@@ -13,6 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
@@ -36,7 +37,7 @@ public class AlertManager implements Initializable {
 
 	@Inject
 	protected SenderManager m_senderManager;
-	
+
 	@Inject
 	protected AlertEntityService m_alertEntityService;
 
@@ -48,6 +49,8 @@ public class AlertManager implements Initializable {
 		String group = alert.getGroup();
 		String level = alert.getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
+
+		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
 
 		for (AlertChannel channel : channels) {
 			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
