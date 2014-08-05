@@ -1,13 +1,12 @@
 package com.dianping.cat;
 
-import javax.naming.ldap.Control;
 
 public class LDAPConfigManager {
 	private static String loginAttribute = "sAMAccountName";
 
 	private final String ldapUrl = "ldap://192.168.50.11:389/DC=dianpingoa,DC=com";
 
-	private final String ldapBaseDN = "OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com";
+	private final String ldapBaseDN = "OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com";
 
 	private final String ldapFactory = "com.sun.jndi.ldap.LdapCtxFactory";
 
@@ -16,8 +15,6 @@ public class LDAPConfigManager {
 	private final String solidUsername = "lionauth";
 
 	private final String solidPwd = "bxHxXopGJOy78Jze3LWi";
-
-	private Control[] connCtls = null;
 
 	public String getLoginAttribute() {
 		return loginAttribute;
@@ -47,7 +44,4 @@ public class LDAPConfigManager {
 		return solidPwd;
 	}
 
-	public Control[] getConnCtls() {
-		return connCtls;
-	}
 }

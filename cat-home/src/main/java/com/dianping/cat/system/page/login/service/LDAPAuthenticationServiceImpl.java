@@ -1,24 +1,6 @@
-/**
- * Project: lion-service
- * 
- * File Created at 2012-8-20
- * $Id$
- * 
- * Copyright 2010 dianping.com.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of
- * Dianping Company. ("Confidential Information").  You shall not
- * disclose such Confidential Information and shall use it only in
- * accordance with the terms of the license agreement you entered into
- * with dianping.com.
- */
 package com.dianping.cat.system.page.login.service;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.LDAPConfigManager;
-import com.dianping.cat.system.page.login.spi.ILDAPAuthenticationService;
-import org.unidal.lookup.annotation.Inject;
+import java.util.Hashtable;
 
 import javax.naming.AuthenticationException;
 import javax.naming.Context;
@@ -27,32 +9,22 @@ import javax.naming.NamingException;
 import javax.naming.directory.Attributes;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import javax.naming.ldap.Control;
 import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
-import java.util.Hashtable;
 
-/**
- * LDAPAuthenticationServiceImpl
- * 
- * @author youngphy.yang
- *
- */
+import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.LDAPConfigManager;
+import com.dianping.cat.system.page.login.spi.ILDAPAuthenticationService;
+
 public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService {
 
 	@Inject
-	LDAPConfigManager m_LDAPConfigManager;
+	private LDAPConfigManager m_LDAPConfigManager;
 
-	/**
-	 * @throws Exception
-	 * @throws javax.naming.AuthenticationException
-	 * @throws javax.naming.NamingException
-	 * @return if authentication succeeded, return user info; otherwise, return null;
-	 * @throws
-	 */
 	@Override
 	public Token authenticate(String userName, String password) throws Exception {
-
 		Token token = null;
 		LdapContext ctx = null;
 		String shortName = null;
@@ -60,7 +32,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 
 		try {
 			shortName = getShortName(userName);
-		} catch (NamingException e1) {
+		} catch (NamingException ne) {
 			Cat.logEvent("LoginError", userName + " doesn't exist.");
 		}
 
@@ -74,7 +46,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 			env.put(Context.SECURITY_CREDENTIALS, password);
 
 			try {
-				ctx = new InitialLdapContext(env, m_LDAPConfigManager.getConnCtls());
+				ctx = new InitialLdapContext(env, null);
 			} catch (AuthenticationException e) {
 				Cat.logEvent("LoginError", "Authentication faild: " + e.toString());
 				throw e;
@@ -90,10 +62,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 	}
 
 	@SuppressWarnings("rawtypes")
-	public Token getUserInfo(String cn, LdapContext ctx, String userName) {
-
-		int memberId = 0;
-		int adminId = 0;
+	private Token getUserInfo(String cn, LdapContext ctx, String userName) {
 		String realName = null;
 
 		try {
@@ -118,19 +87,18 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 						realName = userName;
 					}
 
-					return new Token(adminId, memberId, realName, userName);
+					return new Token(realName, userName);
 				}
 			}
 		} catch (Exception e) {
 			Cat.logEvent("LoginError", "Exception in search():" + e);
 		}
-		return new Token(0, null);
+		return null;
 	}
 
 	@SuppressWarnings("rawtypes")
 	private String getShortName(String sAMAccountName) throws NamingException {
 		String shortName = null;
-
 		Hashtable<String, String> solidEnv = new Hashtable<String, String>();
 		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
 		solidEnv.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
@@ -138,7 +106,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 		solidEnv.put(Context.SECURITY_PRINCIPAL, "cn=" + m_LDAPConfigManager.getSolidUsername() + ","
 		      + m_LDAPConfigManager.getSolidDN());
 		solidEnv.put(Context.SECURITY_CREDENTIALS, m_LDAPConfigManager.getSolidPwd());
-		LdapContext solidContext = new InitialLdapContext(solidEnv, m_LDAPConfigManager.getConnCtls());
+		LdapContext solidContext = new InitialLdapContext(solidEnv, null);
 		SearchControls constraints = new SearchControls();
 		constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
 		NamingEnumeration en = solidContext.search("", m_LDAPConfigManager.getLoginAttribute() + "=" + sAMAccountName,

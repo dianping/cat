@@ -17,15 +17,9 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscription;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionEntity;
-import com.dianping.cat.home.dal.user.DpAdminLogin;
-import com.dianping.cat.home.dal.user.DpAdminLoginDao;
-import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 
 public class ScheduledManager implements Initializable {
-
-	@Inject
-	private DpAdminLoginDao m_loginDao;
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;

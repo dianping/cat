@@ -141,7 +141,7 @@
         WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-name'/> = ${key-user-name}]]></statement>
       </query>
       <query name="insert" type="INSERT">
-        <statement><![CDATA[REPLACE INTO <TABLE/>(<FIELDS/>)
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
       </query>
       <query name="update-by-PK" type="UPDATE">

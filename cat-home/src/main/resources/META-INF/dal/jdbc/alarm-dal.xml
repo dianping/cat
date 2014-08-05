@@ -87,6 +87,10 @@
 					WHERE <FIELD name='scheduled-report-id'/> = ${scheduled-report-id}
 				]]></statement>
             </query>
+            <query name="insert-ingore" type="INSERT">
+		        <statement><![CDATA[INSERT ignore INTO <TABLE/>(<FIELDS/>)
+		        VALUES(<VALUES/>)]]></statement>
+		      </query>
         </query-defs>
     </entity>
 	<entity name="scheduled-report" table="scheduledReport" alias="s">
