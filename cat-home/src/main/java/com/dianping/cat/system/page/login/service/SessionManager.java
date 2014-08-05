@@ -1,6 +1,6 @@
 package com.dianping.cat.system.page.login.service;
 
-import org.unidal.dal.jdbc.DalException;
+import com.dianping.cat.system.page.login.service.LDAPAuthenticationServiceImpl;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
@@ -13,6 +13,9 @@ import com.dianping.cat.system.page.login.spi.ISessionManager;
 public class SessionManager implements ISessionManager<Session, Token, Credential> {
 	@Inject
 	private DpAdminLoginDao m_memberDao;
+
+	@Inject
+	private LDAPAuthenticationServiceImpl m_LDAPService;
 
 	private Token loginByLoginName(String account, String password) {
 		String base = "0000000";
@@ -52,32 +55,31 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 		String account = credential.getAccount();
 		String password = credential.getPassword();
 
-		if (account.length() < 8) {
-			Token token = loginByLoginName(account, password);
-			if (token != null) {
-				return token;
-			}
+		Token token = null;
+
+		try {
+			token = m_LDAPService.authenticate(account, password);
+		} catch (Exception e) {
+			Cat.logEvent("Login", "Login failure, uncorrected password.");
 		}
 
-		Token token = loginByEmail(account, password);
 		if (token != null) {
+			Cat.logEvent("Login", "Login success.");
 			return token;
 		}
 
+		Cat.logEvent("Login", "Login failure, uncorrected username.");
 		return null;
 	}
 
 	@Override
 	public Session validate(Token token) {
-		try {
-			DpAdminLogin member = m_memberDao.findByPK(token.getMemberId(), DpAdminLoginEntity.READSET_FULL);
 
-			return new Session(member);
-		} catch (DalNotFoundException e) {
-		} catch (DalException e) {
-			Cat.getProducer().logError(e);
-		}
+		LoginMember member = new LoginMember();
 
-		return null;
+		member.setUserName(token.getUserName());
+		member.setRealName(token.getRealName());
+
+		return new Session(member);
 	}
 }

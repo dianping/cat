@@ -9,7 +9,22 @@ public class Token implements IToken {
 
 	private String m_realName;
 
+	private String m_userName;
+
 	public static final String TOKEN = "ct";
+
+	public Token(int adminId, int memberId, String realName, String userName) {
+		m_adminId = adminId;
+		m_memberId = memberId;
+		m_realName = realName;
+		m_userName = userName;
+	}
+
+	public Token(int memberId, String realName, String userName) {
+		m_memberId = memberId;
+		m_realName = realName;
+		m_userName = userName;
+	}
 
 	public Token(int memberId, String realName) {
 		m_memberId = memberId;
@@ -24,6 +39,10 @@ public class Token implements IToken {
 
 	public String getRealName() {
 		return m_realName;
+	}
+
+	public String getUserName() {
+		return m_userName;
 	}
 
 	public int getAdminId() {

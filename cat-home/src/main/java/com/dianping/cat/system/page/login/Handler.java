@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.dianping.cat.system.page.login.service.*;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.jsp.function.CodecFunction;
 import org.unidal.web.mvc.ActionContext;
@@ -77,7 +78,7 @@ public class Handler implements PageHandler<Context> {
 
 				if (parent instanceof SystemContext) {
 					SystemContext<?> context = (SystemContext<?>) parent;
-					DpAdminLogin member = session.getMember();
+					LoginMember member = session.getMember();
 					context.setSigninMember(member);
 					logAccess(ctx, member);
 					return;
@@ -116,14 +117,14 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void logAccess(Context ctx, DpAdminLogin member) {
+	private void logAccess(Context ctx, LoginMember member) {
 		StringBuilder sb = new StringBuilder(256);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss]");
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		String actionUri = ctx.getRequestContext().getActionUri();
 
 		sb.append(dateFormat.format(new Date()));
-		sb.append(" ").append(member.getLoginName()).append('/').append(member.getLoginId()).append(' ');
+		// sb.append(" ").append(member.getLoginName()).append('/').append(member.getLoginId()).append(' ');
 
 		if (request.getMethod().equalsIgnoreCase("post")) {
 			Enumeration<String> names = request.getParameterNames();
