@@ -627,6 +627,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

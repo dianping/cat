@@ -151,7 +151,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
-		      AggregationConfigManager.class));
+		      AggregationConfigManager.class, AlertConfigManager.class));
 
 		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
 		      .req(Contactor.class, NetworkContactor.ID, "networkContactor")

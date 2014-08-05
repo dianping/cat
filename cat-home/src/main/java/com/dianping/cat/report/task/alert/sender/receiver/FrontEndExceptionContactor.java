@@ -3,17 +3,21 @@ package com.dianping.cat.report.task.alert.sender.receiver;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.system.config.AlertConfigManager;
 
-public class FrontEndExceptionContactor implements Contactor {
+public class FrontEndExceptionContactor extends DefaultContactor implements Contactor {
 
 	@Inject
-	private AggregationConfigManager m_configManager;
+	private AggregationConfigManager m_aggConfigManager;
+
+	@Inject
+	protected AlertConfigManager m_alertConfigManager;
 
 	public static final String ID = AlertConstants.FRONT_END_EXCEPTION;
 
@@ -24,15 +28,20 @@ public class FrontEndExceptionContactor implements Contactor {
 
 	@Override
 	public List<String> queryEmailContactors(String id) {
-		AggregationRule rule = m_configManager.queryAggration(id);
+		List<String> mailReceivers = new ArrayList<String>();
 
-		if (rule != null) {
-			String mails = rule.getMails();
-			List<String> receiver = Splitters.by(",").noEmptyItem().split(mails);
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
 
-			return receiver;
+		if (receiver != null && !receiver.isEnable()) {
+			return mailReceivers;
 		} else {
-			return new ArrayList<String>();
+			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
+			
+			AggregationRule rule = m_aggConfigManager.queryAggration(id);
+			if (rule != null) {
+				mailReceivers.addAll(split(rule.getMails()));
+			}
+			return mailReceivers;
 		}
 	}
 
@@ -45,5 +54,4 @@ public class FrontEndExceptionContactor implements Contactor {
 	public List<String> querySmsContactors(String id) {
 		return null;
 	}
-
 }
