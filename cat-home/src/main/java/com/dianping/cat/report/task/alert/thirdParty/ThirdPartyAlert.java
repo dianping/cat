@@ -17,6 +17,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -79,8 +80,7 @@ public class ThirdPartyAlert implements Task {
 					List<ThirdPartyAlertEntity> thirdPartyAlerts = entry.getValue();
 					AlertEntity entity = new AlertEntity();
 
-					entity.setDate(new Date()).setContent(thirdPartyAlerts.toString())
-					      .setLevel(AlertConstants.WARNING_EXCEPTION);
+					entity.setDate(new Date()).setContent(thirdPartyAlerts.toString()).setLevel(AlertLevel.WARNING);
 					entity.setMetric(getName()).setType(getName()).setGroup(domain);
 
 					m_sendManager.addAlert(entity);

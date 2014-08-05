@@ -100,7 +100,7 @@ public class AppDataService {
 	}
 
 	public double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize()];
+		double[] value = new double[convertedData.getMaxSize() + 1];
 
 		try {
 			for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
@@ -116,7 +116,7 @@ public class AppDataService {
 					}
 					sum += number;
 				}
-				value[key / 5 - 1] = (double) success / sum;
+				value[key / 5] = (double) success / sum;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -137,20 +137,20 @@ public class AppDataService {
 	}
 
 	public double[] queryRequestCount(AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize()];
+		double[] value = new double[convertedData.getMaxSize() + 1];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 
-				value[data.getMinuteOrder() / 5 - 1] = count;
+				value[data.getMinuteOrder() / 5] = count;
 			}
 		}
 		return value;
 	}
 
 	public double[] queryDelayAvg(AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize()];
+		double[] value = new double[convertedData.getMaxSize() + 1];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
@@ -158,7 +158,7 @@ public class AppDataService {
 				long sum = data.getResponseSumTimeSum();
 
 				double avg = sum / count;
-				value[data.getMinuteOrder() / 5 - 1] = avg;
+				value[data.getMinuteOrder() / 5] = avg;
 			}
 		}
 		return value;
