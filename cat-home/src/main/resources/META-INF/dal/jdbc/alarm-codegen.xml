@@ -119,7 +119,7 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="scheduled-report-subscription2" table="scheduledReportSubscription2" alias="s3">
+  <entity name="scheduled-subscription" table="scheduledSubscription" alias="s3">
     <member name="scheduled-report-id" field="scheduled_report_id" value-type="int" length="10" nullable="false" key="true" />
     <member name="user-name" field="user_name" value-type="String" length="20" nullable="false" key="true" />
     <member name="creation-date" field="creation_date" value-type="Date" />

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription2Dao;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
 import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.home.dal.user.DpAdminLoginDao;
@@ -315,7 +315,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
 		all.add(C(DatabaseConfigManager.class).req(ScheduledReportDao.class, ScheduledReportSubscriptionDao.class,
-		      ScheduledReportSubscription2Dao.class, DpAdminLoginDao.class));
+		      ScheduledSubscriptionDao.class, DpAdminLoginDao.class));
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));

@@ -14,9 +14,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription2;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription2Dao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription2Entity;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscription;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionEntity;
 import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.home.dal.user.DpAdminLoginDao;
 import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
@@ -31,14 +31,14 @@ public class ScheduledManager implements Initializable {
 	private ScheduledReportDao m_scheduledReportDao;
 
 	@Inject
-	private ScheduledReportSubscription2Dao m_scheduledReportSubscriptionDao;
+	private ScheduledSubscriptionDao m_scheduledReportSubscriptionDao;
 
 	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
 		List<String> emails = new ArrayList<String>();
-		List<ScheduledReportSubscription2> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(
-		      scheduledReportId, ScheduledReportSubscription2Entity.READSET_FULL);
+		List<ScheduledSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(
+		      scheduledReportId, ScheduledSubscriptionEntity.READSET_FULL);
 
-		for (ScheduledReportSubscription2 subscription : subscriptions) {
+		for (ScheduledSubscription subscription : subscriptions) {
 			emails.add(subscription.getUserName() + "@dianping.com");
 		}
 		return emails;
@@ -62,7 +62,7 @@ public class ScheduledManager implements Initializable {
 				userRules.add(userSubState);
 				try {
 					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
-					      ScheduledReportSubscription2Entity.READSET_FULL);
+					      ScheduledSubscriptionEntity.READSET_FULL);
 					userSubState.setSubscriberState(1);
 				} catch (DalNotFoundException nfe) {
 				} catch (DalException e) {
@@ -116,7 +116,7 @@ public class ScheduledManager implements Initializable {
 		int subState = payload.getUserSubState();
 		int scheduledReportId = payload.getScheduledReportId();
 
-		ScheduledReportSubscription2 scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
+		ScheduledSubscription scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
 
 		scheduledReportSubscription.setKeyScheduledReportId(scheduledReportId);
 		scheduledReportSubscription.setKeyUserName(userName);

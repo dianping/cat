@@ -67,7 +67,7 @@
 			</query>
 		</query-defs>
 	</entity>
-    <entity name="scheduled-report-subscription2" table="scheduledReportSubscription2"
+    <entity name="scheduled-subscription" table="scheduledSubscription"
             alias="s2">
         <member name="creation-date" insert-expr="NOW()" />
         <query-defs>

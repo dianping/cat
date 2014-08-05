@@ -21,7 +21,7 @@ public class DatabaseConfigManager implements Initializable {
 	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
 
 	@Inject
-	private ScheduledReportSubscription2Dao m_scheduledReportSubscription2Dao;
+	private ScheduledSubscriptionDao m_scheduledSubscriptionDao;
 
 	@Inject
 	private DpAdminLoginDao m_loginDao;
@@ -77,14 +77,14 @@ public class DatabaseConfigManager implements Initializable {
 	}
 
 	public void insertSchReportIdAndUserName(int scheduledReportId, String userName) {
-		ScheduledReportSubscription2 subscription2 = new ScheduledReportSubscription2();
-		subscription2.setScheduledReportId(scheduledReportId);
-		subscription2.setUserName(userName);
-		subscription2.setKeyScheduledReportId(scheduledReportId);
-		subscription2.setKeyUserName(userName);
+		ScheduledSubscription subscription = new ScheduledSubscription();
+		subscription.setScheduledReportId(scheduledReportId);
+		subscription.setUserName(userName);
+		subscription.setKeyScheduledReportId(scheduledReportId);
+		subscription.setKeyUserName(userName);
 
 		try {
-			m_scheduledReportSubscription2Dao.insert(subscription2);
+			m_scheduledSubscriptionDao.insert(subscription);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
