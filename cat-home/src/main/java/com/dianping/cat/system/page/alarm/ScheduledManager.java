@@ -22,7 +22,7 @@ import com.dianping.cat.home.dal.user.DpAdminLoginDao;
 import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 
-public class ScheduledManager implements Initializable{
+public class ScheduledManager implements Initializable {
 
 	@Inject
 	private DpAdminLoginDao m_loginDao;
@@ -39,7 +39,7 @@ public class ScheduledManager implements Initializable{
 		      scheduledReportId, ScheduledReportSubscription2Entity.READSET_FULL);
 
 		for (ScheduledReportSubscription2 subscription : subscriptions) {
-            emails.add(subscription.getUserName() + "@dianping.com");
+			emails.add(subscription.getUserName() + "@dianping.com");
 		}
 		return emails;
 	}
@@ -51,31 +51,31 @@ public class ScheduledManager implements Initializable{
 	}
 
 	public void queryScheduledReports(Model model, String userName) {
-        List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
-        	try {
-                List<ScheduledReport> lists = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
+		try {
+			List<ScheduledReport> lists = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
 
-                for (ScheduledReport report : lists) {
-                    int scheduledReportId = report.getId();
-                    UserReportSubState userSubState = new UserReportSubState(report);
+			for (ScheduledReport report : lists) {
+				int scheduledReportId = report.getId();
+				UserReportSubState userSubState = new UserReportSubState(report);
 
-                    userRules.add(userSubState);
-                    try {
-                            m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
-                                    ScheduledReportSubscription2Entity.READSET_FULL);
-                            userSubState.setSubscriberState(1);
-                    } catch (DalNotFoundException nfe) {
-                    } catch (DalException e) {
-                        Cat.logError(e);
-                    }
-                }
-        	} catch (DalNotFoundException nfe) {
-        	} catch (DalException e) {
-                Cat.logError(e);
-        	}
-        	Collections.sort(userRules, new UserReportSubStateCompartor());
-        	model.setUserReportSubStates(userRules);
-    	}
+				userRules.add(userSubState);
+				try {
+					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
+					      ScheduledReportSubscription2Entity.READSET_FULL);
+					userSubState.setSubscriberState(1);
+				} catch (DalNotFoundException nfe) {
+				} catch (DalException e) {
+					Cat.logError(e);
+				}
+			}
+		} catch (DalNotFoundException nfe) {
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		Collections.sort(userRules, new UserReportSubStateCompartor());
+		model.setUserReportSubStates(userRules);
+	}
 
 	public void scheduledReportAdd(Payload payload, Model model) {
 		List<String> domains = new ArrayList<String>();
@@ -113,28 +113,28 @@ public class ScheduledManager implements Initializable{
 	}
 
 	public boolean scheduledReportSub(Payload payload, String userName) {
-        int subState = payload.getUserSubState();
-        int scheduledReportId = payload.getScheduledReportId();
+		int subState = payload.getUserSubState();
+		int scheduledReportId = payload.getScheduledReportId();
 
-        ScheduledReportSubscription2 scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
+		ScheduledReportSubscription2 scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
 
-        scheduledReportSubscription.setKeyScheduledReportId(scheduledReportId);
-        scheduledReportSubscription.setKeyUserName(userName);
-        scheduledReportSubscription.setUserName(userName);
-        scheduledReportSubscription.setScheduledReportId(scheduledReportId);
+		scheduledReportSubscription.setKeyScheduledReportId(scheduledReportId);
+		scheduledReportSubscription.setKeyUserName(userName);
+		scheduledReportSubscription.setUserName(userName);
+		scheduledReportSubscription.setScheduledReportId(scheduledReportId);
 
-        try {
-            if (subState == 1) {
-                m_scheduledReportSubscriptionDao.deleteByPK(scheduledReportSubscription);
-            } else {
-                m_scheduledReportSubscriptionDao.insert(scheduledReportSubscription);
-            }
-        } catch (DalException e) {
-            Cat.logError(e);
-            return false;
-        }
-        return true;
-    }
+		try {
+			if (subState == 1) {
+				m_scheduledReportSubscriptionDao.deleteByPK(scheduledReportSubscription);
+			} else {
+				m_scheduledReportSubscriptionDao.insert(scheduledReportSubscription);
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
+	}
 
 	public void scheduledReportUpdate(Payload payload, Model model) {
 		int id = payload.getScheduledReportId();
@@ -163,6 +163,6 @@ public class ScheduledManager implements Initializable{
 	}
 
 	@Override
-   public void initialize() throws InitializationException {
-   }
+	public void initialize() throws InitializationException {
+	}
 }

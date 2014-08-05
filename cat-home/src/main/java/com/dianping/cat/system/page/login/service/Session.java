@@ -5,9 +5,13 @@ import com.dianping.cat.system.page.login.spi.ISession;
 
 public class Session implements ISession {
 
-    private LoginMember m_member;
+	private LoginMember m_member;
 
-    public Session (LoginMember member) { this.m_member = member; }
+	public Session(LoginMember member) {
+		this.m_member = member;
+	}
 
-    public LoginMember getMember () { return this.m_member; }
+	public LoginMember getMember() {
+		return this.m_member;
+	}
 }

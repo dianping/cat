@@ -23,7 +23,7 @@ import com.dianping.cat.home.dal.user.DpAdminLogin;
 
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 
-    private LoginMember m_signinMember;
+	private LoginMember m_signinMember;
 
 	public LoginMember getSigninMember() {
 		return m_signinMember;

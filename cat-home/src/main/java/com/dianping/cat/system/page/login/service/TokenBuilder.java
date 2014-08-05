@@ -14,12 +14,12 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 	public String build(SigninContext ctx, Token token) {
 		StringBuilder sb = new StringBuilder(256);
 
-        String userName = token.getUserName();
-        String userNameValue = "";
-        try {
-        	userNameValue = java.net.URLEncoder.encode(userName, "utf-8");
-        } catch (UnsupportedEncodingException e) {
-        }
+		String userName = token.getUserName();
+		String userNameValue = "";
+		try {
+			userNameValue = java.net.URLEncoder.encode(userName, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+		}
 
 		String realName = token.getRealName();
 		String value = "";
@@ -29,7 +29,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		}
 		sb.append(value).append(SP);
 		sb.append(token.getMemberId()).append(SP);
-        sb.append(userNameValue).append(SP);
+		sb.append(userNameValue).append(SP);
 		sb.append(System.currentTimeMillis()).append(SP);
 		sb.append(ctx.getRequest().getRemoteAddr()).append(SP);
 		sb.append(getCheckSum(sb.toString()));
@@ -49,7 +49,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 			int index = 0;
 			String realName = parts[index++];
 			int memberId = Integer.parseInt(parts[index++]);
-            String userName = parts[index++];
+			String userName = parts[index++];
 			long lastLoginDate = Long.parseLong(parts[index++]);
 			String remoteIp = parts[index++];
 			int checkSum = Integer.parseInt(parts[index++]);

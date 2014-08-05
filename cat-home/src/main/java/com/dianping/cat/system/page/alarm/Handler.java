@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.system.page.login.service.LoginMember;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -12,8 +11,8 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
-import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.login.service.LoginMember;
 
 public class Handler implements PageHandler<Context> {
 	public static final String FAIL = "Fail";
@@ -29,12 +28,12 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ScheduledManager m_scheduledManager;
 
-	private String getLoginUserName (Context ctx) {
+	private String getLoginUserName(Context ctx) {
 		LoginMember member = ctx.getSigninMember();
 
-    		if (member != null) {
-    			return member.getUserName();
-    		}
+		if (member != null) {
+			return member.getUserName();
+		}
 
 		return null;
 	}
@@ -52,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-        String userName = getLoginUserName (ctx);
+		String userName = getLoginUserName(ctx);
 		boolean result = false;
 
 		switch (action) {

@@ -88,8 +88,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private BugConfigManager m_bugConfigManager;
 
-    @Inject
-    private DatabaseConfigManager m_databaseConfigManager;
+	@Inject
+	private DatabaseConfigManager m_databaseConfigManager;
 
 	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;

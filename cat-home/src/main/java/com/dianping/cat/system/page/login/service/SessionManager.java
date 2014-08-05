@@ -14,8 +14,8 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 	@Inject
 	private DpAdminLoginDao m_memberDao;
 
-    @Inject
-    private LDAPAuthenticationServiceImpl m_LDAPService;
+	@Inject
+	private LDAPAuthenticationServiceImpl m_LDAPService;
 
 	private Token loginByLoginName(String account, String password) {
 		String base = "0000000";
@@ -55,31 +55,31 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 		String account = credential.getAccount();
 		String password = credential.getPassword();
 
-        Token token = null;
+		Token token = null;
 
-        try {
-        	token = m_LDAPService.authenticate(account, password);
-        } catch (Exception e) {
-        	Cat.logEvent("Login", "Login failure, uncorrected password.");
-        }
+		try {
+			token = m_LDAPService.authenticate(account, password);
+		} catch (Exception e) {
+			Cat.logEvent("Login", "Login failure, uncorrected password.");
+		}
 
-        if (token != null) {
-        	Cat.logEvent("Login", "Login success.");
-        	return token;
-        }
+		if (token != null) {
+			Cat.logEvent("Login", "Login success.");
+			return token;
+		}
 
-        Cat.logEvent("Login", "Login failure, uncorrected username.");
-        return null;
+		Cat.logEvent("Login", "Login failure, uncorrected username.");
+		return null;
 	}
 
 	@Override
 	public Session validate(Token token) {
 
-        LoginMember member = new LoginMember();
+		LoginMember member = new LoginMember();
 
-        member.setUserName(token.getUserName());
-        member.setRealName(token.getRealName());
+		member.setUserName(token.getUserName());
+		member.setRealName(token.getRealName());
 
-        return new Session (member);
+		return new Session(member);
 	}
 }

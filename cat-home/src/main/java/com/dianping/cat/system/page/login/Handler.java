@@ -124,7 +124,7 @@ public class Handler implements PageHandler<Context> {
 		String actionUri = ctx.getRequestContext().getActionUri();
 
 		sb.append(dateFormat.format(new Date()));
-		//sb.append(" ").append(member.getLoginName()).append('/').append(member.getLoginId()).append(' ');
+		// sb.append(" ").append(member.getLoginName()).append('/').append(member.getLoginId()).append(' ');
 
 		if (request.getMethod().equalsIgnoreCase("post")) {
 			Enumeration<String> names = request.getParameterNames();

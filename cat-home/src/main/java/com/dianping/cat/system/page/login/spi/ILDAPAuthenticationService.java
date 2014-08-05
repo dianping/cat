@@ -17,11 +17,6 @@ package com.dianping.cat.system.page.login.spi;
 
 import com.dianping.cat.system.page.login.service.Token;
 
-/**
- * LDAPAuthenticationService
- * @author youngphy.yang
- *
- */
 public interface ILDAPAuthenticationService {
 	public Token authenticate(String userName, String password) throws Exception;
 }
