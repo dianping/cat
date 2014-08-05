@@ -109,8 +109,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
 
-			System.out.println("Date:" + new Date(last));
-
 			if (lastBucketHandler != null) {
 				lastBucketHandler.shutdown();
 				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(last)));
