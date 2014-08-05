@@ -13,9 +13,9 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 	@Override
 	public String build(SigninContext ctx, Token token) {
 		StringBuilder sb = new StringBuilder(256);
-
 		String userName = token.getUserName();
 		String userNameValue = "";
+		
 		try {
 			userNameValue = java.net.URLEncoder.encode(userName, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -28,7 +28,6 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		} catch (UnsupportedEncodingException e) {
 		}
 		sb.append(value).append(SP);
-		sb.append(token.getMemberId()).append(SP);
 		sb.append(userNameValue).append(SP);
 		sb.append(System.currentTimeMillis()).append(SP);
 		sb.append(ctx.getRequest().getRemoteAddr()).append(SP);
@@ -45,10 +44,9 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 	public Token parse(SigninContext ctx, String value) {
 		String[] parts = value.split(Pattern.quote(SP));
 
-		if (parts.length == 6) {
+		if (parts.length == 5) {
 			int index = 0;
 			String realName = parts[index++];
-			int memberId = Integer.parseInt(parts[index++]);
 			String userName = parts[index++];
 			long lastLoginDate = Long.parseLong(parts[index++]);
 			String remoteIp = parts[index++];
@@ -58,7 +56,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 			if (checkSum == expectedCheckSum) {
 				if (remoteIp.equals(ctx.getRequest().getRemoteAddr())) {
 					if (lastLoginDate + ONE_DAY > System.currentTimeMillis()) {
-						return new Token(memberId, realName, userName);
+						return new Token( realName, userName);
 					}
 				}
 			}

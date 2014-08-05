@@ -149,8 +149,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.DatabaseConfigManager</role>
-			<implementation>com.dianping.cat.system.config.DatabaseConfigManager</implementation>
+			<role>com.dianping.cat.system.config.ScheduledJob</role>
+			<implementation>com.dianping.cat.system.config.ScheduledJob</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
@@ -4182,22 +4182,10 @@
 			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4268,9 +4256,6 @@
 			<implementation>com.dianping.cat.system.page.login.service.SessionManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.login.service.LDAPAuthenticationServiceImpl</role>
 				</requirement>
 			</requirements>
@@ -4320,9 +4305,6 @@
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DatabaseConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -4361,6 +4343,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ScheduledJob</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4390,33 +4375,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.DatabaseConfigManager</role>
-			<implementation>com.dianping.cat.system.config.DatabaseConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4480,6 +4438,42 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ScheduledJob</role>
+			<implementation>com.dianping.cat.system.config.ScheduledJob</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -6,7 +6,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.dianping.cat.system.page.login.service.LoginMember;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
@@ -19,7 +18,7 @@ import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
 import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;
 
-import com.dianping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.system.page.login.service.LoginMember;
 
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 

@@ -12,7 +12,7 @@ import org.unidal.lookup.annotation.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DatabaseConfigManager implements Initializable {
+public class ScheduledJob implements Initializable {
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
@@ -84,7 +84,7 @@ public class DatabaseConfigManager implements Initializable {
 		subscription.setKeyUserName(userName);
 
 		try {
-			m_scheduledSubscriptionDao.insert(subscription);
+			m_scheduledSubscriptionDao.insertIngore(subscription);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
