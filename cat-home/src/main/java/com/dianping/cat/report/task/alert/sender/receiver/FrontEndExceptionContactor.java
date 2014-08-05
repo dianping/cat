@@ -8,7 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.alert.config.entity.Receiver;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.system.config.AlertConfigManager;
 
 public class FrontEndExceptionContactor extends DefaultContactor implements Contactor {
@@ -19,7 +19,7 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 	@Inject
 	protected AlertConfigManager m_alertConfigManager;
 
-	public static final String ID = AlertConstants.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FRONT_END_EXCEPTION;
 
 	@Override
 	public String getId() {

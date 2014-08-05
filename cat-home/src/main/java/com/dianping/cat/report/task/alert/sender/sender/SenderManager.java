@@ -5,45 +5,25 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
 
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class SenderManager implements Initializable {
-
-	@Inject(type = Sender.class, value = MailSender.ID)
-	protected Sender m_mailSender;
-
-	@Inject(type = Sender.class, value = WeixinSender.ID)
-	protected Sender m_weixinSender;
-
-	@Inject(type = Sender.class, value = SmsSender.ID)
-	protected Sender m_smsSender;
+public class SenderManager extends ContainerHolder implements Initializable {
 
 	private Map<String, Sender> m_senders = new HashMap<String, Sender>();
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_senders.put(m_mailSender.getId(), m_mailSender);
-		m_senders.put(m_weixinSender.getId(), m_weixinSender);
-		m_senders.put(m_smsSender.getId(), m_smsSender);
+		m_senders = lookupMap(Sender.class);
 	}
 
-	public boolean sendAlert(String channelName, String type, AlertMessageEntity message) {
+	public boolean sendAlert(AlertChannel channel, String type, AlertMessageEntity message) {
+		String channelName = channel.getName();
 		Sender sender = m_senders.get(channelName);
+
 		return sender.send(message, type);
-	}
-
-	public void setMailSender(Sender sender) {
-		m_mailSender = sender;
-	}
-
-	public void setSmsSender(Sender sender) {
-		m_smsSender = sender;
-	}
-
-	public void setWeixinSender(Sender sender) {
-		m_weixinSender = sender;
 	}
 
 }

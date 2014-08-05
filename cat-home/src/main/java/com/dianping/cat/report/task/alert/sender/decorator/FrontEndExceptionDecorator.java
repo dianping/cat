@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class FrontEndExceptionDecorator extends ExceptionDecorator {
 
-	public static final String ID = AlertConstants.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FRONT_END_EXCEPTION;
 
 	@Override
 	public String getId() {
