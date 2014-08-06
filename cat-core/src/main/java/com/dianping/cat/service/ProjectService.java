@@ -1,10 +1,12 @@
 package com.dianping.cat.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -16,6 +18,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
@@ -25,10 +28,23 @@ public class ProjectService implements Initializable {
 	@Inject
 	private ProjectDao m_projectDao;
 
+	@Inject
+	private ServerConfigManager m_manager;
+
 	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+
+	private Set<String> m_domains = new HashSet<String>();
+
+	public void addDomain(String domain) {
+		m_domains.add(domain);
+	}
 
 	public Project createLocal() {
 		return m_projectDao.createLocal();
+	}
+
+	public boolean containsDomainInCat(String domain) {
+		return m_domains.contains(domain);
 	}
 
 	public boolean deleteProject(Project project) {
@@ -61,7 +77,17 @@ public class ProjectService implements Initializable {
 	}
 
 	public Project findByDomain(String domainName) {
-		return m_projects.get(domainName);
+		Project project = m_projects.get(domainName);
+
+		if (project != null) {
+			return project;
+		} else {
+			try {
+				return m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			} catch (DalException e) {
+				return new Project();
+			}
+		}
 	}
 
 	public Project findProject(int id) {
@@ -75,12 +101,19 @@ public class ProjectService implements Initializable {
 				return pro;
 			}
 		}
-		return new Project();
+
+		try {
+			return m_projectDao.findByPK(id, ProjectEntity.READSET_FULL);
+		} catch (DalException e) {
+			return new Project();
+		}
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new ProjectReloadTask());
+		if (!m_manager.isLocalMode()) {
+			Threads.forGroup("Cat").start(new ProjectReloadTask());
+		}
 	}
 
 	public void refresh() {
@@ -89,6 +122,7 @@ public class ProjectService implements Initializable {
 
 			synchronized (this) {
 				for (Project project : projects) {
+					m_domains.add(project.getDomain());
 					m_projects.put(project.getDomain(), project);
 				}
 			}
@@ -106,6 +140,23 @@ public class ProjectService implements Initializable {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean insertDomain(String domain) {
+		Project project = createLocal();
+
+		project.setDomain(domain);
+		project.setProjectLine("Default");
+		project.setDepartment("Default");
+		try {
+			insert(project);
+			m_domains.add(domain);
+
+			return true;
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+		return false;
 	}
 
 	public boolean updateProject(Project project) {

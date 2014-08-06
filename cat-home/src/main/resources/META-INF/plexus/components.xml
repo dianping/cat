@@ -579,6 +579,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -587,6 +590,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1637,7 +1646,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1722,7 +1731,7 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3196,7 +3205,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3215,26 +3224,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.DomainManager</role>
-			<implementation>com.dianping.cat.DomainManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.service.HostinfoService</role>
 			<implementation>com.dianping.cat.service.HostinfoService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3253,6 +3253,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3634,7 +3637,7 @@
 					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4179,23 +4182,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>mail</role-hint>
-					<field-name>m_mailSender</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>weixin</role-hint>
-					<field-name>m_weixinSender</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>sms</role-hint>
-					<field-name>m_smsSender</field-name>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

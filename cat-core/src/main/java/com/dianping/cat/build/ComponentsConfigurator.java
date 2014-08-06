@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatCoreModule;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
@@ -46,12 +45,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(DomainManager.class)//
-		      .req(ServerConfigManager.class, ProjectService.class, HostinfoService.class));
-
-		all.add(C(ProjectService.class).req(ProjectDao.class));
-
-		all.add(C(HostinfoService.class).req(HostinfoDao.class));
+		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
+		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
 
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));

@@ -117,13 +117,13 @@ import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
-import com.dianping.cat.system.config.ScheduledJob;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.config.ScheduledJob;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
@@ -141,8 +141,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
-		all.add(C(ProjectService.class).req(ProjectDao.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class));
+		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
+		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
 
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));

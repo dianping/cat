@@ -7,12 +7,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
+import com.dianping.cat.service.HostinfoService;
 
 public class HostInfo extends BaseVisitor {
 
@@ -34,7 +34,7 @@ public class HostInfo extends BaseVisitor {
 
 	private String m_serviceSortBy = "Avg";
 
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	public HostInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
@@ -110,7 +110,7 @@ public class HostInfo extends BaseVisitor {
 		if (ip.indexOf(':') > 0) {
 			ip = ip.substring(0, ip.indexOf(':'));
 		}
-		String domain = m_domainManager.queryDomainByIp(ip);
+		String domain = m_hostinfoService.queryDomainByIp(ip);
 		if (projectName.equalsIgnoreCase(domain)) {
 			return true;
 		} else {
@@ -128,8 +128,8 @@ public class HostInfo extends BaseVisitor {
 		return this;
 	}
 
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
+	public void setHostinfoService(HostinfoService hostinfoService) {
+		m_hostinfoService = hostinfoService;
 	}
 
 	public HostInfo setProjectName(String projectName) {

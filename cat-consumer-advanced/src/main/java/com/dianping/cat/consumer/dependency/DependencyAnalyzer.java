@@ -9,7 +9,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
@@ -21,6 +20,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportManager;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
@@ -30,7 +31,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private ReportManager<DependencyReport> m_reportManager;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	@Inject
 	private DatabaseParser m_parser;
@@ -142,12 +146,12 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String ip = parseIpFromPigeonClientTransaction(t, tree);
-			String target = m_domainManager.queryDomainByIp(ip);
+			String target = m_hostinfoService.queryDomainByIp(ip);
 			String callType = "PigeonCall";
 
 			updateDependencyInfo(report, t, target, callType);
 
-			if (m_domainManager.containsDomainInCat(target)) {
+			if (m_projectService.containsDomainInCat(target)) {
 				DependencyReport serverReport = findOrCreateReport(target);
 
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");

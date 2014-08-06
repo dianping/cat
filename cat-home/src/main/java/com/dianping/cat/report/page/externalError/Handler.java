@@ -15,9 +15,9 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.service.HostinfoService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -27,7 +27,7 @@ public class Handler implements PageHandler<Context> {
 	private EventCollectManager m_errorCollectManager;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		if (type == EventCollectManager.DB_ERROR) {
 			event.setDomain(payload.getDatabase());
 		} else {
-			String domain = m_domainManager.queryDomainByIp(ip);
+			String domain = m_hostinfoService.queryDomainByIp(ip);
 
 			event.setDomain(domain);
 		}

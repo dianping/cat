@@ -1,10 +1,10 @@
 package com.dianping.cat.report.page.cross;
 
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
+import com.dianping.cat.service.HostinfoService;
 
 public class CrossMethodVisitor extends BaseVisitor {
 
@@ -16,15 +16,15 @@ public class CrossMethodVisitor extends BaseVisitor {
 
 	private MethodQueryInfo m_info = new MethodQueryInfo();
 
-	private DomainManager m_manager;
+	private HostinfoService m_hostinfoService;
 
-	public CrossMethodVisitor(String method, DomainManager manager) {
+	public CrossMethodVisitor(String method, HostinfoService hostinfoService) {
 		if (method == null) {
 			m_method = "";
 		} else {
 			m_method = method;
 		}
-		m_manager = manager;
+		m_hostinfoService = hostinfoService;
 	}
 
 	public MethodQueryInfo getInfo() {
@@ -34,7 +34,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 	@Override
 	public void visitName(Name name) {
 		String methodName = name.getId();
-		String domain = m_manager.queryDomainByIp(m_remoteIp);
+		String domain = m_hostinfoService.queryDomainByIp(m_remoteIp);
 		String ip = m_remoteIp;
 
 		if (ip.indexOf(":") > -1) {
