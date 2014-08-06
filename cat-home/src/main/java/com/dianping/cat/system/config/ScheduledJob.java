@@ -28,14 +28,8 @@ public class ScheduledJob implements Initializable {
 
 	@Override
 	public void initialize() {
-		List<ScheduledReport> reports = null;
+		List<ScheduledReport> reports = queryScheduledReports();
 		List<String> userNames = null;
-
-		try {
-			reports = queryScheduledReports();
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
 
 		for (ScheduledReport report : reports) {
 			int scheduledReportId = report.getId();
@@ -46,8 +40,10 @@ public class ScheduledJob implements Initializable {
 				Cat.logError(e);
 			}
 
-			for (String userName : userNames) {
-				insertSchReportIdAndUserName(scheduledReportId, userName);
+			if (userNames != null) {
+				for (String userName : userNames) {
+					insertSchReportIdAndUserName(scheduledReportId, userName);
+				}
 			}
 		}
 	}
@@ -62,6 +58,7 @@ public class ScheduledJob implements Initializable {
 				DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
 				String email = login.getEmail();
 				String userName = email.substring(0, email.indexOf('@'));
+
 				userNames.add(userName);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -70,10 +67,14 @@ public class ScheduledJob implements Initializable {
 		return userNames;
 	}
 
-	public List<ScheduledReport> queryScheduledReports() throws DalException {
-		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+	public List<ScheduledReport> queryScheduledReports() {
+		try {
+			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
 
-		return reports;
+			return reports;
+		} catch (Exception e) {
+			return new ArrayList<ScheduledReport>();
+		}
 	}
 
 	public void insertSchReportIdAndUserName(int scheduledReportId, String userName) {
