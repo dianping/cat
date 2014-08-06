@@ -365,6 +365,10 @@ public enum RuleType {
 		}
 	}
 
+	protected static final int MbS = 1 * 60 * 1024 * 1024 / 8;
+
+	protected static final int GbS = MbS * 1024;
+
 	protected DecimalFormat m_df = new DecimalFormat("0.0");
 
 	protected abstract String buildRuleMessage(double[] values, double[] baselines, double ruleValue);
@@ -373,7 +377,13 @@ public enum RuleType {
 		StringBuilder builder = new StringBuilder();
 
 		for (double value : values) {
-			builder.append(m_df.format(value)).append(" ");
+			if (value < MbS) {
+				builder.append(m_df.format(value)).append(" ");
+			} else if (value < GbS) {
+				builder.append(m_df.format(value / MbS)).append("Mb/s ");
+			} else {
+				builder.append(m_df.format(value / GbS)).append("Gb/s ");
+			}
 		}
 
 		return builder.toString();
