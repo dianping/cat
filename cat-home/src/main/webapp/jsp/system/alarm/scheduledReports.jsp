@@ -14,9 +14,7 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
-			init();
-			var id = '${payload.action.name}';
-			$('#'+id).addClass("active");
+			$("#scheduledReports").addClass("active");
 			$(".delete").bind("click", function() {
 			 	return confirm("确定要删除此项目吗(不可恢复)？");
 			});

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -121,7 +122,19 @@ public class AppConfigManager implements Initializable {
 	}
 
 	public List<Command> queryCommands() {
-		return new ArrayList<Command>(m_config.getCommands().values());
+		try {
+			String xml = m_config.toString();
+			AppConfig config = DefaultSaxParser.parse(xml);
+
+			Map<Integer, Command> commands = config.getCommands();
+
+			for (Entry<Integer, Command> entry : commands.entrySet()) {
+				entry.getValue().getCodes().putAll(m_config.getCodes());
+			}
+			return new ArrayList<Command>(commands.values());
+		} catch (Exception e) {
+			return new ArrayList<Command>();
+		}
 	}
 
 	public List<Item> queryConfigItem(String name) {

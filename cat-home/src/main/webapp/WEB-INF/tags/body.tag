@@ -74,14 +74,21 @@
             <ul class="nav">
           		<li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Other<b class="caret"></b></a>
           			<ul class="dropdown-menu">
-					<li class="nav-header">Report</li>
-					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">matrix</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">network</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">cdn</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">system</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">change</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">statistics</a></li>
-					<li><a style="padding:1px 30px" href="/cat/s/alarm?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">alarm</a></li>
+					<li class="nav-header">报表</li>
+					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">资源消耗统计</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">分BU统计异常</a></li>
+				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行榜</a></li>
+				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
+				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
+				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
+				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
+					
+					<li><a style="padding:1px 30px" href="/cat/s/alarm?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">报表订阅中心</a></li>
+					<li class="nav-header">监控</li>
+					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
 	          		</ul>
           		</li>
           	</ul>
@@ -101,14 +108,14 @@
 				<label class="control-label text-success" for="account">用户名</label>
 				<div class="controls">
 					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
-						placeholder="工号或邮箱（例如:2000或yong.you）" />
+						placeholder="域账号（例如:yong.you）" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label text-success" for="password">密码</label>
 				<div class="controls">
 					<input type="password" name="password" id="password" style="height:auto" class="input-xlarge"
-						placeholder="sys后台密码" />
+						placeholder="域账号域名（例如:XXX）" />
 				</div>
 			</div>
 			<div class="modal-footer">
