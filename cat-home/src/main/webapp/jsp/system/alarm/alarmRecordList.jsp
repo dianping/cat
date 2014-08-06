@@ -9,13 +9,10 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model"scope="request" />
 
 <a:body>
-	
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 
 	<script type="text/javascript">
 		$(document).ready(function() {
-			init();
 			var id = '${payload.action.name}';
 			$('#'+id).addClass("active");
 		});

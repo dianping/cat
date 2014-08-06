@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -18,7 +18,7 @@ import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
-import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
+import com.dianping.cat.report.page.web.graph.WebReportConvertor;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
@@ -109,7 +109,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			String channel = properties.get("channel");
 			String type = properties.get("type");
 
-			UserMonitorReportConvertor convert = new UserMonitorReportConvertor(type, city, channel);
+			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
 
 			convert.visitMetricReport(report);
 			return convert.getReport();

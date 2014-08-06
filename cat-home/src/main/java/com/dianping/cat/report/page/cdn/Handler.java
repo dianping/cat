@@ -5,16 +5,16 @@ import java.util.Date;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
-import com.dianping.cat.report.page.userMonitor.CityManager;
-
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
+import com.dianping.cat.report.page.web.CityManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

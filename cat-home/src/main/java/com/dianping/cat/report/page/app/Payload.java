@@ -30,7 +30,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new QueryEntity(m_query1);
 		} else {
-			return null;
+			return new QueryEntity();
 		}
 	}
 
@@ -41,7 +41,7 @@ public class Payload extends AbstractReportPayload<Action> {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
