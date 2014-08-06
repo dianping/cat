@@ -113,7 +113,7 @@ public class ExceptionAlert implements Task {
 				if (frontEndItem != null) {
 					handleFrontEndException(frontEndItem);
 				}
-				handleGeneralExceptions(itemList);
+				handleGeneralExceptions(otherItemList);
 
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
