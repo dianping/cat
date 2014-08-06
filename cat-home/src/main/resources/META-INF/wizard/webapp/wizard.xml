@@ -53,13 +53,13 @@
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">
             <description>Statistics</description>
          </page>
-         <page name="alteration" title="Change" path="alteration"  view="/jsp/report/alteration/alter_view.jsp"  standalone="false" template="default">
+         <page name="alteration" title="Change" path="alteration" view="/jsp/report/alteration/alter_view.jsp" standalone="false" template="default">
             <description>Alteration</description>
          </page>
          <page name="monitor" title="Monitor" path="monitor" template="default">
             <description>Monitor</description>
          </page>
-         <page name="network" title="Network" path="network"  view="/jsp/report/network/nettopology.jsp"  standalone="false" template="default">
+         <page name="network" title="Network" path="network" view="/jsp/report/network/nettopology.jsp" standalone="false" template="default">
             <description>Network</description>
          </page>
          <page name="web" title="Web" path="web" template="default">
