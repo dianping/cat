@@ -1,6 +1,7 @@
 package com.dianping.cat.message.internal;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
@@ -98,10 +99,10 @@ public class MessageIdFactory {
 				success = false;
 			}
 			if (!success) {
-				String tmpDir = System.getProperty("java.io.tmpdir");
-
-				mark = new File(tmpDir, "cat-" + domain + ".mark");
+				mark = createTempFile(domain);
 			}
+		} else if (!mark.canWrite()) {
+			mark = createTempFile(domain);
 		}
 
 		m_markFile = new RandomAccessFile(mark, "rw");
@@ -119,6 +120,13 @@ public class MessageIdFactory {
 		}
 
 		saveMark();
+	}
+
+	private File createTempFile(String domain) {
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		File mark = new File(tmpDir, "cat-" + domain + ".mark");
+
+		return mark;
 	}
 
 	protected void resetIndex() {
