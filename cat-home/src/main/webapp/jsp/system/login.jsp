@@ -26,14 +26,14 @@
 				<label class="control-label text-success" for="account">用户名</label>
 				<div class="controls">
 					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
-						placeholder="域账号名称" />
+						placeholder="域账号,例如yong.you" />
 				</div>
 			</div>
 			<div class="control-group">
 				<label class="control-label text-success" for="password">密码</label>
 				<div class="controls">
 					<input type="password" name="password" id="password" style="height:auto" class="input-xlarge"
-						placeholder="域账号密码" />
+						placeholder="域账号密码,例如xxx123" />
 				</div>
 			</div>
 			<div class="control-group">

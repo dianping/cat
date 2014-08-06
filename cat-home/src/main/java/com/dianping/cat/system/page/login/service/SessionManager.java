@@ -19,7 +19,8 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 		try {
 			token = m_LDAPService.authenticate(account, password);
 		} catch (Exception e) {
-			Cat.logError(e);
+			Cat.logEvent("Login", "Login failure, uncorrected password.");
+			return null;
 		}
 
 		if (token != null) {
