@@ -25,7 +25,7 @@ import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
-import com.dianping.cat.report.page.userMonitor.UserMonitorReportConvertorTest;
+import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.alert.AlertReportBuilderTest;
@@ -137,7 +137,7 @@ AlertConfigTest.class,
 
 SystemReportConvertorTest.class,
 
-UserMonitorReportConvertorTest.class,
+WebReportConvertorTest.class,
 
 MetricIdAndRuleMappingTest.class })
 public class AllTests {

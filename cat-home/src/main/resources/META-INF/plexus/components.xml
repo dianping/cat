@@ -372,8 +372,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -3870,29 +3870,29 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.userMonitor.Handler</role>
-			<implementation>com.dianping.cat.report.page.userMonitor.Handler</implementation>
+			<role>com.dianping.cat.report.page.web.Handler</role>
+			<implementation>com.dianping.cat.report.page.web.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
+					<role>com.dianping.cat.report.page.web.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
+					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator</role>
+					<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.userMonitor.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.userMonitor.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.web.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.web.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -3912,8 +3912,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
-			<implementation>com.dianping.cat.report.page.userMonitor.CityManager</implementation>
+			<role>com.dianping.cat.report.page.web.CityManager</role>
+			<implementation>com.dianping.cat.report.page.web.CityManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.system.Handler</role>
@@ -3983,7 +3983,7 @@
 					<role>com.dianping.cat.report.page.cdn.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.userMonitor.CityManager</role>
+					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</role>

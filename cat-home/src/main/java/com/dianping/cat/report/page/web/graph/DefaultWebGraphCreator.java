@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor.graph;
+package com.dianping.cat.report.page.web.graph;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +21,7 @@ import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 
-public class DefaultUserMonitGraphCreator extends AbstractGraphCreator implements UserMonitorGraphCreator {
+public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebGraphCreator {
 
 	private static final String COUNT = "每分钟访问量(次数)";
 

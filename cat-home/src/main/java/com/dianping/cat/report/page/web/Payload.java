@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor;
+package com.dianping.cat.report.page.web;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +25,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("channel")
 	private String m_channel;
-	
+
 	@FieldMeta("group")
 	private String m_group;
 
@@ -35,7 +35,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
-		super(ReportPage.USERMONITOR);
+		super(ReportPage.WEB);
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@Override
 	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.USERMONITOR);
+		m_page = ReportPage.getByName(page, ReportPage.WEB);
 	}
 
 	public void setType(String type) {
@@ -113,14 +113,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setUrl(String url) {
 		m_url = url;
 	}
-	
+
 	public String getGroup() {
-   	return m_group;
-   }
+		return m_group;
+	}
 
 	public void setGroup(String group) {
-   	m_group = group;
-   }
+		m_group = group;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

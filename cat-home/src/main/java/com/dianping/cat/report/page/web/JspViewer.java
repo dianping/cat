@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor;
+package com.dianping.cat.report.page.web;
 
 import org.unidal.web.mvc.view.BaseJspViewer;
 

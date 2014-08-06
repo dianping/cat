@@ -21,11 +21,11 @@ public class NavigationBar {
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
-		ReportPage.METRIC,
-
-		ReportPage.USERMONITOR,
+		ReportPage.WEB,
 
 		ReportPage.APP,
+
+		ReportPage.METRIC,
 
 		ReportPage.TRANSACTION,
 
@@ -44,7 +44,7 @@ public class NavigationBar {
 		ReportPage.STATE,
 
 		ReportPage.MATRIX,
-		
+
 		ReportPage.NETWORK,
 
 		ReportPage.CDN,
@@ -54,9 +54,9 @@ public class NavigationBar {
 		ReportPage.ALTERATION,
 
 		ReportPage.STATISTICS,
-		
-		SystemPage.ALARM,
 
-		ReportPage.LOGVIEW, };
+		ReportPage.LOGVIEW
+
+		};
 	}
 }

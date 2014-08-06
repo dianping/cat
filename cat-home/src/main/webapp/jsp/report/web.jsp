@@ -4,11 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.userMonitor.Context" scope="request" />
+	type="com.dianping.cat.report.page.web.Context" scope="request" />
 <jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.userMonitor.Payload" scope="request" />
+	type="com.dianping.cat.report.page.web.Payload" scope="request" />
 <jsp:useBean id="model"
-	type="com.dianping.cat.report.page.userMonitor.Model" scope="request" />
+	type="com.dianping.cat.report.page.web.Model" scope="request" />
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />

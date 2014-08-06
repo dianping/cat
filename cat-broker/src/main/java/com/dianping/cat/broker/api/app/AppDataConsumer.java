@@ -17,7 +17,9 @@ import com.dianping.cat.config.app.AppDataService;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
-	public static final long DURATION = 5 * 60 * 1000L;
+	public static final long MINUTE = 60 * 1000L;
+
+	public static final long DURATION = 5 * MINUTE;
 
 	@Inject
 	private AppDataService m_appDataService;
@@ -104,12 +106,12 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		private void closeLastTask(long currentDuration) {
-			Long last = new Long(currentDuration - DURATION);
+			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
 
 			if (lastBucketHandler != null) {
 				lastBucketHandler.shutdown();
-				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
+				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(last)));
 			}
 		}
 
@@ -131,9 +133,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 				try {
 					long currentDuration = curTime - curTime % DURATION;
+					long currentMinute = curTime - curTime % MINUTE;
 
+					closeLastTask(currentMinute);
 					removeLastLastTask(currentDuration);
-					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
 				} catch (Exception e) {
@@ -142,7 +145,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				long elapsedTime = System.currentTimeMillis() - curTime;
 
 				try {
-					Thread.sleep(DURATION - elapsedTime);
+					Thread.sleep(MINUTE - elapsedTime);
 				} catch (InterruptedException e) {
 				}
 			}

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor;
+package com.dianping.cat.report.page.web;
 
 import com.dianping.cat.report.ReportContext;
 
