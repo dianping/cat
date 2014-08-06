@@ -23,7 +23,7 @@ public class NavigationBar {
 
 		ReportPage.METRIC,
 
-		ReportPage.USERMONITOR,
+		ReportPage.WEB,
 
 		ReportPage.APP,
 

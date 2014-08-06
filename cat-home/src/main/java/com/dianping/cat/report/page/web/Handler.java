@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor;
+package com.dianping.cat.report.page.web;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
+import com.dianping.cat.report.page.web.graph.WebGraphCreator;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -42,17 +42,17 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private UserMonitorGraphCreator m_graphCreator;
+	private WebGraphCreator m_graphCreator;
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "userMonitor")
+	@InboundActionMeta(name = "web")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "userMonitor")
+	@OutboundActionMeta(name = "web")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -107,7 +107,7 @@ public class Handler implements PageHandler<Context> {
 		model.setEnd(endDate);
 		model.setPattermItems(rules);
 		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.USERMONITOR);
+		model.setPage(ReportPage.WEB);
 		model.setCityInfo(m_cityManager.getCityInfo());
 
 		if (!ctx.isProcessStopped()) {
@@ -116,7 +116,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setPage(ReportPage.USERMONITOR);
+		model.setPage(ReportPage.WEB);
 
 		m_normalizePayload.normalize(model, payload);
 	}

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor;
+package com.dianping.cat.report.page.web;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,15 +9,15 @@ import org.unidal.eunit.helper.Files;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.userMonitor.graph.UserMonitorReportConvertor;
+import com.dianping.cat.report.page.web.graph.WebReportConvertor;
 
-public class UserMonitorReportConvertorTest {
+public class WebReportConvertorTest {
 
 	public MetricReport hackForTest(MetricReport report, Map<String, String> properties) {
 		String city = properties.get("city");
 		String channel = properties.get("channel");
 		String type = properties.get("type");
-		UserMonitorReportConvertor convert = new UserMonitorReportConvertor(type, city, channel);
+		WebReportConvertor convert = new WebReportConvertor(type, city, channel);
 
 		convert.visitMetricReport(report);
 		return convert.getReport();
