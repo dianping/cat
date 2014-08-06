@@ -38,7 +38,7 @@ public class FrontEndExceptionDecorator extends ExceptionDecorator {
 	}
 
 	@Override
-	protected String buildContactInfo(String domainName) {
+	public String buildContactInfo(String domainName) {
 		return "";
 	}
 

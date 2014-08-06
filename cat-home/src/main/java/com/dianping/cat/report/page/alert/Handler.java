@@ -12,6 +12,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.site.helper.Splitters;
@@ -47,7 +48,8 @@ public class Handler implements PageHandler<Context> {
 				      payload.getContent(), receivers);
 
 				try {
-					boolean result = m_senderManager.sendAlert(payload.getChannel(), payload.getType(), message);
+					boolean result = m_senderManager.sendAlert(AlertChannel.findByName(payload.getChannel()),
+					      payload.getType(), message);
 					if (result) {
 						setAlertResult(model, 1);
 					} else {
