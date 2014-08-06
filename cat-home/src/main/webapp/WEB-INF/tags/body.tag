@@ -121,7 +121,7 @@
 				<label class="control-label text-success" for="password">密码</label>
 				<div class="controls">
 					<input type="password" name="password" id="password" onkeydown='if(event.keyCode==13){loginSubmit.click()}' style="height:auto" class="input-xlarge"
-						placeholder="域账号域名（例如:XXX）" />
+						placeholder="域账号密码（例如:XXX）" />
 				</div>
 			</div>
 			<div class="modal-footer">
