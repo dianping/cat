@@ -18,13 +18,13 @@ import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
 import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;
 
-import com.dianping.cat.home.dal.user.DpAdminLogin;
+import com.dianping.cat.system.page.login.service.LoginMember;
 
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 
-	private DpAdminLogin m_signinMember;
+	private LoginMember m_signinMember;
 
-	public DpAdminLogin getSigninMember() {
+	public LoginMember getSigninMember() {
 		return m_signinMember;
 	}
 
@@ -58,7 +58,7 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 		}
 	}
 
-	public void setSigninMember(DpAdminLogin signinMember) {
+	public void setSigninMember(LoginMember signinMember) {
 		m_signinMember = signinMember;
 	}
 

@@ -13,6 +13,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -23,10 +24,14 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
+import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.home.dal.user.DpAdminLoginDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
@@ -70,6 +75,7 @@ import com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator;
@@ -77,6 +83,7 @@ import com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor;
+import com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor;
@@ -110,6 +117,7 @@ import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
+import com.dianping.cat.system.config.ScheduledJob;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
@@ -151,11 +159,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
-		      .req(Contactor.class, NetworkContactor.ID, "networkContactor")
-		      .req(Contactor.class, SystemContactor.ID, "exceptionContactor")
-		      .req(Contactor.class, ExceptionContactor.ID, "systemContactor")
-		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor"));
+		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
+		      AggregationConfigManager.class, AlertConfigManager.class));
+
+		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class));
 
@@ -167,11 +174,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 
-		all.add(C(DecoratorManager.class).req(Decorator.class, BusinessDecorator.ID, "businessDecorator")
-		      .req(Decorator.class, NetworkDecorator.ID, "networkDecorator")
-		      .req(Decorator.class, ExceptionDecorator.ID, "exceptionDecorator")
-		      .req(Decorator.class, SystemDecorator.ID, "systemDecorator")
-		      .req(Decorator.class, ThirdpartyDecorator.ID, "thirdpartyDecorator"));
+		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
+
+		all.add(C(DecoratorManager.class));
 
 		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
 
@@ -181,8 +186,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
 
-		all.add(C(SpliterManager.class).req(Spliter.class, MailSpliter.ID, "mailSpliter")
-		      .req(Spliter.class, SmsSpliter.ID, "smsSpliter").req(Spliter.class, WeixinSpliter.ID, "weixinSpliter"));
+		all.add(C(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(ServerConfigManager.class));
 
@@ -190,8 +194,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class));
 
-		all.add(C(SenderManager.class).req(Sender.class, MailSender.ID, "mailSender")
-		      .req(Sender.class, WeixinSender.ID, "weixinSender").req(Sender.class, SmsSender.ID, "smsSender"));
+		all.add(C(SenderManager.class));
 
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertEntityService.class, SpliterManager.class, SenderManager.class));
@@ -206,7 +209,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
 		all.add(C(ExceptionAlert.class)
 		      .req(ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertManager.class).req(ModelService.class,
@@ -302,6 +305,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
+		all.add(C(ScheduledJob.class).req(ScheduledReportDao.class, ScheduledReportSubscriptionDao.class,
+		      ScheduledSubscriptionDao.class, DpAdminLoginDao.class));
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
@@ -347,8 +352,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
-
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class));
 
 		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));

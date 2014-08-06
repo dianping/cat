@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <aggregation>
-   <aggregation-rule type="3" domain="FrontEnd" pattern="http://w.51ping.com/shop/{shopId}" sample="http://w.51ping.com/shop/5722322" display-name="http://w.51ping.com/shop/{shopId}" creation-date="2013-06-05 15:42:03"/>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://w.51ping.com/shop/{shopId}" sample="http://w.51ping.com/shop/5722322" display-name="http://w.51ping.com/shop/{shopId}" warn="10" email="jialin.sun@dianping.com" creation-date="2013-06-05 15:42:03"/>
    <aggregation-rule type="3" domain="FrontEnd" pattern="http://i{x}.dpfile.com/{*}" sample="http://i1.dpfile.com/s/j" display-name="http://i{x}.dpfile.com/{*}" creation-date="2013-05-20 13:34:00"/>
    <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/food   " display-name="http://www.dianping.com/{City}/food   " creation-date="2013-05-20 13:34:00"/>
    <aggregation-rule type="3" domain="FrontEnd" pattern="http://www.dianping.com/{City}/wedding" display-name="http://www.dianping.com/{City}/wedding" creation-date="2013-05-20 13:34:00"/>

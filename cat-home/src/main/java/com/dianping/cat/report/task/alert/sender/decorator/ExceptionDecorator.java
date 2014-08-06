@@ -10,7 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 
@@ -21,9 +21,9 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertConstants.EXCEPTION;
+	public static final String ID = AlertType.EXCEPTION;
 
-	private DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {
@@ -51,7 +51,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		return sw.toString();
 	}
 
-	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
+	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		String domain = alert.getGroup();
 		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();

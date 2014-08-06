@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.alert.business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
@@ -23,7 +24,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
-	public static String ID = AlertConstants.BUSINESS;
+	public static String ID = AlertType.BUSINESS;
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
@@ -53,16 +54,16 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String domain = config.getDomain();
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
-
-			List<AlertResultEntity> alertResults = null;
+			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+			
 			if (config.isShowAvg()) {
-				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
 			}
 			if (config.isShowCount()) {
-				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.COUNT));
 			}
 			if (config.isShowSum()) {
-				alertResults = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 
 			for (AlertResultEntity alertResult : alertResults) {
@@ -70,8 +71,9 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				String metricName = buildMetricName(metricKey);
 
 				AlertEntity entity = new AlertEntity();
-				
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent()).setLevel(alertResult.getAlertLevel());
+
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
 				entity.setMetric(metricName).setType(getName()).setGroup(product);
 
 				m_sendManager.addAlert(entity);

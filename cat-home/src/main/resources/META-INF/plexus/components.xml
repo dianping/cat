@@ -149,6 +149,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.ScheduledJob</role>
+			<implementation>com.dianping.cat.system.config.ScheduledJob</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
 			<requirements>
@@ -480,15 +498,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
-			<implementation>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
 			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
@@ -647,35 +656,21 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>frontEndException</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-					<role-hint>business</role-hint>
-					<field-name>businessContactor</field-name>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-					<role-hint>network</role-hint>
-					<field-name>networkContactor</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-					<role-hint>system</role-hint>
-					<field-name>exceptionContactor</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-					<role-hint>exception</role-hint>
-					<field-name>systemContactor</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-					<role-hint>thirdParty</role-hint>
-					<field-name>thirdpartyContactor</field-name>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
@@ -728,35 +723,13 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>frontEndException</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-					<role-hint>business</role-hint>
-					<field-name>businessDecorator</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-					<role-hint>network</role-hint>
-					<field-name>networkDecorator</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-					<role-hint>exception</role-hint>
-					<field-name>exceptionDecorator</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-					<role-hint>system</role-hint>
-					<field-name>systemDecorator</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-					<role-hint>thirdParty</role-hint>
-					<field-name>thirdpartyDecorator</field-name>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
@@ -785,23 +758,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
-					<role-hint>mail</role-hint>
-					<field-name>mailSpliter</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
-					<role-hint>sms</role-hint>
-					<field-name>smsSpliter</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
-					<role-hint>weixin</role-hint>
-					<field-name>weixinSpliter</field-name>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
@@ -826,23 +782,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>mail</role-hint>
-					<field-name>mailSender</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>weixin</role-hint>
-					<field-name>weixinSender</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
-					<role-hint>sms</role-hint>
-					<field-name>smsSender</field-name>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
@@ -958,6 +897,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2533,6 +2475,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>scheduled-subscription</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>scheduled-subscription</logical-table-name>
+				<physical-table-name>scheduledSubscription</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
 			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
 			<requirements>
@@ -2553,6 +2505,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3627,6 +3588,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4269,7 +4233,7 @@
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4283,8 +4247,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4296,22 +4260,10 @@
 			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4382,9 +4334,22 @@
 			<implementation>com.dianping.cat.system.page.login.service.SessionManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+					<role>com.dianping.cat.system.page.login.service.LDAPAuthenticationServiceImpl</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.login.service.LDAPAuthenticationServiceImpl</role>
+			<implementation>com.dianping.cat.system.page.login.service.LDAPAuthenticationServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.LDAPConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.LDAPConfigManager</role>
+			<implementation>com.dianping.cat.LDAPConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.Handler</role>
@@ -4455,6 +4420,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ScheduledJob</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4548,6 +4516,42 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ScheduledJob</role>
+			<implementation>com.dianping.cat.system.config.ScheduledJob</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dianping.cat.home.dal.user.DpAdminLoginDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

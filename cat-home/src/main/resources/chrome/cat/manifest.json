@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "CAT Extension",
-    "version": "0.1",
+    "version": "0.2",
     "description": "CAT Extension",
     "page_action": {
 		"default_title": "CAT Logview",

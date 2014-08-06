@@ -24,6 +24,8 @@ public class TopMetric extends BaseVisitor {
 
 	private ExceptionConfigManager m_configManager;
 
+	private List<String> m_excludedDomains;
+
 	private String m_currentDomain;
 
 	private Date m_currentStart;
@@ -58,6 +60,11 @@ public class TopMetric extends BaseVisitor {
 		m_call = new MetricItem(count, tops);
 		m_sql = new MetricItem(count, tops);
 		m_cache = new MetricItem(count, tops);
+	}
+
+	public TopMetric(int count, int tops, ExceptionConfigManager configManager, List<String> excludedDomains) {
+		this(count, tops, configManager);
+		m_excludedDomains = excludedDomains;
 	}
 
 	public MetricItem getCache() {
@@ -101,7 +108,12 @@ public class TopMetric extends BaseVisitor {
 	@Override
 	public void visitDomain(Domain domain) {
 		m_currentDomain = domain.getName();
-		super.visitDomain(domain);
+
+		if (m_excludedDomains == null) {
+			super.visitDomain(domain);
+		} else if (!m_excludedDomains.contains(m_currentDomain)) {
+			super.visitDomain(domain);
+		}
 	}
 
 	@Override
@@ -258,7 +270,7 @@ public class TopMetric extends BaseVisitor {
 		public int compare(Item o1, Item o2) {
 			int alert = o2.getAlert() - o1.getAlert();
 			int value = (int) (o2.getValue() - o1.getValue());
-			
+
 			return alert == 0 ? value : alert;
 		}
 	}

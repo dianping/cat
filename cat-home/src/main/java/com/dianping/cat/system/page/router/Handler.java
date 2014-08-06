@@ -6,6 +6,12 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.router.entity.Domain;
@@ -14,12 +20,6 @@ import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.RouterConfigManager;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -50,24 +50,32 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case API:
-			if (report != null) {
-				Domain domain = report.findDomain(payload.getDomain());
-				String str = null;
+			Domain domainConfig = m_configManager.getRouterConfig().findDomain(payload.getDomain());
 
-				if (domain == null) {
-					m_configManager.getRouterConfig().getDefaultServers();
+			if (domainConfig == null) {
+				if (report != null) {
+					Domain domain = report.findDomain(payload.getDomain());
+					String str = null;
 
+					if (domain == null) {
+						m_configManager.getRouterConfig().getDefaultServers();
+
+						List<Server> servers = m_configManager.queryServersByDomain(payload.getDomain());
+
+						str = buildServerStr(servers);
+					} else {
+						List<Server> servers = domain.getServers();
+
+						str = buildServerStr(servers);
+					}
+					model.setContent(str);
+				} else {
 					List<Server> servers = m_configManager.queryServersByDomain(payload.getDomain());
 
-					str = buildServerStr(servers);
-				} else {
-					List<Server> servers = domain.getServers();
-
-					str = buildServerStr(servers);
+					model.setContent(buildServerStr(servers));
 				}
-				model.setContent(str);
 			} else {
-				model.setContent("");
+				model.setContent(buildServerStr(domainConfig.getServers()));
 			}
 			break;
 		case MODEL:

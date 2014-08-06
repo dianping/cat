@@ -26,12 +26,15 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-	
+
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
 
 	@FieldMeta("group")
 	private String m_group;
+
+	@FieldMeta("id")
+	private String m_id;
 
 	public Payload() {
 		super(ReportPage.METRIC);
@@ -61,6 +64,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public int getTimeRange() {
 		return m_timeRange;
+	}
+
+	public String getId() {
+		return m_id;
 	}
 
 	public boolean isFullScreen() {
@@ -99,14 +106,18 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
 	}
-	
+
 	public boolean isHideNav() {
-   	return m_hideNav;
-   }
+		return m_hideNav;
+	}
 
 	public void setHideNav(boolean hideNav) {
-   	m_hideNav = hideNav;
-   }
+		m_hideNav = hideNav;
+	}
+
+	public void setId(String id) {
+		m_id = id;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

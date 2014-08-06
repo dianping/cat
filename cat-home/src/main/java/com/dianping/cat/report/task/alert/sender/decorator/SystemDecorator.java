@@ -1,11 +1,11 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class SystemDecorator extends ProductlineDecorator {
 
-	public static final String ID = AlertConstants.SYSTEM;
+	public static final String ID = AlertType.SYSTEM;
 
 	@Override
 	public String getId() {

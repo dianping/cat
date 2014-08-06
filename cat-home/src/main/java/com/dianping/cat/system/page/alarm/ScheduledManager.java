@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -12,37 +14,26 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionEntity;
-import com.dianping.cat.home.dal.user.DpAdminLogin;
-import com.dianping.cat.home.dal.user.DpAdminLoginDao;
-import com.dianping.cat.home.dal.user.DpAdminLoginEntity;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscription;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionEntity;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 
-public class ScheduledManager {
-
-	@Inject
-	private DpAdminLoginDao m_loginDao;
+public class ScheduledManager implements Initializable {
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
 
 	@Inject
-	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
+	private ScheduledSubscriptionDao m_scheduledReportSubscriptionDao;
 
 	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
 		List<String> emails = new ArrayList<String>();
-		List<ScheduledReportSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(
-		      scheduledReportId, ScheduledReportSubscriptionEntity.READSET_FULL);
+		List<ScheduledSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(
+		      scheduledReportId, ScheduledSubscriptionEntity.READSET_FULL);
 
-		for (ScheduledReportSubscription subscription : subscriptions) {
-			try {
-				DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
-				emails.add(login.getEmail());
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		for (ScheduledSubscription subscription : subscriptions) {
+			emails.add(subscription.getUserName() + "@dianping.com");
 		}
 		return emails;
 	}
@@ -53,7 +44,7 @@ public class ScheduledManager {
 		return reports;
 	}
 
-	public void queryScheduledReports(Model model, int userId) {
+	public void queryScheduledReports(Model model, String userName) {
 		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
 		try {
 			List<ScheduledReport> lists = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
@@ -64,8 +55,8 @@ public class ScheduledManager {
 
 				userRules.add(userSubState);
 				try {
-					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userId,
-					      ScheduledReportSubscriptionEntity.READSET_FULL);
+					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
+					      ScheduledSubscriptionEntity.READSET_FULL);
 					userSubState.setSubscriberState(1);
 				} catch (DalNotFoundException nfe) {
 				} catch (DalException e) {
@@ -115,15 +106,15 @@ public class ScheduledManager {
 		}
 	}
 
-	public boolean scheduledReportSub(Payload payload, int loginId) {
+	public boolean scheduledReportSub(Payload payload, String userName) {
 		int subState = payload.getUserSubState();
 		int scheduledReportId = payload.getScheduledReportId();
 
-		ScheduledReportSubscription scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
+		ScheduledSubscription scheduledReportSubscription = m_scheduledReportSubscriptionDao.createLocal();
 
 		scheduledReportSubscription.setKeyScheduledReportId(scheduledReportId);
-		scheduledReportSubscription.setKeyUserId(loginId);
-		scheduledReportSubscription.setUserId(loginId);
+		scheduledReportSubscription.setKeyUserName(userName);
+		scheduledReportSubscription.setUserName(userName);
 		scheduledReportSubscription.setScheduledReportId(scheduledReportId);
 
 		try {
@@ -163,5 +154,9 @@ public class ScheduledManager {
 		} catch (Exception e) {
 			model.setOpState(Handler.FAIL);
 		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
 	}
 }

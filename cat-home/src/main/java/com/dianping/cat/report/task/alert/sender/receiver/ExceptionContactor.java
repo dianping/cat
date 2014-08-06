@@ -1,10 +1,10 @@
 package com.dianping.cat.report.task.alert.sender.receiver;
 
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 
 public class ExceptionContactor extends ProjectContactor {
 
-	public static final String ID = AlertConstants.EXCEPTION;
+	public static final String ID = AlertType.EXCEPTION;
 
 	@Override
 	public String getId() {

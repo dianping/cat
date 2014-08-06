@@ -13,13 +13,13 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class SmsSender implements Sender, LogEnabled {
 
-	public static final String ID = AlertConstants.SMS;
-
+	public static final String ID = AlertChannel.SMS.getName();
+	
 	private Logger m_logger;
 
 	@Override

@@ -19,9 +19,28 @@
 				action="${model.pageUri}?op=thirdPartyConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
 				<h4 class="text-center text-error">第三方监控配置</h4>
+				
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
-						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
+						<td style="width:60%">
+						<textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea>
+						</td>
+						<td style="width:40%">
+						<h4>1. HTTP </h4>
+						<p><span class="text-error">[url]</span>：监控的对象</p>
+						<p><span class="text-error">[type]</span>：<span class="text-error">get</span> 或 <span class="text-error">post</span></p>
+						<p><span class="text-error">[domain]</span>：依赖于该第三方的项目名，会向该项目组联系人发第三方告警</p>
+						<p><span class="text-error">[par]</span>：请求中包含的参数，<span class="text-error">id</span>为参数名称，<span class="text-error">value</span>为参数值</p>
+						<p>例如：
+<xmp style="width:auto"><http url="http://cat.dp:8080" type="get" domain="Cat">
+  <par id="domain" value="Cat"/>
+  <par id="date" value="2014073111"/>
+</http>
+</xmp>
+						</p>
+						<br/>所有标红部分均为小写。
+						
+						</td>
 					</tr>
 					<tr>
 						<td style="text-align:center"><input class='btn btn-primary' 

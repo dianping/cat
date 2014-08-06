@@ -66,7 +66,7 @@ public class DomainManager implements Initializable, LogEnabled {
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
-
+	
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {

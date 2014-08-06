@@ -1,9 +1,7 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -49,22 +47,28 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
 	}
 
+	private void addServerList(List<Server> servers, Server server) {
+		for (Server s : servers) {
+			if (s.getId().equals(server.getId())) {
+				return;
+			}
+		}
+		servers.add(server);
+	}
+
 	public List<Server> queryServersByDomain(String domain) {
 		Domain domainConfig = m_routerConfig.findDomain(domain);
 		List<Server> result = new ArrayList<Server>();
 
 		if (domainConfig == null) {
-			Map<Server, Integer> map = new HashMap<Server, Integer>();
 			List<Server> servers = queryEnableServers();
 			int length = servers.size();
-			int index = (int) (Math.random() * length);
+			int index = domain.hashCode();
 
 			for (int i = 0; i < 2; i++) {
-				map.put(servers.get((index + 1) % length), 0);
+				addServerList(result, servers.get((index + i) % length));
 			}
-			map.put(queryBackUpServer(), 0);
-
-			result = new ArrayList<Server>(map.keySet());
+			addServerList(result, queryBackUpServer());
 		} else {
 			for (Server server : domainConfig.getServers()) {
 				result.add(server);
@@ -82,7 +86,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
 			}
 		}
-
 		return result;
 	}
 

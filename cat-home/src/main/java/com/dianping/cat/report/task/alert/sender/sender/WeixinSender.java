@@ -13,7 +13,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class WeixinSender implements Sender, LogEnabled {
@@ -22,7 +22,7 @@ public class WeixinSender implements Sender, LogEnabled {
 
 	private static final String SUCCESS_TEXT = "{\"success\":\"1\"}";
 
-	public static final String ID = AlertConstants.WEIXIN;
+	public static final String ID = AlertChannel.WEIXIN.getName();
 
 	private Logger m_logger;
 

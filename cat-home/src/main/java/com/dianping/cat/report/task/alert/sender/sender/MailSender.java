@@ -21,15 +21,15 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class MailSender implements Initializable, Sender, LogEnabled {
 
+	public static final String ID = AlertChannel.MAIL.getName();
+	
 	@Inject
 	private ServerConfigManager m_manager;
-
-	public static final String ID = AlertConstants.MAIL;
 
 	private String m_name;
 

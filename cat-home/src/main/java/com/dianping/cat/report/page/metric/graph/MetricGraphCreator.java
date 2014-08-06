@@ -72,11 +72,10 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
-			String contactInfo = buildContactInfo(extractDomain(key));
 			double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
-			buildLineChartTitle(alertKeys, lineChart, key, contactInfo);
+			buildLineChartTitle(alertKeys, lineChart, key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
@@ -254,11 +253,12 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return des;
 	}
 
-	private void buildLineChartTitle(List<AlertMetric> alertKeys, LineChart chart, String key, String contactInfo) {
+	private void buildLineChartTitle(List<AlertMetric> alertKeys, LineChart chart, String key) {
 		int index = key.lastIndexOf(":");
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
+		
 		if (config != null) {
 			String des = queryMetricItemDes(type);
 			String title = config.getTitle() + des;
@@ -267,6 +267,8 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			chart.setId(metricId + ":" + type);
 
 			if (containMetric(alertKeys, metricId)) {
+				String contactInfo = buildContactInfo(extractDomain(key));
+
 				chart.setHtmlTitle("<span style='color:red'>" + title + "<br><small>" + contactInfo + "</small></span>");
 			} else {
 				chart.setHtmlTitle(title);
