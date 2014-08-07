@@ -27,22 +27,46 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 	public Token authenticate(String userName, String password) throws Exception {
 		Token token = null;
 		LdapContext ctx = null;
+		String distinguishedName = null;
 		String shortName = null;
 		Hashtable<String, String> env = null;
 
 		try {
-			shortName = getShortName(userName);
+			NamingEnumeration en = getInfo(userName);
+			if (en == null) {
+				Cat.logEvent("LoginError", "Have no NamingEnumeration.");
+				return null;
+			}
+			if (!en.hasMoreElements()) {
+				Cat.logEvent("LoginError", "Have no element.");
+				return null;
+			}
+			while (en != null && en.hasMoreElements()) {
+				Object obj = null;
+				try {
+					obj = en.nextElement();
+				} catch (Exception e) {
+					return null;
+				}
+				if (obj instanceof SearchResult) {
+					SearchResult sr = (SearchResult) obj;
+					Attributes attrs = sr.getAttributes();
+					shortName = (String) attrs.get("cn").get();
+					distinguishedName = (String) attrs.get("distinguishedName").get();
+				}
+			}
 		} catch (NamingException ne) {
 			Cat.logEvent("LoginError", userName + " doesn't exist.");
+			return null;
 		}
 
-		if (shortName != null) {
+		if (shortName != null && distinguishedName != null) {
 			env = new Hashtable<String, String>();
 
 			env.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
 			env.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
-			env.put(Context.SECURITY_PRINCIPAL, "cn=" + shortName + "," + m_LDAPConfigManager.getLdapBaseDN());
+			env.put(Context.SECURITY_PRINCIPAL, distinguishedName);
 			env.put(Context.SECURITY_CREDENTIALS, password);
 
 			try {
@@ -97,8 +121,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 	}
 
 	@SuppressWarnings("rawtypes")
-	private String getShortName(String sAMAccountName) throws NamingException {
-		String shortName = null;
+	private NamingEnumeration getInfo(String sAMAccountName) throws NamingException {
 		Hashtable<String, String> solidEnv = new Hashtable<String, String>();
 		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
 		solidEnv.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
@@ -114,21 +137,11 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 
 		if (en == null) {
 			Cat.logEvent("LoginError", "Have no NamingEnumeration.");
-			return shortName;
 		}
 		if (!en.hasMoreElements()) {
 			Cat.logEvent("LoginError", "Have no element.");
-			return shortName;
 		}
-		while (en != null && en.hasMoreElements()) {
-			Object obj = en.nextElement();
-			if (obj instanceof SearchResult) {
-				SearchResult sr = (SearchResult) obj;
-				// logger.debug(sr);
-				Attributes attrs = sr.getAttributes();
-				shortName = (String) attrs.get("cn").get();
-			}
-		}
-		return shortName;
+
+		return en;
 	}
 }

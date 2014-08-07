@@ -45,7 +45,7 @@ public enum ReportPage implements Page {
 
    NETWORK("network", "network", "Network", "Network", false),
 
-   USERMONITOR("userMonitor", "userMonitor", "Monitor", "UserMonitor", true),
+   WEB("web", "web", "Web", "Web", true),
 
    SYSTEM("system", "system", "System", "System", false),
 

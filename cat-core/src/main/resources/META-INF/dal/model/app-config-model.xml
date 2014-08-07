@@ -3,6 +3,7 @@
 	enable-base-visitor="false"  enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="app-config">
     <entity-ref name="config-item" type="map" names="config-items" method-find-or-create="true"/>
+    <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
     <entity-ref name="command" type="map" names="commands" method-find-or-create="true"/>
   </entity>
   <entity name="config-item">

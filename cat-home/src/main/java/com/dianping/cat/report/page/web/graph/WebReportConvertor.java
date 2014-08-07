@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.userMonitor.graph;
+package com.dianping.cat.report.page.web.graph;
 
 import org.hsqldb.lib.StringUtil;
 
@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.site.lookup.util.StringUtils;
 
-public class UserMonitorReportConvertor extends BaseVisitor {
+public class WebReportConvertor extends BaseVisitor {
 
 	private MetricReport m_report;
 
@@ -21,7 +21,7 @@ public class UserMonitorReportConvertor extends BaseVisitor {
 
 	private String m_channel;
 
-	public UserMonitorReportConvertor(String type, String city, String channel) {
+	public WebReportConvertor(String type, String city, String channel) {
 		m_type = type;
 		m_city = city;
 		m_channel = channel;

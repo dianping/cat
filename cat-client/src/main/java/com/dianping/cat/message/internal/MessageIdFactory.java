@@ -34,6 +34,32 @@ public class MessageIdFactory {
 		}
 	}
 
+	private File createMarkFile(String domain) {
+	   File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
+
+		if (!mark.exists()) {
+			boolean success = true;
+			try {
+				success = mark.createNewFile();
+			} catch (Exception e) {
+				success = false;
+			}
+			if (!success) {
+				mark = createTempFile(domain);
+			}
+		} else if (!mark.canWrite()) {
+			mark = createTempFile(domain);
+		}
+	   return mark;
+   }
+
+	private File createTempFile(String domain) {
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		File mark = new File(tmpDir, "cat-" + domain + ".mark");
+
+		return mark;
+	}
+
 	public String getNextId() {
 		long timestamp = getTimestamp();
 		int index;
@@ -88,21 +114,7 @@ public class MessageIdFactory {
 
 			m_ipAddress = sb.toString();
 		}
-		File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
-
-		if (!mark.exists()) {
-			boolean success = true;
-			try {
-				success = mark.createNewFile();
-			} catch (Exception e) {
-				success = false;
-			}
-			if (!success) {
-				String tmpDir = System.getProperty("java.io.tmpdir");
-
-				mark = new File(tmpDir, "cat-" + domain + ".mark");
-			}
-		}
+		File mark = createMarkFile(domain);
 
 		m_markFile = new RandomAccessFile(mark, "rw");
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
@@ -130,6 +142,10 @@ public class MessageIdFactory {
 			m_byteBuffer.rewind();
 			m_byteBuffer.putInt(m_index);
 			m_byteBuffer.putLong(m_timestamp);
+
+			if (m_index % 100 == 0) {
+				m_byteBuffer.force();
+			}
 		} catch (Exception e) {
 			// ignore it
 		}

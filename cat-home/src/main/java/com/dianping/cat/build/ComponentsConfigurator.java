@@ -59,8 +59,8 @@ import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
-import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
+import com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator;
+import com.dianping.cat.report.page.web.graph.WebGraphCreator;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
@@ -337,7 +337,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
-		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
+		all.add(C(WebGraphCreator.class, DefaultWebGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
