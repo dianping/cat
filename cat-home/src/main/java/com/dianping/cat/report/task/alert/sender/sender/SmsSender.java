@@ -55,6 +55,8 @@ public class SmsSender implements Sender, LogEnabled {
 				URL url = new URL(urlAddress);
 				URLConnection conn = url.openConnection();
 
+				conn.setConnectTimeout(2000);
+				conn.setReadTimeout(3000);
 				in = conn.getInputStream();
 				sb.append(Files.forIO().readFrom(in, "utf-8")).append("");
 			} catch (Exception e) {

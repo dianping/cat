@@ -84,7 +84,9 @@ public class WeixinSender implements Sender, LogEnabled {
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setUseCaches(false);
-
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(3000);
+			
 			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 			wr.writeBytes(urlParameters);
 			wr.flush();

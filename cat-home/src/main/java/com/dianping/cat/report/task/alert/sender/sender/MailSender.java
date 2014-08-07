@@ -113,7 +113,9 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 				String value = title + "," + content;
 				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
 				URLConnection conn = url.openConnection();
-
+				
+				conn.setConnectTimeout(2000);
+				conn.setReadTimeout(3000);
 				conn.setDoOutput(true);
 				conn.setDoInput(true);
 				writer = new OutputStreamWriter(conn.getOutputStream());
