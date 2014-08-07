@@ -29,9 +29,6 @@ TransactionTest.class,
 /* .configuration */
 ConfigTest.class,
 
-/* .internal */
-MessageIdFactoryTest.class,
-
 MockMessageBuilderTest.class,
 
 /* .spi.codec */
