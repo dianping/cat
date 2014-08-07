@@ -56,7 +56,7 @@ public class MessageIdFactory {
 	private File createTempFile(String domain) {
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		File mark = new File(tmpDir, "cat-" + domain + ".mark");
-
+		
 		return mark;
 	}
 
