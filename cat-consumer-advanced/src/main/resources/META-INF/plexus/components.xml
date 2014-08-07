@@ -104,18 +104,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ProjectService</role>
-			<implementation>com.dianping.cat.service.ProjectService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
 		</component>
