@@ -2,7 +2,6 @@ package com.dianping.cat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.site.helper.Splitters;
-import com.site.lookup.util.StringUtils;
 import com.site.helper.Stringizers;
+import com.site.lookup.util.StringUtils;
 
 public class ToolsTest {
 
