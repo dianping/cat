@@ -124,9 +124,8 @@ public class HostinfoService implements Initializable, LogEnabled {
 			project = m_cmdbs.get(ip);
 
 			if (project == null) {
-				if (!m_unknownIps.containsKey(ip)) {
-					m_unknownIps.put(ip, ip);
-				}
+				m_unknownIps.put(ip, ip);
+				
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -225,6 +224,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 		private void queryFromCMDB() {
 			Set<String> addedIps = new HashSet<String>();
+
 			for (String ip : m_unknownIps.keySet()) {
 				try {
 					String cmdb = String.format(CMDB_URL, ip);
@@ -245,15 +245,17 @@ public class HostinfoService implements Initializable, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-
-				for (String temp : addedIps) {
-					m_unknownIps.remove(temp);
+			}
+			for (String ip : addedIps) {
+				if (ip != null) {
+					m_unknownIps.remove(ip);
 				}
 			}
 		}
 
 		private void queryFromDatabase() {
 			Set<String> addIps = new HashSet<String>();
+
 			for (String ip : m_unknownIps.keySet()) {
 				try {
 					Hostinfo hostinfo = findByIp(ip);
@@ -265,7 +267,9 @@ public class HostinfoService implements Initializable, LogEnabled {
 				}
 			}
 			for (String ip : addIps) {
-				m_unknownIps.remove(ip);
+				if (ip != null) {
+					m_unknownIps.remove(ip);
+				}
 			}
 		}
 
