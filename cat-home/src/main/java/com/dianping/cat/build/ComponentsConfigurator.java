@@ -24,14 +24,10 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
-import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.home.dal.user.DpAdminLoginDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
@@ -123,7 +119,6 @@ import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
-import com.dianping.cat.system.config.ScheduledJob;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.tool.DefaultMailImpl;
@@ -287,7 +282,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
-		all.addAll(new UserDatabaseConfigurator().defineComponents());
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
@@ -305,8 +299,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
-		all.add(C(ScheduledJob.class).req(ScheduledReportDao.class, ScheduledReportSubscriptionDao.class,
-		      ScheduledSubscriptionDao.class, DpAdminLoginDao.class));
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
