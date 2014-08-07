@@ -69,17 +69,15 @@ public class AlertManager implements Initializable {
 	public boolean addAlert(AlertEntity alert) {
 		String type = alert.getType();
 		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
-		
+		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
+
 		return m_alerts.offer(alert);
 	}
 
 	private class SendExecutor implements Task {
 		@Override
 		public void run() {
-			boolean active = true;
-
-			while (active) {
+			while (true) {
 				try {
 					AlertEntity alert = m_alerts.poll(5, TimeUnit.MILLISECONDS);
 
@@ -88,7 +86,6 @@ public class AlertManager implements Initializable {
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
-					break;
 				}
 			}
 		}
