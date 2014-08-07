@@ -27,7 +27,7 @@ import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 public class MailSender implements Initializable, Sender, LogEnabled {
 
 	public static final String ID = AlertChannel.MAIL.getName();
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -69,10 +69,10 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 	}
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
+	public boolean send(AlertMessageEntity message) {
 		try {
 			String messageStr = message.toString();
-
+			String type = message.getType();
 			boolean result = sendEmail(message);
 
 			if (!result) {

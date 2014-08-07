@@ -27,11 +27,12 @@ public class WeixinSender implements Sender, LogEnabled {
 	private Logger m_logger;
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
+	public boolean send(AlertMessageEntity message) {
 		try {
 			String messageStr = message.toString();
+			String type = message.getType();
 
-			if (!sendWeixin(message, type)) {
+			if (!sendWeixin(message)) {
 				Cat.logEvent("AlertWeixinError", type, Event.SUCCESS, messageStr);
 				m_logger.info("AlertWeixinError " + messageStr);
 				return false;
@@ -46,10 +47,11 @@ public class WeixinSender implements Sender, LogEnabled {
 		}
 	}
 
-	private boolean sendWeixin(AlertMessageEntity message, String type) {
+	private boolean sendWeixin(AlertMessageEntity message) {
 		String domain = message.getGroup();
 		String title = message.getTitle();
 		String content = message.getContent();
+		String type = message.getType();
 		String weixins = message.getReceiverString();
 		StringBuilder paraBuilder = new StringBuilder(300);
 

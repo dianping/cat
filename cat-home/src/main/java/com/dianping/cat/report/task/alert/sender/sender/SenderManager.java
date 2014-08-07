@@ -19,11 +19,11 @@ public class SenderManager extends ContainerHolder implements Initializable {
 		m_senders = lookupMap(Sender.class);
 	}
 
-	public boolean sendAlert(AlertChannel channel, String type, AlertMessageEntity message) {
+	public boolean sendAlert(AlertChannel channel, AlertMessageEntity message) {
 		String channelName = channel.getName();
 		Sender sender = m_senders.get(channelName);
 
-		return sender.send(message, type);
+		return sender.send(message);
 	}
 
 }

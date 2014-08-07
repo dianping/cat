@@ -55,11 +55,11 @@ public class AlertManager implements Initializable {
 			String title = pair.getKey();
 			String content = m_splitterManager.process(pair.getValue(), channel);
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
-			AlertMessageEntity message = new AlertMessageEntity(group, title, content, receivers);
+			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
 			m_alertEntityService.storeAlert(alert, message);
 
-			if (m_senderManager.sendAlert(channel, type, message)) {
+			if (m_senderManager.sendAlert(channel, message)) {
 				result = true;
 			}
 		}
@@ -70,7 +70,7 @@ public class AlertManager implements Initializable {
 		String type = alert.getType();
 		String group = alert.getGroup();
 		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
-		
+
 		return m_alerts.offer(alert);
 	}
 

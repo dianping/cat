@@ -19,13 +19,14 @@ import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 public class SmsSender implements Sender, LogEnabled {
 
 	public static final String ID = AlertChannel.SMS.getName();
-	
+
 	private Logger m_logger;
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
+	public boolean send(AlertMessageEntity message) {
 		try {
 			String messageStr = message.toString();
+			String type = message.getType();
 
 			if (!sendSms(message)) {
 				Cat.logEvent("AlertSmsError", type, Event.SUCCESS, messageStr);
