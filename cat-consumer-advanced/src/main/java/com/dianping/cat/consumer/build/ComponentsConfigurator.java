@@ -87,9 +87,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
 		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
 		all.add(C(DatabaseParser.class));
-		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP)
-		      //
-		      .req(ReportManager.class, ID)
+		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, DatabaseParser.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
