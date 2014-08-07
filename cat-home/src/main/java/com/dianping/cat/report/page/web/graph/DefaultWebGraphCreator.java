@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.alibaba.cobar.parser.util.Pair;
+import org.unidal.tuple.Pair;
+
 import com.dianping.cat.Monitor;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
