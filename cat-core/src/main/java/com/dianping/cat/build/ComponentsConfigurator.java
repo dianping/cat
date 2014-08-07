@@ -22,7 +22,6 @@ import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.config.url.UrlPatternHandler;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
@@ -32,7 +31,6 @@ import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -45,8 +43,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
+		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));

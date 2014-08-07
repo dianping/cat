@@ -20,9 +20,6 @@
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>

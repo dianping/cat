@@ -29,7 +29,6 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
-import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
@@ -137,7 +136,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = StateAnalyzer.ID;
 
 		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, ServerStatisticManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //

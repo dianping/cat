@@ -22,8 +22,6 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -136,9 +134,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
-		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
-
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 

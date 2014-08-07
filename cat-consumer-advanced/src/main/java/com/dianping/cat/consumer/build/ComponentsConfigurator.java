@@ -24,10 +24,8 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
@@ -84,8 +82,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = DependencyAnalyzer.ID;
 
-		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ProjectService.class, ServerConfigManager.class));
 		all.add(C(DatabaseParser.class));
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, DatabaseParser.class));
