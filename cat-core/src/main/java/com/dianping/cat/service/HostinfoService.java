@@ -6,10 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -55,34 +53,10 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	public Hostinfo createLocal() {
 		return m_hostinfoDao.createLocal();
-	}
-
-	public boolean deleteHostinfo(Hostinfo host) {
-		int id = host.getId();
-		Iterator<Entry<String, Hostinfo>> iterator = m_hostinfos.entrySet().iterator();
-		String ip = null;
-
-		while (iterator.hasNext()) {
-			Entry<String, Hostinfo> entry = iterator.next();
-			Hostinfo hostinfo = entry.getValue();
-			if (hostinfo.getId() == id) {
-				ip = hostinfo.getIp();
-				break;
-			}
-		}
-
-		try {
-			m_hostinfos.remove(ip);
-			m_hostinfoDao.deleteByPK(host);
-			return true;
-		} catch (Exception e) {
-			Cat.logError("delete hostinfo error " + host.toString(), e);
-			return false;
-		}
 	}
 
 	@Override
@@ -108,33 +82,16 @@ public class HostinfoService implements Initializable, LogEnabled {
 		}
 	}
 
-	public Hostinfo findHostinfo(int id) {
-		Iterator<Entry<String, Hostinfo>> iterator = m_hostinfos.entrySet().iterator();
-
-		while (iterator.hasNext()) {
-			Entry<String, Hostinfo> entry = iterator.next();
-			Hostinfo hostinfo = entry.getValue();
-			if (hostinfo.getId() == id) {
-				return hostinfo;
-			}
-		}
-
-		try {
-			return m_hostinfoDao.findByPK(id, HostinfoEntity.READSET_FULL);
-		} catch (DalException e) {
-			return new Hostinfo();
-		}
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
 			m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
+
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
 		}
 	}
 
-	public boolean insert(Hostinfo hostinfo) throws DalException {
+	private boolean insert(Hostinfo hostinfo) throws DalException {
 		m_hostinfos.put(hostinfo.getIp(), hostinfo);
 
 		int result = m_hostinfoDao.insert(hostinfo);
@@ -206,15 +163,13 @@ public class HostinfoService implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public void refresh() {
+	private void refresh() {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 
-			synchronized (this) {
-				for (Hostinfo hostinfo : hostinfos) {
-					m_hostinfos.put(hostinfo.getIp(), hostinfo);
-					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
-				}
+			for (Hostinfo hostinfo : hostinfos) {
+				m_hostinfos.put(hostinfo.getIp(), hostinfo);
+				m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 			}
 		} catch (DalException e) {
 			Cat.logError("initialize HostService error", e);
@@ -252,8 +207,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	}
 
 	public class ReloadDomainTask implements Task {
-
-		private int m_count;
 
 		@Override
 		public String getName() {
@@ -322,15 +275,9 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 			while (active) {
 				try {
-					m_count++;
+					refresh();
 					queryFromDatabase();
 					queryFromCMDB();
-					if (m_count % 1000 == 0 && m_unknownIps.size() > 0) {
-						m_logger.error(String.format("can't get domain info from cmdb, ip: %s", m_unknownIps.keySet()
-						      .toString()));
-					}
-
-					refresh();
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}
