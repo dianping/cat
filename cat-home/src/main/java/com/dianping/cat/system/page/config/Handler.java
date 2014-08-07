@@ -56,7 +56,6 @@ import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
-import com.dianping.cat.system.config.ScheduledJob;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 
@@ -127,9 +126,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
 	
-	@Inject
-	protected ScheduledJob m_job;
-
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}

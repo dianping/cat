@@ -23,6 +23,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 	@Inject
 	private LDAPConfigManager m_LDAPConfigManager;
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Token authenticate(String userName, String password) throws Exception {
 		Token token = null;

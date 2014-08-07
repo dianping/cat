@@ -43,18 +43,6 @@ public class NavigationBar {
 
 		ReportPage.STATE,
 
-		ReportPage.MATRIX,
-
-		ReportPage.NETWORK,
-
-		ReportPage.CDN,
-
-		ReportPage.SYSTEM,
-
-		ReportPage.ALTERATION,
-
-		ReportPage.STATISTICS,
-
 		ReportPage.LOGVIEW
 
 		};
