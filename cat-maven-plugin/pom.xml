@@ -14,7 +14,6 @@
 	<prerequisites>
 		<maven>3.0.3</maven>
 	</prerequisites>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.maven</groupId>
@@ -34,7 +33,7 @@
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>foundation-service</artifactId>
-			<version>2.0.4</version>
+			<version>2.1.0</version>
 		</dependency>
 	</dependencies>
 </project>
