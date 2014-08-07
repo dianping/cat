@@ -41,9 +41,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	@Inject
-	private ProjectService m_projectService;
-
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
 	private Map<String, String> m_unknownIps = new ConcurrentHashMap<String, String>();
@@ -310,7 +307,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 					addIps.add(hostinfo.getIp());
 					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
-					m_projectService.addDomain(hostinfo.getDomain());
 				} catch (Exception e) {
 					// ignore
 				}
