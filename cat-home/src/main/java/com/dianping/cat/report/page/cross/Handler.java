@@ -15,7 +15,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.helper.TimeUtil;
@@ -27,6 +26,7 @@ import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -42,7 +42,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	@Inject(type = ModelService.class, value = CrossAnalyzer.ID)
 	private ModelService<CrossReport> m_service;
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		CrossReport projectReport = getHourlyReport(domain, period, date, Constants.ALL);
 		ProjectInfo projectInfo = new ProjectInfo(duration);
 
-		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setHostinfoService(m_hostinfoService);
 		projectInfo.setClientIp(Constants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 
@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 		CrossReport projectReport = getSummarizeReport(domain, start, end);
 		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
 
-		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setHostinfoService(m_hostinfoService);
 		projectInfo.setClientIp(Constants.ALL);
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
@@ -139,7 +139,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport projectReport = getHourlyReport(payload);
 			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-			projectInfo.setDomainManager(m_domainManager);
+			projectInfo.setHostinfoService(m_hostinfoService);
 			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			projectInfo.visitCrossReport(projectReport);
@@ -171,7 +171,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport hostReport = getHourlyReport(payload);
 			HostInfo hostInfo = new HostInfo(payload.getHourDuration());
 
-			hostInfo.setDomainManager(m_domainManager);
+			hostInfo.setHostinfoService(m_hostinfoService);
 			hostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			hostInfo.setProjectName(payload.getProjectName());
@@ -183,7 +183,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport methodReport = getHourlyReport(payload);
 			MethodInfo methodInfo = new MethodInfo(payload.getHourDuration());
 
-			methodInfo.setDomainManager(m_domainManager);
+			methodInfo.setHostinfoService(m_hostinfoService);
 			methodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			methodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
@@ -195,7 +195,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyProjectReport = getSummarizeReport(payload);
 			ProjectInfo historyProjectInfo = new ProjectInfo(historyTime);
 
-			historyProjectInfo.setDomainManager(m_domainManager);
+			historyProjectInfo.setHostinfoService(m_hostinfoService);
 			historyProjectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyProjectInfo.visitCrossReport(historyProjectReport);
@@ -228,7 +228,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyHostReport = getSummarizeReport(payload);
 			HostInfo historyHostInfo = new HostInfo(historyTime);
 
-			historyHostInfo.setDomainManager(m_domainManager);
+			historyHostInfo.setHostinfoService(m_hostinfoService);
 			historyHostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyHostInfo.setProjectName(payload.getProjectName());
@@ -240,7 +240,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyMethodReport = getSummarizeReport(payload);
 			MethodInfo historyMethodInfo = new MethodInfo(historyTime);
 
-			historyMethodInfo.setDomainManager(m_domainManager);
+			historyMethodInfo.setHostinfoService(m_hostinfoService);
 			historyMethodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			historyMethodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
@@ -251,7 +251,7 @@ public class Handler implements PageHandler<Context> {
 
 		case METHOD_QUERY:
 			String method = payload.getMethod();
-			CrossMethodVisitor info = new CrossMethodVisitor(method, m_domainManager);
+			CrossMethodVisitor info = new CrossMethodVisitor(method, m_hostinfoService);
 			String reportType = payload.getReportType();
 			CrossReport queryReport = null;
 

@@ -40,7 +40,7 @@
 			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -105,10 +105,10 @@
 			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -319,7 +319,7 @@
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -555,6 +555,33 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.HostinfoService</role>
+			<implementation>com.dianping.cat.service.HostinfoService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
 			<role-hint>business</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor</implementation>
@@ -599,7 +626,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -612,7 +639,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -642,7 +669,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -652,7 +679,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -662,7 +689,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -672,7 +699,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -682,7 +709,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1601,7 +1628,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1686,7 +1713,7 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3141,7 +3168,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3160,17 +3187,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.DomainManager</role>
-			<implementation>com.dianping.cat.DomainManager</implementation>
+			<role>com.dianping.cat.service.HostinfoService</role>
+			<implementation>com.dianping.cat.service.HostinfoService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3180,6 +3207,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3364,7 +3403,7 @@
 			<implementation>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -3488,7 +3527,7 @@
 			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3561,7 +3600,7 @@
 					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.DomainManager</role>
+					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3585,7 +3624,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
@@ -3886,7 +3925,7 @@
 					<role>com.dianping.cat.report.page.system.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
@@ -4083,6 +4122,31 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.alert.Handler</role>
+			<implementation>com.dianping.cat.report.page.alert.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.alert.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.alert.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.alert.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -4244,7 +4308,7 @@
 					<role>com.dianping.cat.system.page.config.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>

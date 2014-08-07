@@ -15,7 +15,6 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
@@ -23,11 +22,8 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.MapUtils;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
@@ -50,6 +46,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -60,7 +57,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -212,15 +209,6 @@ public class Handler implements PageHandler<Context> {
 		model.setUtilizationReport(utilizationReport);
 	}
 
-	public Project findProjectByDomain(String domain) {
-		try {
-			return m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "statistics")
@@ -329,7 +317,7 @@ public class Handler implements PageHandler<Context> {
 
 		for (com.dianping.cat.home.utilization.entity.Domain d : domains) {
 			String domain = d.getId();
-			Project project = findProjectByDomain(domain);
+			Project project = m_projectService.findByDomain(domain);
 
 			if (project != null) {
 				d.setCmdbId(project.getCmdbDomain());
@@ -433,7 +421,7 @@ public class Handler implements PageHandler<Context> {
 		public void visitExceptionItem(ExceptionItem exceptionItem) {
 			String exception = exceptionItem.getId();
 			int count = exceptionItem.getCount();
-			Project project = findProjectByDomain(m_currentDomain.getId());
+			Project project = m_projectService.findByDomain(m_currentDomain.getId());
 
 			if (project != null) {
 				String productLine = project.getProjectLine();

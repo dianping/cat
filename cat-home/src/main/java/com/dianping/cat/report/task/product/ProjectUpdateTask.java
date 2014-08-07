@@ -19,21 +19,19 @@ import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Hostinfo;
-import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Inject
-	private HostinfoDao m_hostInfoDao;
+	private HostinfoService m_hostInfoService;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	private Logger m_logger;
 
@@ -49,7 +47,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private void buildDomainToIpMap() {
 		try {
-			List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+			List<Hostinfo> infos = m_hostInfoService.findAll();
 
 			for (Hostinfo info : infos) {
 				String domain = info.getDomain();
@@ -259,9 +257,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				hourStr = "0" + hourStr;
 			}
 
-			Transaction t1 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			Transaction t1 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
 			try {
-				updateProjectInfo();
+				updateHostNameInfo();
 				t1.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t1.setStatus(e);
@@ -269,12 +267,12 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				t1.complete();
 			}
 
-			Transaction t2 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+			Transaction t2 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
 			try {
-				updateHostNameInfo();
+				updateProjectInfo();
 				t2.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				t2.setStatus(e);
+				t1.setStatus(e);
 			} finally {
 				t2.complete();
 			}
@@ -297,7 +295,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private void updateHostNameInfo() {
 		try {
-			List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+			List<Hostinfo> infos = m_hostInfoService.findAll();
 
 			for (Hostinfo info : infos) {
 				try {
@@ -311,7 +309,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 					if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
 						info.setHostname(cmdbHostname);
-						m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
+						m_hostInfoService.updateHostinfo(info);
 					} else {
 						m_logger.error("can't find hostname for ip: " + ip);
 					}
@@ -354,16 +352,16 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		buildDomainToIpMap();
 
 		try {
-			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			List<Project> projects = m_projectService.findAll();
 
 			for (Project pro : projects) {
 				try {
 					List<String> ips = m_domainToIpMap.get(pro.getDomain());
-					String orginalDomain = pro.getCmdbDomain();
+					String originCmdbDomain = pro.getCmdbDomain();
 					String cmdbDomain = queryCmdbName(ips);
 
 					if (cmdbDomain != null) {
-						boolean isChange = !cmdbDomain.equals(orginalDomain);
+						boolean isChange = !cmdbDomain.equals(originCmdbDomain);
 
 						if (checkIfValid(cmdbDomain)) {
 							pro.setCmdbDomain(cmdbDomain);
@@ -371,7 +369,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 							boolean isProjectInfoChange = updateProject(pro);
 
 							if (isProjectInfoChange || isChange) {
-								m_projectDao.updateByPK(pro, ProjectEntity.UPDATESET_FULL);
+								m_projectService.updateProject(pro);
 							}
 						}
 					}

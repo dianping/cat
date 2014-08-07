@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -34,8 +33,6 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
@@ -45,6 +42,7 @@ import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
@@ -64,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
@@ -139,14 +137,12 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void deleteProject(Payload payload) {
-		try {
-			Project proto = new Project();
-			proto.setId(payload.getProjectId());
-			proto.setKeyId(payload.getProjectId());
-			m_projectDao.deleteByPK(proto);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+		Project proto = new Project();
+		int id = payload.getProjectId();
+
+		proto.setId(id);
+		proto.setKeyId(id);
+		m_projectService.deleteProject(proto);
 	}
 
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
@@ -576,7 +572,7 @@ public class Handler implements PageHandler<Context> {
 		List<Project> projects = new ArrayList<Project>();
 
 		try {
-			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			projects = m_projectService.findAll();
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -611,7 +607,7 @@ public class Handler implements PageHandler<Context> {
 	private Project queryProjectById(int projectId) {
 		Project project = null;
 		try {
-			project = m_projectDao.findByPK(projectId, ProjectEntity.READSET_FULL);
+			project = m_projectService.findProject(projectId);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -643,12 +639,8 @@ public class Handler implements PageHandler<Context> {
 		Project project = payload.getProject();
 		project.setKeyId(project.getId());
 
-		try {
-			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
-			m_manager.getProjects().put(project.getDomain(), project);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
+		m_projectService.updateProject(project);
+		m_manager.getProjects().put(project.getDomain(), project);
 	}
 
 	public static class ProjectCompartor implements Comparator<Project> {

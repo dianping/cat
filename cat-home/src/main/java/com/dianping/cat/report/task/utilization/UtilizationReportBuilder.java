@@ -8,7 +8,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -30,9 +29,10 @@ import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.service.HostinfoService;
 
 public class UtilizationReportBuilder implements ReportTaskBuilder {
-	
+
 	public static final String ID = Constants.REPORT_UTILIZATION;
 
 	@Inject
@@ -45,14 +45,14 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	private ServerConfigManager m_configManger;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		UtilizationReport utilizationReport = queryHourlyReportsByDuration(name, domain, period,
 		      TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
-		
+
 		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
@@ -78,7 +78,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 			if (m_configManger.validateDomain(domainName)) {
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
 				int size = transactionReport.getMachines().size();
-				
+
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
 				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
@@ -98,7 +98,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
-				projectInfo.setDomainManager(m_domainManager);
+				projectInfo.setHostinfoService(m_hostinfoService);
 				projectInfo.setClientIp(Constants.ALL);
 				projectInfo.visitCrossReport(crossReport);
 				Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
@@ -113,7 +113,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 
 						if (service != null) {
 							service.setFailureCount(service.getFailureCount() + failure);
-							
+
 							long count = service.getCount();
 							if (count > 0) {
 								service.setFailurePercent(service.getFailureCount() * 1.0 / count);

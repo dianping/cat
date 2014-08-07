@@ -17,8 +17,8 @@
 			<implementation>com.dianping.cat.consumer.dependency.Configurator$ExtendedDependencyDelegate</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.DomainManager</role>
-			<implementation>com.dianping.cat.consumer.dependency.Configurator$ExtendedDomainManager</implementation>
+			<role>com.dianping.cat.service.HostinfoService</role>
+			<implementation>com.dianping.cat.consumer.dependency.Configurator$ExtendedHostinfoService</implementation>
 		</component>
 	</components>
 </plexus>

@@ -26,6 +26,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class LocalMessageBucketTest extends ComponentTestCase {
 
 	private final String m_baseDir = "target/bucket/hdfs/dump/";
+	private final String m_dataDir = "/data/appdatas/cat/";
 
 	public void setup() {
 		String[] files = { "dump", "dump-0", "dump-1", "dump-2", "outbox/dump" };
@@ -34,9 +35,10 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 			new File(m_baseDir + file).delete();
 			new File(m_baseDir + file + ".idx").delete();
 		}
-
+		
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		new File(tmpDir, "cat-Test.mark").delete();
+		new File(m_dataDir, "cat-Test.mark").delete();
 	}
 
 	@Test

@@ -3,7 +3,7 @@ package com.dianping.cat.report.task.alert.sender.decorator;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
-public class SystemDecorator extends DefaultDecorator {
+public class SystemDecorator extends ProductlineDecorator {
 
 	public static final String ID = AlertType.SYSTEM;
 

@@ -1,12 +1,15 @@
-package com.dianping.cat;
+package com.dianping.cat.service;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -16,7 +19,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -24,24 +26,23 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
-import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.site.lookup.util.StringUtils;
 
-public class DomainManager implements Initializable, LogEnabled {
+public class HostinfoService implements Initializable, LogEnabled {
 
 	@Inject
-	private HostinfoDao m_hostInfoDao;
-
-	@Inject
-	private ProjectDao m_projectDao;
+	private HostinfoDao m_hostinfoDao;
 
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
@@ -49,11 +50,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
 
-	private Set<String> m_domainsInCat = new HashSet<String>();
-
-	private Map<String, Hostinfo> m_ipsInCat = new ConcurrentHashMap<String, Hostinfo>();
-
-	private Logger m_logger;
+	private Map<String, Hostinfo> m_hostinfos = new ConcurrentHashMap<String, Hostinfo>();
 
 	private static final String UNKNOWN_IP = "UnknownIp";
 
@@ -61,67 +58,107 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
-	public boolean containsDomainInCat(String domain) {
-		return m_domainsInCat.contains(domain);
+	private Logger m_logger;
+
+	public Hostinfo createLocal() {
+		return m_hostinfoDao.createLocal();
+	}
+
+	public boolean deleteHostinfo(Hostinfo host) {
+		int id = host.getId();
+		Iterator<Entry<String, Hostinfo>> iterator = m_hostinfos.entrySet().iterator();
+		String ip = null;
+
+		while (iterator.hasNext()) {
+			Entry<String, Hostinfo> entry = iterator.next();
+			Hostinfo hostinfo = entry.getValue();
+			if (hostinfo.getId() == id) {
+				ip = hostinfo.getIp();
+				break;
+			}
+		}
+
+		try {
+			m_hostinfos.remove(ip);
+			m_hostinfoDao.deleteByPK(host);
+			return true;
+		} catch (Exception e) {
+			Cat.logError("delete hostinfo error " + host.toString(), e);
+			return false;
+		}
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
-	
+
+	public List<Hostinfo> findAll() throws DalException {
+		return new ArrayList<Hostinfo>(m_hostinfos.values());
+	}
+
+	public Hostinfo findByIp(String ip) {
+		Hostinfo hostinfo = m_hostinfos.get(ip);
+
+		if (hostinfo != null) {
+			return hostinfo;
+		} else {
+			try {
+				return m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+			} catch (DalException e) {
+				return new Hostinfo();
+			}
+		}
+	}
+
+	public Hostinfo findHostinfo(int id) {
+		Iterator<Entry<String, Hostinfo>> iterator = m_hostinfos.entrySet().iterator();
+
+		while (iterator.hasNext()) {
+			Entry<String, Hostinfo> entry = iterator.next();
+			Hostinfo hostinfo = entry.getValue();
+			if (hostinfo.getId() == id) {
+				return hostinfo;
+			}
+		}
+
+		try {
+			return m_hostinfoDao.findByPK(id, HostinfoEntity.READSET_FULL);
+		} catch (DalException e) {
+			return new Hostinfo();
+		}
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			try {
-				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
-				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
-
-				for (Hostinfo info : infos) {
-					m_ipDomains.put(info.getIp(), info.getDomain());
-					m_ipsInCat.put(info.getIp(), info);
-				}
-
-				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-				for (Project project : projects) {
-					m_domainsInCat.add(project.getDomain());
-				}
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
+			m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 			Threads.forGroup("Cat").start(new ReloadDomainTask());
+		}
+	}
+
+	public boolean insert(Hostinfo hostinfo) throws DalException {
+		m_hostinfos.put(hostinfo.getIp(), hostinfo);
+
+		int result = m_hostinfoDao.insert(hostinfo);
+		if (result == 1) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	public boolean insert(String domain, String ip) {
 		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
+			Hostinfo info = createLocal();
 
 			info.setDomain(domain);
 			info.setIp(ip);
-			m_hostInfoDao.insert(info);
-			m_domainsInCat.add(domain);
-			m_ipsInCat.put(ip, info);
+			insert(info);
+			m_hostinfos.put(ip, info);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
-		}
-		return false;
-	}
-
-	public boolean insertDomain(String domain) {
-		Project project = m_projectDao.createLocal();
-
-		project.setDomain(domain);
-		project.setProjectLine("Default");
-		project.setDepartment("Default");
-		try {
-			m_projectDao.insert(project);
-			m_domainsInCat.add(domain);
-
-			return true;
-		} catch (Exception ex) {
-			Cat.logError(ex);
 		}
 		return false;
 	}
@@ -142,14 +179,10 @@ public class DomainManager implements Initializable, LogEnabled {
 		return project;
 	}
 
-	public Hostinfo queryHostInfoByIp(String ip) {
-		return m_ipsInCat.get(ip);
-	}
-
 	public String queryHostnameByIp(String ip) {
 		try {
 			if (validateIp(ip)) {
-				Hostinfo info = m_ipsInCat.get(ip);
+				Hostinfo info = m_hostinfos.get(ip);
 				String hostname = null;
 
 				if (info != null) {
@@ -159,41 +192,60 @@ public class DomainManager implements Initializable, LogEnabled {
 						return hostname;
 					}
 				}
-				info = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				info = findByIp(ip);
 
 				if (info != null) {
-					m_ipsInCat.put(ip, info);
+					m_hostinfos.put(ip, info);
 					hostname = info.getHostname();
 				}
 				return hostname;
 			} else {
 				return null;
 			}
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
 		return null;
 	}
 
-	public boolean update(int id, String domain, String ip) {
+	public void refresh() {
 		try {
-			Hostinfo info = m_hostInfoDao.createLocal();
+			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 
-			info.setId(id);
-			info.setDomain(domain);
-			info.setIp(ip);
-			info.setLastModifiedDate(new Date());
-			m_hostInfoDao.updateByPK(info, HostinfoEntity.UPDATESET_FULL);
-			m_domainsInCat.add(domain);
-			m_ipsInCat.put(ip, info);
+			synchronized (this) {
+				for (Hostinfo hostinfo : hostinfos) {
+					m_hostinfos.put(hostinfo.getIp(), hostinfo);
+					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+				}
+			}
+		} catch (DalException e) {
+			Cat.logError("initialize HostService error", e);
+		}
+	}
+
+	public boolean update(int id, String domain, String ip) {
+		Hostinfo info = createLocal();
+
+		info.setId(id);
+		info.setDomain(domain);
+		info.setIp(ip);
+		info.setLastModifiedDate(new Date());
+		updateHostinfo(info);
+		m_hostinfos.put(ip, info);
+		return true;
+	}
+
+	public boolean updateHostinfo(Hostinfo hostinfo) {
+		m_hostinfos.put(hostinfo.getIp(), hostinfo);
+
+		try {
+			m_hostinfoDao.updateByPK(hostinfo, HostinfoEntity.UPDATESET_FULL);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
+			return false;
 		}
-		return false;
 	}
 
 	private boolean validateIp(String str) {
@@ -254,11 +306,11 @@ public class DomainManager implements Initializable, LogEnabled {
 			Set<String> addIps = new HashSet<String>();
 			for (String ip : m_unknownIps.keySet()) {
 				try {
-					Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+					Hostinfo hostinfo = findByIp(ip);
 
 					addIps.add(hostinfo.getIp());
 					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
-					m_domainsInCat.add(hostinfo.getDomain());
+					m_projectService.addDomain(hostinfo.getDomain());
 				} catch (Exception e) {
 					// ignore
 				}
@@ -281,6 +333,8 @@ public class DomainManager implements Initializable, LogEnabled {
 						m_logger.error(String.format("can't get domain info from cmdb, ip: %s", m_unknownIps.keySet()
 						      .toString()));
 					}
+
+					refresh();
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}

@@ -10,7 +10,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -27,16 +26,17 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.service.HostinfoService;
 
 public class ServiceReportBuilder implements ReportTaskBuilder {
-	
+
 	public static final String ID = Constants.REPORT_SERVICE;
 
 	@Inject
 	protected ReportServiceManager m_reportService;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	Map<String, Domain> stat = new HashMap<String, Domain>();
 
@@ -67,7 +67,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 			ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
-			projectInfo.setDomainManager(m_domainManager);
+			projectInfo.setHostinfoService(m_hostinfoService);
 			projectInfo.setClientIp(Constants.ALL);
 			projectInfo.visitCrossReport(crossReport);
 			Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();

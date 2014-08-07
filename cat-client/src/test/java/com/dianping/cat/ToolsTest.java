@@ -2,17 +2,17 @@ package com.dianping.cat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
-import com.site.helper.Splitters;
-import com.site.lookup.util.StringUtils;
 
+import com.site.helper.Splitters;
 import com.site.helper.Stringizers;
+import com.site.lookup.util.StringUtils;
 
 public class ToolsTest {
 
@@ -31,7 +31,7 @@ public class ToolsTest {
 		Item item = new Item("aaa", "bbbbb", "ccccccccc");
 		String[] array = { "aaa", "bbbbb", "ccccccccc" };
 		List<String> list = Arrays.asList(array);
-		Map<String, String> map = new HashMap<String, String>();
+		Map<String, String> map = new LinkedHashMap<String, String>();
 
 		map.put("a", "a");
 		map.put("b", "b");
@@ -40,7 +40,7 @@ public class ToolsTest {
 		item.setList(list);
 		item.setMap(map);
 
-		String expected = "{\"a\": \"aaa\", \"array\": [\"aaa\", \"bbbbb\", \"c...c\"], \"b\": \"bbbbb\", \"c\": \"c...c\", \"list\": [\"aaa\", \"bbbbb\", \"c...c\"], \"map\": {\"b\": \"b\", \"c\": \"c\", \"a\": \"a\"}}";
+		String expected = "{\"a\": \"aaa\", \"array\": [\"aaa\", \"bbbbb\", \"c...c\"], \"b\": \"bbbbb\", \"c\": \"c...c\", \"list\": [\"aaa\", \"bbbbb\", \"c...c\"], \"map\": {\"a\": \"a\", \"b\": \"b\", \"c\": \"c\"}}";
 		String str = Stringizers.forJson().from(item, 3, 5);
 		Assert.assertEquals(expected, str);
 	}
