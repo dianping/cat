@@ -11,12 +11,12 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.alibaba.cobar.parser.util.Pair;
 import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
