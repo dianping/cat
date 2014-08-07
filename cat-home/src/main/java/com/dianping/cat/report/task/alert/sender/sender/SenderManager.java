@@ -22,7 +22,7 @@ public class SenderManager extends ContainerHolder implements Initializable {
 	public boolean sendAlert(AlertChannel channel, String type, AlertMessageEntity message) {
 		String channelName = channel.getName();
 		Sender sender = m_senders.get(channelName);
-
+		
 		return sender.send(message, type);
 	}
 
