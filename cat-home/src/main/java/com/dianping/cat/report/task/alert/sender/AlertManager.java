@@ -53,6 +53,33 @@ public class AlertManager implements Initializable {
 
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
+	public boolean addAlert(AlertEntity alert) {
+		String type = alert.getType();
+		String group = alert.getGroup();
+		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
+
+		return m_alerts.offer(alert);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("Cat").start(new SendExecutor());
+		Threads.forGroup("Cat").start(new RecoveryAnnouncer());
+	}
+
+	public boolean isSuspend(String alertKey, int suspendMinute) {
+		AlertEntity sendedAlert = m_sendedAlerts.get(alertKey);
+		if (sendedAlert != null) {
+			long duration = System.currentTimeMillis() - sendedAlert.getDate().getTime();
+			if (duration / MILLIS1MINUTE < suspendMinute) {
+				Cat.logEvent("SuspendAlert", alertKey);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	private boolean send(AlertEntity alert) {
 		boolean result = false;
 		String type = alert.getType();
@@ -69,13 +96,8 @@ public class AlertManager implements Initializable {
 		}
 
 		if (suspendMinute > 0) {
-			AlertEntity sendedAlert = m_sendedAlerts.get(alertKey);
-			if (sendedAlert != null) {
-				long duration = System.currentTimeMillis() - sendedAlert.getDate().getTime();
-				if (duration / MILLIS1MINUTE <= suspendMinute) {
-					Cat.logEvent("SuspendAlert", alertKey);
-					return true;
-				}
+			if (isSuspend(alertKey, suspendMinute)) {
+				return true;
 			}
 			m_sendedAlerts.put(alertKey, alert);
 		}
@@ -116,40 +138,12 @@ public class AlertManager implements Initializable {
 		return result;
 	}
 
-	public boolean addAlert(AlertEntity alert) {
-		String type = alert.getType();
-		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
-
-		return m_alerts.offer(alert);
-	}
-
-	private class SendExecutor implements Task {
-		@Override
-		public void run() {
-			while (true) {
-				try {
-					AlertEntity alert = m_alerts.poll(5, TimeUnit.MILLISECONDS);
-					if (alert != null) {
-						send(alert);
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
-		}
+	private class RecoveryAnnouncer implements Task {
 
 		@Override
 		public String getName() {
-			return "send-executor";
+			return "recovery-announcer";
 		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
-	private class RecoveryAnnouncer implements Task {
 
 		@Override
 		public void run() {
@@ -191,19 +185,33 @@ public class AlertManager implements Initializable {
 		}
 
 		@Override
+		public void shutdown() {
+		}
+	}
+
+	private class SendExecutor implements Task {
+		@Override
 		public String getName() {
-			return "recovery-announcer";
+			return "send-executor";
+		}
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					AlertEntity alert = m_alerts.poll(5, TimeUnit.MILLISECONDS);
+					if (alert != null) {
+						send(alert);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
 		}
 
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new SendExecutor());
-		Threads.forGroup("Cat").start(new RecoveryAnnouncer());
 	}
 
 }
