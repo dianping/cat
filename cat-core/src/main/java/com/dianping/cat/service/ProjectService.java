@@ -187,7 +187,6 @@ public class ProjectService implements Initializable {
 				try {
 					TimeUnit.MINUTES.sleep(1);
 				} catch (InterruptedException ex) {
-					Cat.logError("reload project stop", ex);
 					active = false;
 				}
 			}

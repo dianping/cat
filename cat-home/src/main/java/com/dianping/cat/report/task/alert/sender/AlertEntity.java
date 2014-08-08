@@ -87,4 +87,10 @@ public class AlertEntity {
 		return this;
 	}
 
+	@Override
+	public String toString() {
+		return "AlertEntity [m_date=" + m_date + ", m_type=" + m_type + ", m_group=" + m_group + ", m_level=" + m_level
+		      + ", m_metric=" + m_metric + "]";
+	}
+
 }

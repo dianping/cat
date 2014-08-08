@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.mail.Authenticator;
@@ -117,7 +118,7 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 				conn.setDoInput(true);
 				writer = new OutputStreamWriter(conn.getOutputStream());
 
-				writer.write("&value=" + value);
+				writer.write(URLEncoder.encode("&value=" + value, "utf-8"));
 				writer.flush();
 
 				in = conn.getInputStream();

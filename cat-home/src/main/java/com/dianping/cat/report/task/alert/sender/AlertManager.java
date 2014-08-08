@@ -56,7 +56,7 @@ public class AlertManager implements Initializable {
 	public boolean addAlert(AlertEntity alert) {
 		String type = alert.getType();
 		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, null);
+		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
 
 		return m_alerts.offer(alert);
 	}
