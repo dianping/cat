@@ -36,6 +36,16 @@ public class DefaultBaselineService implements BaselineService {
 		}
 	};
 
+	private Map<String, String> m_empties = new LinkedHashMap<String, String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, String> eldest) {
+			return size() > 50000;
+		}
+	};
+
 	private double[] decodeBaselines(byte[] datas) throws IOException {
 		double[] result;
 		ByteArrayInputStream input = new ByteArrayInputStream(datas);
@@ -77,11 +87,17 @@ public class DefaultBaselineService implements BaselineService {
 
 		if (baseline == null) {
 			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
-				m_baselines.put(baselineKey, baseline);
+				String str = m_empties.get(baselineKey);
+
+				if (str == null) {
+					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
+					      BaselineEntity.READSET_FULL);
+					m_baselines.put(baselineKey, baseline);
+				} else {
+					return null;
+				}
 			} catch (DalNotFoundException e) {
-				Cat.logEvent("BaselineNotFound", baselineKey);
+				m_empties.put(baselineKey, baselineKey);
 				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
