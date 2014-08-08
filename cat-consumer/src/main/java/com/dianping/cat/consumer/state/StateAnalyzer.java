@@ -218,7 +218,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			} else {
 				String oldDomain = info.getDomain();
 
-				if (!oldDomain.equals(domain) && !oldDomain.equals(Constants.CAT)) {
+				if (!domain.equals(oldDomain) && !Constants.CAT.equals(oldDomain)) {
 					// only work on online environment
 					long current = System.currentTimeMillis();
 					Date lastModifiedDate = info.getLastModifiedDate();

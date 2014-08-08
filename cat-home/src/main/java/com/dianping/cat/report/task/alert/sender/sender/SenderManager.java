@@ -33,9 +33,9 @@ public class SenderManager extends ContainerHolder implements Initializable, Log
 			boolean result = sender.send(message, type);
 
 			if (result) {
-				Cat.logEvent("Alert:" + channelName, type + ":success", Event.SUCCESS, null);
+				Cat.logEvent("Channel:" + channelName, type + ":success", Event.SUCCESS, null);
 			} else {
-				Cat.logEvent("Alert:" + channelName, type + ":fail", Event.SUCCESS, null);
+				Cat.logEvent("Channel:" + channelName, type + ":fail", Event.SUCCESS, null);
 			}
 			m_logger.info("Alert Channel " + channelName + ",content" + message.toString());
 			return result;
