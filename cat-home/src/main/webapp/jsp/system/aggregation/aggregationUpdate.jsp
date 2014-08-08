@@ -60,7 +60,7 @@
 					</tr>
 					<tr>
 						<td>联系邮件</td>
-						<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="aggregation.mails" required value="${model.aggregationRule.mails}"/></td>
+						<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="aggregation.mails" required value="${model.aggregationRule.mails}"/>（多个以逗号隔开）</td>
 					</tr>
 					
 					<%-- <tr>

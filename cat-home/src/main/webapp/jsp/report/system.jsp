@@ -201,9 +201,9 @@
 					查询类型
 					<select style="width: 100px;" name="type" id="type" >
 							<option value="paasSystem">Paas系统</option>
-							<option value="system">系统</option>
+							<!-- option value="system">系统</option>
 							<option value="jvm">JVM</option>
-							<option value="nginx">Nginx</option>
+							<option value="nginx">Nginx</option> -->
 					</select>
 				</th>
 
