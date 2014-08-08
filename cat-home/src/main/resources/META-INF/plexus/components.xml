@@ -490,7 +490,7 @@
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.tool.MailSMS</role>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
@@ -531,15 +531,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 			<implementation>com.dianping.cat.report.task.alert.AlertInfo</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.tool.DefaultMailImpl</role>
-			<implementation>com.dianping.cat.system.tool.DefaultMailImpl</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -3641,7 +3632,7 @@
 					<field-name>m_alertSummaryDecorator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.tool.MailSMS</role>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3683,6 +3674,10 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
@@ -4113,10 +4108,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
@@ -4478,15 +4469,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.tool.MailSMS</role>
-			<implementation>com.dianping.cat.system.tool.DefaultMailImpl</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.notify.ReportRender</role>
 			<implementation>com.dianping.cat.system.notify.ReportRenderImpl</implementation>
 		</component>
@@ -4498,7 +4480,7 @@
 					<role>com.dianping.cat.system.notify.ReportRender</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.tool.MailSMS</role>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
