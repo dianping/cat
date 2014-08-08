@@ -27,8 +27,10 @@ import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
+import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
-import com.dianping.cat.system.tool.MailSMS;
 
 public class ScheduledMailTask implements Task, LogEnabled {
 
@@ -39,7 +41,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	private MailRecordDao m_mailRecordDao;
 
 	@Inject
-	private MailSMS m_mailSms;
+	private SenderManager m_sendManager;
 
 	@Inject
 	private ReportRender m_render;
@@ -138,7 +140,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 							String content = renderContent(names, domain);
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
-							boolean result = m_mailSms.sendEmail(title, content, emails);
+							AlertMessageEntity message = new AlertMessageEntity(domain, title, content, emails);
+
+							boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, "ScheduledJob", message);
 
 							insertMailLog(report.getId(), content, title, result, emails);
 							t.addData(emails.toString());

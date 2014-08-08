@@ -23,7 +23,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_productLine = "All";
 
 	@FieldMeta("type")
-	private String m_type = "system";
+	private String m_type = "paasSystem";
 
 	@FieldMeta("ipAddrs")
 	private String m_ipAddrs = "All";

@@ -8,15 +8,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class WeixinSender implements Sender, LogEnabled {
+public class WeixinSender implements Sender {
 
 	private static final String WEIXIN_URL = "http://dpoa.api.dianping.com/app/monitor/cat/push";
 
@@ -24,27 +21,13 @@ public class WeixinSender implements Sender, LogEnabled {
 
 	public static final String ID = AlertChannel.WEIXIN.getName();
 
-	private Logger m_logger;
-
 	@Override
 	public boolean send(AlertMessageEntity message) {
-		try {
-			String messageStr = message.toString();
-			String type = message.getType();
-
-			if (!sendWeixin(message)) {
-				Cat.logEvent("AlertWeixinError", type, Event.SUCCESS, messageStr);
-				m_logger.info("AlertWeixinError " + messageStr);
-				return false;
-			}
-
-			Cat.logEvent("AlertWeiixin", type, Event.SUCCESS, messageStr);
-			m_logger.info("AlertWeiixin " + messageStr);
-			return true;
-		} catch (Exception ex) {
-			Cat.logError("send weixin error " + message.toString(), ex);
+		if (!sendWeixin(message)) {
 			return false;
 		}
+
+		return true;
 	}
 
 	private boolean sendWeixin(AlertMessageEntity message) {
@@ -86,6 +69,8 @@ public class WeixinSender implements Sender, LogEnabled {
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setUseCaches(false);
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(3000);
 
 			DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
 			wr.writeBytes(urlParameters);
@@ -129,11 +114,6 @@ public class WeixinSender implements Sender, LogEnabled {
 	@Override
 	public String getId() {
 		return ID;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }
