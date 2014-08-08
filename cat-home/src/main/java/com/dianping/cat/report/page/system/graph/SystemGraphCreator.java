@@ -52,16 +52,26 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Map<String, String> pars,
 	      Set<String> ipAddrs, Date startDate, Date endDate) {
+		String type = filterType(pars);
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, pars, ipAddrs, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-
-		String type = pars.get("type");
 		Set<String> curIpAddrs = buildIpAddrs(pars.get("ip"), ipAddrs);
 		Map<String, Map<String, String>> aggregationKeys = buildLineChartKeys(dataWithOutFutures.keySet(), curIpAddrs,
 		      type);
 
 		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures, aggregationKeys);
+	}
+
+	private String filterType(Map<String, String> pars) {
+		String type = pars.get("type");
+
+		if (PAAS_SYSTEM.equals(type)) {
+			type = SYSTEM_TYPE;
+			
+			pars.put("type", type);
+		}
+		return type;
 	}
 
 	private Set<String> buildIpAddrs(String ipPar, Set<String> ipAll) {
