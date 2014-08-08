@@ -140,9 +140,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 							String content = renderContent(names, domain);
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
-							AlertMessageEntity message = new AlertMessageEntity(domain, title, content, emails);
+							AlertMessageEntity message = new AlertMessageEntity(domain, title, "ScheduledJob", content, emails);
 
-							boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, "ScheduledJob", message);
+							boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
 
 							insertMailLog(report.getId(), content, title, result, emails);
 							t.addData(emails.toString());

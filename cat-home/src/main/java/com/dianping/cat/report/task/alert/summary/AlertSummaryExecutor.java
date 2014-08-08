@@ -60,9 +60,9 @@ public class AlertSummaryExecutor {
 			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
 			List<String> receivers = builderReceivers(receiverStr);
 
-			AlertMessageEntity message = new AlertMessageEntity(domain, title, content, receivers);
+			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
 
-			m_sendManager.sendAlert(AlertChannel.MAIL, "AlertSummary", message);
+			m_sendManager.sendAlert(AlertChannel.MAIL, message);
 			return content;
 		} catch (Exception e) {
 			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
