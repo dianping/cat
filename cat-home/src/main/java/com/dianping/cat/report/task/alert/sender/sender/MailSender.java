@@ -71,36 +71,24 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 
 	@Override
 	public boolean send(AlertMessageEntity message, String type) {
-		try {
-			String messageStr = message.toString();
+		boolean result = sendEmail(message);
 
-			boolean result = sendEmail(message);
+		if (!result) {
+			Cat.logEvent("InternalMailSender", "error", Event.SUCCESS, null);
 
-			if (!result) {
-				Cat.logEvent("InternalEmailSendError", type, Event.SUCCESS, messageStr);
-				boolean gmail = sendEmailByGmail(message);
+			boolean gmail = sendEmailByGmail(message);
 
-				if (gmail == false) {
-					Cat.logEvent("AlertMailError", type, Event.SUCCESS, messageStr);
-					m_logger.info("AlertMailError " + messageStr);
-					return false;
-				}
+			if (gmail == false) {
+				return false;
 			}
-
-			Cat.logEvent("AlertMail", type, Event.SUCCESS, messageStr);
-			m_logger.info("AlertMail " + messageStr);
-			return true;
-		} catch (Exception ex) {
-			Cat.logError("send mail error " + message.toString(), ex);
-			return false;
 		}
+		return true;
 	}
 
 	private boolean sendEmail(AlertMessageEntity message) {
 		String title = message.getTitle();
 		String content = message.getContent();
 		List<String> emails = message.getReceivers();
-
 		StringBuilder sb = new StringBuilder();
 
 		for (String email : emails) {
@@ -113,14 +101,15 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 				String value = title + "," + content;
 				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
 				URLConnection conn = url.openConnection();
-				
+
 				conn.setConnectTimeout(2000);
 				conn.setReadTimeout(3000);
 				conn.setDoOutput(true);
 				conn.setDoInput(true);
 				writer = new OutputStreamWriter(conn.getOutputStream());
+				String encode = "&value=" + URLEncoder.encode(value, "utf-8");
 
-				writer.write(URLEncoder.encode("&value=" + value, "utf-8"));
+				writer.write(encode);
 				writer.flush();
 
 				in = conn.getInputStream();

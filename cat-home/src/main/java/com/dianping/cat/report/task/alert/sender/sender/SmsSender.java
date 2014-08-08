@@ -11,34 +11,21 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class SmsSender implements Sender, LogEnabled {
 
 	public static final String ID = AlertChannel.SMS.getName();
-	
+
 	private Logger m_logger;
 
 	@Override
 	public boolean send(AlertMessageEntity message, String type) {
-		try {
-			String messageStr = message.toString();
-
-			if (!sendSms(message)) {
-				Cat.logEvent("AlertSmsError", type, Event.SUCCESS, messageStr);
-				m_logger.info("AlertSmsError " + messageStr);
-				return false;
-			}
-
-			Cat.logEvent("AlertSms", type, Event.SUCCESS, messageStr);
-			m_logger.info("AlertSms " + messageStr);
-			return true;
-		} catch (Exception ex) {
-			Cat.logError("send sms error " + message.toString(), ex);
+		if (!sendSms(message)) {
 			return false;
+		} else {
+			return true;
 		}
 	}
 

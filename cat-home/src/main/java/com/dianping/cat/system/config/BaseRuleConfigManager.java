@@ -68,8 +68,7 @@ public abstract class BaseRuleConfigManager {
 
 				if (validate) {
 					configs.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule", getCategoryName(), Event.SUCCESS,
-					      "find rule for " + metricKey + ": " + rule.toString());
+					Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 					break;
 				}
 			}
