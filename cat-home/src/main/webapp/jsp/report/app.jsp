@@ -54,6 +54,14 @@
 			var myDate = new Date();
 			var myMonth = new Number(myDate.getMonth());
 			var month = myMonth + 1;
+			var day = myDate.getDate();
+			
+			if(month<10){
+				month = '0' + month;
+			}
+			if(day<10){
+				day = '0' + day;
+			}
 
 			return myDate.getFullYear() + "-" + month + "-"
 					+ myDate.getDate();
@@ -307,11 +315,11 @@
 			</label> <label class="btn btn-info"> <input type="radio"
 				name="typeCheckbox" value="success">成功率
 			</label> <label class="btn btn-info">  <input type="radio"
-				name="typeCheckbox" value="delay">成功延时(ms)
+				name="typeCheckbox" value="delay">成功延时
 			</label>
 		</div>
 
-		<div style="float: left; width: 95%;">
+		<div style="margin: 0 auto; width: 95%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
 

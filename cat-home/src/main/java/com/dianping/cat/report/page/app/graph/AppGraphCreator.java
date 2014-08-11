@@ -42,11 +42,11 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 	private String queryType(String type) {
 		if (AppDataService.SUCCESS.equals(type)) {
-			return "成功率";
+			return "成功率（%/5分钟）";
 		} else if (AppDataService.REQUEST.equals(type)) {
-			return "请求数";
+			return "请求数（个/5分钟）";
 		} else if (AppDataService.DELAY.equals(type)) {
-			return "成功延时(ms)";
+			return "延时平均值（毫秒/5分钟）";
 		} else {
 			throw new RuntimeException("unexpected query type, type:" + type);
 		}
@@ -55,6 +55,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	public LineChart buildChartData(final List<double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
+		lineChart.setUnit("");
 		lineChart.setHtmlTitle(queryType(type));
 		int length = datas.size();
 
