@@ -104,7 +104,7 @@ public class AppDataService {
 		double[] value = new double[n];
 
 		for (int i = 0; i < n; i++) {
-			value[i] = 1.0;
+			value[i] = 100.0;
 		}
 
 		try {
