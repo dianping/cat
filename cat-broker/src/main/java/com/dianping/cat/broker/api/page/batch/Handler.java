@@ -184,10 +184,12 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setOperator(operatorId);
 					appData.setCount(1);
 
-					if (appData.getResponseTime() < 30 * 1000) {
+					int responseTime = appData.getResponseTime();
+
+					if (responseTime < 60 * 1000) {
 						m_appDataConsumer.enqueue(appData);
 					} else {
-						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, null);
+						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, String.valueOf(responseTime));
 					}
 					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
 				} else {
