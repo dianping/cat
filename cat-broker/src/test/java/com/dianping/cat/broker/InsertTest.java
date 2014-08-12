@@ -37,9 +37,8 @@ public class InsertTest extends ComponentTestCase {
 
 		}
 		dao.insert(commands);
-
 	}
-	
+
 	@Test
 	public void test() throws DalException {
 		AppDataCommandDao dao = lookup(AppDataCommandDao.class);
