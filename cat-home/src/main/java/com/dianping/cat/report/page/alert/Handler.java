@@ -45,11 +45,10 @@ public class Handler implements PageHandler<Context> {
 				setAlertResult(model, 0);
 			} else {
 				AlertMessageEntity message = new AlertMessageEntity(payload.getGroup(), payload.getTitle(),
-				      payload.getContent(), receivers);
+				      payload.getType(), payload.getContent(), receivers);
 
 				try {
-					boolean result = m_senderManager.sendAlert(AlertChannel.findByName(payload.getChannel()),
-					      payload.getType(), message);
+					boolean result = m_senderManager.sendAlert(AlertChannel.findByName(payload.getChannel()), message);
 					if (result) {
 						setAlertResult(model, 1);
 					} else {

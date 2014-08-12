@@ -7,13 +7,16 @@ public class AlertMessageEntity {
 
 	private String m_title;
 
+	private String m_type;
+
 	private String m_content;
-	
+
 	private List<String> m_receivers;
 
-	public AlertMessageEntity(String group, String title, String content, List<String> receivers) {
+	public AlertMessageEntity(String group, String title, String type, String content, List<String> receivers) {
 		m_group = group;
 		m_title = title;
+		m_type = type;
 		m_content = content;
 		m_receivers = receivers;
 	}
@@ -24,6 +27,10 @@ public class AlertMessageEntity {
 
 	public String getGroup() {
 		return m_group;
+	}
+
+	public String getType() {
+		return m_type;
 	}
 
 	public List<String> getReceivers() {
@@ -51,7 +58,7 @@ public class AlertMessageEntity {
 
 	@Override
 	public String toString() {
-		return "title: " + m_title + " content: " + m_content + " receiver: " + getReceiverString();
+		return "title: " + m_title + " content: " + m_content + " type: " + m_type + " receiver: " + getReceiverString();
 	}
 
 }

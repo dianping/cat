@@ -70,14 +70,13 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 	}
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
+	public boolean send(AlertMessageEntity message) {
 		boolean result = sendEmail(message);
 
 		if (!result) {
 			Cat.logEvent("InternalMailSender", "error", Event.SUCCESS, null);
 
 			boolean gmail = sendEmailByGmail(message);
-
 			if (gmail == false) {
 				return false;
 			}

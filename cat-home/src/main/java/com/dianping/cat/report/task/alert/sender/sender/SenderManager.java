@@ -25,12 +25,13 @@ public class SenderManager extends ContainerHolder implements Initializable, Log
 		m_senders = lookupMap(Sender.class);
 	}
 
-	public boolean sendAlert(AlertChannel channel, String type, AlertMessageEntity message) {
+	public boolean sendAlert(AlertChannel channel, AlertMessageEntity message) {
 		String channelName = channel.getName();
 
 		try {
 			Sender sender = m_senders.get(channelName);
-			boolean result = sender.send(message, type);
+			boolean result = sender.send(message);
+			String type = message.getType();
 
 			if (result) {
 				Cat.logEvent("Channel:" + channelName, type + ":success", Event.SUCCESS, null);

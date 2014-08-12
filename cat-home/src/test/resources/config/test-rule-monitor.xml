@@ -75,7 +75,7 @@
 			</condition>
 			<condition>
 					<sub-condition type="DescPer" text="40"></sub-condition>
-					<sub-condition type="DescVal" text="100"></sub-condition>
+					<sub-condition type="DescVal" text="80"></sub-condition>
 			</condition>
 		</config>
 	</rule>

@@ -21,7 +21,7 @@ public class SmsSender implements Sender, LogEnabled {
 	private Logger m_logger;
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
+	public boolean send(AlertMessageEntity message) {
 		if (!sendSms(message)) {
 			return false;
 		} else {
