@@ -1,6 +1,8 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 	public Configuration m_configuration;
 
 	public static final String ID = AlertType.THIRDPARTY;
+
+	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {

@@ -104,7 +104,7 @@ public class AppDataService {
 		double[] value = new double[n];
 
 		for (int i = 0; i < n; i++) {
-			value[i] = 1.0;
+			value[i] = 100.0;
 		}
 
 		try {
@@ -121,7 +121,7 @@ public class AppDataService {
 					}
 					sum += number;
 				}
-				value[key / 5] = (double) success / sum;
+				value[key / 5] = (double) success / sum * 100;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
