@@ -1,7 +1,6 @@
 package com.dianping.cat.broker.api.app;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,8 +46,6 @@ public class BucketHandler implements Task {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 
 		Date period = new Date(cal.getTimeInMillis());
-		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
-		int batchSize = 100;
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
 			HashMap<String, AppData> value = outerEntry.getValue();
@@ -72,18 +69,17 @@ public class BucketHandler implements Task {
 				proto.setRequestPackage(appData.getRequestByte());
 				proto.setResponsePackage(appData.getResponseByte());
 				proto.setCreationDate(new Date());
-				appDataCommands.add(proto);
 
-				if (appDataCommands.size() >= batchSize) {
-					batchInsert(appDataCommands);
-					appDataCommands = new ArrayList<AppDataCommand>();
+				try {
+					m_appDataService.insertSignal(proto);
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		}
-		batchInsert(appDataCommands);
 	}
 
-	private void batchInsert(List<AppDataCommand> appDataCommands) {
+	protected void batchInsert(List<AppDataCommand> appDataCommands) {
 		try {
 			int length = appDataCommands.size();
 			AppDataCommand[] array = new AppDataCommand[length];
@@ -117,7 +113,7 @@ public class BucketHandler implements Task {
 		int command = appData.getCommand();
 		StringBuilder sb = new StringBuilder();
 		char split = ':';
-		
+
 		sb.append(appData.getCity()).append(split);
 		sb.append(appData.getOperator()).append(split);
 		sb.append(appData.getConnectType()).append(split);
@@ -142,7 +138,7 @@ public class BucketHandler implements Task {
 			} else {
 				mergedAppData.addCount(appData.getCount());
 				mergedAppData.addRequestByte(appData.getRequestByte());
-				mergedAppData.addResponseByte( appData.getResponseByte());
+				mergedAppData.addResponseByte(appData.getResponseByte());
 				mergedAppData.addResponseTime(appData.getResponseTime());
 			}
 		}

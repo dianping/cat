@@ -27,7 +27,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	private AppDataQueue m_appDataQueue;
 
-	private long m_dataLoss;
+	private volatile long m_dataLoss;
 
 	private Logger m_logger;
 
@@ -71,7 +71,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					if (appData != null) {
 						long timestamp = appData.getTimestamp();
 						timestamp = timestamp - timestamp % DURATION;
-						BucketHandler handler = m_tasks.get(new Long(timestamp));
+						BucketHandler handler = m_tasks.get(timestamp);
 
 						if (handler == null) {
 							recordErrorInfo();
@@ -137,10 +137,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					long currentDuration = curTime - curTime % DURATION;
 					long currentMinute = curTime - curTime % MINUTE;
 
-					closeLastTask(currentMinute);
-					removeLastLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
+					removeLastLastTask(currentDuration);
+					closeLastTask(currentMinute);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -158,13 +158,12 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		}
 
 		private void startCurrentTask(long currentDuration) {
-			Long cur = new Long(currentDuration);
-			if (m_tasks.get(cur) == null) {
-				BucketHandler curBucketHandler = new BucketHandler(cur, m_appDataService);
+			if (m_tasks.get(currentDuration) == null) {
+				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataService);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 				Threads.forGroup("Cat").start(curBucketHandler);
 
-				m_tasks.put(cur, curBucketHandler);
+				m_tasks.put(currentDuration, curBucketHandler);
 				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 			}
 		}

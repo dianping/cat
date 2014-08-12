@@ -47,7 +47,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private Logger m_logger;
 
-	private int m_error;
+	private volatile int m_error;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -82,6 +82,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		} else {
 			success = false;
+			Cat.logEvent("unknownIp", "batch", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -165,14 +166,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		if (items.length == 10) {
 			AppData appData = new AppData();
-			long time = System.currentTimeMillis();
 
 			try {
 				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
 
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setTimestamp(time);
+					appData.setTimestamp(System.currentTimeMillis());
 					appData.setCommand(command);
 					appData.setNetwork(Integer.parseInt(items[1]));
 					appData.setVersion(Integer.parseInt(items[2]));
