@@ -20,7 +20,7 @@
 <h4 class="text-success">第二步:更改配置信息</h4>
 <h5>配置文件格式如下：</h5>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/businessAlert.png" />
+	src="${model.webapp}/images/alertConfig.png" />
 <h5>配置方式如下：</h5>
 <p>1).一个rule元素为规则的基本单位</p>
 <p>2).rule元素由两个部分组成：监控对象与监控规则</p>
@@ -70,3 +70,35 @@
 	</tr>
 </table>
 <p>3).点击提交功能。如果标题上方出现“操作成功”的提示，代表规则添加成功，将会在下次执行时被应用</p>
+<br/>
+
+<h4 class="text-info">告警HTTP API</h4>
+<p>Cat支持通过调用HTTP API来发送告警信息。目前支持三种发送渠道：邮件、短信、微信（需要邮箱和“爱点评”微信订阅号绑定）</p>
+<pre>
+	http请求方式: GET或者POST
+	http://主机域名:端口/cat/r/alert?
+</pre>
+<p>参数说明</p>
+<table style="width:50%" class="table table-striped table-bordered table-condensed">
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><td>op</td><td>执行操作<span class="text-error">  必需[唯一值：alert]</span></td></tr>
+	<tr><td>channel</td><td>渠道类型<span class="text-error">  必需[可能值：mail, sms, weixin]</span></td></tr>
+	<tr><td>title</td><td>告警标题<span class="text-error">  必需</span></td></tr>
+	<tr><td>content</td><td>告警内容<span class="text-error">  短信可选，邮件、微信必需</span></td></tr>
+	<tr><td>group</td><td>告警组名<span class="text-error">  微信必需，短信、邮件可选</span></td></tr>	
+	<tr><td>type</td><td>告警类型<span class="text-error">  必需[可能值：network, business, exception, system, thirdParty, frontEndException]</span></td></tr>
+	<tr><td>receivers</td><td>接收人<span class="text-error">  必需[邮箱地址或者手机号；如有多个接收人，用半角逗号分割]</span></td></tr>
+</table>
+
+<p> url示例（get方式）</p>
+<pre>
+	http://主机域名:端口/cat/r/alert?op=alert&channel=mail&title=test&content=testcontent&group=cat&type=test&receivers=leon.li@dianping.com
+</pre>
+<p>返回说明</p>
+<pre>
+	<span class="text-success">{"status":200} ——> 成功</span>
+	<span class="text-error">{"status":500, "errorMessage":"lack receivers"} ——> 失败 [接收人receivers未填写或者格式错误]</span>
+	<span class="text-error">{"status":500, "errorMessage":"send failed, please check your channel argument"} ——> 失败 [渠道channel错误，请指定mail,sms,weixin三者中的一种渠道]</span>
+	<span class="text-error">{"status":500, "errorMessage":"send failed, please retry again"} ——> 失败 [发送异常]</span>
+</pre>
+</br>

@@ -41,7 +41,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] <= 0 || values[i] / baselines[i] > (1 - ruleValue / 100)) {
+				if (baselines[i] <= 0 || values[i] / baselines[i] >= (1 - ruleValue / 100)) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -76,7 +76,7 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[下降值:").append(convertDoublesToString(buildDescVals(values, baselines))).append("]");
-			sb.append("[下降阈值: " + m_df.format(ruleValue) + " ]");
+			sb.append("[下降阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 
 			return sb.toString();
@@ -87,7 +87,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] - values[i] < ruleValue) {
+				if (baselines[i] - values[i] <= ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -132,7 +132,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] <= 0 || values[i] / baselines[i] < (1 + ruleValue / 100)) {
+				if (baselines[i] <= 0 || values[i] / baselines[i] <= (1 + ruleValue / 100)) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -166,7 +166,7 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[上升值:").append(convertDoublesToString(buildAscVals(values, baselines))).append("]");
-			sb.append("[上升阈值: " + m_df.format(ruleValue) + " ]");
+			sb.append("[上升阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 
 			return sb.toString();
@@ -177,7 +177,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] - baselines[i] < ruleValue) {
+				if (values[i] - baselines[i] <= ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -198,7 +198,7 @@ public enum RuleType {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
-			sb.append("[最大阈值: " + m_df.format(ruleValue) + " ]");
+			sb.append("[最大阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 
 			return sb.toString();
@@ -209,7 +209,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] < ruleValue) {
+				if (values[i] <= ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -230,7 +230,7 @@ public enum RuleType {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
-			sb.append("[最小阈值: " + m_df.format(ruleValue) + " ]");
+			sb.append("[最小阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
 
 			return sb.toString();
@@ -241,7 +241,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] > ruleValue) {
+				if (values[i] >= ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -292,7 +292,7 @@ public enum RuleType {
 			double baseVal = values[length - 1];
 
 			for (int i = 0; i <= length - 2; i++) {
-				if (baseVal / values[i] - 1 < ruleValue / 100) {
+				if (baseVal / values[i] - 1 <= ruleValue / 100) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -343,7 +343,7 @@ public enum RuleType {
 			double baseVal = values[length - 1];
 
 			for (int i = 0; i <= length - 2; i++) {
-				if (1 - baseVal / values[i] < ruleValue / 100) {
+				if (1 - baseVal / values[i] <= ruleValue / 100) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -365,9 +365,9 @@ public enum RuleType {
 		}
 	}
 
-	protected static final int MbS = 1 * 60 * 1024 * 1024 / 8;
+	protected static final long MbS = 1 * 60 * 1024 * 1024 / 8;
 
-	protected static final int GbS = MbS * 1024;
+	protected static final long GbS = MbS * 1024;
 
 	protected DecimalFormat m_df = new DecimalFormat("0.0");
 
@@ -377,16 +377,21 @@ public enum RuleType {
 		StringBuilder builder = new StringBuilder();
 
 		for (double value : values) {
-			if (value < MbS) {
-				builder.append(m_df.format(value)).append(" ");
-			} else if (value < GbS) {
-				builder.append(m_df.format(value / MbS)).append("Mb/s ");
-			} else {
-				builder.append(m_df.format(value / GbS)).append("Gb/s ");
-			}
+			builder.append(convertDoubleToString(value)).append(" ");
 		}
 
 		return builder.toString();
+	}
+
+	protected String convertDoubleToString(double value) {
+		if (value < MbS) {
+			System.out.println(m_df.format(value));
+			return m_df.format(value);
+		} else if (value < GbS) {
+			return m_df.format(value / MbS) + "Mb/s";
+		} else {
+			return m_df.format(value / GbS) + "Gb/s";
+		}
 	}
 
 	protected String convertPercentsToString(double[] values) {

@@ -22,18 +22,19 @@ public class WeixinSender implements Sender {
 	public static final String ID = AlertChannel.WEIXIN.getName();
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
-		if (!sendWeixin(message, type)) {
+	public boolean send(AlertMessageEntity message) {
+		if (!sendWeixin(message)) {
 			return false;
 		}
 
 		return true;
 	}
 
-	private boolean sendWeixin(AlertMessageEntity message, String type) {
+	private boolean sendWeixin(AlertMessageEntity message) {
 		String domain = message.getGroup();
 		String title = message.getTitle();
 		String content = message.getContent();
+		String type = message.getType();
 		String weixins = message.getReceiverString();
 		StringBuilder paraBuilder = new StringBuilder(300);
 

@@ -6,6 +6,6 @@ public interface Sender {
 
 	public String getId();
 
-	public boolean send(AlertMessageEntity message, String alertType);
+	public boolean send(AlertMessageEntity message);
 
 }

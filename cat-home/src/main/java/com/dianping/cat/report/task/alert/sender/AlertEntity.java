@@ -20,16 +20,20 @@ public class AlertEntity {
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
-	public Date getDate() {
-		return m_date;
-	}
-
 	public String getContent() {
 		return m_content;
 	}
 
+	public Date getDate() {
+		return m_date;
+	}
+
 	public String getGroup() {
 		return m_group;
+	}
+
+	public String getKey() {
+		return m_level + ":" + m_type + ":" + m_group + ":" + m_metric;
 	}
 
 	public String getLevel() {
@@ -48,13 +52,13 @@ public class AlertEntity {
 		return m_type;
 	}
 
-	public AlertEntity setDate(Date alertDate) {
-		m_date = alertDate;
+	public AlertEntity setContent(String content) {
+		m_content = content;
 		return this;
 	}
 
-	public AlertEntity setContent(String content) {
-		m_content = content;
+	public AlertEntity setDate(Date alertDate) {
+		m_date = alertDate;
 		return this;
 	}
 

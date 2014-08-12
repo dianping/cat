@@ -100,7 +100,12 @@ public class AppDataService {
 	}
 
 	public double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize() + 1];
+		int n = convertedData.getMaxSize() + 1;
+		double[] value = new double[n];
+
+		for (int i = 0; i < n; i++) {
+			value[i] = 100.0;
+		}
 
 		try {
 			for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
@@ -116,7 +121,7 @@ public class AppDataService {
 					}
 					sum += number;
 				}
-				value[key / 5] = (double) success / sum;
+				value[key / 5] = (double) success / sum * 100;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);

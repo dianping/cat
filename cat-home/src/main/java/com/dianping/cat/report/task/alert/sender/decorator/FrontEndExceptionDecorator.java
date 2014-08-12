@@ -31,7 +31,7 @@ public class FrontEndExceptionDecorator extends ExceptionDecorator {
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
-		map.put("date", m_dateFormat.format(alert.getDate()));
+		map.put("date", m_format.format(alert.getDate()));
 		map.put("contactInfo", contactInfo);
 
 		return map;
