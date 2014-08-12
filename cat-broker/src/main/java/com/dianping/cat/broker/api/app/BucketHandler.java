@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.app;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -48,6 +49,7 @@ public class BucketHandler implements Task {
 		Date period = new Date(cal.getTimeInMillis());
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
+			List<AppDataCommand> commands = new ArrayList<AppDataCommand>();
 			HashMap<String, AppData> value = outerEntry.getValue();
 
 			for (Entry<String, AppData> entry : value.entrySet()) {
@@ -70,12 +72,15 @@ public class BucketHandler implements Task {
 				proto.setResponsePackage(appData.getResponseByte());
 				proto.setCreationDate(new Date());
 
-				try {
-					m_appDataService.insertSignal(proto);
-				} catch (Exception e) {
-					Cat.logError(e);
+				commands.add(proto);
+
+				if (commands.size() >= 100) {
+					batchInsert(commands);
+
+					commands = new ArrayList<AppDataCommand>();
 				}
 			}
+			batchInsert(commands);
 		}
 	}
 
