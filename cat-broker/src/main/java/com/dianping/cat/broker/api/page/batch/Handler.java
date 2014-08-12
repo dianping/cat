@@ -47,6 +47,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private Logger m_logger;
 
+	private int m_error;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -149,7 +151,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							processOneRecord(cityId, operatorId, record);
 						}
 					} catch (Exception e) {
-						// ignore
+						Cat.logError(e);
 					}
 				}
 			} else {
@@ -187,7 +189,16 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					int responseTime = appData.getResponseTime();
 
 					if (responseTime < 60 * 1000) {
-						m_appDataConsumer.enqueue(appData);
+						boolean success = m_appDataConsumer.enqueue(appData);
+
+						if (!success) {
+							m_error++;
+
+							if (m_error % 1000 == 0) {
+								Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
+								m_logger.error("Error when offer appData to queue , discard number " + m_error);
+							}
+						}
 					} else {
 						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, String.valueOf(responseTime));
 					}

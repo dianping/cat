@@ -14,6 +14,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.message.Event;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
@@ -37,12 +38,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public void enqueue(AppData appData) {
-		m_appDataQueue.offer(appData);
-	}
-
-	public long getDataLoss() {
-		return m_dataLoss;
+	public boolean enqueue(AppData appData) {
+		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
@@ -54,10 +51,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		Threads.forGroup("Cat").start(bucketThreadController);
 		Threads.forGroup("Cat").start(appDataDispatcherThread);
-	}
-
-	public void setDataLoss(long dataLoss) {
-		m_dataLoss = dataLoss;
 	}
 
 	private class AppDataDispatcherThread implements Task {
@@ -80,19 +73,28 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 						timestamp = timestamp - timestamp % DURATION;
 						BucketHandler handler = m_tasks.get(new Long(timestamp));
 
-						if (handler == null || !handler.isActive()) {
-							m_dataLoss++;
-
-							if (m_dataLoss % 1000 == 0) {
-								m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
-							}
+						if (handler == null) {
+							recordErrorInfo();
 						} else {
-							handler.enqueue(appData);
+							boolean success = handler.enqueue(appData);
+
+							if (!success) {
+								recordErrorInfo();
+							}
 						}
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
+			}
+		}
+
+		private void recordErrorInfo() {
+			m_dataLoss++;
+
+			if (m_dataLoss % 1000 == 0) {
+				Cat.logEvent("Discard", "BucketHandler", Event.SUCCESS, null);
+				m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
 			}
 		}
 
