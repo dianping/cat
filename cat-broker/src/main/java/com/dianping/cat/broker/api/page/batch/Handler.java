@@ -94,6 +94,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		try {
 			String content = payload.getContent();
 			String[] lines = content.split("\n");
+			long time = System.currentTimeMillis();
 
 			for (String line : lines) {
 				String[] tabs = line.split("\t");
@@ -109,7 +110,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					if (StringUtils.isEmpty(httpStatus)) {
 						httpStatus = Constrants.NOT_SET;
 					}
-					entity.setTimestamp(Long.parseLong(tabs[0]));
+					// entity.setTimestamp(Long.parseLong(tabs[0]));
+					entity.setTimestamp(time);
 					entity.setTargetUrl(tabs[1]);
 					entity.setDuration(Double.parseDouble(tabs[2]));
 					entity.setHttpStatus(httpStatus);
@@ -150,6 +152,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						// ignore
 					}
 				}
+			} else {
+				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 	}
@@ -159,12 +163,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		if (items.length == 10) {
 			AppData appData = new AppData();
+			long time = System.currentTimeMillis();
 
 			try {
 				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
 
 				if (command != null) {
-					appData.setTimestamp(Long.parseLong(items[0]));
+					// appData.setTimestamp(Long.parseLong(items[0]));
+					appData.setTimestamp(time);
 					appData.setCommand(command);
 					appData.setNetwork(Integer.parseInt(items[1]));
 					appData.setVersion(Integer.parseInt(items[2]));
@@ -178,7 +184,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setOperator(operatorId);
 					appData.setCount(1);
 
-					m_appDataConsumer.enqueue(appData);
+					int responseTime = appData.getResponseTime();
+
+					if (responseTime < 60 * 1000) {
+						m_appDataConsumer.enqueue(appData);
+					} else {
+						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, String.valueOf(responseTime));
+					}
 					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
 				} else {
 					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);

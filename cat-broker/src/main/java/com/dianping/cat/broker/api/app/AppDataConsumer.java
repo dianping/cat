@@ -77,7 +77,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 					if (appData != null) {
 						long timestamp = appData.getTimestamp();
-						timestamp -= timestamp % DURATION;
+						timestamp = timestamp - timestamp % DURATION;
 						BucketHandler handler = m_tasks.get(new Long(timestamp));
 
 						if (handler == null || !handler.isActive()) {
