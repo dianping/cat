@@ -169,7 +169,7 @@ function parseMetricLineDataForApp(data) {
 	data.subTitles.forEach(function(title, i) {
 		var series = {}
 		series.name = title;
-		series.data = data.values[i];
+		series.data = data.valueObjects[i];
 		res.push(series);
 	});
 	return res;

@@ -20,22 +20,22 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	private AppDataService m_appDataService;
 
 	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
-		List<double[]> datas = new LinkedList<double[]>();
+		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
-			double[] data1 = prepareQueryData(queryEntity1, type);
+			Double[] data1 = prepareQueryData(queryEntity1, type);
 			datas.add(data1);
 		}
 
 		if (queryEntity2 != null) {
-			double[] values2 = prepareQueryData(queryEntity2, type);
+			Double[] values2 = prepareQueryData(queryEntity2, type);
 			datas.add(values2);
 		}
 		return buildChartData(datas, type);
 	}
 
-	private double[] prepareQueryData(QueryEntity queryEntity, String type) {
-		double[] value = m_appDataService.queryValue(queryEntity, type);
+	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
+		Double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;
 	}
@@ -52,7 +52,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	public LineChart buildChartData(final List<double[]> datas, String type) {
+	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
@@ -60,7 +60,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		int length = datas.size();
 
 		for (int i = 0; i < length; i++) {
-			double[] data = datas.get(i);
+			Double[] data = datas.get(i);
 
 			lineChart.add("查询" + (i + 1), data);
 		}

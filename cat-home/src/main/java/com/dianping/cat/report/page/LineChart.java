@@ -20,27 +20,29 @@ public class LineChart {
 	private List<String> m_subTitles = new ArrayList<String>();
 
 	private String m_title;
-	
+
 	private String m_unit = "Value/分钟";
-	
+
 	private String m_id;
 
 	private String m_htmlTitle;
 
 	private List<double[]> m_values = new ArrayList<double[]>();
 
+	private List<Double[]> m_valueObjects = new ArrayList<Double[]>();
+
 	private List<Map<Long, Double>> m_datas = new ArrayList<Map<Long, Double>>();
 
 	private double[] m_ylable;
-	
+
 	private double m_minYlable;
 
 	public LineChart() {
 	}
 
-	public LineChart add(String title, double[] value) {
+	public LineChart add(String title, Double[] value) {
 		m_subTitles.add(title);
-		m_values.add(value);
+		m_valueObjects.add(value);
 		return this;
 	}
 
@@ -71,14 +73,14 @@ public class LineChart {
 			return m_htmlTitle;
 		}
 	}
-	
-	public String getUnit(){
+
+	public String getUnit() {
 		return m_unit;
 	}
 
 	public String getId() {
-   	return m_id;
-   }
+		return m_id;
+	}
 
 	public String getJsonString() {
 		return new JsonBuilder().toJson(this);
@@ -108,6 +110,10 @@ public class LineChart {
 		return m_values;
 	}
 
+	public List<Double[]> getValueObjects() {
+		return m_valueObjects;
+	}
+
 	public double[] getValues(int index) {
 		int size = m_values.size();
 
@@ -131,8 +137,8 @@ public class LineChart {
 	}
 
 	public void setId(String id) {
-   	m_id = id;
-   }
+		m_id = id;
+	}
 
 	public LineChart setSize(int size) {
 		m_size = size;
@@ -157,8 +163,8 @@ public class LineChart {
 		m_title = title;
 		return this;
 	}
-	
-	public LineChart setUnit(String unit){
+
+	public LineChart setUnit(String unit) {
 		m_unit = unit;
 		return this;
 	}
@@ -169,12 +175,12 @@ public class LineChart {
 	}
 
 	public double getMinYlable() {
-   	return m_minYlable;
-   }
+		return m_minYlable;
+	}
 
 	public void setMinYlable(double minYlable) {
-   	m_minYlable = minYlable;
-   }
+		m_minYlable = minYlable;
+	}
 
 	public LineChart setYlable(double[] ylable) {
 		if (ylable == null) {
@@ -184,5 +190,5 @@ public class LineChart {
 		}
 		return this;
 	}
-	
+
 }
