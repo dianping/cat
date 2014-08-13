@@ -188,7 +188,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 					int responseTime = appData.getResponseTime();
 
-					if (responseTime < 60 * 1000) {
+					if (responseTime < 60 * 1000 && responseTime >= 0) {
 						boolean success = m_appDataConsumer.enqueue(appData);
 
 						if (!success) {
