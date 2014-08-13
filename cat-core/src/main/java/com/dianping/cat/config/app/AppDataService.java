@@ -31,6 +31,10 @@ public class AppDataService {
 
 	public static final String DELAY = "delay";
 
+	public void insertSignal(AppDataCommand proto) throws DalException {
+		m_dao.insert(proto);
+	}
+
 	public void insert(AppDataCommand[] proto) throws DalException {
 		m_dao.insert(proto);
 	}

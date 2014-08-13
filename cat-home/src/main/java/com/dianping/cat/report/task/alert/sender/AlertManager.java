@@ -72,7 +72,7 @@ public class AlertManager implements Initializable {
 		if (sendedAlert != null) {
 			long duration = System.currentTimeMillis() - sendedAlert.getDate().getTime();
 			if (duration / MILLIS1MINUTE < suspendMinute) {
-				Cat.logEvent("SuspendAlert", alertKey);
+				Cat.logEvent("SuspendAlert", alertKey, Event.SUCCESS, null);
 				return true;
 			}
 		}
