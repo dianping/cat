@@ -4096,6 +4096,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlertDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

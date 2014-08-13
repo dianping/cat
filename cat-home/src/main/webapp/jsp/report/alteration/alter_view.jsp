@@ -9,7 +9,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.alteration.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alteration.Model" scope="request" />
 
-<a:report title="Alteration Report" navUrlPrefix="">
+<a:navbar title="Alteration Report" navUrlPrefix="">
 	<jsp:body>
 	<%@ include file="alter_query.jsp"%>
 	<table	class="problem table table-striped table-bordered table-condensed table-hover">
@@ -41,7 +41,6 @@
 	</table>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".header").hide();
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		
@@ -101,4 +100,4 @@
 </script>
 </jsp:body>
 
-</a:report>
+</a:navbar>
