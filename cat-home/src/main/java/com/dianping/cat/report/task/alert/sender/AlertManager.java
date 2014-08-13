@@ -69,14 +69,15 @@ public class AlertManager implements Initializable {
 
 	public boolean isSuspend(String alertKey, int suspendMinute) {
 		AlertEntity sendedAlert = m_sendedAlerts.get(alertKey);
+
 		if (sendedAlert != null) {
 			long duration = System.currentTimeMillis() - sendedAlert.getDate().getTime();
+
 			if (duration / MILLIS1MINUTE < suspendMinute) {
 				Cat.logEvent("SuspendAlert", alertKey, Event.SUCCESS, null);
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -98,8 +99,9 @@ public class AlertManager implements Initializable {
 		if (suspendMinute > 0) {
 			if (isSuspend(alertKey, suspendMinute)) {
 				return true;
+			} else {
+				m_sendedAlerts.put(alertKey, alert);
 			}
-			m_sendedAlerts.put(alertKey, alert);
 		}
 
 		for (AlertChannel channel : channels) {
@@ -175,6 +177,7 @@ public class AlertManager implements Initializable {
 				long duration = System.currentTimeMillis() - currentTime;
 				if (duration < MILLIS1MINUTE) {
 					long lackMills = MILLIS1MINUTE - duration;
+
 					try {
 						TimeUnit.MILLISECONDS.sleep(lackMills);
 					} catch (InterruptedException e) {
