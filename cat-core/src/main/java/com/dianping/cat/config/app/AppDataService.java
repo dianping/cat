@@ -104,7 +104,12 @@ public class AppDataService {
 	}
 
 	public Double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
-		Double[] value = new Double[convertedData.getMaxSize() + 1];
+		int n = convertedData.getMaxSize() + 1;
+		Double[] value = new Double[n];
+
+		for (int i = 0; i < n; i++) {
+			value[i] = 100.0;
+		}
 
 		try {
 			for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
