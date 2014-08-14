@@ -42,6 +42,33 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("endTime")
 	private String m_endTime;
 
+	@FieldMeta("frequency")
+	private int m_frequency = 10;
+
+	@FieldMeta("fullScreen")
+	private boolean m_fullScreen = false;
+
+	@FieldMeta("refresh")
+	private boolean m_refresh = false;
+
+	@FieldMeta("showNetwork")
+	private boolean m_showNetwork = true;
+
+	@FieldMeta("showBusiness")
+	private boolean m_showBusiness = true;
+
+	@FieldMeta("showSystem")
+	private boolean m_showSystem = true;
+
+	@FieldMeta("showException")
+	private boolean m_showException = true;
+
+	@FieldMeta("showThirdParty")
+	private boolean m_thirdParty = true;
+
+	@FieldMeta("showFrontEndException")
+	private boolean m_frontEndException = true;
+
 	@FieldMeta("type")
 	private String m_type;
 
@@ -50,7 +77,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("receivers")
 	private String m_receivers;
-	
+
 	@FieldMeta("reportType")
 	private String m_reportType = "";
 
@@ -91,6 +118,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		} catch (Exception e) {
 			return new Date();
 		}
+	}
+
+	public int getFrequency() {
+		return m_frequency;
 	}
 
 	public String getGroup() {
@@ -158,6 +189,38 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public boolean isShowBusiness() {
+		return m_showBusiness;
+	}
+
+	public boolean isShowException() {
+		return m_showException;
+	}
+
+	public boolean isShowNetwork() {
+		return m_showNetwork;
+	}
+
+	public boolean isShowSystem() {
+		return m_showSystem;
+	}
+
+	public boolean isShowFrontEndException() {
+		return m_frontEndException;
+	}
+
+	public boolean isShowThirdParty() {
+		return m_thirdParty;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -176,6 +239,18 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setEndTime(String endTime) {
 		m_endTime = endTime;
+	}
+
+	public void setFrequency(int frequency) {
+		m_frequency = frequency;
+	}
+
+	public void setFrontEndException(boolean frontEndException) {
+		m_frontEndException = frontEndException;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
 	}
 
 	public void setGroup(String group) {
@@ -199,12 +274,36 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_receivers = receivers;
 	}
 
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
+	}
+
 	public void setReportType(String reportType) {
 		m_reportType = "";
 	}
 
+	public void setShowBusiness(boolean showBusiness) {
+		m_showBusiness = showBusiness;
+	}
+
+	public void setShowException(boolean showException) {
+		m_showException = showException;
+	}
+
+	public void setShowNetwork(boolean showNetwork) {
+		m_showNetwork = showNetwork;
+	}
+
+	public void setShowSystem(boolean showSystem) {
+		m_showSystem = showSystem;
+	}
+
 	public void setStartTime(String startTime) {
 		m_startTime = startTime;
+	}
+
+	public void setThirdParty(boolean thirdParty) {
+		m_thirdParty = thirdParty;
 	}
 
 	public void setTitle(String title) {

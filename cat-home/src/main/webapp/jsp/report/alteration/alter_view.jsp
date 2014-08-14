@@ -11,6 +11,8 @@
 
 <a:navbar title="Alteration Report" navUrlPrefix="">
 	<jsp:body>
+	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<%@ include file="alter_query.jsp"%>
 	<table	class="problem table table-striped table-bordered table-condensed table-hover">
 		<tr class="text-success">
@@ -41,6 +43,8 @@
 	</table>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+		$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		

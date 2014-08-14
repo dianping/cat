@@ -73,6 +73,8 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+	private SimpleDateFormat m_minSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
 	public Payload() {
 		super(ReportPage.ALTERATION);
 	}
@@ -111,7 +113,7 @@ public class Payload extends AbstractReportPayload<Action> {
 			return new Date();
 		} else {
 			try {
-				return m_sdf.parse(m_endTime);
+				return m_minSdf.parse(m_endTime);
 			} catch (ParseException e) {
 				return new Date();
 			}
@@ -148,7 +150,7 @@ public class Payload extends AbstractReportPayload<Action> {
 			return new Date(System.currentTimeMillis() - TimeUtil.ONE_HOUR / 2);
 		} else {
 			try {
-				return m_sdf.parse(m_startTime);
+				return m_minSdf.parse(m_startTime);
 			} catch (ParseException e) {
 				return new Date();
 			}
