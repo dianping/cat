@@ -70,12 +70,13 @@
 					<th width="60%">内容</th>
 				</tr>
 				<c:forEach var="entry" items="${model.alerts}" varStatus="status">
+					<tr class="noter">
+						<td rowspan="${fn:length(entry.value)+1}">${entry.key}</td>
+						<td style="display:none" colspan="5"></td>
+					</tr>
 					<c:forEach var="alert" items="${entry.value}" varStatus="status">
 						<c:set var="category" value="${fn:replace(alert.category,'-alert','')}"/>
 						<tr class="${category}">
-							<c:if test="${status.first eq 'true'}">
-								<td rowspan="${fn:length(entry.value)}">${entry.key}</td>
-							</c:if>
 							<td>${category}</td>
 							<td>${alert.type}</td>
 							<td>${alert.domain}</td>
@@ -95,22 +96,22 @@
 				</c:if>
 				
 				<c:if test="${payload.showNetwork == false}">
-					toggleButton("network");
+					toggleButton("network", true);
 				</c:if>
 				<c:if test="${payload.showException == false}">
-					toggleButton("exception");
+					toggleButton("exception", true);
 				</c:if>
 				<c:if test="${payload.showSystem == false}">
-					toggleButton("system");
+					toggleButton("system", true);
 				</c:if>
 				<c:if test="${payload.showBusiness == false}">
-					toggleButton("business");
+					toggleButton("business", true);
 				</c:if>
 				<c:if test="${payload.showThirdParty == false}">
-					toggleButton("thirdParty");
+					toggleButton("thirdParty", true);
 				</c:if>
 				<c:if test="${payload.showFrontEndException == false}">
-					toggleButton("frontEndException");
+					toggleButton("frontEndException", true);
 				</c:if>
 				
 				$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
@@ -119,22 +120,22 @@
 				$("#fullScreen").click(clickFullScreen);
 				
 				$("#networkButton").click(function(){
-					toggleButton("network");
+					toggleButton("network", false);
 				});
 				$("#businessButton").click(function(){
-					toggleButton("business");
+					toggleButton("business", false);
 				});
 				$("#systemButton").click(function(){
-					toggleButton("system");
+					toggleButton("system", false);
 				});
 				$("#exceptionButton").click(function(){
-					toggleButton("exception");
+					toggleButton("exception", false);
 				});
 				$("#frontEndExceptionButton").click(function(){
-					toggleButton("frontEndException");
+					toggleButton("frontEndException", false);
 				});
 				$("#thirdPartyButton").click(function(){
-					toggleButton("thirdParty");
+					toggleButton("thirdParty", false);
 				});
 				
 				var refresh = ${payload.refresh};
@@ -158,20 +159,41 @@
 				}
 				$('#fullScreenStr').val(!isFullScreen);
 			}
-			function toggleButton(button){
+			function toggleButton(button, isInitialized){
 				var status = $("#"+button+"Status").val() === 'true';
-				alert(status);
+				if(isInitialized){
+					$("#"+button+"Button").button('toggle');
+					status = !status;
+				}
 				
 				if(status){
 					$("."+button).each(function(){
+						var counter = $(this).prevAll().filter(".noter").first().children().first();
+						
 						$(this).css("display","none");
+						var count = Number(counter.attr('rowspan'))-1;
+						counter.attr('rowspan', count);
 					});
 				}else{
 					$("."+button).each(function(){
+						var counter = $(this).prevAll().filter(".noter").first().children().first();
+						
 						$(this).css("display","table-row");
+						var count = Number(counter.attr('rowspan'))+1;
+						counter.attr('rowspan', count);
 					});
 				}
 				$("#"+button+"Status").val(String(!status));
+			}
+			function getType(){
+				var networkStr=$('#networkStatus').val();
+				var businessStr=$('#businessStatus').val();
+				var systemStr=$('#systemStatus').val();
+				var exceptionStr=$('#exceptionStatus').val();
+				var frontEndExceptionStr=$('#frontEndExceptionStatus').val();
+				var thirdPartyStr=$('#thirdPartyStatus').val();
+				return "showNetwork="+networkStr+"&showBusiness="+businessStr+"&showSystem="+systemStr+"&showException="+exceptionStr+
+				"&showFrontEndException="+frontEndExceptionStr+"&showThirdParty="+thirdPartyStr;
 			}
 			function queryNew(){
 				var startTime=$("#startTime").val();
@@ -180,21 +202,21 @@
 				var level=$("#level").val();
 				var metric=$("#metric").val();
 				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen;
+				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
 			}
 			function queryFrequency(frequency){
 				var domain=$("#domain").val();
 				var level=$("#level").val();
 				var metric=$("#metric").val();
 				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency;
+				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency+"&"+getType();
 			}
 			function refreshPage(){
 				var domain=$("#domain").val();
 				var level=$("#level").val();
 				var metric=$("#metric").val();
 				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency};
+				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency}+"&"+getType();
 			}
 		</script>
 	</jsp:body>
