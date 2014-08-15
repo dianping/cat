@@ -39,9 +39,9 @@ public class IpService implements Initializable {
 					ipInfo.setProvince(area.getProvince());
 					ipInfo.setCity(area.getCity());
 				} else {
-					ipInfo.setNation("未知");
-					ipInfo.setProvince("未知");
-					ipInfo.setCity("未知");
+					ipInfo.setNation("其他");
+					ipInfo.setProvince("其他");
+					ipInfo.setCity("其他");
 				}
 
 				Corporation corp = m_corps.get(m_corpIds[mid]);

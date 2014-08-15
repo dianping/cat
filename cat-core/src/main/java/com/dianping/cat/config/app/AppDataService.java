@@ -31,11 +31,15 @@ public class AppDataService {
 
 	public static final String DELAY = "delay";
 
+	public void insertSignal(AppDataCommand proto) throws DalException {
+		m_dao.insert(proto);
+	}
+
 	public void insert(AppDataCommand[] proto) throws DalException {
 		m_dao.insert(proto);
 	}
 
-	public double[] queryValue(QueryEntity entity, String type) {
+	public Double[] queryValue(QueryEntity entity, String type) {
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -99,12 +103,12 @@ public class AppDataService {
 		return new AppDataCommandMap(n, dataMap);
 	}
 
-	public double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
+	public Double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
 		int n = convertedData.getMaxSize() + 1;
-		double[] value = new double[n];
+		Double[] value = new Double[n];
 
 		for (int i = 0; i < n; i++) {
-			value[i] = 1.0;
+			value[i] = 100.0;
 		}
 
 		try {
@@ -121,7 +125,7 @@ public class AppDataService {
 					}
 					sum += number;
 				}
-				value[key / 5] = (double) success / sum;
+				value[key / 5] = (double) success / sum * 100;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -141,21 +145,20 @@ public class AppDataService {
 		return false;
 	}
 
-	public double[] queryRequestCount(AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize() + 1];
+	public Double[] queryRequestCount(AppDataCommandMap convertedData) {
+		Double[] value = new Double[convertedData.getMaxSize() + 1];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
-				long count = data.getAccessNumberSum();
-
-				value[data.getMinuteOrder() / 5] = count;
+				double count = data.getAccessNumberSum();
+				value[data.getMinuteOrder() / 5] = new Double(count);
 			}
 		}
 		return value;
 	}
 
-	public double[] queryDelayAvg(AppDataCommandMap convertedData) {
-		double[] value = new double[convertedData.getMaxSize() + 1];
+	public Double[] queryDelayAvg(AppDataCommandMap convertedData) {
+		Double[] value = new Double[convertedData.getMaxSize() + 1];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
 			for (AppDataCommand data : entry.getValue()) {
@@ -166,6 +169,7 @@ public class AppDataService {
 				value[data.getMinuteOrder() / 5] = avg;
 			}
 		}
+
 		return value;
 	}
 

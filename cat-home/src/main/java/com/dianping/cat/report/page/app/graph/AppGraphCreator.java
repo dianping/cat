@@ -20,46 +20,47 @@ public class AppGraphCreator extends AbstractGraphCreator {
 	private AppDataService m_appDataService;
 
 	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
-		List<double[]> datas = new LinkedList<double[]>();
+		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
-			double[] data1 = prepareQueryData(queryEntity1, type);
+			Double[] data1 = prepareQueryData(queryEntity1, type);
 			datas.add(data1);
 		}
 
 		if (queryEntity2 != null) {
-			double[] values2 = prepareQueryData(queryEntity2, type);
+			Double[] values2 = prepareQueryData(queryEntity2, type);
 			datas.add(values2);
 		}
 		return buildChartData(datas, type);
 	}
 
-	private double[] prepareQueryData(QueryEntity queryEntity, String type) {
-		double[] value = m_appDataService.queryValue(queryEntity, type);
+	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
+		Double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;
 	}
 
 	private String queryType(String type) {
 		if (AppDataService.SUCCESS.equals(type)) {
-			return "成功率";
+			return "成功率（%/5分钟）";
 		} else if (AppDataService.REQUEST.equals(type)) {
-			return "请求数";
+			return "请求数（个/5分钟）";
 		} else if (AppDataService.DELAY.equals(type)) {
-			return "成功延时(ms)";
+			return "延时平均值（毫秒/5分钟）";
 		} else {
 			throw new RuntimeException("unexpected query type, type:" + type);
 		}
 	}
 
-	public LineChart buildChartData(final List<double[]> datas, String type) {
+	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
+		lineChart.setUnit("");
 		lineChart.setHtmlTitle(queryType(type));
 		int length = datas.size();
 
 		for (int i = 0; i < length; i++) {
-			double[] data = datas.get(i);
+			Double[] data = datas.get(i);
 
 			lineChart.add("查询" + (i + 1), data);
 		}

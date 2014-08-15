@@ -23,7 +23,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 
 	public static final String ID = AlertType.EXCEPTION;
 
-	protected DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {
@@ -58,7 +58,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
-		map.put("date", m_dateFormat.format(alert.getDate()));
+		map.put("date", m_format.format(alert.getDate()));
 		map.put("contactInfo", contactInfo);
 
 		return map;

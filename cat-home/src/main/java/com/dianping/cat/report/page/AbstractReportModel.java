@@ -152,7 +152,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 		for (String ip : ips) {
 			String hostname = m_hostinfoService.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
+
+			if (hostname != null && !hostname.equalsIgnoreCase("null")) {
+				ipToHostname.put(ip, hostname);
+			}
 		}
 
 		return ipToHostname;

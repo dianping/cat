@@ -169,7 +169,7 @@ function parseMetricLineDataForApp(data) {
 	data.subTitles.forEach(function(title, i) {
 		var series = {}
 		series.name = title;
-		series.data = data.values[i];
+		series.data = data.valueObjects[i];
 		res.push(series);
 	});
 	return res;
@@ -178,7 +178,7 @@ function parseMetricLineDataForApp(data) {
 function graphMetricChartForApp(container, data, datePair) {
 	Highcharts.setOptions({
 		global : {
-			useUTC : false
+			useUTC : true
 		}
 	});
 	var ylabelMin = data.minYlable;
@@ -232,7 +232,7 @@ function graphMetricChartForApp(container, data, datePair) {
 					allowPointSelect : false,
 					formatter : function() {
 						var number0 = Number(this.y).toFixed(0);
-						var number1 = Number(this.y).toFixed(1);
+						var number1 = Number(this.y).toFixed(2);
 						var number = number1;
 
 						if (Number(number1) == Number(number0)) {

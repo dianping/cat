@@ -1,5 +1,6 @@
 package com.dianping.cat.broker.api.app;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,14 +23,14 @@ public class BucketHandler implements Task {
 
 	private boolean m_isActive = true;
 
-	private HashMap<Integer, HashMap<String, AppData>> m_mergedData;
+	private HashMap<Integer, HashMap<String, AppData>> m_datas;
 
 	private long m_startTime;
 
 	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataQueue = new AppDataQueue();
-		m_mergedData = new LinkedHashMap<Integer, HashMap<String, AppData>>();
+		m_datas = new LinkedHashMap<Integer, HashMap<String, AppData>>();
 		m_appDataService = appDataService;
 	}
 
@@ -39,17 +40,16 @@ public class BucketHandler implements Task {
 
 		int minute = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
 		minute = minute - minute % 5;
-		
+
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
-		
-		Date period = new Date(cal.getTimeInMillis());
-		List<AppDataCommand> appDataCommands = new ArrayList<AppDataCommand>();
-		int batchSize = 100;
 
-		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_mergedData.entrySet()) {
+		Date period = new Date(cal.getTimeInMillis());
+
+		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
+			List<AppDataCommand> commands = new ArrayList<AppDataCommand>();
 			HashMap<String, AppData> value = outerEntry.getValue();
 
 			for (Entry<String, AppData> entry : value.entrySet()) {
@@ -71,18 +71,20 @@ public class BucketHandler implements Task {
 				proto.setRequestPackage(appData.getRequestByte());
 				proto.setResponsePackage(appData.getResponseByte());
 				proto.setCreationDate(new Date());
-				appDataCommands.add(proto);
 
-				if (appDataCommands.size() >= batchSize) {
-					batchInsert(appDataCommands);
-					appDataCommands = new ArrayList<AppDataCommand>();
+				commands.add(proto);
+
+				if (commands.size() >= 100) {
+					batchInsert(commands);
+
+					commands = new ArrayList<AppDataCommand>();
 				}
 			}
+			batchInsert(commands);
 		}
-		batchInsert(appDataCommands);
 	}
 
-	private void batchInsert(List<AppDataCommand> appDataCommands) {
+	protected void batchInsert(List<AppDataCommand> appDataCommands) {
 		try {
 			int length = appDataCommands.size();
 			AppDataCommand[] array = new AppDataCommand[length];
@@ -97,13 +99,15 @@ public class BucketHandler implements Task {
 		}
 	}
 
-	public void enqueue(AppData appData) {
-		m_appDataQueue.offer(appData);
+	public boolean enqueue(AppData appData) {
+		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
 	public String getName() {
-		return "BucketHandler-" + m_startTime;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		return "BucketHandler-" + sdf.format(new Date(m_startTime));
 	}
 
 	public boolean isActive() {
@@ -113,34 +117,34 @@ public class BucketHandler implements Task {
 	private void processEntity(AppData appData) {
 		int command = appData.getCommand();
 		StringBuilder sb = new StringBuilder();
+		char split = ':';
 
-		sb.append(m_startTime).append(":");
-		sb.append(appData.getCity()).append(":");
-		sb.append(appData.getOperator()).append(":");
-		sb.append(appData.getConnectType()).append(":");
-		sb.append(appData.getVersion()).append(":");
-		sb.append(appData.getNetwork()).append(":");
-		sb.append(appData.getCode()).append(":");
+		sb.append(appData.getCity()).append(split);
+		sb.append(appData.getOperator()).append(split);
+		sb.append(appData.getConnectType()).append(split);
+		sb.append(appData.getVersion()).append(split);
+		sb.append(appData.getNetwork()).append(split);
+		sb.append(appData.getCode()).append(split);
 		sb.append(appData.getPlatform());
 
 		String key = sb.toString();
-		HashMap<String, AppData> secondMap = m_mergedData.get(command);
+		HashMap<String, AppData> secondMap = m_datas.get(command);
 
 		if (secondMap == null) {
 			secondMap = new LinkedHashMap<String, AppData>();
 
 			secondMap.put(key, appData);
-			m_mergedData.put(command, secondMap);
+			m_datas.put(command, secondMap);
 		} else {
 			AppData mergedAppData = secondMap.get(key);
 
 			if (mergedAppData == null) {
 				secondMap.put(key, appData);
 			} else {
-				mergedAppData.setCount(mergedAppData.getCount() + 1);
-				mergedAppData.setRequestByte(mergedAppData.getRequestByte() + appData.getRequestByte());
-				mergedAppData.setResponseByte(mergedAppData.getResponseByte() + appData.getResponseByte());
-				mergedAppData.setResponseTime(mergedAppData.getResponseTime() + appData.getResponseTime());
+				mergedAppData.addCount(appData.getCount());
+				mergedAppData.addRequestByte(appData.getRequestByte());
+				mergedAppData.addResponseByte(appData.getResponseByte());
+				mergedAppData.addResponseTime(appData.getResponseTime());
 			}
 		}
 	}
