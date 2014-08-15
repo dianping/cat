@@ -160,21 +160,13 @@
 				$('#fullScreenStr').val(!isFullScreen);
 			}
 			function toggleButton(button, isInitialized){
-				var status = $("#"+button+"Status").val() === 'true';
+				var targetStatus = $("#"+button+"Status").val() === 'false';
 				if(isInitialized){
 					$("#"+button+"Button").button('toggle');
-					status = !status;
+					targetStatus = !targetStatus;
 				}
 				
-				if(status){
-					$("."+button).each(function(){
-						var counter = $(this).prevAll().filter(".noter").first().children().first();
-						
-						$(this).css("display","none");
-						var count = Number(counter.attr('rowspan'))-1;
-						counter.attr('rowspan', count);
-					});
-				}else{
+				if(targetStatus){
 					$("."+button).each(function(){
 						var counter = $(this).prevAll().filter(".noter").first().children().first();
 						
@@ -182,8 +174,16 @@
 						var count = Number(counter.attr('rowspan'))+1;
 						counter.attr('rowspan', count);
 					});
+				}else{
+					$("."+button).each(function(){
+						var counter = $(this).prevAll().filter(".noter").first().children().first();
+						
+						$(this).css("display","none");
+						var count = Number(counter.attr('rowspan'))-1;
+						counter.attr('rowspan', count);
+					});
 				}
-				$("#"+button+"Status").val(String(!status));
+				$("#"+button+"Status").val(String(targetStatus));
 			}
 			function getType(){
 				var networkStr=$('#networkStatus').val();
