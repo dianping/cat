@@ -88,13 +88,15 @@ public class AlertManager implements Initializable {
 		String level = alert.getLevel();
 		String alertKey = alert.getKey();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
-		int recoverMinute = m_policyManager.queryRecoverMinute(type, group, level);
 		int suspendMinute = m_policyManager.querySuspendMinute(type, group, level);
 
-		if (recoverMinute > 0) {
-			String key = recoverMinute + ":" + alertKey;
-			m_unrecoveredAlerts.put(key, alert);
-		}
+		m_unrecoveredAlerts.put(alertKey, alert);
+
+		Pair<String, String> mailPair = m_decoratorManager.generateTitleAndContent(alert);
+		String mailTitle = mailPair.getKey();
+		String mailContent = m_splitterManager.process(mailPair.getValue(), AlertChannel.MAIL);
+		AlertMessageEntity dbMessage = new AlertMessageEntity(group, mailTitle, type, mailContent, null);
+		m_alertEntityService.storeAlert(alert, dbMessage);
 
 		if (suspendMinute > 0) {
 			if (isSuspend(alertKey, suspendMinute)) {
@@ -110,8 +112,6 @@ public class AlertManager implements Initializable {
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
-			m_alertEntityService.storeAlert(alert, message);
-
 			if (m_senderManager.sendAlert(channel, message)) {
 				result = true;
 			}
@@ -120,23 +120,23 @@ public class AlertManager implements Initializable {
 	}
 
 	private boolean sendRecoveryMessage(AlertEntity alert) {
-		boolean result = false;
 		String type = alert.getType();
 		String group = alert.getGroup();
 		String level = alert.getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
-			String title = "[告警恢复] [告警类型]" + generateTypeStr(type) + "[" + group + " " + alert.getMetric() + "]";
+			String title = "[告警恢复] [告警类型 " + generateTypeStr(type) + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复]";
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
 			if (m_senderManager.sendAlert(channel, message)) {
-				result = true;
+				return true;
 			}
 		}
-		return result;
+
+		return false;
 	}
 
 	private String generateTypeStr(String type) {
@@ -176,9 +176,8 @@ public class AlertManager implements Initializable {
 						AlertEntity alert = entry.getValue();
 						long alertTime = alert.getDate().getTime();
 						int alreadyMinutes = (int) ((currentTime - alertTime) / MILLIS1MINUTE);
-						int requiredMinutes = Integer.parseInt(key.split(":")[0]);
 
-						if (alreadyMinutes >= requiredMinutes) {
+						if (alreadyMinutes >= 1) {
 							recoveredItems.add(key);
 							sendRecoveryMessage(alert);
 						}

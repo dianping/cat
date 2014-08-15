@@ -6,7 +6,7 @@ import java.util.Map;
 public enum AlertType {
 
 	Business("business"), Network("network"), System("system"), 
-	ThirdParty("thirdParty"), Exception("exception"), FrontEndException("FRONT_END_EXCEPTION");
+	Exception("exception"), ThirdParty("thirdParty"), FrontEndException("FRONT_END_EXCEPTION");
 
 	private String m_name;
 

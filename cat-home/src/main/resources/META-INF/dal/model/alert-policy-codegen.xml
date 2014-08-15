@@ -15,7 +15,6 @@
     <attribute name="id" value-type="String" />
     <attribute name="send" value-type="String" />
     <attribute name="suspendMinute" value-type="int" />
-    <attribute name="recoverMinute" value-type="int" />
   </entity>
 </model>
 
