@@ -123,7 +123,7 @@ public class ThirdPartyAlert implements Task {
 
 	@Override
 	public String getName() {
-		return AlertType.THIRDPARTY;
+		return AlertType.ThirdParty.getName();
 	}
 
 	@Override

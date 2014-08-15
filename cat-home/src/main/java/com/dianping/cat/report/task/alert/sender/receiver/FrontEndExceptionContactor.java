@@ -19,7 +19,7 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 	@Inject
 	protected AlertConfigManager m_alertConfigManager;
 
-	public static final String ID = AlertType.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FrontEndException.getName();
 
 	@Override
 	public String getId() {
@@ -36,7 +36,7 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 			return mailReceivers;
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
-			
+
 			AggregationRule rule = m_aggConfigManager.queryAggration(id);
 			if (rule != null) {
 				mailReceivers.addAll(split(rule.getMails()));

@@ -21,7 +21,7 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertType.THIRDPARTY;
+	public static final String ID = AlertType.ThirdParty.getName();
 
 	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 

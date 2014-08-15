@@ -18,6 +18,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
@@ -126,7 +127,7 @@ public class AlertManager implements Initializable {
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		for (AlertChannel channel : channels) {
-			String title = "[告警恢复] [" + group + " " + alert.getMetric() + "]";
+			String title = "[告警恢复] [告警类型]" + generateTypeStr(type) + "[" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复]";
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
@@ -136,6 +137,24 @@ public class AlertManager implements Initializable {
 			}
 		}
 		return result;
+	}
+
+	private String generateTypeStr(String type) {
+		switch (AlertType.getTypeByName(type)) {
+		case Business:
+			return "业务告警";
+		case Network:
+			return "网络告警";
+		case System:
+			return "系统告警";
+		case Exception:
+			return "异常告警";
+		case ThirdParty:
+			return "第三方告警";
+		case FrontEndException:
+			return "前端告警";
+		}
+		return type;
 	}
 
 	private class RecoveryAnnouncer implements Task {
