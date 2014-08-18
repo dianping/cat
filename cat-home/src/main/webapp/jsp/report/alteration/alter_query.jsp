@@ -3,9 +3,17 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 	<div class="text-left"></div>
 	开始
-	<input type="text" name="startTime" id="startTime" value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-02-02 00:00:00">
+	<div id="startDatePicker" class="input-append date" >
+		<input name="startTime" id="startTime" style="height:auto; width: 150px;" readonly
+		value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
+		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
+	</div>
 	结束
-    <input type="text" name="endTime" id="endTime" value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-02-02 00:00:00">
+	<div id="endDatePicker" class="input-append date" >
+		<input name="endTime" id="endTime" style="height:auto; width: 150px;" readonly
+		value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
+		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
+	</div>
 	应用名
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名
@@ -26,9 +34,6 @@
 	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>   workflow 
 	<input type="checkbox" checked="checked" id="show_lazyman" class="typeCheckbox"/>   lazyman 
 	<br>
-	<div class="btn-group">
-	  
-	</div>
 	</div>
 
 <script>
@@ -58,7 +63,7 @@
 			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
 		</c:if>
 		<c:if test="${!payload.refresh}">
-			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm:ss"/>";
+			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>";
 		</c:if>
 	}
 	function queryFrequency(frequency){

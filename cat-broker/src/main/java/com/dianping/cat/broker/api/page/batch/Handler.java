@@ -205,13 +205,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);
+					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidPar", items[1], Event.SUCCESS, items[1]);
+			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
 		}
 	}
 

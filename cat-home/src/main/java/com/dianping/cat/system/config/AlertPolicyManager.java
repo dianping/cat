@@ -115,20 +115,6 @@ public class AlertPolicyManager implements Initializable {
 		return group.findLevel(levelName);
 	}
 
-	public int queryRecoverMinute(String typeName, String groupName, String levelName) {
-		try {
-			Level level = queryLevel(typeName, groupName, levelName);
-
-			if (level == null) {
-				return 0;
-			} else {
-				return level.getRecoverMinute();
-			}
-		} catch (Exception ex) {
-			return 0;
-		}
-	}
-
 	public int querySuspendMinute(String typeName, String groupName, String levelName) {
 		try {
 			Level level = queryLevel(typeName, groupName, levelName);

@@ -22,7 +22,7 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return AlertType.SYSTEM;
+		return AlertType.System.getName();
 	}
 
 	@Override

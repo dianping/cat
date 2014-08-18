@@ -2,7 +2,9 @@ package com.dianping.cat.report.page.alert;
 
 
 public enum Action implements org.unidal.web.mvc.Action {
-	ALERT("alert");
+	ALERT("alert"),
+
+	VIEW("view");
 
 	private String m_name;
 

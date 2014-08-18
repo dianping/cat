@@ -1,16 +1,27 @@
 package com.dianping.cat.report.page.alert;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.home.dal.report.Alert;
+import com.dianping.cat.home.dal.report.AlertDao;
+import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
@@ -23,6 +34,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SenderManager m_senderManager;
+
+	@Inject
+	private AlertDao m_alertDao;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -59,9 +73,25 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 			break;
+		case VIEW:
+			Date startTime = payload.getStartTime();
+			Date endTime = payload.getEndTime();
+			String domain = payload.getDomain();
+			String metric = payload.getMetric();
+			String level = payload.getLevel();
+			List<Alert> alerts;
+			try {
+				alerts = m_alertDao.queryAlertsByTimeDomainMetricType(startTime, endTime, domain, metric, level,
+				      AlertEntity.READSET_FULL);
+			} catch (DalException e) {
+				alerts = new ArrayList<Alert>();
+				Cat.logError(e);
+			}
+			model.setAlerts(generateAlertMap(alerts));
+			break;
 		}
 
-		model.setAction(Action.ALERT);
+		model.setAction(action);
 		model.setPage(ReportPage.ALERT);
 
 		if (!ctx.isProcessStopped()) {
@@ -69,7 +99,24 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	//
+	private Map<String, List<Alert>> generateAlertMap(List<Alert> alerts) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Map<String, List<Alert>> map = new LinkedHashMap<String, List<Alert>>();
+
+		for (Alert alert : alerts) {
+			String time = format.format(alert.getAlertTime());
+			List<Alert> alertsInMinute = map.get(time);
+			if (alertsInMinute == null) {
+				alertsInMinute = new ArrayList<Alert>();
+				map.put(time, alertsInMinute);
+			}
+
+			alertsInMinute.add(alert);
+		}
+
+		return map;
+	}
+
 	private void setAlertResult(Model model, int status) {
 		switch (status) {
 		case 0:

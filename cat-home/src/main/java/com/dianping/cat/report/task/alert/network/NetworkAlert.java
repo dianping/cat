@@ -22,7 +22,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return AlertType.NETWORK;
+		return AlertType.Network.getName();
 	}
 
 	@Override

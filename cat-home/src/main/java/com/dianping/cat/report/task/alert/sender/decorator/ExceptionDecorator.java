@@ -21,7 +21,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertType.EXCEPTION;
+	public static final String ID = AlertType.Exception.getName();
 
 	protected DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
