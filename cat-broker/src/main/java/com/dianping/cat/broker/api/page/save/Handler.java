@@ -15,7 +15,7 @@ import com.dianping.cat.broker.api.app.AppDataConsumer;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
-	private JspViewer m_jspViewer;
+	protected JspViewer m_jspViewer;
 	
 	@Inject
 	private AppDataConsumer m_appDataConsumer;

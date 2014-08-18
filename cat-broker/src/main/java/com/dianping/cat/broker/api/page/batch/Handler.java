@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private Logger m_logger;
 
 	private volatile int m_error;
-	
+
 	public static final String TOO_LONG = "toolongurl.bin";
 
 	@Override
@@ -195,7 +195,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						offerQueue(appData);
 
 						Cat.logEvent("Command", url, Event.SUCCESS, null);
-					} else {
+					} else if (responseTime > 0) {
 						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 
 						if (tooLong != null) {
@@ -203,6 +203,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							offerQueue(appData);
 						}
 						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+					} else {
+						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
 					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
