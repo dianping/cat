@@ -33,9 +33,9 @@ public class LineChart {
 
 	private List<Map<Long, Double>> m_datas = new ArrayList<Map<Long, Double>>();
 
-	private double[] m_ylable;
+	private double[] m_ylabel;
 
-	private double m_minYlable;
+	private double m_minYlabel = 0D;
 
 	public LineChart() {
 	}
@@ -125,7 +125,7 @@ public class LineChart {
 	}
 
 	public double[] getYlable() {
-		return m_ylable;
+		return m_ylabel;
 	}
 
 	public void setDatas(List<Map<Long, Double>> datas) {
@@ -175,20 +175,19 @@ public class LineChart {
 	}
 
 	public double getMinYlable() {
-		return m_minYlable;
+		return m_minYlabel;
 	}
 
 	public void setMinYlable(double minYlable) {
-		m_minYlable = minYlable;
+		m_minYlabel = minYlable;
 	}
 
 	public LineChart setYlable(double[] ylable) {
 		if (ylable == null) {
-			m_ylable = new double[0];
+			m_ylabel = new double[0];
 		} else {
-			m_ylable = Arrays.copyOf(ylable, ylable.length);
+			m_ylabel = Arrays.copyOf(ylable, ylable.length);
 		}
 		return this;
 	}
-
 }

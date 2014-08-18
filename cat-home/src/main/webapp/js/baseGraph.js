@@ -96,7 +96,7 @@ function graphMetricChart(container, data) {
 			useUTC : false
 		}
 	});
-	var ylabelMin = data.minYlable;
+	var ylabelMin = data.minYlabel;
 	var _data = parseMetricLineData(data);
 	$(container).highcharts(
 			{
@@ -181,7 +181,7 @@ function graphMetricChartForApp(container, data, datePair) {
 			useUTC : true
 		}
 	});
-	var ylabelMin = data.minYlable;
+	var ylabelMin = data.minYlabel;
 	var _data = parseMetricLineDataForApp(data);
 	$(container).highcharts(
 			{

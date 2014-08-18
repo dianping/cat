@@ -144,7 +144,7 @@ public abstract class BaseAlert {
 				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		}
-		return null;
+		return new ArrayList<AlertResultEntity>();
 	}
 
 	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
