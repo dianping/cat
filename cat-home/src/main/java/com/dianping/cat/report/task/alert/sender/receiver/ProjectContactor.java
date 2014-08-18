@@ -20,7 +20,6 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 
 	@Override
 	public List<String> queryEmailContactors(String id) {
-		Project project = m_projectService.findByDomain(id);
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -28,17 +27,18 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return mailReceivers;
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
+
+			Project project = m_projectService.findByDomain(id);
+
 			if (project != null) {
 				mailReceivers.addAll(split(project.getEmail()));
 			}
-
 			return mailReceivers;
 		}
 	}
 
 	@Override
 	public List<String> querySmsContactors(String id) {
-		Project project = m_projectService.findByDomain(id);
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -46,6 +46,9 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return smsReceivers;
 		} else {
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+
+			Project project = m_projectService.findByDomain(id);
+
 			if (project != null) {
 				smsReceivers.addAll(split(project.getPhone()));
 			}
@@ -55,7 +58,6 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 
 	@Override
 	public List<String> queryWeiXinContactors(String id) {
-		Project project = m_projectService.findByDomain(id);
 		List<String> weixinReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 
@@ -63,10 +65,12 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 			return weixinReceivers;
 		} else {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			Project project = m_projectService.findByDomain(id);
+
 			if (project != null) {
 				weixinReceivers.addAll(split(project.getEmail()));
 			}
-
 			return weixinReceivers;
 		}
 	}

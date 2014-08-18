@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.alert;
 
+
 public enum Action implements org.unidal.web.mvc.Action {
 	ALERT("alert"),
 
@@ -16,8 +17,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 			if (action.getName().equals(name)) {
 				return action;
 			}
+			
 		}
-
+		
 		return defaultAction;
 	}
 

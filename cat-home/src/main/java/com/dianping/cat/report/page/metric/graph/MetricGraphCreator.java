@@ -36,18 +36,20 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 	protected String buildContactInfo(String domainName) {
 		try {
 			Project project = m_projectService.findByDomain(domainName);
-			String owners = project.getOwner();
-			String phones = project.getPhone();
-			StringBuilder builder = new StringBuilder();
 
-			if (!StringUtils.isEmpty(owners)) {
-				builder.append("[负责人: ").append(owners);
-			}
-			if (!StringUtils.isEmpty(phones)) {
-				builder.append(" 手机: ").append(phones).append(" ]");
-			}
+			if (project != null) {
+				String owners = project.getOwner();
+				String phones = project.getPhone();
+				StringBuilder builder = new StringBuilder();
 
-			return builder.toString();
+				if (!StringUtils.isEmpty(owners)) {
+					builder.append("[负责人: ").append(owners);
+				}
+				if (!StringUtils.isEmpty(phones)) {
+					builder.append(" 手机: ").append(phones).append(" ]");
+				}
+				return builder.toString();
+			}
 		} catch (Exception ex) {
 			Cat.logError("build contact info error for doamin: " + domainName, ex);
 		}
@@ -258,7 +260,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		String metricId = key.substring(0, index);
 		String type = key.substring(index + 1);
 		MetricItemConfig config = m_metricConfigManager.queryMetricItemConfig(metricId);
-		
+
 		if (config != null) {
 			String des = queryMetricItemDes(type);
 			String title = config.getTitle() + des;
