@@ -1,4 +1,4 @@
-package com.dianping.cat.message.spi.core;
+package com.dianping.cat.message.spi.codec;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

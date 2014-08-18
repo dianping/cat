@@ -192,37 +192,41 @@ public class BucketHandler implements Task {
 		if (m_datas.size() > 0) {
 			try {
 				File parentDir = new File(SAVE_PATH);
-				parentDir.mkdirs();
+				boolean success = parentDir.mkdirs();
 
-				String filePath = SAVE_PATH + String.valueOf(m_startTime);
-				BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+				if (success) {
+					String filePath = SAVE_PATH + String.valueOf(m_startTime);
+					BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+					char tab = '\t';
+					char enter = '\n';
 
-				for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
-					HashMap<String, AppData> value = outerEntry.getValue();
+					for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
+						HashMap<String, AppData> value = outerEntry.getValue();
 
-					for (Entry<String, AppData> entry : value.entrySet()) {
-						AppData appData = entry.getValue();
+						for (Entry<String, AppData> entry : value.entrySet()) {
+							AppData appData = entry.getValue();
 
-						StringBuilder sb = new StringBuilder();
-						sb.append(appData.getTimestamp()).append("\t");
-						sb.append(appData.getCity()).append("\t");
-						sb.append(appData.getOperator()).append("\t");
-						sb.append(appData.getNetwork()).append("\t");
-						sb.append(appData.getVersion()).append("\t");
-						sb.append(appData.getConnectType()).append("\t");
-						sb.append(appData.getCommand()).append("\t");
-						sb.append(appData.getCode()).append("\t");
-						sb.append(appData.getPlatform()).append("\t");
-						sb.append(appData.getRequestByte()).append("\t");
-						sb.append(appData.getResponseByte()).append("\t");
-						sb.append(appData.getResponseTime()).append("\n");
+							StringBuilder sb = new StringBuilder();
+							sb.append(appData.getTimestamp()).append(tab);
+							sb.append(appData.getCity()).append(tab);
+							sb.append(appData.getOperator()).append(tab);
+							sb.append(appData.getNetwork()).append(tab);
+							sb.append(appData.getVersion()).append(tab);
+							sb.append(appData.getConnectType()).append(tab);
+							sb.append(appData.getCommand()).append(tab);
+							sb.append(appData.getCode()).append(tab);
+							sb.append(appData.getPlatform()).append(tab);
+							sb.append(appData.getRequestByte()).append(tab);
+							sb.append(appData.getResponseByte()).append(tab);
+							sb.append(appData.getResponseTime()).append(enter);
 
-						writer.append(sb.toString());
+							writer.append(sb.toString());
+						}
 					}
+					writer.close();
+				} else {
+					Cat.logError(new RuntimeException("error when create temp data file " + parentDir.getAbsolutePath()));
 				}
-
-				writer.close();
-
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -233,7 +237,7 @@ public class BucketHandler implements Task {
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
 			String line;
-			
+
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] items = line.split("\t");
 				AppData appData = new AppData();
