@@ -13,7 +13,6 @@
       <dependency>
          <groupId>com.dianping.cat</groupId>
          <artifactId>cat-client</artifactId>
-         <version>1.0.4</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
