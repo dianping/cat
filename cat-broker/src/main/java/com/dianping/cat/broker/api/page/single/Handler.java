@@ -72,8 +72,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Cat.logEvent("Code", "Error", Event.SUCCESS, errorCode + " " + httpStatus);
 			}
 		} else {
-			Cat.logEvent("ip", "miss", Event.SUCCESS, request.getHeader("x-forwarded-for"));
-
+			Cat.logEvent("unknownIp", "single", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 		response.getWriter().write("OK");

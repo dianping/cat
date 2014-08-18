@@ -112,7 +112,7 @@ public class AlertConfigTest {
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
 		Assert.assertNull(result);
 
-		itemConfig.setDecreaseValue(40);
+		itemConfig.setDecreaseValue(30);
 		itemConfig.setDecreasePercentage(50);
 		conditions = buildConditions(convert(itemConfig));
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
@@ -124,19 +124,19 @@ public class AlertConfigTest {
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
 		Assert.assertNull(result);
 
-		itemConfig.setDecreaseValue(40);
+		itemConfig.setDecreaseValue(30);
 		itemConfig.setDecreasePercentage(79);
 		conditions = buildConditions(convert(itemConfig));
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
 		Assert.assertEquals(result.isTriggered(), true);
 
-		itemConfig.setDecreaseValue(40);
+		itemConfig.setDecreaseValue(30);
 		itemConfig.setDecreasePercentage(80);
 		conditions = buildConditions(convert(itemConfig));
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
 		Assert.assertNull(result);
 
-		itemConfig.setDecreaseValue(40);
+		itemConfig.setDecreaseValue(30);
 		itemConfig.setDecreasePercentage(80);
 		conditions = buildConditions(convert(itemConfig));
 		result = extractError(alertConfig.checkData(value4, baseline4, conditions));

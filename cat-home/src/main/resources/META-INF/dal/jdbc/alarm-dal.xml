@@ -67,6 +67,32 @@
 			</query>
 		</query-defs>
 	</entity>
+    <entity name="scheduled-subscription" table="scheduledSubscription"
+            alias="s2">
+        <member name="creation-date" insert-expr="NOW()" />
+        <query-defs>
+            <query name="find-by-user-name" type="SELECT" multiple="true">
+                <param name="user-name" />
+                <statement><![CDATA[
+					SELECT <FIELDS/>
+					FROM <TABLE/>
+					WHERE <FIELD name='user-name'/> = ${user-name}
+				]]></statement>
+            </query>
+            <query name="find-by-scheduled-report-id" type="SELECT" multiple="true">
+                <param name="scheduled-report-id" />
+                <statement><![CDATA[
+					SELECT <FIELDS/>
+					FROM <TABLE/>
+					WHERE <FIELD name='scheduled-report-id'/> = ${scheduled-report-id}
+				]]></statement>
+            </query>
+            <query name="insert-ingore" type="INSERT">
+		        <statement><![CDATA[INSERT ignore INTO <TABLE/>(<FIELDS/>)
+		        VALUES(<VALUES/>)]]></statement>
+		      </query>
+        </query-defs>
+    </entity>
 	<entity name="scheduled-report" table="scheduledReport" alias="s">
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />

@@ -128,12 +128,14 @@
   <entity name="baseline" table="baseline" alias="b">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
-    <member name="index-key" field="index_key" value-type="String" length="256" nullable="false" />
+    <member name="index-key" field="index_key" value-type="String" length="100" />
     <member name="report-period" field="report_period" value-type="Date" />
     <member name="data" field="data" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="ix_indexkey_reportperiod" members="index_key ASC, report_period ASC" />
+    <index name="ix_reportperiod" members="report_period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -212,6 +214,7 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="ix_date_domain" members="date ASC, domain ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -280,7 +283,7 @@
   </entity>
   <entity name="topology-graph" table="topologyGraph" alias="t">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="ip" field="ip" value-type="String" length="20" />
+    <member name="ip" field="ip" value-type="String" length="50" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
     <member name="content" field="content" value-type="byte[]" length="2147483647" />

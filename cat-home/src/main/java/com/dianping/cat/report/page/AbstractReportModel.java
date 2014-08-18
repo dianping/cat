@@ -15,16 +15,17 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.DomainNavManager.Department;
 import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;
+import com.dianping.cat.service.HostinfoService;
 
 public abstract class AbstractReportModel<A extends Action, M extends ActionContext<?>> extends
       ViewModel<ReportPage, A, M> {
+
 	private Date m_creatTime;
 
 	private String m_customDate;
@@ -45,13 +46,13 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private DomainNavManager m_manager;
 
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 		try {
 			m_manager = ContainerLoader.getDefaultContainer().lookup(DomainNavManager.class);
-			m_domainManager = ContainerLoader.getDefaultContainer().lookup(DomainManager.class);
+			m_hostinfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -113,8 +114,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 			return Integer.toString(hour);
 		}
 	}
-	
-	public String getIpToHostnameStr(){
+
+	public String getIpToHostnameStr() {
 		return new JsonBuilder().toJson(getIpToHostname());
 	}
 
@@ -140,7 +141,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	public String getIpAddress() {
 		return m_ipAddress;
 	}
-	
+
 	public List<String> getIps() {
 		return new ArrayList<String>();
 	};
@@ -150,8 +151,11 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		Map<String, String> ipToHostname = new HashMap<String, String>();
 
 		for (String ip : ips) {
-			String hostname = m_domainManager.queryHostnameByIp(ip);
-			ipToHostname.put(ip, hostname);
+			String hostname = m_hostinfoService.queryHostnameByIp(ip);
+
+			if (hostname != null && !hostname.equalsIgnoreCase("null")) {
+				ipToHostname.put(ip, hostname);
+			}
 		}
 
 		return ipToHostname;

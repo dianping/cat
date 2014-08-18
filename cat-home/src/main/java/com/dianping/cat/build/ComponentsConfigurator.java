@@ -22,8 +22,6 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -55,8 +53,8 @@ import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.report.page.userMonitor.graph.DefaultUserMonitGraphCreator;
-import com.dianping.cat.report.page.userMonitor.graph.UserMonitorGraphCreator;
+import com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator;
+import com.dianping.cat.report.page.web.graph.WebGraphCreator;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
@@ -105,7 +103,9 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -119,8 +119,6 @@ import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
-import com.dianping.cat.system.tool.DefaultMailImpl;
-import com.dianping.cat.system.tool.MailSMS;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -131,10 +129,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(AlertInfo.class));
-		all.add(C(DefaultMailImpl.class).req(ServerConfigManager.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
-
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
@@ -144,40 +140,30 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProductLineConfigManager.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectDao.class,
+		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
-		      AggregationConfigManager.class));
+		      AggregationConfigManager.class, AlertConfigManager.class));
 
-		all.add(C(ContactorManager.class).req(Contactor.class, BusinessContactor.ID, "businessContactor")
-		      .req(Contactor.class, NetworkContactor.ID, "networkContactor")
-		      .req(Contactor.class, SystemContactor.ID, "exceptionContactor")
-		      .req(Contactor.class, ExceptionContactor.ID, "systemContactor")
-		      .req(Contactor.class, ThirdpartyContactor.ID, "thirdpartyContactor")
-		      .req(Contactor.class, FrontEndExceptionContactor.ID, "frontEndExceptionContactor"));
+		all.add(C(ContactorManager.class));
 
-		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class));
 
-		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectDao.class));
+		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
 
-		all.add(C(DecoratorManager.class).req(Decorator.class, BusinessDecorator.ID, "businessDecorator")
-		      .req(Decorator.class, NetworkDecorator.ID, "networkDecorator")
-		      .req(Decorator.class, ExceptionDecorator.ID, "exceptionDecorator")
-		      .req(Decorator.class, SystemDecorator.ID, "systemDecorator")
-		      .req(Decorator.class, ThirdpartyDecorator.ID, "thirdpartyDecorator")
-		      .req(Decorator.class, FrontEndExceptionDecorator.ID, "frontEndExceptionDecorator"));
+		all.add(C(DecoratorManager.class));
 
 		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
 
@@ -187,8 +173,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
 
-		all.add(C(SpliterManager.class).req(Spliter.class, MailSpliter.ID, "mailSpliter")
-		      .req(Spliter.class, SmsSpliter.ID, "smsSpliter").req(Spliter.class, WeixinSpliter.ID, "weixinSpliter"));
+		all.add(C(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(ServerConfigManager.class));
 
@@ -196,8 +181,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class));
 
-		all.add(C(SenderManager.class).req(Sender.class, MailSender.ID, "mailSender")
-		      .req(Sender.class, WeixinSender.ID, "weixinSender").req(Sender.class, SmsSender.ID, "smsSender"));
+		all.add(C(SenderManager.class));
 
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertEntityService.class, SpliterManager.class, SenderManager.class));
@@ -241,7 +225,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportServiceManager.class));
-		all.add(C(DomainNavManager.class).req(ProjectDao.class));
+		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
@@ -255,7 +239,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class)//
-		      .req(ProjectDao.class, HostinfoDao.class));
+		      .req(ProjectService.class, HostinfoService.class));
 
 		return all;
 	}
@@ -290,7 +274,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
-		all.addAll(new UserDatabaseConfigurator().defineComponents());
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
@@ -334,11 +317,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectDao.class));
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectService.class));
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
-		all.add(C(UserMonitorGraphCreator.class, DefaultUserMonitGraphCreator.class).req(CachedMetricReportService.class,
+		all.add(C(WebGraphCreator.class, DefaultWebGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
 		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
@@ -354,7 +337,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
-		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, MailSMS.class)
+		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, SenderManager.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
 
 		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));

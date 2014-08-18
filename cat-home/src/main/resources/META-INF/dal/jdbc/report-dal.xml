@@ -6,6 +6,30 @@
 		<var name="end-time" value-type="Date" />
 		<param name="domain" />
 		<query-defs>
+			<query name="query-alerts-by-time-domain-metric-type" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<param name="metric" />
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='metric'>
+						AND <FIELD name='metric'/> = ${metric} 
+					</IF>
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> desc		
+					]]></statement>
+			</query>
 			<query name="query-alerts-by-time-category-domain" type="SELECT"
 				multiple="true">
 				<param name="start-time" />

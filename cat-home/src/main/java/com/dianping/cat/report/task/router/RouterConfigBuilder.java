@@ -102,8 +102,6 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 			routerConfig = new RouterConfig(Constants.CAT);
 			StateReportVisitor visitor = new StateReportVisitor();
 
-			routerConfig.setStartTime(period);
-			routerConfig.setEndTime(new Date(period.getTime() + TimeUtil.ONE_DAY));
 			visitor.visitStateReport(report);
 
 			Map<String, Long> numbers = visitor.getNumbers();
@@ -120,11 +118,10 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 			processMainServer(servers, routerConfig, numbers);
 			processBackServer(servers, routerConfig, numbers);
 		} else {
-			System.err.println("no need change");
 			routerConfig = yesterdayConfig;
-			routerConfig.setStartTime(start);
-			routerConfig.setEndTime(end);
 		}
+		routerConfig.setStartTime(start);
+		routerConfig.setEndTime(end);
 
 		DailyReport dailyReport = new DailyReport();
 

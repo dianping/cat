@@ -10,20 +10,20 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class ExceptionDecorator extends DefaultDecorator implements Initializable {
+public class ExceptionDecorator extends ProjectDecorator implements Initializable {
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertConstants.EXCEPTION;
+	public static final String ID = AlertType.Exception.getName();
 
-	protected DateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {
@@ -58,7 +58,7 @@ public class ExceptionDecorator extends DefaultDecorator implements Initializabl
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
-		map.put("date", m_dateFormat.format(alert.getDate()));
+		map.put("date", m_format.format(alert.getDate()));
 		map.put("contactInfo", contactInfo);
 
 		return map;

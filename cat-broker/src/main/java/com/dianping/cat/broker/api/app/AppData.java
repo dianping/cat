@@ -26,6 +26,22 @@ public class AppData {
 	private int m_responseByte;
 
 	private int m_responseTime;
+	
+	public void setCount(int count) {
+   	m_count = count;
+   }
+
+	public void setRequestByte(int requestByte) {
+   	m_requestByte = requestByte;
+   }
+
+	public void setResponseByte(int responseByte) {
+   	m_responseByte = responseByte;
+   }
+
+	public void setResponseTime(int responseTime) {
+   	m_responseTime = responseTime;
+   }
 
 	public AppData() {
 	}
@@ -102,11 +118,6 @@ public class AppData {
 		return this;
 	}
 
-	public AppData setCount(int count) {
-		m_count = count;
-		return this;
-	}
-
 	public AppData setNetwork(int network) {
 		m_network = network;
 		return this;
@@ -122,18 +133,23 @@ public class AppData {
 		return this;
 	}
 
-	public AppData setRequestByte(int requestByte) {
-		m_requestByte = requestByte;
+	public AppData addCount(int count) {
+		m_count = m_count + count;
 		return this;
 	}
 
-	public AppData setResponseByte(int responseByte) {
-		m_responseByte = responseByte;
+	public AppData addRequestByte(int requestByte) {
+		m_requestByte = m_requestByte + requestByte;
 		return this;
 	}
 
-	public AppData setResponseTime(int responseTime) {
-		m_responseTime = responseTime;
+	public AppData addResponseByte(int responseByte) {
+		m_responseByte = m_responseByte + responseByte;
+		return this;
+	}
+
+	public AppData addResponseTime(int responseTime) {
+		m_responseTime = m_responseTime + responseTime;
 		return this;
 	}
 

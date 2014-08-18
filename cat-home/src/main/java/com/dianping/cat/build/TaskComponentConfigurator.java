@@ -6,7 +6,6 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
@@ -51,6 +50,7 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
@@ -101,7 +101,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class));
 
 		all.add(C(ReportTaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(ReportServiceManager.class,
-		      DomainManager.class));
+				HostinfoService.class));
 
 		all.add(C(ReportTaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(ReportServiceManager.class));
 
@@ -118,7 +118,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(ReportServiceManager.class));
 
 		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
-		      ReportServiceManager.class, TransactionMergeManager.class, ServerConfigManager.class, DomainManager.class));
+		      ReportServiceManager.class, TransactionMergeManager.class, ServerConfigManager.class, HostinfoService.class));
 
 		all.add(C(ReportTaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      ReportServiceManager.class, TopologyGraphBuilder.class, TopologyGraphDao.class));

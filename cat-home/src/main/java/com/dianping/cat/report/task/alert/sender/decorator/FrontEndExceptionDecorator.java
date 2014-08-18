@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class FrontEndExceptionDecorator extends ExceptionDecorator {
 
-	public static final String ID = AlertConstants.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FrontEndException.getName();
 
 	@Override
 	public String getId() {
@@ -31,14 +31,14 @@ public class FrontEndExceptionDecorator extends ExceptionDecorator {
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
-		map.put("date", m_dateFormat.format(alert.getDate()));
+		map.put("date", m_format.format(alert.getDate()));
 		map.put("contactInfo", contactInfo);
 
 		return map;
 	}
 
 	@Override
-	protected String buildContactInfo(String domainName) {
+	public String buildContactInfo(String domainName) {
 		return "";
 	}
 

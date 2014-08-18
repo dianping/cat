@@ -3,47 +3,52 @@ package com.dianping.cat.report.task.alert.sender.sender;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class SenderManager implements Initializable {
-
-	@Inject(type = Sender.class, value = MailSender.ID)
-	protected Sender m_mailSender;
-
-	@Inject(type = Sender.class, value = WeixinSender.ID)
-	protected Sender m_weixinSender;
-
-	@Inject(type = Sender.class, value = SmsSender.ID)
-	protected Sender m_smsSender;
+public class SenderManager extends ContainerHolder implements Initializable, LogEnabled {
 
 	private Map<String, Sender> m_senders = new HashMap<String, Sender>();
 
+	private Logger m_logger;
+
 	@Override
 	public void initialize() throws InitializationException {
-		m_senders.put(m_mailSender.getId(), m_mailSender);
-		m_senders.put(m_weixinSender.getId(), m_weixinSender);
-		m_senders.put(m_smsSender.getId(), m_smsSender);
+		m_senders = lookupMap(Sender.class);
 	}
 
-	public boolean sendAlert(String channelName, String type, AlertMessageEntity message) {
-		Sender sender = m_senders.get(channelName);
-		return sender.send(message, type);
+	public boolean sendAlert(AlertChannel channel, AlertMessageEntity message) {
+		String channelName = channel.getName();
+
+		try {
+			Sender sender = m_senders.get(channelName);
+			boolean result = sender.send(message);
+			String type = message.getType();
+
+			if (result) {
+				Cat.logEvent("Channel:" + channelName, type + ":success", Event.SUCCESS, null);
+			} else {
+				Cat.logEvent("Channel:" + channelName, type + ":fail", Event.SUCCESS, null);
+			}
+			m_logger.info("Alert Channel " + channelName + ",content" + message.toString());
+			return result;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
-	public void setMailSender(Sender sender) {
-		m_mailSender = sender;
-	}
-
-	public void setSmsSender(Sender sender) {
-		m_smsSender = sender;
-	}
-
-	public void setWeixinSender(Sender sender) {
-		m_weixinSender = sender;
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }

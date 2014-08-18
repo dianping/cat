@@ -129,8 +129,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 				configs.add(buildDefaultConfig());
 			}
 
-			Cat.logEvent("FindRule", getCategoryName(), Event.SUCCESS,
-			      "find rule for " + metricKey + ": " + rule.toString());
+			Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 			return configs;
 		}
 	}

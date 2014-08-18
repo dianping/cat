@@ -9,7 +9,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
-import com.dianping.cat.system.tool.MailSMS;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
+import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 
@@ -25,7 +27,7 @@ public class AlertSummaryExecutor {
 	private AlertSummaryDecorator m_alertSummaryDecorator;
 
 	@Inject
-	protected MailSMS m_mailSms;
+	private SenderManager m_sendManager;
 
 	private String buildMailTitle(String domain, Date date) {
 		StringBuilder builder = new StringBuilder();
@@ -57,8 +59,10 @@ public class AlertSummaryExecutor {
 			String title = buildMailTitle(domain, date);
 			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
 			List<String> receivers = builderReceivers(receiverStr);
-			m_mailSms.sendEmail(title, content, receivers);
 
+			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
+
+			m_sendManager.sendAlert(AlertChannel.MAIL, message);
 			return content;
 		} catch (Exception e) {
 			Cat.logError("generate alert summary fail:" + domain + " " + date, e);

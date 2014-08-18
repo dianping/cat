@@ -144,7 +144,7 @@ public abstract class BaseAlert {
 				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		}
-		return null;
+		return new ArrayList<AlertResultEntity>();
 	}
 
 	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
@@ -233,8 +233,9 @@ public abstract class BaseAlert {
 
 				String metricName = buildMetricName(metricKey);
 				AlertEntity entity = new AlertEntity();
-				
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent()).setLevel(alertResult.getAlertLevel());
+
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
 				entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
 
 				m_sendManager.addAlert(entity);
@@ -248,11 +249,13 @@ public abstract class BaseAlert {
 		String product = productLine.getId();
 		MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
-		for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
-			try {
-				processMetricItem(minute, productLine, entry.getKey());
-			} catch (Exception e) {
-				Cat.logError(e);
+		if (report != null) {
+			for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
+				try {
+					processMetricItem(minute, productLine, entry.getKey());
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		}
 	}

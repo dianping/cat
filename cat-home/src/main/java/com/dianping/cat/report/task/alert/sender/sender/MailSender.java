@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.mail.Authenticator;
@@ -21,15 +22,15 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class MailSender implements Initializable, Sender, LogEnabled {
 
+	public static final String ID = AlertChannel.MAIL.getName();
+
 	@Inject
 	private ServerConfigManager m_manager;
-
-	public static final String ID = AlertConstants.MAIL;
 
 	private String m_name;
 
@@ -69,37 +70,24 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 	}
 
 	@Override
-	public boolean send(AlertMessageEntity message, String type) {
-		try {
-			String messageStr = message.toString();
+	public boolean send(AlertMessageEntity message) {
+		boolean result = sendEmail(message);
 
-			boolean result = sendEmail(message);
+		if (!result) {
+			Cat.logEvent("InternalMailSender", "error", Event.SUCCESS, null);
 
-			if (!result) {
-				Cat.logEvent("InternalEmailSendError", type, Event.SUCCESS, messageStr);
-				boolean gmail = sendEmailByGmail(message);
-
-				if (gmail == false) {
-					Cat.logEvent("AlertMailError", type, Event.SUCCESS, messageStr);
-					m_logger.info("AlertMailError " + messageStr);
-					return false;
-				}
+			boolean gmail = sendEmailByGmail(message);
+			if (gmail == false) {
+				return false;
 			}
-
-			Cat.logEvent("AlertMail", type, Event.SUCCESS, messageStr);
-			m_logger.info("AlertMail " + messageStr);
-			return true;
-		} catch (Exception ex) {
-			Cat.logError("send mail error " + message.toString(), ex);
-			return false;
 		}
+		return true;
 	}
 
 	private boolean sendEmail(AlertMessageEntity message) {
 		String title = message.getTitle();
 		String content = message.getContent();
 		List<String> emails = message.getReceivers();
-
 		StringBuilder sb = new StringBuilder();
 
 		for (String email : emails) {
@@ -113,11 +101,14 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
 				URLConnection conn = url.openConnection();
 
+				conn.setConnectTimeout(2000);
+				conn.setReadTimeout(3000);
 				conn.setDoOutput(true);
 				conn.setDoInput(true);
 				writer = new OutputStreamWriter(conn.getOutputStream());
+				String encode = "&value=" + URLEncoder.encode(value, "utf-8");
 
-				writer.write("&value=" + value);
+				writer.write(encode);
 				writer.flush();
 
 				in = conn.getInputStream();

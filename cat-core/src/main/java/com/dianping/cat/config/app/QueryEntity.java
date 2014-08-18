@@ -1,6 +1,7 @@
 package com.dianping.cat.config.app;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +31,18 @@ public class QueryEntity {
 	private int m_operator = DEFAULT_VALUE;
 
 	private static final int DEFAULT_VALUE = -1;
+
+	public QueryEntity() {
+		m_command = 1;
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		m_date = cal.getTime();
+	}
 
 	public QueryEntity(String query) {
 		List<String> strs = Splitters.by(";").split(query);

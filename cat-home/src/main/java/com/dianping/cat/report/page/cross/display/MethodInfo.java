@@ -9,12 +9,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
+import com.dianping.cat.service.HostinfoService;
 
 public class MethodInfo extends BaseVisitor {
 
@@ -42,7 +42,7 @@ public class MethodInfo extends BaseVisitor {
 
 	private String m_serviceSortBy = "Avg";
 
-	private DomainManager m_domainManager;
+	private HostinfoService m_hostinfoService;
 
 	public MethodInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
@@ -129,7 +129,7 @@ public class MethodInfo extends BaseVisitor {
 			if (ip.indexOf(':') > 0) {
 				ip = ip.substring(0, ip.indexOf(':'));
 			}
-			String domain = m_domainManager.queryDomainByIp(ip);
+			String domain = m_hostinfoService.queryDomainByIp(ip);
 
 			if (projectName.equalsIgnoreCase(domain)) {
 				return true;
@@ -150,8 +150,8 @@ public class MethodInfo extends BaseVisitor {
 		return this;
 	}
 
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
+	public void setHostinfoService(HostinfoService hostinfoService) {
+		m_hostinfoService = hostinfoService;
 	}
 
 	public MethodInfo setQuery(String query) {

@@ -94,10 +94,12 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				try {
 					MessageTree tree = m_queue.poll();
 
+					
 					if (tree != null) {
 						sendInternal(tree);
 						tree.setMessage(null);
 					}
+					
 				} catch (Throwable t) {
 					m_logger.error("Error when sending message over TCP socket!", t);
 				}

@@ -11,8 +11,8 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
-import com.dianping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.login.service.LoginMember;
 
 public class Handler implements PageHandler<Context> {
 	public static final String FAIL = "Fail";
@@ -28,14 +28,14 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ScheduledManager m_scheduledManager;
 
-	private int getLoginUserId(Context ctx) {
-		DpAdminLogin member = ctx.getSigninMember();
+	private String getLoginUserName(Context ctx) {
+		LoginMember member = ctx.getSigninMember();
 
 		if (member != null) {
-			return member.getLoginId();
-		} else {
-			return -1;
+			return member.getUserName();
 		}
+
+		return null;
 	}
 
 	@Override
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		int userId = getLoginUserId(ctx);
+		String userName = getLoginUserName(ctx);
 		boolean result = false;
 
 		switch (action) {
@@ -63,10 +63,10 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case SCHEDULED_REPORT_DELETE:
 			m_scheduledManager.scheduledReportDelete(payload);
-			m_scheduledManager.queryScheduledReports(model, userId);
+			m_scheduledManager.queryScheduledReports(model, userName);
 			break;
 		case SCHEDULED_REPORT_LIST:
-			m_scheduledManager.queryScheduledReports(model, userId);
+			m_scheduledManager.queryScheduledReports(model, userName);
 			break;
 		case SCHEDULED_REPORT_UPDATE:
 			m_scheduledManager.scheduledReportUpdate(payload, model);
@@ -75,7 +75,7 @@ public class Handler implements PageHandler<Context> {
 			m_scheduledManager.scheduledReportUpdateSubmit(payload, model);
 			break;
 		case SCHEDULED_REPORT_SUB:
-			result = m_scheduledManager.scheduledReportSub(payload, userId);
+			result = m_scheduledManager.scheduledReportSub(payload, userName);
 			if (result) {
 				model.setOpState(SUCCESS);
 			} else {
@@ -83,7 +83,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case REPORT_RECORD_LIST:
-			m_recordManager.queryUserReportRecords(model, userId);
+			m_recordManager.queryUserReportRecords(model, userName);
 			break;
 		case ALARM_RECORD_DETAIL:
 			m_recordManager.queryAlarmRecordDetail(payload, model);

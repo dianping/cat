@@ -226,6 +226,13 @@ CREATE TABLE `scheduledReportSubscription` (
   PRIMARY KEY (`scheduled_report_id`,`user_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
 
+CREATE TABLE `scheduledSubscription` (
+  `scheduled_report_id` int(11) NOT NULL COMMENT '定时任务ID',
+  `user_name` varchar(20) NOT NULL COMMENT '用户域账号',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`scheduled_report_id`,`user_name`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
+
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(200) NOT NULL COMMENT '项目名称',

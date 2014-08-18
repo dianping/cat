@@ -23,21 +23,20 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
+import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -60,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 		Map<String, Set<String>> project2Domains = new HashMap<String, Set<String>>();
 
 		try {
-			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			projects = m_projectService.findAll();
 		} catch (DalException e) {
 			Cat.logError(e);
 		}

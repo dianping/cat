@@ -37,39 +37,6 @@ public class AlertPolicyManager implements Initializable {
 		return m_config;
 	}
 
-	public List<AlertChannel> queryChannels(String typeName, String groupName, String levelName) {
-		try {
-			Type type = m_config.findType(typeName);
-			Group group = type.findGroup(groupName);
-
-			if (group == null) {
-				group = type.findGroup(DEFAULT_GROUP);
-			}
-
-			Level level = group.findLevel(levelName);
-			if (level == null) {
-				return new ArrayList<AlertChannel>();
-			} else {
-				String send = level.getSend();
-				String[] sends = send.split(",");
-				List<AlertChannel> channels = new ArrayList<AlertChannel>();
-
-				for (String str : sends) {
-					AlertChannel channel = AlertChannel.findByName(str);
-
-					if (channel != null) {
-						channels.add(channel);
-					}
-				}
-
-				return channels;
-			}
-
-		} catch (Exception ex) {
-			return new ArrayList<AlertChannel>();
-		}
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		try {
@@ -109,6 +76,56 @@ public class AlertPolicyManager implements Initializable {
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
+		}
+	}
+
+	public List<AlertChannel> queryChannels(String typeName, String groupName, String levelName) {
+		try {
+			Level level = queryLevel(typeName, groupName, levelName);
+			if (level == null) {
+				return new ArrayList<AlertChannel>();
+			} else {
+				String send = level.getSend();
+				String[] sends = send.split(",");
+				List<AlertChannel> channels = new ArrayList<AlertChannel>();
+
+				for (String str : sends) {
+					AlertChannel channel = AlertChannel.findByName(str);
+
+					if (channel != null) {
+						channels.add(channel);
+					}
+				}
+
+				return channels;
+			}
+		} catch (Exception ex) {
+			return new ArrayList<AlertChannel>();
+		}
+	}
+
+	private Level queryLevel(String typeName, String groupName, String levelName) {
+		Type type = m_config.findType(typeName);
+		Group group = type.findGroup(groupName);
+
+		if (group == null) {
+			group = type.findGroup(DEFAULT_GROUP);
+		}
+
+		return group.findLevel(levelName);
+	}
+
+	public int querySuspendMinute(String typeName, String groupName, String levelName) {
+		try {
+			Level level = queryLevel(typeName, groupName, levelName);
+
+			if (level == null) {
+				return 0;
+			} else {
+				return level.getSuspendMinute();
+			}
+		} catch (Exception ex) {
+			return 0;
 		}
 	}
 

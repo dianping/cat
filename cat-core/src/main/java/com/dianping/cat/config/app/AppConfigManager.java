@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -110,14 +111,30 @@ public class AppConfigManager implements Initializable {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
-			return c.getCodes().values();
+			Collection<Code> values = c.getCodes().values();
+			Collection<Code> result = new ArrayList<Code>(values);
+
+			result.addAll(m_config.getCodes().values());
+			return result;
 		} else {
 			return Collections.emptySet();
 		}
 	}
 
 	public List<Command> queryCommands() {
-		return new ArrayList<Command>(m_config.getCommands().values());
+		try {
+			String xml = m_config.toString();
+			AppConfig config = DefaultSaxParser.parse(xml);
+
+			Map<Integer, Command> commands = config.getCommands();
+
+			for (Entry<Integer, Command> entry : commands.entrySet()) {
+				entry.getValue().getCodes().putAll(m_config.getCodes());
+			}
+			return new ArrayList<Command>(commands.values());
+		} catch (Exception e) {
+			return new ArrayList<Command>();
+		}
 	}
 
 	public List<Item> queryConfigItem(String name) {
@@ -229,7 +246,7 @@ public class AppConfigManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(10 * 1000L);
+					Thread.sleep(60 * 1000L);
 				} catch (InterruptedException e) {
 					active = false;
 				}

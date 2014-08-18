@@ -96,7 +96,7 @@ function graphMetricChart(container, data) {
 			useUTC : false
 		}
 	});
-	var ylabelMin = data.minYlable;
+	var ylabelMin = data.minYlabel;
 	var _data = parseMetricLineData(data);
 	$(container).highcharts(
 			{
@@ -169,7 +169,7 @@ function parseMetricLineDataForApp(data) {
 	data.subTitles.forEach(function(title, i) {
 		var series = {}
 		series.name = title;
-		series.data = data.values[i];
+		series.data = data.valueObjects[i];
 		res.push(series);
 	});
 	return res;
@@ -178,10 +178,10 @@ function parseMetricLineDataForApp(data) {
 function graphMetricChartForApp(container, data, datePair) {
 	Highcharts.setOptions({
 		global : {
-			useUTC : false
+			useUTC : true
 		}
 	});
-	var ylabelMin = data.minYlable;
+	var ylabelMin = data.minYlabel;
 	var _data = parseMetricLineDataForApp(data);
 	$(container).highcharts(
 			{
@@ -232,14 +232,14 @@ function graphMetricChartForApp(container, data, datePair) {
 					allowPointSelect : false,
 					formatter : function() {
 						var number0 = Number(this.y).toFixed(0);
-						var number1 = Number(this.y).toFixed(1);
+						var number1 = Number(this.y).toFixed(2);
 						var number = number1;
 
 						if (Number(number1) == Number(number0)) {
 							number = number0;
 						}
 						
-						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x*300000 - 8*3600000 + Date.parse(datePair[this.series.name]))
+						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x*300000 + Date.parse(datePair[this.series.name]))
 								+ '<br/>[' + this.series.name + '] ' + '<b>'
 								+ number + '</b>';
 					}

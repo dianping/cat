@@ -16,15 +16,15 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
-	public static String ID = AlertConstants.BUSINESS;
+	public static String ID = AlertType.Business.getName();
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
@@ -55,7 +55,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
 			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-			
+
 			if (config.isShowAvg()) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
 			}

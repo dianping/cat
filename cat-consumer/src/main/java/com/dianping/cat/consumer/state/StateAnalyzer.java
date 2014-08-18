@@ -10,7 +10,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.DomainManager;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -22,6 +21,8 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -36,7 +37,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	private ServerStatisticManager m_serverStateManager;
 
 	@Inject
-	private DomainManager m_domainManager;
+	private ProjectService m_projectService;
+
+	@Inject
+	private HostinfoService m_hostinfoService;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
@@ -200,27 +204,27 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (m_serverConfigManager.validateDomain(domain)) {
-			if (!m_domainManager.containsDomainInCat(domain)) {
-				boolean insert = m_domainManager.insertDomain(domain);
+			if (!m_projectService.containsDomainInCat(domain)) {
+				boolean insert = m_projectService.insertDomain(domain);
 
 				if (!insert) {
 					m_logger.warn(String.format("Error when insert domain %s info", domain));
 				}
 			}
-			Hostinfo info = m_domainManager.queryHostInfoByIp(ip);
+			Hostinfo info = m_hostinfoService.findByIp(ip);
 
 			if (info == null) {
-				m_domainManager.insert(domain, ip);
+				m_hostinfoService.insert(domain, ip);
 			} else {
 				String oldDomain = info.getDomain();
 
-				if (!oldDomain.equals(domain) && !oldDomain.equals(Constants.CAT)) {
+				if (!domain.equals(oldDomain) && !Constants.CAT.equals(oldDomain)) {
 					// only work on online environment
 					long current = System.currentTimeMillis();
 					Date lastModifiedDate = info.getLastModifiedDate();
 
 					if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
-						m_domainManager.update(info.getId(), domain, ip);
+						m_hostinfoService.update(info.getId(), domain, ip);
 						m_logger.info(String.format("old domain is %s , change ip %s to %s", oldDomain, ip, domain));
 					}
 				}

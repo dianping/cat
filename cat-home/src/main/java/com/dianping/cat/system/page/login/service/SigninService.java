@@ -22,7 +22,6 @@ public class SigninService implements ISigninService<SigninContext, Credential, 
 			if (session != null) {
 				m_tokenManager.setToken(ctx, token);
 			}
-
 			return session;
 		} else {
 			return null;

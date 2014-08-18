@@ -45,13 +45,15 @@ public enum ReportPage implements Page {
 
    NETWORK("network", "network", "Network", "Network", false),
 
-   USERMONITOR("userMonitor", "userMonitor", "Monitor", "UserMonitor", true),
+   WEB("web", "web", "Web", "Web", true),
 
    SYSTEM("system", "system", "System", "System", false),
 
    CDN("cdn", "cdn", "Cdn", "Cdn", false),
 
-   APP("app", "app", "App", "App", true);
+   APP("app", "app", "App", "App", true),
+
+   ALERT("alert", "alert", "Alert", "Alert", true);
 
    private String m_name;
 

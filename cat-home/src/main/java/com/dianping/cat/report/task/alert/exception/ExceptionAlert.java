@@ -20,7 +20,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -56,7 +56,7 @@ public class ExceptionAlert implements Task {
 	}
 
 	public String getName() {
-		return AlertConstants.EXCEPTION;
+		return AlertType.Exception.getName();
 	}
 
 	private TopReport queryTopReport(Date start) {
@@ -113,7 +113,7 @@ public class ExceptionAlert implements Task {
 				if (frontEndItem != null) {
 					handleFrontEndException(frontEndItem);
 				}
-				handleGeneralExceptions(itemList);
+				handleGeneralExceptions(otherItemList);
 
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -164,7 +164,7 @@ public class ExceptionAlert implements Task {
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-				entity.setMetric(metricName).setType(AlertConstants.FRONT_END_EXCEPTION).setGroup(metricName);
+				entity.setMetric(metricName).setType(AlertType.FrontEndException.getName()).setGroup(metricName);
 				m_sendManager.addAlert(entity);
 			} catch (Exception e) {
 				Cat.logError(e);

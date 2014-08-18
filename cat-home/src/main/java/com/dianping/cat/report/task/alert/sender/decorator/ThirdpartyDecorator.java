@@ -1,6 +1,8 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,18 +10,20 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.task.alert.AlertConstants;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class ThirdpartyDecorator extends DefaultDecorator implements Initializable {
+public class ThirdpartyDecorator extends ProjectDecorator implements Initializable {
 
 	public Configuration m_configuration;
 
-	public static final String ID = AlertConstants.THIRDPARTY;
+	public static final String ID = AlertType.ThirdParty.getName();
+
+	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {

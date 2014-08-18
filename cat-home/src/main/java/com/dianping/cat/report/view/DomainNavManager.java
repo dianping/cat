@@ -15,14 +15,13 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.service.ProjectService;
 
 public class DomainNavManager implements Task, Initializable {
 
 	@Inject
-	private ProjectDao m_projectDao;
+	private ProjectService m_projectService;
 
 	// key is domain
 	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
@@ -77,7 +76,7 @@ public class DomainNavManager implements Task, Initializable {
 
 	public void reloadDomainInfo() {
 		try {
-			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			List<Project> projects = m_projectService.findAll();
 
 			synchronized (m_projects) {
 				if (projects.size() > 0) {

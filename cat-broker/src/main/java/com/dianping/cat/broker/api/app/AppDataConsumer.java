@@ -18,17 +18,20 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.message.Event;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 
-	public static final long DURATION = 5 * 60 * 1000L;
+	public static final long MINUTE = 60 * 1000L;
+
+	public static final long DURATION = 5 * MINUTE;
 
 	@Inject
 	private AppDataService m_appDataService;
 
 	private AppDataQueue m_appDataQueue;
 
-	private long m_dataLoss;
+	private volatile long m_dataLoss;
 
 	private Logger m_logger;
 
@@ -43,12 +46,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public void enqueue(AppData appData) {
-		m_appDataQueue.offer(appData);
-	}
-
-	public long getDataLoss() {
-		return m_dataLoss;
+	public boolean enqueue(AppData appData) {
+		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
@@ -62,10 +61,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		Threads.forGroup("Cat").start(bucketThreadController);
 		Threads.forGroup("Cat").start(appDataDispatcherThread);
-	}
-
-	public void setDataLoss(long dataLoss) {
-		m_dataLoss = dataLoss;
 	}
 
 	private class AppDataDispatcherThread implements Task {
@@ -85,22 +80,31 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 					if (appData != null) {
 						long timestamp = appData.getTimestamp();
-						timestamp -= timestamp % DURATION;
-						BucketHandler handler = m_tasks.get(new Long(timestamp));
+						timestamp = timestamp - timestamp % DURATION;
+						BucketHandler handler = m_tasks.get(timestamp);
 
-						if (handler == null || !handler.isActive()) {
-							m_dataLoss++;
-
-							if (m_dataLoss % 1000 == 0) {
-								m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
-							}
+						if (handler == null) {
+							recordErrorInfo();
 						} else {
-							handler.enqueue(appData);
+							boolean success = handler.enqueue(appData);
+
+							if (!success) {
+								recordErrorInfo();
+							}
 						}
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
+			}
+		}
+
+		private void recordErrorInfo() {
+			m_dataLoss++;
+
+			if (m_dataLoss % 1000 == 0) {
+				Cat.logEvent("Discard", "BucketHandler", Event.SUCCESS, null);
+				m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
 			}
 		}
 
@@ -114,12 +118,12 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		private void closeLastTask(long currentDuration) {
-			Long last = new Long(currentDuration - DURATION);
+			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 			BucketHandler lastBucketHandler = m_tasks.get(last);
 
 			if (lastBucketHandler != null) {
 				lastBucketHandler.shutdown();
-				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
+				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(last)));
 			}
 		}
 
@@ -151,19 +155,21 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 				try {
 					long currentDuration = curTime - curTime % DURATION;
+					long currentMinute = curTime - curTime % MINUTE;
 
 					removeLoadTasks();
-					removeLastLastTask(currentDuration);
 					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
+					removeLastLastTask(currentDuration);
+					closeLastTask(currentMinute);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 				long elapsedTime = System.currentTimeMillis() - curTime;
 
 				try {
-					Thread.sleep(DURATION - elapsedTime);
+					Thread.sleep(MINUTE - elapsedTime);
 				} catch (InterruptedException e) {
 				}
 			}
@@ -174,13 +180,12 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		}
 
 		private void startCurrentTask(long currentDuration) {
-			Long cur = new Long(currentDuration);
-			if (m_tasks.get(cur) == null) {
-				BucketHandler curBucketHandler = new BucketHandler(cur, m_appDataService);
+			if (m_tasks.get(currentDuration) == null) {
+				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataService);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 				Threads.forGroup("Cat").start(curBucketHandler);
 
-				m_tasks.put(cur, curBucketHandler);
+				m_tasks.put(currentDuration, curBucketHandler);
 				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 			}
 		}
