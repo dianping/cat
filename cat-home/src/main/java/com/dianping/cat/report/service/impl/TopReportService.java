@@ -72,7 +72,7 @@ public class TopReportService extends AbstractReportService<TopReport> {
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						m_logger.warn(this.getClass().getSimpleName() + " " + domain + " " + start + " " + end);
+						//ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

@@ -16,6 +16,7 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.advanced.dal.BusinessReport;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -170,7 +171,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		ConfigItem config = parseValue(status, data);
 
 		if (!StringUtils.isEmpty(group)) {
-			m_productLineConfigManager.insertIfNotExsit(group, domain);
+			boolean result = m_productLineConfigManager.insertIfNotExsit(group, domain);
+
+			if (!result) {
+				m_logger.error(String.format("error when insert product line info, productline %s, domain %s", group,
+				      domain));
+			}
 
 			report = findOrCreateReport(group);
 		}
@@ -184,19 +190,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			updateMetric(metricItem, min, config.getCount(), config.getValue());
 
 			config.setTitle(metricName);
-			if (!isNetwork(group) && !isSystem(group)) {
-				m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+
+			ProductLine productline = m_productLineConfigManager.queryProductLine(report.getProduct());
+
+			if (productline != null && productline.getMetricDashboard()) {
+				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+
+				if (!result) {
+					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,
+					      metricName));
+				}
 			}
 		}
 		return 0;
-	}
-
-	private boolean isNetwork(String group) {
-		return group.startsWith("f5") || group.startsWith("switch");
-	}
-
-	private boolean isSystem(String group) {
-		return group.startsWith("system");
 	}
 
 	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {

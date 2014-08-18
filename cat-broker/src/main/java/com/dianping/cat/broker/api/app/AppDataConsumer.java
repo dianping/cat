@@ -1,8 +1,6 @@
 package com.dianping.cat.broker.api.app;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,9 +33,9 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	private ConcurrentHashMap<Long, BucketHandler> m_tasks;
-	
+
 	private List<BucketHandler> m_loadTasks;
-	
+
 	private long m_startTime;
 
 	@Override
@@ -124,11 +122,11 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 			}
 		}
-		
+
 		private void removeLoadTasks() {
 			if (m_loadTasks != null) {
 				long curTime = System.currentTimeMillis();
-				
+
 				if (curTime - m_startTime > DURATION) {
 					m_loadTasks = null;
 				}
@@ -215,41 +213,19 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		try {
 			File path = new File(BucketHandler.SAVE_PATH);
 			File[] files = path.listFiles();
-			
+
 			if (files.length > 0) {
 				m_loadTasks = new ArrayList<BucketHandler>();
-			}
 
-			for (File file : files) {
-				long timestamp = Long.parseLong(file.getName());
-				BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
-				Threads.forGroup("Cat").start(handler);
+				for (File file : files) {
+					long timestamp = Long.parseLong(file.getName());
+					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
 
-				BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-				String line;
-				while ((line = bufferedReader.readLine()) != null) {
-					String[] items = line.split("\t");
-					AppData appData = new AppData();
-
-					appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setCity(Integer.parseInt(items[1]));
-					appData.setOperator(Integer.parseInt(items[2]));
-					appData.setNetwork(Integer.parseInt(items[3]));
-					appData.setVersion(Integer.parseInt(items[4]));
-					appData.setConnectType(Integer.parseInt(items[5]));
-					appData.setCommand(Integer.parseInt(items[6]));
-					appData.setCode(Integer.parseInt(items[7]));
-					appData.setPlatform(Integer.parseInt(items[8]));
-					appData.setRequestByte(Integer.parseInt(items[9]));
-					appData.setResponseByte(Integer.parseInt(items[10]));
-					appData.setResponseTime(Integer.parseInt(items[11]));
-					
-					handler.enqueue(appData);
+					handler.load(file);
+					Threads.forGroup("Cat").start(handler);
+					handler.shutdown();
+					m_loadTasks.add(handler);
 				}
-				
-				bufferedReader.close();
-				handler.shutdown();
-				m_loadTasks.add(handler);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);

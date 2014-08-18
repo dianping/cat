@@ -7,14 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-<res:bean id="res" />
-<res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 	
 <style>
 	.tooltip-inner {
@@ -29,6 +21,14 @@
 </style>
  <c:choose>
 	<c:when test="${payload.fullScreen}">
+		<res:bean id="res" />
+		<res:useCss value='${res.css.local.table_css}' target="head-css" />
+		<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+		<res:useCss value='${res.css.local.body_css}' target="head-css" />
+		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
+		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
 			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>

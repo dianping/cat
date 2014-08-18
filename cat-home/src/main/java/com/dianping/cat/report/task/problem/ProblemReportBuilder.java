@@ -23,11 +23,14 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class ProblemReportBuilder implements ReportTaskBuilder {
+	
+	public static final String ID = ProblemAnalyzer.ID;
+
 	@Inject
 	protected GraphDao m_graphDao;
 
@@ -35,7 +38,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private ProblemGraphCreator m_problemGraphCreator;

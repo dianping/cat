@@ -58,8 +58,8 @@ public class ClientConfigManager implements LogEnabled {
 	}
 
 	/**
-	 * Return the max total message node size for the whole message, children after this limit will be split into another child
-	 * message tree.
+	 * Return the max total message node size for the whole message, children after this limit will be split into another
+	 * child message tree.
 	 * 
 	 * @return
 	 */
@@ -98,8 +98,8 @@ public class ClientConfigManager implements LogEnabled {
 	}
 
 	public int getTaggedTransactionCacheSize() {
-	   return 1024;
-   }
+		return 1024;
+	}
 
 	public void initialize(File configFile) throws Exception {
 		ClientConfig globalConfig = null;
@@ -148,7 +148,24 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+	}
 
+	public String getServerConfigUrl() {
+		if (m_config == null) {
+			return null;
+		} else {
+			List<Server> servers = m_config.getServers();
+
+			for (Server server : servers) {
+				Integer httpPort = server.getHttpPort();
+
+				if (httpPort == null || httpPort == 0) {
+					httpPort = 8080;
+				}
+				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp(), httpPort, getDomain().getId());
+			}
+		}
+		return null;
 	}
 
 	public boolean isCatEnabled() {

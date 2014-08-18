@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.0.5</version>
+		<version>1.1.1</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-home</artifactId>
@@ -55,6 +55,16 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>dal-jdbc</artifactId>
+			<version>2.1.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>foundation-service</artifactId>
+			<version>2.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-api-2.1</artifactId>
 			<version>6.1.14</version>
@@ -88,7 +98,7 @@
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>test-framework</artifactId>
-			<version>2.0.4</version>
+			<version>2.1.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -156,7 +166,10 @@
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertconfig-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alertsummary-manifest.xml,
-                            </manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/thirdParty-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
+							</manifest>
 						</configuration>
 					</execution>
 					<execution>
@@ -197,20 +210,20 @@
 				</configuration>
 			</plugin>
 			<plugin>
-		        <groupId>org.mortbay.jetty</groupId>
-		        <artifactId>maven-jetty-plugin</artifactId>
-		        <version>6.1.26</version>
-		        <configuration>
-	                <scanIntervalSeconds>10</scanIntervalSeconds>
-					<contextPath>/cat</contextPath> 
-					<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor> 
-					<connectors> 
-						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector"> 
-							<port>2281</port> 
-							<maxIdleTime>500000</maxIdleTime> 
-						</connector> 
-					</connectors> 
-		        </configuration>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.26</version>
+				<configuration>
+					<scanIntervalSeconds>10</scanIntervalSeconds>
+					<contextPath>/cat</contextPath>
+					<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
+					<connectors>
+						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+							<port>2281</port>
+							<maxIdleTime>500000</maxIdleTime>
+						</connector>
+					</connectors>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

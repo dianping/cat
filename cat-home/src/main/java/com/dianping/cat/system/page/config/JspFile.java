@@ -43,6 +43,8 @@ public enum JspFile {
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
+	ALERT_POLICY("/jsp/system/alert/policy.jsp"),
+
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 
 	EXCEPTION("/jsp/system/exception/exception.jsp"),
@@ -58,10 +60,14 @@ public enum JspFile {
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-	
+
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
+
+	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 	
-	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp");
+	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
+	
+	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
 
 	private String m_path;
 

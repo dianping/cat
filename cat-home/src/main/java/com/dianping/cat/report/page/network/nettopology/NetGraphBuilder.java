@@ -88,6 +88,20 @@ public class NetGraphBuilder {
 				inter.setOutErrorsState(ERROR);
 				outErrorsState = ERROR;
 			}
+			if (containsAlert(alertKeys, group, domain, prefix, "-status-up/down")) {
+				inter.setInstate(ERROR);
+				inter.setOutstate(ERROR);
+				inter.setInDiscardsState(ERROR);
+				inter.setOutDiscardsState(ERROR);
+				inter.setInErrorsState(ERROR);
+				inter.setOutErrorsState(ERROR);
+				inState = ERROR;
+				outState = ERROR;
+				inDiscardsState = ERROR;
+				outDiscardsState = ERROR;
+				inErrorsState = ERROR;
+				outErrorsState = ERROR;
+			}
 
 			insum += inter.getIn();
 			outsum += inter.getOut();

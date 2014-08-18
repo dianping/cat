@@ -68,8 +68,8 @@ CREATE TABLE `graph` (
 CREATE TABLE `hostinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(50) NOT NULL COMMENT '部署机器IP',
-  `domain` varchar(256) NOT NULL COMMENT '部署机器对应的项目名',
-  `hostname` varchar(256) DEFAULT NULL COMMENT '机器域名',
+  `domain` varchar(200) NOT NULL COMMENT '部署机器对应的项目名',
+  `hostname` varchar(200) DEFAULT NULL COMMENT '机器域名',
   `creation_date` datetime NOT NULL,
   `last_modified_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
@@ -129,9 +129,7 @@ CREATE TABLE `businessReport` (
   `content` longblob COMMENT '用于存放报表的具体内容',
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
-  KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
-  KEY `IX_Name_Period` (`name`,`period`),
-  KEY `IX_Period` (`period`)
+  KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqltable` (
@@ -230,13 +228,13 @@ CREATE TABLE `scheduledReportSubscription` (
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `domain` varchar(256) NOT NULL COMMENT '项目名称',
-  `cmdb_domain` varchar(256) DEFAULT  NULL COMMENT 'cmdb项目名称',
+  `domain` varchar(200) NOT NULL COMMENT '项目名称',
+  `cmdb_domain` varchar(200) DEFAULT  NULL COMMENT 'cmdb项目名称',
   `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
   `department` varchar(50) DEFAULT NULL COMMENT '关联项目组名称',  
   `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
-  `email` varchar(256)  DEFAULT NULL COMMENT '项目组邮件',
-  `phone` varchar(256)  DEFAULT NULL COMMENT '联系电话',
+  `email` varchar(200)  DEFAULT NULL COMMENT '项目组邮件',
+  `phone` varchar(200)  DEFAULT NULL COMMENT '联系电话',
   `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
@@ -286,8 +284,7 @@ CREATE TABLE `baseline` (
   `data` blob,
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
-  KEY `ix_reportperiod` (`report_period`)
+  KEY `period_name_key` (`report_period`,`report_name`,`index_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `alteration` (
@@ -346,6 +343,7 @@ CREATE TABLE `app_data_command_1` (
   `status` smallint NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
+  KEY IX_period_minute (period,minute_order),
   KEY IX_period_city_minute (period,city,minute_order),
   KEY IX_period_operator_minute (period,operator,minute_order),
   KEY IX_period_network_minute (period,network,minute_order),

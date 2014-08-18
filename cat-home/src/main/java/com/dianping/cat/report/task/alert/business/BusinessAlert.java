@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.alert.business;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,17 +14,20 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.message.Event;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.task.alert.AlertConstants;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.BaseAlertConfig;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
+	public static String ID = AlertConstants.BUSINESS;
+
 	@Inject
-	protected BusinessAlertConfig m_alertConfig;
+	protected MetricConfigManager m_metricConfigManager;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -32,12 +36,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "business-alert";
-	}
-
-	@Override
-	public BaseAlertConfig getAlertConfig() {
-		return m_alertConfig;
+		return ID;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
@@ -55,30 +54,29 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String domain = config.getDomain();
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
-
-			AlertResultEntity alertResult = null;
+			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+			
 			if (config.isShowAvg()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.AVG);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
 			}
 			if (config.isShowCount()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.COUNT);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.COUNT));
 			}
 			if (config.isShowSum()) {
-				alertResult = computeAlertInfo(minute, product, metricKey, MetricType.SUM);
+				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 
-			if (alertResult != null && alertResult.isTriggered()) {
-				String mailTitle = m_alertConfig.buildMailTitle(productLine.getTitle(), config.getTitle());
-				String contactInfo = buildContactInfo(domain);
-				alertResult.setContent(alertResult.getContent() + contactInfo);
-				String content = alertResult.getContent();
+			for (AlertResultEntity alertResult : alertResults) {
 				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
+				String metricName = buildMetricName(metricKey);
 
-				storeAlert(domain, metric, mailTitle, alertResult);
+				AlertEntity entity = new AlertEntity();
 
-				String configId = getAlertConfig().getId();
-				sendAllAlert(productLine, domain, mailTitle, content, alertResult.getAlertType(), configId);
-				Cat.logEvent(configId, product, Event.SUCCESS, mailTitle + "  " + content);
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
+				entity.setMetric(metricName).setType(getName()).setGroup(product);
+
+				m_sendManager.addAlert(entity);
 			}
 		}
 	}

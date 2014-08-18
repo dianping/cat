@@ -1,7 +1,6 @@
 package com.dianping.cat.agent.monitor;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,26 +11,34 @@ public class CommandUtils {
 
 	public List<String> runShell(String cmd) throws Exception {
 		List<String> result = new LinkedList<String>();
-		BufferedReader reader = null;
+		InputStreamReader sReader = null;
+		BufferedReader bReader = null;
+		Process process = null;
 
 		try {
-			Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
-			reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd });
+			sReader = new InputStreamReader(process.getInputStream());
+			bReader = new BufferedReader(sReader);
 			String line = null;
 
-			while ((line = reader.readLine()) != null && StringUtils.isNotEmpty(line)) {
+			while ((line = bReader.readLine()) != null && StringUtils.isNotEmpty(line)) {
 				result.add(line);
 			}
-
 		} catch (Exception e) {
-			throw new Exception(e);
+			throw e;
 		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (IOException e) {
-					throw new Exception(e);
+			try {
+				if (sReader != null) {
+					sReader.close();
 				}
+				if (bReader != null) {
+					bReader.close();
+				}
+				if (process != null) {
+					process.destroy();
+				}
+			} catch (Exception e) {
+				throw e;
 			}
 		}
 		return result;

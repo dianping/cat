@@ -7,21 +7,14 @@ public class AlertResultEntity {
 
 	private String m_content;
 
-	private String m_alertType;
+	private String m_alertLevel;
 
 	private Date m_alertTime;
 
-	public AlertResultEntity() {
-		this.m_isTriggered = false;
-		this.m_content = "";
-		this.m_alertType = "";
-		this.m_alertTime = new Date();
-	}
-
-	public AlertResultEntity(boolean result, String content, String alertType) {
+	public AlertResultEntity(boolean result, String content, String alertLevel) {
 		this.m_isTriggered = result;
 		this.m_content = content;
-		this.m_alertType = alertType;
+		this.m_alertLevel = alertLevel;
 		this.m_alertTime = new Date();
 	}
 
@@ -29,8 +22,8 @@ public class AlertResultEntity {
 		return m_alertTime;
 	}
 
-	public String getAlertType() {
-		return m_alertType;
+	public String getAlertLevel() {
+		return m_alertLevel;
 	}
 
 	public String getContent() {

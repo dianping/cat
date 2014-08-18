@@ -299,7 +299,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				long duration = System.currentTimeMillis() - current;
 
 				try {
-					int maxDuration = 15 * 1000;
+					int maxDuration = 60 * 1000;
 					if (duration < maxDuration) {
 						Thread.sleep(maxDuration - duration);
 					}

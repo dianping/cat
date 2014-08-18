@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="router-config" root="true">
+    <entity-ref name="default-server" type="list" names="default-servers" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="default-server">
+    <attribute name="id" value-type="String" />
+    <attribute name="port" value-type="int"/>
+    <attribute name="enable" value-type="boolean" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="server" type="list" names="servers" />
+  </entity>
+  <entity name="server">
+    <attribute name="id" value-type="String" />
+    <attribute name="port" value-type="int" />
+  </entity>
+</model>
+

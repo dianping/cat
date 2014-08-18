@@ -15,14 +15,16 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class CrossReportBuilder implements ReportTaskBuilder {
+	
+	public static final String ID = CrossAnalyzer.ID;
 
 	@Inject
-	protected ReportService m_reportService;
+	protected ReportServiceManager m_reportService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {

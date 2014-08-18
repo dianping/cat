@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.Constrants;
@@ -24,6 +26,7 @@ import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.message.Event;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -64,19 +67,27 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		HttpServletResponse response = ctx.getHttpServletResponse();
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
+		boolean success = true;
 
-		userIp = "180.97.33.71";
 		if (userIp != null) {
 			if ("1".equals(version)) {
 				processVersion1(payload, request, userIp);
 			} else if ("2".equals(version)) {
 				processVersion2(payload, request, userIp);
+			} else {
+				success = false;
+				Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
 			}
 		} else {
+			success = false;
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
-		response.getWriter().write("OK");
+		if (success) {
+			response.getWriter().write("OK");
+		} else {
+			response.getWriter().write("validate request!");
+		}
 	}
 
 	private void processVersion1(Payload payload, HttpServletRequest request, String userIp) {
@@ -131,7 +142,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				for (String record : records) {
-					processOneRecord(cityId, operatorId, record);
+					try {
+						if (!StringUtils.isEmpty(record)) {
+							processOneRecord(cityId, operatorId, record);
+						}
+					} catch (Exception e) {
+						// ignore
+					}
 				}
 			}
 		}
@@ -144,15 +161,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			AppData appData = new AppData();
 
 			try {
-				appData.setTimestamp(Long.parseLong(items[0]));
-				Integer command = m_appConfigManager.getCommands().get(items[1]);
-				command = 1;
+				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
 
 				if (command != null) {
+					appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[2]));
-					appData.setVersion(Integer.parseInt(items[3]));
-					appData.setConnectType(Integer.parseInt(items[4]));
+					appData.setNetwork(Integer.parseInt(items[1]));
+					appData.setVersion(Integer.parseInt(items[2]));
+					appData.setConnectType(Integer.parseInt(items[3]));
 					appData.setCode(Integer.parseInt(items[5]));
 					appData.setPlatform(Integer.parseInt(items[6]));
 					appData.setRequestByte(Integer.parseInt(items[7]));
@@ -163,10 +179,15 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCount(1);
 
 					m_appDataConsumer.enqueue(appData);
+					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
+				} else {
+					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
 			}
+		} else {
+			Cat.logEvent("InvalidPar", items[1], Event.SUCCESS, items[1]);
 		}
 	}
 

@@ -75,13 +75,13 @@ public class RuleConfigTest {
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination"));
+		result = extractError(m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination")));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination"));
-		Assert.assertEquals(result.isTriggered(), false);
+		result = extractError(m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination")));
+		Assert.assertNull(result);
 	}
 
 	@Test
@@ -92,7 +92,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertResultEntity result = m_check.checkData(value, baseline, configMap.get("two-minute"));
+		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -104,7 +104,22 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		AlertResultEntity result = m_check.checkData(value, baseline, configMap.get("demo1"));
+		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
 		Assert.assertEquals(result.isTriggered(), true);
+	}
+
+	private AlertResultEntity extractError(List<AlertResultEntity> alertResults) {
+		int length = alertResults.size();
+		if (length == 0) {
+			return null;
+		}
+
+		for (AlertResultEntity alertResult : alertResults) {
+			if (alertResult.getAlertLevel().equals("error")) {
+				return alertResult;
+			}
+		}
+
+		return alertResults.get(length - 1);
 	}
 }

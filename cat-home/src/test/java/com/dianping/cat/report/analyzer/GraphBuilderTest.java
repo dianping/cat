@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -66,7 +66,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 
 	@Test
 	public void testStateReportBuilder() throws Exception {
-		ReportService service = lookup(ReportService.class);
+		ReportServiceManager service = lookup(ReportServiceManager.class);
 		Date date = TimeUtil.getCurrentMonth();
 		long start = date.getTime();
 		long end = System.currentTimeMillis();

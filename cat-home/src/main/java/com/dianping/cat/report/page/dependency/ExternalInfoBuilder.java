@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.dependency;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -13,6 +14,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.top.TopAnalyzer;
@@ -26,7 +28,7 @@ import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -43,10 +45,13 @@ public class ExternalInfoBuilder {
 	private EventCollectManager m_eventManager;
 
 	@Inject
-	private ReportService m_reportService;
+	private ReportServiceManager m_reportService;
 
 	@Inject
 	private ExceptionConfigManager m_configManager;
+
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -114,7 +119,8 @@ public class ExternalInfoBuilder {
 		int minuteCount = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		TopReport report = queryTopReport(payload);
-		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager);
+		List<String> excludeDomains = Arrays.asList(Constants.FRONT_END);
+		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
 		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
 

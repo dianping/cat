@@ -83,7 +83,7 @@
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
-<p><span class='text-error'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示</span></p>
+<p><span class='text-error'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示，如果项目换名，必须重新修改。</span></p>
 <p><span class='text-error'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
 <p><span class='text-error'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
 <h4 class="text-error">url : <a href="/cat/s/config?op=topologyProductLines" target="_blank">链接</a></h4>

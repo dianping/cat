@@ -1,7 +1,9 @@
 package com.dianping.cat.broker.api.app;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -84,7 +86,7 @@ public class BucketHandler implements Task {
 				}
 			}
 		}
-		
+
 		batchInsert(appDataCommands);
 	}
 
@@ -188,7 +190,7 @@ public class BucketHandler implements Task {
 			try {
 				File parentDir = new File(SAVE_PATH);
 				parentDir.mkdirs();
-				
+
 				String filePath = SAVE_PATH + String.valueOf(m_startTime);
 				BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
 
@@ -221,6 +223,36 @@ public class BucketHandler implements Task {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+		}
+	}
+
+	public void load(File file) {
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+			String line;
+			
+			while ((line = bufferedReader.readLine()) != null) {
+				String[] items = line.split("\t");
+				AppData appData = new AppData();
+
+				appData.setTimestamp(Long.parseLong(items[0]));
+				appData.setCity(Integer.parseInt(items[1]));
+				appData.setOperator(Integer.parseInt(items[2]));
+				appData.setNetwork(Integer.parseInt(items[3]));
+				appData.setVersion(Integer.parseInt(items[4]));
+				appData.setConnectType(Integer.parseInt(items[5]));
+				appData.setCommand(Integer.parseInt(items[6]));
+				appData.setCode(Integer.parseInt(items[7]));
+				appData.setPlatform(Integer.parseInt(items[8]));
+				appData.setRequestByte(Integer.parseInt(items[9]));
+				appData.setResponseByte(Integer.parseInt(items[10]));
+				appData.setResponseTime(Integer.parseInt(items[11]));
+
+				enqueue(appData);
+			}
+			bufferedReader.close();
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 }
