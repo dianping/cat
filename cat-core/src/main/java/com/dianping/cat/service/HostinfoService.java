@@ -75,7 +75,10 @@ public class HostinfoService implements Initializable, LogEnabled {
 			return hostinfo;
 		} else {
 			try {
-				return m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				Hostinfo host = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+
+				m_hostinfos.put(ip, hostinfo);
+				return host;
 			} catch (DalException e) {
 				return new Hostinfo();
 			}
@@ -125,7 +128,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 			if (project == null) {
 				m_unknownIps.put(ip, ip);
-				
+
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -166,6 +169,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 
+			
 			for (Hostinfo hostinfo : hostinfos) {
 				m_hostinfos.put(hostinfo.getIp(), hostinfo);
 				m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());

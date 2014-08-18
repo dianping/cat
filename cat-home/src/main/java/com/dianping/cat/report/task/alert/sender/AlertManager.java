@@ -111,7 +111,7 @@ public class AlertManager implements Initializable {
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
-			m_alertEntityService.storeAlert(alert, message);
+			
 
 			if (m_senderManager.sendAlert(channel, message)) {
 				result = true;
