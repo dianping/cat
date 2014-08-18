@@ -3,7 +3,10 @@ package com.dianping.cat.report.page.event;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -22,6 +25,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
+import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -239,6 +243,9 @@ public class Handler implements PageHandler<Context> {
 		case GRAPHS:
 			report = getEventGraphReport(model, payload);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			System.out.println(report);
+			TimeHandle(report);
+			System.out.println(report);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
@@ -306,5 +313,58 @@ public class Handler implements PageHandler<Context> {
 
 	public enum SummaryOrder {
 		TYPE, TOTAL_COUNT, FAILURE_COUNT
+	}
+
+	private void TimeHandle(EventReport report) {
+		for (Entry<String, Machine> machineEntrys : report.getMachines().entrySet()) {
+			Machine machine = machineEntrys.getValue();
+
+			for (Entry<String, EventType> eventTypeEntrys : machine.getTypes().entrySet()) {
+				EventType eventType = eventTypeEntrys.getValue();
+
+				for (Entry<String, EventName> eventNameEntrys : eventType.getNames().entrySet()) {
+					EventName eventName = eventNameEntrys.getValue();
+					Map<Integer, Range> ranges = eventName.getRanges();
+					Set<Integer> rangeIds = ranges.keySet();
+					boolean needDivide = true;
+
+					for (int id : rangeIds) {
+						if (id % 5 != 0) {
+							needDivide = false;
+							break;
+						}
+					}
+
+					if (needDivide) {
+						Map<Integer, Range> newRanges = new LinkedHashMap<Integer, Range>();
+
+						for (Entry<Integer, Range> rangeEntrys : ranges.entrySet()) {
+							Range range = rangeEntrys.getValue();
+							int value = range.getValue();
+							int count = range.getCount();
+							int fails = range.getFails();
+
+							range.setCount(count / 5 + count % 5);
+							range.setFails(fails / 5 + fails % 5);
+
+							if (count / 5 > 0) {
+								for (int i = value + 1; i < value + 5; i++) {
+									Range newRange = new Range();
+									newRange.setValue(i);
+									newRange.setCount(count / 5);
+									newRange.setFails(fails / 5);
+
+									newRanges.put(i, newRange);
+								}
+							}
+						}
+
+						for (Entry<Integer, Range> rangeEntrys : newRanges.entrySet()) {
+							ranges.put(rangeEntrys.getKey(), rangeEntrys.getValue());
+						}
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,7 +1,11 @@
 package com.dianping.cat.broker.api.app;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -33,6 +37,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	private ConcurrentHashMap<Long, BucketHandler> m_tasks;
 
+	private List<BucketHandler> m_loadTasks;
+
+	private long m_startTime;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -48,6 +56,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
+		m_startTime = System.currentTimeMillis();
+		load();
 
 		Threads.forGroup("Cat").start(bucketThreadController);
 		Threads.forGroup("Cat").start(appDataDispatcherThread);
@@ -117,6 +127,16 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			}
 		}
 
+		private void removeLoadTasks() {
+			if (m_loadTasks != null) {
+				long curTime = System.currentTimeMillis();
+
+				if (curTime - m_startTime > DURATION) {
+					m_loadTasks = null;
+				}
+			}
+		}
+
 		@Override
 		public String getName() {
 			return "BucketThreadController";
@@ -137,6 +157,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					long currentDuration = curTime - curTime % DURATION;
 					long currentMinute = curTime - curTime % MINUTE;
 
+					removeLoadTasks();
+					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
 					removeLastLastTask(currentDuration);
@@ -182,4 +204,36 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		}
 	}
 
+	public void save() {
+		for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
+			BucketHandler handler = entry.getValue();
+
+			if (handler.isActive()) {
+				handler.save();
+			}
+		}
+	}
+
+	public void load() {
+		try {
+			File path = new File(BucketHandler.SAVE_PATH);
+			File[] files = path.listFiles();
+
+			if (files.length > 0) {
+				m_loadTasks = new ArrayList<BucketHandler>();
+
+				for (File file : files) {
+					long timestamp = Long.parseLong(file.getName());
+					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
+
+					handler.load(file);
+					Threads.forGroup("Cat").start(handler);
+					handler.shutdown();
+					m_loadTasks.add(handler);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 }
