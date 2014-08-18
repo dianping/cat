@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private Logger m_logger;
 
 	private volatile int m_error;
-
+	
 	public static final String TOO_LONG = "toolongurl.bin";
 
 	@Override
@@ -196,7 +196,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else {
-						Integer tooLong = m_appConfigManager.getCommands().get(url);
+						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 
 						if (tooLong != null) {
 							appData.setCommand(tooLong);
