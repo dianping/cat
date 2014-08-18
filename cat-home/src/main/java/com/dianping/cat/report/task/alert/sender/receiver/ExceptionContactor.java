@@ -4,7 +4,7 @@ import com.dianping.cat.report.task.alert.AlertType;
 
 public class ExceptionContactor extends ProjectContactor {
 
-	public static final String ID = AlertType.EXCEPTION;
+	public static final String ID = AlertType.Exception.getName();
 
 	@Override
 	public String getId() {

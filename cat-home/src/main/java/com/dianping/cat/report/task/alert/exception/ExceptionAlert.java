@@ -56,7 +56,7 @@ public class ExceptionAlert implements Task {
 	}
 
 	public String getName() {
-		return AlertType.EXCEPTION;
+		return AlertType.Exception.getName();
 	}
 
 	private TopReport queryTopReport(Date start) {
@@ -164,7 +164,7 @@ public class ExceptionAlert implements Task {
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-				entity.setMetric(metricName).setType(AlertType.FRONT_END_EXCEPTION).setGroup(metricName);
+				entity.setMetric(metricName).setType(AlertType.FrontEndException.getName()).setGroup(metricName);
 				m_sendManager.addAlert(entity);
 			} catch (Exception e) {
 				Cat.logError(e);

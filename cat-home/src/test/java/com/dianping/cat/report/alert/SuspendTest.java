@@ -19,7 +19,7 @@ public class SuspendTest extends ComponentTestCase {
 		AlertManager manager = lookup(AlertManager.class);
 		AlertEntity entity = new AlertEntity();
 		entity.setDate(new Date()).setContent("test").setLevel("error");
-		entity.setMetric("testMetric").setType(AlertType.NETWORK).setGroup("testGroup");
+		entity.setMetric("testMetric").setType(AlertType.Network.getName()).setGroup("testGroup");
 
 		try {
 			manager.addAlert(entity);

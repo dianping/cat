@@ -4,7 +4,7 @@ import com.dianping.cat.report.task.alert.AlertType;
 
 public class SystemContactor extends ProductlineContactor {
 
-	public static final String ID = AlertType.SYSTEM;
+	public static final String ID = AlertType.System.getName();
 
 	@Override
 	public String getId() {

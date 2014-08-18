@@ -5,7 +5,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class SystemDecorator extends ProductlineDecorator {
 
-	public static final String ID = AlertType.SYSTEM;
+	public static final String ID = AlertType.System.getName();
 
 	@Override
 	public String getId() {

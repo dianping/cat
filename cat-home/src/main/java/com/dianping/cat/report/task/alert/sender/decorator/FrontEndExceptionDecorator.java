@@ -9,7 +9,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 public class FrontEndExceptionDecorator extends ExceptionDecorator {
 
-	public static final String ID = AlertType.FRONT_END_EXCEPTION;
+	public static final String ID = AlertType.FrontEndException.getName();
 
 	@Override
 	public String getId() {

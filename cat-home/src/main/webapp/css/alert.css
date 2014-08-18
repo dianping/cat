@@ -1,0 +1,24 @@
+/* this css is for alertView.jsp */
+.network {
+	color: #3a87ad;
+}
+
+.business {
+	color: #b94a48;
+}
+
+.exception {
+	color: #999;
+}
+
+.system {
+	color: #c09853;
+}
+
+.thirdParty {
+	color: #3a985d;
+}
+
+.frontEndException {
+	color: #468847;
+}
