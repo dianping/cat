@@ -49,6 +49,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private volatile int m_error;
 
+	public static final String TOO_LONG = "toolongurl.bin";
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -168,7 +170,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			AppData appData = new AppData();
 
 			try {
-				Integer command = m_appConfigManager.getCommands().get(URLDecoder.decode(items[4], "utf-8"));
+				String url = URLDecoder.decode(items[4], "utf-8");
+				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
@@ -189,20 +192,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					int responseTime = appData.getResponseTime();
 
 					if (responseTime < 60 * 1000 && responseTime >= 0) {
-						boolean success = m_appDataConsumer.enqueue(appData);
+						offerQueue(appData);
 
-						if (!success) {
-							m_error++;
-
-							if (m_error % 1000 == 0) {
-								Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
-								m_logger.error("Error when offer appData to queue , discard number " + m_error);
-							}
-						}
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else {
-						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, String.valueOf(responseTime));
+						Integer tooLong = m_appConfigManager.getCommands().get(url);
+
+						if (tooLong != null) {
+							appData.setCommand(tooLong);
+							offerQueue(appData);
+						}
+						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
-					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
 				} else {
 					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);
 				}
@@ -211,6 +212,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		} else {
 			Cat.logEvent("InvalidPar", items[1], Event.SUCCESS, items[1]);
+		}
+	}
+
+	private void offerQueue(AppData appData) {
+		boolean success = m_appDataConsumer.enqueue(appData);
+
+		if (!success) {
+			m_error++;
+
+			if (m_error % 1000 == 0) {
+				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
+				m_logger.error("Error when offer appData to queue , discard number " + m_error);
+			}
 		}
 	}
 
