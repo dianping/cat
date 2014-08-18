@@ -200,9 +200,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							}
 						}
 					} else {
-						Cat.logEvent("ResponseTooLong", String.valueOf(command), Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("ResponseTooLong", items[4], Event.SUCCESS, String.valueOf(responseTime));
 					}
-					Cat.logEvent("Command", String.valueOf(command), Event.SUCCESS, null);
+					Cat.logEvent("Command", items[4], Event.SUCCESS, null);
 				} else {
 					Cat.logEvent("CommandNotFound", items[4], Event.SUCCESS, items[4]);
 				}
@@ -210,7 +210,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidPar", items[1], Event.SUCCESS, items[1]);
+			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
 		}
 	}
 
