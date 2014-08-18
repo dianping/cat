@@ -17,6 +17,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -79,9 +80,11 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 				m_hostinfos.put(ip, hostinfo);
 				return host;
-			} catch (DalException e) {
-				return new Hostinfo();
+			} catch (DalNotFoundException e) {
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
+			return null;
 		}
 	}
 
@@ -169,7 +172,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 
-			
 			for (Hostinfo hostinfo : hostinfos) {
 				m_hostinfos.put(hostinfo.getIp(), hostinfo);
 				m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
@@ -264,8 +266,10 @@ public class HostinfoService implements Initializable, LogEnabled {
 				try {
 					Hostinfo hostinfo = findByIp(ip);
 
-					addIps.add(hostinfo.getIp());
-					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+					if (hostinfo != null) {
+						addIps.add(hostinfo.getIp());
+						m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+					}
 				} catch (Exception e) {
 					// ignore
 				}

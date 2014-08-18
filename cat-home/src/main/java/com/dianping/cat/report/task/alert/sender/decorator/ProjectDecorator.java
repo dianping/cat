@@ -15,18 +15,21 @@ public abstract class ProjectDecorator extends DefaultDecorator {
 	public String buildContactInfo(String domainName) {
 		try {
 			Project project = m_projectService.findByDomain(domainName);
-			String owners = project.getOwner();
-			String phones = project.getPhone();
-			StringBuilder builder = new StringBuilder();
 
-			if (!StringUtils.isEmpty(owners)) {
-				builder.append("[业务负责人: ").append(owners).append(" ]");
-			}
-			if (!StringUtils.isEmpty(phones)) {
-				builder.append("[负责人手机号码: ").append(phones).append(" ]");
-			}
+			if (project != null) {
+				String owners = project.getOwner();
+				String phones = project.getPhone();
+				StringBuilder builder = new StringBuilder();
 
-			return builder.toString();
+				if (!StringUtils.isEmpty(owners)) {
+					builder.append("[业务负责人: ").append(owners).append(" ]");
+				}
+				if (!StringUtils.isEmpty(phones)) {
+					builder.append("[负责人手机号码: ").append(phones).append(" ]");
+				}
+
+				return builder.toString();
+			}
 		} catch (Exception ex) {
 			Cat.logError("build project contact info error for doamin: " + domainName, ex);
 		}
