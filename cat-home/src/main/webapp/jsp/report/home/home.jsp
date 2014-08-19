@@ -33,6 +33,7 @@
    			 	<li class="text-right" id="pluginButton"><a href="?op=view&docName=plugin"><strong>插件扩展</strong></a></li>
   			</ul>
   			<div class="tab-content">
+  				<br/>
   				<c:choose>
 	  				<c:when test="${payload.docName == 'dianping'}">
 			    		<%@ include file="dianping.jsp"%>
