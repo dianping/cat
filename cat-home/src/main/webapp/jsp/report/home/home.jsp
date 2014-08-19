@@ -21,32 +21,32 @@
    			 	<li class="text-right"><a href="#tab1" data-toggle="tab"><strong>版本说明</strong></a></li>
    			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>集成文档</strong></a></li>
    			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>业务监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>业务告警</strong></a></li>
-   			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>变更监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>网络监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>异常监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab13" data-toggle="tab"><strong>用户端监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab7" data-toggle="tab"><strong>开发者文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>设计文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab9" data-toggle="tab"><strong>用户文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab10" data-toggle="tab"><strong>常见问题</strong></a></li>
-   			 	<li class="text-right"><a href="#tab11" data-toggle="tab"><strong>插件扩展</strong></a></li>
+   			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>业务告警</strong></a></li>
+   			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>变更监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>网络监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab7" data-toggle="tab"><strong>异常监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>用户端监控</strong></a></li>
+   			 	<li class="text-right"><a href="#tab9" data-toggle="tab"><strong>开发者文档</strong></a></li>
+   			 	<li class="text-right"><a href="#tab10" data-toggle="tab"><strong>设计文档</strong></a></li>
+   			 	<li class="text-right"><a href="#tab11" data-toggle="tab"><strong>用户文档</strong></a></li>
+   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>常见问题</strong></a></li>
+   			 	<li class="text-right"><a href="#tab13" data-toggle="tab"><strong>插件扩展</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab0"><%@ include file="dianping.jsp"%></div>
 	    		<div class="tab-pane" id="tab1"><%@ include file="releasenotes.jsp"%></div>
 	    		<div class="tab-pane" id="tab2"><%@ include file="integratingDocument.jsp"%></div>
 	    		<div class="tab-pane" id="tab3"><%@ include file="integratingBusiness.jsp"%></div>
-	    		<div class="tab-pane" id="tab4"><%@ include file="alterationDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab5"><%@ include file="networkDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab6"><%@ include file="exceptionDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab7"><%@ include file="developDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab8"><%@ include file="develop.jsp"%></div>
-	    		<div class="tab-pane" id="tab9"><%@ include file="userDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab10"><%@ include file="problem.jsp"%></div>
-	    		<div class="tab-pane" id="tab11"><%@ include file="plugin.jsp"%></div>
-	    		<div class="tab-pane" id="tab12"><%@ include file="monitorRule.jsp"%></div>
-	    		<div class="tab-pane" id="tab13"><%@ include file="userMonitor.jsp"%></div>
+	    		<div class="tab-pane" id="tab4"><%@ include file="monitorRule.jsp"%></div>
+	    		<div class="tab-pane" id="tab5"><%@ include file="alterationDocument.jsp"%></div>
+	    		<div class="tab-pane" id="tab6"><%@ include file="networkDocument.jsp"%></div>
+	    		<div class="tab-pane" id="tab7"><%@ include file="exceptionDocument.jsp"%></div>
+	    		<div class="tab-pane" id="tab8"><%@ include file="userMonitor.jsp"%></div>
+	    		<div class="tab-pane" id="tab9"><%@ include file="developDocument.jsp"%></div>
+	    		<div class="tab-pane" id="tab10"><%@ include file="develop.jsp"%></div>
+	    		<div class="tab-pane" id="tab11"><%@ include file="userDocument.jsp"%></div>
+	    		<div class="tab-pane" id="tab12"><%@ include file="problem.jsp"%></div>
+	    		<div class="tab-pane" id="tab13"><%@ include file="plugin.jsp"%></div>
 			</div>
 	</div>
 </div>
