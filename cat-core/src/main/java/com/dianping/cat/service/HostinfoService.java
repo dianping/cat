@@ -76,10 +76,10 @@ public class HostinfoService implements Initializable, LogEnabled {
 			return hostinfo;
 		} else {
 			try {
-				Hostinfo host = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				hostinfo = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
 				m_hostinfos.put(ip, hostinfo);
-				return host;
+				return hostinfo;
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -270,6 +270,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 						addIps.add(hostinfo.getIp());
 						m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 					}
+
 				} catch (Exception e) {
 					// ignore
 				}
