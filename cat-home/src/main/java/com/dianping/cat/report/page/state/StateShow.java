@@ -247,7 +247,7 @@ public class StateShow extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return (int) (o1.getAvg() * 100 - o2.getAvg() * 100);
+			return (int) (o2.getAvg() * 100 - o1.getAvg() * 100);
 		}
 	}
 
