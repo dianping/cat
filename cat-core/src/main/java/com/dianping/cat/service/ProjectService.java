@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -84,11 +85,14 @@ public class ProjectService implements Initializable {
 		} else {
 			try {
 				Project pro = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+
 				m_projects.put(pro.getDomain(), pro);
 				return project;
 			} catch (DalException e) {
-				return null;
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
+			return null;
 		}
 	}
 
@@ -105,10 +109,15 @@ public class ProjectService implements Initializable {
 		}
 
 		try {
-			return m_projectDao.findByPK(id, ProjectEntity.READSET_FULL);
-		} catch (DalException e) {
-			return new Project();
+			Project project = m_projectDao.findByPK(id, ProjectEntity.READSET_FULL);
+
+			m_projects.put(project.getDomain(), project);
+			return project;
+		} catch (DalNotFoundException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
+		return null;
 	}
 
 	@Override

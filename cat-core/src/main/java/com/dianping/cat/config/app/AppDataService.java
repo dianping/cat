@@ -80,7 +80,7 @@ public class AppDataService {
 		return null;
 	}
 
-	private static int queryTenMinutesBackLength(Date period, int n) {
+	private int queryTenMinutesBackLength(Date period, int n) {
 		int size = n;
 		Calendar cal = Calendar.getInstance();
 

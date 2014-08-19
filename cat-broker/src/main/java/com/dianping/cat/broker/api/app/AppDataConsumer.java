@@ -1,7 +1,9 @@
 package com.dianping.cat.broker.api.app;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -49,8 +51,64 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
 
+		loadOldData();
+
 		Threads.forGroup("Cat").start(bucketThreadController);
 		Threads.forGroup("Cat").start(appDataDispatcherThread);
+	}
+
+	public void loadOldData() {
+		try {
+			File path = new File(BucketHandler.SAVE_PATH);
+			File[] files = path.listFiles();
+
+			if (files.length > 0) {
+				for (File file : files) {
+					long timestamp = Long.parseLong(file.getName());
+					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
+
+					handler.load(file);
+					Threads.forGroup("Cat").start(handler);
+					handler.shutdown();
+					m_tasks.put(timestamp, handler);
+
+					file.delete();
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		try {
+			File path = new File(BucketHandler.SAVE_PATH);
+			File[] files = path.listFiles();
+
+			if (files.length > 0) {
+				for (File file : files) {
+					boolean success = file.delete();
+
+					if (!success) {
+						Cat.logError(new RuntimeException("error when delete file " + file.getAbsolutePath()));
+					}
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	public void save() {
+		for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
+			BucketHandler handler = entry.getValue();
+
+			if (handler.isActive()) {
+				try {
+					handler.save();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		}
 	}
 
 	private class AppDataDispatcherThread implements Task {
@@ -60,6 +118,15 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		@Override
 		public String getName() {
 			return NAME;
+		}
+
+		private void recordErrorInfo() {
+			m_dataLoss++;
+
+			if (m_dataLoss % 1000 == 0) {
+				Cat.logEvent("Discard", "BucketHandler", Event.SUCCESS, null);
+				m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
+			}
 		}
 
 		@Override
@@ -86,15 +153,6 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-			}
-		}
-
-		private void recordErrorInfo() {
-			m_dataLoss++;
-
-			if (m_dataLoss % 1000 == 0) {
-				Cat.logEvent("Discard", "BucketHandler", Event.SUCCESS, null);
-				m_logger.error("error timestamp in consumer, loss:" + m_dataLoss);
 			}
 		}
 
@@ -137,6 +195,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					long currentDuration = curTime - curTime % DURATION;
 					long currentMinute = curTime - curTime % MINUTE;
 
+					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
 					removeLastLastTask(currentDuration);
@@ -181,5 +240,5 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			}
 		}
 	}
-
+	
 }

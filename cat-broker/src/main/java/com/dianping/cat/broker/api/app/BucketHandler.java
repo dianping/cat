@@ -1,5 +1,10 @@
 package com.dianping.cat.broker.api.app;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +32,8 @@ public class BucketHandler implements Task {
 
 	private long m_startTime;
 
+	public final static String SAVE_PATH = "/data/appdatas/cat/app-data-save/";
+
 	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataQueue = new AppDataQueue();
@@ -34,7 +41,7 @@ public class BucketHandler implements Task {
 		m_appDataService = appDataService;
 	}
 
-	private void end() {
+	public void end() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(m_startTime);
 
@@ -181,4 +188,78 @@ public class BucketHandler implements Task {
 		m_isActive = false;
 	}
 
+	public void save() {
+		if (m_datas.size() > 0) {
+			try {
+				File parentDir = new File(SAVE_PATH);
+				boolean success = parentDir.mkdirs();
+
+				if (success) {
+					String filePath = SAVE_PATH + String.valueOf(m_startTime);
+					BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
+					char tab = '\t';
+					char enter = '\n';
+
+					for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
+						HashMap<String, AppData> value = outerEntry.getValue();
+
+						for (Entry<String, AppData> entry : value.entrySet()) {
+							AppData appData = entry.getValue();
+
+							StringBuilder sb = new StringBuilder();
+							sb.append(appData.getTimestamp()).append(tab);
+							sb.append(appData.getCity()).append(tab);
+							sb.append(appData.getOperator()).append(tab);
+							sb.append(appData.getNetwork()).append(tab);
+							sb.append(appData.getVersion()).append(tab);
+							sb.append(appData.getConnectType()).append(tab);
+							sb.append(appData.getCommand()).append(tab);
+							sb.append(appData.getCode()).append(tab);
+							sb.append(appData.getPlatform()).append(tab);
+							sb.append(appData.getRequestByte()).append(tab);
+							sb.append(appData.getResponseByte()).append(tab);
+							sb.append(appData.getResponseTime()).append(enter);
+
+							writer.append(sb.toString());
+						}
+					}
+					writer.close();
+				} else {
+					Cat.logError(new RuntimeException("error when create temp data file " + parentDir.getAbsolutePath()));
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
+	public void load(File file) {
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+			String line;
+
+			while ((line = bufferedReader.readLine()) != null) {
+				String[] items = line.split("\t");
+				AppData appData = new AppData();
+
+				appData.setTimestamp(Long.parseLong(items[0]));
+				appData.setCity(Integer.parseInt(items[1]));
+				appData.setOperator(Integer.parseInt(items[2]));
+				appData.setNetwork(Integer.parseInt(items[3]));
+				appData.setVersion(Integer.parseInt(items[4]));
+				appData.setConnectType(Integer.parseInt(items[5]));
+				appData.setCommand(Integer.parseInt(items[6]));
+				appData.setCode(Integer.parseInt(items[7]));
+				appData.setPlatform(Integer.parseInt(items[8]));
+				appData.setRequestByte(Integer.parseInt(items[9]));
+				appData.setResponseByte(Integer.parseInt(items[10]));
+				appData.setResponseTime(Integer.parseInt(items[11]));
+
+				enqueue(appData);
+			}
+			bufferedReader.close();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 }

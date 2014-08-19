@@ -1,9 +1,6 @@
-package com.dianping.cat.report.page.alert;
-
+package com.dianping.cat.broker.api.page.save;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	ALERT("alert"),
-
 	VIEW("view");
 
 	private String m_name;
@@ -17,9 +14,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 			if (action.getName().equals(name)) {
 				return action;
 			}
-			
 		}
-		
+
 		return defaultAction;
 	}
 

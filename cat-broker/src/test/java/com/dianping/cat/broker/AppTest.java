@@ -6,8 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,24 +14,7 @@ public class AppTest {
 	
 	@Test
 	public void test() throws Exception {
-		long time = System.currentTimeMillis();
-		
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(time);
-
-		int minute = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-		minute = minute - minute % 5;
-		
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		
-		Date period = new Date(cal.getTimeInMillis());
-		
-		
-		System.out.println(minute);
-		System.out.println(period);
+		SendData();
 	}
 	
 	public void SendData() throws Exception {
