@@ -75,7 +75,9 @@ public class HostinfoService implements Initializable, LogEnabled {
 			return hostinfo;
 		} else {
 			try {
-				return m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				Hostinfo host = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				m_hostinfos.put(ip, host);
+				return host;
 			} catch (DalException e) {
 				return new Hostinfo();
 			}
@@ -125,7 +127,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 			if (project == null) {
 				m_unknownIps.put(ip, ip);
-				
+
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -165,11 +167,15 @@ public class HostinfoService implements Initializable, LogEnabled {
 	private void refresh() {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+			Map<String, Hostinfo> tmpHostInfos = new ConcurrentHashMap<String, Hostinfo>();
+			Map<String, String> tmpIpDomains = new ConcurrentHashMap<String, String>(); 
 
 			for (Hostinfo hostinfo : hostinfos) {
-				m_hostinfos.put(hostinfo.getIp(), hostinfo);
-				m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+				tmpHostInfos.put(hostinfo.getIp(), hostinfo);
+				tmpIpDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 			}
+			m_hostinfos = tmpHostInfos;
+			m_ipDomains = tmpIpDomains;
 		} catch (DalException e) {
 			Cat.logError("initialize HostService error", e);
 		}
