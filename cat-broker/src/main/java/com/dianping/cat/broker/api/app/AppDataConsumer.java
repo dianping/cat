@@ -3,7 +3,9 @@ package com.dianping.cat.broker.api.app;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -35,6 +37,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	private ConcurrentHashMap<Long, BucketHandler> m_tasks;
 
+	private SimpleDateFormat m_fileFormat = new SimpleDateFormat("yyyyMMddHHmm");
+
+	public final static String SAVE_PATH = "/data/appdatas/cat/app-data-save/";
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -58,33 +64,34 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 	}
 
 	public void loadOldData() {
-		try {
-			File path = new File(BucketHandler.SAVE_PATH);
-			File[] files = path.listFiles();
+		File path = new File(SAVE_PATH);
+		File[] files = path.listFiles();
 
-			if (files.length > 0) {
-				for (File file : files) {
-					long timestamp = Long.parseLong(file.getName());
+		if (files.length > 0) {
+
+			for (File file : files) {
+				try {
+					long timestamp = m_fileFormat.parse(file.getName()).getTime();
 					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
 
 					handler.load(file);
 					Threads.forGroup("Cat").start(handler);
 					handler.shutdown();
 					m_tasks.put(timestamp, handler);
-
+				} catch (Exception e) {
+					Cat.logError(e);
+				} finally {
 					file.delete();
 				}
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
 
 		try {
-			File path = new File(BucketHandler.SAVE_PATH);
-			File[] files = path.listFiles();
+			File paths = new File(SAVE_PATH);
+			File[] leftFiles = paths.listFiles();
 
-			if (files.length > 0) {
-				for (File file : files) {
+			if (leftFiles.length > 0) {
+				for (File file : leftFiles) {
 					boolean success = file.delete();
 
 					if (!success) {
@@ -103,7 +110,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 			if (handler.isActive()) {
 				try {
-					handler.save();
+					File file = new File(SAVE_PATH + m_fileFormat.format(new Date(entry.getKey())));
+
+					file.getParentFile().mkdirs();
+					handler.save(file);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -167,11 +177,14 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private void closeLastTask(long currentDuration) {
 			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
-			BucketHandler lastBucketHandler = m_tasks.get(last);
 
-			if (lastBucketHandler != null) {
-				lastBucketHandler.shutdown();
-				m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(last)));
+			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
+				Long time = entry.getKey();
+
+				if (time <= last) {
+					entry.getValue().shutdown();
+					m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(time)));
+				}
 			}
 		}
 
@@ -182,8 +195,20 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private void removeLastLastTask(long currentDuration) {
 			Long lastLast = new Long(currentDuration - 2 * DURATION);
+			Set<Long> closed = new HashSet<Long>();
 
-			m_tasks.remove(lastLast);
+			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
+				Long time = entry.getKey();
+
+				if (time <= lastLast) {
+					closed.add(time);
+				}
+			}
+
+			for (Long time : closed) {
+				m_tasks.remove(time);
+				m_logger.info("remove bucket handler ,time " + m_sdf.format(new Date(time)));
+			}
 		}
 
 		@Override
@@ -240,5 +265,5 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			}
 		}
 	}
-	
+
 }
