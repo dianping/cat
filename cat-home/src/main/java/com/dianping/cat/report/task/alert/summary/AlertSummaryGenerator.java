@@ -34,7 +34,7 @@ public class AlertSummaryGenerator {
 		alert.setAlertTime(date);
 		alert.setContext(edge.getDes());
 		alert.setMetric(edge.getKey());
-		alert.setType("slow "+edge.getType());
+		alert.setType("slow " + edge.getType());
 		alert.setDomain(edge.getSelf());
 
 		return alert;
@@ -87,7 +87,7 @@ public class AlertSummaryGenerator {
 
 	private Category generateCategoryByTimeCategory(Date date, String cate) {
 		Category category = new Category(cate);
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Date startTime = new Date(date.getTime() - DURATION);
 
 		try {
@@ -103,7 +103,7 @@ public class AlertSummaryGenerator {
 
 	private Category generateCategoryByTimeCateDomain(Date date, String cate, String domain) {
 		Category category = new Category(cate);
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Date startTime = new Date(date.getTime() - DURATION);
 
 		try {
@@ -119,7 +119,7 @@ public class AlertSummaryGenerator {
 
 	private Category generateDependCategoryByTimeCateDomain(Date date, String cate, List<String> dependencyDomains) {
 		String categoryName = "dependency_" + cate;
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Category category = new Category(categoryName);
 		Date startTime = new Date(date.getTime() - DURATION);
 
