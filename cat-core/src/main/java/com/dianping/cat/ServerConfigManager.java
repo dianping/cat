@@ -340,11 +340,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean filterDomain(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals(Constants.ALL);
+		return !domain.equals("PhoenixAgent") && !domain.equals("cat-agent") && !domain.equals(Constants.ALL);
 	}
 
 	public boolean validateDomain(String domain) {
 		return !domain.equals(Constants.FRONT_END) && filterDomain(domain);
 	}
-	
+
 }
