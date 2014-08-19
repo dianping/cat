@@ -120,6 +120,10 @@ public class StateShow extends BaseVisitor {
 			all.setTotal(all.getTotal() + temp.getTotal());
 			all.setTotalLoss(all.getTotalLoss() + temp.getTotalLoss());
 		}
+
+		if (all.getTotal() > 0) {
+			all.setAvg(all.getSize() / all.getTotal());
+		}
 		return all;
 	}
 
