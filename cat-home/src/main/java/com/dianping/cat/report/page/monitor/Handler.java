@@ -17,14 +17,11 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
 
 	@Inject
 	private JsonBuilder m_builder;
@@ -147,14 +144,11 @@ public class Handler implements PageHandler<Context> {
 	@Override
 	@OutboundActionMeta(name = "monitor")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 		HttpStatus status = checkPars(payload);
 
-		model.setStatus(m_builder.toJson(status));
 		if (status.getStatusCode().equals(String.valueOf(HttpStatus.SUCCESS))) {
-
 			switch (action) {
 			case COUNT_API:
 				buildMetric(payload, MetricType.COUNT.name(), payload.getCount());
@@ -168,14 +162,9 @@ public class Handler implements PageHandler<Context> {
 			case BATCH_API:
 				buildBatchMetric(payload.getBatch());
 				break;
-			default:
-				throw new RuntimeException("Unknown action: " + action);
 			}
-
 		}
-		model.setAction(action);
-		model.setPage(ReportPage.MONITOR);
-		m_jspViewer.view(ctx, model);
+		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
 	}
 
 }
