@@ -143,6 +143,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		}
 		machine.setAvgTps(avgTps);
 		machine.setMaxTps(maxTps);
+		
 		return machine;
 	}
 
