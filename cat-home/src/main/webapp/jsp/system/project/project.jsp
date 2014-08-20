@@ -34,12 +34,14 @@
 			<table class="project table table-striped table-bordered table-condensed" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
-					<th width="15%">项目名称</th>
-					<th width="15%">CMDB名称</th>
+					<th width="11%">项目名称</th>
+					<th width="13%">CMDB名称</th>
 					<th width="10%">所属部门</th>
 					<th width="10%">产品线</th>
-					<th width="15%">组邮件</th>
-					<th width="15%">组号码</th>
+					<th width="10%">BU</th>
+					<th width="10%">CMDB产品线</th>
+					<th width="13%">组邮件</th>
+					<th width="13%">组号码</th>
 					<th width="5%">负责人</th>
 					<th width="5%">操作</th>
 				</tr></thead><tbody>
@@ -50,6 +52,8 @@
 						<td>${item.cmdbDomain}</td>
 						<td>${item.department}</td>
 						<td>${item.projectLine}</td>
+						<td>${item.bu}</td>
+						<td>${item.cmdbProductline}</td>
 						<td>${item.email}</td>
 						<td>${item.phone}</td>
 						<td>${item.owner}</td>

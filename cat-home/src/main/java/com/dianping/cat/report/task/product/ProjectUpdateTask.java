@@ -50,7 +50,19 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private static final String CMDB_INFO_URL = "http://api.cmdb.dp/api/v0.1/projects/%s";
 
+	private static final String CMDB_BU_URL = "http://api.cmdb.dp/api/v0.1/projects/%s/bu";
+
+	private static final String CMDB_PRODUCT_URL = "http://api.cmdb.dp/api/v0.1/projects/%s/product";
+
 	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server),private_ip:%s&fl=hostname";
+
+	private boolean checkIfNullOrEqual(String source, int target) {
+		if (source == null || source.equals("null")) {
+			return true;
+		} else {
+			return Integer.parseInt(source) == target;
+		}
+	}
 
 	private boolean checkIfNullOrEqual(String source, String target) {
 		if (source == null || source.equals("null")) {
@@ -129,8 +141,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private Map<String, String> parseInfos(String content) throws Exception {
 		Map<String, String> infosMap = new HashMap<String, String>();
-		JsonObject object = new JsonObject(content);
-		JsonObject project = object.getJSONObject("project");
+		JsonObject project = new JsonObject(content).getJSONObject("project");
 
 		if (project == null) {
 			return infosMap;
@@ -139,6 +150,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		Object owner = project.get("rd_duty");
 		Object email = project.get("project_email");
 		Object phone = project.get("rd_mobile");
+		Object level = project.get("project_level");
 
 		if (email != null) {
 			infosMap.put("owner", owner.toString());
@@ -157,7 +169,26 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		} else {
 			infosMap.put("phone", null);
 		}
+
+		if (level != null) {
+			infosMap.put("level", level.toString());
+		} else {
+			infosMap.put("level", null);
+		}
 		return infosMap;
+	}
+
+	private String parseInfo(String content, String jsonName, String attrName) throws Exception {
+		JsonObject json = new JsonObject(content).getJSONObject(jsonName);
+
+		if (json != null) {
+			Object obj = json.get(attrName);
+
+			if (obj != null) {
+				obj.toString();
+			}
+		}
+		return null;
 	}
 
 	private String queryCmdbName(List<String> ips) {
@@ -263,6 +294,24 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		return null;
 	}
 
+	private String queryProjectInfoFromCMDB(String url, String jsonName, String attrName) {
+		Transaction t = Cat.newTransaction("CMDB", "queryProjectInfo");
+		try {
+			InputStream in = Urls.forIO().readTimeout(1000).connectTimeout(1000).openStream(url);
+			String content = Files.forIO().readFrom(in, "utf-8");
+
+			t.setStatus(Transaction.SUCCESS);
+			t.addData(content);
+			return parseInfo(content, jsonName, attrName);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
+		return null;
+	}
+
 	@Override
 	public void run() {
 		boolean active = true;
@@ -342,13 +391,16 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private boolean updateProject(Project pro) {
-		Map<String, String> infosMap = queryProjectInfoFromCMDB(pro.getCmdbDomain());
+		String cmdbDomain = pro.getCmdbDomain();
+		Map<String, String> infosMap = queryProjectInfoFromCMDB(cmdbDomain);
 		String cmdbOwner = infosMap.get("owner");
 		String cmdbEmail = infosMap.get("email");
 		String cmdbPhone = infosMap.get("phone");
+		String cmdbLevel = infosMap.get("level");
 		String dbOwner = pro.getOwner();
 		String dbEmail = pro.getEmail();
 		String dbPhone = pro.getPhone();
+		int dbLevel = pro.getLevel();
 		boolean isProjChanged = false;
 
 		if (!checkIfNullOrEqual(cmdbOwner, dbOwner)) {
@@ -361,6 +413,27 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		}
 		if (!checkIfNullOrEqual(cmdbPhone, dbPhone)) {
 			pro.setPhone(mergeAndBuildUniqueString(cmdbPhone, dbPhone));
+			isProjChanged = true;
+		}
+		if (!checkIfNullOrEqual(cmdbLevel, dbLevel)) {
+			pro.setLevel(Integer.parseInt(cmdbLevel));
+			isProjChanged = true;
+		}
+
+		String buUrl = String.format(CMDB_BU_URL, cmdbDomain);
+		String productlineUrl = String.format(CMDB_PRODUCT_URL, cmdbDomain);
+		String cmdbBu = queryProjectInfoFromCMDB(buUrl, "bu", "bu_name");
+		String cmdbProductline = queryProjectInfoFromCMDB(productlineUrl, "product", "product_name");
+		String dbBu = pro.getBu();
+		String dbProductline = pro.getCmdbProductline();
+
+		if (!checkIfNullOrEqual(cmdbBu, dbBu)) {
+			pro.setBu(cmdbBu);
+			isProjChanged = true;
+		}
+
+		if (!checkIfNullOrEqual(cmdbProductline, dbProductline)) {
+			pro.setCmdbProductline(cmdbProductline);
 			isProjChanged = true;
 		}
 
@@ -380,14 +453,11 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 					if (cmdbDomain != null) {
 						boolean isChange = !cmdbDomain.equals(originCmdbDomain);
 
-						if (checkIfValid(cmdbDomain)) {
-							pro.setCmdbDomain(cmdbDomain);
+						pro.setCmdbDomain(cmdbDomain);
+						boolean isProjectInfoChange = updateProject(pro);
 
-							boolean isProjectInfoChange = updateProject(pro);
-
-							if (isProjectInfoChange || isChange) {
-								m_projectService.updateProject(pro);
-							}
+						if (isProjectInfoChange || isChange) {
+							m_projectService.updateProject(pro);
 						}
 					}
 				} catch (Exception e) {

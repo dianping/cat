@@ -28,6 +28,8 @@
 	<table class="table table-striped table-bordered table-condensed">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
+		<input type="hidden" name="project.bu" value="${model.project.bu}" />
+		<input type="hidden" name="project.cmdbProductline" value="${model.project.cmdbProductline}" />
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
 			<td>项目名称</td>
