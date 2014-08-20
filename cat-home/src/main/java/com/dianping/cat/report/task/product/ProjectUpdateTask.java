@@ -3,13 +3,15 @@ package com.dianping.cat.report.task.product;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
@@ -19,6 +21,7 @@ import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.message.Transaction;
@@ -36,11 +39,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	private ProjectService m_projectService;
 
 	@Inject(type = ReportService.class, value = TransactionAnalyzer.ID)
-	private ReportService m_reportService;
+	private ReportService<TransactionReport> m_reportService;
 
 	private Logger m_logger;
-
-	private Map<String, List<String>> m_domainToIpMap = new HashMap<String, List<String>>();
 
 	private static final long DURATION = 60 * 60 * 1000L;
 
@@ -49,30 +50,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	private static final String CMDB_INFO_URL = "http://api.cmdb.dp/api/v0.1/projects/%s";
 
 	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server),private_ip:%s&fl=hostname";
-
-	private void buildDomainToIpMap() {
-		try {
-			m_reportService.queryDailyReport(domain, start, end);
-			
-			
-			
-			List<Hostinfo> infos = m_hostInfoService.findAll();
-
-			for (Hostinfo info : infos) {
-				String domain = info.getDomain();
-				String ip = info.getIp();
-				List<String> ips = m_domainToIpMap.get(domain);
-
-				if (ips == null) {
-					ips = new ArrayList<String>();
-					m_domainToIpMap.put(domain, ips);
-				}
-				ips.add(ip);
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-	}
 
 	private boolean checkIfNullOrEqual(String source, String target) {
 		if (source == null || source.equals("null")) {
@@ -184,15 +161,36 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private String queryCmdbName(List<String> ips) {
 		if (ips != null) {
+			Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
+
 			for (String ip : ips) {
 				String cmdbDomain = queryDomainFromCMDB(ip);
 
 				if (checkIfValid(cmdbDomain)) {
-					return cmdbDomain;
+					Integer count = nameCountMap.get(cmdbDomain);
+					if (count == null) {
+						nameCountMap.put(cmdbDomain, 1);
+					} else {
+						nameCountMap.put(cmdbDomain, count + 1);
+					}
 				}
 			}
+
+			String probableDomain = null;
+			int maxCount = 0;
+			for (Entry<String, Integer> entry : nameCountMap.entrySet()) {
+				int currentCount = entry.getValue();
+
+				if (currentCount > maxCount) {
+					maxCount = currentCount;
+					probableDomain = entry.getKey();
+				}
+			}
+
+			return probableDomain;
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	private String queryDomainFromCMDB(String ip) {
@@ -232,6 +230,20 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.complete();
 		}
 		return null;
+	}
+
+	private List<String> queryIpsFromReport(String domain) {
+		Calendar cal = Calendar.getInstance();
+		Date endDate = cal.getTime();
+		cal.add(Calendar.DATE, -2);
+		Date startDate = cal.getTime();
+
+		TransactionReport report = m_reportService.queryDailyReport(domain, startDate, endDate);
+		Set<String> ipSet = report.getMachines().keySet();
+		List<String> ipList = new ArrayList<String>();
+		ipList.addAll(ipSet);
+
+		return ipList;
 	}
 
 	private Map<String, String> queryProjectInfoFromCMDB(String cmdbDomain) {
@@ -358,14 +370,12 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private void updateProjectInfo() {
-		buildDomainToIpMap();
-
 		try {
 			List<Project> projects = m_projectService.findAll();
 
 			for (Project pro : projects) {
 				try {
-					List<String> ips = m_domainToIpMap.get(pro.getDomain());
+					List<String> ips = queryIpsFromReport(pro.getDomain());
 					String originCmdbDomain = pro.getCmdbDomain();
 					String cmdbDomain = queryCmdbName(ips);
 
