@@ -24,6 +24,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.HostinfoService;
@@ -233,11 +234,8 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private List<String> queryIpsFromReport(String domain) {
-		Calendar cal = Calendar.getInstance();
-		Date endDate = cal.getTime();
-		cal.add(Calendar.DATE, -2);
-		Date startDate = cal.getTime();
-
+		Date startDate = TimeUtil.getCurrentDay(-2);
+		Date endDate = TimeUtil.getCurrentDay();
 		TransactionReport report = m_reportService.queryDailyReport(domain, startDate, endDate);
 		Set<String> ipSet = report.getMachines().keySet();
 		List<String> ipList = new ArrayList<String>();
