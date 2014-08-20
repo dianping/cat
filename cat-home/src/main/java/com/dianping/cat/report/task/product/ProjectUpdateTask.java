@@ -18,9 +18,11 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
@@ -32,6 +34,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Inject
 	private ProjectService m_projectService;
+
+	@Inject(type = ReportService.class, value = TransactionAnalyzer.ID)
+	private ReportService m_reportService;
 
 	private Logger m_logger;
 
@@ -47,6 +52,10 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private void buildDomainToIpMap() {
 		try {
+			m_reportService.queryDailyReport(domain, start, end);
+			
+			
+			
 			List<Hostinfo> infos = m_hostInfoService.findAll();
 
 			for (Hostinfo info : infos) {

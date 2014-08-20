@@ -16,15 +16,10 @@ public class AlertEntityService {
 
 	private Alert buildAlert(AlertEntity alertEntity, AlertMessageEntity message) {
 		Alert alert = new Alert();
-		String type = alertEntity.getType();
 
-		if ("business".equals(type)) {
-			alert.setDomain((String) alertEntity.getParas().get("domain"));
-		} else {
-			alert.setDomain(alertEntity.getGroup());
-		}
+		alert.setDomain(alertEntity.getDomain());
 		alert.setAlertTime(alertEntity.getDate());
-		alert.setCategory(type);
+		alert.setCategory(alertEntity.getType());
 		alert.setType(alertEntity.getLevel());
 		alert.setContent(message.getTitle() + "<br/>" + message.getContent());
 		alert.setMetric(alertEntity.getMetric());
