@@ -49,12 +49,12 @@ def get_created(inspect_info):
 
 
 def get_name(inspect_info):
-    return re.sub(r'(^/|_\d+$)', '', inspect_info['Name'])
+    return re.sub(r'(^/|_.+$)', '', inspect_info['Name'])
 
 
 def get_cpu_usage(metric_info):
     if 'current_usage' in metric_info['cpu_stats']['cpu_usage']:
-        return metric_info['cpu_stats']['cpu_usage']['cpu_usage']
+        return metric_info['cpu_stats']['cpu_usage']['current_usage']
     return 0
 
 
@@ -86,13 +86,11 @@ def get_container_info(pid):
     disk_usage = docker_command(pid, 'df -h | grep "rootfs"')
     disk_usage = re.split(r'\s+', disk_usage.strip())[-2][:-1]
     disk_usage = int(disk_usage) * 1.0 / 100
-    ssh_md5 = docker_command(pid, 'md5sum /usr/sbin/sshd')
-    ssh_md5 = re.split(r'\s+', ssh_md5.strip())[0]
 
     eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision = get_network_info(pid, 'eth0')
     lo_rx, lo_tx, lo_errors, lo_dropped, lo_collision = get_network_info(pid, 'lo')
 
-    return disk_usage, ssh_md5, eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision, \
+    return disk_usage, eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision, \
            lo_rx, lo_tx, lo_errors, lo_dropped, lo_collision
 
 
@@ -159,7 +157,7 @@ def get_all_info(current_instance=None):
         metric_info = instance_metric(instance_id)
         pid = inspect_info['State']['Pid']
 
-        disk_usage, ssh_md5, eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision, lo_rx, lo_tx, \
+        disk_usage, eth0_rx, eth0_tx, eth0_errors, eth0_dropped, eth0_collision, lo_rx, lo_tx, \
         lo_errors, lo_dropped, lo_collision = get_container_info(pid)
         ip = get_ip(inspect_info)
         mem_total, mem_used, mem_cached, mem_free, mem_shared, mem_buffered = get_memory_info(metric_info, instance_id)
@@ -170,7 +168,7 @@ def get_all_info(current_instance=None):
 
         m = [
             ('domain', '', get_name(inspect_info)),
-            ('system_userCpu', 'avg', '%.3f' % (float(get_cpu_usage(metric_info)))),
+            ('system_cpuUsage', 'avg', '%.3f' % (float(get_cpu_usage(metric_info)))),
             ('system_cachedMem', 'avg', mem_cached),
             ('system_totalMem', 'avg', mem_total),
             ('system_usedMem', 'avg', mem_used),
@@ -179,8 +177,6 @@ def get_all_info(current_instance=None):
             ('system_buffersMem', 'avg', mem_buffered),
             ('system_/-usage', 'avg', disk_usage),
             ('system_swapUsage', 'avg', get_swap_usage(metric_info)),
-            ('system_md5Change', 'avg', ssh_md5),
-            ('system_uptime', 'avg', get_created(inspect_info)),
             ('system_eth0-outFlow', 'sum', eth0_tx),
             ('system_eth0-inFlow', 'sum', eth0_rx),
             ('system_eth0-dropped', 'sum', eth0_dropped),

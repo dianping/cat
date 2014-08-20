@@ -12,6 +12,7 @@
 	       <li class="text-right" id="urlPatternList"><a href="?op=urlPatterns">URL合并规则</a></li>
 	       <li class="text-right" id="aggregationList"><a href="?op=aggregations">JS合并规则</a></li>
 	       <li class="text-right" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
+	       <li class="text-right" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">APP报表配置</a></li>
 	       <li class="text-right" id="thirdPartyConfigUpdate"><a href="?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
            <li class='nav-header'>业务监控配置</li>
 	       <li class="text-right" id="metricConfigList"><a href="?op=metricConfigList">业务监控规则</a></li>

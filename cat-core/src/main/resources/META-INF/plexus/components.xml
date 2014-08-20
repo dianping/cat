@@ -86,6 +86,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.app.AppDataService</role>
 			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
 			<requirements>

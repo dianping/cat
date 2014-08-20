@@ -337,8 +337,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
-		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class, SenderManager.class)
-		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
+		all.add(C(AlertSummaryExecutor.class).req(AlertSummaryGenerator.class, AlertSummaryManager.class,
+		      SenderManager.class).req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
 
 		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
 

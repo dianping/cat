@@ -49,6 +49,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	@Inject
 	private ScheduledManager m_scheduledManager;
 
+	@Inject
+	private AppDataComparisonNotifier m_appDataInformer;
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	private Logger m_logger;
@@ -126,8 +129,10 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				}
 				long currentDay = TimeUtil.getCurrentDay().getTime();
 				Calendar cal = Calendar.getInstance();
+				m_appDataInformer.doNotifying();
 
 				if (lastSendMailTime < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
+//					m_appDataInformer.doNotifying();
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
@@ -162,13 +167,14 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(TimeUtil.ONE_HOUR);
+//				Thread.sleep(TimeUtil.ONE_HOUR);
+				Thread.sleep(10000);
 			} catch (Exception e) {
 				active = false;
 			}
 		}
 	}
-
+	
 	@Override
 	public void shutdown() {
 	}

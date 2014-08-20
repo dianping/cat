@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="app-comparison-config" root="true">
+    <entity-ref name="app-comparison" type="list" names="app-comparisons" />
+  </entity>
+  <entity name="app-comparison">
+    <attribute name="id" value-type="String" />
+    <attribute name="emails" value-type="String" />
+    <entity-ref name="item" type="list" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="id" value-type="String" />
+    <attribute name="command" value-type="String" />
+  </entity>
+</model>
+

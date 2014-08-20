@@ -67,9 +67,9 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		String type = pars.get("type");
 
 		if (PAAS_SYSTEM.equals(type)) {
-			type = SYSTEM_TYPE;
-			
-			pars.put("type", type);
+			type = PAAS_SYSTEM;
+
+			pars.put("type", SYSTEM_TYPE);
 		}
 		return type;
 	}

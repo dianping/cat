@@ -124,7 +124,7 @@ public class AppDataService {
 	}
 
 	public Double[] querySuccessRatio(int commandId, AppDataCommandMap convertedData) {
-		int n = convertedData.getMaxSize();
+		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
 		for (int i = 0; i < n; i++) {
@@ -170,7 +170,7 @@ public class AppDataService {
 	}
 
 	public Double[] queryRequestCount(AppDataCommandMap convertedData) {
-		int n = convertedData.getMaxSize();
+		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
@@ -187,7 +187,7 @@ public class AppDataService {
 	}
 
 	public Double[] queryDelayAvg(AppDataCommandMap convertedData) {
-		int n = convertedData.getMaxSize();
+		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
 		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
@@ -206,21 +206,35 @@ public class AppDataService {
 		return value;
 	}
 
+	public double queryOneDayDelayAvg(QueryEntity entity) {
+		Double[] values = queryValue(entity, DELAY);
+		double delaySum = 0;
+		int size = 0;
+
+		for (int i = 0; i < values.length; i++) {
+			if (values[i] != null) {
+				delaySum += values[i];
+				size++;
+			}
+		}
+		return size > 0 ? delaySum / size : -1;
+	}
+
 	public class AppDataCommandMap {
-		private int m_maxSize;
+		private int m_duration;
 
 		private Map<Integer, List<AppDataCommand>> m_appDataCommands;
 
-		public int getMaxSize() {
-			return m_maxSize;
+		public int getDuration() {
+			return m_duration;
 		}
 
 		public Map<Integer, List<AppDataCommand>> getAppDataCommands() {
 			return m_appDataCommands;
 		}
 
-		public AppDataCommandMap(int maxSize, Map<Integer, List<AppDataCommand>> appDataCommands) {
-			m_maxSize = maxSize;
+		public AppDataCommandMap(int duration, Map<Integer, List<AppDataCommand>> appDataCommands) {
+			m_duration = duration;
 			m_appDataCommands = appDataCommands;
 		}
 	}
