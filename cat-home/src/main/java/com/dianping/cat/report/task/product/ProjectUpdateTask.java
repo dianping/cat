@@ -185,7 +185,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			Object obj = json.get(attrName);
 
 			if (obj != null) {
-				obj.toString();
+				return obj.toString();
 			}
 		}
 		return null;

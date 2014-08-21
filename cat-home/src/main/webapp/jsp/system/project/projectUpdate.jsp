@@ -30,6 +30,7 @@
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
 		<input type="hidden" name="project.bu" value="${model.project.bu}" />
 		<input type="hidden" name="project.cmdbProductline" value="${model.project.cmdbProductline}" />
+		<input type="hidden" name="project.level" value="${model.project.level}" />
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
 			<td>项目名称</td>

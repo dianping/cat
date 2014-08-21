@@ -35,10 +35,11 @@
 			<thead>
 				<tr class="odd">
 					<th width="11%">项目名称</th>
-					<th width="13%">CMDB名称</th>
-					<th width="10%">所属部门</th>
+					<th width="10%">CMDB名称</th>
+					<th width="5%">级别</th>
+					<th width="9%">所属部门</th>
 					<th width="10%">产品线</th>
-					<th width="10%">BU</th>
+					<th width="9%">BU</th>
 					<th width="10%">CMDB产品线</th>
 					<th width="13%">组邮件</th>
 					<th width="13%">组号码</th>
@@ -50,6 +51,7 @@
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${item.domain}</td>
 						<td>${item.cmdbDomain}</td>
+						<td>${item.level}</td>
 						<td>${item.department}</td>
 						<td>${item.projectLine}</td>
 						<td>${item.bu}</td>

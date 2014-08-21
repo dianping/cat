@@ -78,8 +78,12 @@ public class HostinfoService implements Initializable, LogEnabled {
 			try {
 				Hostinfo host = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
-				m_hostinfos.put(ip, host);
-				return host;
+				if (host != null) {
+					m_hostinfos.put(ip, host);
+					return host;
+				} else {
+					return null;
+				}
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
