@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -19,6 +20,8 @@ import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
 public class ClientConfigManager implements LogEnabled {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
+
+	private static final String PROPERTIES_CLIENT_XML = "/META-INF/app.properties";
 
 	private Logger m_logger;
 
@@ -121,21 +124,10 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		// load the client configure from Java class-path
+		clientConfig = loadConfigFromEnviroment();
+
 		if (clientConfig == null) {
-			InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
-
-			if (in == null) {
-				in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
-			}
-
-			if (in != null) {
-				String xml = Files.forIO().readFrom(in, "utf-8");
-
-				clientConfig = DefaultSaxParser.parse(xml);
-				m_logger.info(String.format("Resource file(%s) found.", Cat.class.getResource(CAT_CLIENT_XML)));
-			} else {
-				m_logger.warn(String.format("Resource file(%s) not found.", CAT_CLIENT_XML));
-			}
+			clientConfig = loadConfigFromXml();
 		}
 
 		// merge the two configures together to make it effected
@@ -148,6 +140,75 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+	}
+
+	private ClientConfig loadConfigFromEnviroment() {
+		InputStream in = null;
+		try {
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_CLIENT_XML);
+
+			if (in == null) {
+				in = Cat.class.getResourceAsStream(PROPERTIES_CLIENT_XML);
+			}
+			if (in != null) {
+				Properties prop = new Properties();
+
+				prop.load(in);
+
+				String appName = prop.getProperty("app.name");
+
+				if (appName != null) {
+					ClientConfig config = new ClientConfig();
+
+					config.addDomain(new Domain(appName));
+					m_logger.info(String.format("Find domain name %s from app.properties.", appName));
+					return config;
+				} else {
+					m_logger.info(String.format("Can't find app.name from app.properties."));
+					return null;
+				}
+			} else {
+				m_logger.info(String.format("Can't find app.properties in %s", PROPERTIES_CLIENT_XML));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		return null;
+	}
+
+	private ClientConfig loadConfigFromXml() {
+		InputStream in = null;
+		try {
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
+
+			if (in == null) {
+				in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
+			}
+			if (in != null) {
+				String xml = Files.forIO().readFrom(in, "utf-8");
+
+				m_logger.info(String.format("Resource file(%s) found.", Cat.class.getResource(CAT_CLIENT_XML)));
+				return DefaultSaxParser.parse(xml);
+			}
+			return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		return null;
 	}
 
 	public String getServerConfigUrl() {
