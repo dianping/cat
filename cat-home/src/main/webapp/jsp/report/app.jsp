@@ -67,7 +67,7 @@
 					+ myDate.getDate();
 		}
 
-		function query() {
+		function query(field) {
 			var time = $("#time").val();
 			var command = $("#command").val();
 			var code = $("#code").val();
@@ -109,9 +109,12 @@
 					break;
 				}
 			}
-
+			
+			if(typeof(field) == "undefined"){
+				field = "";
+			}
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
-					+ type;
+					+ type + "&groupByField=" + field;
 			window.location.href = href;
 		}
 
@@ -322,6 +325,79 @@
 		<div style="margin: 0 auto; width: 95%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
+		
+<table class="heartbeat">
+	<tr>
+		<th>网络类型</th>
+		<th>版本</th>
+		<th>连接类型</th>
+		<th>平台</th>
+		<th>地区</th>
+		<th>运营商</th>
+		<th>成功率(%)</th>
+		<th>总请求数</th>
+		<th>成功平均延迟(ms)</th>
+		<th>平均发包数</th>
+		<th>平均回包数</th>
+	</tr>
+	<c:forEach var="item" items="${model.appDatas}" varStatus="status">
+		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<c:choose>
+			<c:when test="${empty item.network && status.index == 0}">
+			<td onclick="query('network');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.network}</td>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${empty item.appVersion && status.index == 0}">
+			<td onclick="query('app-version');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.appVersion}</td>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${empty item.connectType && status.index == 0}">
+			<td onclick="query('connnect-type');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.connectType}</td>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${empty item.platform && status.index == 0}">
+			<td onclick="query('platform');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.platform}</td>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${empty item.city && status.index == 0}">
+			<td onclick="query('city');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.city}</td>
+			</c:otherwise>
+		</c:choose>
+		<c:choose>
+			<c:when test="${empty item.operator && status.index == 0}">
+			<td onclick="query('operator');">展开</td>
+			</c:when>
+			<c:otherwise>
+			<td>${item.operator}</td>
+			</c:otherwise>
+		</c:choose>
+		<td>${item.successRatio}</td>
+		<td>${item.accessNumberSum}</td>
+		<td>${item.responseTimeAvg}</td>
+		<td>${item.requestPackageAvg}</td>
+		<td>${item.responsePackageAvg}</td>
+		</tr>
+	</c:forEach>
+</table>
 
 		<table class="footer">
 			<tr>

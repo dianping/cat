@@ -4010,6 +4010,9 @@
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>

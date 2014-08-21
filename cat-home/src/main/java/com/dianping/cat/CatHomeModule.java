@@ -74,7 +74,7 @@ public class CatHomeModule extends AbstractModule {
 	private void executeAlarmModule(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
-		Threads.forGroup("Cat").start(scheduledTask);
+
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(scheduledTask);
 		}

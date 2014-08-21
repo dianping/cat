@@ -67,7 +67,6 @@ public class AppDataComparisonNotifier {
 			Map<List<String>, List<AppDataComparisonResult>> results2Receivers = buildReceivers2Results(results);
 
 			for (Entry<List<String>, List<AppDataComparisonResult>> entry : results2Receivers.entrySet()) {
-
 				notify(yesterdayDate, entry.getValue(), entry.getKey());
 			}
 
@@ -198,13 +197,13 @@ public class AppDataComparisonNotifier {
 		Map<String, AppDataComparisonResult> results = new LinkedHashMap<String, AppDataComparisonResult>();
 
 		for (Entry<String, AppComparison> entry : config.getAppComparisons().entrySet()) {
-			try {
-				// AppDataComparisonResult result = queryDelay4AppComparison(date, appComparison);
-				AppDataComparisonResult result = queryDelay4AppComparison(m_sdf.parse("2014-07-18"), entry.getValue());
-				results.put(entry.getKey(), result);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
+			// try {
+			AppDataComparisonResult result = queryDelay4AppComparison(date, entry.getValue());
+			// AppDataComparisonResult result = queryDelay4AppComparison(m_sdf.parse("2014-07-18"), entry.getValue());
+			results.put(entry.getKey(), result);
+			// } catch (ParseException e) {
+			// e.printStackTrace();
+			// }
 		}
 		return results;
 	}

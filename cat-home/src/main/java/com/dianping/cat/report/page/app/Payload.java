@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.app;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
+import com.dianping.cat.config.app.AppDataGroupByField;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -21,6 +22,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type = "request";
+
+	@FieldMeta("groupByField")
+	private AppDataGroupByField m_groupByField;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -59,6 +63,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.APP);
+	}
+
+	public void setGroupByField(String groupByField) {
+		m_groupByField = AppDataGroupByField.getByName(groupByField);
+	}
+
+	public AppDataGroupByField getGroupByField() {
+		return m_groupByField;
 	}
 
 	public String getQuery1() {
