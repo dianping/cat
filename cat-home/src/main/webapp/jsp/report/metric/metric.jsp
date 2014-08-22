@@ -20,7 +20,7 @@
 		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
 		<div class="opNav">
 		<%@ include file="metricOpNav.jsp" %>
-		<table>
+		<table> 
 			<tr style="text-align: left">
 				<th>&nbsp;&nbsp;时间段选择: 
 					<c:forEach var="range" items="${model.allRange}">
