@@ -39,7 +39,7 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 		MessageIdFactory factory = lookup(MessageIdFactory.class);
 		StringBuilder sb = new StringBuilder(8192);
 
-		factory.initialize("Cat");
+		factory.initialize("cat");
 
 		for (int i = 0; i < 100; i++) {
 			createMessage(factory, sb, i);
@@ -82,7 +82,7 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 		MessageIdFactory factory = lookup(MessageIdFactory.class);
 		StringBuilder sb = new StringBuilder(8192);
 
-		factory.initialize("Cat");
+		factory.initialize("cat");
 
 		for (int i = 0; i < 50; i++) {
 			createMessage(factory, sb, i);

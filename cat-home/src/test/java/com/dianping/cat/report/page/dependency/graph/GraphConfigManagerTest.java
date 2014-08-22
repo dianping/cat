@@ -80,7 +80,7 @@ public class GraphConfigManagerTest {
 	@Test
 	public void testAddModifyDeleteNode() throws IOException {
 		String type = "URL";
-		String domain = "Cat";
+		String domain = "cat";
 		DomainConfig config = new DomainConfig(domain);
 		config.setErrorResponseTime(1.1);
 		config.setErrorThreshold(1);
@@ -115,15 +115,15 @@ public class GraphConfigManagerTest {
 		index.setSum(1000.0);
 		index.setTotalCount(100);
 		
-		Pair<Integer, String> state = m_manager.buildNodeState("Cat", index);
+		Pair<Integer, String> state = m_manager.buildNodeState("cat", index);
 		Assert.assertEquals(GraphConstrant.OK, (int)state.getKey());
 		
 		index.setErrorCount(100);
-		state = m_manager.buildNodeState("Cat", index);
+		state = m_manager.buildNodeState("cat", index);
 		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 
 		index.setErrorCount(200);
-		state = m_manager.buildNodeState("Cat", index);
+		state = m_manager.buildNodeState("cat", index);
 		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 	}
 	
@@ -153,7 +153,7 @@ public class GraphConfigManagerTest {
 		Dependency index = new Dependency();
 		String service = "TuanGouService";
 		index.setType("PigeonCall");
-		String domain = "Cat";
+		String domain = "cat";
 		index.setTarget(service);
 		index.setAvg(40.0);
 		index.setErrorCount(50);
@@ -176,7 +176,7 @@ public class GraphConfigManagerTest {
 	@Test
 	public void testBuildEdgeStateByConfig(){
 		Dependency index = new Dependency();
-		String domain = "Cat";
+		String domain = "cat";
 		String service = "UserService";
 		index.setType("PigeonCall");
 		index.setTarget(service);

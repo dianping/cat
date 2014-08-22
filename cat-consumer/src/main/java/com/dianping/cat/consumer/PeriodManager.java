@@ -91,7 +91,7 @@ public class PeriodManager implements Task {
 						startPeriod(value);
 					} else if (value < 0) {
 						// last period is over,make it asynchronous
-						Threads.forGroup("Cat").start(new EndTaskThread(-value));
+						Threads.forGroup("cat").start(new EndTaskThread(-value));
 					}
 				} catch (Throwable e) {
 					Cat.logError(e);

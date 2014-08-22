@@ -32,7 +32,7 @@ public class ProblemReportMergerTest {
 
 	@Test
 	public void testMergeList() {
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport("Cat"));
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport("cat"));
 		List<String> list1 = buildList1();
 		merger.mergeList(list1, buildList2(), 10);
 		Assert.assertEquals(10, list1.size());

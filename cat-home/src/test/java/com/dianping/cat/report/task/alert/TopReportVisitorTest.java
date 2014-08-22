@@ -20,7 +20,6 @@ public class TopReportVisitorTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-
 		String topReportXml = Files.forIO().readFrom(getClass().getResourceAsStream("topReport.xml"), "utf-8");
 		TopReport topReport = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser.parse(topReportXml);
 

@@ -30,7 +30,7 @@ public class TaskManagerTest {
 			Date date = new Date(dateLong);
 
 
-			analyzer.createTask(date,"Cat","trasnaction",TaskProlicy.ALL);
+			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 
@@ -51,7 +51,7 @@ public class TaskManagerTest {
 			Date date = new Date(dateLong);
 
 
-			analyzer.createTask(date,"Cat","trasnaction",TaskProlicy.ALL_EXCLUED_HOURLY);
+			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 		Assert.assertEquals(2, result.get(ReportType.MONTH).size());

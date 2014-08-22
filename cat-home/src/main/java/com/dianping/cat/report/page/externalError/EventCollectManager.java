@@ -99,7 +99,7 @@ public class EventCollectManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			Threads.forGroup("Cat").start(new Job());
+			Threads.forGroup("cat").start(new Job());
 		}
 	}
 

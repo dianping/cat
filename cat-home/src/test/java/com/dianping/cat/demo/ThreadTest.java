@@ -15,7 +15,7 @@ public class ThreadTest {
 		
 		String id= Cat.getProducer().createMessageId();
 		
-		Threads.forGroup("Cat").start(new Task(id));
+		Threads.forGroup("cat").start(new Task(id));
 		
 		
 		Cat.logEvent("RemoteLink", "ChildThread3", Event.SUCCESS, id);

@@ -51,7 +51,7 @@ public class MessageTest extends ComponentTestCase {
 			ClientConfig config = new ClientConfig();
 
 			config.setMode("client");
-			config.addDomain(new Domain("Cat").setMaxMessageSize(8));
+			config.addDomain(new Domain("cat").setMaxMessageSize(8));
 			config.addServer(new Server("localhost"));
 
 			File file = new File("target/cat-config.xml");

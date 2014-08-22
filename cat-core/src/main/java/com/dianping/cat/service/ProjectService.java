@@ -123,7 +123,7 @@ public class ProjectService implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			Threads.forGroup("Cat").start(new ProjectReloadTask());
+			Threads.forGroup("cat").start(new ProjectReloadTask());
 		}
 	}
 

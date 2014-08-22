@@ -79,7 +79,7 @@ public class AggregationConfigManager implements Initializable {
 		}
 		m_handler.register(queryAggregationRules());
 
-		Threads.forGroup("Cat").start(new ConfigReloadTask());
+		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insertAggregationRule(AggregationRule rule) {

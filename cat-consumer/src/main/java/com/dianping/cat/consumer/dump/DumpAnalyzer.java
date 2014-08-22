@@ -34,7 +34,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	private Logger m_logger;
 
 	private void checkpointAsyc(final long startTime) {
-		Threads.forGroup("Cat").start(new Threads.Task() {
+		Threads.forGroup("cat").start(new Threads.Task() {
 			@Override
 			public String getName() {
 				return "DumpAnalyzer-Checkpoint";

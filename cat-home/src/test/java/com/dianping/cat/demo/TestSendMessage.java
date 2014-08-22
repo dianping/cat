@@ -288,7 +288,7 @@ public class TestSendMessage {
 
 		while (i > 0) {
 			i++;
-			Transaction total = Cat.newTransaction("Cat", "Test");
+			Transaction total = Cat.newTransaction("cat", "Test");
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
 			t.setStatus(Message.SUCCESS);
 			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");

@@ -55,7 +55,7 @@ public class TaskExecutors extends ContainerHolder implements Task, Initializabl
 				m_executors.add(map.get(JVMMemoryExecutor.ID));
 				m_executors.add(map.get(JVMStateExecutor.ID));
 			}
-			Threads.forGroup("Cat").start(this);
+			Threads.forGroup("cat").start(this);
 		}
 	}
 

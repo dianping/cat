@@ -40,7 +40,7 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 
 	@Override
 	public boolean createHourlyTask(DependencyReport report) {
-		return m_taskManager.createTask(report.getStartTime(), "Cat", DependencyAnalyzer.ID, TaskProlicy.HOULY);
+		return m_taskManager.createTask(report.getStartTime(), "cat", DependencyAnalyzer.ID, TaskProlicy.HOULY);
 	}
 
 	@Override

@@ -111,7 +111,7 @@ public class TopAnalyzerTest extends ComponentTestCase {
 		tree.setDomain(m_domain);
 		tree.setHostName("group001");
 		tree.setIpAddress("192.168.1.1");
-		tree.setThreadGroupName("Cat");
+		tree.setThreadGroupName("cat");
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 
 		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
