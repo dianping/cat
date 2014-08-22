@@ -21,9 +21,7 @@
    			 	<li class="text-right" id="releaseButton"><a href="?op=view&docName=release"><strong>版本说明</strong></a></li>
    			 	<li class="text-right" id="integrationButton"><a href="?op=view&docName=integration"><strong>集成文档</strong></a></li>
    			 	<li class="text-right" id="alertButton"><a href="?op=view&docName=alert"><strong>告警文档</strong></a></li>
-   			 	<li class="text-right" id="businessMonitorButton"><a href="?op=view&docName=businessMonitor"><strong>业务监控</strong></a></li>
    			 	<li class="text-right" id="alterationButton"><a href="?op=view&docName=alteration"><strong>变更监控</strong></a></li>
-   			 	<li class="text-right" id="networkButton"><a href="?op=view&docName=network"><strong>网络监控</strong></a></li>
    			 	<li class="text-right" id="userMonitorButton"><a href="?op=view&docName=userMonitor"><strong>用户端监控</strong></a></li>
    			 	<li class="text-right" id="developButton"><a href="?op=view&docName=develop"><strong>开发者文档</strong></a></li>
    			 	<li class="text-right" id="designButton"><a href="?op=view&docName=design"><strong>设计文档</strong></a></li>
@@ -46,14 +44,8 @@
 			    	<c:when test="${payload.docName == 'alert'}">
 			    		<%@ include file="alert.jsp"%>
 			    	</c:when>
-			    	<c:when test="${payload.docName == 'businessMonitor'}">
-			    		<%@ include file="integratingBusiness.jsp"%>
-			    	</c:when>
 			    	<c:when test="${payload.docName == 'alteration'}">
 			    		<%@ include file="alterationDocument.jsp"%>
-			    	</c:when>
-			    	<c:when test="${payload.docName == 'network'}">
-			    		<%@ include file="networkDocument.jsp"%>
 			    	</c:when>
 			    	<c:when test="${payload.docName == 'userMonitor'}">
 			    		<%@ include file="userMonitor.jsp"%>
