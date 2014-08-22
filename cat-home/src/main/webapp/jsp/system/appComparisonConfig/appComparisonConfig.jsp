@@ -16,10 +16,10 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<form name="appConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=appConfigUpdate">
+			<form name="appComparisonConfigUpdate" id="form" method="post"
+				action="${model.pageUri}?op=appComparisonConfigUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">手机端配置（请增加COMMAND节点，ID增加，不要删除其他节点）</h4>
+				<h4 class="text-center text-error">手机端报表配置</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#appConfigUpdate').addClass('active');
+			$('#appComparisonConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

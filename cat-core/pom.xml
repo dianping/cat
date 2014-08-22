@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.1.1</version>
+      <version>1.1.2</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-core</artifactId>
@@ -70,6 +70,7 @@
                         ${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
 						${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
 						${basedir}/src/main/resources/META-INF/dal/model/app-config-manifest.xml,
+						${basedir}/src/main/resources/META-INF/dal/model/app-comparison-config-manifest.xml,
                      </manifest>
                   </configuration>
                </execution>

@@ -32,13 +32,26 @@ public class BucketHandler implements Task {
 
 	private long m_startTime;
 
-	public final static String SAVE_PATH = "/data/appdatas/cat/app-data-save/";
-
 	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataQueue = new AppDataQueue();
 		m_datas = new LinkedHashMap<Integer, HashMap<String, AppData>>();
 		m_appDataService = appDataService;
+	}
+
+	protected void batchInsert(List<AppDataCommand> appDataCommands) {
+		try {
+			int length = appDataCommands.size();
+			AppDataCommand[] array = new AppDataCommand[length];
+
+			for (int i = 0; i < length; i++) {
+				array[i] = appDataCommands.get(i);
+			}
+
+			m_appDataService.insert(array);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public void end() {
@@ -91,23 +104,16 @@ public class BucketHandler implements Task {
 		}
 	}
 
-	protected void batchInsert(List<AppDataCommand> appDataCommands) {
-		try {
-			int length = appDataCommands.size();
-			AppDataCommand[] array = new AppDataCommand[length];
-
-			for (int i = 0; i < length; i++) {
-				array[i] = appDataCommands.get(i);
-			}
-
-			m_appDataService.insert(array);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	public boolean enqueue(AppData appData) {
 		return m_appDataQueue.offer(appData);
+	}
+
+	public AppDataQueue getAppDataQueue() {
+		return m_appDataQueue;
+	}
+
+	public HashMap<Integer, HashMap<String, AppData>> getDatas() {
+		return m_datas;
 	}
 
 	@Override
@@ -121,7 +127,38 @@ public class BucketHandler implements Task {
 		return m_isActive;
 	}
 
-	private void processEntity(AppData appData) {
+	public void load(File file) {
+		try {
+			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
+			String line;
+
+			while ((line = bufferedReader.readLine()) != null) {
+				String[] items = line.split("\t");
+				AppData appData = new AppData();
+
+				appData.setTimestamp(Long.parseLong(items[0]));
+				appData.setCity(Integer.parseInt(items[1]));
+				appData.setOperator(Integer.parseInt(items[2]));
+				appData.setNetwork(Integer.parseInt(items[3]));
+				appData.setVersion(Integer.parseInt(items[4]));
+				appData.setConnectType(Integer.parseInt(items[5]));
+				appData.setCommand(Integer.parseInt(items[6]));
+				appData.setCode(Integer.parseInt(items[7]));
+				appData.setPlatform(Integer.parseInt(items[8]));
+				appData.setRequestByte(Integer.parseInt(items[9]));
+				appData.setResponseByte(Integer.parseInt(items[10]));
+				appData.setResponseTime(Integer.parseInt(items[11]));
+
+				enqueue(appData);
+			}
+			bufferedReader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			Cat.logError(e);
+		}
+	}
+
+	public void processEntity(AppData appData) {
 		int command = appData.getCommand();
 		StringBuilder sb = new StringBuilder();
 		char split = ':';
@@ -183,83 +220,45 @@ public class BucketHandler implements Task {
 		end();
 	}
 
-	@Override
-	public void shutdown() {
-		m_isActive = false;
-	}
-
-	public void save() {
+	public void save(File file) {
 		if (m_datas.size() > 0) {
 			try {
-				File parentDir = new File(SAVE_PATH);
-				boolean success = parentDir.mkdirs();
+				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+				char tab = '\t';
+				char enter = '\n';
 
-				if (success) {
-					String filePath = SAVE_PATH + String.valueOf(m_startTime);
-					BufferedWriter writer = new BufferedWriter(new FileWriter(filePath));
-					char tab = '\t';
-					char enter = '\n';
+				for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
+					HashMap<String, AppData> value = outerEntry.getValue();
 
-					for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
-						HashMap<String, AppData> value = outerEntry.getValue();
+					for (Entry<String, AppData> entry : value.entrySet()) {
+						AppData appData = entry.getValue();
 
-						for (Entry<String, AppData> entry : value.entrySet()) {
-							AppData appData = entry.getValue();
+						StringBuilder sb = new StringBuilder();
+						sb.append(appData.getTimestamp()).append(tab);
+						sb.append(appData.getCity()).append(tab);
+						sb.append(appData.getOperator()).append(tab);
+						sb.append(appData.getNetwork()).append(tab);
+						sb.append(appData.getVersion()).append(tab);
+						sb.append(appData.getConnectType()).append(tab);
+						sb.append(appData.getCommand()).append(tab);
+						sb.append(appData.getCode()).append(tab);
+						sb.append(appData.getPlatform()).append(tab);
+						sb.append(appData.getRequestByte()).append(tab);
+						sb.append(appData.getResponseByte()).append(tab);
+						sb.append(appData.getResponseTime()).append(enter);
 
-							StringBuilder sb = new StringBuilder();
-							sb.append(appData.getTimestamp()).append(tab);
-							sb.append(appData.getCity()).append(tab);
-							sb.append(appData.getOperator()).append(tab);
-							sb.append(appData.getNetwork()).append(tab);
-							sb.append(appData.getVersion()).append(tab);
-							sb.append(appData.getConnectType()).append(tab);
-							sb.append(appData.getCommand()).append(tab);
-							sb.append(appData.getCode()).append(tab);
-							sb.append(appData.getPlatform()).append(tab);
-							sb.append(appData.getRequestByte()).append(tab);
-							sb.append(appData.getResponseByte()).append(tab);
-							sb.append(appData.getResponseTime()).append(enter);
-
-							writer.append(sb.toString());
-						}
+						writer.append(sb.toString());
 					}
-					writer.close();
-				} else {
-					Cat.logError(new RuntimeException("error when create temp data file " + parentDir.getAbsolutePath()));
 				}
+				writer.close();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
 	}
 
-	public void load(File file) {
-		try {
-			BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
-			String line;
-
-			while ((line = bufferedReader.readLine()) != null) {
-				String[] items = line.split("\t");
-				AppData appData = new AppData();
-
-				appData.setTimestamp(Long.parseLong(items[0]));
-				appData.setCity(Integer.parseInt(items[1]));
-				appData.setOperator(Integer.parseInt(items[2]));
-				appData.setNetwork(Integer.parseInt(items[3]));
-				appData.setVersion(Integer.parseInt(items[4]));
-				appData.setConnectType(Integer.parseInt(items[5]));
-				appData.setCommand(Integer.parseInt(items[6]));
-				appData.setCode(Integer.parseInt(items[7]));
-				appData.setPlatform(Integer.parseInt(items[8]));
-				appData.setRequestByte(Integer.parseInt(items[9]));
-				appData.setResponseByte(Integer.parseInt(items[10]));
-				appData.setResponseTime(Integer.parseInt(items[11]));
-
-				enqueue(appData);
-			}
-			bufferedReader.close();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+	@Override
+	public void shutdown() {
+		m_isActive = false;
 	}
 }

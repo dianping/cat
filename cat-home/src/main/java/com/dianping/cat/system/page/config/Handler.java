@@ -26,6 +26,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
@@ -107,6 +108,9 @@ public class Handler implements PageHandler<Context> {
 	private AppConfigManager m_appConfigManager;
 
 	@Inject
+	private AppComparisonConfigManager m_appComparisonConfigManager;
+
+	@Inject
 	private DomainNavManager m_manager;
 
 	@Inject
@@ -123,7 +127,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
-	
+
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}
@@ -485,6 +489,13 @@ public class Handler implements PageHandler<Context> {
 				model.setOpState(m_appConfigManager.insert(appConfig));
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
+			break;
+		case APP_COMPARISON_CONFIG_UPDATE:
+			String appComparisonConfig = payload.getContent();
+			if (!StringUtils.isEmpty(appComparisonConfig)) {
+				model.setOpState(m_appComparisonConfigManager.insert(appComparisonConfig));
+			}
+			model.setContent(m_appComparisonConfigManager.getConfig().toString());
 			break;
 		case THIRD_PARTY_CONFIG_UPDATE:
 			String thirdPartyConfig = payload.getContent();

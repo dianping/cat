@@ -3718,19 +3718,7 @@
 			<implementation>com.dianping.cat.report.page.monitor.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.monitor.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.JsonBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.monitor.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.monitor.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4012,6 +4000,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
@@ -4321,6 +4312,9 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 				<requirement>
@@ -4407,6 +4401,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 			<implementation>com.dianping.cat.system.config.AlertPolicyManager</implementation>
 			<requirements>
@@ -4480,6 +4483,34 @@
 			<implementation>com.dianping.cat.system.notify.ReportRenderImpl</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.notify.render.AppDataComparisonRender</role>
+			<implementation>com.dianping.cat.system.notify.render.AppDataComparisonRender</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.notify.AppDataComparisonNotifier</role>
+			<implementation>com.dianping.cat.system.notify.AppDataComparisonNotifier</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.notify.render.AppDataComparisonRender</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.notify.ScheduledMailTask</role>
 			<implementation>com.dianping.cat.system.notify.ScheduledMailTask</implementation>
 			<requirements>
@@ -4497,6 +4528,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.notify.AppDataComparisonNotifier</role>
 				</requirement>
 			</requirements>
 		</component>

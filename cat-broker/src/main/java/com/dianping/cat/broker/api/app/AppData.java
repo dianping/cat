@@ -162,5 +162,5 @@ public class AppData {
 		m_version = version;
 		return this;
 	}
-
+	
 }

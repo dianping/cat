@@ -8,6 +8,8 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <member name="access-number-sum" value-type="long" all="false" select-expr="sum(access_number)" length="19" nullable="false" />
     <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
+    <member name="request-package-sum" value-type="long" all="false" select-expr="sum(request_package)" length="19" nullable="false" />
+    <member name="response-package-sum" value-type="long" all="false" select-expr="sum(response_package)" length="19" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <var name="command-id" value-type="int" />
     <readsets>
@@ -25,6 +27,61 @@
       	<member name="code"/>
       	<member name="access-number-sum"/>
       </readset>
+      <readset name="CODE-DATA">
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>
+      <readset name="OPERATOR-CODE-DATA">
+      	<member name="code"/>
+      	<member name="operator"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>
+      <readset name="NETWORK-CODE-DATA">
+      	<member name="code"/>
+      	<member name="network"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>
+      <readset name="APP-VERSION-CODE--DATA">
+      	<member name="code"/>
+      	<member name="app-version"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>
+      <readset name="CONNECT-TYPE-CODE-DATA">
+      	<member name="code"/>
+      	<member name="connnect-type"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>
+      <readset name="PLATFORM-CODE-DATA">
+      	<member name="code"/>
+      	<member name="platform"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>  
+      <readset name="CITY-CODE-DATA">
+      	<member name="code"/>
+      	<member name="city"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="request-package-sum"/>
+      	<member name="response-package-sum"/>
+      </readset>    
     </readsets>
     <query-defs>
 	  <query name="insert" type="INSERT"  batch="true">
@@ -102,6 +159,258 @@
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
         group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='code'/> ]]></statement>
+      </query>
+      <query name="find-data-by-operator-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='operator'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-network-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='network'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-app-version-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='app-version'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-connnect-type-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='connnect-type'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-platform-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='platform'/>, <FIELD name='code'/>]]></statement>
+      </query>
+      <query name="find-data-by-city-code" type="SELECT" multiple="true">
+        <param name="command-id" /><param name="period" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="connnect-type" />
+        <param name="code" />
+        <param name="platform" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by <FIELD name='city'/>, <FIELD name='code'/>]]></statement>
       </query>
     </query-defs>
   </entity>

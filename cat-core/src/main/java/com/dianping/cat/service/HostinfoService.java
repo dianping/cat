@@ -76,11 +76,11 @@ public class HostinfoService implements Initializable, LogEnabled {
 			return hostinfo;
 		} else {
 			try {
-				Hostinfo host = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				hostinfo = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
-				if (host != null) {
-					m_hostinfos.put(ip, host);
-					return host;
+				if (hostinfo != null) {
+					m_hostinfos.put(ip, hostinfo);
+					return hostinfo;
 				} else {
 					return null;
 				}
@@ -278,6 +278,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 						addIps.add(hostinfo.getIp());
 						m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 					}
+
 				} catch (Exception e) {
 					// ignore
 				}

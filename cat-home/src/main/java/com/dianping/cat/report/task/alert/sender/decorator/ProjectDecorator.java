@@ -31,7 +31,7 @@ public abstract class ProjectDecorator extends DefaultDecorator {
 				return builder.toString();
 			}
 		} catch (Exception ex) {
-			Cat.logError("build project contact info error for doamin: " + domainName, ex);
+			Cat.logError("build project contact info error for domain: " + domainName, ex);
 		}
 
 		return "";
