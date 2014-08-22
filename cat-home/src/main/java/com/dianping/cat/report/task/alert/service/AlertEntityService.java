@@ -6,6 +6,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
+import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
@@ -28,6 +29,9 @@ public class AlertEntityService {
 	}
 
 	public void storeAlert(AlertEntity alertEntity, AlertMessageEntity message) {
+		if (alertEntity.getType().equals(AlertType.FrontEndException.getName())) {
+			return;
+		}
 		Alert alert = buildAlert(alertEntity, message);
 
 		try {

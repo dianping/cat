@@ -14,7 +14,7 @@
 	<br>
 	<form id="form" method="post" action="?op=summary">
 		警告时间
-		<input type="text" name="summarytime" id="summarytime" value="<fmt:formatDate value="${payload.summarytime}" pattern="yyyy-MM-dd HH:mm:ss"/>" style="height:auto" class="input-medium" placeholder="格式如：2014-07-01 00:00:00">
+		<input type="text" name="summarytime" id="summarytime" value="<fmt:formatDate value="${payload.summarytime}" pattern="yyyy-MM-dd HH:mm"/>" style="height:auto" class="input-medium" placeholder="格式：2014-07-01 00:00">
 		应用名
 		<input type="text" name="summarydomain" id="summarydomain" value="${payload.summarydomain}" style="height:auto" class="input-small">
 		发送邮箱
