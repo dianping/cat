@@ -132,7 +132,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 
 				if (lastSendMailTime < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					m_appDataInformer.doNotifying();
-					
+
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
@@ -146,7 +146,6 @@ public class ScheduledMailTask implements Task, LogEnabled {
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
 							AlertMessageEntity message = new AlertMessageEntity(domain, title, "ScheduledJob", content, emails);
-
 							boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
 
 							insertMailLog(report.getId(), content, title, result, emails);
@@ -167,8 +166,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 				Cat.logError(e);
 			}
 			try {
-				// Thread.sleep(TimeUtil.ONE_HOUR);
-				Thread.sleep(10000);
+				Thread.sleep(TimeUtil.ONE_HOUR);
 			} catch (Exception e) {
 				active = false;
 			}

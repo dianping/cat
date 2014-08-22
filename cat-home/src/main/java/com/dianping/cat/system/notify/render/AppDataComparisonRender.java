@@ -1,6 +1,7 @@
 package com.dianping.cat.system.notify.render;
 
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,8 @@ public class AppDataComparisonRender implements Initializable {
 
 	private Configuration m_configuration;
 
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
@@ -33,8 +36,7 @@ public class AppDataComparisonRender implements Initializable {
 	public String renderReport(Date yesterday, List<AppDataComparisonResult> results) {
 		Map<Object, Object> root = new HashMap<Object, Object>();
 		root.put("results", results);
-		root.put("yesterday", yesterday.toString());
-		root.put("date", new Date().toString());
+		root.put("yesterday", m_sdf.format(yesterday));
 		StringWriter sw = new StringWriter(5000);
 
 		try {
@@ -46,5 +48,4 @@ public class AppDataComparisonRender implements Initializable {
 		}
 		return sw.toString();
 	}
-
 }

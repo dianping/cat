@@ -325,9 +325,9 @@
 		<div style="margin: 0 auto; width: 95%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
-		
-<table class="heartbeat">
-	<tr>
+		 <div class="report">
+<table class="table table-striped table-bordered table-condensed">
+	<tr class="text-success">
 		<th>网络类型</th>
 		<th>版本</th>
 		<th>连接类型</th>
@@ -344,7 +344,7 @@
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
 		<c:choose>
 			<c:when test="${empty item.network && status.index == 0}">
-			<td onclick="query('network');">展开</td>
+			<td><button class="btn btn-small btn-info" onclick="query('network');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.network}</td>
@@ -352,7 +352,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${empty item.appVersion && status.index == 0}">
-			<td onclick="query('app-version');">展开</td>
+			<td><button class="btn btn-small btn-info" onclick="query('app-version');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.appVersion}</td>
@@ -360,7 +360,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${empty item.connectType && status.index == 0}">
-			<td onclick="query('connnect-type');">展开</td>
+			<td><button class="btn btn-small btn-info" onclick="query('connnect-type');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.connectType}</td>
@@ -368,7 +368,8 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${empty item.platform && status.index == 0}">
-			<td onclick="query('platform');">展开</td>
+			<td>
+			<button class="btn btn-small btn-info" onclick="query('platform');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.platform}</td>
@@ -376,7 +377,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${empty item.city && status.index == 0}">
-			<td onclick="query('city');">展开</td>
+			<td><button class="btn btn-small btn-info" onclick="query('city');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.city}</td>
@@ -384,7 +385,7 @@
 		</c:choose>
 		<c:choose>
 			<c:when test="${empty item.operator && status.index == 0}">
-			<td onclick="query('operator');">展开</td>
+			<td><button class="btn btn-small btn-info" onclick="query('operator');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${item.operator}</td>
@@ -398,6 +399,8 @@
 		</tr>
 	</c:forEach>
 </table>
+</div>
+</div>
 
 		<table class="footer">
 			<tr>

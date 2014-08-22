@@ -1,10 +1,12 @@
-[CAT端到端数据报告] : [${yesterday}] [时间: ${date}]  <br/>
+[${yesterday} 00:00 - 24:00]   
+<br/>
+<br/>
 <table rules="all" border="1" >
 	<tr>
 		<td>分类</td>
 		<td>公司</td>
 		<td>命令字</td>
-		<td>响应时间</td>
+		<td>响应时间(ms)</td>
 	</tr>
 	<#list results as result>
 			<#list result.items as item>

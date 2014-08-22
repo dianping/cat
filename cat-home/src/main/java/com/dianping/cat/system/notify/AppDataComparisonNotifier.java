@@ -1,6 +1,5 @@
 package com.dianping.cat.system.notify;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -197,13 +196,8 @@ public class AppDataComparisonNotifier {
 		Map<String, AppDataComparisonResult> results = new LinkedHashMap<String, AppDataComparisonResult>();
 
 		for (Entry<String, AppComparison> entry : config.getAppComparisons().entrySet()) {
-			// try {
 			AppDataComparisonResult result = queryDelay4AppComparison(date, entry.getValue());
-			// AppDataComparisonResult result = queryDelay4AppComparison(m_sdf.parse("2014-07-18"), entry.getValue());
 			results.put(entry.getKey(), result);
-			// } catch (ParseException e) {
-			// e.printStackTrace();
-			// }
 		}
 		return results;
 	}
