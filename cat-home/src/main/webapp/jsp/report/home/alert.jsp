@@ -18,6 +18,8 @@
     <div class="tab-pane" id="network"><%@ include file="alertDocument/network.jsp"%></div>
     <div class="tab-pane" id="system"><%@ include file="alertDocument/system.jsp"%></div>
     <div class="tab-pane" id="exception"><%@ include file="alertDocument/exception.jsp"%></div>
+    <div class="tab-pane" id="thirdPartyException"><%@ include file="alertDocument/thirdPartyException.jsp"%></div>
+    <div class="tab-pane" id="frontendException"><%@ include file="alertDocument/frontendException.jsp"%></div>
     <div class="tab-pane" id="api"><%@ include file="alertDocument/api.jsp"%></div>
    </div>
 </div>
