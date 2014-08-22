@@ -113,8 +113,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir("dump"));
 		}
 
-		Threads.forGroup("Cat").start(new BlockDumper());
-		Threads.forGroup("Cat").start(new OldMessageMover());
+		Threads.forGroup("cat").start(new BlockDumper());
+		Threads.forGroup("cat").start(new OldMessageMover());
 
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
@@ -124,7 +124,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 
 			m_messageQueues.put(i, messageQueue);
-			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
+			Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
 		}
 	}
 

@@ -21,7 +21,7 @@ public class PeriodTaskTest extends ComponentTestCase {
 		MessageQueue queue = new DefaultMessageQueue(size);
 		MockAnalyzer analyzer = new MockAnalyzer();
 		ServerStatisticManager serverStateManager = lookup(ServerStatisticManager.class);
-		String domain = "Cat";
+		String domain = "cat";
 
 		analyzer.initialize(start, 1000, 1000);
 

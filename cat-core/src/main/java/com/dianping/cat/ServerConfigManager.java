@@ -65,9 +65,9 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public String getConsoleDefaultDomain() {
 		if (m_config != null) {
-			return m_config.getConsole().getDefaultDomain();
+			return m_config.getConsole().getDefaultDomain().toLowerCase();
 		} else {
-			return "Cat";
+			return Constants.CAT;
 		}
 	}
 

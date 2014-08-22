@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -32,7 +33,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return "Cat";
+		return Constants.CAT;
 	}
 
 	@Override

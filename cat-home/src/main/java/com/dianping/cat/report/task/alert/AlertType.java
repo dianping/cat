@@ -1,25 +1,23 @@
 package com.dianping.cat.report.task.alert;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum AlertType {
 
-	Business("business"), Network("network"), System("system"), 
-	Exception("exception"), ThirdParty("thirdParty"), FrontEndException("frontEnd");
+	Business("business"),
+
+	Network("network"),
+
+	System("system"),
+
+	Exception("exception"),
+
+	ThirdParty("thirdParty"),
+
+	FrontEndException("frontEnd");
 
 	private String m_name;
 
-	static Map<String, AlertType> m_alertTypes = new HashMap<String, AlertType>();
-
-	AlertType(String name) {
+	private AlertType(String name) {
 		m_name = name;
-	}
-
-	static {
-		for (AlertType type : AlertType.values()) {
-			m_alertTypes.put(type.getName(), type);
-		}
 	}
 
 	public String getName() {
@@ -27,7 +25,12 @@ public enum AlertType {
 	}
 
 	public static AlertType getTypeByName(String name) {
-		return m_alertTypes.get(name);
+		for (AlertType type : AlertType.values()) {
+			if (type.getName().equals(name)) {
+				return type;
+			}
+		}
+		return null;
 	}
 
 }

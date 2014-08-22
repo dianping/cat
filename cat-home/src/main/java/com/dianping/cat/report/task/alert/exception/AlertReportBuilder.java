@@ -56,7 +56,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(end);
 
-		TopReport topReport = m_reportService.queryTopReport("Cat", start, end);
+		TopReport topReport = m_reportService.queryTopReport(Constants.CAT, start, end);
 		visitor.visitTopReport(topReport);
 
 		HourlyReport report = new HourlyReport();

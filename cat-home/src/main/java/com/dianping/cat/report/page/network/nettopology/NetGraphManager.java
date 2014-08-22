@@ -106,7 +106,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new NetGraphReloader());
+			Threads.forGroup("cat").start(new NetGraphReloader());
 		}
 	}
 

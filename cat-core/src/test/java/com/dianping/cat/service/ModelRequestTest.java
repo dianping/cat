@@ -10,7 +10,7 @@ public class ModelRequestTest {
 	public void test() {
 		long time = System.currentTimeMillis();
 		long start = time - time % (3600 * 1000L);
-		String domain = "Cat";
+		String domain = "cat";
 		String str = "test";
 		ModelRequest request = new ModelRequest(domain, start);
 
@@ -21,7 +21,7 @@ public class ModelRequestTest {
 		Assert.assertEquals("{test=test}", request.getProperties().toString());
 		Assert.assertEquals(start, request.getStartTime());
 		Assert.assertEquals(domain, request.getDomain());
-		Assert.assertEquals("ModelRequest[domain=Cat, period=CURRENT, properties={test=test}]", request.toString());
+		Assert.assertEquals("ModelRequest[domain=cat, period=CURRENT, properties={test=test}]", request.toString());
 
 	}
 }

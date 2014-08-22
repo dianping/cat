@@ -59,8 +59,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		loadOldData();
 
-		Threads.forGroup("Cat").start(bucketThreadController);
-		Threads.forGroup("Cat").start(appDataDispatcherThread);
+		Threads.forGroup("cat").start(bucketThreadController);
+		Threads.forGroup("cat").start(appDataDispatcherThread);
 	}
 
 	public void loadOldData() {
@@ -75,7 +75,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
 
 					handler.load(file);
-					Threads.forGroup("Cat").start(handler);
+					Threads.forGroup("cat").start(handler);
 					handler.shutdown();
 					m_tasks.put(timestamp, handler);
 				} catch (Exception e) {
@@ -245,7 +245,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			if (m_tasks.get(currentDuration) == null) {
 				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataService);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
-				Threads.forGroup("Cat").start(curBucketHandler);
+				Threads.forGroup("cat").start(curBucketHandler);
 
 				m_tasks.put(currentDuration, curBucketHandler);
 				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
@@ -258,7 +258,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			if (m_tasks.get(next) == null) {
 				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataService);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(next)));
-				Threads.forGroup("Cat").start(nextBucketHandler);
+				Threads.forGroup("cat").start(nextBucketHandler);
 
 				m_tasks.put(next, nextBucketHandler);
 				m_logger.info("started bucket handler ,time " + m_sdf.format(new Date(next)));

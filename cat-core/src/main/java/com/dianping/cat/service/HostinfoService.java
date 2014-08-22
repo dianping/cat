@@ -97,7 +97,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 		if (!m_manager.isLocalMode()) {
 			m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 
-			Threads.forGroup("Cat").start(new ReloadDomainTask());
+			Threads.forGroup("cat").start(new ReloadDomainTask());
 		}
 	}
 

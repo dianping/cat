@@ -2,14 +2,14 @@
 <h3 class="text-error">告警文档</h3>
 <div class="tabbable">
   <ul class="nav nav-tabs" style="background-color:#f5f5f5">
-    <li class="active"><a href="#overall" data-toggle="tab"><strong>总述</strong></a></li>
+    <li class="active"><a href="#overall" data-toggle="tab"><strong>综述</strong></a></li>
     <li><a href="#business" data-toggle="tab"><strong>业务告警</strong></a></a></li>
     <li><a href="#network" data-toggle="tab"><strong>网络告警</strong></a></a></li>
     <li><a href="#system" data-toggle="tab"><strong>系统告警</strong></a></a></li>
     <li><a href="#exception" data-toggle="tab"><strong>异常告警</strong></a></a></li>
     <li><a href="#thirdPartyException" data-toggle="tab"><strong>第三方告警</strong></a></a></li>
-    <li><a href="#frontendException" data-toggle="tab"><strong>前端JS告警</strong></a></a></li>
-    <li><a href="#api" data-toggle="tab"><strong>告警HTTP API</strong></a></a></li>
+    <li><a href="#frontendException" data-toggle="tab"><strong>前端告警</strong></a></a></li>
+    <li><a href="#api" data-toggle="tab"><strong>HTTP接口</strong></a></a></li>
   </ul>
   
   <div class="tab-content">

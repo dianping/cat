@@ -128,7 +128,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	public void initialize() throws InitializationException {
 		m_periodManager = new PeriodManager(DURATION, m_analyzerManager, m_serverStateManager, m_logger);
 
-		Threads.forGroup("Cat").start(m_periodManager);
+		Threads.forGroup("cat").start(m_periodManager);
 	}
 
 	private void logErrorInfo(MessageTree tree) {
