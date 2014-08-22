@@ -2,7 +2,7 @@
 <topology-graph-config>
    <node-config type="URL" default-warning-threshold="100" default-error-threshold="200" default-warning-response-time="50.0" default-error-response-time="100.0">
       <domain-config id="UserWeb" warning-threshold="10" error-threshold="100" warning-response-time="10.0" error-response-time="100.0"/>
-      <domain-config id="Cat" warning-threshold="2" error-threshold="1" warning-response-time="2.2" error-response-time="1.1"/>
+      <domain-config id="cat" warning-threshold="2" error-threshold="1" warning-response-time="2.2" error-response-time="1.1"/>
    </node-config>
    <node-config type="PigeonCall" default-warning-threshold="100" default-error-threshold="200" default-warning-response-time="50.0" default-error-response-time="100.0">
       <domain-config id="UserWeb" warning-threshold="11" error-threshold="110" warning-response-time="11.0" error-response-time="110.0"/>

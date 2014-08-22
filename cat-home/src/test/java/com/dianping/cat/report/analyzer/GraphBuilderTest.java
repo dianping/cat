@@ -37,7 +37,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 		ProblemReportBuilder builder = lookup(ProblemReportBuilder.class);
 
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
-		builder.buildHourlyTask(ProblemAnalyzer.ID, "Cat", period);
+		builder.buildHourlyTask(ProblemAnalyzer.ID, "cat", period);
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 		TransactionReportBuilder builder = lookup(TransactionReportBuilder.class);
 
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
-		builder.buildHourlyTask(TransactionAnalyzer.ID, "Cat", period);
+		builder.buildHourlyTask(TransactionAnalyzer.ID, "cat", period);
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 		EventReportBuilder builder = lookup(EventReportBuilder.class);
 
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-16 16:00:00");
-		builder.buildHourlyTask(EventAnalyzer.ID, "Cat", period);
+		builder.buildHourlyTask(EventAnalyzer.ID, "cat", period);
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class GraphBuilderTest extends ComponentTestCase {
 		UtilizationReportBuilder builder = lookup(UtilizationReportBuilder.class);
 
 		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2013-12-24 10:00:00");
-		builder.buildHourlyTask(Constants.REPORT_UTILIZATION, "Cat", period);
+		builder.buildHourlyTask(Constants.REPORT_UTILIZATION, "cat", period);
 	}
 
 	@Test
@@ -70,10 +70,10 @@ public class GraphBuilderTest extends ComponentTestCase {
 		Date date = TimeUtil.getCurrentMonth();
 		long start = date.getTime();
 		long end = System.currentTimeMillis();
-		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport("Cat"));
+		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport("cat"));
 
 		for (; start < end; start = start + TimeUtil.ONE_DAY) {
-			StateReport stateReport = service.queryStateReport("Cat", new Date(start), new Date(start + TimeUtil.ONE_DAY));
+			StateReport stateReport = service.queryStateReport("cat", new Date(start), new Date(start + TimeUtil.ONE_DAY));
 
 			stateReport.accept(merger);
 		}

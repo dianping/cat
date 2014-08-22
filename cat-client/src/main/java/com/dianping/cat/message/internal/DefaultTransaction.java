@@ -41,7 +41,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	public void complete() {
 		if (isCompleted()) {
 			// complete() was called more than once
-			DefaultEvent event = new DefaultEvent("CAT", "BadInstrument");
+			DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
 
 			event.setStatus("TransactionAlreadyCompleted");
 			event.complete();

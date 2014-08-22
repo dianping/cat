@@ -460,7 +460,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {
-			DefaultEvent event = new DefaultEvent("CAT", "BadInstrument");
+			DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
 
 			event.setStatus("TransactionNotCompleted");
 			event.setCompleted(true);

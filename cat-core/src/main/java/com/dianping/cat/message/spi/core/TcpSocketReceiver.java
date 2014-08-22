@@ -134,7 +134,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		for (int i = 0; i < threadSize; i++) {
 			LinkedBlockingQueue<ChannelBuffer> queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
 			DecodeMessageTask messageDecoder = new DecodeMessageTask(i, queue, m_codec, m_handler);
-			Threads.forGroup("Cat").start(messageDecoder);
+			Threads.forGroup("cat").start(messageDecoder);
 
 			m_queues.put(i, queue);
 		}

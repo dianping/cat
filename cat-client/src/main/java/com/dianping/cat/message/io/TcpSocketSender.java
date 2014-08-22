@@ -79,8 +79,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public void initialize() {
 		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager);
 
-		Threads.forGroup("Cat").start(this);
-		Threads.forGroup("Cat").start(m_manager);
+		Threads.forGroup("cat").start(this);
+		Threads.forGroup("cat").start(m_manager);
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Date;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
@@ -17,7 +18,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("domain")
-	private String m_domain = "cat";
+	private String m_domain = Constants.CAT;
 
 	@FieldMeta("productLine")
 	private String m_productLine = "All";

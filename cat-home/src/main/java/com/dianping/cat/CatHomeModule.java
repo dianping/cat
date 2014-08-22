@@ -37,8 +37,8 @@ public class CatHomeModule extends AbstractModule {
 			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
 			UploaderAndCleaner uploader = ctx.lookup(UploaderAndCleaner.class);
 
-			Threads.forGroup("Cat").start(configReloadTask);
-			Threads.forGroup("Cat").start(uploader);
+			Threads.forGroup("cat").start(configReloadTask);
+			Threads.forGroup("cat").start(uploader);
 		}
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
@@ -46,9 +46,9 @@ public class CatHomeModule extends AbstractModule {
 			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
 			CachedReportTask cachedReportTask = ctx.lookup(CachedReportTask.class);
 
-			Threads.forGroup("Cat").start(cachedReportTask);
-			Threads.forGroup("Cat").start(domainNavManager);
-			Threads.forGroup("Cat").start(taskConsumer);
+			Threads.forGroup("cat").start(cachedReportTask);
+			Threads.forGroup("cat").start(domainNavManager);
+			Threads.forGroup("cat").start(taskConsumer);
 		}
 
 		if (serverConfigManager.isAlertMachine() && !serverConfigManager.isLocalMode()) {
@@ -60,13 +60,13 @@ public class CatHomeModule extends AbstractModule {
 			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
 			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
 
-			Threads.forGroup("Cat").start(networkAlert);
-			Threads.forGroup("Cat").start(systemAlert);
-			Threads.forGroup("Cat").start(metricAlert);
-			Threads.forGroup("Cat").start(exceptionAlert);
-			Threads.forGroup("Cat").start(productUpdateTask);
-			Threads.forGroup("Cat").start(thirdPartyAlert);
-			Threads.forGroup("Cat").start(alertBuildingTask);
+			Threads.forGroup("cat").start(networkAlert);
+			Threads.forGroup("cat").start(systemAlert);
+			Threads.forGroup("cat").start(metricAlert);
+			Threads.forGroup("cat").start(exceptionAlert);
+			Threads.forGroup("cat").start(productUpdateTask);
+			Threads.forGroup("cat").start(thirdPartyAlert);
+			Threads.forGroup("cat").start(alertBuildingTask);
 		}
 		executeAlarmModule(ctx);
 	}
@@ -76,7 +76,7 @@ public class CatHomeModule extends AbstractModule {
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
-			Threads.forGroup("Cat").start(scheduledTask);
+			Threads.forGroup("cat").start(scheduledTask);
 		}
 	}
 

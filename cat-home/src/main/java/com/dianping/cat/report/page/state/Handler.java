@@ -48,11 +48,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_configManager;
-	
-	private static final String CAT = "Cat";
 
 	public StateReport getHistoryReport(Payload payload) {
-		String domain = CAT;
+		String domain = Constants.CAT;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
@@ -61,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 
 	private StateReport getHourlyReport(Payload payload) {
 		// only for cat
-		String domain = CAT;
+		String domain = Constants.CAT;
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("ip", payload.getIpAddress());
 
@@ -113,7 +111,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
 			StateShow show = new StateShow(payload.getIpAddress());
-			
+
 			show.setSortType(payload.getSort());
 			show.visitStateReport(report);
 			model.setState(show);
@@ -158,7 +156,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
-			if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
+			if (!Constants.CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
 				payload.setIpAddress(Constants.ALL);
 			}
 		}

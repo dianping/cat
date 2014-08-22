@@ -66,7 +66,7 @@
             <message>69</message>
             <message>70</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="90">
                <message>1</message>
                <message>2</message>
@@ -194,7 +194,7 @@
             <message>68</message>
             <message>69</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="91">
                <message>10</message>
                <message>11</message>
@@ -268,7 +268,7 @@
             <message>76</message>
             <message>90</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>20</message>
                <message>34</message>
@@ -296,7 +296,7 @@
             <message>90</message>
             <message>96</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="12">
                <message>20</message>
                <message>26</message>
@@ -322,7 +322,7 @@
             <message>77</message>
             <message>91</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>21</message>
                <message>35</message>
@@ -346,7 +346,7 @@
             <message>77</message>
             <message>91</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>21</message>
                <message>35</message>
@@ -371,7 +371,7 @@
             <message>88</message>
             <message>92</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="11">
                <message>22</message>
                <message>32</message>
@@ -403,7 +403,7 @@
             <message>88</message>
             <message>92</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="11">
                <message>22</message>
                <message>32</message>
@@ -428,7 +428,7 @@
             <message>79</message>
             <message>93</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>23</message>
                <message>37</message>
@@ -448,7 +448,7 @@
             <message>79</message>
             <message>93</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>23</message>
                <message>37</message>
@@ -468,7 +468,7 @@
             <message>80</message>
             <message>94</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>24</message>
                <message>38</message>
@@ -490,7 +490,7 @@
             <message>80</message>
             <message>94</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>24</message>
                <message>38</message>
@@ -516,7 +516,7 @@
             <message>95</message>
             <message>99</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="12">
                <message>25</message>
                <message>29</message>
@@ -550,7 +550,7 @@
             <message>95</message>
             <message>99</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="12">
                <message>25</message>
                <message>29</message>
@@ -576,7 +576,7 @@
             <message>82</message>
             <message>96</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>26</message>
                <message>40</message>
@@ -596,7 +596,7 @@
             <message>83</message>
             <message>97</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>27</message>
                <message>41</message>
@@ -623,7 +623,7 @@
             <message>89</message>
             <message>97</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="11">
                <message>27</message>
                <message>33</message>
@@ -648,7 +648,7 @@
             <message>84</message>
             <message>98</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>28</message>
                <message>42</message>
@@ -672,7 +672,7 @@
             <message>84</message>
             <message>98</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>28</message>
                <message>42</message>
@@ -692,7 +692,7 @@
             <message>86</message>
             <message>100</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>30</message>
                <message>44</message>
@@ -712,7 +712,7 @@
             <message>86</message>
             <message>100</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>30</message>
                <message>44</message>
@@ -731,7 +731,7 @@
             <message>73</message>
             <message>87</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>31</message>
                <message>45</message>
@@ -751,7 +751,7 @@
             <message>73</message>
             <message>87</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>31</message>
                <message>45</message>
@@ -769,7 +769,7 @@
             <message>75</message>
             <message>89</message>
          </duration>
-         <thread group-name="Cat" name="Cat-ProblemAnalyzer-Test" id="Cat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>33</message>
                <message>47</message>

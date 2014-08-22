@@ -71,7 +71,7 @@ public class CatConstants {
 	public static final String TYPE_ACTION = "Action";
 
 	public static final String TYPE_METRIC = "MetricType";
-	
+
 	public static final String TYPE_TRACE = "TraceMode";
 
 	public static final int ERROR_COUNT = 100;

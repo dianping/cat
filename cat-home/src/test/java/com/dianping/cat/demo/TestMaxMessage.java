@@ -84,11 +84,11 @@ public class TestMaxMessage {
 
 			String newMessageId = messageId.replaceAll(ip6, ip6.substring(0, ip6.length() - 1) + "" + i % 3);
 			if (i % 3 == 1) {
-				newMessageId = newMessageId.replaceAll("Cat", "Cat1");
+				newMessageId = newMessageId.replaceAll("cat", "Cat1");
 			} else if (i % 3 == 2) {
-				newMessageId = newMessageId.replaceAll("Cat", "Cat2");
+				newMessageId = newMessageId.replaceAll("cat", "Cat2");
 			} else if (i % 3 == 0) {
-				newMessageId = newMessageId.replaceAll("Cat", "Cat0");
+				newMessageId = newMessageId.replaceAll("cat", "Cat0");
 			}
 			tree.setMessageId(newMessageId);
 			t.complete();

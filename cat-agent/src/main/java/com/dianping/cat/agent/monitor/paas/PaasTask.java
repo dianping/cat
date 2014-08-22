@@ -28,7 +28,7 @@ public class PaasTask implements Task, Initializable {
 		String agent = System.getProperty("agent", "executors");
 
 		if ("paas".equalsIgnoreCase(agent)) {
-			Threads.forGroup("Cat").start(this);
+			Threads.forGroup("cat").start(this);
 		}
 	}
 

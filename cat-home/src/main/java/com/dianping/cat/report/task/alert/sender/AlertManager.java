@@ -64,8 +64,8 @@ public class AlertManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new SendExecutor());
-		Threads.forGroup("Cat").start(new RecoveryAnnouncer());
+		Threads.forGroup("cat").start(new SendExecutor());
+		Threads.forGroup("cat").start(new RecoveryAnnouncer());
 	}
 
 	public boolean isSuspend(String alertKey, int suspendMinute) {

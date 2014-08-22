@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<state-report domain="Cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+<state-report domain="cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
    <machine ip="192.168.1.1" total="0" totalLoss="0" maxTps="0.0" avgTps="0.0" blockTotal="0" blockLoss="0" blockTime="0" pigeonTimeError="0" networkTimeError="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayAvg="0.0" delayCount="0">
       <message id="1325347200000" time="2012-01-01 00:00:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="0" networkTimeError="0" blockTotal="0" blockLoss="0" blockTime="0"/>
       <message id="1325347260000" time="2012-01-01 00:01:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="0" networkTimeError="0" blockTotal="0" blockLoss="0" blockTime="0"/>

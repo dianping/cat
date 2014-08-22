@@ -24,7 +24,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(true, manager.getServerConfig() != null);
 		Assert.assertEquals(null, manager.getBindHost());
 		Assert.assertEquals(2280, manager.getBindPort());
-		Assert.assertEquals("Cat", manager.getConsoleDefaultDomain());
+		Assert.assertEquals("cat", manager.getConsoleDefaultDomain());
 		Assert.assertEquals("[Pair[key=127.0.0.1, value=2281]]", manager.getConsoleEndpoints().toString());
 		Assert.assertEquals("127.0.0.1:2281", manager.getConsoleRemoteServers());
 		Assert.assertEquals("logview", manager.getHdfsBaseDir(id));

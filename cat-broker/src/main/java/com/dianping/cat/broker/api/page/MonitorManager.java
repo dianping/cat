@@ -86,7 +86,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 	public void initialize() throws InitializationException {
 		for (int i = 0; i < m_threadCounts; i++) {
 			BlockingQueue<MonitorEntity> queue = new LinkedBlockingQueue<MonitorEntity>(10000);
-			Threads.forGroup("Cat").start(new MessageSender(queue, i));
+			Threads.forGroup("cat").start(new MessageSender(queue, i));
 
 			m_queues.put(i, queue);
 		}
