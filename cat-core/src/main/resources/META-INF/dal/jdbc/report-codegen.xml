@@ -215,8 +215,11 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
     <member name="cmdb-domain" field="cmdb_domain" value-type="String" length="50" />
+    <member name="level" field="level" value-type="int" length="10" />
     <member name="project-line" field="project_line" value-type="String" length="50" />
     <member name="department" field="department" value-type="String" length="50" />
+    <member name="bu" field="bu" value-type="String" length="50" />
+    <member name="cmdb-productline" field="cmdb_productline" value-type="String" length="50" />
     <member name="owner" field="owner" value-type="String" length="50" />
     <member name="email" field="email" value-type="String" length="200" />
     <member name="phone" field="phone" value-type="String" length="200" />

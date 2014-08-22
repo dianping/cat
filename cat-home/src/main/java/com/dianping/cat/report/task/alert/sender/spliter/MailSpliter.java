@@ -8,7 +8,7 @@ public class MailSpliter implements Spliter {
 
 	@Override
 	public String process(String content) {
-		return content;
+		return content+"<br/><a href=\"http://web.cmdb.dp/app-alter/app\">修改项目信息请点击</a>";
 	}
 
 	@Override

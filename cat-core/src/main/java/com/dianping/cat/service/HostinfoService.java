@@ -78,8 +78,12 @@ public class HostinfoService implements Initializable, LogEnabled {
 			try {
 				hostinfo = m_hostinfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
-				m_hostinfos.put(ip, hostinfo);
-				return hostinfo;
+				if (hostinfo != null) {
+					m_hostinfos.put(ip, hostinfo);
+					return hostinfo;
+				} else {
+					return null;
+				}
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -171,11 +175,15 @@ public class HostinfoService implements Initializable, LogEnabled {
 	private void refresh() {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+			Map<String, Hostinfo> tmpHostInfos = new ConcurrentHashMap<String, Hostinfo>();
+			Map<String, String> tmpIpDomains = new ConcurrentHashMap<String, String>();
 
 			for (Hostinfo hostinfo : hostinfos) {
-				m_hostinfos.put(hostinfo.getIp(), hostinfo);
-				m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+				tmpHostInfos.put(hostinfo.getIp(), hostinfo);
+				tmpIpDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 			}
+			m_hostinfos = tmpHostInfos;
+			m_ipDomains = tmpIpDomains;
 		} catch (DalException e) {
 			Cat.logError("initialize HostService error", e);
 		}

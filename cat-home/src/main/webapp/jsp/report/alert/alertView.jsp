@@ -75,7 +75,7 @@
 						<td style="display:none" colspan="5"></td>
 					</tr>
 					<c:forEach var="alert" items="${entry.value}" varStatus="status">
-						<c:set var="category" value="${fn:replace(alert.category,'-alert','')}"/>
+						<c:set var="category" value="${alert.category}"/>
 						<tr class="${category}">
 							<td>${category}</td>
 							<td>${alert.type}</td>

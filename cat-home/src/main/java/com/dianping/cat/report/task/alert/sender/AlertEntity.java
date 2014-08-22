@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.dianping.cat.report.task.alert.AlertType;
+
 public class AlertEntity {
 
 	private Date m_date;
@@ -19,6 +21,14 @@ public class AlertEntity {
 	private String m_content;
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
+
+	public String getDomain() {
+		if (m_type.equals(AlertType.Business.getName())) {
+			return String.valueOf(m_paras.get("domain"));
+		} else {
+			return m_group;
+		}
+	}
 
 	public String getContent() {
 		return m_content;
