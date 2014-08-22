@@ -12,7 +12,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.system.notify.ReportRenderImpl;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -69,7 +68,7 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 		m_configuration = new Configuration();
 		m_configuration.setDefaultEncoding("UTF-8");
 		try {
-			m_configuration.setClassForTemplateLoading(ReportRenderImpl.class, "/freemaker");
+			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

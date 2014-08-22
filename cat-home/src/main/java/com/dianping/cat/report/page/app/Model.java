@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
+import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
@@ -33,6 +34,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<Item> m_platforms;
 
 	private List<Command> m_commands;
+
+	private List<AppDataSpreadInfo> m_appDatas;
 
 	public String getCommand() {
 		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
@@ -97,12 +100,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<Item> getConnectionTypes() {
-   	return m_connectionTypes;
-   }
+		return m_connectionTypes;
+	}
 
 	public void setConnectionTypes(List<Item> connectionTypes) {
-   	m_connectionTypes = connectionTypes;
-   }
+		m_connectionTypes = connectionTypes;
+	}
 
 	public void setCities(List<Item> cities) {
 		m_cities = cities;
@@ -130,5 +133,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
+	}
+
+	public void setAppDatas(List<AppDataSpreadInfo> appDatas) {
+		m_appDatas = appDatas;
+	}
+
+	public List<AppDataSpreadInfo> getAppDatas() {
+		return m_appDatas;
 	}
 }

@@ -1,0 +1,10 @@
+<app-comparison-config>
+	<app-comparison id="首页" emails="jialin.sun@dianping.com">
+		<item id="点评" command="shop.bin"></item>
+		<item id="美团" command="shop.bin"></item>
+	</app-comparison>
+	<app-comparison id="详情">
+		<item id="点评" command="shop.bin"></item>
+		<item id="美团" command="shop.bin"></item>
+	</app-comparison>
+</app-comparison-config>

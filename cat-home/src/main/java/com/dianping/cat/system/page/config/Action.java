@@ -99,6 +99,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 	
+	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
+	
 	THIRD_PARTY_CONFIG_UPDATE("thirdPartyConfigUpdate"),
 	
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate");

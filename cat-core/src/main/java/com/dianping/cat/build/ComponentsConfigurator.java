@@ -15,6 +15,7 @@ import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.aggregation.AggregationHandler;
 import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
+import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
@@ -63,6 +64,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class));
+
+		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(AppDataService.class).req(AppConfigManager.class, AppDataCommandDao.class));
 

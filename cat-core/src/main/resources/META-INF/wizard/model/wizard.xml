@@ -4,6 +4,9 @@
       <sample-model>src/test/resources/com/dianping/cat/message/configuration/server.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.app" name="app">
-      <sample-model>src/test/resources/com/dianping/cat/system/config/appConfig.xml</sample-model>
+      <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/appConfig.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.appComparisonConfig" name="app-comparison-config">
+      <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/appComparisonConfig.xml</sample-model>
    </model>
 </wizard>
