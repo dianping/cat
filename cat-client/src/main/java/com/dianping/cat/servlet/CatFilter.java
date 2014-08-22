@@ -52,6 +52,10 @@ public class CatFilter implements Filter {
 
 		ctx.handle();
 	}
+	
+	protected String getOriginalUrl(ServletRequest request) {
+		return ((HttpServletRequest) request).getRequestURI();
+	}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
