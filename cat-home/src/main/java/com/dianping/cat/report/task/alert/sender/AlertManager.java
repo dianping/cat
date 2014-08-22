@@ -93,11 +93,11 @@ public class AlertManager implements Initializable {
 
 		m_unrecoveredAlerts.put(alertKey, alert);
 
-		Pair<String, String> mailPair = m_decoratorManager.generateTitleAndContent(alert);
-		String mailTitle = mailPair.getKey();
-		String mailContent = m_splitterManager.process(mailPair.getValue(), AlertChannel.MAIL);
-		AlertMessageEntity dbMessage = new AlertMessageEntity(group, mailTitle, type, mailContent, null);
-		
+		Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
+		String title = pair.getKey();
+		String mailContent = m_splitterManager.process(pair.getValue(), AlertChannel.MAIL);
+		AlertMessageEntity dbMessage = new AlertMessageEntity(group, title, type, mailContent, null);
+
 		m_alertEntityService.storeAlert(alert, dbMessage);
 
 		if (suspendMinute > 0) {
@@ -109,8 +109,6 @@ public class AlertManager implements Initializable {
 		}
 
 		for (AlertChannel channel : channels) {
-			Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
-			String title = pair.getKey();
 			String content = m_splitterManager.process(pair.getValue(), channel);
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
