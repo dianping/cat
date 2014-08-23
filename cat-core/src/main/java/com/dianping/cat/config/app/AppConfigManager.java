@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -137,13 +138,13 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public List<Item> queryConfigItem(String name) {
+	public Map<Integer, Item> queryConfigItem(String name) {
 		ConfigItem config = m_config.findConfigItem(name);
 
 		if (config != null) {
-			return new ArrayList<Item>(config.getItems().values());
+			return config.getItems();
 		} else {
-			return new ArrayList<Item>();
+			return new LinkedHashMap<Integer, Item>();
 		}
 	}
 

@@ -21,21 +21,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private LineChart m_lineChart;
 
-	private List<Item> m_cities;
+	private Map<Integer, Item> m_cities;
 
-	private List<Item> m_versions;
+	private Map<Integer, Item> m_versions;
 
-	private List<Item> m_connectionTypes;
+	private Map<Integer, Item> m_connectionTypes;
 
-	private List<Item> m_operators;
+	private Map<Integer, Item> m_operators;
 
-	private List<Item> m_networks;
+	private Map<Integer, Item> m_networks;
 
-	private List<Item> m_platforms;
+	private Map<Integer, Item> m_platforms;
 
 	private List<Command> m_commands;
 
-	private List<AppDataSpreadInfo> m_appDatas;
+	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
 
 	public String getCommand() {
 		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
@@ -52,11 +52,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(maps);
 	}
 
-	public List<Item> getPlatforms() {
+	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
 
-	public void setPlatforms(List<Item> platforms) {
+	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
 	}
 
@@ -64,7 +64,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
-	public List<Item> getCities() {
+	public Map<Integer, Item> getCities() {
 		return m_cities;
 	}
 
@@ -87,27 +87,27 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new ArrayList<String>();
 	}
 
-	public List<Item> getNetworks() {
+	public Map<Integer, Item> getNetworks() {
 		return m_networks;
 	}
 
-	public List<Item> getOperators() {
+	public Map<Integer, Item> getOperators() {
 		return m_operators;
 	}
 
-	public List<Item> getVersions() {
+	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
 
-	public List<Item> getConnectionTypes() {
+	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
 
-	public void setConnectionTypes(List<Item> connectionTypes) {
-		m_connectionTypes = connectionTypes;
+	public void setConnectionTypes(Map<Integer, Item> map) {
+		m_connectionTypes = map;
 	}
 
-	public void setCities(List<Item> cities) {
+	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
 	}
 
@@ -115,15 +115,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_commands = commands;
 	}
 
-	public void setNetworks(List<Item> networks) {
+	public void setNetworks(Map<Integer, Item> networks) {
 		m_networks = networks;
 	}
 
-	public void setOperators(List<Item> operators) {
+	public void setOperators(Map<Integer, Item> operators) {
 		m_operators = operators;
 	}
 
-	public void setVersions(List<Item> versions) {
+	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
 	}
 
@@ -135,11 +135,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineChart = lineChart;
 	}
 
-	public void setAppDatas(List<AppDataSpreadInfo> appDatas) {
-		m_appDatas = appDatas;
+	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
+		m_appDataSpreadInfos = appDatas;
 	}
 
-	public List<AppDataSpreadInfo> getAppDatas() {
-		return m_appDatas;
+	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
+		return m_appDataSpreadInfos;
 	}
 }

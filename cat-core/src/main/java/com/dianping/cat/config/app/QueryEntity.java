@@ -30,7 +30,11 @@ public class QueryEntity {
 
 	private int m_operator = DEFAULT_VALUE;
 
-	private static final int DEFAULT_VALUE = -1;
+	private int m_startMinuteOrder = DEFAULT_VALUE;
+
+	private int m_endMinuteOrder = DEFAULT_VALUE;
+
+	public static final int DEFAULT_VALUE = -1;
 
 	public QueryEntity() {
 		m_command = 1;
@@ -58,9 +62,21 @@ public class QueryEntity {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	private int convert2MinuteOrder(String time) {
+		String[] pair = time.split(":");
+		int hour = Integer.parseInt(pair[0]);
+		int minute = Integer.parseInt(pair[1]);
+		int current = hour * 60 + minute;
+		current = current - current % 5;
+
+		return 0;
 	}
 
 	private int parseValue(String str) {
@@ -141,6 +157,22 @@ public class QueryEntity {
 
 	public void setOperator(int operator) {
 		m_operator = operator;
+	}
+
+	public int getStartMinuteOrder() {
+		return m_startMinuteOrder;
+	}
+
+	public void setStartMinuteOrder(int startMinuteOrder) {
+		m_startMinuteOrder = startMinuteOrder;
+	}
+
+	public int getEndMinuteOrder() {
+		return m_endMinuteOrder;
+	}
+
+	public void setEndMinuteOrder(int endMinuteOrder) {
+		m_endMinuteOrder = endMinuteOrder;
 	}
 
 	@Override

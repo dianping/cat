@@ -18,10 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.app.AppDataCommandEntity;
-import com.dianping.cat.configuration.app.entity.AppConfig;
 import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.ConfigItem;
-import com.dianping.cat.configuration.app.entity.Item;
 
 public class AppDataService {
 
@@ -222,57 +219,25 @@ public class AppDataService {
 		return -1;
 	}
 
-	private void setFieldValue(AppDataSpreadInfo info, int value, AppDataGroupByField field) {
-		AppConfig config = m_appConfigManager.getConfig();
-
+	private void setFieldValue(AppDataSpreadInfo info, AppDataGroupByField field, int value) {
 		switch (field) {
 		case OPERATOR:
-			ConfigItem operatorConfigItem = config.getConfigItems().get(AppConfigManager.OPERATOR);
-			Item operatorItem = null;
-
-			if (operatorConfigItem != null && (operatorItem = operatorConfigItem.getItems().get(value)) != null) {
-				info.setOperator(operatorItem.getName());
-			}
+			info.setOperator(value);
 			break;
 		case APP_VERSION:
-			ConfigItem versionConfigItem = config.getConfigItems().get(AppConfigManager.VERSION);
-			Item versionItem = null;
-
-			if (versionConfigItem != null && (versionItem = versionConfigItem.getItems().get(value)) != null) {
-				info.setAppVersion(versionItem.getName());
-			}
+			info.setAppVersion(value);
 			break;
 		case CITY:
-			ConfigItem cityConfigItem = config.getConfigItems().get(AppConfigManager.CITY);
-			Item cityItem = null;
-
-			if (cityConfigItem != null && (cityItem = cityConfigItem.getItems().get(value)) != null) {
-				info.setCity(cityItem.getName());
-			}
+			info.setCity(value);
 			break;
 		case CONNECT_TYPE:
-			ConfigItem connectConfigItem = config.getConfigItems().get(AppConfigManager.CONNECT_TYPE);
-			Item connectItem = null;
-
-			if (connectConfigItem != null && (connectItem = connectConfigItem.getItems().get(value)) != null) {
-				info.setConnectType(connectItem.getName());
-			}
+			info.setConnectType(value);
 			break;
 		case NETWORK:
-			ConfigItem networkConfigItem = config.getConfigItems().get(AppConfigManager.NETWORK);
-			Item networkItem = null;
-
-			if (networkConfigItem != null && (networkItem = networkConfigItem.getItems().get(value)) != null) {
-				info.setNetwork(networkItem.getName());
-			}
+			info.setNetwork(value);
 			break;
 		case PLATFORM:
-			ConfigItem platformConfigItem = config.getConfigItems().get(AppConfigManager.PLATFORM);
-			Item platformItem = null;
-
-			if (platformConfigItem != null && (platformItem = platformConfigItem.getItems().get(value)) != null) {
-				info.setPlatform(platformItem.getName());
-			}
+			info.setPlatform(value);
 			break;
 		}
 	}
@@ -320,8 +285,8 @@ public class AppDataService {
 	}
 
 	private void updateAppDataSpreadInfo(AppDataSpreadInfo info, Entry<Integer, List<AppDataCommand>> entry,
-	      AppDataGroupByField groupByField) {
-		int fieldValue = entry.getKey();
+	      AppDataGroupByField field, QueryEntity entity) {
+		int key = entry.getKey();
 		List<AppDataCommand> datas = entry.getValue();
 		long accessNumberSum = 0;
 		long responseTimeSum = 0;
@@ -340,10 +305,12 @@ public class AppDataService {
 
 		info.setAccessNumberSum(accessNumberSum).setResponseTimeAvg(convertDouble(responseTimeAvg))
 		      .setRequestPackageAvg(convertDouble(requestPackageAvg))
-		      .setResponsePackageAvg(convertDouble(responsePackageAvg));
+		      .setResponsePackageAvg(convertDouble(responsePackageAvg)).setOperator(entity.getOperator())
+		      .setCity(entity.getCity()).setNetwork(entity.getNetwork()).setAppVersion(entity.getVersion())
+		      .setPlatform(entity.getPlatfrom()).setConnectType(entity.getChannel());
 
-		if (groupByField != null) {
-			setFieldValue(info, fieldValue, groupByField);
+		if (field != null) {
+			setFieldValue(info, field, key);
 		}
 	}
 
@@ -362,9 +329,10 @@ public class AppDataService {
 			double ratio = querySuccessRatio(entity.getCommand(), datalst);
 
 			info.setSuccessRatio(convertDouble(ratio));
-			updateAppDataSpreadInfo(info, entry, groupByField);
+			updateAppDataSpreadInfo(info, entry, groupByField, entity);
 			infos.add(info);
 		}
+		
 		return infos;
 	}
 
@@ -379,6 +347,8 @@ public class AppDataService {
 		int connnectType = entity.getChannel();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
+		int startMinuteOrder = entity.getStartMinuteOrder();
+		int endMinuteOrder = entity.getEndMinuteOrder();
 
 		try {
 			if (groupByField != null) {
@@ -410,7 +380,7 @@ public class AppDataService {
 				}
 			} else {
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppDataCommandEntity.READSET_CODE_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);

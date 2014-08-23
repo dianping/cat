@@ -49,15 +49,24 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		QueryEntity entity1 = payload.getQueryEntity1();
-		QueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
-		AppDataGroupByField field = payload.getGroupByField();
-		LineChart lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-		List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(entity1, field);
+		Action action = payload.getAction();
 
-		model.setLineChart(lineChart);
-		model.setAppDatas(appDataSpreadInfos);
+		switch (action) {
+		case VIEW:
+			QueryEntity linechartEntity1 = payload.getQueryEntity1();
+			QueryEntity linechartEntity2 = payload.getQueryEntity2();
+			String type = payload.getType();
+			AppDataGroupByField field = payload.getGroupByField();
+			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
+			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
+
+			model.setLineChart(lineChart);
+			model.setAppDataSpreadInfos(appDataSpreadInfos);
+			break;
+		case PIECHART:
+			QueryEntity piechartEntity = payload.getQueryEntity1();
+			break;
+		}
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -73,5 +82,4 @@ public class Handler implements PageHandler<Context> {
 			m_jspViewer.view(ctx, model);
 		}
 	}
-
 }
