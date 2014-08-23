@@ -70,13 +70,16 @@ public class QueryEntity {
 	}
 
 	private int convert2MinuteOrder(String time) {
-		String[] pair = time.split(":");
-		int hour = Integer.parseInt(pair[0]);
-		int minute = Integer.parseInt(pair[1]);
-		int current = hour * 60 + minute;
-		current = current - current % 5;
-
-		return 0;
+		if (StringUtils.isNotEmpty(time)) {
+			String[] pair = time.split(":");
+			int hour = Integer.parseInt(pair[0]);
+			int minute = Integer.parseInt(pair[1]);
+			int current = hour * 60 + minute;
+			current = current - current % 5;
+			return current;
+		} else {
+			return DEFAULT_VALUE;
+		}
 	}
 
 	private int parseValue(String str) {
@@ -176,10 +179,11 @@ public class QueryEntity {
 	}
 
 	@Override
-	public String toString() {
-		return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
-		      + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
-		      + ", m_city=" + m_city + ", m_operator=" + m_operator + "]";
-	}
+   public String toString() {
+	   return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
+	         + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
+	         + ", m_city=" + m_city + ", m_operator=" + m_operator + ", m_startMinuteOrder=" + m_startMinuteOrder
+	         + ", m_endMinuteOrder=" + m_endMinuteOrder + "]";
+   }
 
 }

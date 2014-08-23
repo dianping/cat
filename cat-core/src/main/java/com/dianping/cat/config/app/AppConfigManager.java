@@ -108,17 +108,17 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public Collection<Code> queryCodeByCommand(int command) {
+	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
-			Collection<Code> values = c.getCodes().values();
-			Collection<Code> result = new ArrayList<Code>(values);
+			Map<Integer, Code> values = c.getCodes();
+			Map<Integer, Code> result = new HashMap<Integer, Code>(values);
 
-			result.addAll(m_config.getCodes().values());
+			result.putAll(m_config.getCodes());
 			return result;
 		} else {
-			return Collections.emptySet();
+			return Collections.emptyMap();
 		}
 	}
 

@@ -19,6 +19,7 @@ import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 
 public class Handler implements PageHandler<Context> {
@@ -50,13 +51,13 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
+		AppDataGroupByField field = payload.getGroupByField();
 
 		switch (action) {
 		case VIEW:
 			QueryEntity linechartEntity1 = payload.getQueryEntity1();
 			QueryEntity linechartEntity2 = payload.getQueryEntity2();
 			String type = payload.getType();
-			AppDataGroupByField field = payload.getGroupByField();
 			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
 			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
 
@@ -64,7 +65,9 @@ public class Handler implements PageHandler<Context> {
 			model.setAppDataSpreadInfos(appDataSpreadInfos);
 			break;
 		case PIECHART:
-			QueryEntity piechartEntity = payload.getQueryEntity1();
+			PieChart pieChart = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
+
+			model.setPieChart(pieChart);
 			break;
 		}
 		model.setAction(Action.VIEW);

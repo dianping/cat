@@ -15,11 +15,15 @@ import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.PieChart;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private LineChart m_lineChart;
+
+	@EntityMeta
+	private PieChart m_pieChart;
 
 	private Map<Integer, Item> m_cities;
 
@@ -133,6 +137,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
+	}
+
+	public PieChart getPieChart() {
+		return m_pieChart;
+	}
+
+	public void setPieChart(PieChart pieChart) {
+		m_pieChart = pieChart;
 	}
 
 	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {

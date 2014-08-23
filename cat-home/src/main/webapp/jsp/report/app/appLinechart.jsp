@@ -20,7 +20,16 @@
 
 			if (value == true) {
 				$('#history').slideDown();
+				$("#command2").val($("#command").val());
 				command2Change();
+				$("#code2").val($("#code").val());
+				$("#network2").val($("#network").val());
+				$("#version2").val($("#version").val());
+				$("#connectionType2").val($("#connectionType").val());
+				$("#platform2").val($("#platform").val());
+				$("#city2").val($("#city").val());
+				$("#operator2").val($("#operator").val());
+				$("#time2").val($("#time").val());
 			} else {
 				$('#history').slideUp();
 			}
@@ -228,8 +237,8 @@
 	<div class="span2">
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
-			<li class='nav-header' id="all"><a href="?op=view"><strong>曲线图</strong></a></li>
-          	<li class='nav-header' id="all"><a href="?op=piechart"><strong>饼图</strong></a></li>
+			<li class='nav-header active' id="all"><a href="?op=view"><strong>综合信息</strong></a></li>
+          	<li class='nav-header' id="all"><a href="?op=piechart&groupByField=code"><strong>访问量分布</strong></a></li>
           </ul>
         </div>
 	</div>
@@ -255,7 +264,7 @@
 	padding: 10px 10px 10px 19p;
 	}
 	.nav-list  li  a{
-		padding:2px 15px;
+		padding:2px 10px;
 	}
 	.nav li  +.nav-header{
 		margin-top:2px;

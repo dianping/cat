@@ -58,18 +58,32 @@
 			}
 			return myHour + ":" + myMinute;
 		}
+		
+		function converTimeFormat(time){
+			var times = time.split(":");
+			var hour = times[0];
+			var minute = times[1];
+			
+			if(hour.length == 1){
+				hour = "0" + hour;
+			}
+			if(minute.length == 1) {
+				minute = "0" + minute;
+			}
+			return hour + ":" + minute;
+		}
 
-		function query(field) {
+		function query() {
 			var time = $("#time").val();
-			var length = time.length;
-			var period = time.substring(0,length-6);
-			var start = time.substring(length-5);
-			var end = $("#time2").val();
+			var times = time.split(" ");
+			var period = times[0];
+			var start = converTimeFormat(times[1]);
+			var end = converTimeFormat($("#time2").val());
 			var command = $("#command").val();
 			var code = $("#code").val();
 			var network = $("#network").val();
-			var version = $("#version").val();
-			var connectionType = $("#connectionType").val();
+			var version = $("#app-version").val();
+			var connectionType = $("#connection-type").val();
 			var palteform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
@@ -78,12 +92,21 @@
 					+ network + split + version + split + connectionType
 					+ split + palteform + split + city + split + operator + split + start + split + end;
 			
-			if(typeof(field) == "undefined"){
-				field = "";
-			}
+			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field;
  			window.location.href = href;
  		}
+		
+		function refreshDisabled(){
+			document.getElementById("code").disabled = false;
+			document.getElementById("network").disabled = false;
+			document.getElementById("app-version").disabled = false;
+			document.getElementById("connnect-type").disabled = false;
+			document.getElementById("platform").disabled = false;
+			document.getElementById("city").disabled = false;
+			document.getElementById("operator").disabled = false;
+			document.getElementById($("#piechartSelect").val()).disabled = true;
+		}
 
 		$(document).ready(
 				function() {
@@ -98,6 +121,8 @@
 
 					command1.on('change', command1Change);
 					$("#command").val(words[1]);
+					
+					$("#piechartSelect").on('change', refreshDisabled);
 					
 					if (words[0] == null || words.length == 1) {
 						$("#time").val(getDate());
@@ -114,16 +139,15 @@
 					command1Change();
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);
-					$("#version").val(words[4]);
-					$("#connectionType").val(words[5]);
+					$("#app-version").val(words[4]);
+					$("#connnect-type").val(words[5]);
 					$("#platform").val(words[6]);
 					$("#city").val(words[7]);
 					$("#operator").val(words[8]);
+					$("#piechartSelect").val('${payload.groupByField.name}');
+					refreshDisabled();
 					
-					/* var data = ${model.lineChart.jsonString};
-					graphMetricChartForApp(document
-							.getElementById('${model.lineChart.id}'), data, datePair); */
-
+					graphPieChart(document.getElementById('piechart'), ${model.pieChart.jsonString});
 				});
 	</script>
 	
@@ -131,8 +155,8 @@
 	<div class="span2">
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
-			<li class='nav-header' id="all"><a href="?op=view"><strong>曲线图</strong></a></li>
-          	<li class='nav-header' id="all"><a href="?op=piechart"><strong>饼图</strong></a></li>
+			<li class='nav-header' id="all"><a href="?op=view"><strong>综合信息</strong></a></li>
+          	<li class='nav-header active' id="all"><a href="?op=piechart&groupByField=code"><strong>访问量分布</strong></a></li>
           </ul>
         </div>
 	</div>

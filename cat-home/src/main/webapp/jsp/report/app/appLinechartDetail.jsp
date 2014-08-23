@@ -142,8 +142,8 @@
 		<th>成功率(%)</th>
 		<th>总请求数</th>
 		<th>成功平均延迟(ms)</th>
-		<th>平均发包数</th>
-		<th>平均回包数</th>
+		<th>平均发包(B)</th>
+		<th>平均回包(B)</th>
 	</tr>
 	<c:forEach var="item" items="${model.appDataSpreadInfos}" varStatus="status">
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right" name>
@@ -155,7 +155,7 @@
 		<c:set var="operatorCode" value="${item.operator}"/>
 		<c:set var="network" value="${model.networks[networkCode].name}"/>
 		<c:set var="appVersion" value="${model.versions[appVersionCode].name}"/>
-		<c:set var="channel" value="${model.connectionTypes[connectTypeCode].name}"/>
+		<c:set var="channel" value="${model.connectionTypes[channelCode].name}"/>
 		<c:set var="platform" value="${model.platforms[platformCode].name}"/>
 		<c:set var="city" value="${model.cities[cityCode].name}"/>
 		<c:set var="operator" value="${model.operators[operatorCode].name}"/>
@@ -190,7 +190,7 @@
 		<c:choose>
 			<c:when test="${empty platform}">
 			<td>
-			<button class="btn btn-small btn-info" onclick="query('paltform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<button class="btn btn-small btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${platform}</td>

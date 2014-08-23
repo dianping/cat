@@ -2,7 +2,6 @@ package com.dianping.cat.config.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -214,6 +213,8 @@ public class AppDataService {
 				return data.getNetwork();
 			case PLATFORM:
 				return data.getPlatform();
+			default:
+				break;
 			}
 		}
 		return -1;
@@ -239,6 +240,8 @@ public class AppDataService {
 		case PLATFORM:
 			info.setPlatform(value);
 			break;
+		default:
+			break;
 		}
 	}
 
@@ -259,9 +262,9 @@ public class AppDataService {
 	}
 
 	private boolean isSuccessStatus(int commandId, int code) {
-		Collection<Code> codes = m_appConfigManager.queryCodeByCommand(commandId);
+		Map<Integer, Code> codes = m_appConfigManager.queryCodeByCommand(commandId);
 
-		for (Code c : codes) {
+		for (Code c : codes.values()) {
 			if (c.getId() == code) {
 				return (c.getStatus() == 0);
 			}
@@ -320,7 +323,7 @@ public class AppDataService {
 
 	public List<AppDataSpreadInfo> buildAppDataSpreadInfo(QueryEntity entity, AppDataGroupByField groupByField) {
 		List<AppDataSpreadInfo> infos = new ArrayList<AppDataSpreadInfo>();
-		List<AppDataCommand> datas = queryAppDataCommands(entity, groupByField);
+		List<AppDataCommand> datas = queryAppDataCommandsByFieldCode(entity, groupByField);
 		Map<Integer, List<AppDataCommand>> field2Datas = buildFields2Datas(datas, groupByField);
 
 		for (Entry<Integer, List<AppDataCommand>> entry : field2Datas.entrySet()) {
@@ -332,11 +335,11 @@ public class AppDataService {
 			updateAppDataSpreadInfo(info, entry, groupByField, entity);
 			infos.add(info);
 		}
-		
+
 		return infos;
 	}
 
-	private List<AppDataCommand> queryAppDataCommands(QueryEntity entity, AppDataGroupByField groupByField) {
+	private List<AppDataCommand> queryAppDataCommandsByFieldCode(QueryEntity entity, AppDataGroupByField groupByField) {
 		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
 		int commandId = entity.getCommand();
 		Date period = entity.getDate();
@@ -377,10 +380,63 @@ public class AppDataService {
 					datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
 					      code, platform, AppDataCommandEntity.READSET_CITY_CODE_DATA);
 					break;
+				default:
+					break;
 				}
 			} else {
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return datas;
+	}
+
+	public List<AppDataCommand> queryAppDataCommandsByField(QueryEntity entity, AppDataGroupByField groupByField) {
+		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
+		int commandId = entity.getCommand();
+		Date period = entity.getDate();
+		int city = entity.getCity();
+		int operator = entity.getOperator();
+		int network = entity.getNetwork();
+		int appVersion = entity.getVersion();
+		int connnectType = entity.getChannel();
+		int code = entity.getCode();
+		int platform = entity.getPlatfrom();
+		int startMinuteOrder = entity.getStartMinuteOrder();
+		int endMinuteOrder = entity.getEndMinuteOrder();
+
+		try {
+			switch (groupByField) {
+			case OPERATOR:
+				datas = m_dao.findDataByOperator(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_OPERATOR_DATA);
+				break;
+			case NETWORK:
+				datas = m_dao.findDataByNetwork(commandId, period, city, operator, network, appVersion, connnectType, code,
+				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_NETWORK_DATA);
+				break;
+			case APP_VERSION:
+				datas = m_dao.findDataByAppVersion(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_APP_VERSION_DATA);
+				break;
+			case CONNECT_TYPE:
+				datas = m_dao.findDataByConnnectType(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CONNNECT_TYPE_DATA);
+				break;
+			case PLATFORM:
+				datas = m_dao.findDataByPlatform(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_PLATFORM_DATA);
+				break;
+			case CITY:
+				datas = m_dao.findDataByCity(commandId, period, city, operator, network, appVersion, connnectType, code,
+				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CITY_DATA);
+				break;
+			case CODE:
+				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
+				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
+				break;
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
