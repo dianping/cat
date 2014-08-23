@@ -151,6 +151,6 @@ public class DataSender implements Task, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(this);
+		Threads.forGroup("cat").start(this);
 	}
 }

@@ -112,7 +112,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 		for (Http http : https) {
 			if (!connectHttpUrl(http)) {
-				Threads.forGroup("Cat").start(new HttpReconnector(this, http, current + DURATION));
+				Threads.forGroup("cat").start(new HttpReconnector(this, http, current + DURATION));
 			}
 		}
 	}

@@ -110,6 +110,10 @@
 				<requirement>
 					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

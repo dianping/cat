@@ -83,7 +83,8 @@ public class LineChart {
 	}
 
 	public String getJsonString() {
-		return new JsonBuilder().toJson(this);
+		String json = new JsonBuilder().toJson(this);
+		return json;
 	}
 
 	public int getSize() {

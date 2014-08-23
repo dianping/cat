@@ -75,7 +75,7 @@ public class UrlPatternConfigManager implements Initializable {
 			m_UrlPattern = new UrlPattern();
 		}
 		m_handler.register(queryUrlPatternRules());
-		Threads.forGroup("Cat").start(new ConfigReloadTask());
+		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insertPatternItem(PatternItem rule) {

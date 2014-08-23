@@ -11,6 +11,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -111,7 +112,7 @@ public class CachedReportTask implements Task, LogEnabled {
 				t.complete();
 			}
 		}
-		String domain = "Cat";
+		String domain = Constants.CAT;
 
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
@@ -154,7 +155,7 @@ public class CachedReportTask implements Task, LogEnabled {
 				t.complete();
 			}
 		}
-		String domain = "Cat";
+		String domain = Constants.CAT;
 
 		StateReport stateReport = m_reportService.queryStateReport(domain, start, end);
 		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID),

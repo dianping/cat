@@ -11,7 +11,7 @@ public class ServerStatisticManagerTest {
 	@Test
 	public void test() {
 		ServerStatisticManager manager = new ServerStatisticManager();
-		String domain = "Cat";
+		String domain = "cat";
 		long time = System.currentTimeMillis();
 
 		time = time - time % (60 * 1000);

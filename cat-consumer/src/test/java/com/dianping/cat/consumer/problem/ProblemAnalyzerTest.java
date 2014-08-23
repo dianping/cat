@@ -63,7 +63,7 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 		tree.setDomain(m_domain);
 		tree.setHostName("group001");
 		tree.setIpAddress("192.168.1.1");
-		tree.setThreadGroupName("Cat");
+		tree.setThreadGroupName("cat");
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 		if (i < 10) {
 			DefaultEvent error = new DefaultEvent("Error", "Error", null);

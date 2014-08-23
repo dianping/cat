@@ -30,7 +30,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("summaryemails")
 	private String m_summaryemails;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public Payload() {
 		super(ReportPage.STATISTICS);

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<top-report domain="Cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+<top-report domain="cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
    <domain name="Cat">
       <segment id="2" error="0" url="16" url-duration="10.00" service="60" service-duration="10.00" sql="38" sql-duration="10.00" call="54" call-duration="10.00" cache="0" cache-duration="0.00" url-error="4" url-sum="160.00" service-error="8" service-sum="600.00" sql-error="4" sql-sum="380.00" call-error="8" call-sum="540.00" cache-error="0" cache-sum="0.00">
       </segment>

@@ -1,6 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h3 class="text-error">异常监控文档</h3>
-<br/>
 <h4 class="text-info">对所有应用异常进行监控，通过对异常次数的判断选择进行警告的发送，并统计出异常警告报表。</h4>
 <br/>
 <h4 class="text-success">1. 异常阈值<a href="/cat/s/config?op=exception">配置</a></h4>

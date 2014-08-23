@@ -94,7 +94,7 @@ public class AppConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppConfig();
 		}
-		Threads.forGroup("Cat").start(new ConfigReloadTask());
+		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insert(String xml) {

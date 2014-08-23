@@ -75,6 +75,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
 				entity.setMetric(metricName).setType(getName()).setGroup(product);
+				entity.getParas().put("domain", domain);
 
 				m_sendManager.addAlert(entity);
 			}

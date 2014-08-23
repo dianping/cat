@@ -22,6 +22,7 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
@@ -56,6 +57,7 @@ import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 import com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
@@ -239,8 +241,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		// update project database
-		all.add(C(ProjectUpdateTask.class)//
-		      .req(ProjectService.class, HostinfoService.class));
+		all.add(C(ProjectUpdateTask.class).req(ProjectService.class, HostinfoService.class)//
+		      .req(ReportService.class, TransactionAnalyzer.ID));
 
 		return all;
 	}

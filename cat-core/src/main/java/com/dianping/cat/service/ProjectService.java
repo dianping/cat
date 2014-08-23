@@ -84,8 +84,11 @@ public class ProjectService implements Initializable {
 			return project;
 		} else {
 			try {
-				return m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
-			} catch (DalNotFoundException e) {
+				Project pro = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+
+				m_projects.put(pro.getDomain(), pro);
+				return project;
+			} catch (DalException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -120,20 +123,22 @@ public class ProjectService implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			Threads.forGroup("Cat").start(new ProjectReloadTask());
+			Threads.forGroup("cat").start(new ProjectReloadTask());
 		}
 	}
 
 	public void refresh() {
 		try {
 			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			Map<String, Project> tmpProjects = new ConcurrentHashMap<String, Project>();
+			Set<String> tmpDomains = new HashSet<String>();
 
-			synchronized (this) {
-				for (Project project : projects) {
-					m_domains.add(project.getDomain());
-					m_projects.put(project.getDomain(), project);
-				}
+			for (Project project : projects) {
+				tmpDomains.add(project.getDomain());
+				tmpProjects.put(project.getDomain(), project);
 			}
+			m_domains = tmpDomains;
+			m_projects = tmpProjects;
 		} catch (DalException e) {
 			Cat.logError("initialize ProjectService error", e);
 		}

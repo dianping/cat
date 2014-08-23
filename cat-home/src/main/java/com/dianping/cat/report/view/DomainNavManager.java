@@ -37,8 +37,9 @@ public class DomainNavManager implements Task, Initializable {
 			String projectLine = DEFAULT;
 
 			if (project != null) {
-				department = project.getDepartment();
-				projectLine = project.getProjectLine();
+				department = project.getBu() == null ? DEFAULT : project.getBu();
+				projectLine = project.getCmdbProductline() == null ? DEFAULT : project.getCmdbProductline();
+
 			}
 			Department temp = result.get(department);
 

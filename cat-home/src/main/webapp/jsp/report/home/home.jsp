@@ -17,36 +17,58 @@
 	<div class="span12">
 		 <div class="tabbable tabs-left " id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs well" style="margin-top:30px;">
-   			 	<li class="text-right active"><a href="#tab0" data-toggle="tab"><strong>点评内部</strong></a></li>
-   			 	<li class="text-right"><a href="#tab1" data-toggle="tab"><strong>版本说明</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>集成文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab"><strong>业务监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab12" data-toggle="tab"><strong>业务告警</strong></a></li>
-   			 	<li class="text-right"><a href="#tab4" data-toggle="tab"><strong>变更监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab5" data-toggle="tab"><strong>网络监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab6" data-toggle="tab"><strong>异常监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab13" data-toggle="tab"><strong>用户端监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab7" data-toggle="tab"><strong>开发者文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab8" data-toggle="tab"><strong>设计文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab9" data-toggle="tab"><strong>用户文档</strong></a></li>
-   			 	<li class="text-right"><a href="#tab10" data-toggle="tab"><strong>常见问题</strong></a></li>
-   			 	<li class="text-right"><a href="#tab11" data-toggle="tab"><strong>插件扩展</strong></a></li>
+   			 	<li class="text-right" id="dianpingButton"><a href="?op=view&docName=dianping"><strong>点评内部</strong></a></li>
+   			 	<li class="text-right" id="releaseButton"><a href="?op=view&docName=release"><strong>版本说明</strong></a></li>
+   			 	<li class="text-right" id="integrationButton"><a href="?op=view&docName=integration"><strong>集成文档</strong></a></li>
+   			 	<li class="text-right" id="alertButton"><a href="?op=view&docName=alert"><strong>告警文档</strong></a></li>
+   			 	<li class="text-right" id="alterationButton"><a href="?op=view&docName=alteration"><strong>变更监控</strong></a></li>
+   			 	<li class="text-right" id="userMonitorButton"><a href="?op=view&docName=userMonitor"><strong>用户端监控</strong></a></li>
+   			 	<li class="text-right" id="developButton"><a href="?op=view&docName=develop"><strong>开发者文档</strong></a></li>
+   			 	<li class="text-right" id="designButton"><a href="?op=view&docName=design"><strong>设计文档</strong></a></li>
+   			 	<li class="text-right" id="userButton"><a href="?op=view&docName=user"><strong>用户文档</strong></a></li>
+   			 	<li class="text-right" id="problemButton"><a href="?op=view&docName=problem"><strong>常见问题</strong></a></li>
+   			 	<li class="text-right" id="pluginButton"><a href="?op=view&docName=plugin"><strong>插件扩展</strong></a></li>
   			</ul>
   			<div class="tab-content">
-	    		<div class="tab-pane active" id="tab0"><%@ include file="dianping.jsp"%></div>
-	    		<div class="tab-pane" id="tab1"><%@ include file="releasenotes.jsp"%></div>
-	    		<div class="tab-pane" id="tab2"><%@ include file="integratingDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab3"><%@ include file="integratingBusiness.jsp"%></div>
-	    		<div class="tab-pane" id="tab4"><%@ include file="alterationDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab5"><%@ include file="networkDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab6"><%@ include file="exceptionDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab7"><%@ include file="developDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab8"><%@ include file="develop.jsp"%></div>
-	    		<div class="tab-pane" id="tab9"><%@ include file="userDocument.jsp"%></div>
-	    		<div class="tab-pane" id="tab10"><%@ include file="problem.jsp"%></div>
-	    		<div class="tab-pane" id="tab11"><%@ include file="plugin.jsp"%></div>
-	    		<div class="tab-pane" id="tab12"><%@ include file="monitorRule.jsp"%></div>
-	    		<div class="tab-pane" id="tab13"><%@ include file="userMonitor.jsp"%></div>
+  				<br/>
+  				<c:choose>
+	  				<c:when test="${payload.docName == 'dianping'}">
+			    		<%@ include file="dianping.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'release'}">
+			    		<%@ include file="releasenotes.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'integration'}">
+			    		<%@ include file="integratingDocument.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'alert'}">
+			    		<%@ include file="alert.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'alteration'}">
+			    		<%@ include file="alterationDocument.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'userMonitor'}">
+			    		<%@ include file="userMonitor.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'develop'}">
+			    		<%@ include file="developDocument.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'design'}">
+			    		<%@ include file="develop.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'user'}">
+			    		<%@ include file="userDocument.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'problem'}">
+			    		<%@ include file="problem.jsp"%>
+			    	</c:when>
+			    	<c:when test="${payload.docName == 'plugin'}">
+			    		<%@ include file="plugin.jsp"%>
+			    	</c:when>
+			    	<c:otherwise>
+			    		<%@ include file="dianping.jsp"%>
+			    	</c:otherwise>
+	    		</c:choose>
 			</div>
 	</div>
 </div>
@@ -54,4 +76,11 @@
 <br>
 <br>
 <a href="?op=checkpoint&domain=${model.domain}&date=${model.date}" style="color:#FFF">Do checkpoint here</a>
+<script>
+	var liElement = $('#${payload.docName}Button');
+	if(liElement.size() == 0){
+		liElement = $('#dianpingButton');
+	}
+	liElement.addClass('active');
+</script>
 </a:body>

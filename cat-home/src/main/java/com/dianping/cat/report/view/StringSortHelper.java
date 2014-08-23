@@ -6,6 +6,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.Constants;
+
 public class StringSortHelper {
 	public static List<String> sort(List<String> lists) {
 		Collections.sort(lists);
@@ -65,16 +67,16 @@ public class StringSortHelper {
 				return -1;
 			}
 
-			if ("Cat".equals(d1)) {
+			if (Constants.CAT.equals(d1)) {
 				return 1;
 			}
-			if ("Cat".equals(d2)) {
+			if (Constants.CAT.equals(d2)) {
 				return -1;
 			}
-			if ("All".equals(d1)) {
+			if (Constants.ALL.equals(d1)) {
 				return -1;
 			}
-			if ("All".equals(d2)) {
+			if (Constants.ALL.equals(d2)) {
 				return +1;
 			}
 

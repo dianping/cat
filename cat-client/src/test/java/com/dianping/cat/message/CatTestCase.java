@@ -22,7 +22,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 				ClientConfig config = new ClientConfig();
 
 				config.setMode("client");
-				config.addDomain(new Domain("Cat"));
+				config.addDomain(new Domain("cat"));
 				config.addServer(new Server("localhost").setPort(2280));
 
 				File file = new File("target/cat-config.xml");

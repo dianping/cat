@@ -49,11 +49,11 @@ public class CatClientModule extends AbstractModule {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
 
-			Threads.forGroup("Cat").start(statusUpdateTask);
+			Threads.forGroup("cat").start(statusUpdateTask);
 			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 
 			// MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
-			// Threads.forGroup("Cat").start(mmapReaderTask);
+			// Threads.forGroup("cat").start(mmapReaderTask);
 		}
 	}
 

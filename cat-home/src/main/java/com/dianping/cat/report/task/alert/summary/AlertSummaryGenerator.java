@@ -16,6 +16,7 @@ import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.task.alert.AlertType;
 
 public class AlertSummaryGenerator {
 
@@ -34,7 +35,7 @@ public class AlertSummaryGenerator {
 		alert.setAlertTime(date);
 		alert.setContext(edge.getDes());
 		alert.setMetric(edge.getKey());
-		alert.setType("slow "+edge.getType());
+		alert.setType("slow " + edge.getType());
 		alert.setDomain(edge.getSelf());
 
 		return alert;
@@ -69,25 +70,27 @@ public class AlertSummaryGenerator {
 		alertSummary.setDomain(domain);
 		alertSummary.setAlertDate(date);
 
-		alertSummary.addCategory(generateCategoryByTimeCategory(date, "network"));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, "business", domain));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, "exception", domain));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, "system", domain));
+		alertSummary.addCategory(generateCategoryByTimeCategory(date, AlertType.Network.getName()));
+		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business.getName(), domain));
+		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Exception.getName(), domain));
+		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.System.getName(), domain));
 
 		TopologyGraph topology = m_topologyManager.buildTopologyGraph(domain, date.getTime());
 		int statusThreshold = 2;
 
-		alertSummary.addCategory(generateDependCategoryByTopology(date, "business", topology, statusThreshold));
+		alertSummary.addCategory(generateDependCategoryByTopology(date, AlertType.Business.getName(), topology,
+		      statusThreshold));
 
 		List<String> dependencyDomains = queryDependencyDomains(topology, date, domain);
-		alertSummary.addCategory(generateDependCategoryByTimeCateDomain(date, "exception", dependencyDomains));
+		alertSummary.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),
+		      dependencyDomains));
 
 		return alertSummary;
 	}
 
 	private Category generateCategoryByTimeCategory(Date date, String cate) {
 		Category category = new Category(cate);
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Date startTime = new Date(date.getTime() - DURATION);
 
 		try {
@@ -103,7 +106,7 @@ public class AlertSummaryGenerator {
 
 	private Category generateCategoryByTimeCateDomain(Date date, String cate, String domain) {
 		Category category = new Category(cate);
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Date startTime = new Date(date.getTime() - DURATION);
 
 		try {
@@ -119,7 +122,7 @@ public class AlertSummaryGenerator {
 
 	private Category generateDependCategoryByTimeCateDomain(Date date, String cate, List<String> dependencyDomains) {
 		String categoryName = "dependency_" + cate;
-		String dbCategoryName = cate + "-alert";
+		String dbCategoryName = cate;
 		Category category = new Category(categoryName);
 		Date startTime = new Date(date.getTime() - DURATION);
 
@@ -127,6 +130,7 @@ public class AlertSummaryGenerator {
 			try {
 				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
 				      AlertEntity.READSET_FULL);
+				
 				setDBAlertsToCategoryWithDomain(category, dbAlerts);
 			} catch (DalException e) {
 				Cat.logError("find dependency alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
