@@ -67,9 +67,13 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		lineChart.setId("app");
 		lineChart.setUnit("");
 		lineChart.setHtmlTitle(queryType(type));
-		int length = datas.size();
 
-		for (int i = 0; i < length; i++) {
+		if (AppDataService.SUCCESS.equals(type)) {
+			lineChart.setMinYlable(95D);
+			lineChart.setMaxYlabel(100D);
+		}
+
+		for (int i = 0; i < datas.size(); i++) {
 			Double[] data = datas.get(i);
 
 			lineChart.add("查询" + (i + 1), data);
@@ -172,7 +176,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		Item item = new Item();
 		item.setNumber(data.getAccessNumberSum());
 		String title = buildPieChartTitle(command, data, field);
-		
+
 		item.setTitle(title);
 
 		return item;
