@@ -124,7 +124,7 @@ public class AppDataComparisonNotifier {
 			if (StringUtils.isEmpty(users)) {
 				id2Users.put(value, key);
 			} else {
-				id2Users.put(value, users + ";" + value);
+				id2Users.put(value, users + "," + value);
 			}
 		}
 		return id2Users;
