@@ -2,10 +2,12 @@ package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -51,6 +53,8 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
+
+		normalize(model, payload);
 		AppDataGroupByField field = payload.getGroupByField();
 
 		switch (action) {
@@ -65,11 +69,19 @@ public class Handler implements PageHandler<Context> {
 			model.setAppDataSpreadInfos(appDataSpreadInfos);
 			break;
 		case PIECHART:
-			PieChart pieChart = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
+			Pair<PieChart, Map<String, Double>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
 
-			model.setPieChart(pieChart);
+			model.setPieChart(pair.getKey());
+			model.setPercents(pair.getValue());
 			break;
 		}
+
+		if (!ctx.isProcessStopped()) {
+			m_jspViewer.view(ctx, model);
+		}
+	}
+
+	private void normalize(Model model, Payload payload) {
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -80,9 +92,5 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
 		m_normalizePayload.normalize(model, payload);
-
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
-		}
 	}
 }

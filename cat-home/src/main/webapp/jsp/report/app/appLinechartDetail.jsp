@@ -130,7 +130,7 @@
 		<div style="float: left; width: 100%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
-		 <div class="report">
+		<br/>
 <table class="table table-striped table-bordered table-condensed">
 	<tr class="text-success">
 		<th>网络类型</th>
@@ -214,11 +214,11 @@
 			<td>${operator}</td>
 			</c:otherwise>
 		</c:choose>
-		<td>${item.successRatio}</td>
+		<td>${w:format(item.successRatio,'#0.0%')}</td>
 		<td>${item.accessNumberSum}</td>
-		<td>${item.responseTimeAvg}</td>
-		<td>${item.requestPackageAvg}</td>
-		<td>${item.responsePackageAvg}</td>
+		<td>${w:format(item.responseTimeAvg,'#0.0')}</td>
+		<td>${w:format(item.requestPackageAvg,'#0.0')}</td>
+		<td>${w:format(item.responsePackageAvg,'#0.0')}</td>
 		</tr>
 	</c:forEach>
 </table>

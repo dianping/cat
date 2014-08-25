@@ -24,7 +24,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_type = "request";
 
 	@FieldMeta("groupByField")
-	private AppDataGroupByField m_groupByField;
+	private AppDataGroupByField m_groupByField = AppDataGroupByField.CODE;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -66,7 +66,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroupByField(String groupByField) {
-		m_groupByField = AppDataGroupByField.getByName(groupByField);
+		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
 	}
 
 	public AppDataGroupByField getGroupByField() {
