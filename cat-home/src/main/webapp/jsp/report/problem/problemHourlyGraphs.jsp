@@ -38,7 +38,7 @@
 	
 	var distributionChart = ${model.distributionChart};
 
-	if(distributionChart!=null&&distributionChart.length>0){
+	if(distributionChart!=null){
 		graphPieChart(document.getElementById('distributionChart'), distributionChart);
 	}
 </script>

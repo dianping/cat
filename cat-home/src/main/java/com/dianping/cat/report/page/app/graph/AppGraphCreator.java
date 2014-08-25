@@ -120,6 +120,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 		for (AppDataCommand data : datas) {
 			Item item = buildPieChartItem(entity.getCommand(), data, field);
+
 			items.add(item);
 		}
 		System.out.println(field);
