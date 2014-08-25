@@ -160,7 +160,7 @@ public class AppDataComparisonNotifier {
 	private void notify(Date yesterday, List<AppDataComparisonResult> results, List<String> emails) {
 		String title = renderTitle();
 		String content = m_render.renderReport(yesterday, results);
-		AlertMessageEntity message = new AlertMessageEntity(null, title, "AppDataComparison", content, emails);
+		AlertMessageEntity message = new AlertMessageEntity("", title, "AppDataComparison", content, emails);
 
 		try {
 			boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
@@ -208,12 +208,14 @@ public class AppDataComparisonNotifier {
 		result.setId(id);
 
 		for (Item item : appComparison.getItems()) {
-			String itemId = item.getId();
-			String command = item.getCommand();
-			double delay = queryOneDayDelay4Command(yesterday, command);
+			try {
+				String itemId = item.getId();
+				String command = item.getCommand();
+				double delay = queryOneDayDelay4Command(yesterday, command);
 
-			if (delay > -1) {
 				result.addItem(itemId, command, delay);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return result;
@@ -228,8 +230,7 @@ public class AppDataComparisonNotifier {
 
 			return m_appDataService.queryOneDayDelayAvg(entity);
 		} else {
-			Cat.logError(new RuntimeException("AppComparison config has unrecognized command: " + url));
-			return -1;
+			throw new RuntimeException("error config command id app data config! command:" + url);
 		}
 	}
 

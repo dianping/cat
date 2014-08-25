@@ -5,6 +5,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
@@ -22,7 +23,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_consumer;
 
-	private String m_defaultDomain = "cat";
+	private String m_defaultDomain = Constants.CAT;
 
 	private String m_name;
 
