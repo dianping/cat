@@ -105,7 +105,7 @@ public class AppDataComparisonNotifier {
 					if (StringUtils.isEmpty(ids)) {
 						user2Id.put(user, id);
 					} else {
-						user2Id.put(user, ids + ";" + id);
+						user2Id.put(user, ids + "," + id);
 					}
 				}
 			}
@@ -145,8 +145,8 @@ public class AppDataComparisonNotifier {
 		Map<List<String>, List<AppDataComparisonResult>> users2Results = new HashMap<List<String>, List<AppDataComparisonResult>>();
 
 		for (Entry<String, String> entry : id2Users.entrySet()) {
-			List<String> emails = Splitters.by(";").noEmptyItem().split(entry.getValue());
-			List<String> ids = Splitters.by(";").noEmptyItem().split(entry.getKey());
+			List<String> emails = Splitters.by(",").noEmptyItem().split(entry.getValue());
+			List<String> ids = Splitters.by(",").noEmptyItem().split(entry.getKey());
 			List<AppDataComparisonResult> userResults = new ArrayList<AppDataComparisonResult>();
 
 			for (String id : ids) {
