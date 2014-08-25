@@ -4,7 +4,7 @@ import com.site.lookup.util.StringUtils;
 
 public enum AppDataGroupByField {
 	OPERATOR("operator"), NETWORK("network"), APP_VERSION("app-version"), CONNECT_TYPE("connnect-type"), PLATFORM(
-	      "platform"), CITY("city");
+	      "platform"), CITY("city"), CODE("code");
 
 	private String m_name;
 

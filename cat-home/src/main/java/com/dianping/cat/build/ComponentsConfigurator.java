@@ -14,6 +14,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -332,7 +333,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, AppConfigManager.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));

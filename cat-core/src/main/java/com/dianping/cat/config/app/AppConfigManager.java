@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -107,17 +108,17 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public Collection<Code> queryCodeByCommand(int command) {
+	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
-			Collection<Code> values = c.getCodes().values();
-			Collection<Code> result = new ArrayList<Code>(values);
+			Map<Integer, Code> values = c.getCodes();
+			Map<Integer, Code> result = new HashMap<Integer, Code>(values);
 
-			result.addAll(m_config.getCodes().values());
+			result.putAll(m_config.getCodes());
 			return result;
 		} else {
-			return Collections.emptySet();
+			return Collections.emptyMap();
 		}
 	}
 
@@ -137,13 +138,13 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public List<Item> queryConfigItem(String name) {
+	public Map<Integer, Item> queryConfigItem(String name) {
 		ConfigItem config = m_config.findConfigItem(name);
 
 		if (config != null) {
-			return new ArrayList<Item>(config.getItems().values());
+			return config.getItems();
 		} else {
-			return new ArrayList<Item>();
+			return new LinkedHashMap<Integer, Item>();
 		}
 	}
 

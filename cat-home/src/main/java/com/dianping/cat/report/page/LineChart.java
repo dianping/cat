@@ -35,7 +35,9 @@ public class LineChart {
 
 	private double[] m_ylabel;
 
-	private double m_minYlabel = 0D;
+	private Double m_minYlabel = 0D;
+
+	private Double m_maxYlabel;
 
 	public LineChart() {
 	}
@@ -175,12 +177,20 @@ public class LineChart {
 		return this;
 	}
 
-	public double getMinYlable() {
+	public Double getMinYlable() {
 		return m_minYlabel;
 	}
 
-	public void setMinYlable(double minYlable) {
+	public void setMinYlable(Double minYlable) {
 		m_minYlabel = minYlable;
+	}
+
+	public Double getMaxYlabel() {
+		return m_maxYlabel;
+	}
+
+	public void setMaxYlabel(Double maxYlabel) {
+		m_maxYlabel = maxYlabel;
 	}
 
 	public LineChart setYlable(double[] ylable) {

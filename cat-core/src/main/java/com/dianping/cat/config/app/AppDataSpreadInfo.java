@@ -2,17 +2,17 @@ package com.dianping.cat.config.app;
 
 public class AppDataSpreadInfo {
 
-	private String m_operator;
+	private int m_operator = QueryEntity.DEFAULT_VALUE;
 
-	private String m_network;
+	private int m_network = QueryEntity.DEFAULT_VALUE;
 
-	private String m_appVersion;
+	private int m_appVersion = QueryEntity.DEFAULT_VALUE;
 
-	private String m_connectType;
+	private int m_connectType = QueryEntity.DEFAULT_VALUE;
 
-	private String m_platform;
+	private int m_platform = QueryEntity.DEFAULT_VALUE;
 
-	private String m_city;
+	private int m_city = QueryEntity.DEFAULT_VALUE;
 
 	private double m_successRatio;
 
@@ -37,27 +37,27 @@ public class AppDataSpreadInfo {
 		return m_accessNumberSum;
 	}
 
-	public String getAppVersion() {
+	public int getAppVersion() {
 		return m_appVersion;
 	}
 
-	public String getCity() {
+	public int getCity() {
 		return m_city;
 	}
 
-	public String getConnectType() {
+	public int getConnectType() {
 		return m_connectType;
 	}
 
-	public String getNetwork() {
+	public int getNetwork() {
 		return m_network;
 	}
 
-	public String getOperator() {
+	public int getOperator() {
 		return m_operator;
 	}
 
-	public String getPlatform() {
+	public int getPlatform() {
 		return m_platform;
 	}
 
@@ -78,32 +78,32 @@ public class AppDataSpreadInfo {
 		return this;
 	}
 
-	public AppDataSpreadInfo setAppVersion(String appVersion) {
+	public AppDataSpreadInfo setAppVersion(int appVersion) {
 		m_appVersion = appVersion;
 		return this;
 	}
 
-	public AppDataSpreadInfo setCity(String city) {
+	public AppDataSpreadInfo setCity(int city) {
 		m_city = city;
 		return this;
 	}
 
-	public AppDataSpreadInfo setConnectType(String connectType) {
+	public AppDataSpreadInfo setConnectType(int connectType) {
 		m_connectType = connectType;
 		return this;
 	}
 
-	public AppDataSpreadInfo setNetwork(String network) {
+	public AppDataSpreadInfo setNetwork(int network) {
 		m_network = network;
 		return this;
 	}
 
-	public AppDataSpreadInfo setOperator(String operator) {
+	public AppDataSpreadInfo setOperator(int operator) {
 		m_operator = operator;
 		return this;
 	}
 
-	public AppDataSpreadInfo setPlatform(String platform) {
+	public AppDataSpreadInfo setPlatform(int platform) {
 		m_platform = platform;
 		return this;
 	}
