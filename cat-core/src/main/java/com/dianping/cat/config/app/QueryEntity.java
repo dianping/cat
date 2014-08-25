@@ -30,7 +30,11 @@ public class QueryEntity {
 
 	private int m_operator = DEFAULT_VALUE;
 
-	private static final int DEFAULT_VALUE = -1;
+	private int m_startMinuteOrder = DEFAULT_VALUE;
+
+	private int m_endMinuteOrder = DEFAULT_VALUE;
+
+	public static final int DEFAULT_VALUE = -1;
 
 	public QueryEntity() {
 		m_command = 1;
@@ -58,8 +62,23 @@ public class QueryEntity {
 			m_platfrom = parseValue(strs.get(6));
 			m_city = parseValue(strs.get(7));
 			m_operator = parseValue(strs.get(8));
+			m_startMinuteOrder = convert2MinuteOrder(strs.get(9));
+			m_endMinuteOrder = convert2MinuteOrder(strs.get(10));
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	private int convert2MinuteOrder(String time) {
+		if (StringUtils.isNotEmpty(time)) {
+			String[] pair = time.split(":");
+			int hour = Integer.parseInt(pair[0]);
+			int minute = Integer.parseInt(pair[1]);
+			int current = hour * 60 + minute;
+			current = current - current % 5;
+			return current;
+		} else {
+			return DEFAULT_VALUE;
 		}
 	}
 
@@ -143,11 +162,28 @@ public class QueryEntity {
 		m_operator = operator;
 	}
 
-	@Override
-	public String toString() {
-		return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
-		      + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
-		      + ", m_city=" + m_city + ", m_operator=" + m_operator + "]";
+	public int getStartMinuteOrder() {
+		return m_startMinuteOrder;
 	}
+
+	public void setStartMinuteOrder(int startMinuteOrder) {
+		m_startMinuteOrder = startMinuteOrder;
+	}
+
+	public int getEndMinuteOrder() {
+		return m_endMinuteOrder;
+	}
+
+	public void setEndMinuteOrder(int endMinuteOrder) {
+		m_endMinuteOrder = endMinuteOrder;
+	}
+
+	@Override
+   public String toString() {
+	   return "QueryEntity [m_date=" + m_date + ", m_command=" + m_command + ", m_code=" + m_code + ", m_network="
+	         + m_network + ", m_version=" + m_version + ", m_channel=" + m_channel + ", m_platfrom=" + m_platfrom
+	         + ", m_city=" + m_city + ", m_operator=" + m_operator + ", m_startMinuteOrder=" + m_startMinuteOrder
+	         + ", m_endMinuteOrder=" + m_endMinuteOrder + "]";
+   }
 
 }

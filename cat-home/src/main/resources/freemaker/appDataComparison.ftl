@@ -1,4 +1,4 @@
-[${yesterday} 00:00 - 24:00]   
+[${yesterday} 00:00 - 23:59]   
 <br/>
 <br/>
 <table rules="all" border="1" >

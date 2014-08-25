@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	PIECHART("piechart");
 
 	private String m_name;
 

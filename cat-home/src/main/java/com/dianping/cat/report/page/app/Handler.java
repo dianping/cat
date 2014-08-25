@@ -19,6 +19,7 @@ import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 
 public class Handler implements PageHandler<Context> {
@@ -49,15 +50,26 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		QueryEntity entity1 = payload.getQueryEntity1();
-		QueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
+		Action action = payload.getAction();
 		AppDataGroupByField field = payload.getGroupByField();
-		LineChart lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-		List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(entity1, field);
 
-		model.setLineChart(lineChart);
-		model.setAppDatas(appDataSpreadInfos);
+		switch (action) {
+		case VIEW:
+			QueryEntity linechartEntity1 = payload.getQueryEntity1();
+			QueryEntity linechartEntity2 = payload.getQueryEntity2();
+			String type = payload.getType();
+			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
+			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
+
+			model.setLineChart(lineChart);
+			model.setAppDataSpreadInfos(appDataSpreadInfos);
+			break;
+		case PIECHART:
+			PieChart pieChart = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
+
+			model.setPieChart(pieChart);
+			break;
+		}
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -73,5 +85,4 @@ public class Handler implements PageHandler<Context> {
 			m_jspViewer.view(ctx, model);
 		}
 	}
-
 }

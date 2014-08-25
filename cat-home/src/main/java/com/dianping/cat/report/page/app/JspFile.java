@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.app;
 
 public enum JspFile {
-	VIEW("/jsp/report/app.jsp"),
-
+	VIEW("/jsp/report/app/appLinechart.jsp"),
+	PIECHART("/jsp/report/app/appPiechart.jsp"),
 	;
 
 	private String m_path;

@@ -448,6 +448,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4033,6 +4036,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>

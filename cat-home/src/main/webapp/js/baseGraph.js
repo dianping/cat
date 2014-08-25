@@ -182,6 +182,7 @@ function graphMetricChartForApp(container, data, datePair) {
 		}
 	});
 	var ylabelMin = data.minYlabel;
+	var ylabelMax = data.maxYlabel;
 	var _data = parseMetricLineDataForApp(data);
 	$(container).highcharts(
 			{
@@ -205,6 +206,7 @@ function graphMetricChartForApp(container, data, datePair) {
 				},
 				yAxis : {
 					min : ylabelMin,
+					max : ylabelMax,
 					title : {
 						text : data.unit,
 					}
