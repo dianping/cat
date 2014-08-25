@@ -164,8 +164,9 @@ public class AppDataComparisonNotifier {
 
 		try {
 			boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
+			int reportId = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(yesterday));
 
-			insertMailLog(-1, content, title, result, emails);
+			insertMailLog(reportId, content, title, result, emails);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -178,7 +179,7 @@ public class AppDataComparisonNotifier {
 		entity.setTitle(title);
 		entity.setContent(content);
 		entity.setRuleId(reportId);
-		entity.setType(1);
+		entity.setType(2);
 		entity.setReceivers(emails.toString());
 		if (result) {
 			entity.setStatus(0);
@@ -230,7 +231,7 @@ public class AppDataComparisonNotifier {
 
 			return m_appDataService.queryOneDayDelayAvg(entity);
 		} else {
-			throw new RuntimeException("error config command id app data config! command:" + url);
+			throw new RuntimeException("Unrecognized command configuration in app comparison config, command id: " + url);
 		}
 	}
 

@@ -2,10 +2,12 @@ package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -65,9 +67,10 @@ public class Handler implements PageHandler<Context> {
 			model.setAppDataSpreadInfos(appDataSpreadInfos);
 			break;
 		case PIECHART:
-			PieChart pieChart = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
+			Pair<PieChart, Map<String, Double>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
 
-			model.setPieChart(pieChart);
+			model.setPieChart(pair.getKey());
+			model.setPercents(pair.getValue());
 			break;
 		}
 		model.setAction(Action.VIEW);

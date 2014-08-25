@@ -66,7 +66,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroupByField(String groupByField) {
-		m_groupByField = AppDataGroupByField.getByName(groupByField);
+		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
 	}
 
 	public AppDataGroupByField getGroupByField() {

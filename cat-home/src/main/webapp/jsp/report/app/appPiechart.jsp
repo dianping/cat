@@ -83,14 +83,14 @@
 			var code = $("#code").val();
 			var network = $("#network").val();
 			var version = $("#app-version").val();
-			var connectionType = $("#connection-type").val();
-			var palteform = $("#platform").val();
+			var connectionType = $("#connnect-type").val();
+			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
 			var split = ";";
 			var query1 = period + split + command + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + palteform + split + city + split + operator + split + start + split + end;
+					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
 			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field;
