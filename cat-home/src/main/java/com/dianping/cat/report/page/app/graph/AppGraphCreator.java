@@ -102,6 +102,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 		for (AppDataCommand data : datas) {
 			Item item = builPieChartItem(entity.getCommand(), data, field);
+			
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");

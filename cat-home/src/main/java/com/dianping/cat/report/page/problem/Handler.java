@@ -90,19 +90,21 @@ public class Handler implements PageHandler<Context> {
 		return cal.get(Calendar.HOUR_OF_DAY);
 	}
 
-	private ProblemReport getHourlyReport(Payload payload, String type) {
-		return getHourlyReportInternal(payload, type);
-	}
-
-	private ProblemReport getHourlyReportInternal(Payload payload, String type) {
+	private ProblemReport getHourlyReport(Payload payload, String queryType) {
 		String domain = payload.getDomain();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", type);
+		      .setProperty("queryType", queryType);
 		if (!Constants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
 			request.setProperty("thread", payload.getThreadId());
+		}
+		if (!StringUtils.isEmpty(payload.getType())) {
+			request.setProperty("type", payload.getType());
+		}
+		if (!StringUtils.isEmpty(payload.getStatus())) {
+			request.setProperty("name", payload.getStatus());
 		}
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);

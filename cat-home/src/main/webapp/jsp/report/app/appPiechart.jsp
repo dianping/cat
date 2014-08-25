@@ -83,7 +83,7 @@
 			var code = $("#code").val();
 			var network = $("#network").val();
 			var version = $("#app-version").val();
-			var connectionType = $("#connection-type").val();
+			var connectionType = $("#connnect-type").val();
 			var palteform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
@@ -155,8 +155,8 @@
 	<div class="span2">
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
-			<li class='nav-header' id="all"><a href="?op=view"><strong>数据大盘</strong></a></li>
-          	<li class='nav-header active' id="all"><a href="?op=piechart&groupByField=code"><strong>访问量分布</strong></a></li>
+			<li class='nav-header'><a href="?op=view"><strong>一天访问趋势</strong></a></li>
+          	<li class='nav-header active'><a href="?op=piechart&groupByField=code"><strong>访问量分布</strong></a></li>
           </ul>
         </div>
 	</div>
@@ -177,17 +177,5 @@
 	}
 	.row-fluid .span10{
 		width:87%;
-	}
-	.well {
-	padding: 10px 10px 10px 19p;
-	}
-	.nav-list  li  a{
-		padding:2px 15px;
-	}
-	.nav li  +.nav-header{
-		margin-top:2px;
-	}
-	.nav-header{
-		padding:15px 3px;
 	}
 </style>
