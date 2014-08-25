@@ -53,6 +53,8 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
+
+		normalize(model, payload);
 		AppDataGroupByField field = payload.getGroupByField();
 
 		switch (action) {
@@ -73,6 +75,13 @@ public class Handler implements PageHandler<Context> {
 			model.setPercents(pair.getValue());
 			break;
 		}
+
+		if (!ctx.isProcessStopped()) {
+			m_jspViewer.view(ctx, model);
+		}
+	}
+
+	private void normalize(Model model, Payload payload) {
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -83,9 +92,5 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
 		m_normalizePayload.normalize(model, payload);
-
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
-		}
 	}
 }

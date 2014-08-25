@@ -238,7 +238,7 @@
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
 			<li class='nav-header active' id="all"><a href="?op=view"><strong>数据大盘</strong></a></li>
-          	<li class='nav-header' id="all"><a href="?op=piechart&groupByField=code"><strong>访问量分布</strong></a></li>
+          	<li class='nav-header' id="all"><a href="?op=piechart"><strong>访问量分布</strong></a></li>
           </ul>
         </div>
 	</div>
