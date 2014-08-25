@@ -214,11 +214,11 @@
 			<td>${operator}</td>
 			</c:otherwise>
 		</c:choose>
-		<td>${w:format(item.successRatio,'#0.00%')}</td>
+		<td>${w:format(item.successRatio,'#0.0%')}</td>
 		<td>${item.accessNumberSum}</td>
-		<td>${w:format(item.responseTimeAvg,'#0.00')}</td>
-		<td>${w:format(item.requestPackageAvg,'#0.00')}</td>
-		<td>${w:format(item.responsePackageAvg,'#0.00')}</td>
+		<td>${w:format(item.responseTimeAvg,'#0.0')}</td>
+		<td>${w:format(item.requestPackageAvg,'#0.0')}</td>
+		<td>${w:format(item.responsePackageAvg,'#0.0')}</td>
 		</tr>
 	</c:forEach>
 </table>
