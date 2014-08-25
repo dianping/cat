@@ -619,7 +619,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>FRONT_END_EXCEPTION</role-hint>
+			<role-hint>frontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
@@ -686,7 +686,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>FRONT_END_EXCEPTION</role-hint>
+			<role-hint>frontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
 		</component>
 		<component>
