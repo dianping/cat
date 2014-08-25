@@ -123,7 +123,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 			items.add(item);
 		}
-		System.out.println(field);
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
 
