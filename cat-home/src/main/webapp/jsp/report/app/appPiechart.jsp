@@ -83,7 +83,7 @@
 			var code = $("#code").val();
 			var network = $("#network").val();
 			var version = $("#app-version").val();
-			var connectionType = $("#connection-type").val();
+			var connectionType = $("#connnect-type").val();
 			var palteform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
