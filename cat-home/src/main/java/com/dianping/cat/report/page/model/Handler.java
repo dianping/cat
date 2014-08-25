@@ -32,6 +32,7 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -136,7 +137,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
 		} else if (ProblemAnalyzer.ID.equals(report)) {
-			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getThreadId(), payload.getType());
+			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getType(), payload.getQueryType(),
+			      payload.getName());
 
 			return filter.buildXml((com.dianping.cat.consumer.problem.model.IEntity<?>) dataModel);
 		} else if (HeartbeatAnalyzer.ID.equals(report)) {
@@ -387,19 +389,16 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		// view is show the summary,detail show the thread info
 		private String m_type;
 
-		public ProblemReportFilter(String ipAddress, String threadId, String type) {
+		private String m_queryType;
+
+		private String m_status;
+
+		public ProblemReportFilter(String ipAddress, String type, String queryType, String name) {
 			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_ipAddress = ipAddress;
 			m_type = type;
-		}
-
-		@Override
-		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
-			if ("view".equals(m_type)) {
-				super.visitDuration(duration);
-			} else if (!"graph".equals(m_type)) {
-				super.visitDuration(duration);
-			}
+			m_status = name;
+			m_queryType = queryType;
 		}
 
 		@Override
@@ -412,15 +411,35 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
+		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
+			super.visitDuration(duration);
+		}
+
+		@Override
 		public void visitSegment(Segment segment) {
 			super.visitSegment(segment);
 		}
 
 		@Override
+		public void visitEntry(Entry entry) {
+			if (m_type == null) {
+				super.visitEntry(entry);
+			} else {
+				if (m_status == null) {
+					if (entry.getType().equals(m_type)) {
+						super.visitEntry(entry);
+					}
+				} else {
+					if (entry.getType().equals(m_type) && entry.getStatus().equals(m_status)) {
+						super.visitEntry(entry);
+					}
+				}
+			}
+		}
+
+		@Override
 		public void visitThread(JavaThread thread) {
-			if ("graph".equals(m_type)) {
-				super.visitThread(thread);
-			} else if (!"view".equals(m_type)) {
+			if ("detail".equals(m_queryType)) {
 				super.visitThread(thread);
 			}
 		}
