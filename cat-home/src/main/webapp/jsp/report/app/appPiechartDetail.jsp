@@ -86,7 +86,7 @@
 	<c:forEach var="item" items="${model.pieChart.items}" varStatus="status">
 		<tr>
 		<td>${item.title}</td>
-		<td>${w:format(item.number,'###0')}</td>
+		<td>${w:format(item.number,'#,###,###,###,##0')}</td>
 		<td>${w:format(model.percents[item.title],'#0.0%')}</td>
 		</tr>
 	</c:forEach>
