@@ -95,10 +95,13 @@ public class AlertManager implements Initializable {
 
 		Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
 		String title = pair.getKey();
-		String mailContent = m_splitterManager.process(pair.getValue(), AlertChannel.MAIL);
-		AlertMessageEntity dbMessage = new AlertMessageEntity(group, title, type, mailContent, null);
+		String dbContent = m_splitterManager.process(pair.getValue(), AlertChannel.DATABASE);
+		AlertMessageEntity dbMessage = new AlertMessageEntity(group, title, type, dbContent, null);
 
 		m_alertEntityService.storeAlert(alert, dbMessage);
+		if (AlertType.Business.getName().equals(alert.getType())) {
+			pair = m_decoratorManager.generateTitleAndContent(alert);
+		}
 
 		if (suspendMinute > 0) {
 			if (isSuspend(alertKey, suspendMinute)) {

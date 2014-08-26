@@ -619,7 +619,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>FRONT_END_EXCEPTION</role-hint>
+			<role-hint>frontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
@@ -641,6 +641,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -686,7 +689,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>FRONT_END_EXCEPTION</role-hint>
+			<role-hint>frontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
 		</component>
 		<component>
@@ -716,6 +719,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
 			<role-hint>weixin</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.DbSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>

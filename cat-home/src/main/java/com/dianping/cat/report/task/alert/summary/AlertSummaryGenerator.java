@@ -1,8 +1,12 @@
 package com.dianping.cat.report.task.alert.summary;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
@@ -26,42 +30,68 @@ public class AlertSummaryGenerator {
 	@Inject
 	private TopologyGraphManager m_topologyManager;
 
+	public static final String LONG_CALL = "long_call";
+
+	public static final String PREFIX = "dependency_";
+
 	// fetch alerts during this period, time unit is ms, default value is 5 minnutes
 	private final long DURATION = 5 * 60 * 1000L;
 
-	private com.dianping.cat.home.alert.summary.entity.Alert convertToAlert(TopologyEdge edge, Date date) {
-		com.dianping.cat.home.alert.summary.entity.Alert alert = new com.dianping.cat.home.alert.summary.entity.Alert();
+	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlert(List<TopologyEdge> edges,
+	      Date date) {
+		Map<String, com.dianping.cat.home.alert.summary.entity.Alert> alerts = new LinkedHashMap<String, com.dianping.cat.home.alert.summary.entity.Alert>();
 
-		alert.setAlertTime(date);
-		alert.setContext(edge.getDes());
-		alert.setMetric(edge.getKey());
-		alert.setType("slow " + edge.getType());
-		alert.setDomain(edge.getSelf());
+		for (TopologyEdge edge : edges) {
+			String domain = edge.getSelf();
+			String metric = edge.getKey();
+			String key = domain + ":" + metric;
+			com.dianping.cat.home.alert.summary.entity.Alert alertInMap = alerts.get(key);
 
-		return alert;
+			if (alertInMap == null) {
+				com.dianping.cat.home.alert.summary.entity.Alert alert = new com.dianping.cat.home.alert.summary.entity.Alert();
+				alert.setAlertTime(date);
+				alert.setContext(edge.getDes());
+				alert.setMetric(metric);
+				alert.setType("slow " + edge.getType());
+				alert.setDomain(domain);
+				alert.setCount(1);
+
+				alerts.put(key, alert);
+			} else {
+				int originCount = alertInMap.getCount();
+				alertInMap.setCount(originCount + 1);
+			}
+		}
+
+		return alerts.values();
 	}
 
-	private com.dianping.cat.home.alert.summary.entity.Alert convertToAlert(Alert dbAlert) {
-		com.dianping.cat.home.alert.summary.entity.Alert alert = new com.dianping.cat.home.alert.summary.entity.Alert();
+	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlerts(List<Alert> dbAlerts) {
+		Map<String, com.dianping.cat.home.alert.summary.entity.Alert> alerts = new LinkedHashMap<String, com.dianping.cat.home.alert.summary.entity.Alert>();
 
-		alert.setAlertTime(dbAlert.getAlertTime());
-		alert.setContext(dbAlert.getContent());
-		alert.setMetric(dbAlert.getMetric());
-		alert.setType(dbAlert.getType());
+		for (Alert dbAlert : dbAlerts) {
+			String domain = dbAlert.getDomain();
+			String metric = dbAlert.getMetric();
+			String key = domain + ":" + metric;
+			com.dianping.cat.home.alert.summary.entity.Alert alertInMap = alerts.get(key);
 
-		return alert;
-	}
+			if (alertInMap == null) {
+				com.dianping.cat.home.alert.summary.entity.Alert alert = new com.dianping.cat.home.alert.summary.entity.Alert();
+				alert.setAlertTime(dbAlert.getAlertTime());
+				alert.setContext(dbAlert.getContent());
+				alert.setMetric(metric);
+				alert.setType(dbAlert.getType());
+				alert.setDomain(domain);
+				alert.setCount(1);
 
-	private com.dianping.cat.home.alert.summary.entity.Alert convertToAlertWithDomain(Alert dbAlert) {
-		com.dianping.cat.home.alert.summary.entity.Alert alert = new com.dianping.cat.home.alert.summary.entity.Alert();
+				alerts.put(key, alert);
+			} else {
+				int originCount = alertInMap.getCount();
+				alertInMap.setCount(originCount + 1);
+			}
+		}
 
-		alert.setAlertTime(dbAlert.getAlertTime());
-		alert.setContext(dbAlert.getContent());
-		alert.setMetric(dbAlert.getMetric());
-		alert.setType(dbAlert.getType());
-		alert.setDomain(dbAlert.getDomain());
-
-		return alert;
+		return alerts.values();
 	}
 
 	public AlertSummary generateAlertSummary(String domain, Date date) {
@@ -78,8 +108,7 @@ public class AlertSummaryGenerator {
 		TopologyGraph topology = m_topologyManager.buildTopologyGraph(domain, date.getTime());
 		int statusThreshold = 2;
 
-		alertSummary.addCategory(generateDependCategoryByTopology(date, AlertType.Business.getName(), topology,
-		      statusThreshold));
+		alertSummary.addCategory(generateLongCallCategory(date, topology, statusThreshold));
 
 		List<String> dependencyDomains = queryDependencyDomains(topology, date, domain);
 		alertSummary.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),
@@ -96,7 +125,7 @@ public class AlertSummaryGenerator {
 		try {
 			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
 			      AlertEntity.READSET_FULL);
-			setDBAlertsToCategoryWithDomain(category, dbAlerts);
+			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
 		}
@@ -121,7 +150,7 @@ public class AlertSummaryGenerator {
 	}
 
 	private Category generateDependCategoryByTimeCateDomain(Date date, String cate, List<String> dependencyDomains) {
-		String categoryName = "dependency_" + cate;
+		String categoryName = PREFIX + cate;
 		String dbCategoryName = cate;
 		Category category = new Category(categoryName);
 		Date startTime = new Date(date.getTime() - DURATION);
@@ -130,8 +159,8 @@ public class AlertSummaryGenerator {
 			try {
 				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
 				      AlertEntity.READSET_FULL);
-				
-				setDBAlertsToCategoryWithDomain(category, dbAlerts);
+
+				setDBAlertsToCategory(category, dbAlerts);
 			} catch (DalException e) {
 				Cat.logError("find dependency alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
 			}
@@ -140,14 +169,20 @@ public class AlertSummaryGenerator {
 		return category;
 	}
 
-	private Category generateDependCategoryByTopology(Date date, String cate, TopologyGraph topology, int statusThreshold) {
-		String categoryName = "dependency_" + cate;
-		Category category = new Category(categoryName);
+	private Category generateLongCallCategory(Date date, TopologyGraph topology, int statusThreshold) {
+		Category category = new Category(LONG_CALL);
+		List<TopologyEdge> edges = new ArrayList<TopologyEdge>();
 
 		for (TopologyEdge edge : topology.getEdges().values()) {
 			if (edge.getStatus() >= statusThreshold) {
-				category.addAlert(convertToAlert(edge, date));
+				edges.add(edge);
 			}
+		}
+
+		Collection<com.dianping.cat.home.alert.summary.entity.Alert> alerts = convertToAlert(edges, date);
+		Iterator<com.dianping.cat.home.alert.summary.entity.Alert> it = alerts.iterator();
+		while (it.hasNext()) {
+			category.addAlert(it.next());
 		}
 
 		return category;
@@ -164,15 +199,11 @@ public class AlertSummaryGenerator {
 	}
 
 	private void setDBAlertsToCategory(Category category, List<Alert> dbAlerts) {
-		for (Alert dbAlert : dbAlerts) {
-			category.addAlert(convertToAlert(dbAlert));
+		Collection<com.dianping.cat.home.alert.summary.entity.Alert> alerts = convertToAlerts(dbAlerts);
+		Iterator<com.dianping.cat.home.alert.summary.entity.Alert> it = alerts.iterator();
+
+		while (it.hasNext()) {
+			category.addAlert(it.next());
 		}
 	}
-
-	private void setDBAlertsToCategoryWithDomain(Category category, List<Alert> dbAlerts) {
-		for (Alert dbAlert : dbAlerts) {
-			category.addAlert(convertToAlertWithDomain(dbAlert));
-		}
-	}
-
 }

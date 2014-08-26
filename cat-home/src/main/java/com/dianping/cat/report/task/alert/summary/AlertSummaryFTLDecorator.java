@@ -23,10 +23,10 @@ public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initiali
 
 	@Override
 	public String generateHtml(AlertSummary alertSummary) {
-		AlertSummaryVisitor visitor = new AlertSummaryVisitor();
+		AlertSummaryVisitor visitor = new AlertSummaryVisitor(alertSummary.getDomain());
 		visitor.visitAlertSummary(alertSummary);
 
-		Map<Object, Object> dataMap = convertDataMap(visitor.getResult());
+		Map<Object, Object> dataMap = gatherDomainsForDependBusiness(visitor.getResult());
 		StringWriter sw = new StringWriter(5000);
 
 		try {
@@ -38,30 +38,28 @@ public class AlertSummaryFTLDecorator implements AlertSummaryDecorator, Initiali
 		return sw.toString();
 	}
 
-	private Map<Object, Object> convertDataMap(Map<Object, Object> map) {
-		return gatherDomainsForDependBusiness(map);
-	}
-
 	@SuppressWarnings("unchecked")
 	private Map<Object, Object> gatherDomainsForDependBusiness(Map<Object, Object> map) {
 		try {
 			Map<Object, Object> categories = (Map<Object, Object>) map.get("categories");
-			List<Map<Object, Object>> alerts = (List<Map<Object, Object>>) categories.get("dependency_business");
-			Map<String, List<Map<Object, Object>>> dependBusiMap = new TreeMap<String, List<Map<Object, Object>>>();
+			List<Map<Object, Object>> alerts = (List<Map<Object, Object>>) categories
+			      .get(AlertSummaryVisitor.LONG_CALL_NAME);
+			Map<String, List<Map<Object, Object>>> longCallMap = new TreeMap<String, List<Map<Object, Object>>>();
 
 			for (Map<Object, Object> alert : alerts) {
 				String domain = (String) alert.get("domain");
-				List<Map<Object, Object>> tmpAlerts = dependBusiMap.get(domain);
+				List<Map<Object, Object>> tmpAlerts = longCallMap.get(domain);
 
 				if (tmpAlerts == null) {
 					tmpAlerts = new ArrayList<Map<Object, Object>>();
-					dependBusiMap.put(domain, tmpAlerts);
+					longCallMap.put(domain, tmpAlerts);
 				}
 				tmpAlerts.add(alert);
 			}
 
-			categories.put("dependency_business_length", alerts.size());
-			categories.put("dependency_business", dependBusiMap);
+			categories.remove(AlertSummaryVisitor.LONG_CALL_NAME);
+			categories.put(AlertSummaryGenerator.LONG_CALL, longCallMap);
+			map.put(AlertSummaryGenerator.LONG_CALL + "_length", alerts.size());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

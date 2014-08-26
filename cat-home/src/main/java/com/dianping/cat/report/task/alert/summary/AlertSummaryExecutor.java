@@ -29,6 +29,16 @@ public class AlertSummaryExecutor {
 	@Inject
 	private SenderManager m_sendManager;
 
+	private List<String> builderReceivers(String str) {
+		List<String> result = new ArrayList<String>();
+
+		if (str != null) {
+			result.addAll(Splitters.by(",").noEmptyItem().split(str));
+		}
+
+		return result;
+	}
+
 	private String buildMailTitle(String domain, Date date) {
 		StringBuilder builder = new StringBuilder();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -38,14 +48,20 @@ public class AlertSummaryExecutor {
 		return builder.toString();
 	}
 
-	private List<String> builderReceivers(String str) {
-		List<String> result = new ArrayList<String>();
-
-		if (str != null) {
-			result.addAll(Splitters.by(",").noEmptyItem().split(str));
+	public String execute(String domain, Date date) {
+		if (StringUtils.isEmpty(domain) || date == null) {
+			return null;
 		}
 
-		return result;
+		try {
+			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
+			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
+
+			return content;
+		} catch (Exception e) {
+			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
+			return null;
+		}
 	}
 
 	public String execute(String domain, Date date, String receiverStr) {
