@@ -17,6 +17,36 @@
 	    </tr>
       </thead>
       <tbody>
+      	  <#list categories?keys as cateName>
+      	    <#assign cate = ${categories.get(cateName)} />
+			<#assign length = cate?size />
+			<#if length == 0>
+			  <tr>
+				  <td class="text-success"><strong>${cateName}</strong></td>
+				  <td class="text-success" colspan="5"><strong>状况正常</strong></td>
+			  </tr>
+		    <#else>
+		  	  <tr>
+			    <td class="text-success" rowspan="${length + 1}"><strong>${cateName}</strong></td>
+			    <th>告警设备</th>
+			    <th>告警指标</th>
+			    <th>告警时间</th>
+			    <th>告警级别</th>
+			    <th>告警内容</th>
+			  </tr>
+			  <#list cate as item>
+		    	  <tr>
+		    	    <td>${item.domain}</td>
+		    	    <td>${item.metric}</td>
+		    	    <td>${item.dateStr}</td>
+		    	    <td>${item.type}</td>
+		    	    <td class="alert-content">${item.context}</td>
+		    	  </tr>
+		      </#list>
+		    </#if>
+      	  </#list>
+      
+      
 		  <#assign length = categories.network?size />
 		  <#if length == 0>
 		 	<tr>
