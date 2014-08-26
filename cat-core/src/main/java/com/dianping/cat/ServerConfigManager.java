@@ -236,9 +236,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public void initialize() throws InitializationException {
 		m_unusedTypes.add("Service");
 		m_unusedTypes.add("PigeonService");
+		m_unusedTypes.add("URL");
 		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
 		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
 		m_unusedNames.add("pigeon:HeartBeatService:null");
+		m_unusedNames.add("/");
+		m_unusedNames.add("/index.jsp");
+		m_unusedNames.add("/Heartbeat.html");
 	}
 
 	public void initialize(File configFile) throws Exception {
