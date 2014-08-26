@@ -143,7 +143,7 @@ public class AppDataService {
 			data.add(from);
 		}
 		int n = max / 5 + 1;
-		int length = queryTenMinutesBackLength(period, n);
+		int length = queryAppDataDuration(period, n);
 
 		return new AppDataCommandMap(length, dataMap);
 	}
@@ -232,9 +232,6 @@ public class AppDataService {
 		int startMinuteOrder = entity.getStartMinuteOrder();
 		int endMinuteOrder = entity.getEndMinuteOrder();
 
-		if (groupByField == null) {
-			groupByField = AppDataGroupByField.CODE;
-		}
 		try {
 			switch (groupByField) {
 			case OPERATOR:
@@ -264,7 +261,6 @@ public class AppDataService {
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
-
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -272,7 +268,7 @@ public class AppDataService {
 		return datas;
 	}
 
-	public Double[] queryDelayAvg(AppDataCommandMap convertedData) {
+	public Double[] computeDelayAvg(AppDataCommandMap convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -292,25 +288,23 @@ public class AppDataService {
 	}
 
 	private int queryFieldValue(AppDataCommand data, AppDataGroupByField field) {
-		if (field != null) {
-			switch (field) {
-			case OPERATOR:
-				return data.getOperator();
-			case APP_VERSION:
-				return data.getAppVersion();
-			case CITY:
-				return data.getCity();
-			case CONNECT_TYPE:
-				return data.getConnnectType();
-			case NETWORK:
-				return data.getNetwork();
-			case PLATFORM:
-				return data.getPlatform();
-			default:
-				break;
-			}
+		switch (field) {
+		case OPERATOR:
+			return data.getOperator();
+		case APP_VERSION:
+			return data.getAppVersion();
+		case CITY:
+			return data.getCity();
+		case CONNECT_TYPE:
+			return data.getConnnectType();
+		case NETWORK:
+			return data.getNetwork();
+		case PLATFORM:
+			return data.getPlatform();
+		case CODE:
+		default:
+			return QueryEntity.DEFAULT_VALUE;
 		}
-		return -1;
 	}
 
 	public double queryOneDayDelayAvg(QueryEntity entity) {
@@ -326,9 +320,8 @@ public class AppDataService {
 		}
 		return size > 0 ? delaySum / size : -1;
 	}
-	
-	private int queryTenMinutesBackLength(Date period, int defaultValue) {
-		int size = defaultValue;
+
+	private int queryAppDataDuration(Date period, int defaultValue) {
 		Calendar cal = Calendar.getInstance();
 
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -340,9 +333,10 @@ public class AppDataService {
 			long start = cal.getTimeInMillis();
 			long current = System.currentTimeMillis();
 			int length = (int) (current - current % 300000 - start) / 300000 - 1;
-			size = length < 0 ? 0 : length;
+
+			return length < 0 ? 0 : length;
 		}
-		return size;
+		return defaultValue;
 	}
 
 	public Double[] queryValue(QueryEntity entity, String type) {
@@ -375,7 +369,7 @@ public class AppDataService {
 				      platform, AppDataCommandEntity.READSET_AVG_DATA);
 				AppDataCommandMap dataPair = convert2AppDataCommandMap(datas, period);
 
-				return queryDelayAvg(dataPair);
+				return computeDelayAvg(dataPair);
 			} else {
 				throw new RuntimeException("unexpected query type, type:" + type);
 			}
@@ -405,7 +399,7 @@ public class AppDataService {
 		case PLATFORM:
 			info.setPlatform(value);
 			break;
-		default:
+		case CODE:
 			break;
 		}
 	}
@@ -434,9 +428,7 @@ public class AppDataService {
 		      .setOperator(entity.getOperator()).setCity(entity.getCity()).setNetwork(entity.getNetwork())
 		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom()).setConnectType(entity.getChannel());
 
-		if (field != null) {
-			setFieldValue(info, field, key);
-		}
+		setFieldValue(info, field, key);
 	}
 
 	public class AppDataCommandMap {

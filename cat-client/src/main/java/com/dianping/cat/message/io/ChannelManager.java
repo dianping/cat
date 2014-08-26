@@ -81,7 +81,13 @@ public class ChannelManager implements Task {
 		} else {
 			ChannelHolder holder = initChannel(serverAddresses, null);
 
-			m_activeChannelHolder = holder;
+			if (holder != null) {
+				m_activeChannelHolder = holder;
+			} else {
+				m_activeChannelHolder = new ChannelHolder();
+				m_activeChannelHolder.setServerAddresses(serverAddresses);
+				m_logger.error("error when init cat module due to error config xml in /data/appdatas/cat/client.xml");
+			}
 		}
 	}
 

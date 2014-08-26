@@ -8,7 +8,7 @@ public enum AppDataGroupByField {
 
 	private String m_name;
 
-	public static AppDataGroupByField getByName(String name) {
+	public static AppDataGroupByField getByName(String name, AppDataGroupByField defaultField) {
 		if (StringUtils.isNotEmpty(name)) {
 			for (AppDataGroupByField field : AppDataGroupByField.values()) {
 				if (field.getName().equals(name)) {
@@ -16,7 +16,7 @@ public enum AppDataGroupByField {
 				}
 			}
 		}
-		return null;
+		return defaultField;
 	}
 
 	AppDataGroupByField(String name) {

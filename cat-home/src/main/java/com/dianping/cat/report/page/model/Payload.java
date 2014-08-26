@@ -51,10 +51,21 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("province")
 	private String m_province;
+	
+	@FieldMeta("queryType")
+	private String m_queryType;
 
 	@FieldMeta("cdn")
 	private String m_cdn = "ALL";
 	
+	public String getQueryType() {
+   	return m_queryType;
+   }
+
+	public void setQueryType(String queryType) {
+   	m_queryType = queryType;
+   }
+
 	@Override
 	public Action getAction() {
 		return m_action;

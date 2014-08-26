@@ -130,9 +130,9 @@
 		<div style="float: left; width: 100%;">
 			<div id="${model.lineChart.id}"></div>
 		</div>
-		 <div class="report">
-<table class="table table-striped table-bordered table-condensed">
-	<tr class="text-success">
+		<br/>
+<table class="table table-striped table-bordered table-condensed table-hover">
+	<thead><tr class="text-success">
 		<th>网络类型</th>
 		<th>版本</th>
 		<th>连接类型</th>
@@ -144,9 +144,10 @@
 		<th>成功平均延迟(ms)</th>
 		<th>平均发包(B)</th>
 		<th>平均回包(B)</th>
-	</tr>
+	</tr></thead>
+	<tbody>
 	<c:forEach var="item" items="${model.appDataSpreadInfos}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right" name>
+		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
 		<c:set var="networkCode" value="${item.network}"/>
 		<c:set var="appVersionCode" value="${item.appVersion}"/>
 		<c:set var="channelCode" value="${item.connectType}"/>
@@ -214,11 +215,12 @@
 			<td>${operator}</td>
 			</c:otherwise>
 		</c:choose>
-		<td>${item.successRatio}</td>
-		<td>${item.accessNumberSum}</td>
-		<td>${item.responseTimeAvg}</td>
-		<td>${item.requestPackageAvg}</td>
-		<td>${item.responsePackageAvg}</td>
+		<td>${w:format(item.successRatio,'#0.0')}%</td>
+		<td>${w:format(item.accessNumberSum,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.responseTimeAvg,'###,##0.0')}</td>
+		<td>${w:format(item.requestPackageAvg,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.responsePackageAvg,'#,###,###,###,##0')}</td>
 		</tr>
 	</c:forEach>
+	</tbody>
 </table>

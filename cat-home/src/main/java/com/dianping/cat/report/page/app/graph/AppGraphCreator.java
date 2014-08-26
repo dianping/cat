@@ -2,12 +2,14 @@ package com.dianping.cat.report.page.app.graph;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.config.app.AppConfigManager;
@@ -95,90 +97,131 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return map;
 	}
 
-	public PieChart buildPieChart(QueryEntity entity, AppDataGroupByField field) {
+	private Map<String, Double> buildPercentMap(List<Item> items) {
+		Map<String, Double> percents = new HashMap<String, Double>();
+		double sum = 0;
+
+		for (Item item : items) {
+			sum += item.getNumber();
+		}
+
+		if (sum > 0) {
+			for (Item item : items) {
+				percents.put(item.getTitle(), item.getNumber() / sum);
+			}
+		}
+		return percents;
+	}
+
+	public Pair<PieChart, Map<String, Double>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppDataCommand> datas = m_appDataService.queryAppDataCommandsByField(entity, field);
 
 		for (AppDataCommand data : datas) {
-			Item item = builPieChartItem(entity.getCommand(), data, field);
+			Item item = buildPieChartItem(entity.getCommand(), data, field);
+
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
 
-		return pieChart;
+		return new Pair<PieChart, Map<String, Double>>(pieChart, buildPercentMap(items));
 	}
 
-	private String buildPieChartTitle(int command, AppDataCommand data, AppDataGroupByField field) {
+	private String buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataGroupByField field) {
 		switch (field) {
 		case OPERATOR:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_manager
 			      .queryConfigItem(AppConfigManager.OPERATOR);
 			com.dianping.cat.configuration.app.entity.Item operator = null;
+			int operatorValue = data.getOperator();
 
-			if (operators != null && (operator = operators.get(data.getOperator())) != null) {
+			if (operators != null && (operator = operators.get(operatorValue)) != null) {
 				return operator.getName();
+			} else {
+				throw new RuntimeException("Unrecognized operator configuration in app config, operator id: "
+				      + operatorValue);
 			}
 		case APP_VERSION:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_manager
 			      .queryConfigItem(AppConfigManager.VERSION);
 			com.dianping.cat.configuration.app.entity.Item appVersion = null;
+			int appVersionValue = data.getAppVersion();
 
-			if (appVersions != null && (appVersion = appVersions.get(data.getAppVersion())) != null) {
+			if (appVersions != null && (appVersion = appVersions.get(appVersionValue)) != null) {
 				return appVersion.getName();
+			} else {
+				throw new RuntimeException("Unrecognized app-version configuration in app config, operator id: "
+				      + appVersionValue);
 			}
 		case CITY:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_manager
 			      .queryConfigItem(AppConfigManager.CITY);
 			com.dianping.cat.configuration.app.entity.Item city = null;
+			int cityValue = data.getCity();
 
-			if (cities != null && (city = cities.get(data.getCity())) != null) {
+			if (cities != null && (city = cities.get(cityValue)) != null) {
 				return city.getName();
+			} else {
+				throw new RuntimeException("Unrecognized city configuration in app config, operator id: " + cityValue);
 			}
 		case CONNECT_TYPE:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_manager
 			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
 			com.dianping.cat.configuration.app.entity.Item connectType = null;
+			int connectTypeValue = data.getConnnectType();
 
-			if (connectTypes != null && (connectType = connectTypes.get(data.getConnnectType())) != null) {
+			if (connectTypes != null && (connectType = connectTypes.get(connectTypeValue)) != null) {
 				return connectType.getName();
+			} else {
+				throw new RuntimeException("Unrecognized connect-type configuration in app config, operator id: "
+				      + connectTypeValue);
 			}
 		case NETWORK:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_manager
 			      .queryConfigItem(AppConfigManager.NETWORK);
 			com.dianping.cat.configuration.app.entity.Item network = null;
+			int networkValue = data.getNetwork();
 
-			if (networks != null && (network = networks.get(data.getNetwork())) != null) {
+			if (networks != null && (network = networks.get(networkValue)) != null) {
 				return network.getName();
+			} else {
+				throw new RuntimeException("Unrecognized network configuration in app config, operator id: " + networkValue);
 			}
 		case PLATFORM:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_manager
 			      .queryConfigItem(AppConfigManager.PLATFORM);
 			com.dianping.cat.configuration.app.entity.Item platform = null;
+			int platformValue = data.getPlatform();
 
-			if (platforms != null && (platform = platforms.get(data.getPlatform())) != null) {
+			if (platforms != null && (platform = platforms.get(platformValue)) != null) {
 				return platform.getName();
+			} else {
+				throw new RuntimeException("Unrecognized platform configuration in app config, operator id: "
+				      + platformValue);
 			}
-		default:
+		case CODE:
 			Map<Integer, Code> codes = m_manager.queryCodeByCommand(command);
 			Code code = null;
+			int codeValue = data.getCode();
 
-			if (codes != null && (code = codes.get(data.getCode())) != null) {
+			if (codes != null && (code = codes.get(codeValue)) != null) {
 				return code.getName();
+			} else {
+				throw new RuntimeException("Unrecognized code configuration in app config, operator id: " + codeValue);
 			}
-			break;
+		default:
+			throw new RuntimeException("Unrecognized groupby field: " + field);
 		}
-		return null;
 	}
 
-	private Item builPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
+	private Item buildPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
 		Item item = new Item();
 		item.setNumber(data.getAccessNumberSum());
-		String title = buildPieChartTitle(command, data, field);
+		String title = buildPieChartFieldTitlePair(command, data, field);
 
 		item.setTitle(title);
-
 		return item;
 	}
 }
