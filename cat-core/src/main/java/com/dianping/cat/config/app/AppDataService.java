@@ -120,7 +120,7 @@ public class AppDataService {
 			}
 			sum += number;
 		}
-		return sum == 0 ? 0 : (double) success / sum;
+		return sum == 0 ? 0 : (double) success / sum * 100;
 	}
 
 	private AppDataCommandMap convert2AppDataCommandMap(List<AppDataCommand> fromDatas, Date period) {
