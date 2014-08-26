@@ -81,7 +81,7 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">URL合并规则</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS合并规则</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">APP报表配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">业务监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控规则</a></li>
