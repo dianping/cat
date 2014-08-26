@@ -240,9 +240,15 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
 		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
 		m_unusedNames.add("pigeon:HeartBeatService:null");
+		m_unusedNames.add("");
 		m_unusedNames.add("/");
 		m_unusedNames.add("/index.jsp");
 		m_unusedNames.add("/Heartbeat.html");
+		m_unusedNames.add("/heartbeat.html");
+		m_unusedNames.add("/heartbeat.jsp");
+		m_unusedNames.add("/inspect/healthcheck");
+		m_unusedNames.add("/MonitorServlet");
+		m_unusedNames.add("/monitorServlet?client=f5");
 	}
 
 	public void initialize(File configFile) throws Exception {
