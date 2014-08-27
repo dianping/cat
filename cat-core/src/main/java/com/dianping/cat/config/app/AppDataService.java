@@ -33,8 +33,12 @@ public class AppDataService {
 
 	public static final String DELAY = "delay";
 
+	public static final String REQUEST_PACKAGE = "requestPackage";
+
+	public static final String RESPONSE_PACKAGE = "responsePackage";
+
 	public List<AppDataSpreadInfo> buildAppDataSpreadInfo(QueryEntity entity, AppDataGroupByField groupByField) {
-		List<AppDataSpreadInfo> infos = new ArrayList<AppDataSpreadInfo>();
+		List<AppDataSpreadInfo> infos = new LinkedList<AppDataSpreadInfo>();
 		List<AppDataCommand> datas = queryAppDataCommandsByFieldCode(entity, groupByField);
 		Map<Integer, List<AppDataCommand>> field2Datas = buildFields2Datas(datas, groupByField);
 
@@ -47,7 +51,6 @@ public class AppDataService {
 			updateAppDataSpreadInfo(info, entry, groupByField, entity);
 			infos.add(info);
 		}
-
 		return infos;
 	}
 

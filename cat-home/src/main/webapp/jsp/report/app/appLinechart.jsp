@@ -13,7 +13,7 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
-	<script type="text/javascript">
+ 	<script type="text/javascript">
 		var commandInfo = ${model.command};
 		function check() {
 			var value = document.getElementById("checkbox").checked;
@@ -75,8 +75,15 @@
 			return myDate.getFullYear() + "-" + month + "-"
 					+ myDate.getDate();
 		}
+		
+		function queryGroupBy(sort){
+			var str = document.URL;
+			var result = str.split("&groupByField=");
+			var field = result[1].split("&")[0];
+			query(field,undefined,undefined,undefined,undefined,undefined,undefined,sort);
+		}
 
-		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode) {
+		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode,sort) {
 			var time = $("#time").val();
 			var command = $("#command").val();
 			var code = $("#code").val();
@@ -119,7 +126,7 @@
 			var split = ";";
 			var query1 = time + split + command + split + code + split
 					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + split;;
+					+ split + platform + split + city + split + operator + split + split;
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
@@ -152,8 +159,11 @@
 			if(typeof(field) == "undefined"){
 				field = "";
 			}
+			if(typeof(sort) == "undefined"){
+				sort = "";
+			}
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
-					+ type + "&groupByField=" + field;
+					+ type + "&groupByField=" + field + "&sort=" + sort;
 			window.location.href = href;
 		}
 
@@ -229,7 +239,6 @@
 					var data = ${model.lineChart.jsonString};
 					graphMetricChartForApp(document
 							.getElementById('${model.lineChart.id}'), data, datePair);
-
 				});
 	</script>
 	
