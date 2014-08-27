@@ -40,7 +40,11 @@ public class BusinessDecorator extends ProductlineDecorator {
 		StringBuilder sb = new StringBuilder();
 		sb.append(alert.getContent());
 		sb.append(buildContactInfo(alert.getGroup()));
-		sb.append("<br/>").append(m_executor.execute(alert.getDomain(), alertDate));
+
+		String summaryContext = m_executor.execute(alert.getDomain(), alertDate);
+		if (summaryContext != null) {
+			sb.append("<br/>").append(summaryContext);
+		}
 
 		return sb.toString();
 	}

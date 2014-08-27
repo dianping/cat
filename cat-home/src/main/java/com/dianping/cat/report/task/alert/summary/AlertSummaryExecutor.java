@@ -2,8 +2,10 @@ package com.dianping.cat.report.task.alert.summary;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -27,7 +29,13 @@ public class AlertSummaryExecutor {
 	private AlertSummaryDecorator m_alertSummaryDecorator;
 
 	@Inject
+	private FailureModelGenerator m_failureContextGenerator;
+
+	@Inject
 	private SenderManager m_sendManager;
+
+	@Inject
+	private FailureDecorator m_failureDecorator;
 
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();
@@ -52,12 +60,17 @@ public class AlertSummaryExecutor {
 		if (StringUtils.isEmpty(domain) || date == null) {
 			return null;
 		}
+		date = normalizeDate(date);
 
 		try {
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
-			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
+			m_alertSummaryManager.insert(alertSummary);
+			String summaryContent = m_alertSummaryDecorator.generateHtml(alertSummary);
 
-			return content;
+			Map<Object, Object> failureModel = m_failureContextGenerator.generateFailureModel(domain, date);
+			String failureContext = m_failureDecorator.generateHtml(failureModel);
+
+			return summaryContent + failureContext;
 		} catch (Exception e) {
 			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
 			return null;
@@ -65,25 +78,27 @@ public class AlertSummaryExecutor {
 	}
 
 	public String execute(String domain, Date date, String receiverStr) {
-		if (StringUtils.isEmpty(domain) || date == null) {
+		String content = execute(domain, date);
+		if (content == null || "".equals(content)) {
 			return null;
-		}
-
-		try {
-			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
-			m_alertSummaryManager.insert(alertSummary);
+		} else {
 			String title = buildMailTitle(domain, date);
-			String content = m_alertSummaryDecorator.generateHtml(alertSummary);
 			List<String> receivers = builderReceivers(receiverStr);
-
 			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
 
 			m_sendManager.sendAlert(AlertChannel.MAIL, message);
-			return content;
-		} catch (Exception e) {
-			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
-			return null;
 		}
+
+		return content;
+	}
+
+	private Date normalizeDate(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTime();
 	}
 
 }
