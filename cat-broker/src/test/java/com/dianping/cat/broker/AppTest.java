@@ -11,19 +11,23 @@ import java.util.List;
 import org.junit.Test;
 
 public class AppTest {
-	
+
 	@Test
 	public void test() throws Exception {
-		SendData();
+		while (true) {
+			SendData();
+			Thread.sleep(10000);
+		}
 	}
-	
+
 	public void SendData() throws Exception {
 		List<String> urls = new ArrayList<String>();
 		String url_pre = "http://localhost:2765/broker-service/api/batch";
 		long timestamp = System.currentTimeMillis();
-		
+
 		for (int i = 0; i < 10; i++) {
-			urls.add(url_pre + "?v=2&c=" + timestamp + URLEncoder.encode("\thttp://www.dianping.com/\t1\t1\t1\t1\t1\t1\t1\t1\n", "utf-8"));
+			urls.add(url_pre + "?v=2&c=" + timestamp
+			      + URLEncoder.encode("\t1\t2\t3\tshop.bin\t4\t5\t10\t20\t30\n", "utf-8"));
 		}
 
 		for (String url : urls) {

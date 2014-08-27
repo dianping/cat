@@ -23,6 +23,14 @@
         	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>
+			<query name="find-last-alarm-record" type="SELECT">
+				<statement><![CDATA[
+        	SELECT <FIELDS/>
+        	FROM <TABLE/> 
+        	WHERE <FIELD name='type'/> > 1
+        	ORDER BY <FIELD name='id'/> desc limit 100
+        	]]></statement>
+			</query>
 			<query name="find-alarm-record-by-rule-id" type="SELECT" multiple="true">
 				<param name="rule-ids" />
 				<statement><![CDATA[

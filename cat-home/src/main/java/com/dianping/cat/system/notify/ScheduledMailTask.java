@@ -118,21 +118,30 @@ public class ScheduledMailTask implements Task, LogEnabled {
 
 		while (active) {
 			try {
-				MailRecord mailRecord = null;
-				long lastSendMailTime = 0;
+				MailRecord reportMailRecord = null;
+				MailRecord alarmMailRecord = null;
+				long lastSendReportMailTime = 0;
+				long lastSendAlarmMailTiem = 0;
+
 				try {
-					mailRecord = m_mailRecordDao.findLastReportRecord(MailRecordEntity.READSET_FULL);
-					lastSendMailTime = mailRecord.getCreationDate().getTime();
+					reportMailRecord = m_mailRecordDao.findLastReportRecord(MailRecordEntity.READSET_FULL);
+					lastSendReportMailTime = reportMailRecord.getCreationDate().getTime();
+
+					alarmMailRecord = m_mailRecordDao.findLastAlarmRecord(MailRecordEntity.READSET_FULL);
+					lastSendAlarmMailTiem = alarmMailRecord.getCreationDate().getTime();
 				} catch (DalNotFoundException e) {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
+
 				long currentDay = TimeUtil.getCurrentDay().getTime();
 				Calendar cal = Calendar.getInstance();
 
-				if (lastSendMailTime < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
+				if (lastSendAlarmMailTiem < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					m_appDataInformer.doNotifying();
+				}
 
+				if (lastSendReportMailTime < currentDay && cal.get(Calendar.HOUR_OF_DAY) >= 2) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 					m_logger.info("Send daily report starting! size :" + reports.size());
