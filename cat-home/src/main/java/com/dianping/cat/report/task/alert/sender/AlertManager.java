@@ -1,6 +1,9 @@
 package com.dianping.cat.report.task.alert.sender;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -112,7 +115,11 @@ public class AlertManager implements Initializable {
 		}
 
 		for (AlertChannel channel : channels) {
-			String content = m_splitterManager.process(pair.getValue(), channel);
+			String rawContent = pair.getValue();
+			if (suspendMinute > 0) {
+				rawContent = rawContent + "<br/>[连续告警暂停时间]" + suspendMinute + "分钟";
+			}
+			String content = m_splitterManager.process(rawContent, channel);
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
@@ -123,7 +130,7 @@ public class AlertManager implements Initializable {
 		return result;
 	}
 
-	private boolean sendRecoveryMessage(AlertEntity alert) {
+	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
 		String type = alert.getType();
 		String group = alert.getGroup();
 		String level = alert.getLevel();
@@ -131,7 +138,7 @@ public class AlertManager implements Initializable {
 
 		for (AlertChannel channel : channels) {
 			String title = "[告警恢复] [告警类型 " + generateTypeStr(type) + "][" + group + " " + alert.getMetric() + "]";
-			String content = "[告警已恢复]";
+			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
 			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
 
@@ -163,6 +170,8 @@ public class AlertManager implements Initializable {
 
 	private class RecoveryAnnouncer implements Task {
 
+		private DateFormat m_sdf = new SimpleDateFormat("hh:mm");
+
 		@Override
 		public String getName() {
 			return "recovery-announcer";
@@ -172,6 +181,7 @@ public class AlertManager implements Initializable {
 		public void run() {
 			while (true) {
 				long currentTime = System.currentTimeMillis();
+				String currentMinute = m_sdf.format(new Date(currentTime));
 				List<String> recoveredItems = new ArrayList<String>();
 
 				for (Entry<String, AlertEntity> entry : m_unrecoveredAlerts.entrySet()) {
@@ -183,7 +193,7 @@ public class AlertManager implements Initializable {
 
 						if (alreadyMinutes >= 1) {
 							recoveredItems.add(key);
-							sendRecoveryMessage(alert);
+							sendRecoveryMessage(alert, currentMinute);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);
