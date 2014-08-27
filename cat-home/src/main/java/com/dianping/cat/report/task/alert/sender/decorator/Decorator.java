@@ -9,7 +9,7 @@ public interface Decorator {
 	public String generateTitle(AlertEntity alert);
 
 	public String generateContent(AlertEntity alert);
-
+	
 	public String buildContactInfo(String group);
 
 }
