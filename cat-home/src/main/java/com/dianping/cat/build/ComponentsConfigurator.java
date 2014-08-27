@@ -89,6 +89,7 @@ import com.dianping.cat.report.task.alert.sender.sender.Sender;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.alert.sender.sender.SmsSender;
 import com.dianping.cat.report.task.alert.sender.sender.WeixinSender;
+import com.dianping.cat.report.task.alert.sender.spliter.DbSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.MailSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.SmsSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.Spliter;
@@ -154,7 +155,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ContactorManager.class));
 
-		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class));
+		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
+		      AlertSummaryExecutor.class));
 
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
 
@@ -175,6 +177,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Spliter.class, SmsSpliter.ID, SmsSpliter.class));
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
+
+		all.add(C(Spliter.class, DbSpliter.ID, DbSpliter.class));
 
 		all.add(C(SpliterManager.class));
 

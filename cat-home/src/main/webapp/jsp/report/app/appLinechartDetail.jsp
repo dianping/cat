@@ -1,5 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<table>
+<table >
 			<tr>
 				<th align=left>时间
 					<div id="datetimepicker1" class="input-append date"
@@ -131,7 +131,7 @@
 			<div id="${model.lineChart.id}"></div>
 		</div>
 		<br/>
-<table class="table table-striped table-bordered table-condensed table-hover">
+<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
 	<thead><tr class="text-success">
 		<th>网络类型</th>
 		<th>版本</th>
@@ -139,11 +139,11 @@
 		<th>平台</th>
 		<th>地区</th>
 		<th>运营商</th>
-		<th>成功率(%)</th>
-		<th>总请求数</th>
-		<th>成功平均延迟(ms)</th>
-		<th>平均发包(B)</th>
-		<th>平均回包(B)</th>
+		<th><a href="javascript:queryGroupBy('success');">成功率</a>(%)</th>
+		<th><a href="javascript:queryGroupBy('request');">总请求数</a></th>
+		<th><a href="javascript:queryGroupBy('delay');">成功平均延迟</a>(ms)</th>
+		<th><a href="javascript:queryGroupBy('requestPackage');">平均发包</a>(B)</th>
+		<th><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
 	</tr></thead>
 	<tbody>
 	<c:forEach var="item" items="${model.appDataSpreadInfos}" varStatus="status">
@@ -215,7 +215,7 @@
 			<td>${operator}</td>
 			</c:otherwise>
 		</c:choose>
-		<td>${w:format(item.successRatio,'#0.0')}%</td>
+ 		<td>${w:format(item.successRatio,'#0.0')}%</td>
 		<td>${w:format(item.accessNumberSum,'#,###,###,###,##0')}</td>
 		<td>${w:format(item.responseTimeAvg,'###,##0.0')}</td>
 		<td>${w:format(item.requestPackageAvg,'#,###,###,###,##0')}</td>

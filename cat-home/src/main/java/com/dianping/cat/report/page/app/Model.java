@@ -25,7 +25,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private PieChart m_pieChart;
 
-	private Map<String, Double> m_percents;
+	private List<PieChartDetailInfo> m_pieChartDetailInfos;
 
 	private Map<Integer, Item> m_cities;
 
@@ -157,11 +157,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_appDataSpreadInfos;
 	}
 
-	public Map<String, Double> getPercents() {
-		return m_percents;
+	public List<PieChartDetailInfo> getPieChartDetailInfos() {
+		return m_pieChartDetailInfos;
 	}
 
-	public void setPercents(Map<String, Double> percents) {
-		m_percents = percents;
+	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
+		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
+
 }
