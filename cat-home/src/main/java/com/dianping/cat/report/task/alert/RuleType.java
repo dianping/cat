@@ -385,7 +385,6 @@ public enum RuleType {
 
 	protected String convertDoubleToString(double value) {
 		if (value < MbS) {
-			System.out.println(m_df.format(value));
 			return m_df.format(value);
 		} else if (value < GbS) {
 			return m_df.format(value / MbS) + "Mb/s";

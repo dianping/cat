@@ -642,6 +642,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -716,6 +719,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
 			<role-hint>weixin</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.spliter.DbSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
