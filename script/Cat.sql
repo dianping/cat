@@ -337,6 +337,7 @@ CREATE TABLE `alert_summary` (
 
 CREATE TABLE `operation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `user` varchar(128) NOT NULL COMMENT '用户名',
   `module` varchar(128) NOT NULL COMMENT '模块',
   `operation` varchar(128) NOT NULL COMMENT '操作',
   `time` datetime NOT NULL COMMENT '修改时间',
