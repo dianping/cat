@@ -67,7 +67,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		File path = new File(SAVE_PATH);
 		File[] files = path.listFiles();
 
-		if (files.length > 0) {
+		if (files != null && files.length > 0) {
 
 			for (File file : files) {
 				try {
@@ -90,7 +90,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			File paths = new File(SAVE_PATH);
 			File[] leftFiles = paths.listFiles();
 
-			if (leftFiles.length > 0) {
+			if (leftFiles != null && leftFiles.length > 0) {
 				for (File file : leftFiles) {
 					boolean success = file.delete();
 
