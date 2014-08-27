@@ -209,6 +209,9 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		default:
 			throw new RuntimeException("Unrecognized groupby field: " + field);
 		}
+		if ("Unknown".equals(title)) {
+			title += " [ " + keyValue + " ]";
+		}
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
