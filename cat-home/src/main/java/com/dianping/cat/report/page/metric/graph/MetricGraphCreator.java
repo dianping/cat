@@ -6,12 +6,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -66,11 +68,13 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	public Map<String, LineChart> buildChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
-	      final Map<String, double[]> dataWithOutFutures) {
+	public Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
+	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 		int step = m_dataExtractor.getStep();
+		Map<String, double[]> baseLinesWithoutFutures = new HashMap<String, double[]>();
+		Map<String, double[]> baseLinesDatas = new HashMap<String, double[]>();
 
 		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
@@ -81,24 +85,57 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+
 			double[] baselines = queryBaseline(key, startDate, endDate);
+
+			if (baselines != null) {
+				lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), startDate, step));
+			} else {
+				if (baseLinesWithoutFutures.isEmpty()) {
+					Pair<Map<String, double[]>, Map<String, double[]>> pair = buildMockBaseline(productLine, key, startDate,
+					      endDate);
+
+					baseLinesDatas.putAll(pair.getKey());
+					baseLinesWithoutFutures.putAll(pair.getValue());
+				}
+				double[] baseLinesData = baseLinesDatas.get(key);
+				double[] baseLineWithoutFuture = baseLinesWithoutFutures.get(key);
+
+				if (baseLinesData != null && baseLineWithoutFuture != null) {
+					Map<Long, Double> allBaselines = convertToMap(baseLinesData, startDate, 1);
+					Map<Long, Double> currentBaselines = convertToMap(baseLineWithoutFuture, startDate, step);
+
+					addLastMinuteData(currentBaselines, allBaselines, m_lastMinute, endDate);
+					lineChart.add(Chinese.BASELINE_VALUE, currentBaselines);
+				}
+			}
 
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 			addLastMinuteData(current, all, m_lastMinute, endDate);
 			lineChart.add(Chinese.CURRENT_VALUE, current);
-			lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), startDate, step));
 			charts.put(key, lineChart);
 		}
 		return charts;
+	}
+
+	private Pair<Map<String, double[]>, Map<String, double[]>> buildMockBaseline(String productLine, String key,
+	      Date startDate, Date endDate) {
+		Date start = new Date(startDate.getTime() - TimeUtil.ONE_DAY);
+		Date end = new Date(endDate.getTime() - TimeUtil.ONE_DAY);
+		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, start, end);
+		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
+		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+
+		return new Pair<Map<String, double[]>, Map<String, double[]>>(oldCurrentValues, dataWithOutFutures);
 	}
 
 	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
-		return buildChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
