@@ -227,7 +227,7 @@ public class AppDataComparisonNotifier {
 		Integer command = m_appConfigManager.getCommands().get(url);
 
 		if (command != null) {
-			QueryEntity entity = new QueryEntity(yesterdayStr + ";" + command + ";;;;;;;");
+			QueryEntity entity = new QueryEntity(yesterdayStr + ";" + command + ";;;;;;;;;");
 
 			return m_appDataService.queryOneDayDelayAvg(entity);
 		} else {
