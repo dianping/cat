@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.app.graph;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +21,7 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.report.page.app.PieChartDetailInfo;
 
 public class AppGraphCreator extends AbstractGraphCreator {
 
@@ -97,131 +97,131 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return map;
 	}
 
-	private Map<String, Double> buildPercentMap(List<Item> items) {
-		Map<String, Double> percents = new HashMap<String, Double>();
+	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
 		double sum = 0;
 
-		for (Item item : items) {
-			sum += item.getNumber();
+		for (PieChartDetailInfo item : items) {
+			sum += item.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (Item item : items) {
-				percents.put(item.getTitle(), item.getNumber() / sum);
+			for (PieChartDetailInfo item : items) {
+				item.setSuccessRatio(item.getRequestSum() / sum);
 			}
 		}
-		return percents;
 	}
 
-	public Pair<PieChart, Map<String, Double>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
+	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
+		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppDataCommand> datas = m_appDataService.queryAppDataCommandsByField(entity, field);
 
 		for (AppDataCommand data : datas) {
-			Item item = buildPieChartItem(entity.getCommand(), data, field);
+			Pair<Integer, Item> pair = buildPieChartItem(entity.getCommand(), data, field);
+			Item item = pair.getValue();
+			PieChartDetailInfo info = new PieChartDetailInfo();
 
+			info.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
+			infos.add(info);
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
+		updatePieChartDetailInfo(infos);
 
-		return new Pair<PieChart, Map<String, Double>>(pieChart, buildPercentMap(items));
+		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
 	}
 
-	private String buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataGroupByField field) {
+	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataGroupByField field) {
+		String title = "Unknown";
+		int keyValue = -1;
+
 		switch (field) {
 		case OPERATOR:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_manager
 			      .queryConfigItem(AppConfigManager.OPERATOR);
 			com.dianping.cat.configuration.app.entity.Item operator = null;
-			int operatorValue = data.getOperator();
+			keyValue = data.getOperator();
 
-			if (operators != null && (operator = operators.get(operatorValue)) != null) {
-				return operator.getName();
-			} else {
-				throw new RuntimeException("Unrecognized operator configuration in app config, operator id: "
-				      + operatorValue);
+			if (operators != null && (operator = operators.get(keyValue)) != null) {
+				title = operator.getName();
 			}
+			break;
 		case APP_VERSION:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_manager
 			      .queryConfigItem(AppConfigManager.VERSION);
 			com.dianping.cat.configuration.app.entity.Item appVersion = null;
-			int appVersionValue = data.getAppVersion();
+			keyValue = data.getAppVersion();
 
-			if (appVersions != null && (appVersion = appVersions.get(appVersionValue)) != null) {
-				return appVersion.getName();
-			} else {
-				throw new RuntimeException("Unrecognized app-version configuration in app config, operator id: "
-				      + appVersionValue);
+			if (appVersions != null && (appVersion = appVersions.get(keyValue)) != null) {
+				title = appVersion.getName();
 			}
+			break;
 		case CITY:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_manager
 			      .queryConfigItem(AppConfigManager.CITY);
 			com.dianping.cat.configuration.app.entity.Item city = null;
-			int cityValue = data.getCity();
+			keyValue = data.getCity();
 
-			if (cities != null && (city = cities.get(cityValue)) != null) {
-				return city.getName();
-			} else {
-				throw new RuntimeException("Unrecognized city configuration in app config, operator id: " + cityValue);
+			if (cities != null && (city = cities.get(keyValue)) != null) {
+				title = city.getName();
 			}
+			break;
 		case CONNECT_TYPE:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_manager
 			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
 			com.dianping.cat.configuration.app.entity.Item connectType = null;
-			int connectTypeValue = data.getConnnectType();
+			keyValue = data.getConnnectType();
 
-			if (connectTypes != null && (connectType = connectTypes.get(connectTypeValue)) != null) {
-				return connectType.getName();
-			} else {
-				throw new RuntimeException("Unrecognized connect-type configuration in app config, operator id: "
-				      + connectTypeValue);
+			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
+				title = connectType.getName();
 			}
 		case NETWORK:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_manager
 			      .queryConfigItem(AppConfigManager.NETWORK);
 			com.dianping.cat.configuration.app.entity.Item network = null;
-			int networkValue = data.getNetwork();
+			keyValue = data.getNetwork();
 
-			if (networks != null && (network = networks.get(networkValue)) != null) {
-				return network.getName();
-			} else {
-				throw new RuntimeException("Unrecognized network configuration in app config, operator id: " + networkValue);
+			if (networks != null && (network = networks.get(keyValue)) != null) {
+				title = network.getName();
 			}
+			break;
 		case PLATFORM:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_manager
 			      .queryConfigItem(AppConfigManager.PLATFORM);
 			com.dianping.cat.configuration.app.entity.Item platform = null;
-			int platformValue = data.getPlatform();
+			keyValue = data.getPlatform();
 
-			if (platforms != null && (platform = platforms.get(platformValue)) != null) {
-				return platform.getName();
-			} else {
-				throw new RuntimeException("Unrecognized platform configuration in app config, operator id: "
-				      + platformValue);
+			if (platforms != null && (platform = platforms.get(keyValue)) != null) {
+				title = platform.getName();
 			}
+			break;
 		case CODE:
 			Map<Integer, Code> codes = m_manager.queryCodeByCommand(command);
 			Code code = null;
-			int codeValue = data.getCode();
+			keyValue = data.getCode();
 
-			if (codes != null && (code = codes.get(codeValue)) != null) {
-				return code.getName();
-			} else {
-				throw new RuntimeException("Unrecognized code configuration in app config, operator id: " + codeValue);
+			if (codes != null && (code = codes.get(keyValue)) != null) {
+				title = code.getName();
 			}
+			break;
 		default:
 			throw new RuntimeException("Unrecognized groupby field: " + field);
 		}
+		if ("Unknown".equals(title)) {
+			title += " [ " + keyValue + " ]";
+		}
+		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Item buildPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
+	private Pair<Integer, Item> buildPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
 		Item item = new Item();
-		item.setNumber(data.getAccessNumberSum());
-		String title = buildPieChartFieldTitlePair(command, data, field);
 
-		item.setTitle(title);
-		return item;
+		item.setNumber(data.getAccessNumberSum());
+		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
+
+		item.setTitle(pair.getValue());
+		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 }

@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.app;
 
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
@@ -21,10 +22,13 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_query2;
 
 	@FieldMeta("type")
-	private String m_type = "request";
+	private String m_type = AppDataService.REQUEST;
 
 	@FieldMeta("groupByField")
 	private AppDataGroupByField m_groupByField = AppDataGroupByField.CODE;
+
+	@FieldMeta("sort")
+	private String m_sort = AppDataService.SUCCESS;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -95,6 +99,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getType() {
 		return m_type;
+	}
+
+	public String getSort() {
+		return m_sort;
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	@Override
