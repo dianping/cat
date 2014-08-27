@@ -47,7 +47,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		} catch (Exception e) {
 			Cat.logError("build exception content error:" + alert.toString(), e);
 		}
-		return sw.toString();
+		return sw.toString() + "<br/><a href=\"http://web.cmdb.dp/app-alter/app\">修改项目信息请点击</a>";
 	}
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {

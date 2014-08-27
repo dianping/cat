@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.sender.spliter;
 
+import java.util.regex.Pattern;
+
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 
 public class WeixinSpliter implements Spliter {
@@ -8,7 +10,8 @@ public class WeixinSpliter implements Spliter {
 
 	@Override
 	public String process(String content) {
-		return content.replaceAll("<br/>", "\n");
+		String weixinContent = content.replaceAll("<br/>", "\n");
+		return Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(weixinContent).replaceAll("");
 	}
 
 	@Override

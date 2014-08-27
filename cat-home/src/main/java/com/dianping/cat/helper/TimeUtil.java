@@ -36,6 +36,16 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 	
+	public static Date getCurrentHour() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		return cal.getTime();
+	}
+	
 	public static Date getCurrentHour(int index) {
 		Calendar cal = Calendar.getInstance();
 
@@ -47,10 +57,9 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 	
-	public static Date getCurrentHour() {
+	public static Date getCurrentMinute() {
 		Calendar cal = Calendar.getInstance();
 
-		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
