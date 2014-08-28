@@ -152,13 +152,96 @@
 			</query>
 		</query-defs>
 	</entity>
+	<entity name="monthly-report-content" table="monthly_report_content" alias="mrc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="max-id" value-type="int" />
+	 <var name="capacity" value-type="double" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="max-id" />
+			<param name="capacity" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> >= ${max-id}
+				AND <FIELD name='content-length'/> >= ${capacity}
+				ORDER BY <FIELD name='report-id'/> asc
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="weekly-report-content" table="weekly_report_content" alias="wrc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="max-id" value-type="int" />
+	 <var name="capacity" value-type="double" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="max-id" />
+			<param name="capacity" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> >= ${max-id}
+				AND <FIELD name='content-length'/> >= ${capacity}
+				ORDER BY <FIELD name='report-id'/> asc
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="daily-report-content" table="daily_report_content" alias="drc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="max-id" value-type="int" />
+	 <var name="capacity" value-type="double" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="max-id" />
+			<param name="capacity" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> >= ${max-id}
+				AND <FIELD name='content-length'/> >= ${capacity}
+				ORDER BY <FIELD name='report-id'/> asc
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="overload-table" table="overload_table" alias="ot">
+    	<member name="creation-date" insert-expr="NOW()" />
+   		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
+   		<var name="type" value-type="int" />
+    	<readsets>
+			<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+		 </readsets>
+	     <query-defs>
+	     	<query name="find-max-id-by-type" type="SELECT" multiple="false">
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-type'/> = ${type}
+					]]></statement>
+			</query>
+	     </query-defs>
+    </entity>
 </entities>
-
-
-
-
-
-
-
-
-
