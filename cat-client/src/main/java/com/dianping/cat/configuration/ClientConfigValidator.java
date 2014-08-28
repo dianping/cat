@@ -23,9 +23,9 @@ public class ClientConfigValidator extends DefaultValidator {
 
 	@Override
 	public void visitConfig(ClientConfig config) {
-		if (!"client".equals(config.getMode())) {
-			throw new RuntimeException(String.format("Attribute(%s) is required: %s", "mode", config));
-		} else if (config.getServers().size() == 0) {
+		config.setMode("client");
+
+		if (config.getServers().size() == 0) {
 			config.setEnabled(false);
 			log("WARN", "CAT client was disabled due to no CAT servers configured!");
 		} else if (!config.isEnabled()) {
@@ -74,4 +74,5 @@ public class ClientConfigValidator extends DefaultValidator {
 			server.setEnabled(true);
 		}
 	}
+
 }
