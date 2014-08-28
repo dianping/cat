@@ -195,11 +195,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE * 5;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		long step = TimeUtil.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
-		if (queryType.equalsIgnoreCase("month")) {
+		if (queryType.equalsIgnoreCase("week") || queryType.equalsIgnoreCase("month")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 		}
@@ -239,8 +239,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			allDatas.add(lastDayGraph);
 			allDatas.add(lastWeekGraph);
 		} else if (queryType.equalsIgnoreCase("week")) {
-			Map<String, double[]> currentGraph = getGraphDatasFromHour(start, end, domain, type, name, ip);
-			Map<String, double[]> lastWeek = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			Map<String, double[]> currentGraph = getGraphDatasFromDaily(start, end, domain, type, name, ip);
+			Map<String, double[]> lastWeek = getGraphDatasFromDaily(new Date(start.getTime() - TimeUtil.ONE_WEEK),
 			      new Date(end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
 
 			allDatas.add(currentGraph);
@@ -283,11 +283,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String ip = model.getIpAddress();
 
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE * 5;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		long step = TimeUtil.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
-		if (queryType.equalsIgnoreCase("month")) {
+		if (queryType.equalsIgnoreCase("month") || queryType.equalsIgnoreCase("week")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 		}
