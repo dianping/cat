@@ -253,6 +253,7 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='report-type'/> = ${type} AND <FIELD name='report-id'/> > ${begin-id}
+					ORDER BY <FIELD name='report-id'/> ASC
 					]]></statement>
 			</query>
 	     </query-defs>

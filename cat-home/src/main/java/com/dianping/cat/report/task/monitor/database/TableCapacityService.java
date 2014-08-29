@@ -3,9 +3,12 @@ package com.dianping.cat.report.task.monitor.database;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -15,6 +18,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
@@ -25,11 +29,36 @@ public class TableCapacityService extends ContainerHolder implements Initializab
 
 	private Map<String, CapacityUpdater> m_updaters = new HashMap<String, CapacityUpdater>();
 
-	private List<OverloadReport> m_overloadReports = Collections.synchronizedList(new ArrayList<OverloadReport>());
+	private List<OverloadReport> m_overloadReports = new CopyOnWriteArrayList<OverloadReport>();
 
 	private static final double CAPACITY = 5;
 
 	private Logger m_logger;
+
+	private boolean compareOverloadReport(OverloadReport originReport, OverloadReport compareRepoort, Date startTime,
+	      Date endTime) {
+		Date originDate = originReport.getPeriod();
+
+		if (originDate.before(startTime) || originDate.after(endTime)) {
+			return false;
+		}
+
+		String name = compareRepoort.getName();
+		String domain = compareRepoort.getDomain();
+		String ip = compareRepoort.getIp();
+
+		if (StringUtils.isNotEmpty(name) && !name.equals(originReport.getName())) {
+			return false;
+		}
+		if (StringUtils.isNotEmpty(domain) && !domain.equals(originReport.getDomain())) {
+			return false;
+		}
+		if (StringUtils.isNotEmpty(ip) && !ip.equals(originReport.getIp())) {
+			return false;
+		}
+
+		return true;
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -57,6 +86,50 @@ public class TableCapacityService extends ContainerHolder implements Initializab
 				Cat.logError(e);
 			}
 		}
+	}
+
+	public List<OverloadReport> queryOverloadReports(OverloadReport compareRepoort, Date startTime, Date endTime) {
+		List<OverloadReport> reports = new ArrayList<OverloadReport>();
+
+		for (OverloadReport report : m_overloadReports) {
+			if (compareOverloadReport(report, compareRepoort, startTime, endTime)) {
+				reports.add(report);
+			}
+		}
+
+		Collections.sort(reports, new Comparator<OverloadReport>() {
+			@Override
+			public int compare(OverloadReport o1, OverloadReport o2) {
+				if (o1.getPeriod().after(o2.getPeriod())) {
+					return -1;
+				}
+
+				int result = o1.getName().compareTo(o2.getName());
+				if (result != 0) {
+					return result;
+				}
+
+				result = o1.getDomain().compareTo(o2.getDomain());
+				if (result != 0) {
+					return result;
+				}
+
+				result = o1.getIp().compareTo(o2.getIp());
+				if (result != 0) {
+					return result;
+				}
+
+				int o1ReportType = o1.getReportType();
+				int o2ReportType = o2.getReportType();
+				if (o1ReportType != o2ReportType) {
+					return o1ReportType > o2ReportType ? 1 : -1;
+				}
+
+				return o1.getType() > o2.getType() ? 1 : -1;
+			}
+		});
+
+		return reports;
 	}
 
 	public class CapacityUpdateTask implements Task {
