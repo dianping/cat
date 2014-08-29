@@ -10,6 +10,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.monitor.database.TableCapacityService;
@@ -56,9 +57,13 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			OverloadReport compareReport = generateReport(payload);
-			model.setReports(m_tableCapacityService.queryOverloadReports(compareReport, payload.getStartTime(),
-			      payload.getEndTime()));
+			try {
+				OverloadReport compareReport = generateReport(payload);
+				model.setReports(m_tableCapacityService.queryOverloadReports(compareReport, payload.getStartTime(),
+				      payload.getEndTime()));
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
 			break;
 		}
 

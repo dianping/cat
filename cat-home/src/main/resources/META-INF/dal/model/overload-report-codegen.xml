@@ -7,6 +7,7 @@
     <attribute name="period" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="type" value-type="int" />
     <attribute name="reportType" value-type="int" />
+    <attribute name="reportLength" value-type="double" />
   </entity>
 </model>
 

@@ -32,7 +32,7 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 
 	public static final String ID = "monthly_capacity_updater";
 
-	private OverloadReport generateOverloadReport(MonthlyReport report) {
+	private OverloadReport generateOverloadReport(MonthlyReport report, OverloadTable table) {
 		OverloadReport overloadReport = new OverloadReport();
 
 		overloadReport.setDomain(report.getDomain());
@@ -41,6 +41,7 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 		overloadReport.setPeriod(report.getPeriod());
 		overloadReport.setReportType(TYPE);
 		overloadReport.setType(report.getType());
+		overloadReport.setReportLength(table.getReportSize());
 
 		return overloadReport;
 	}
@@ -77,15 +78,15 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 
 	@Override
 	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		List<OverloadTable> overloadTables = m_overloadTableDao.findIdByTypeAndBeginId(TYPE, updateStartId,
-		      OverloadTableEntity.READSET_BIGGER_ID);
+		List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
+		      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
 
 		for (OverloadTable table : overloadTables) {
 			try {
 				int reportId = table.getReportId();
 				MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
 
-				overloadReports.add(generateOverloadReport(report));
+				overloadReports.add(generateOverloadReport(report, table));
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}

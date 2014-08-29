@@ -58,15 +58,16 @@
 		<div id="DatabaseReport">
 			<table	class="problem table table-striped table-bordered table-condensed table-hover">
 				<tr class="text-success">
-					<th width="10%">日期</th>
-					<th width="60%">报表类型</th>
-					<th width="10%">报表名称</th>
-					<th width="5%">项目</th>
-					<th width="5%">ip</th>
+					<th width="20%">日期</th>
+					<th width="10%">报表类型</th>
+					<th width="15%">报表名称</th>
+					<th width="20%">项目</th>
+					<th width="15%">ip</th>
 					<th width="10%">报表格式</th>
+					<th width="10%">报表长度</th>
 				</tr>
 				<c:forEach var="report" items="${model.reports}" varStatus="status">
-					<tr class="reportType${category}">
+					<tr class="reportType${report.reportType}">
 						<td>${report.period}</td>
 						<c:choose>
 						    <c:when test="${report.reportType eq 1}">
@@ -99,141 +100,117 @@
 						        <td></td>
 						    </c:otherwise>
 						</c:choose>
+						<td><fmt:formatNumber type="number" maxFractionDigits="3" minFractionDigits="1" value="${report.reportLength}" /></td>
 					</tr>
 				</c:forEach>
 			</table>
 		</div>
 		<script type="text/javascript">
-			$(document).ready(function(){
-				<c:if test="${payload.fullScreen}">
-					$('#fullScreen').addClass('btn-danger');
-					$('.navbar').hide();
-					$('.footer').hide();
-				</c:if>
-				
-				<c:if test="${payload.showNetwork == false}">
-					toggleButton("network", true);
-				</c:if>
-				<c:if test="${payload.showException == false}">
-					toggleButton("exception", true);
-				</c:if>
-				<c:if test="${payload.showSystem == false}">
-					toggleButton("system", true);
-				</c:if>
-				<c:if test="${payload.showBusiness == false}">
-					toggleButton("business", true);
-				</c:if>
-				<c:if test="${payload.showThirdParty == false}">
-					toggleButton("thirdParty", true);
-				</c:if>
-				<c:if test="${payload.showFrontEndException == false}">
-					toggleButton("frontEndException", true);
-				</c:if>
-				
-				$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-				$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-				
-				$("#fullScreen").click(clickFullScreen);
-				
-				$("#networkButton").click(function(){
-					toggleButton("network", false);
-				});
-				$("#businessButton").click(function(){
-					toggleButton("business", false);
-				});
-				$("#systemButton").click(function(){
-					toggleButton("system", false);
-				});
-				$("#exceptionButton").click(function(){
-					toggleButton("exception", false);
-				});
-				$("#frontEndExceptionButton").click(function(){
-					toggleButton("frontEndException", false);
-				});
-				$("#thirdPartyButton").click(function(){
-					toggleButton("thirdParty", false);
-				});
-				
-				var refresh = ${payload.refresh};
-				var frequency = ${payload.frequency};
-				if(refresh){
-					$('#refresh'+frequency).addClass('btn-danger');
-					setTimeout(refreshPage,frequency*1000);
-				};
-			});
-			
-			function clickFullScreen(){
-				var isFullScreen = $('#fullScreenStr').val() === 'true';
-				if(isFullScreen){
-					$('#fullScreen').removeClass('btn-danger');
-					$('.navbar').show();
-					$('.footer').show();
-				}else{
-					$('#fullScreen').addClass('btn-danger');
-					$('.navbar').hide();
-					$('.footer').hide();
-				}
-				$('#fullScreenStr').val(!isFullScreen);
-			}
-			function toggleButton(button, isInitialized){
-				var targetStatus = $("#"+button+"Status").val() === 'false';
-				if(isInitialized){
-					$("#"+button+"Button").button('toggle');
-					targetStatus = !targetStatus;
-				}
-				
-				if(targetStatus){
-					$("."+button).each(function(){
-						var counter = $(this).prevAll().filter(".noter").first().children().first();
-						
-						$(this).css("display","table-row");
-						var count = Number(counter.attr('rowspan'))+1;
-						counter.attr('rowspan', count);
-					});
-				}else{
-					$("."+button).each(function(){
-						var counter = $(this).prevAll().filter(".noter").first().children().first();
-						
-						$(this).css("display","none");
-						var count = Number(counter.attr('rowspan'))-1;
-						counter.attr('rowspan', count);
-					});
-				}
-				$("#"+button+"Status").val(String(targetStatus));
-			}
-			function getType(){
-				var networkStr=$('#networkStatus').val();
-				var businessStr=$('#businessStatus').val();
-				var systemStr=$('#systemStatus').val();
-				var exceptionStr=$('#exceptionStatus').val();
-				var frontEndExceptionStr=$('#frontEndExceptionStatus').val();
-				var thirdPartyStr=$('#thirdPartyStatus').val();
-				return "showNetwork="+networkStr+"&showBusiness="+businessStr+"&showSystem="+systemStr+"&showException="+exceptionStr+
-				"&showFrontEndException="+frontEndExceptionStr+"&showThirdParty="+thirdPartyStr;
-			}
-			function queryNew(){
-				var startTime=$("#startTime").val();
-				var endTime=$("#endTime").val();
-				var domain=$("#domain").val();
-				var name=$("#name").val();
-				var ip=$("#ip").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen;
-			}
-			function queryFrequency(frequency){
-				var domain=$("#domain").val();
-				var level=$("#level").val();
-				var metric=$("#metric").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency+"&"+getType();
-			}
-			function refreshPage(){
-				var domain=$("#domain").val();
-				var level=$("#level").val();
-				var metric=$("#metric").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency}+"&"+getType();
-			}
+		  $(document).ready(function(){
+	        <c:if test="${payload.fullScreen}">
+	          $('#fullScreen').addClass('btn-danger');
+	          $('.navbar').hide();
+	          $('.footer').hide();
+	        </c:if>
+	        
+	        <c:if test="${payload.showHourly == false}">
+	          toggleButton("hourly", true);
+	        </c:if>
+	        <c:if test="${payload.showDaily == false}">
+	          toggleButton("daily", true);
+	        </c:if>
+	        <c:if test="${payload.showWeekly == false}">
+	          toggleButton("weekly", true);
+	        </c:if>
+	        <c:if test="${payload.showMonthly == false}">
+	          toggleButton("monthly", true);
+	        </c:if>
+	        
+	        $('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+	        $('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+	        
+	        $("#fullScreen").click(clickFullScreen);
+	        
+	        $("#hourlyButton").click(function(){
+	          toggleButton("hourly", false);
+	        });
+	        $("#dailyButton").click(function(){
+	          toggleButton("daily", false);
+	        });
+	        $("#weeklyButton").click(function(){
+	          toggleButton("weekly", false);
+	        });
+	        $("#monthlyButton").click(function(){
+	          toggleButton("monthly", false);
+	        });
+	        
+	        var refresh = ${payload.refresh};
+	        var frequency = ${payload.frequency};
+	        if(refresh){
+	          $('#refresh'+frequency).addClass('btn-danger');
+	          setTimeout(refreshPage,frequency*1000);
+	        };
+	      });
+	      
+	      var buttonToInt = {'hourly':1, 'daily':2, 'weekly':3, 'monthly':4};
+	      
+	      function clickFullScreen(){
+	        var isFullScreen = $('#fullScreenStr').val() === 'true';
+	        if(isFullScreen){
+	          $('#fullScreen').removeClass('btn-danger');
+	          $('.navbar').show();
+	          $('.footer').show();
+	        }else{
+	          $('#fullScreen').addClass('btn-danger');
+	          $('.navbar').hide();
+	          $('.footer').hide();
+	        }
+	        $('#fullScreenStr').val(!isFullScreen);
+	      }
+	      function toggleButton(button, isInitialized){
+	        var targetStatus = $("#"+button+"Status").val() === 'false';
+	        if(isInitialized){
+	          $("#"+button+"Button").button('toggle');
+	          targetStatus = !targetStatus;
+	        }
+	        
+	        if(targetStatus){
+	          $(".reportType"+buttonToInt[button]).css("display","table-row");
+	        }else{
+	          $(".reportType"+buttonToInt[button]).css("display","none");
+	        }
+	        $("#"+button+"Status").val(String(targetStatus));
+	      }
+	      function getType(){
+	        var hourlyStr=$('#hourlyStatus').val();
+	        var dailyStr=$('#dailyStatus').val();
+	        var weeklyStr=$('#weeklyStatus').val();
+	        var monthlyStr=$('#monthlyStatus').val();
+	        return "showHourly="+hourlyStr+"&showDaily="+dailyStr+"&showWeekly="+weeklyStr+"&showMonthly="+monthlyStr;
+	      }
+	      function queryNew(){
+	        var startTime=$("#startTime").val();
+	        var endTime=$("#endTime").val();
+	        var domain=$("#domain").val();
+	        var name=$("#name").val();
+	        var ip=$("#ip").val();
+	        var isFullScreen=$('#fullScreenStr').val();
+	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
+	      }
+	      function queryFrequency(frequency){
+	        var domain=$("#domain").val();
+	        var name=$("#name").val();
+	        var ip=$("#ip").val();
+	        var isFullScreen=$('#fullScreenStr').val();
+	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency+"&"+getType();
+	      }
+	      function refreshPage(){
+	        var domain=$("#domain").val();
+	        var name=$("#name").val();
+	        var ip=$("#ip").val();
+	        var isFullScreen=$('#fullScreenStr').val();
+	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency}+"&"+getType();
+	      }
 		</script>
 	</jsp:body>
 </a:navbar>

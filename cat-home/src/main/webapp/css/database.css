@@ -1,24 +1,16 @@
-/* this css is for alertView.jsp */
-.network {
+/* this css is for database.jsp */
+.reportType1 {
 	color: #3a87ad;
 }
 
-.business {
+.reportType2 {
 	color: #b94a48;
 }
 
-.exception {
+.reportType3 {
 	color: #999;
 }
 
-.system {
+.reportType4 {
 	color: #c09853;
-}
-
-.thirdParty {
-	color: #3a985d;
-}
-
-.frontEndException {
-	color: #468847;
 }

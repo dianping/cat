@@ -32,7 +32,7 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 
 	public static final String ID = "daily_capacity_updater";
 
-	private OverloadReport generateOverloadReport(DailyReport report) {
+	private OverloadReport generateOverloadReport(DailyReport report, OverloadTable table) {
 		OverloadReport overloadReport = new OverloadReport();
 
 		overloadReport.setDomain(report.getDomain());
@@ -41,6 +41,7 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 		overloadReport.setPeriod(report.getPeriod());
 		overloadReport.setReportType(TYPE);
 		overloadReport.setType(report.getType());
+		overloadReport.setReportLength(table.getReportSize());
 
 		return overloadReport;
 	}
@@ -76,16 +77,16 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public void updateOverloadReport(int updateBStartId, List<OverloadReport> overloadReports) throws DalException {
-		List<OverloadTable> overloadTables = m_overloadTableDao.findIdByTypeAndBeginId(TYPE, updateBStartId,
-		      OverloadTableEntity.READSET_BIGGER_ID);
+	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
+		List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
+		      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
 
 		for (OverloadTable table : overloadTables) {
 			try {
 				int reportId = table.getReportId();
 				DailyReport report = m_dailyReportDao.findByPK(reportId, DailyReportEntity.READSET_FULL);
 
-				overloadReports.add(generateOverloadReport(report));
+				overloadReports.add(generateOverloadReport(report, table));
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
