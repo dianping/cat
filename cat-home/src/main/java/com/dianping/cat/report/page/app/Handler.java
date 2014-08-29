@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -56,6 +56,7 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		AppDataGroupByField field = payload.getGroupByField();
+		String sortBy = payload.getSort();
 
 		switch (action) {
 		case VIEW:
@@ -64,15 +65,19 @@ public class Handler implements PageHandler<Context> {
 			String type = payload.getType();
 			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
 			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
+			Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
 
 			model.setLineChart(lineChart);
 			model.setAppDataSpreadInfos(appDataSpreadInfos);
 			break;
 		case PIECHART:
-			Pair<PieChart, Map<String, Double>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(), field);
-
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			      field);
+			List<PieChartDetailInfo> infos = pair.getValue();
+			Collections.sort(infos, new Sorter(sortBy).buildPieChartInfoComparator());
+			
 			model.setPieChart(pair.getKey());
-			model.setPercents(pair.getValue());
+			model.setPieChartDetailInfos(infos);
 			break;
 		}
 

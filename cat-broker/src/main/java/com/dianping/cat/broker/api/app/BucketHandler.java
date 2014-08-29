@@ -145,9 +145,11 @@ public class BucketHandler implements Task {
 				appData.setCommand(Integer.parseInt(items[6]));
 				appData.setCode(Integer.parseInt(items[7]));
 				appData.setPlatform(Integer.parseInt(items[8]));
-				appData.setRequestByte(Integer.parseInt(items[9]));
-				appData.setResponseByte(Integer.parseInt(items[10]));
-				appData.setResponseTime(Integer.parseInt(items[11]));
+				appData.setCount(Integer.parseInt(items[9]));
+				appData.setResponseTime(Integer.parseInt(items[10]));
+				appData.setRequestByte(Integer.parseInt(items[11]));
+				appData.setResponseByte(Integer.parseInt(items[12]));
+				
 
 				enqueue(appData);
 			}
@@ -243,9 +245,10 @@ public class BucketHandler implements Task {
 						sb.append(appData.getCommand()).append(tab);
 						sb.append(appData.getCode()).append(tab);
 						sb.append(appData.getPlatform()).append(tab);
+						sb.append(appData.getCount()).append(tab);
+						sb.append(appData.getResponseTime()).append(tab);
 						sb.append(appData.getRequestByte()).append(tab);
-						sb.append(appData.getResponseByte()).append(tab);
-						sb.append(appData.getResponseTime()).append(enter);
+						sb.append(appData.getResponseByte()).append(enter);
 
 						writer.append(sb.toString());
 					}

@@ -77,17 +77,19 @@
 		<h5 class="text-center">请求量分布</h5>
 		<div id="piechart"></div>
 		<br/>
-		<table class="table table-striped table-bordered table-condensed">
-	<tr class="text-success">
+<table id="web_content" class="table table-striped table-bordered table-condensed">
+	<thead><tr class="text-success">
 		<th>类别</th>
 		<th>请求总数</th>
 		<th>百分比</th>
-	</tr>
-	<c:forEach var="item" items="${model.pieChart.items}" varStatus="status">
+	</tr></thead>
+	<tbody>
+	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
 		<tr>
 		<td>${item.title}</td>
-		<td>${w:format(item.number,'#,###,###,###,##0')}</td>
-		<td>${w:format(model.percents[item.title],'#0.0%')}</td>
+		<td></a>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.successRatio,'#0.0%')}</td>
 		</tr>
 	</c:forEach>
+	</tbody>
 </table>
