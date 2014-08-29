@@ -51,7 +51,7 @@
 			  <input type='hidden' id='hourlyStatus' value='${payload.showHourly}'/>
 			  <input type='hidden' id='dailyStatus' value='${payload.showDaily}'/>
 			  <input type='hidden' id='weeklyStatus' value='${payload.showWeekly}'/>
-			  <input type='hidden' id='monthlyStatus' value='${payload.showMonthly}'/>
+			  <input type='hidden' id='monthlyStatus' value='${payload.showMonthly}' />
 			</div>
 			<br><br>
 		</div>
