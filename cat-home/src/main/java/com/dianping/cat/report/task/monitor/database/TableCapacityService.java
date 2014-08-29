@@ -100,32 +100,14 @@ public class TableCapacityService extends ContainerHolder implements Initializab
 		Collections.sort(reports, new Comparator<OverloadReport>() {
 			@Override
 			public int compare(OverloadReport o1, OverloadReport o2) {
-				if (o1.getPeriod().after(o2.getPeriod())) {
-					return -1;
-				}
+				long o1Mills = o1.getPeriod().getTime();
+				long o2Mills = o2.getPeriod().getTime();
 
-				int result = o1.getName().compareTo(o2.getName());
-				if (result != 0) {
-					return result;
+				if (o1Mills == o2Mills) {
+					return 0;
+				} else {
+					return o1Mills > o2Mills ? -1 : 1;
 				}
-
-				result = o1.getDomain().compareTo(o2.getDomain());
-				if (result != 0) {
-					return result;
-				}
-
-				result = o1.getIp().compareTo(o2.getIp());
-				if (result != 0) {
-					return result;
-				}
-
-				int o1ReportType = o1.getReportType();
-				int o2ReportType = o2.getReportType();
-				if (o1ReportType != o2ReportType) {
-					return o1ReportType > o2ReportType ? 1 : -1;
-				}
-
-				return o1.getType() > o2.getType() ? 1 : -1;
 			}
 		});
 

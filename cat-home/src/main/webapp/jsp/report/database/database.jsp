@@ -29,7 +29,7 @@
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
-			类型(Transaction等)
+			类型
 			<input type="text" name="name" id="name" value="${payload.name}" style="height:auto" class="input-small">
 			项目
 			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
@@ -100,7 +100,7 @@
 						        <td></td>
 						    </c:otherwise>
 						</c:choose>
-						<td><fmt:formatNumber type="number" maxFractionDigits="3" minFractionDigits="1" value="${report.reportLength}" /></td>
+						<td><fmt:formatNumber type="number" maxFractionDigits="1" minFractionDigits="1" value="${report.reportLength}" /></td>
 					</tr>
 				</c:forEach>
 			</table>
