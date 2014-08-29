@@ -565,6 +565,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -577,6 +580,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -591,6 +597,9 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -603,6 +612,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 				</requirement>
 			</requirements>
 		</component>

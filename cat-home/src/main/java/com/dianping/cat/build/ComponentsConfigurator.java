@@ -25,7 +25,11 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
+import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
@@ -375,16 +379,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
 		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, HourlyReportContentDao.class));
+		      OverloadTableDao.class, HourlyReportContentDao.class, HourlyReportDao.class));
 
 		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadTableDao.class,
-		      DailyReportContentDao.class));
+		      DailyReportContentDao.class, DailyReportDao.class));
 
 		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(
-		      OverloadTableDao.class, WeeklyReportContentDao.class));
+		      OverloadTableDao.class, WeeklyReportContentDao.class, WeeklyReportDao.class));
 
 		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, MonthlyReportContentDao.class));
+		      OverloadTableDao.class, MonthlyReportContentDao.class, MonthlyReportDao.class));
 
 		all.add(C(TableCapacityService.class));
 

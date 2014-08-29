@@ -169,7 +169,7 @@
 			<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> >= ${max-id}
+				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
 				]]></statement>
@@ -193,7 +193,7 @@
 			<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> >= ${max-id}
+				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
 				]]></statement>
@@ -217,7 +217,7 @@
 			<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> >= ${max-id}
+				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
 				]]></statement>
@@ -228,9 +228,13 @@
     	<member name="creation-date" insert-expr="NOW()" />
    		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
    		<var name="type" value-type="int" />
+   		<var name="begin-id" value-type="int" />
     	<readsets>
 			<readset name="maxid">
 				<member name="max-id" />
+			</readset>
+			<readset name="bigger-id">
+				<member name="report-id" />
 			</readset>
 		 </readsets>
 	     <query-defs>
@@ -240,6 +244,15 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='report-type'/> = ${type}
+					]]></statement>
+			</query>
+			<query name="find-id-by-type-and-begin-id" type="SELECT" multiple="true">
+				<param name="type" />
+				<param name="begin-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-type'/> = ${type} AND <FIELD name='report-id'/> > ${begin-id}
 					]]></statement>
 			</query>
 	     </query-defs>

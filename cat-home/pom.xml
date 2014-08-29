@@ -169,6 +169,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/thirdParty-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/overload-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

@@ -255,7 +255,7 @@
 			<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> >= ${max-id}
+				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
 				]]></statement>
