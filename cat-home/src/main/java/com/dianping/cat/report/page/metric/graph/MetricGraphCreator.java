@@ -135,10 +135,11 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+
 		return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
-	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+	public Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
@@ -345,6 +346,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 				putKey(datas, values, sumKey);
 			}
 		}
-		return values;
+		return datas.isEmpty() ? values : datas;
 	}
 }

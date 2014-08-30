@@ -86,7 +86,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	private Map<String, double[]> prepareAllData(String group, Map<String, String> pars, Set<String> ipAddrs,
+	public Map<String, double[]> prepareAllData(String group, Map<String, String> pars, Set<String> ipAddrs,
 	      Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);

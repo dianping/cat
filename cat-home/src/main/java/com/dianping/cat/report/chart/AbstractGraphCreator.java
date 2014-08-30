@@ -180,7 +180,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		return hasBaseline ? result : null;
 	}
 
-	protected Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {
+	public Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {
 		if (isCurrentMode(endDate)) {
 			// remove the minute of future
 			Map<String, double[]> newCurrentValues = new LinkedHashMap<String, double[]>();

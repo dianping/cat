@@ -109,10 +109,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private void processEventGrpah(EventName name, Event t) {
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
-		int tk = min - min % 5;
 
 		synchronized (name) {
-			Range range = name.findOrCreateRange(tk);
+			Range range = name.findOrCreateRange(min);
 
 			range.incCount();
 			if (!t.isSuccess()) {
