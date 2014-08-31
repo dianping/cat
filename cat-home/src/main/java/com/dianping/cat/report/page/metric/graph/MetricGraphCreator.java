@@ -86,6 +86,12 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			lineChart.setSize(value.length);
 			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
 
+			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
+			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
+
+			addLastMinuteData(current, all, m_lastMinute, endDate);
+			lineChart.add(Chinese.CURRENT_VALUE, current);
+
 			double[] baselines = queryBaseline(key, startDate, endDate);
 
 			if (baselines != null) {
@@ -109,12 +115,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 					lineChart.add(Chinese.BASELINE_VALUE, currentBaselines);
 				}
 			}
-
-			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
-			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
-
-			addLastMinuteData(current, all, m_lastMinute, endDate);
-			lineChart.add(Chinese.CURRENT_VALUE, current);
 			charts.put(key, lineChart);
 		}
 		return charts;
