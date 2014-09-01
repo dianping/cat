@@ -117,8 +117,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
 						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 60);
 						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 60);

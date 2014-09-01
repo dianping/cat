@@ -36,7 +36,8 @@ public class EventGraphDataTest {
 		Map<String, double[]> graphDatas = handler.buildGraphDatasForHour(start, end, "URL", "", graphs);
 		double[] total_count = graphDatas.get("total_count");
 		double[] failure_count = graphDatas.get("failure_count");
-		assertArray(30, total_count);
+		
+		assertArray(6, total_count);
 		assertArray(0, failure_count);
 	}
 
@@ -57,7 +58,7 @@ public class EventGraphDataTest {
 		Map<String, double[]> graphDatas = handler.buildGraphDatasForHour(start, end, "URL", "ClientInfo", graphs);
 		double[] total_count = graphDatas.get("total_count");
 		double[] failure_count = graphDatas.get("failure_count");
-		assertArray(15, total_count);
+		assertArray(3, total_count);
 		assertArray(0, failure_count);
 	}
 
