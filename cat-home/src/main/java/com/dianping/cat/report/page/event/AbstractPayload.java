@@ -15,7 +15,11 @@ abstract class AbstractPayload extends AbstractGraphPayload {
 
 	@Override
 	public String getAxisXLabel(int index) {
-		return String.valueOf(index);
+		if (index % 5 == 0 && index < 61) {
+			return String.valueOf(index);
+		} else {
+			return "";
+		}
 	}
 
 	@Override
