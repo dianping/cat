@@ -63,4 +63,7 @@
    <model package="com.dianping.cat.home.router" name="router">
       <sample-model>src/test/resources/config/router-config.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.OverloadReport" name="overload-report">
+      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/overload-report.xml</sample-model>
+   </model>
 </wizard>

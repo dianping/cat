@@ -18,6 +18,7 @@
          <table name="weekly_report_content"/>
          <table name="alert"/>
          <table name="alert_summary"/>
+         <table name="overload_table"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="mailRecord"/>
