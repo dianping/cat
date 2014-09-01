@@ -19,119 +19,96 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 
 	public static final String ID = Constants.DATABASE_CAPACITY;
 
-	@Inject
-	private TableCapacityService m_tableCapacityService;
+	@Inject(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
+	private CapacityUpdater m_hourlyUpdater;
+
+	@Inject(type = CapacityUpdater.class, value = DailyCapacityUpdater.ID)
+	private CapacityUpdater m_dailyUpdater;
+
+	@Inject(type = CapacityUpdater.class, value = WeeklyCapacityUpdater.ID)
+	private CapacityUpdater m_weeklyUpdater;
+
+	@Inject(type = CapacityUpdater.class, value = MonthlyCapacityUpdater.ID)
+	private CapacityUpdater m_monthlyUpdater;
 
 	private Logger m_logger;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		String updaterName = DailyCapacityUpdater.ID;
-		CapacityUpdater updater = m_tableCapacityService.getUpdater(updaterName);
+		int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+		String dayStr = String.valueOf(day);
 
-		if (updater != null) {
-			int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-			String dayStr = String.valueOf(day);
+		if (day < 10) {
+			dayStr = "0" + dayStr;
+		}
 
-			if (day < 10) {
-				dayStr = "0" + dayStr;
-			}
+		try {
+			m_dailyUpdater.updateDBCapacity(CAPACITY);
 
-			try {
-				int maxId = updater.updateDBCapacity(CAPACITY);
-				updater.updateOverloadReport(maxId, m_tableCapacityService.getOverloadReports());
-
-				Cat.logEvent("DailyCapacityUpdater", dayStr, Event.SUCCESS, null);
-				m_logger.info("DailyCapacityUpdater success " + dayStr);
-				return true;
-			} catch (DalException e) {
-				Cat.logError(e);
-				return false;
-			}
-		} else {
+			Cat.logEvent("DailyCapacityUpdater", dayStr, Event.SUCCESS, null);
+			m_logger.info("DailyCapacityUpdater success " + dayStr);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		String updaterName = HourlyCapacityUpdater.ID;
-		CapacityUpdater updater = m_tableCapacityService.getUpdater(updaterName);
+		int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+		String hourStr = String.valueOf(hour);
 
-		if (updater != null) {
-			int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-			String hourStr = String.valueOf(hour);
+		if (hour < 10) {
+			hourStr = "0" + hourStr;
+		}
 
-			if (hour < 10) {
-				hourStr = "0" + hourStr;
-			}
+		try {
+			m_hourlyUpdater.updateDBCapacity(CAPACITY);
 
-			try {
-				int maxId = updater.updateDBCapacity(CAPACITY);
-				updater.updateOverloadReport(maxId, m_tableCapacityService.getOverloadReports());
-
-				Cat.logEvent("HourlyCapacityUpdater", hourStr, Event.SUCCESS, null);
-				m_logger.info("HourlyCapacityUpdater success " + hourStr);
-				return true;
-			} catch (DalException e) {
-				Cat.logError(e);
-				return false;
-			}
-		} else {
+			Cat.logEvent("HourlyCapacityUpdater", hourStr, Event.SUCCESS, null);
+			m_logger.info("HourlyCapacityUpdater success " + hourStr);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		String updaterName = MonthlyCapacityUpdater.ID;
-		CapacityUpdater updater = m_tableCapacityService.getUpdater(updaterName);
+		int month = Calendar.getInstance().get(Calendar.MONTH);
+		String monthStr = String.valueOf(month);
 
-		if (updater != null) {
-			int month = Calendar.getInstance().get(Calendar.MONTH);
-			String monthStr = String.valueOf(month);
+		if (month < 10) {
+			monthStr = "0" + monthStr;
+		}
 
-			if (month < 10) {
-				monthStr = "0" + monthStr;
-			}
+		try {
+			m_monthlyUpdater.updateDBCapacity(CAPACITY);
 
-			try {
-				int maxId = updater.updateDBCapacity(CAPACITY);
-				updater.updateOverloadReport(maxId, m_tableCapacityService.getOverloadReports());
-
-				Cat.logEvent("MonthlyCapacityUpdater", monthStr, Event.SUCCESS, null);
-				m_logger.info("MonthlyCapacityUpdater success " + monthStr);
-				return true;
-			} catch (DalException e) {
-				Cat.logError(e);
-				return false;
-			}
-		} else {
+			Cat.logEvent("MonthlyCapacityUpdater", monthStr, Event.SUCCESS, null);
+			m_logger.info("MonthlyCapacityUpdater success " + monthStr);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		String updaterName = WeeklyCapacityUpdater.ID;
-		CapacityUpdater updater = m_tableCapacityService.getUpdater(updaterName);
+		int week = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
+		String weekStr = String.valueOf(week);
 
-		if (updater != null) {
-			int week = Calendar.getInstance().get(Calendar.WEEK_OF_MONTH);
-			String weekStr = String.valueOf(week);
+		try {
+			m_weeklyUpdater.updateDBCapacity(CAPACITY);
 
-			try {
-				int maxId = updater.updateDBCapacity(CAPACITY);
-				updater.updateOverloadReport(maxId, m_tableCapacityService.getOverloadReports());
-
-				Cat.logEvent("WeeklyCapacityUpdater", weekStr, Event.SUCCESS, null);
-				m_logger.info("WeeklyCapacityUpdater success " + weekStr);
-				return true;
-			} catch (DalException e) {
-				Cat.logError(e);
-				return false;
-			}
-		} else {
+			Cat.logEvent("WeeklyCapacityUpdater", weekStr, Event.SUCCESS, null);
+			m_logger.info("WeeklyCapacityUpdater success " + weekStr);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}

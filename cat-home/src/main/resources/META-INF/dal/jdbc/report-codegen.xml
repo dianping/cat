@@ -286,6 +286,7 @@
     <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" />
     <member name="report-type" field="report_type" value-type="int" length="3" nullable="false" />
     <member name="report-size" field="report_size" value-type="double" length="5" decimal="3" nullable="false" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />

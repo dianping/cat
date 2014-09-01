@@ -19,29 +19,15 @@ import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 public class WeeklyCapacityUpdater implements CapacityUpdater {
 
 	@Inject
-	private WeeklyReportContentDao m_weeklyReportContentDao;
+	private WeeklyReportDao m_weeklyReportDao;
 
 	@Inject
-	private WeeklyReportDao m_weeklyReportDao;
+	private WeeklyReportContentDao m_weeklyReportContentDao;
 
 	@Inject
 	private OverloadDao m_overloadDao;
 
 	public static final String ID = "weekly_capacity_updater";
-
-	private OverloadReport generateOverloadReport(WeeklyReport report, Overload overload) {
-		OverloadReport overloadReport = new OverloadReport();
-
-		overloadReport.setDomain(report.getDomain());
-		overloadReport.setIp(report.getIp());
-		overloadReport.setName(report.getName());
-		overloadReport.setPeriod(report.getPeriod());
-		overloadReport.setReportType(CapacityUpdater.WEEKLY_TYPE);
-		overloadReport.setType(report.getType());
-		overloadReport.setReportLength(overload.getReportSize());
-
-		return overloadReport;
-	}
 
 	@Override
 	public String getId() {
@@ -49,7 +35,7 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public int updateDBCapacity(double capacity) throws DalException {
+	public void updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.WEEKLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
 		int loopStartId = maxId;
 		boolean hasMore = true;
@@ -62,13 +48,16 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 				try {
 					int reportId = content.getReportId();
 					double contentLength = content.getContentLength();
-					Overload overloadTable = m_overloadDao.createLocal();
+					Overload overload = m_overloadDao.createLocal();
 
-					overloadTable.setReportId(reportId);
-					overloadTable.setReportSize(contentLength);
-					overloadTable.setReportType(CapacityUpdater.WEEKLY_TYPE);
+					overload.setReportId(reportId);
+					overload.setReportSize(contentLength);
+					overload.setReportType(CapacityUpdater.WEEKLY_TYPE);
 
-					m_overloadDao.insert(overloadTable);
+					WeeklyReport weeklyReport = m_weeklyReportDao.findByPK(reportId, WeeklyReportEntity.READSET_FULL);
+					overload.setPeriod(weeklyReport.getPeriod());
+
+					m_overloadDao.insert(overload);
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
@@ -79,32 +68,6 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 				hasMore = false;
 			} else {
 				loopStartId = weeklyReports.get(size - 1).getReportId();
-			}
-		}
-
-		return maxId;
-	}
-
-	@Override
-	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		boolean hasMore = true;
-
-		while (hasMore) {
-			List<Overload> overloads = m_overloadDao.findIdAndSizeByTypeAndBeginId(CapacityUpdater.WEEKLY_TYPE,
-			      updateStartId, OverloadEntity.READSET_BIGGER_ID_SIZE);
-
-			for (Overload overload : overloads) {
-				try {
-					int reportId = overload.getReportId();
-					WeeklyReport report = m_weeklyReportDao.findByPK(reportId, WeeklyReportEntity.READSET_FULL);
-
-					overloadReports.add(generateOverloadReport(report, overload));
-				} catch (Exception ex) {
-					Cat.logError(ex);
-				}
-			}
-			if (overloads.size() < 1000) {
-				hasMore = false;
 			}
 		}
 	}

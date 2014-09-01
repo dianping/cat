@@ -29,27 +29,13 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 
 	public static final String ID = "hourly_capacity_updater";
 
-	private OverloadReport generateOverloadReport(HourlyReport report, Overload overload) {
-		OverloadReport overloadReport = new OverloadReport();
-
-		overloadReport.setDomain(report.getDomain());
-		overloadReport.setIp(report.getIp());
-		overloadReport.setName(report.getName());
-		overloadReport.setPeriod(report.getPeriod());
-		overloadReport.setReportType(CapacityUpdater.HOURLY_TYPE);
-		overloadReport.setType(report.getType());
-		overloadReport.setReportLength(overload.getReportSize());
-
-		return overloadReport;
-	}
-
 	@Override
 	public String getId() {
 		return ID;
 	}
 
 	@Override
-	public int updateDBCapacity(double capacity) throws DalException {
+	public void updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.HOURLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
 		int loopStartId = maxId;
 		boolean hasMore = true;
@@ -68,6 +54,9 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 					overload.setReportSize(contentLength);
 					overload.setReportType(CapacityUpdater.HOURLY_TYPE);
 
+					HourlyReport hourlyReport = m_hourlyReportDao.findByPK(reportId, HourlyReportEntity.READSET_FULL);
+					overload.setPeriod(hourlyReport.getPeriod());
+
 					m_overloadDao.insert(overload);
 				} catch (Exception ex) {
 					Cat.logError(ex);
@@ -79,32 +68,6 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 				hasMore = false;
 			} else {
 				loopStartId = reports.get(size - 1).getReportId();
-			}
-		}
-
-		return maxId;
-	}
-
-	@Override
-	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		boolean hasMore = true;
-
-		while (hasMore) {
-			List<Overload> overloads = m_overloadDao.findIdAndSizeByTypeAndBeginId(CapacityUpdater.HOURLY_TYPE,
-			      updateStartId, OverloadEntity.READSET_BIGGER_ID_SIZE);
-
-			for (Overload overload : overloads) {
-				try {
-					int reportId = overload.getReportId();
-					HourlyReport report = m_hourlyReportDao.findByPK(reportId, HourlyReportEntity.READSET_FULL);
-
-					overloadReports.add(generateOverloadReport(report, overload));
-				} catch (Exception ex) {
-					Cat.logError(ex);
-				}
-			}
-			if (overloads.size() < 1000) {
-				hasMore = false;
 			}
 		}
 	}

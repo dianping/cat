@@ -392,9 +392,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(OverloadDao.class,
 		      MonthlyReportContentDao.class, MonthlyReportDao.class));
 
-		all.add(C(TableCapacityService.class));
+		all.add(C(TableCapacityService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
+		      MonthlyReportDao.class, OverloadDao.class));
 
-		all.add(C(CapacityUpdateTask.class).req(TableCapacityService.class));
+		all.add(C(CapacityUpdateTask.class).req(CapacityUpdater.class, HourlyCapacityUpdater.ID)
+		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID).req(CapacityUpdater.class, WeeklyCapacityUpdater.ID)
+		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID));
 
 		all.add(C(NetGraphBuilder.class));
 

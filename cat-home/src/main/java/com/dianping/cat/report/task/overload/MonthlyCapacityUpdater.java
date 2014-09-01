@@ -19,29 +19,15 @@ import com.dianping.cat.home.dal.report.OverloadEntity;
 public class MonthlyCapacityUpdater implements CapacityUpdater {
 
 	@Inject
-	private MonthlyReportContentDao m_monthlyReportContentDao;
+	private MonthlyReportDao m_monthlyReportDao;
 
 	@Inject
-	private MonthlyReportDao m_monthlyReportDao;
+	private MonthlyReportContentDao m_monthlyReportContentDao;
 
 	@Inject
 	private OverloadDao m_overloadDao;
 
 	public static final String ID = "monthly_capacity_updater";
-
-	private OverloadReport generateOverloadReport(MonthlyReport report, Overload overload) {
-		OverloadReport overloadReport = new OverloadReport();
-
-		overloadReport.setDomain(report.getDomain());
-		overloadReport.setIp(report.getIp());
-		overloadReport.setName(report.getName());
-		overloadReport.setPeriod(report.getPeriod());
-		overloadReport.setReportType(CapacityUpdater.MONTHLY_TYPE);
-		overloadReport.setType(report.getType());
-		overloadReport.setReportLength(overload.getReportSize());
-
-		return overloadReport;
-	}
 
 	@Override
 	public String getId() {
@@ -49,7 +35,7 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public int updateDBCapacity(double capacity) throws DalException {
+	public void updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.MONTHLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
 		int loopStartId = maxId;
 		boolean hasMore = true;
@@ -68,6 +54,9 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 					overload.setReportSize(contentLength);
 					overload.setReportType(CapacityUpdater.MONTHLY_TYPE);
 
+					MonthlyReport monthlyReport = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
+					overload.setPeriod(monthlyReport.getPeriod());
+
 					m_overloadDao.insert(overload);
 				} catch (Exception ex) {
 					Cat.logError(ex);
@@ -81,31 +70,6 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 				loopStartId = monthlyReports.get(size - 1).getReportId();
 			}
 		}
-
-		return maxId;
 	}
 
-	@Override
-	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		boolean hasMore = true;
-
-		while (hasMore) {
-			List<Overload> overloads = m_overloadDao.findIdAndSizeByTypeAndBeginId(CapacityUpdater.MONTHLY_TYPE,
-			      updateStartId, OverloadEntity.READSET_BIGGER_ID_SIZE);
-
-			for (Overload overload : overloads) {
-				try {
-					int reportId = overload.getReportId();
-					MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
-
-					overloadReports.add(generateOverloadReport(report, overload));
-				} catch (Exception ex) {
-					Cat.logError(ex);
-				}
-			}
-			if (overloads.size() < 1000) {
-				hasMore = false;
-			}
-		}
-	}
 }

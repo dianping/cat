@@ -373,3 +373,15 @@ CREATE TABLE `app_data_command_1` (
   KEY IX_period_platform_minute (period,platform,minute_order),
   KEY IX_period_code_minute (period,code,minute_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
+
+
+CREATE TABLE `overload` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `report_id` int(11) NOT NULL COMMENT '报告id',
+  `report_type` tinyint(4) NOT NULL COMMENT '报告类型 1:hourly 2:daily 3:weekly 4:monthly',
+  `report_size` double NOT NULL COMMENT '报告大小 单位MB',
+  `period` datetime NOT NULL COMMENT '报表时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `reported` (`report_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='过大容量表';

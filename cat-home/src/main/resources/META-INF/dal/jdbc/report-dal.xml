@@ -228,17 +228,23 @@
      </query-defs>
     </entity>
     <entity name="overload" table="overload" alias="ot">
+   		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="type" value-type="int" />
     	<member name="creation-date" insert-expr="NOW()" />
    		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
-   		<var name="type" value-type="int" />
-   		<var name="begin-id" value-type="int" />
+   		<member name="count" value-type="int" all="false" select-expr="count(*)" length="19" nullable="false" />
     	<readsets>
 			<readset name="maxid">
 				<member name="max-id" />
 			</readset>
-			<readset name="bigger-id-size">
+			<readset name="count-num">
+				<member name="count" />
+			</readset>
+			<readset name="id-size-type">
 				<member name="report-id" />
 				<member name="report-size" />
+				<member name="report-type" />
 			</readset>
 		 </readsets>
 	     <query-defs>
@@ -250,14 +256,21 @@
 					WHERE <FIELD name='report-type'/> = ${type}
 					]]></statement>
 			</query>
-			<query name="find-id-and-size-by-type-and-begin-id" type="SELECT" multiple="true">
-				<param name="type" />
-				<param name="begin-id" />
+			<query name="find-count" type="SELECT" multiple="false">
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='report-type'/> = ${type} AND <FIELD name='report-id'/> > ${begin-id}
-					ORDER BY <FIELD name='report-id'/> ASC LIMIT 1000
+					]]></statement>
+			</query>
+			<query name="find-id-and-size-by-duration" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-time}
+					AND <FIELD name='period'/> <= ${end-time} 
+					ORDER BY <FIELD name='period'/> DESC, <FIELD name='report-type'/> ASC
 					]]></statement>
 			</query>
 	     </query-defs>
