@@ -31,13 +31,13 @@ public class FailureModelGenerator {
 
 	private void addDistributeInfo(Map<Object, Object> resultMap, ProblemReport report) {
 		PieGraphChartVisitor pieChart = new PieGraphChartVisitor("failure", null);
-		Map<Object, Object> distributeMap = new HashMap<Object, Object>();
+		Map<Object, Object> distributes = new HashMap<Object, Object>();
 
 		pieChart.visitProblemReport(report);
 		for (Item item : pieChart.getPieChart().getItems()) {
-			distributeMap.put(item.getTitle(), item.getNumber());
+			distributes.put(item.getTitle(), item.getNumber());
 		}
-		resultMap.put("distributeMap", distributeMap);
+		resultMap.put("distributeMap", distributes);
 	}
 
 	private void addFailureInfo(Map<Object, Object> resultMap, ProblemReport report) {
