@@ -227,7 +227,7 @@
 		</query>
      </query-defs>
     </entity>
-    <entity name="overload-table" table="overload_table" alias="ot">
+    <entity name="overload" table="overload" alias="ot">
     	<member name="creation-date" insert-expr="NOW()" />
    		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
    		<var name="type" value-type="int" />
