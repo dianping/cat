@@ -35,7 +35,7 @@ import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
-import com.dianping.cat.home.dal.report.OverloadTableDao;
+import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -380,17 +380,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
-		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, HourlyReportContentDao.class, HourlyReportDao.class));
+		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(OverloadDao.class,
+		      HourlyReportContentDao.class, HourlyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadTableDao.class,
+		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadDao.class,
 		      DailyReportContentDao.class, DailyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(
-		      OverloadTableDao.class, WeeklyReportContentDao.class, WeeklyReportDao.class));
+		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(OverloadDao.class,
+		      WeeklyReportContentDao.class, WeeklyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, MonthlyReportContentDao.class, MonthlyReportDao.class));
+		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(OverloadDao.class,
+		      MonthlyReportContentDao.class, MonthlyReportDao.class));
 
 		all.add(C(TableCapacityService.class));
 
