@@ -53,7 +53,6 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 
 	@Override
 	public int updateDBCapacity(double capacity) throws DalException {
-		System.out.println("beginnnnnnn");
 		int maxId = m_overloadTableDao.findMaxIdByType(TYPE, OverloadTableEntity.READSET_MAXID).getMaxId();
 		int loopStartId = maxId;
 		boolean hasMore = true;
