@@ -172,6 +172,7 @@
 				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
+				LIMIT 1000
 				]]></statement>
 		</query>
      </query-defs>
@@ -196,6 +197,7 @@
 				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
+				LIMIT 1000
 				]]></statement>
 		</query>
      </query-defs>
@@ -220,6 +222,7 @@
 				WHERE <FIELD name='report-id'/> > ${max-id}
 				AND <FIELD name='content-length'/> >= ${capacity}
 				ORDER BY <FIELD name='report-id'/> asc
+				LIMIT 1000
 				]]></statement>
 		</query>
      </query-defs>
@@ -254,7 +257,7 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='report-type'/> = ${type} AND <FIELD name='report-id'/> > ${begin-id}
-					ORDER BY <FIELD name='report-id'/> ASC
+					ORDER BY <FIELD name='report-id'/> ASC LIMIT 1000
 					]]></statement>
 			</query>
 	     </query-defs>

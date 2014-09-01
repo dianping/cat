@@ -117,6 +117,7 @@ import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
+import com.dianping.cat.report.task.database.CapacityUpdateTask;
 import com.dianping.cat.report.task.database.CapacityUpdater;
 import com.dianping.cat.report.task.database.DailyCapacityUpdater;
 import com.dianping.cat.report.task.database.HourlyCapacityUpdater;
@@ -391,6 +392,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      OverloadTableDao.class, MonthlyReportContentDao.class, MonthlyReportDao.class));
 
 		all.add(C(TableCapacityService.class));
+
+		all.add(C(CapacityUpdateTask.class).req(TableCapacityService.class));
 
 		all.add(C(NetGraphBuilder.class));
 

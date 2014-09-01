@@ -54,22 +54,34 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 	@Override
 	public int updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadTableDao.findMaxIdByType(TYPE, OverloadTableEntity.READSET_MAXID).getMaxId();
-		List<DailyReportContent> dailyReports = m_dailyReportContentDao.findOverloadReport(maxId, capacity,
-		      DailyReportContentEntity.READSET_LENGTH);
+		int loopStartId = maxId;
+		boolean hasMore = true;
 
-		for (DailyReportContent content : dailyReports) {
-			try {
-				int reportId = content.getReportId();
-				double contentLength = content.getContentLength();
-				OverloadTable overloadTable = m_overloadTableDao.createLocal();
+		while (hasMore) {
+			List<DailyReportContent> dailyReports = m_dailyReportContentDao.findOverloadReport(loopStartId, capacity,
+			      DailyReportContentEntity.READSET_LENGTH);
 
-				overloadTable.setReportId(reportId);
-				overloadTable.setReportSize(contentLength);
-				overloadTable.setReportType(TYPE);
+			for (DailyReportContent content : dailyReports) {
+				try {
+					int reportId = content.getReportId();
+					double contentLength = content.getContentLength();
+					OverloadTable overloadTable = m_overloadTableDao.createLocal();
 
-				m_overloadTableDao.insert(overloadTable);
-			} catch (Exception ex) {
-				Cat.logError(ex);
+					overloadTable.setReportId(reportId);
+					overloadTable.setReportSize(contentLength);
+					overloadTable.setReportType(TYPE);
+
+					m_overloadTableDao.insert(overloadTable);
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
+			}
+
+			int size = dailyReports.size();
+			if (size < 1000) {
+				hasMore = false;
+			} else {
+				loopStartId = dailyReports.get(size - 1).getReportId();
 			}
 		}
 
@@ -78,17 +90,25 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 
 	@Override
 	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
-		      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
+		boolean hasMore = true;
 
-		for (OverloadTable table : overloadTables) {
-			try {
-				int reportId = table.getReportId();
-				DailyReport report = m_dailyReportDao.findByPK(reportId, DailyReportEntity.READSET_FULL);
+		while (hasMore) {
+			List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
+			      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
 
-				overloadReports.add(generateOverloadReport(report, table));
-			} catch (Exception ex) {
-				Cat.logError(ex);
+			for (OverloadTable table : overloadTables) {
+				try {
+					int reportId = table.getReportId();
+					DailyReport report = m_dailyReportDao.findByPK(reportId, DailyReportEntity.READSET_FULL);
+
+					overloadReports.add(generateOverloadReport(report, table));
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
+			}
+
+			if (overloadTables.size() < 1000) {
+				hasMore = false;
 			}
 		}
 	}

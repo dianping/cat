@@ -54,22 +54,34 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 	@Override
 	public int updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadTableDao.findMaxIdByType(TYPE, OverloadTableEntity.READSET_MAXID).getMaxId();
-		List<MonthlyReportContent> monthlyReports = m_monthlyReportContentDao.findOverloadReport(maxId, capacity,
-		      MonthlyReportContentEntity.READSET_LENGTH);
+		int loopStartId = maxId;
+		boolean hasMore = true;
 
-		for (MonthlyReportContent content : monthlyReports) {
-			try {
-				int reportId = content.getReportId();
-				double contentLength = content.getContentLength();
-				OverloadTable overloadTable = m_overloadTableDao.createLocal();
+		while (hasMore) {
+			List<MonthlyReportContent> monthlyReports = m_monthlyReportContentDao.findOverloadReport(loopStartId,
+			      capacity, MonthlyReportContentEntity.READSET_LENGTH);
 
-				overloadTable.setReportId(reportId);
-				overloadTable.setReportSize(contentLength);
-				overloadTable.setReportType(TYPE);
+			for (MonthlyReportContent content : monthlyReports) {
+				try {
+					int reportId = content.getReportId();
+					double contentLength = content.getContentLength();
+					OverloadTable overloadTable = m_overloadTableDao.createLocal();
 
-				m_overloadTableDao.insert(overloadTable);
-			} catch (Exception ex) {
-				Cat.logError(ex);
+					overloadTable.setReportId(reportId);
+					overloadTable.setReportSize(contentLength);
+					overloadTable.setReportType(TYPE);
+
+					m_overloadTableDao.insert(overloadTable);
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
+			}
+
+			int size = monthlyReports.size();
+			if (size < 1000) {
+				hasMore = false;
+			} else {
+				loopStartId = monthlyReports.get(size - 1).getReportId();
 			}
 		}
 
@@ -78,17 +90,24 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 
 	@Override
 	public void updateOverloadReport(int updateStartId, List<OverloadReport> overloadReports) throws DalException {
-		List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
-		      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
+		boolean hasMore = true;
 
-		for (OverloadTable table : overloadTables) {
-			try {
-				int reportId = table.getReportId();
-				MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
+		while (hasMore) {
+			List<OverloadTable> overloadTables = m_overloadTableDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
+			      OverloadTableEntity.READSET_BIGGER_ID_SIZE);
 
-				overloadReports.add(generateOverloadReport(report, table));
-			} catch (Exception ex) {
-				Cat.logError(ex);
+			for (OverloadTable table : overloadTables) {
+				try {
+					int reportId = table.getReportId();
+					MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
+
+					overloadReports.add(generateOverloadReport(report, table));
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
+			}
+			if (overloadTables.size() < 1000) {
+				hasMore = false;
 			}
 		}
 	}

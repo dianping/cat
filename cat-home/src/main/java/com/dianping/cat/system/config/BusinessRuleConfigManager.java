@@ -123,7 +123,8 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 					configs.addAll(rule.getConfigs());
 					break;
 				} else {
-					Cat.logError("No Metric Type find. product:" + product + " metric:" + metricKey, new RuntimeException());
+					Cat.logError("No Metric Type find. product:" + product + " metric key:" + metricKey,
+					      new RuntimeException());
 				}
 			}
 			if (configs.size() == 0) {

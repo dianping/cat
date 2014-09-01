@@ -623,6 +623,15 @@
 			<implementation>com.dianping.cat.report.task.database.TableCapacityService</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.database.CapacityUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.database.CapacityUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.database.TableCapacityService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</implementation>
 		</component>
