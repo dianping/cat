@@ -26,20 +26,22 @@ public class DomainNavManager implements Task, Initializable {
 	// key is domain
 	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
 
+	// key is cmdb domain
+	private Map<String, Project> m_cmdbProjects = new ConcurrentHashMap<String, Project>();
+
 	public static final String DEFAULT = "Default";
 
 	public Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
 
 		for (String domain : domains) {
-			Project project = m_projects.get(domain);
+			Project project = findProject(domain);
 			String department = DEFAULT;
 			String projectLine = DEFAULT;
 
 			if (project != null) {
 				department = project.getBu() == null ? DEFAULT : project.getBu();
 				projectLine = project.getCmdbProductline() == null ? DEFAULT : project.getCmdbProductline();
-
 			}
 			Department temp = result.get(department);
 
@@ -53,6 +55,15 @@ public class DomainNavManager implements Task, Initializable {
 		return result;
 	}
 
+	private Project findProject(String domain) {
+		Project project = m_projects.get(domain);
+
+		if (project == null) {
+			project = m_cmdbProjects.get(domain);
+		}
+		return project;
+	}
+
 	public Collection<String> getDomains() {
 		return m_projects.keySet();
 	}
@@ -63,7 +74,7 @@ public class DomainNavManager implements Task, Initializable {
 	}
 
 	public Project getProjectByName(String domain) {
-		return m_projects.get(domain);
+		return findProject(domain);
 	}
 
 	public Map<String, Project> getProjects() {
@@ -83,6 +94,12 @@ public class DomainNavManager implements Task, Initializable {
 				if (projects.size() > 0) {
 					for (Project project : projects) {
 						m_projects.put(project.getDomain(), project);
+
+						String cmdbDomain = project.getCmdbDomain();
+
+						if (cmdbDomain != null && cmdbDomain.length() > 0) {
+							m_cmdbProjects.put(cmdbDomain, project);
+						}
 					}
 				}
 			}
