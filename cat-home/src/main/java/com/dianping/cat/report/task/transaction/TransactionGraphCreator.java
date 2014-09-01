@@ -45,10 +45,10 @@ public class TransactionGraphCreator {
 
 	private String arrayToString(double[] array) {
 		StringBuilder sb = new StringBuilder();
-		int size = 12;
+		int size = 60;
 		for (int i = 0; i < size; i++) {
 			sb.append(array[i]);
-			if (i < 12) {
+			if (i < 59) {
 				sb.append(',');
 			}
 		}
@@ -57,10 +57,10 @@ public class TransactionGraphCreator {
 
 	private String arrayToString(long[] array) {
 		StringBuilder sb = new StringBuilder();
-		int size = 12;
+		int size = 60;
 		for (int i = 0; i < size; i++) {
 			sb.append(array[i]);
-			if (i < 11) {
+			if (i < 59) {
 				sb.append(',');
 			}
 		}
@@ -68,28 +68,28 @@ public class TransactionGraphCreator {
 	}
 
 	private long[] getFailsCount(List<Range> ranges) {
-		long[] value = new long[12];
+		long[] value = new long[60];
 		for (Range range : ranges) {
 			int minute = range.getValue();
-			value[minute / 5] = range.getFails();
+			value[minute] = range.getFails();
 		}
 		return value;
 	}
 
 	private double[] getSumCount(List<Range> ranges) {
-		double[] value = new double[12];
+		double[] value = new double[60];
 		for (Range range : ranges) {
 			int minute = range.getValue();
-			value[minute / 5] = range.getSum();
+			value[minute] = range.getSum();
 		}
 		return value;
 	}
 
 	private long[] getTotalCount(List<Range> ranges) {
-		long[] value = new long[12];
+		long[] value = new long[60];
 		for (Range range : ranges) {
 			int minute = range.getValue();
-			value[minute / 5] = range.getCount();
+			value[minute] = range.getCount();
 		}
 		return value;
 	}
@@ -117,9 +117,9 @@ public class TransactionGraphCreator {
 			StringBuilder summaryBuilder = new StringBuilder();
 			for (Entry<String, TransactionType> transactionEntry : types.entrySet()) {
 				TransactionType transactionType = transactionEntry.getValue();
-				long[] typeCounts = new long[12];
-				long[] typeFails = new long[12];
-				double[] typeSums = new double[12];
+				long[] typeCounts = new long[60];
+				long[] typeFails = new long[60];
+				double[] typeSums = new double[60];
 
 				Map<String, TransactionName> names = transactionType.getNames();
 				for (Entry<String, TransactionName> nameEntry : names.entrySet()) {

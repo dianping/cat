@@ -115,16 +115,19 @@ public class DefaultBaselineService implements BaselineService {
 
 	@Override
 	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
-		double[] result = new double[60];
 		Date today = TaskHelper.todayZero(reportPeriod);
 		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
 		double[] dayResult = queryDailyBaseline(reportName, key, today);
 
 		if (dayResult != null) {
+			double[] result = new double[60];
+
 			for (int i = 0; i < 60; i++) {
 				result[i] = dayResult[hour * 60 + i];
 			}
+			return result;
+		} else {
+			return null;
 		}
-		return result;
 	}
 }

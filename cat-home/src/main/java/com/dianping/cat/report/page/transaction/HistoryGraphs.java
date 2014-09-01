@@ -36,9 +36,13 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 	private void appendArray(double[] src, int index, String str, int size) {
 		String[] values = str.split(",");
-		if (values.length < size) {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(str);
+		int valueSize = values.length;
+		
+		if (valueSize <= 12) {
+			for (int i = 0; i < valueSize; i++) {
+				for (int j = 0; j < 5; j++) {
+					src[index + i * 5 + j] = Double.valueOf(values[i]) / 5;
+				}
 			}
 		} else {
 			for (int i = 0; i < size; i++) {
@@ -107,8 +111,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
 						totalCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
 						failureCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
@@ -121,8 +127,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
 						totalCount[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
 						failureCount[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
@@ -141,7 +149,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
 	      List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
 		double[] sum = new double[size];
@@ -154,29 +162,33 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 60);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 60);
+						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 60);
 					}
 				}
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 12);
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 60);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 60);
+						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 60);
 					}
 				}
 			}
@@ -195,11 +207,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE * 5;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		long step = TimeUtil.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
-		if (queryType.equalsIgnoreCase("month")) {
+		if (queryType.equalsIgnoreCase("week") || queryType.equalsIgnoreCase("month")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 		}
@@ -239,8 +251,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			allDatas.add(lastDayGraph);
 			allDatas.add(lastWeekGraph);
 		} else if (queryType.equalsIgnoreCase("week")) {
-			Map<String, double[]> currentGraph = getGraphDatasFromHour(start, end, domain, type, name, ip);
-			Map<String, double[]> lastWeek = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			Map<String, double[]> currentGraph = getGraphDatasFromDaily(start, end, domain, type, name, ip);
+			Map<String, double[]> lastWeek = getGraphDatasFromDaily(new Date(start.getTime() - TimeUtil.ONE_WEEK),
 			      new Date(end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
 
 			allDatas.add(currentGraph);
@@ -283,11 +295,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String ip = model.getIpAddress();
 
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE * 5;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		long step = TimeUtil.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
-		if (queryType.equalsIgnoreCase("month")) {
+		if (queryType.equalsIgnoreCase("month") || queryType.equalsIgnoreCase("week")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 		}

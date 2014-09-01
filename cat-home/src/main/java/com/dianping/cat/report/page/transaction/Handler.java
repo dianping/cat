@@ -3,7 +3,10 @@ package com.dianping.cat.report.page.transaction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -19,6 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -85,9 +89,56 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void transformTo60MinuteData(TransactionName transactionName) {
+		Map<Integer, Range> rangeMap = transactionName.getRanges();
+		Map<Integer, Range> rangeMapCopy = new LinkedHashMap<Integer, Range>();
+		Set<Integer> keys = rangeMap.keySet();
+		int minute, completeMinute, count, fails;
+		double sum, avg;
+		boolean tranform = true;
+
+		if (keys.size() <= 12) {
+			for (int key : keys) {
+				if (key % 5 != 0) {
+					tranform = false;
+					break;
+				}
+			}
+		} else {
+			tranform = false;
+		}
+
+		if (tranform) {
+			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
+				Range range = entry.getValue();
+				rangeMapCopy.put(
+				      entry.getKey(),
+				      new Range(range.getValue()).setCount(range.getCount()).setSum(range.getSum())
+				            .setFails(range.getFails()).setAvg(range.getAvg()));
+			}
+
+			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
+				Range range = entry.getValue();
+				minute = range.getValue();
+				count = range.getCount() / 5;
+				fails = range.getFails() / 5;
+				sum = range.getSum() / 5;
+				avg = range.getAvg();
+
+				for (int i = 0; i < 5; i++) {
+					completeMinute = minute + i;
+
+					transactionName.findOrCreateRange(completeMinute).setCount(count).setFails(fails).setSum(sum)
+					      .setAvg(avg);
+				}
+			}
+		}
+	}
+
 	private void buildTransactionNameGraph(Model model, TransactionReport report, String type, String name, String ip) {
 		TransactionType t = report.findOrCreateMachine(ip).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
+		transformTo60MinuteData(transactionName);
 
 		if (transactionName != null) {
 			String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count",
@@ -204,7 +255,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-
 		return report;
 	}
 
@@ -342,4 +392,5 @@ public class Handler implements PageHandler<Context> {
 	public enum SummaryOrder {
 		TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
 	}
+
 }

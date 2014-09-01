@@ -38,9 +38,9 @@ public class TransactionGraphDataTest {
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectSum = graphDates.get("sum");
 
-			assertArray(15, expectTotalCount);
+			assertArray(12, expectTotalCount);
 			assertArray(0, expectFailureCount);
-			assertArray(234038.7, expectSum);
+			assertArray(200, expectSum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -90,7 +90,7 @@ public class TransactionGraphDataTest {
 		List<Graph> graphs = new ArrayList<Graph>();
 		String summary = "Call	13704	0	0.993	505.822	133680.3	7678055.5" + "\n"
 		      + "Result	13704	0	0.096	73.104	13377.4	156669.3" + "\n" + "Task	26	0	36.406555	60.022	1102.4	47641.6"
-		      + "\n" + "URL	15	0	11.836555	225244.724	234038.7	5.07448582695E10" + "\n";
+		      + "\n" + "URL	60,60,60,60,60,60,60,60,60,60,60,60	0	11.836555	225244.724	1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000,1000	5.07448582695E10" + "\n";
 		String detail = "Call	cacheService:cacheConfigService_1.0.0:getCacheConfigurations	6	0	261.046	481.68	2369.7	989806.8"
 		      + "\n"
 		      + "Call	cacheService:cacheConfigService_1.0.0:getKeyConfigurations	6	0	40.301	43.161	250.6	10472.6"
@@ -100,7 +100,7 @@ public class TransactionGraphDataTest {
 		      + "Call	shopService:shopService_1.0.0:findShops	11344	0	0.993	294.569	100011.4	4784759.1"
 		      + "\n"
 		      + "Result	cacheService:cacheConfigService_1.0.0:getCacheConfigurations	6	0	28.769	64.718	302.0	16596.8"
-		      + "\n" + "Result	cacheService:cacheConfigService_1.0.0:getKeyConfigurations	6	0	6.83	7.583	43.2	311.0";
+		      + "\n" + "Result	cacheService:cacheConfigService_1.0.0:getKeyConfigurations	30,30,30,30,30,30,30,30,30,30,30,30	0	6.83	7.583	43.2	311.0";
 
 		for (long i = start.getTime(); i < end.getTime(); i = i + ONE_HOUR) {
 			Graph graph = new Graph();

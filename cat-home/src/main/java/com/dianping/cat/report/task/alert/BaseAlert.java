@@ -264,7 +264,10 @@ public abstract class BaseAlert {
 		double[] baseline = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
 		int length = end - start + 1;
 		double[] result = new double[length];
-		System.arraycopy(baseline, start, result, 0, length);
+
+		if (baseline != null) {
+			System.arraycopy(baseline, start, result, 0, length);
+		}
 
 		return result;
 	}

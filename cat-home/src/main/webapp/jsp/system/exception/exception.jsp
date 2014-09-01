@@ -62,7 +62,8 @@
 					type: "get",
 					url: anchor.href,
 					success : function(response, textStatus) {
-						$('#myModal').html(response);
+						var responseTrim = response.trim();
+						$('#myModal').html(responseTrim);
 						$('#myModal').modal();
  						$("#domainId").select2();
  						$("#smsSending").select2();

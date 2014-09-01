@@ -21,9 +21,9 @@ public class EventGraphCreatorTest {
 		EventGraphCreator creator = new EventGraphCreator();
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"), "utf-8");
 		EventReport report = DefaultSaxParser.parse(xml);
-		List<Graph> graphs =	creator.splitReportToGraphs(report.getStartTime(),report.getDomain(),"event",report);
-		
-		//List<Graph> graphs = creator.buildGraph(report);
+		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "event", report);
+
+		// List<Graph> graphs = creator.buildGraph(report);
 		Map<String, Range> realResult = new HashMap<String, Range>();
 		Map<String, Range> excepectedResult = buildExceptedResult();
 		buildResultResult(graphs, realResult);
@@ -32,6 +32,7 @@ public class EventGraphCreatorTest {
 		for (String str : realResult.keySet()) {
 			Range range1 = realResult.get(str);
 			Range range2 = excepectedResult.get(str);
+			
 			Assert.assertEquals("key:" + str, range1.total, range2.total);
 			Assert.assertEquals("key:" + str, range1.fail, range2.fail);
 		}
