@@ -28,7 +28,7 @@ import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnabled {
-	
+
 	public static final String ID = MetricAnalyzer.ID;
 
 	@Inject
@@ -61,7 +61,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricId);
 		String metricDomain = metricConfig.getDomain();
 		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
-		
+
 		for (MetricType type : MetricType.values()) {
 			String key = metricId + ":" + type;
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
@@ -73,6 +73,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 			for (Integer day : days) {
 				List<MetricItem> metricItems = new ArrayList<MetricItem>();
 				Date currentDate = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
+
 				for (int i = 0; i < 24; i++) {
 					Date start = new Date(currentDate.getTime() + i * TimeUtil.ONE_HOUR);
 					Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -81,6 +82,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 
 					if (report == null) {
 						report = m_reportService.queryMetricReport(productLine, start, end);
+
 						reports.put(metricReportKey, report);
 					}
 					MetricItem reportItem = report.findMetricItem(metricId);
@@ -91,6 +93,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 					metricItems.add(reportItem);
 				}
 				double[] oneDayValue = m_parser.buildDailyData(metricItems, type);
+
 				values.add(oneDayValue);
 			}
 
@@ -101,6 +104,19 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 			baseline.setReportName(reportName);
 			baseline.setReportPeriod(targetDate);
 			m_baselineService.insertBaseline(baseline);
+
+			Date tomorrow = new Date(reportPeriod.getTime() + TimeUtil.ONE_DAY);
+			double[] baseLine = m_baselineService.queryDailyBaseline(reportName, key, tomorrow);
+
+			if (baseLine == null) {
+				Baseline tomorrowBaseline = new Baseline();
+
+				tomorrowBaseline.setDataInDoubleArray(result);
+				tomorrowBaseline.setIndexKey(key);
+				tomorrowBaseline.setReportName(reportName);
+				tomorrowBaseline.setReportPeriod(tomorrow);
+				m_baselineService.insertBaseline(tomorrowBaseline);
+			}
 		}
 	}
 
