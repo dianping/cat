@@ -179,7 +179,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return StringSortHelper.sortDomain(m_report.getIps());
+			return StringSortHelper.sort(m_report.getIps());
 		}
 	}
 
