@@ -27,8 +27,6 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private OverloadDao m_overloadDao;
 
-	private static final int TYPE = 3;
-
 	public static final String ID = "weekly_capacity_updater";
 
 	private OverloadReport generateOverloadReport(WeeklyReport report, Overload overload) {
@@ -38,7 +36,7 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 		overloadReport.setIp(report.getIp());
 		overloadReport.setName(report.getName());
 		overloadReport.setPeriod(report.getPeriod());
-		overloadReport.setReportType(TYPE);
+		overloadReport.setReportType(CapacityUpdater.WEEKLY_TYPE);
 		overloadReport.setType(report.getType());
 		overloadReport.setReportLength(overload.getReportSize());
 
@@ -52,7 +50,7 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 
 	@Override
 	public int updateDBCapacity(double capacity) throws DalException {
-		int maxId = m_overloadDao.findMaxIdByType(TYPE, OverloadEntity.READSET_MAXID).getMaxId();
+		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.WEEKLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
 		int loopStartId = maxId;
 		boolean hasMore = true;
 
@@ -68,7 +66,7 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 
 					overloadTable.setReportId(reportId);
 					overloadTable.setReportSize(contentLength);
-					overloadTable.setReportType(TYPE);
+					overloadTable.setReportType(CapacityUpdater.WEEKLY_TYPE);
 
 					m_overloadDao.insert(overloadTable);
 				} catch (Exception ex) {
@@ -92,8 +90,8 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 		boolean hasMore = true;
 
 		while (hasMore) {
-			List<Overload> overloads = m_overloadDao.findIdAndSizeByTypeAndBeginId(TYPE, updateStartId,
-			      OverloadEntity.READSET_BIGGER_ID_SIZE);
+			List<Overload> overloads = m_overloadDao.findIdAndSizeByTypeAndBeginId(CapacityUpdater.WEEKLY_TYPE,
+			      updateStartId, OverloadEntity.READSET_BIGGER_ID_SIZE);
 
 			for (Overload overload : overloads) {
 				try {

@@ -6,9 +6,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.database.Context" scope="request" />
-<jsp:useBean id="payload"	type="com.dianping.cat.report.page.database.Payload" scope="request" />
-<jsp:useBean id="model"	type="com.dianping.cat.report.page.database.Model" scope="request" />
+<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.overload.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
 <a:navbar title="DatabaseReport" navUrlPrefix="">
 	<jsp:body>

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 import java.util.Date;
 import java.util.List;

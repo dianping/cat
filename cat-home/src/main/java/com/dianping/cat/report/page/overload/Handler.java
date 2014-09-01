@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 import java.io.IOException;
 
@@ -43,13 +43,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "database")
+	@InboundActionMeta(name = "overload")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "database")
+	@OutboundActionMeta(name = "overload")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -68,7 +68,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.DATABASE);
+		model.setPage(ReportPage.OVERLOAD);
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);

@@ -4266,11 +4266,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.database.Handler</role>
-			<implementation>com.dianping.cat.report.page.database.Handler</implementation>
+			<role>com.dianping.cat.report.page.overload.Handler</role>
+			<implementation>com.dianping.cat.report.page.overload.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.database.JspViewer</role>
+					<role>com.dianping.cat.report.page.overload.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.overload.TableCapacityService</role>
@@ -4278,8 +4278,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.database.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.overload.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.overload.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

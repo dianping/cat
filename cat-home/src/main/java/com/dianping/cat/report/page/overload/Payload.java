@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -171,7 +171,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@Override
 	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.DATABASE);
+		m_page = ReportPage.getByName(page, ReportPage.OVERLOAD);
 	}
 
 	public void setRefresh(boolean refresh) {
