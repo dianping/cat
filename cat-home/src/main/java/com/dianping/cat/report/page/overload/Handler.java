@@ -12,7 +12,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.overload.OverloadReport;
 import com.dianping.cat.report.task.overload.TableCapacityService;
 
 public class Handler implements PageHandler<Context> {
@@ -21,25 +20,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TableCapacityService m_tableCapacityService;
-
-	private OverloadReport generateReport(Payload payload) {
-		OverloadReport report = new OverloadReport();
-		String domain = payload.getDomain();
-		String ip = payload.getIp();
-		String name = payload.getName();
-
-		if (domain != null) {
-			report.setDomain(domain);
-		}
-		if (ip != null) {
-			report.setIp(ip);
-		}
-		if (name != null) {
-			report.setName(name);
-		}
-
-		return report;
-	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -58,9 +38,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			try {
-				OverloadReport compareReport = generateReport(payload);
-				model.setReports(m_tableCapacityService.queryOverloadReports(compareReport, payload.getStartTime(),
-				      payload.getEndTime()));
+				model.setReports(m_tableCapacityService.queryOverloadReports(payload.getStartTime(), payload.getEndTime()));
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}

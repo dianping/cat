@@ -10,7 +10,6 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.site.lookup.util.StringUtils;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	private ReportPage m_page;
@@ -24,20 +23,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("endTime")
 	private String m_endTime;
 
-	@FieldMeta("domain")
-	private String m_domain;
-
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-
-	@FieldMeta("refresh")
-	private boolean m_refresh = false;
-
-	@FieldMeta("name")
-	private String m_name;
-
-	@FieldMeta("ip")
-	private String m_ip;
 
 	@FieldMeta("showHourly")
 	private boolean m_showHourly = true;
@@ -51,9 +38,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("showMonthly")
 	private boolean m_showMonthly = true;
 
-	@FieldMeta("frequency")
-	private int m_frequency = 10;
-	
 	@FieldMeta("reportType")
 	private String m_reportType = "";
 
@@ -64,39 +48,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
-	public String getDomain() {
-		if (StringUtils.isEmpty(m_domain)) {
-			return null;
-		} else {
-			return m_domain;
-		}
-	}
-
 	public Date getEndTime() {
 		try {
 			return m_format.parse(m_endTime);
 		} catch (Exception e) {
 			return new Date();
-		}
-	}
-
-	public int getFrequency() {
-		return m_frequency;
-	}
-
-	public String getIp() {
-		if (StringUtils.isEmpty(m_ip)) {
-			return null;
-		} else {
-			return m_ip;
-		}
-	}
-
-	public String getName() {
-		if (StringUtils.isEmpty(m_name)) {
-			return null;
-		} else {
-			return m_name;
 		}
 	}
 
@@ -120,10 +76,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public boolean isFullScreen() {
 		return m_fullScreen;
 	}
-	
-	public boolean isRefresh() {
-		return m_refresh;
-	}
 
 	public boolean isShowDaily() {
 		return m_showDaily;
@@ -145,37 +97,17 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
 	public void setEndTime(String endTime) {
 		m_endTime = endTime;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
 	}
 
 	public void setFullScreen(boolean fullScreen) {
 		m_fullScreen = fullScreen;
 	}
 
-	public void setIp(String ip) {
-		m_ip = ip;
-	}
-
-	public void setName(String name) {
-		m_name = name;
-	}
-
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.OVERLOAD);
-	}
-
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
 	}
 
 	public void setReportType(String reportType) {

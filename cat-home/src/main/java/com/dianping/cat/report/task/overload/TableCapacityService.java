@@ -15,7 +15,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
@@ -27,31 +26,6 @@ public class TableCapacityService extends ContainerHolder implements Initializab
 	private List<OverloadReport> m_overloadReports = new CopyOnWriteArrayList<OverloadReport>();
 
 	private Logger m_logger;
-
-	private boolean compareOverloadReport(OverloadReport originReport, OverloadReport compareRepoort, Date startTime,
-	      Date endTime) {
-		Date originDate = originReport.getPeriod();
-
-		if (originDate.before(startTime) || originDate.after(endTime)) {
-			return false;
-		}
-
-		String name = compareRepoort.getName();
-		String domain = compareRepoort.getDomain();
-		String ip = compareRepoort.getIp();
-
-		if (StringUtils.isNotEmpty(name) && !name.equals(originReport.getName())) {
-			return false;
-		}
-		if (StringUtils.isNotEmpty(domain) && !domain.equals(originReport.getDomain())) {
-			return false;
-		}
-		if (StringUtils.isNotEmpty(ip) && !ip.equals(originReport.getIp())) {
-			return false;
-		}
-
-		return true;
-	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -102,11 +76,13 @@ public class TableCapacityService extends ContainerHolder implements Initializab
 		}
 	}
 
-	public List<OverloadReport> queryOverloadReports(OverloadReport compareRepoort, Date startTime, Date endTime) {
+	public List<OverloadReport> queryOverloadReports(Date startTime, Date endTime) {
 		List<OverloadReport> reports = new ArrayList<OverloadReport>();
 
 		for (OverloadReport report : m_overloadReports) {
-			if (compareOverloadReport(report, compareRepoort, startTime, endTime)) {
+			Date originDate = report.getPeriod();
+
+			if (!originDate.before(startTime) && !originDate.after(endTime)) {
 				reports.add(report);
 			}
 		}
