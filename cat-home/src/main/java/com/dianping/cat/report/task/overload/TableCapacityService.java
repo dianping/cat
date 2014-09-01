@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.database;
+package com.dianping.cat.report.task.overload;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,6 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 import com.dianping.cat.message.Event;
 
 public class TableCapacityService extends ContainerHolder implements Initializable, LogEnabled {

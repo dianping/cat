@@ -1,10 +1,8 @@
-package com.dianping.cat.report.task.database;
+package com.dianping.cat.report.task.overload;
 
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
-
-import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 
 public interface CapacityUpdater {
 

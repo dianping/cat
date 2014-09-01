@@ -6,8 +6,8 @@ import java.util.List;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.task.overload.OverloadReport;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 
@@ -16,7 +16,7 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public Model(Context ctx) {
 		super(ctx);
 	}
-	
+
 	public Date getDate() {
 		return new Date();
 	}

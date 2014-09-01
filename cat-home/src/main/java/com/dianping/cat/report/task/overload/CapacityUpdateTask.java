@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.database;
+package com.dianping.cat.report.task.overload;
 
 import java.util.Calendar;
 import java.util.Date;

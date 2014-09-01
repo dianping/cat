@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.database;
+package com.dianping.cat.report.task.overload;
 
 import java.util.List;
 
@@ -6,33 +6,32 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.MonthlyReportDao;
-import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
-import com.dianping.cat.home.dal.report.MonthlyReportContent;
-import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
-import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.home.dal.report.DailyReportContent;
+import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.OverloadTable;
 import com.dianping.cat.home.dal.report.OverloadTableDao;
 import com.dianping.cat.home.dal.report.OverloadTableEntity;
 
-public class MonthlyCapacityUpdater implements CapacityUpdater {
+public class DailyCapacityUpdater implements CapacityUpdater {
 
 	@Inject
-	MonthlyReportContentDao m_monthlyReportContentDao;
+	DailyReportContentDao m_dailyReportContentDao;
 
 	@Inject
-	MonthlyReportDao m_monthlyReportDao;
+	DailyReportDao m_dailyReportDao;
 
 	@Inject
 	OverloadTableDao m_overloadTableDao;
 
-	private static final int TYPE = 4;
+	private static final int TYPE = 2;
 
-	public static final String ID = "monthly_capacity_updater";
+	public static final String ID = "daily_capacity_updater";
 
-	private OverloadReport generateOverloadReport(MonthlyReport report, OverloadTable table) {
+	private OverloadReport generateOverloadReport(DailyReport report, OverloadTable table) {
 		OverloadReport overloadReport = new OverloadReport();
 
 		overloadReport.setDomain(report.getDomain());
@@ -58,10 +57,10 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 		boolean hasMore = true;
 
 		while (hasMore) {
-			List<MonthlyReportContent> monthlyReports = m_monthlyReportContentDao.findOverloadReport(loopStartId,
-			      capacity, MonthlyReportContentEntity.READSET_LENGTH);
+			List<DailyReportContent> dailyReports = m_dailyReportContentDao.findOverloadReport(loopStartId, capacity,
+			      DailyReportContentEntity.READSET_LENGTH);
 
-			for (MonthlyReportContent content : monthlyReports) {
+			for (DailyReportContent content : dailyReports) {
 				try {
 					int reportId = content.getReportId();
 					double contentLength = content.getContentLength();
@@ -77,11 +76,11 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 				}
 			}
 
-			int size = monthlyReports.size();
+			int size = dailyReports.size();
 			if (size < 1000) {
 				hasMore = false;
 			} else {
-				loopStartId = monthlyReports.get(size - 1).getReportId();
+				loopStartId = dailyReports.get(size - 1).getReportId();
 			}
 		}
 
@@ -99,16 +98,18 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 			for (OverloadTable table : overloadTables) {
 				try {
 					int reportId = table.getReportId();
-					MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
+					DailyReport report = m_dailyReportDao.findByPK(reportId, DailyReportEntity.READSET_FULL);
 
 					overloadReports.add(generateOverloadReport(report, table));
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
 			}
+
 			if (overloadTables.size() < 1000) {
 				hasMore = false;
 			}
 		}
 	}
+
 }
