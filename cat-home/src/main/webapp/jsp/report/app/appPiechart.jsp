@@ -41,8 +41,7 @@
 			if(day<10){
 				day = '0' + day;
 			}
-			return myDate.getFullYear() + "-" + month + "-"
-					+ myDate.getDate() + " 00:00";
+			return myDate.getFullYear() + "-" + month + "-" + day + " 00:00";
 		}
 		
 		function getTime(){

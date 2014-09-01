@@ -149,14 +149,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
-		int tk = min - min % 5;
 
 		while (dk < d) {
 			dk <<= 1;
 		}
 
 		Duration duration = name.findOrCreateDuration(dk);
-		Range range = name.findOrCreateRange(tk);
+		Range range = name.findOrCreateRange(min);
 
 		duration.incCount();
 		range.incCount();

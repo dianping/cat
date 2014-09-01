@@ -20,7 +20,7 @@ public class GraphPayload {
 
 		@Override
 		public String getAxisXLabel(int index) {
-			return String.valueOf(index * 5);
+			return String.valueOf(index);
 		}
 
 		@Override
@@ -65,13 +65,12 @@ public class GraphPayload {
 
 		@Override
 		protected double[] loadValues() {
-			double[] values = new double[12];
+			double[] values = new double[60];
 
 			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
-				int k = value / 5;
 
-				values[k] += range.getAvg();
+				values[value] += range.getAvg();
 			}
 
 			return values;
@@ -153,13 +152,12 @@ public class GraphPayload {
 
 		@Override
 		protected double[] loadValues() {
-			double[] values = new double[12];
+			double[] values = new double[60];
 
 			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
-				int k = value / 5;
 
-				values[k] += range.getFails();
+				values[value] += range.getFails();
 			}
 
 			return values;
@@ -178,13 +176,12 @@ public class GraphPayload {
 
 		@Override
 		protected double[] loadValues() {
-			double[] values = new double[12];
+			double[] values = new double[60];
 
 			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
-				int k = value / 5;
 
-				values[k] += range.getCount();
+				values[value] += range.getCount();
 			}
 
 			return values;

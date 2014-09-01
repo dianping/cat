@@ -15,7 +15,7 @@ abstract class AbstractPayload extends AbstractGraphPayload {
 
 	@Override
 	public String getAxisXLabel(int index) {
-		return String.valueOf(index * 5);
+		return String.valueOf(index);
 	}
 
 	@Override
@@ -60,13 +60,12 @@ final class FailurePayload extends AbstractPayload {
 
 	@Override
 	protected double[] loadValues() {
-		double[] values = new double[12];
+		double[] values = new double[60];
 
 		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
-			int k = value / 5;
 
-			values[k] += range.getFails();
+			values[value] += range.getFails();
 		}
 
 		return values;
@@ -80,13 +79,12 @@ final class HitPayload extends AbstractPayload {
 
 	@Override
 	protected double[] loadValues() {
-		double[] values = new double[12];
+		double[] values = new double[60];
 
 		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
-			int k = value / 5;
 
-			values[k] += range.getCount();
+			values[value] += range.getCount();
 		}
 
 		return values;

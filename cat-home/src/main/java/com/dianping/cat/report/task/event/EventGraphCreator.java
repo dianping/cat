@@ -31,10 +31,10 @@ public class EventGraphCreator {
 
 	private String arrayToString(long[] array) {
 		StringBuilder sb = new StringBuilder();
-		int size = 12;
+		int size = 60;
 		for (int i = 0; i < size; i++) {
 			sb.append(array[i]);
-			if (i < 11) {
+			if (i < 59) {
 				sb.append(',');
 			}
 		}
@@ -42,19 +42,19 @@ public class EventGraphCreator {
 	}
 
 	private long[] getFailsCount(List<Range> ranges) {
-		long[] value = new long[12];
+		long[] value = new long[60];
 		for (Range range : ranges) {
 			int minute = range.getValue();
-			value[minute / 5] = range.getFails();
+			value[minute] = range.getFails();
 		}
 		return value;
 	}
 
 	private long[] getTotalCount(List<Range> ranges) {
-		long[] value = new long[12];
+		long[] value = new long[60];
 		for (Range range : ranges) {
 			int minute = range.getValue();
-			value[minute / 5] = range.getCount();
+			value[minute] = range.getCount();
 		}
 		return value;
 	}
@@ -80,8 +80,8 @@ public class EventGraphCreator {
 			StringBuilder summaryBuilder = new StringBuilder();
 			for (Entry<String, EventType> eventEntry : types.entrySet()) {
 				EventType eventType = eventEntry.getValue();
-				long[] typeCounts = new long[12];
-				long[] typeFails = new long[12];
+				long[] typeCounts = new long[60];
+				long[] typeFails = new long[60];
 
 				Map<String, EventName> names = eventType.getNames();
 				for (Entry<String, EventName> nameEntry : names.entrySet()) {

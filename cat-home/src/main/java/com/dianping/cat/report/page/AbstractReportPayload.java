@@ -168,7 +168,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public Date getHistoryStartDate() {
 		if (m_customStart != null) {
-			System.out.println(m_customStart);
 			try {
 				if (m_customStart.length() == 8) {
 					return m_dayFormat.parse(m_customStart);

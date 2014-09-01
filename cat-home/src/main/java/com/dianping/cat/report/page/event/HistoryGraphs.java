@@ -34,9 +34,13 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 	private void appendArray(double[] src, int index, String str, int size) {
 		String[] values = str.split(",");
-		if (values.length < size) {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(str);
+		int valueSize = values.length;
+
+		if (valueSize <= 12) {
+			for (int i = 0; i < valueSize; i++) {
+				for (int j = 0; j < 5; j++) {
+					src[index + i * 5 + j] = Double.valueOf(values[i]) / 5;
+				}
 			}
 		} else {
 			for (int i = 0; i < size; i++) {
@@ -104,34 +108,36 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
 	      List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
+				
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 60);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 60);
 					}
 				}
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
 
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 60);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 60);
 					}
 				}
 			}
@@ -149,7 +155,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 		long step = TimeUtil.ONE_MINUTE * 5;
 		String queryType = payload.getReportType();
 
@@ -231,9 +237,9 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String domain = model.getDomain();
 		String ip = model.getIpAddress();
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 		String queryType = payload.getReportType();
-		long step = TimeUtil.ONE_MINUTE * 5;
+		long step = TimeUtil.ONE_MINUTE;
 
 		if (queryType.equalsIgnoreCase("month")) {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
