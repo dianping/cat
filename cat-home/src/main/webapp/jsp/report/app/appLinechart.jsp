@@ -72,8 +72,7 @@
 				day = '0' + day;
 			}
 
-			return myDate.getFullYear() + "-" + month + "-"
-					+ myDate.getDate();
+			return myDate.getFullYear() + "-" + month + "-" + day;
 		}
 		
 		function queryGroupBy(sort){
