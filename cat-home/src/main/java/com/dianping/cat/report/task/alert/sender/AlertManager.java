@@ -117,7 +117,7 @@ public class AlertManager implements Initializable {
 		for (AlertChannel channel : channels) {
 			String rawContent = pair.getValue();
 			if (suspendMinute > 0) {
-				rawContent = rawContent + "<br/>[连续告警暂停时间]" + suspendMinute + "分钟";
+				rawContent = rawContent + "<br/>[告警间隔时间]" + suspendMinute + "分钟";
 			}
 			String content = m_splitterManager.process(rawContent, channel);
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
@@ -170,7 +170,7 @@ public class AlertManager implements Initializable {
 
 	private class RecoveryAnnouncer implements Task {
 
-		private DateFormat m_sdf = new SimpleDateFormat("hh:mm");
+		private DateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		@Override
 		public String getName() {
@@ -180,8 +180,8 @@ public class AlertManager implements Initializable {
 		@Override
 		public void run() {
 			while (true) {
-				long currentTime = System.currentTimeMillis();
-				String currentMinute = m_sdf.format(new Date(currentTime));
+				long current = System.currentTimeMillis();
+				String currentStr = m_sdf.format(new Date(current));
 				List<String> recoveredItems = new ArrayList<String>();
 
 				for (Entry<String, AlertEntity> entry : m_unrecoveredAlerts.entrySet()) {
@@ -189,11 +189,11 @@ public class AlertManager implements Initializable {
 						String key = entry.getKey();
 						AlertEntity alert = entry.getValue();
 						long alertTime = alert.getDate().getTime();
-						int alreadyMinutes = (int) ((currentTime - alertTime) / MILLIS1MINUTE);
+						int alreadyMinutes = (int) ((current - alertTime) / MILLIS1MINUTE);
 
 						if (alreadyMinutes >= 1) {
 							recoveredItems.add(key);
-							sendRecoveryMessage(alert, currentMinute);
+							sendRecoveryMessage(alert, currentStr);
 						}
 					} catch (Exception e) {
 						Cat.logError(e);
@@ -204,7 +204,7 @@ public class AlertManager implements Initializable {
 					m_unrecoveredAlerts.remove(key);
 				}
 
-				long duration = System.currentTimeMillis() - currentTime;
+				long duration = System.currentTimeMillis() - current;
 				if (duration < MILLIS1MINUTE) {
 					long lackMills = MILLIS1MINUTE - duration;
 
