@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.monitor.database;
+package com.dianping.cat.report.task.database;
 
 import java.util.ArrayList;
 import java.util.Calendar;

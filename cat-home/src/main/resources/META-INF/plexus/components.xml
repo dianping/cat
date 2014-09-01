@@ -555,9 +555,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
 			<role-hint>hourly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.monitor.database.HourlyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.database.HourlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
@@ -571,9 +571,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
 			<role-hint>daily_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.monitor.database.DailyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.database.DailyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
@@ -587,9 +587,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
 			<role-hint>weekly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.monitor.database.WeeklyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.database.WeeklyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
@@ -603,9 +603,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
 			<role-hint>monthly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.monitor.database.MonthlyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.database.MonthlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
@@ -619,8 +619,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.TableCapacityService</role>
-			<implementation>com.dianping.cat.report.task.monitor.database.TableCapacityService</implementation>
+			<role>com.dianping.cat.report.task.database.TableCapacityService</role>
+			<implementation>com.dianping.cat.report.task.database.TableCapacityService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
@@ -4261,7 +4261,7 @@
 					<role>com.dianping.cat.report.page.database.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.monitor.database.TableCapacityService</role>
+					<role>com.dianping.cat.report.task.database.TableCapacityService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4275,8 +4275,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monitor.database.TableCapacityService</role>
-			<implementation>com.dianping.cat.report.task.monitor.database.TableCapacityService</implementation>
+			<role>com.dianping.cat.report.task.database.TableCapacityService</role>
+			<implementation>com.dianping.cat.report.task.database.TableCapacityService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

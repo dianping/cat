@@ -13,7 +13,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.monitor.database.TableCapacityService;
+import com.dianping.cat.report.task.database.TableCapacityService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
