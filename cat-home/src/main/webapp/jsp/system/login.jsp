@@ -13,15 +13,15 @@
 <res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
 
 <style>
-.form-horizontal .control-label{
-	width:50px;
-}
-.form-horizontal .controls{
-	margin-left:70px;
-}
+	body{text-align:center} 
+	div_center{margin:0 auto} 
 </style>
-		<form class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
-			<h4 id="myModalLabel" class="text-success">用户登录</h4>
+<br/>
+<br/>
+
+<div class="div_center" style="width:40%">
+		<h2 class="text-info">点评监控系统CAT</h2>
+		<form  class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
 			<div class="control-group">
 				<label class="control-label text-success" for="account">用户名</label>
 				<div class="controls">

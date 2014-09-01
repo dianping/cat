@@ -2,8 +2,10 @@ package com.dianping.cat.report.page.model.spi.internal;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 
@@ -12,6 +14,7 @@ import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -46,8 +49,14 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 				sb.append(e.getKey()).append('=').append(e.getValue());
 			}
 		}
+		String parameters = "";
+		try {
+			parameters = URLEncoder.encode(sb.toString(), "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			Cat.logError(e);
+		}
 		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,
-		      request.getDomain(), request.getPeriod(), sb.toString());
+		      request.getDomain(), request.getPeriod(), parameters);
 
 		return new URL(url);
 	}

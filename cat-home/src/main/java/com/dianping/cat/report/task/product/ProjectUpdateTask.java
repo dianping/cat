@@ -291,7 +291,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		} finally {
 			t.complete();
 		}
-		return null;
+		return new HashMap<String, String>();
 	}
 
 	private String queryProjectInfoFromCMDB(String url, String jsonName, String attrName) {

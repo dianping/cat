@@ -335,6 +335,17 @@ CREATE TABLE `alert_summary` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一告警信息';
 
+CREATE TABLE `operation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `user` varchar(128) NOT NULL COMMENT '用户名',
+  `module` varchar(128) NOT NULL COMMENT '模块',
+  `operation` varchar(128) NOT NULL COMMENT '操作',
+  `time` datetime NOT NULL COMMENT '修改时间',
+  `content` longtext NOT NULL COMMENT '修改内容',
+  `creation_date` datetime NOT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户操作日志';
+
 CREATE TABLE `app_data_command_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `period` date NOT NULL COMMENT '时间',
