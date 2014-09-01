@@ -53,7 +53,9 @@ public enum ReportPage implements Page {
 
    APP("app", "app", "App", "App", true),
 
-   ALERT("alert", "alert", "Alert", "Alert", true);
+   ALERT("alert", "alert", "Alert", "Alert", true),
+
+   DATABASE("database", "database", "Database", "Database", true);
 
    private String m_name;
 

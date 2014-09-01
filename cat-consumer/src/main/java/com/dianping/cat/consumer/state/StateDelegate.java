@@ -6,9 +6,9 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -44,6 +44,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
+		m_taskManager.createTask(startTime, domain, Constants.DATABASE_CAPACITY, TaskProlicy.ALL);
 		return m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
@@ -76,7 +77,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 		return report;
 	}
-	
+
 	@Override
 	public byte[] buildBinary(StateReport report) {
 		return DefaultNativeBuilder.build(report);

@@ -122,14 +122,16 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 				} else if (type == MetricType.SUM && item.isMonitorSum()) {
 					configs.addAll(rule.getConfigs());
 					break;
+				} else {
+					Cat.logError("No Metric Type find. product:" + product + " metric key:" + metricKey,
+					      new RuntimeException());
 				}
 			}
-
 			if (configs.size() == 0) {
 				configs.add(buildDefaultConfig());
+			} else {
+				Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 			}
-
-			Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 			return configs;
 		}
 	}

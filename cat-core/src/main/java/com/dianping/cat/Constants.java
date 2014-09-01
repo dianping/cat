@@ -28,13 +28,15 @@ public class Constants {
 	public static final String REPORT_ALERT = "alert";
 
 	public static final String BROKER_SERVICE = "broker-service";
-	
+
 	public static final String METRIC_USER_MONITOR = "userMonitor";
-	
+
 	public static final String METRIC_SYSTEM_MONITOR = "systemMonitor";
-	
+
 	public static final String METRIC_CDN = "cdn";
 
 	public static final String REPORT_ROUTER = "router";
+
+	public static final String DATABASE_CAPACITY = "databaseCapacity";
 
 }

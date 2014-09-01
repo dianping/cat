@@ -77,6 +77,9 @@
          <page name="alert" title="Alert" path="alert" template="default">
             <description>Alert</description>
          </page>
+         <page name="database" title="Database" path="database" template="default">
+            <description>Database</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp" standalone="false">
