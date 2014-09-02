@@ -285,7 +285,6 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		int xstep = w / cols;
 
 		b.tag1("g", "id", "xt");
-
 		boolean rotated = payload.isAxisXLabelRotated();
 		boolean skipped = payload.isAxisXLabelSkipped();
 
