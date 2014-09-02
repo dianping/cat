@@ -225,6 +225,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			String key = metric.getMetricKey();
 			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
 			      + metric.getDisplayType().toUpperCase();
+
 			put(allCharts, result, id);
 		}
 		return result;
@@ -308,6 +309,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 				putKey(datas, values, sumKey);
 			}
 		}
-		return datas.isEmpty() ? values : datas;
+		return values;
 	}
 }
