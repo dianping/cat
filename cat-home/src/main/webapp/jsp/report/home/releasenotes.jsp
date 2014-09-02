@@ -3,7 +3,7 @@
 <h3 class="text-error">客户端版本说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="3%">版本</th><th width="87%">说明</th><th width="10%">发布时间</th></tr>
-	<tr><td>1.1.1</td><td>1、将ABtest的功能从监控中分离</td><td>2014-01-02</td></tr>
+	<tr><td>1.1.2</td><td>1、动态配置CAT的路由策略，支持统一项目名调整</td><td>2014-01-02</td></tr>
 	<tr><td>1.0.1</td><td>1、将ABtest的功能从监控中分离</td><td>2014-01-02</td></tr>
 	<tr><td>1.0.0</td><td>1、修复了CAT监控初始化当服务端都出异常的状况，不会自动连接的Bug</td><td>2013-12-20</td></tr>
 	<tr><td>0.6.2</td><td>1、支持java job的监控，优化了cat的API</td><td>2013-08-06</td></tr>
