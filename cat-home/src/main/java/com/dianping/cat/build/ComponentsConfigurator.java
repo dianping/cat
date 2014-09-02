@@ -35,7 +35,7 @@ import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
-import com.dianping.cat.home.dal.report.OverloadTableDao;
+import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -117,13 +117,13 @@ import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
-import com.dianping.cat.report.task.database.CapacityUpdateTask;
-import com.dianping.cat.report.task.database.CapacityUpdater;
-import com.dianping.cat.report.task.database.DailyCapacityUpdater;
-import com.dianping.cat.report.task.database.HourlyCapacityUpdater;
-import com.dianping.cat.report.task.database.MonthlyCapacityUpdater;
-import com.dianping.cat.report.task.database.TableCapacityService;
-import com.dianping.cat.report.task.database.WeeklyCapacityUpdater;
+import com.dianping.cat.report.task.overload.CapacityUpdateTask;
+import com.dianping.cat.report.task.overload.CapacityUpdater;
+import com.dianping.cat.report.task.overload.DailyCapacityUpdater;
+import com.dianping.cat.report.task.overload.HourlyCapacityUpdater;
+import com.dianping.cat.report.task.overload.MonthlyCapacityUpdater;
+import com.dianping.cat.report.task.overload.TableCapacityService;
+import com.dianping.cat.report.task.overload.WeeklyCapacityUpdater;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
@@ -179,7 +179,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
 
-		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class));
+		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class,
+		      AlertSummaryExecutor.class));
 
 		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProductLineConfigManager.class));
 
@@ -379,21 +380,24 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
-		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, HourlyReportContentDao.class, HourlyReportDao.class));
+		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(OverloadDao.class,
+		      HourlyReportContentDao.class, HourlyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadTableDao.class,
+		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadDao.class,
 		      DailyReportContentDao.class, DailyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(
-		      OverloadTableDao.class, WeeklyReportContentDao.class, WeeklyReportDao.class));
+		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(OverloadDao.class,
+		      WeeklyReportContentDao.class, WeeklyReportDao.class));
 
-		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(
-		      OverloadTableDao.class, MonthlyReportContentDao.class, MonthlyReportDao.class));
+		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(OverloadDao.class,
+		      MonthlyReportContentDao.class, MonthlyReportDao.class));
 
-		all.add(C(TableCapacityService.class));
+		all.add(C(TableCapacityService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
+		      MonthlyReportDao.class, OverloadDao.class));
 
-		all.add(C(CapacityUpdateTask.class).req(TableCapacityService.class));
+		all.add(C(CapacityUpdateTask.class).req(CapacityUpdater.class, HourlyCapacityUpdater.ID)
+		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID).req(CapacityUpdater.class, WeeklyCapacityUpdater.ID)
+		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID));
 
 		all.add(C(NetGraphBuilder.class));
 

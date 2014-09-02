@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 import com.dianping.cat.report.ReportContext;
 

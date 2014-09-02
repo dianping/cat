@@ -31,13 +31,13 @@ public class FailureModelGenerator {
 
 	private void addDistributeInfo(Map<Object, Object> resultMap, ProblemReport report) {
 		PieGraphChartVisitor pieChart = new PieGraphChartVisitor("failure", null);
-		Map<Object, Object> distributeMap = new HashMap<Object, Object>();
+		Map<Object, Object> distributes = new HashMap<Object, Object>();
 
 		pieChart.visitProblemReport(report);
 		for (Item item : pieChart.getPieChart().getItems()) {
-			distributeMap.put(item.getTitle(), item.getNumber());
+			distributes.put(item.getTitle(), item.getNumber());
 		}
-		resultMap.put("distributeMap", distributeMap);
+		resultMap.put("distributeMap", distributes);
 	}
 
 	private void addFailureInfo(Map<Object, Object> resultMap, ProblemReport report) {
@@ -60,26 +60,13 @@ public class FailureModelGenerator {
 
 	public Map<Object, Object> generateFailureModel(String domain, Date endTime) {
 		Map<Object, Object> resultMap = new HashMap<Object, Object>();
+		ModelRequest request = new ModelRequest(domain, getMillsOfMinutePastCurrentHour(0))
+		      .setProperty("queryType", null);
 		ProblemReport report = null;
-		long endMills = endTime.getTime();
 
-		if (endMills >= getMillsOfMinutePastCurrentHour(5)) {
-			ModelRequest request = new ModelRequest(domain, getMillsOfMinutePastCurrentHour(0)).setProperty("queryType",
-			      null);
-
-			if (m_service.isEligable(request)) {
-				ModelResponse<ProblemReport> response = m_service.invoke(request);
-				report = response.getModel();
-			}
-		} else {
-			if (endMills > getMillsOfMinutePastCurrentHour(0)) {
-				endMills = getHourMills(endMills);
-			} else {
-				endMills = getHourMills(endMills) + TimeUtil.ONE_HOUR;
-			}
-			long startMills = endMills - TimeUtil.ONE_HOUR;
-
-			report = m_reportService.queryProblemReport(domain, new Date(startMills), new Date(endMills));
+		if (m_service.isEligable(request)) {
+			ModelResponse<ProblemReport> response = m_service.invoke(request);
+			report = response.getModel();
 		}
 
 		try {

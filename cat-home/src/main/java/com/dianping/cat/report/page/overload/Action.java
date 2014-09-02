@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view");

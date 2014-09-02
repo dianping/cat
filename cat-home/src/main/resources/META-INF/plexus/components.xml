@@ -555,12 +555,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 			<role-hint>hourly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.database.HourlyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.overload.HourlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
@@ -571,12 +571,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 			<role-hint>daily_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.database.DailyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.overload.DailyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
@@ -587,12 +587,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 			<role-hint>weekly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.database.WeeklyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.overload.WeeklyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
@@ -603,12 +603,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.CapacityUpdater</role>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 			<role-hint>monthly_capacity_updater</role-hint>
-			<implementation>com.dianping.cat.report.task.database.MonthlyCapacityUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.overload.MonthlyCapacityUpdater</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
@@ -619,15 +619,45 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.TableCapacityService</role>
-			<implementation>com.dianping.cat.report.task.database.TableCapacityService</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.database.CapacityUpdateTask</role>
-			<implementation>com.dianping.cat.report.task.database.CapacityUpdateTask</implementation>
+			<role>com.dianping.cat.report.task.overload.TableCapacityService</role>
+			<implementation>com.dianping.cat.report.task.overload.TableCapacityService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.database.TableCapacityService</role>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
+					<role-hint>hourly_capacity_updater</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
+					<role-hint>daily_capacity_updater</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
+					<role-hint>weekly_capacity_updater</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
+					<role-hint>monthly_capacity_updater</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -764,6 +794,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2415,11 +2448,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>overload-table</role-hint>
+			<role-hint>overload</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>overload-table</logical-table-name>
-				<physical-table-name>overload_table</physical-table-name>
+				<logical-table-name>overload</logical-table-name>
+				<physical-table-name>overload</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -2507,8 +2540,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.OverloadTableDao</role>
-			<implementation>com.dianping.cat.home.dal.report.OverloadTableDao</implementation>
+			<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+			<implementation>com.dianping.cat.home.dal.report.OverloadDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4263,20 +4296,20 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.database.Handler</role>
-			<implementation>com.dianping.cat.report.page.database.Handler</implementation>
+			<role>com.dianping.cat.report.page.overload.Handler</role>
+			<implementation>com.dianping.cat.report.page.overload.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.database.JspViewer</role>
+					<role>com.dianping.cat.report.page.overload.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.database.TableCapacityService</role>
+					<role>com.dianping.cat.report.task.overload.TableCapacityService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.database.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.overload.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.overload.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -4284,8 +4317,70 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.database.TableCapacityService</role>
-			<implementation>com.dianping.cat.report.task.database.TableCapacityService</implementation>
+			<role>com.dianping.cat.report.task.overload.TableCapacityService</role>
+			<implementation>com.dianping.cat.report.task.overload.TableCapacityService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+			<implementation>com.dianping.cat.home.dal.report.OverloadDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.DailyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.MonthlyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

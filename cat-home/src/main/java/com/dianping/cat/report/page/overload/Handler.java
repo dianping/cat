@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.database;
+package com.dianping.cat.report.page.overload;
 
 import java.io.IOException;
 
@@ -11,9 +11,8 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.OverloadReport.entity.OverloadReport;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.database.TableCapacityService;
+import com.dianping.cat.report.task.overload.TableCapacityService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -22,34 +21,15 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private TableCapacityService m_tableCapacityService;
 
-	private OverloadReport generateReport(Payload payload) {
-		OverloadReport report = new OverloadReport();
-		String domain = payload.getDomain();
-		String ip = payload.getIp();
-		String name = payload.getName();
-
-		if (domain != null) {
-			report.setDomain(domain);
-		}
-		if (ip != null) {
-			report.setIp(ip);
-		}
-		if (name != null) {
-			report.setName(name);
-		}
-
-		return report;
-	}
-
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "database")
+	@InboundActionMeta(name = "overload")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "database")
+	@OutboundActionMeta(name = "overload")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -58,9 +38,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			try {
-				OverloadReport compareReport = generateReport(payload);
-				model.setReports(m_tableCapacityService.queryOverloadReports(compareReport, payload.getStartTime(),
-				      payload.getEndTime()));
+				model.setReports(m_tableCapacityService.queryOverloadReports(payload.getStartTime(), payload.getEndTime()));
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -68,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.DATABASE);
+		model.setPage(ReportPage.OVERLOAD);
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);

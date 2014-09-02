@@ -8,15 +8,20 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
 public class ExceptionDecorator extends ProjectDecorator implements Initializable {
+
+	@Inject
+	private AlertSummaryExecutor m_executor;
 
 	public Configuration m_configuration;
 
@@ -47,7 +52,15 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		} catch (Exception e) {
 			Cat.logError("build exception content error:" + alert.toString(), e);
 		}
-		return sw.toString();
+
+		String alertContent = sw.toString();
+		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
+
+		if (summaryContext != null) {
+			return alertContent + "<br/>" + summaryContext;
+		} else {
+			return alertContent;
+		}
 	}
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {

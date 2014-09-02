@@ -45,11 +45,11 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 		for (Entry<String, String> e : request.getProperties().entrySet()) {
 			if (e.getValue() != null) {
 				try {
-	            sb.append('&');
-	            sb.append(e.getKey()).append('=').append(URLEncoder.encode(e.getValue(), "utf-8") );
-            } catch (Exception ex) {
-            	Cat.logError(ex);
-            }
+					sb.append('&');
+					sb.append(e.getKey()).append('=').append(URLEncoder.encode(e.getValue(), "utf-8"));
+				} catch (Exception ex) {
+					Cat.logError(ex);
+				}
 			}
 		}
 		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,

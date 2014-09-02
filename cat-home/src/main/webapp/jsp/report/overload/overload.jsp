@@ -6,9 +6,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.database.Context" scope="request" />
-<jsp:useBean id="payload"	type="com.dianping.cat.report.page.database.Payload" scope="request" />
-<jsp:useBean id="model"	type="com.dianping.cat.report.page.database.Model" scope="request" />
+<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.overload.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
 <a:navbar title="DatabaseReport" navUrlPrefix="">
 	<jsp:body>
@@ -29,20 +29,9 @@
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
-			类型
-			<input type="text" name="name" id="name" value="${payload.name}" style="height:auto" class="input-small">
-			项目
-			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			机器ip
-			<input type="text" name="ip" id="ip" value="${payload.ip}" style="height:auto" class="input-small"> 
 			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
 			<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
-			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>
-			<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-			<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-			<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
-			<br>
-			报告类型（可多选）&nbsp;&nbsp;
+			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>&nbsp;&nbsp;
 			<div class="btn-group" data-toggle="buttons-checkbox">
 			  <button id="hourlyButton" type="button" class="btn btn-info">小时</button>
 			  <button id="dailyButton" type="button" class="btn btn-info">天报</button>
@@ -143,13 +132,6 @@
 	        $("#monthlyButton").click(function(){
 	          toggleButton("monthly", false);
 	        });
-	        
-	        var refresh = ${payload.refresh};
-	        var frequency = ${payload.frequency};
-	        if(refresh){
-	          $('#refresh'+frequency).addClass('btn-danger');
-	          setTimeout(refreshPage,frequency*1000);
-	        };
 	      });
 	      
 	      var buttonToInt = {'hourly':1, 'daily':2, 'weekly':3, 'monthly':4};
@@ -191,25 +173,8 @@
 	      function queryNew(){
 	        var startTime=$("#startTime").val();
 	        var endTime=$("#endTime").val();
-	        var domain=$("#domain").val();
-	        var name=$("#name").val();
-	        var ip=$("#ip").val();
 	        var isFullScreen=$('#fullScreenStr').val();
-	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
-	      }
-	      function queryFrequency(frequency){
-	        var domain=$("#domain").val();
-	        var name=$("#name").val();
-	        var ip=$("#ip").val();
-	        var isFullScreen=$('#fullScreenStr').val();
-	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency+"&"+getType();
-	      }
-	      function refreshPage(){
-	        var domain=$("#domain").val();
-	        var name=$("#name").val();
-	        var ip=$("#ip").val();
-	        var isFullScreen=$('#fullScreenStr').val();
-	        window.location.href="?op=view&domain="+domain+"&name="+name+"&ip="+ip+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency}+"&"+getType();
+	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
 	      }
 		</script>
 	</jsp:body>

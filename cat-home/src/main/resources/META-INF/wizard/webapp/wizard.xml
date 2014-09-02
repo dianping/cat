@@ -77,8 +77,8 @@
          <page name="alert" title="Alert" path="alert" template="default">
             <description>Alert</description>
          </page>
-         <page name="database" title="Database" path="database" template="default">
-            <description>Database</description>
+         <page name="overload" title="Overload" path="overload" template="default">
+            <description>Overload</description>
          </page>
       </module>
       <module name="system" path="s" default="false">
