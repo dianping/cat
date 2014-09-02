@@ -64,6 +64,7 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 			}
 
 			int size = dailyReports.size();
+			
 			if (size < 1000) {
 				hasMore = false;
 			} else {

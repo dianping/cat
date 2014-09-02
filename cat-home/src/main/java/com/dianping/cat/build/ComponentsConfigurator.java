@@ -364,8 +364,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
-		all.add(C(FailureModelGenerator.class).req(ReportServiceManager.class)
-		      .req(ModelService.class, ProblemAnalyzer.ID));
+		all.add(C(FailureModelGenerator.class).req(ModelService.class, ProblemAnalyzer.ID));
 
 		all.add(C(FailureDecorator.class));
 

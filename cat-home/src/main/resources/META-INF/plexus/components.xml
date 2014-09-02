@@ -491,9 +491,6 @@
 			<implementation>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
 				</requirement>
@@ -3852,9 +3849,6 @@
 			<role>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</role>
 			<implementation>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
