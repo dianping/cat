@@ -15,7 +15,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 
 	public static final double CAPACITY = 5.0;
 
-	public static final String ID = Constants.DATABASE_CAPACITY;
+	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;
 
 	@Inject(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
 	private CapacityUpdater m_hourlyUpdater;

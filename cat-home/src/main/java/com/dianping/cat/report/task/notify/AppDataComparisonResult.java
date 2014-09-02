@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify;
+package com.dianping.cat.report.task.notify;
 
 import java.util.ArrayList;
 import java.util.List;

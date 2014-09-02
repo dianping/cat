@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify;
+package com.dianping.cat.report.task.notify;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
-import com.dianping.cat.system.notify.render.AppDataComparisonRender;
+import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 

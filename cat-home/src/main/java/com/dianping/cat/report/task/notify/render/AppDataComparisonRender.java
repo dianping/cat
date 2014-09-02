@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify.render;
+package com.dianping.cat.report.task.notify.render;
 
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -11,7 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.system.notify.AppDataComparisonResult;
+import com.dianping.cat.report.task.notify.AppDataComparisonResult;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify;
+package com.dianping.cat.report.task.notify;
 
 import java.io.StringWriter;
 import java.util.Map;
@@ -11,9 +11,9 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.system.notify.render.EventRender;
-import com.dianping.cat.system.notify.render.ProblemRender;
-import com.dianping.cat.system.notify.render.TransactionRender;
+import com.dianping.cat.report.task.notify.render.EventRender;
+import com.dianping.cat.report.task.notify.render.ProblemRender;
+import com.dianping.cat.report.task.notify.render.TransactionRender;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
