@@ -263,7 +263,6 @@ public class Handler implements PageHandler<Context> {
 			deleteAggregationRule(payload);
 			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
 			break;
-
 		case URL_PATTERN_ALL:
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
 			break;
@@ -278,7 +277,6 @@ public class Handler implements PageHandler<Context> {
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
 			break;
-
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			break;
@@ -609,12 +607,17 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR - TimeUtil.ONE_DAY);
 		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
 		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
-		Set<String> exceptions = new HashSet<String>();
+		Set<String> keys = new HashSet<String>();
+		List<String> exceptions = new ArrayList<String>();
 
 		for (Entry<String, com.dianping.cat.home.bug.entity.Domain> domain : report.getDomains().entrySet()) {
-			exceptions.addAll(domain.getValue().getExceptionItems().keySet());
+			keys.addAll(domain.getValue().getExceptionItems().keySet());
 		}
-		return new ArrayList<String>(exceptions);
+
+		for (String key : keys) {
+			exceptions.add(key.replaceAll("\n", " "));
+		}
+		return exceptions;
 	}
 
 	private Project queryProjectById(int projectId) {
