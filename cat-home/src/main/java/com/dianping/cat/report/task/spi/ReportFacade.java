@@ -20,10 +20,6 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 
 	private Map<String, ReportTaskBuilder> m_reportBuilders = new HashMap<String, ReportTaskBuilder>();
 
-	public void addNewReportBuild(ReportTaskBuilder newReportBuilder, String name) {
-		m_reportBuilders.put(name, newReportBuilder);
-	}
-
 	public boolean builderReport(Task task) {
 		try {
 			if (task == null) {
@@ -36,7 +32,7 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 			ReportTaskBuilder reportBuilder = getReportBuilder(reportName);
 
 			if (reportBuilder == null) {
-				m_logger.info("no report builder for type:" + " " + reportName);
+				Cat.logError(new RuntimeException("no report builder for type:" + " " + reportName));
 				return false;
 			} else {
 				boolean result = false;

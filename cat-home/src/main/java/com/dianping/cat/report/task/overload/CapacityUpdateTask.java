@@ -80,4 +80,20 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 		m_logger = logger;
 	}
 
+	public void setHourlyUpdater(CapacityUpdater hourlyUpdater) {
+   	m_hourlyUpdater = hourlyUpdater;
+   }
+
+	public void setDailyUpdater(CapacityUpdater dailyUpdater) {
+   	m_dailyUpdater = dailyUpdater;
+   }
+
+	public void setWeeklyUpdater(CapacityUpdater weeklyUpdater) {
+   	m_weeklyUpdater = weeklyUpdater;
+   }
+
+	public void setMonthlyUpdater(CapacityUpdater monthlyUpdater) {
+   	m_monthlyUpdater = monthlyUpdater;
+   }
+	
 }

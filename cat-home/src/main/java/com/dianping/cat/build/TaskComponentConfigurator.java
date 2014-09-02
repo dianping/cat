@@ -173,10 +173,11 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableCapacityService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, OverloadDao.class));
 
-		all.add(C(CapacityUpdateTask.class).req(CapacityUpdater.class, HourlyCapacityUpdater.ID)
-		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID).req(CapacityUpdater.class, WeeklyCapacityUpdater.ID)
-		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID));
-		
+		all.add(C(ReportTaskBuilder.class, CapacityUpdateTask.ID, CapacityUpdateTask.class)
+		      .req(CapacityUpdater.class, HourlyCapacityUpdater.ID, "m_hourlyUpdater")
+		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID, "m_dailyUpdater")
+		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
+		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 

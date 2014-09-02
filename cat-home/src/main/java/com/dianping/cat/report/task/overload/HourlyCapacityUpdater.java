@@ -28,7 +28,7 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 	private OverloadDao m_overloadDao;
 
 	public static final String ID = "hourly_capacity_updater";
-
+	
 	@Override
 	public String getId() {
 		return ID;

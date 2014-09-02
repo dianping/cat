@@ -1375,24 +1375,29 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.overload.CapacityUpdateTask</role>
+			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role-hint>databaseCapacity</role-hint>
 			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 					<role-hint>hourly_capacity_updater</role-hint>
+					<field-name>m_hourlyUpdater</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 					<role-hint>daily_capacity_updater</role-hint>
+					<field-name>m_dailyUpdater</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 					<role-hint>weekly_capacity_updater</role-hint>
+					<field-name>m_weeklyUpdater</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 					<role-hint>monthly_capacity_updater</role-hint>
+					<field-name>m_monthlyUpdater</field-name>
 				</requirement>
 			</requirements>
 		</component>

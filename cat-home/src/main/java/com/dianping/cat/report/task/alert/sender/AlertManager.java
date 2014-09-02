@@ -102,9 +102,6 @@ public class AlertManager implements Initializable {
 		AlertMessageEntity dbMessage = new AlertMessageEntity(group, title, type, dbContent, null);
 
 		m_alertEntityService.storeAlert(alert, dbMessage);
-		if (AlertType.Business.getName().equals(alert.getType())) {
-			pair = m_decoratorManager.generateTitleAndContent(alert);
-		}
 
 		if (suspendMinute > 0) {
 			if (isSuspend(alertKey, suspendMinute)) {
