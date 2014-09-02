@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.overload;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -28,7 +29,7 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 	private OverloadDao m_overloadDao;
 
 	public static final String ID = "hourly_capacity_updater";
-	
+
 	@Override
 	public String getId() {
 		return ID;
@@ -37,37 +38,44 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 	@Override
 	public void updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.HOURLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
-		int loopStartId = maxId;
-		boolean hasMore = true;
 
-		while (hasMore) {
-			List<HourlyReportContent> reports = m_hourlyReportContentDao.findOverloadReport(loopStartId, capacity,
+		while (true) {
+			List<HourlyReportContent> reports = m_hourlyReportContentDao.findOverloadReport(maxId,
 			      HourlyReportContentEntity.READSET_LENGTH);
 
 			for (HourlyReportContent content : reports) {
 				try {
 					int reportId = content.getReportId();
 					double contentLength = content.getContentLength();
-					Overload overload = m_overloadDao.createLocal();
 
-					overload.setReportId(reportId);
-					overload.setReportSize(contentLength);
-					overload.setReportType(CapacityUpdater.HOURLY_TYPE);
+					if (contentLength >= CapacityUpdater.CAPACITY) {
+						Overload overload = m_overloadDao.createLocal();
 
-					HourlyReport hourlyReport = m_hourlyReportDao.findByPK(reportId, HourlyReportEntity.READSET_FULL);
-					overload.setPeriod(hourlyReport.getPeriod());
+						overload.setReportId(reportId);
+						overload.setReportSize(contentLength);
+						overload.setReportType(CapacityUpdater.HOURLY_TYPE);
 
-					m_overloadDao.insert(overload);
+						HourlyReport hourlyReport;
+						try {
+							hourlyReport = m_hourlyReportDao.findByPK(reportId, HourlyReportEntity.READSET_FULL);
+							overload.setPeriod(hourlyReport.getPeriod());
+							m_overloadDao.insert(overload);
+
+						} catch (DalNotFoundException e) {
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
+					}
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
 			}
 
 			int size = reports.size();
-			if (size < 1000) {
-				hasMore = false;
+			if (size == 0) {
+				break;
 			} else {
-				loopStartId = reports.get(size - 1).getReportId();
+				maxId = reports.get(size - 1).getReportId();
 			}
 		}
 	}

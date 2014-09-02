@@ -3,6 +3,7 @@ package com.dianping.cat.report.task.overload;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -37,39 +38,44 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	@Override
 	public void updateDBCapacity(double capacity) throws DalException {
 		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.WEEKLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
-		int loopStartId = maxId;
-		boolean hasMore = true;
 
-		while (hasMore) {
-			List<WeeklyReportContent> weeklyReports = m_weeklyReportContentDao.findOverloadReport(loopStartId, capacity,
-			      WeeklyReportContentEntity.READSET_LENGTH);
+		while (true) {
+			List<WeeklyReportContent> reports = m_weeklyReportContentDao.findOverloadReport(maxId,
+					WeeklyReportContentEntity.READSET_LENGTH);
 
-			for (WeeklyReportContent content : weeklyReports) {
+			for (WeeklyReportContent content : reports) {
 				try {
 					int reportId = content.getReportId();
 					double contentLength = content.getContentLength();
-					Overload overload = m_overloadDao.createLocal();
 
-					overload.setReportId(reportId);
-					overload.setReportSize(contentLength);
-					overload.setReportType(CapacityUpdater.WEEKLY_TYPE);
+					if (contentLength >= CapacityUpdater.CAPACITY) {
+						Overload overload = m_overloadDao.createLocal();
 
-					WeeklyReport weeklyReport = m_weeklyReportDao.findByPK(reportId, WeeklyReportEntity.READSET_FULL);
-					overload.setPeriod(weeklyReport.getPeriod());
+						overload.setReportId(reportId);
+						overload.setReportSize(contentLength);
+						overload.setReportType(CapacityUpdater.HOURLY_TYPE);
 
-					m_overloadDao.insert(overload);
+						try {
+							WeeklyReport report = m_weeklyReportDao.findByPK(reportId, WeeklyReportEntity.READSET_FULL);
+							overload.setPeriod(report.getPeriod());
+							m_overloadDao.insert(overload);
+						} catch (DalNotFoundException e) {
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
+					}
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
 			}
 
-			int size = weeklyReports.size();
-			if (size < 1000) {
-				hasMore = false;
+			int size = reports.size();
+			if (size == 0) {
+				break;
 			} else {
-				loopStartId = weeklyReports.get(size - 1).getReportId();
+				maxId = reports.get(size - 1).getReportId();
 			}
-		}
+		}		
 	}
 
 }

@@ -11,8 +11,11 @@ public class CapacityAnalyzer extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		ReportTaskBuilder builder = lookup(ReportTaskBuilder.class, CapacityUpdateTask.ID);
-		
-		builder.buildDailyTask("cat","cat", null);
+
+		builder.buildHourlyTask("cat", "cat", null);
+		builder.buildDailyTask("cat", "cat", null);
+		builder.buildWeeklyTask("cat", "cat", null);
+		builder.buildMonthlyTask("cat", "cat", null);
 	}
 
 }

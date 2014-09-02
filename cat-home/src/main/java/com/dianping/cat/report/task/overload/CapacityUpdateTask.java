@@ -13,7 +13,7 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 
-	public static final double CAPACITY = 5.0;
+	
 
 	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;
 
@@ -34,7 +34,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			m_dailyUpdater.updateDBCapacity(CAPACITY);
+			m_dailyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -45,7 +45,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
-			m_hourlyUpdater.updateDBCapacity(CAPACITY);
+			m_hourlyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -56,7 +56,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		try {
-			m_monthlyUpdater.updateDBCapacity(CAPACITY);
+			m_monthlyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -67,7 +67,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		try {
-			m_weeklyUpdater.updateDBCapacity(CAPACITY);
+			m_weeklyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
