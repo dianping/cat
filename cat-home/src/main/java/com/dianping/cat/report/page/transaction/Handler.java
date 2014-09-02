@@ -111,10 +111,10 @@ public class Handler implements PageHandler<Context> {
 		if (tranform) {
 			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
 				Range range = entry.getValue();
-				rangeMapCopy.put(
-				      entry.getKey(),
-				      new Range(range.getValue()).setCount(range.getCount()).setSum(range.getSum())
-				            .setFails(range.getFails()).setAvg(range.getAvg()));
+				Range r = new Range(range.getValue()).setCount(range.getCount()).setSum(range.getSum())
+				      .setFails(range.getFails()).setAvg(range.getAvg());
+
+				rangeMapCopy.put(entry.getKey(), r);
 			}
 
 			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {

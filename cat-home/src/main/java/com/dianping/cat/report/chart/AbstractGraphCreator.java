@@ -163,21 +163,18 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		int index = 0;
 		long startLong = start.getTime();
 		long endLong = end.getTime();
-		boolean hasBaseline = false;
 
 		for (; startLong < endLong; startLong += TimeUtil.ONE_HOUR) {
 			double[] values = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, key, new Date(startLong));
 
 			if (values != null) {
-				hasBaseline = true;
-
 				for (int j = 0; j < values.length; j++) {
 					result[index * 60 + j] = values[j];
 				}
 			}
 			index++;
 		}
-		return hasBaseline ? result : null;
+		return result;
 	}
 
 	public Map<String, double[]> removeFutureData(Date endDate, final Map<String, double[]> allCurrentValues) {

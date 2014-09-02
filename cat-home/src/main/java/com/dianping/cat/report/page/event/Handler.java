@@ -102,8 +102,9 @@ public class Handler implements PageHandler<Context> {
 		if (tranform) {
 			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
 				Range range = entry.getValue();
-				rangeMapCopy.put(entry.getKey(),
-				      new Range(range.getValue()).setCount(range.getCount()).setFails(range.getFails()));
+				Range r = new Range(range.getValue()).setCount(range.getCount()).setFails(range.getFails());
+
+				rangeMapCopy.put(entry.getKey(), r);
 			}
 
 			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
