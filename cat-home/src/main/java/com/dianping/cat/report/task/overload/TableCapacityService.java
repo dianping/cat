@@ -110,7 +110,7 @@ public class TableCapacityService extends ContainerHolder {
 						break;
 					}
 
-					reports.add(generateOverloadReport(report, reportSize, reportId));
+					reports.add(generateOverloadReport(report, reportSize, reportType));
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
