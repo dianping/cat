@@ -19,13 +19,13 @@ import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
-public class FailureModelGenerator {
+public class ErrorModelGenerator {
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
 
 	private void addDistributeInfo(Map<Object, Object> resultMap, ProblemReport report) {
-		PieGraphChartVisitor pieChart = new PieGraphChartVisitor("failure", null);
+		PieGraphChartVisitor pieChart = new PieGraphChartVisitor("error", null);
 		Map<Object, Object> distributes = new HashMap<Object, Object>();
 
 		pieChart.visitProblemReport(report);
@@ -39,7 +39,7 @@ public class FailureModelGenerator {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		problemStatistics.setAllIp(true);
 		problemStatistics.visitProblemReport(report);
-		TypeStatistics failureStatus = problemStatistics.getStatus().get("failure");
+		TypeStatistics failureStatus = problemStatistics.getStatus().get("error");
 
 		if (failureStatus != null) {
 			Map<Object, Object> statusMap = new HashMap<Object, Object>();
@@ -56,6 +56,7 @@ public class FailureModelGenerator {
 	public Map<Object, Object> generateFailureModel(String domain, Date endTime) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		ModelRequest request = new ModelRequest(domain, getCurrentHour()).setProperty("queryType", "view");
+		request.setProperty("type", "error");
 		ProblemReport report = null;
 
 		if (m_service.isEligable(request)) {

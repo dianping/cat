@@ -11,7 +11,7 @@ import com.dianping.cat.Cat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class FailureDecorator implements Initializable {
+public class ErrorDecorator implements Initializable {
 
 	public Configuration m_configuration;
 
@@ -19,7 +19,7 @@ public class FailureDecorator implements Initializable {
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("failureInfo.ftl");
+			Template t = m_configuration.getTemplate("errorInfo.ftl");
 			t.process(failureModel, sw);
 		} catch (Exception e) {
 			Cat.logError(e);
