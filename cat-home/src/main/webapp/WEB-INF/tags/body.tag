@@ -74,7 +74,6 @@
 		           <li class='nav-header' style="margin-top:0px;">全局配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
@@ -84,20 +83,21 @@
 		           <li class='nav-header' style="margin-top:0px;">业务监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控规则</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricGroupConfigUpdate">业务指标分组</a></li>
+		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">网络监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigUpdate">网络告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
 			       <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigUpdate">系统告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警类型设置</a></li>
-			       <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">异常类型配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">应用大盘配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
 			       <li class='nav-header' style="margin-top:0px;">其他监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
+			       <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">异常归属配置</a></li>
 			      </ul>
 			     </li>
         	 </ul>
