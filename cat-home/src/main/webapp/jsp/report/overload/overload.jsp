@@ -10,22 +10,26 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
-<a:navbar title="DatabaseReport" navUrlPrefix="">
-	<jsp:body>
+<a:body>
 		<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-		<res:useCss value="${res.css.local['database.css']}" target="head-css" />
 		<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+		<div style="height:24px"></div>
+   <div class="row-fluid">
+     <div class="span2">
+		<%@include file="../reportTree.jsp"%>
+	 </div>
+	 <div class="span10">
 		<div id="queryBar">
 			<div class="text-left"></div>
 			开始
 			<div id="startDatePicker" class="input-append date" >
-				<input name="startTime" id="startTime" style="height:auto; width: 150px;" readonly
+				<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
 				value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
 			结束
 			<div id="endDatePicker" class="input-append date" >
-				<input name="endTime" id="endTime" style="height:auto; width: 150px;" readonly
+				<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
@@ -93,9 +97,11 @@
 					</tr>
 				</c:forEach>
 			</table>
-		</div>
+		</div></div></div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
+			  $('#overload').addClass("active");
+			  
 	        <c:if test="${payload.fullScreen}">
 	          $('#fullScreen').addClass('btn-danger');
 	          $('.navbar').hide();
@@ -177,5 +183,4 @@
 	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
 	      }
 		</script>
-	</jsp:body>
-</a:navbar>
+</a:body>

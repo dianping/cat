@@ -22,7 +22,6 @@ import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.appComparison.entity.AppComparison;
 import com.dianping.cat.configuration.appComparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.appComparison.entity.Item;
-import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.message.Transaction;
@@ -55,18 +54,16 @@ public class AppDataComparisonNotifier {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public void doNotifying() {
-		Date yesterdayDate = TimeUtil.getYesterday();
-		String yesterday = m_sdf.format(yesterdayDate);
-		Transaction t = Cat.newTransaction("AppDataComparitonInformer", yesterday);
+	public void doNotifying(Date period) {
+		Transaction t = Cat.newTransaction("AppDataComparitonInformer", m_sdf.format(period));
 
 		try {
-			Map<String, AppDataComparisonResult> results = buildAppDataComparisonResults(yesterdayDate,
+			Map<String, AppDataComparisonResult> results = buildAppDataComparisonResults(period,
 			      m_appComparisonConfigManager.getConfig());
 			Map<List<String>, List<AppDataComparisonResult>> results2Receivers = buildReceivers2Results(results);
 
 			for (Entry<List<String>, List<AppDataComparisonResult>> entry : results2Receivers.entrySet()) {
-				notify(yesterdayDate, entry.getValue(), entry.getKey());
+				notify(period, entry.getValue(), entry.getKey());
 			}
 
 			t.setStatus(Transaction.SUCCESS);

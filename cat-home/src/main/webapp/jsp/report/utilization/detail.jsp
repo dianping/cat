@@ -1,7 +1,7 @@
 	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <div class="row-fluid">
       <div class="span2">
-		<%@include file="../bugTree.jsp"%>
+		<%@include file="../reportTree.jsp"%>
 	</div>
 	<div class="span10">
 			</br>
