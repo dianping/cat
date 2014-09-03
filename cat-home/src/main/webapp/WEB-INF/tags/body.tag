@@ -79,8 +79,8 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">外部监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">URL合并规则</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS合并规则</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方监控配置</a></li>

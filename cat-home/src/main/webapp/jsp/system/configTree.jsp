@@ -9,8 +9,8 @@
 	       <li class="text-right" id="topylogyEdgeConfigList"><a href="?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
 	       <li class="text-right" id="exceptionConfigList"><a href="?op=exception">异常告警配置</a></li>
            <li class='nav-header'>外部监控配置</li>
-	       <li class="text-right" id="urlPatternList"><a href="?op=urlPatterns">URL合并规则</a></li>
-	       <li class="text-right" id="aggregationList"><a href="?op=aggregations">JS合并规则</a></li>
+	       <li class="text-right" id="aggregationList"><a href="?op=aggregations">JS报错配置</a></li>
+	       <li class="text-right" id="urlPatternList"><a href="?op=urlPatterns">WEB监控配置</a></li>
 	       <li class="text-right" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
 	       <li class="text-right" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
 	       <li class="text-right" id="thirdPartyConfigUpdate"><a href="?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
