@@ -60,8 +60,8 @@ import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
-import com.dianping.cat.report.task.alert.summary.FailureDecorator;
-import com.dianping.cat.report.task.alert.summary.FailureModelGenerator;
+import com.dianping.cat.report.task.alert.summary.ErrorDecorator;
+import com.dianping.cat.report.task.alert.summary.ErrorModelGenerator;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
@@ -168,13 +168,13 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
-		all.add(C(FailureModelGenerator.class).req(ModelService.class, ProblemAnalyzer.ID));
+		all.add(C(ErrorModelGenerator.class).req(ModelService.class, ProblemAnalyzer.ID));
 
-		all.add(C(FailureDecorator.class));
+		all.add(C(ErrorDecorator.class));
 
 		all.add(C(AlertSummaryExecutor.class)
 		      .req(AlertSummaryGenerator.class, AlertSummaryManager.class, SenderManager.class)
-		      .req(FailureModelGenerator.class, FailureDecorator.class)
+		      .req(ErrorModelGenerator.class, ErrorDecorator.class)
 		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
 
 		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));

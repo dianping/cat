@@ -30,13 +30,13 @@ public class AlertSummaryExecutor {
 	private AlertSummaryDecorator m_alertSummaryDecorator;
 
 	@Inject
-	private FailureModelGenerator m_failureContextGenerator;
+	private ErrorModelGenerator m_failureContextGenerator;
 
 	@Inject
 	private SenderManager m_sendManager;
 
 	@Inject
-	private FailureDecorator m_failureDecorator;
+	private ErrorDecorator m_failureDecorator;
 
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();

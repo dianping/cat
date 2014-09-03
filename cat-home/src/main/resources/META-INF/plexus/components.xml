@@ -2656,8 +2656,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</implementation>
+			<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2666,8 +2666,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.FailureDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.FailureDecorator</implementation>
+			<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.ErrorDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
@@ -2683,10 +2683,10 @@
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</role>
+					<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.FailureDecorator</role>
+					<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
@@ -3858,13 +3858,13 @@
 					<field-name>m_alertSummaryDecorator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</role>
+					<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.FailureDecorator</role>
+					<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3908,8 +3908,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.FailureModelGenerator</implementation>
+			<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3923,8 +3923,8 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.FailureDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.FailureDecorator</implementation>
+			<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.ErrorDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
