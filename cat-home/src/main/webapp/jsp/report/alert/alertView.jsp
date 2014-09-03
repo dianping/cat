@@ -19,13 +19,13 @@
 			<div class="text-left"></div>
 			开始
 			<div id="startDatePicker" class="input-append date" >
-				<input name="startTime" id="startTime" style="height:auto; width: 150px;" readonly
+				<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
 				value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
 			结束
 			<div id="endDatePicker" class="input-append date" >
-				<input name="endTime" id="endTime" style="height:auto; width: 150px;" readonly
+				<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
