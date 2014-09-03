@@ -54,7 +54,13 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		}
 
 		String alertContent = sw.toString();
-		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
+		String summaryContext = "";
+		
+      try {
+	      summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
+      } catch (Exception e) {
+      	Cat.logError(alert.toString(),e);
+      }
 
 		if (summaryContext != null) {
 			return alertContent + "<br/>" + summaryContext;
@@ -64,7 +70,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 	}
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
-		String domain = alert.getGroup();
+		String domain = alert.getDomain();
 		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();
 

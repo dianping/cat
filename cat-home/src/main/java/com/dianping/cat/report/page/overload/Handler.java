@@ -39,8 +39,8 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			try {
 				model.setReports(m_tableCapacityService.queryOverloadReports(payload.getStartTime(), payload.getEndTime()));
-			} catch (Exception ex) {
-				Cat.logError(ex);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 			break;
 		}

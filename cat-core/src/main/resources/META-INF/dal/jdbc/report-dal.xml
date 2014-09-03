@@ -240,7 +240,7 @@
 	<entity name="report-content" table="report_content" alias="rc" class-name="HourlyReportContent">
 	 <member name="creation-date" insert-expr="NOW()" />
 	 <member name="content-length" value-type="long" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
-	 <var name="max-id" value-type="int" />
+	 <var name="start-id" value-type="int" />
 	 <var name="capacity" value-type="double" />
 	 <readsets>
 		<readset name="LENGTH">
@@ -250,15 +250,12 @@
 	 </readsets>
      <query-defs>
      	<query name="find-overload-report" type="SELECT" multiple="true">
-			<param name="max-id" />
-			<param name="capacity" />
+			<param name="start-id" />
 			<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> > ${max-id}
-				AND <FIELD name='content-length'/> >= ${capacity}
-				ORDER BY <FIELD name='report-id'/> asc
-				LIMIT 1000
+				WHERE <FIELD name='report-id'/> > ${start-id}
+				ORDER BY <FIELD name='report-id'/> asc limit 1000
 				]]></statement>
 		</query>
      </query-defs>

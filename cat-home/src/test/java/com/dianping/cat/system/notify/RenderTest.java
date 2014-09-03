@@ -11,6 +11,8 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.task.notify.ReportRender;
+import com.dianping.cat.report.task.notify.ReportRenderImpl;
 
 public class RenderTest extends ComponentTestCase {
 

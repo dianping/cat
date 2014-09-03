@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify;
+package com.dianping.cat.report.task.notify;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;

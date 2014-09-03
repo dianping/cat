@@ -38,10 +38,15 @@ public class ScheduledManager implements Initializable {
 		return emails;
 	}
 
-	public List<ScheduledReport> queryScheduledReports() throws DalException {
-		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+	public List<ScheduledReport> queryScheduledReports() {
+		try {
+			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
 
-		return reports;
+			return reports;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return new ArrayList<ScheduledReport>();
+		}
 	}
 
 	public void queryScheduledReports(Model model, String userName) {

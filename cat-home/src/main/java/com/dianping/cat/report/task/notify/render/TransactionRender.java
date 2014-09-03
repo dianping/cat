@@ -1,4 +1,4 @@
-package com.dianping.cat.system.notify.render;
+package com.dianping.cat.report.task.notify.render;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

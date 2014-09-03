@@ -144,7 +144,7 @@ public class StatusInfoCollector extends BaseVisitor {
 		memory.setFree(runtime.freeMemory());
 		memory.setHeapUsage(bean.getHeapMemoryUsage().getUsed());
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
-
+		
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
 
 		for (GarbageCollectorMXBean mxbean : beans) {

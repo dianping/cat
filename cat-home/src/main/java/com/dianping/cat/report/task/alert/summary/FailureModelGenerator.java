@@ -10,21 +10,16 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
-import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
 public class FailureModelGenerator {
-
-	@Inject
-	private ReportServiceManager m_reportService;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -59,9 +54,8 @@ public class FailureModelGenerator {
 	}
 
 	public Map<Object, Object> generateFailureModel(String domain, Date endTime) {
-		Map<Object, Object> resultMap = new HashMap<Object, Object>();
-		ModelRequest request = new ModelRequest(domain, getMillsOfMinutePastCurrentHour(0))
-		      .setProperty("queryType", null);
+		Map<Object, Object> result = new HashMap<Object, Object>();
+		ModelRequest request = new ModelRequest(domain, getCurrentHour()).setProperty("queryType", "view");
 		ProblemReport report = null;
 
 		if (m_service.isEligable(request)) {
@@ -70,22 +64,17 @@ public class FailureModelGenerator {
 		}
 
 		try {
-			addFailureInfo(resultMap, report);
-			addDistributeInfo(resultMap, report);
+			addFailureInfo(result, report);
+			addDistributeInfo(result, report);
 		} catch (Exception ex) {
 			Cat.logError(ex);
 		}
-
-		return resultMap;
+		return result;
 	}
 
-	public long getHourMills(long mills) {
-		return mills - mills % TimeUtil.ONE_HOUR;
-	}
-
-	private long getMillsOfMinutePastCurrentHour(int minute) {
+	private long getCurrentHour() {
 		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MINUTE, minute);
+		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 

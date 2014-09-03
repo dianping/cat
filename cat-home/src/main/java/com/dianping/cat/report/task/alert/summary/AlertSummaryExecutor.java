@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
@@ -62,6 +63,8 @@ public class AlertSummaryExecutor {
 		}
 		date = normalizeDate(date);
 
+		Transaction t = Cat.newTransaction("AlertSummary", domain);
+
 		try {
 			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
 			m_alertSummaryManager.insert(alertSummary);
@@ -70,11 +73,15 @@ public class AlertSummaryExecutor {
 			Map<Object, Object> failureModel = m_failureContextGenerator.generateFailureModel(domain, date);
 			String failureContext = m_failureDecorator.generateHtml(failureModel);
 
+			t.setStatus(Transaction.SUCCESS);
 			return summaryContent + failureContext;
 		} catch (Exception e) {
+			t.setStatus(e);
 			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
-			return null;
+		} finally {
+			t.complete();
 		}
+		return null;
 	}
 
 	public String execute(String domain, Date date, String receiverStr) {

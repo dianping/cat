@@ -37,6 +37,8 @@ public class Constants {
 
 	public static final String REPORT_ROUTER = "router";
 
-	public static final String DATABASE_CAPACITY = "databaseCapacity";
+	public static final String REPORT_DATABASE_CAPACITY = "databaseCapacity";
+
+	public static final String REPORT_NOTIFY = "dailyNotify";
 
 }

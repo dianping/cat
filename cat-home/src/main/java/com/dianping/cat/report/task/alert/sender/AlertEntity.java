@@ -23,7 +23,7 @@ public class AlertEntity {
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
 	public String getDomain() {
-		if (m_type.equals(AlertType.Business.getName())) {
+		if (AlertType.Business.getName().equals(m_type)) {
 			return String.valueOf(m_paras.get("domain"));
 		} else {
 			return m_group;

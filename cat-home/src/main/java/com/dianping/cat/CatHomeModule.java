@@ -23,7 +23,6 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
-import com.dianping.cat.system.notify.ScheduledMailTask;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
@@ -67,16 +66,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(productUpdateTask);
 			Threads.forGroup("cat").start(thirdPartyAlert);
 			Threads.forGroup("cat").start(alertBuildingTask);
-		}
-		executeAlarmModule(ctx);
-	}
-
-	private void executeAlarmModule(ModuleContext ctx) throws Exception {
-		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
-
-		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
-			Threads.forGroup("cat").start(scheduledTask);
 		}
 	}
 
