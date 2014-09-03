@@ -69,16 +69,13 @@
           		</li>
           	</ul>
           	<ul class="nav">
-         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Config<b class="caret"></b></a>
+         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configs<b class="caret"></b></a>
           		<ul class="dropdown-menu">
 		           <li class='nav-header' style="margin-top:0px;">全局配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">外部监控配置</li>
+		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
@@ -95,6 +92,9 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警类型设置</a></li>
 			       <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">异常类型配置</a></li>
+		           <li class='nav-header' style="margin-top:0px;">应用大盘配置</li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
 			       <li class='nav-header' style="margin-top:0px;">其他监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
