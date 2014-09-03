@@ -56,6 +56,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 		item.setProductText(product);
 		item.setMetricItemText(metricKey);
+		item.setMonitorCount(true);
 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
