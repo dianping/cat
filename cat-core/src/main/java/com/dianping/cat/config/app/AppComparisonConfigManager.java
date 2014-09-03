@@ -11,9 +11,9 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.appComparison.entity.AppComparison;
-import com.dianping.cat.configuration.appComparison.entity.AppComparisonConfig;
-import com.dianping.cat.configuration.appComparison.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
+import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
+import com.dianping.cat.configuration.app.comparison.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
