@@ -72,7 +72,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public String getName() {
-		return "TcpSocketHierarchySender";
+		return "TcpSocketSender";
 	}
 
 	@Override
@@ -94,7 +94,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				try {
 					MessageTree tree = m_queue.poll();
 
-					
 					if (tree != null) {
 						sendInternal(tree);
 						tree.setMessage(null);

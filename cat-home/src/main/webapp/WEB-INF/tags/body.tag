@@ -133,6 +133,20 @@
 			</div>
 		</form>
 	</div>
+<style>
+	.nav-list  li  a{
+		padding:0px 15px;
+	}
+	.nav li  +.nav-header{
+		margin-top:2px;
+	}
+	.nav-header{
+		padding:1px 3px;
+	}
+	.row-fluid .span2{
+		width:12%;
+	}
+</style>
 	<script>
 		function getcookie(objname) {
 			var arrstr = document.cookie.split("; ");

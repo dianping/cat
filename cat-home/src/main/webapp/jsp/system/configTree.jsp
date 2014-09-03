@@ -30,18 +30,4 @@
 	       <li class="text-left" id="bugConfigUpdate"><a href="?op=bugConfigUpdate">异常归属配置</a></li>
          </ul>
 </div>
-<style>
-	.nav-list  li  a{
-		padding:0px 15px;
-	}
-	.nav li  +.nav-header{
-		margin-top:2px;
-	}
-	.nav-header{
-		padding:5px 3px;
-	}
-	.row-fluid .span2{
-		width:12%;
-	}
-</style>
 
