@@ -20,14 +20,12 @@
 			});
 		});
 	</script>
-
-	<div class="container-fluid">
+		<div style="height:24px"></div>
       	<div class="row-fluid">
         <div class="span2">
 		<%@include file="./alarm.jsp"%>
 		</div>
 		<div class="span10">
-			</br>
 			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
 				<thead>
 				<tr class="odd">
@@ -55,5 +53,4 @@
 				</c:forEach></tbody>
 			</table>
 		</div></div>
-	</div>
 </a:body>

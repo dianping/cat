@@ -10,8 +10,18 @@
 <a:historyReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-</br>
-<table class='data'>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#matrix').addClass('active');
+	});
+</script>
+<div class="row-fluid">
+     <div class="span2">
+		<%@include file="../reportTree.jsp"%>
+	 </div>
+	 <div class="span10">
+	 <br/>
+	<table class='data'>
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
@@ -78,7 +88,7 @@
 					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Link</a></td>
 				</tr>
 			</c:forEach>
-</table>
+</table></div></div>
 
 </jsp:body>
 

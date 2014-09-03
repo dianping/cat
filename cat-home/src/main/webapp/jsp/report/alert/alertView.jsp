@@ -10,7 +10,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.alert.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alert.Model" scope="request" />
 
-<a:navbar title="AlertReport" navUrlPrefix="">
+<a:body>
 	<jsp:body>
 		<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 		<res:useCss value="${res.css.local['alert.css']}" target="head-css" />
@@ -220,4 +220,4 @@
 			}
 		</script>
 	</jsp:body>
-</a:navbar>
+</a:body>
