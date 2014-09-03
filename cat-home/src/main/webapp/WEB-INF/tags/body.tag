@@ -48,7 +48,6 @@
 					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">报表容量监控</a></li>
 	          		</ul>
           		</li>
           	</ul>
@@ -65,6 +64,7 @@
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
 	  				<li><a style="padding:1px 30px" href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
+	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">超载报表记录</a></li>
 	          		</ul>
           		</li>
           	</ul>
