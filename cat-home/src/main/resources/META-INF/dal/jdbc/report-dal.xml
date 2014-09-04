@@ -267,4 +267,7 @@
 			</query>
 	     </query-defs>
     </entity>
+    <entity name="config-modification" table="config_modification" alias="cm">
+    	<member name="creation-date" insert-expr="NOW()" />
+    </entity>
 </entities>

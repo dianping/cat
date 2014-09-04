@@ -179,7 +179,7 @@
 				loginInfo.innerHTML ='<a href="/cat/s/login?op=logout">'+name +'&nbsp;登出</a>';
 			}else{
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="#loginModal" data-toggle="modal">登陆</a>';
+				loginInfo.innerHTML ='<a href="#loginModal" data-toggle="modal">登录</a>';
 			}
 		});
 	</script>
