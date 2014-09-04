@@ -256,7 +256,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseHostname(content.trim());
 		} catch (Exception e) {
-			Cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();
@@ -286,7 +285,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseInfos(content.trim());
 		} catch (Exception e) {
-			Cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();
@@ -304,7 +302,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseInfo(content, jsonName, attrName);
 		} catch (Exception e) {
-			Cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();
