@@ -177,6 +177,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4701,6 +4704,9 @@
 			<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BusinessRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
