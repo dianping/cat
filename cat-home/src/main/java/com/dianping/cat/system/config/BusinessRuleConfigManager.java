@@ -8,9 +8,12 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -27,6 +30,9 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	private static final String CATEGORY_NAME = "business";
 
 	private static final String CONFIG_NAME = "businessRuleConfig";
+
+	@Inject
+	protected MetricConfigManager m_metricConfigManager;
 
 	public String updateRule(String ruleContent) throws SAXException, IOException {
 		Rule rule = DefaultSaxParser.parseEntity(Rule.class, ruleContent);
@@ -56,7 +62,17 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 		item.setProductText(product);
 		item.setMetricItemText(metricKey);
-		item.setMonitorCount(true);
+
+		MetricItemConfig metricItem = m_metricConfigManager.queryMetricItemConfig(metricKey);
+		if (metricItem.isShowAvg()) {
+			item.setMonitorAvg(true);
+		}
+		if (metricItem.isShowCount()) {
+			item.setMonitorCount(true);
+		}
+		if (metricItem.isShowSum()) {
+			item.setMonitorSum(true);
+		}
 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
