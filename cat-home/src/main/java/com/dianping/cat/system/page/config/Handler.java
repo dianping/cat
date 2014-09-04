@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
@@ -129,6 +131,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
 
+	@Inject
+	private ConfigModificationService m_modificationService;
+
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
 	}
@@ -229,6 +234,8 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+
+		storeModifyInfo(ctx, payload);
 
 		model.setPage(SystemPage.CONFIG);
 		Action action = payload.getAction();
@@ -628,6 +635,31 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return project;
+	}
+
+	private void storeModifyInfo(Context ctx, Payload payload) {
+		Cookie cookie = ctx.getCookie("ct");
+
+		if (cookie != null) {
+			String cookieValue = cookie.getValue();
+
+			try {
+				String[] values = cookieValue.split("\\|");
+				String userName = values[0];
+				String account = values[1];
+
+				if (userName.startsWith("\"")) {
+					userName = userName.substring(1, userName.length() - 1);
+				}
+				userName = URLDecoder.decode(userName, "UTF-8");
+
+				m_modificationService.store(userName, account, payload);
+			} catch (Exception ex) {
+				Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
+			}
+		} else {
+			Cat.logError("cannot get cookie info", new RuntimeException());
+		}
 	}
 
 	private void updateAggregationRule(Payload payload) {

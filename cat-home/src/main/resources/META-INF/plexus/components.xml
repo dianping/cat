@@ -177,6 +177,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2015,6 +2018,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>config-modification</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>config-modification</logical-table-name>
+				<physical-table-name>config_modification</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>daily-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2103,6 +2116,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.BaselineDao</role>
 			<implementation>com.dianping.cat.home.dal.report.BaselineDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.ConfigModificationDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4665,6 +4687,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4701,6 +4726,9 @@
 			<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BusinessRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
@@ -4766,6 +4794,24 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigModificationService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.ConfigModificationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

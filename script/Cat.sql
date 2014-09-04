@@ -385,3 +385,14 @@ CREATE TABLE `overload` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `reported` (`report_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='过大容量表';
+
+CREATE TABLE `config_modification` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `user_name` varchar(64) NOT NULL COMMENT '用户名',
+  `account_name` varchar(64) NOT NULL COMMENT '账户名',
+  `action_name` varchar(64) NOT NULL COMMENT 'action名',
+  `argument` longtext COMMENT '参数内容',
+  `date` datetime NOT NULL COMMENT '修改时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';
