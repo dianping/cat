@@ -11,12 +11,10 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.DataChecker;
@@ -58,97 +56,6 @@ public class AlertConfigTest {
 			Cat.logError(ex);
 			return null;
 		}
-	}
-
-	private List<Config> convert(MetricItemConfig metricItemConfig) {
-		List<Config> configs = new ArrayList<Config>();
-		Config config = new Config();
-		Condition condition = new Condition();
-		SubCondition descPerSubcon = new SubCondition();
-		SubCondition descValSubcon = new SubCondition();
-
-		double decreasePercent = metricItemConfig.getDecreasePercentage();
-		double decreaseValue = metricItemConfig.getDecreaseValue();
-
-		if (decreasePercent == 0) {
-			decreasePercent = 50;
-		}
-		if (decreaseValue == 0) {
-			decreaseValue = 100;
-		}
-
-		descPerSubcon.setType("DescPer").setText(String.valueOf(decreasePercent));
-		descValSubcon.setType("DescVal").setText(String.valueOf(decreaseValue));
-
-		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
-		config.addCondition(condition);
-		configs.add(config);
-		return configs;
-	}
-
-	@Test
-	public void test() {
-		DataChecker alertConfig = new DefaultDataChecker();
-		MetricItemConfig itemConfig = new MetricItemConfig();
-		List<Condition> conditions = buildConditions(convert(itemConfig));
-
-		double baseline[] = { 100, 100 };
-		double value[] = { 200, 200 };
-		AlertResultEntity result = extractError(alertConfig.checkData(value, baseline, conditions));
-		Assert.assertNull(result);
-
-		double[] baseline2 = { 100, 100 };
-		double[] value2 = { 49, 49 };
-		result = extractError(alertConfig.checkData(value2, baseline2, conditions));
-		Assert.assertNull(result);
-
-		double[] baseline3 = { 100, 100 };
-		double[] value3 = { 51, 49 };
-		result = extractError(alertConfig.checkData(value3, baseline3, conditions));
-		Assert.assertNull(result);
-
-		double[] baseline4 = { 50, 50 };
-		double[] value4 = { 10, 10 };
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertNull(result);
-
-		itemConfig.setDecreaseValue(30);
-		itemConfig.setDecreasePercentage(50);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertEquals(result.isTriggered(), true);
-
-		itemConfig.setDecreaseValue(41);
-		itemConfig.setDecreasePercentage(50);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertNull(result);
-
-		itemConfig.setDecreaseValue(30);
-		itemConfig.setDecreasePercentage(79);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertEquals(result.isTriggered(), true);
-
-		itemConfig.setDecreaseValue(30);
-		itemConfig.setDecreasePercentage(80);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertNull(result);
-
-		itemConfig.setDecreaseValue(30);
-		itemConfig.setDecreasePercentage(80);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value4, baseline4, conditions));
-		Assert.assertNull(result);
-
-		double[] baseline5 = { 117, 118 };
-		double[] value5 = { 43, 48 };
-		itemConfig.setDecreasePercentage(50);
-		itemConfig.setDecreasePercentage(50);
-		conditions = buildConditions(convert(itemConfig));
-		result = extractError(alertConfig.checkData(value5, baseline5, conditions));
-		Assert.assertEquals(result.isTriggered(), true);
 	}
 
 	@Test

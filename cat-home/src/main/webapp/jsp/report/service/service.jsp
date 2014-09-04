@@ -32,7 +32,7 @@
 </div>
 <div class="row-fluid">
       <div class="span2">
-		<%@include file="../bugTree.jsp"%>
+		<%@include file="../reportTree.jsp"%>
 	</div>
 	<div class="span10">
 		<div class="report">

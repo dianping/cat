@@ -52,9 +52,10 @@
           		</li>
           	</ul>
             <ul class="nav">
-          		<li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
           			<ul class="dropdown-menu">
 					<li class="nav-header">报表</li>
+	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">数据库容量报表</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">资源消耗统计</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">分BU统计异常</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行榜</a></li>
@@ -64,40 +65,39 @@
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
 	  				<li><a style="padding:1px 30px" href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
-	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">超载报表记录</a></li>
 	          		</ul>
           		</li>
           	</ul>
           	<ul class="nav">
-         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Config<b class="caret"></b></a>
+         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configs<b class="caret"></b></a>
           		<ul class="dropdown-menu">
 		           <li class='nav-header' style="margin-top:0px;">全局配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">外部监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">URL合并规则</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS合并规则</a></li>
+		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">业务监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控规则</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricGroupConfigUpdate">业务指标分组</a></li>
+		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">拓扑节点阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">网络监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigUpdate">网络告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
 			       <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigUpdate">系统告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警类型设置</a></li>
-			       <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">异常类型配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
 			       <li class='nav-header' style="margin-top:0px;">其他监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
+			       <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">异常归属配置</a></li>
 			      </ul>
 			     </li>
         	 </ul>
@@ -133,6 +133,20 @@
 			</div>
 		</form>
 	</div>
+<style>
+	.nav-list  li  a{
+		padding:0px 15px;
+	}
+	.nav li  +.nav-header{
+		margin-top:2px;
+	}
+	.nav-header{
+		padding:1px 3px;
+	}
+	.row-fluid .span2{
+		width:12%;
+	}
+</style>
 	<script>
 		function getcookie(objname) {
 			var arrstr = document.cookie.split("; ");

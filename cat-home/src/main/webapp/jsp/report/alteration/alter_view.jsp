@@ -9,7 +9,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.alteration.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alteration.Model" scope="request" />
 
-<a:navbar title="Alteration Report" navUrlPrefix="">
+<a:body>
 	<jsp:body>
 	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
@@ -104,4 +104,4 @@
 </script>
 </jsp:body>
 
-</a:navbar>
+</a:body>
