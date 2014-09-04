@@ -30,7 +30,7 @@ import com.dianping.cat.system.page.alarm.ScheduledManager;
 public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 	public static final String ID = Constants.REPORT_NOTIFY;
-	
+
 	@Inject
 	private ReportServiceManager m_reportService;
 
@@ -51,7 +51,6 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-
 	private void insertMailLog(int reportId, String content, String title, boolean result, List<String> emails)
 	      throws DalException {
 		MailRecord entity = m_mailRecordDao.createLocal();
@@ -69,13 +68,11 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 		m_mailRecordDao.insert(entity);
 	}
 
-	private String renderContent(String names, String domain) {
+	private String renderContent(String names, String domain, Date start) {
 		int transactionFlag = names.indexOf(TransactionAnalyzer.ID);
 		int eventFlag = names.indexOf(EventAnalyzer.ID);
 		int problemFlag = names.indexOf(ProblemAnalyzer.ID);
-		Date end = TimeUtil.getCurrentDay();
-		Date start = new Date(end.getTime() - TimeUtil.ONE_DAY);
-
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
 		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
@@ -100,17 +97,17 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domainName, Date period) {
-		sendDailyReport();
-		sendVsMeiTuanReport();
+		sendDailyReport(period);
+		sendVsMeiTuanReport(period);
 		return true;
 	}
 
-	private void sendVsMeiTuanReport() {
-	   m_appDataInformer.doNotifying();
-   }
+	private void sendVsMeiTuanReport(Date period) {
+		m_appDataInformer.doNotifying(period);
+	}
 
-	private void sendDailyReport() {
-	   List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
+	private void sendDailyReport(Date period) {
+		List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 		for (ScheduledReport report : reports) {
 			String domain = report.getDomain();
@@ -118,7 +115,7 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 			try {
 				String names = String.valueOf(report.getNames());
-				String content = renderContent(names, domain);
+				String content = renderContent(names, domain, period);
 				String title = renderTitle(names, domain);
 				List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
 				AlertMessageEntity message = new AlertMessageEntity(domain, title, "ScheduledJob", content, emails);
@@ -134,7 +131,7 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 				t.complete();
 			}
 		}
-   }
+	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {

@@ -53,7 +53,7 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 
 						overload.setReportId(reportId);
 						overload.setReportSize(contentLength);
-						overload.setReportType(CapacityUpdater.HOURLY_TYPE);
+						overload.setReportType(CapacityUpdater.MONTHLY_TYPE);
 
 						try {
 							MonthlyReport report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);

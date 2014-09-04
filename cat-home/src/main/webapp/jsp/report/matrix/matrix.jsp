@@ -10,8 +10,18 @@
 <a:report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
-<br>
-<table class='data'>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#matrix').addClass('active');
+	});
+</script>
+<div class="row-fluid">
+     <div class="span2">
+		<%@include file="../reportTree.jsp"%>
+	 </div>
+	 <div class="span10">
+	 <br/>
+	<table class='data'>
 	<tr>
 		<th class="left" rowspan="2">Type</th>
 		<th class="left" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
@@ -76,7 +86,7 @@
 			<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Link</a></td>
 		</tr>
 	</c:forEach>
-</table>
+</table></div></div>
 
 </jsp:body>
 </a:report>

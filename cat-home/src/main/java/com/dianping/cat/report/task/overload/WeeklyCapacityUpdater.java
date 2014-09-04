@@ -53,7 +53,7 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 
 						overload.setReportId(reportId);
 						overload.setReportSize(contentLength);
-						overload.setReportType(CapacityUpdater.HOURLY_TYPE);
+						overload.setReportType(CapacityUpdater.WEEKLY_TYPE);
 
 						try {
 							WeeklyReport report = m_weeklyReportDao.findByPK(reportId, WeeklyReportEntity.READSET_FULL);

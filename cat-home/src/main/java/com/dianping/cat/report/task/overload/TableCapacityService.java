@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
@@ -110,7 +111,8 @@ public class TableCapacityService extends ContainerHolder {
 						break;
 					}
 
-					reports.add(generateOverloadReport(report, reportSize, reportId));
+					reports.add(generateOverloadReport(report, reportSize, reportType));
+				} catch (DalNotFoundException e) {
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}

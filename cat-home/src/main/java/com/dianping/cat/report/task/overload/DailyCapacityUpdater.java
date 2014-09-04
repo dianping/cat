@@ -53,7 +53,7 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 
 						overload.setReportId(reportId);
 						overload.setReportSize(contentLength);
-						overload.setReportType(CapacityUpdater.HOURLY_TYPE);
+						overload.setReportType(CapacityUpdater.DAILY_TYPE);
 
 						try {
 							DailyReport report = m_dailyReportDao.findByPK(reportId, DailyReportEntity.READSET_FULL);
