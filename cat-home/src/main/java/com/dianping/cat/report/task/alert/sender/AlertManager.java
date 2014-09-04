@@ -161,6 +161,8 @@ public class AlertManager implements Initializable {
 			return "第三方告警";
 		case FrontEndException:
 			return "前端告警";
+		case APP:
+			return "手机端告警";
 		}
 		return type;
 	}

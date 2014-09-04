@@ -63,6 +63,7 @@ import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
+import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
@@ -122,7 +123,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMetricComponents());
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
-		
+
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
@@ -160,6 +161,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));

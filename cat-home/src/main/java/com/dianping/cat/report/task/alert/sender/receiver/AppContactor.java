@@ -5,21 +5,16 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.aggregation.AggregationConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.system.config.AlertConfigManager;
 
-public class FrontEndExceptionContactor extends DefaultContactor implements Contactor {
-
-	@Inject
-	private AggregationConfigManager m_aggConfigManager;
+public class AppContactor extends DefaultContactor implements Contactor {
 
 	@Inject
 	protected AlertConfigManager m_alertConfigManager;
 
-	public static final String ID = AlertType.FrontEndException.getName();
+	public static final String ID = AlertType.APP.getName();
 
 	@Override
 	public String getId() {
@@ -37,10 +32,6 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
-			AggregationRule rule = m_aggConfigManager.queryAggration(id);
-			if (rule != null) {
-				mailReceivers.addAll(split(rule.getMails()));
-			}
 			return mailReceivers;
 		}
 	}
@@ -72,4 +63,5 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 			return smsReceivers;
 		}
 	}
+
 }

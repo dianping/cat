@@ -48,6 +48,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
+import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -101,6 +102,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SystemRuleConfigManager m_systemRuleConfigManager;
+
+	@Inject
+	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
 	private AlertConfigManager m_alertConfigManager;
@@ -277,6 +281,16 @@ public class Handler implements PageHandler<Context> {
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
 			break;
+		case WEB_RULE_UPDATE:
+
+			break;
+		case APP_RULE_UPDATE:
+			String appRule = payload.getContent();
+			if (!StringUtils.isEmpty(appRule)) {
+				model.setOpState(m_appRuleConfigManager.insert(appRule));
+			}
+			model.setContent(m_appRuleConfigManager.getMonitorRules().toString());
+			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			break;
@@ -292,7 +306,6 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(graphNodeConfigDelete(payload));
 			model.setConfig(m_topologyConfigManager.getConfig());
 			break;
-
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			model.buildEdgeInfo();
@@ -311,7 +324,6 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(graphEdgeConfigDelete(payload));
 			model.buildEdgeInfo();
 			break;
-
 		case TOPOLOGY_GRAPH_PRODUCT_LINE:
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());

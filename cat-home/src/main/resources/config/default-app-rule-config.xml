@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+ <rule id="-1,-1,-1,-1,-1,-1,-1:successRatio">
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="warning">
+            <sub-condition type="MaxVal" text="0.8"/>
+         </condition>
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>
