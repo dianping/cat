@@ -13,10 +13,10 @@
 			<div class="tab-pane active" id="tab1">
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
-						<th>项目名【1】</th>
-						<th>URL名称</th>
-						<th>链接</th>
-						<th style="text-align:right">访问次数</th>
+						<th width="10%">项目名【1】</th>
+						<th width="70%">URL名称</th>
+						<th width="10%">链接</th>
+						<th width="10%" style="text-align:right">访问次数</th>
 					</tr>
 					<c:forEach var="item" items="${model.callUrls}" varStatus="status">
 						<tr>
@@ -31,10 +31,10 @@
 			<div class="tab-pane" id="tab2">
 				<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
-							<th>项目名【2】</th>
-							<th>Service名称</th>
-							<th>链接</th>
-							<th style="text-align:right">访问次数</th>
+							<th width="10%">项目名【2】</th>
+							<th width="70%">Service名称</th>
+							<th width="10%">链接</th>
+							<th width="10%" style="text-align:right">访问次数</th>
 						</tr>
 					<c:forEach var="item" items="${model.callServices}" varStatus="status">
 						<tr>
@@ -49,10 +49,10 @@
 			<div class="tab-pane" id="tab3">
 				<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
-							<th>项目名【3】</th>
-							<th>URL名称</th>
-							<th>链接</th>
-							<th style="text-align:right">访问次数</th>
+							<th width="10%">项目名【3】</th>
+							<th width="70%">URL名称</th>
+							<th width="10%">链接</th>
+							<th width="10%" style="text-align:right">访问次数</th>
 						</tr>
 					<c:forEach var="item" items="${model.sqlUrls}" varStatus="status">
 						<tr>
@@ -67,10 +67,10 @@
 			<div class="tab-pane" id="tab4">
 			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
-							<th>项目名【4】</th>
-							<th>URL名称</th>
-							<th>链接</th>
-							<th style="text-align:right">访问次数</th>
+							<th width="10%">项目名【4】</th>
+							<th width="70%">URL名称</th>
+							<th width="10%">链接</th>
+							<th width="10%" style="text-align:right">访问次数</th>
 						</tr>
 					<c:forEach var="item" items="${model.sqlServices}" varStatus="status">
 						<tr>
@@ -85,10 +85,10 @@
 			<div class="tab-pane" id="tab5">
 			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
-							<th>项目名【5】</th>
-							<th>URL名称</th>
-							<th>链接</th>
-							<th style="text-align:right">访问次数</th>
+							<th width="10%">项目名【5】</th>
+							<th width="70%">URL名称</th>
+							<th width="10%">链接</th>
+							<th width="10%" style="text-align:right">访问次数</th>
 						</tr>
 					<c:forEach var="item" items="${model.cacheUrls}" varStatus="status">
 						<tr>
@@ -103,10 +103,10 @@
 			<div class="tab-pane" id="tab6">
 			<table class="table table-striped table-bordered table-condensed table-hover">
 						<tr>
-							<th>项目名【6】</th>
-							<th>URL名称</th>
-							<th>链接</th>
-							<th style="text-align:right">访问次数</th>
+							<th width="10%">项目名【6】</th>
+							<th width="70%">URL名称</th>
+							<th width="10%">链接</th>
+							<th width="10%" style="text-align:right">访问次数</th>
 						</tr>
 					<c:forEach var="item" items="${model.cacheServices}" varStatus="status">
 						<tr>
