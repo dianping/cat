@@ -9,12 +9,12 @@ import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.system.config.AlertConfigManager;
 
-public class AppContactor extends DefaultContactor implements Contactor {
+public class WebContactor extends DefaultContactor implements Contactor {
 
 	@Inject
 	protected AlertConfigManager m_alertConfigManager;
 
-	public static final String ID = AlertType.App.getName();
+	public static final String ID = AlertType.Web.getName();
 
 	@Override
 	public String getId() {

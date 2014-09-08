@@ -14,7 +14,9 @@ public enum AlertType {
 
 	FrontEndException("frontEnd"),
 
-	APP("app");
+	App("app"),
+
+	Web("web");
 
 	private String m_name;
 

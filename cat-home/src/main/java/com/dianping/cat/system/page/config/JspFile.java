@@ -62,6 +62,8 @@ public enum JspFile {
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
+	
+	WEB_RULE_UPDATE("/jsp/system/webRule/webRule.jsp"),
 
 	APP_RULE_UPDATE("/jsp/system/appRule/appRule.jsp"),
 

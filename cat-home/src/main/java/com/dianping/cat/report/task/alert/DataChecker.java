@@ -6,7 +6,9 @@ import com.dianping.cat.home.rule.entity.Condition;
 
 public interface DataChecker {
 	public List<AlertResultEntity> checkData(double[] value, double[] baseline, List<Condition> conditions);
-	
-	public List<AlertResultEntity> checkData(double[] value, List<Condition> conditions);
+
+	public List<AlertResultEntity> checkData(double[] value, Condition condition);
+
+	public List<AlertResultEntity> checkData(double[] value, List<Condition> checkedConditions);
 
 }

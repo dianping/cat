@@ -16,10 +16,10 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<form name="appRuleUpdate" id="form" method="post"
-				action="${model.pageUri}?op=appRuleUpdate">
+			<form name="webRuleUpdate" id="form" method="post"
+				action="${model.pageUri}?op=webRuleUpdate">
 				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">手机端告警规则配置</h4>
+				<h4 class="text-center text-error">web告警规则配置</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#appRuleUpdate').addClass('active');
+			$('#webRuleUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

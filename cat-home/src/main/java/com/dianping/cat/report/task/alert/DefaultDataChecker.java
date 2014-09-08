@@ -45,6 +45,21 @@ public class DefaultDataChecker implements DataChecker {
 		return alertResults;
 	}
 
+	public List<AlertResultEntity> checkData(double[] value, Condition condition) {
+		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+		int conditionMinute = condition.getMinute();
+		double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
+		Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
+
+		if (condResult.getKey() == true) {
+			String alertType = condition.getAlertType();
+
+			alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+		}
+
+		return alertResults;
+	}
+
 	public List<AlertResultEntity> checkData(double[] value, List<Condition> conditions) {
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 
@@ -71,8 +86,6 @@ public class DefaultDataChecker implements DataChecker {
 				String ruleType = subCondition.getType();
 				double ruleValue = parseSubConditionText(subCondition.getText());
 				RuleType rule = RuleType.getByTypeId(ruleType);
-				for (int i = 0; i < value.length; i++)
-					System.out.println(value[i] + ":" + ruleValue);
 				Pair<Boolean, String> subResult = rule.executeRule(value, baseline, ruleValue);
 
 				if (!subResult.getKey()) {

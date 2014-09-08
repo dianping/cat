@@ -74,6 +74,7 @@ import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.WebRuleConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -162,6 +163,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));

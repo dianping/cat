@@ -99,7 +99,7 @@ public class AppAlert implements Task {
 
 	@Override
 	public String getName() {
-		return AlertType.APP.getName();
+		return AlertType.App.getName();
 	}
 
 	@Override

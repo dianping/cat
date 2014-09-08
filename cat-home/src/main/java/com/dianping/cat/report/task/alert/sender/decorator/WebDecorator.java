@@ -8,16 +8,15 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class AppDecorator extends DefaultDecorator implements Initializable {
+public class WebDecorator extends DefaultDecorator implements Initializable {
 
-	public static final String ID = AlertType.App.getName();
+	public static final String ID = AlertType.Web.getName();
 
 	public Configuration m_configuration;
 
@@ -40,18 +39,7 @@ public class AppDecorator extends DefaultDecorator implements Initializable {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		String type = alert.getMetric();
-		String title = "";
-
-		if (AppDataService.SUCCESS.equals(type)) {
-			title = "成功率（%/5分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			title = "请求数（个/5分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			title = "延时平均值（毫秒/5分钟）";
-		}
-
-		sb.append("[手机端告警] [监控项: ").append(title).append("]");
+		sb.append("[CAT Web告警] [组: ").append(alert.getGroup()).append("] [URL: ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 
@@ -61,7 +49,7 @@ public class AppDecorator extends DefaultDecorator implements Initializable {
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("appAlert.ftl");
+			Template t = m_configuration.getTemplate("webAlert.ftl");
 			t.process(dataMap, sw);
 		} catch (Exception e) {
 			Cat.logError("build front end content error:" + alert.toString(), e);

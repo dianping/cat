@@ -109,7 +109,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case METRIC_GROUP_CONFIG_UPDATE:
 			return JspFile.METRIC_GROUP_CONFIG_UPDATE.getPath();
 		case WEB_RULE_UPDATE:
-			break;
+			return JspFile.WEB_RULE_UPDATE.getPath();
 		case APP_RULE_UPDATE:
 			return JspFile.APP_RULE_UPDATE.getPath();
 		case APP_CONFIG_UPDATE:

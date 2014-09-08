@@ -189,6 +189,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.WebRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
 			<requirements>
@@ -2373,6 +2382,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>web</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.WebContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
 		</component>
@@ -2441,6 +2460,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>app</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.AppDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>web</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.WebDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
@@ -2629,6 +2653,36 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.web.WebAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.web.WebAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4684,6 +4738,9 @@
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -4766,6 +4823,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.WebRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

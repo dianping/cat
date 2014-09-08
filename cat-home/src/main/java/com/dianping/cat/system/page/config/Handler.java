@@ -59,6 +59,7 @@ import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.WebRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -102,6 +103,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SystemRuleConfigManager m_systemRuleConfigManager;
+
+	@Inject
+	private WebRuleConfigManager m_webRuleConfigManager;
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
@@ -282,7 +286,11 @@ public class Handler implements PageHandler<Context> {
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
 			break;
 		case WEB_RULE_UPDATE:
-
+			String webRule = payload.getContent();
+			if (!StringUtils.isEmpty(webRule)) {
+				model.setOpState(m_webRuleConfigManager.insert(webRule));
+			}
+			model.setContent(m_webRuleConfigManager.getMonitorRules().toString());
 			break;
 		case APP_RULE_UPDATE:
 			String appRule = payload.getContent();
