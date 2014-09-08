@@ -161,7 +161,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
 		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
-		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
