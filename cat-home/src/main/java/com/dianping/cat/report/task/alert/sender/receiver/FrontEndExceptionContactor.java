@@ -47,11 +47,29 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 
 	@Override
 	public List<String> queryWeiXinContactors(String id) {
-		return null;
+		List<String> weixinReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return weixinReceivers;
+		} else {
+			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			return weixinReceivers;
+		}
 	}
 
 	@Override
 	public List<String> querySmsContactors(String id) {
-		return null;
+		List<String> smsReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return smsReceivers;
+		} else {
+			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
+
+			return smsReceivers;
+		}
 	}
 }

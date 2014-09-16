@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+ <rule id="1;-1;-1;-1;-1;-1;-1;-1:success">
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="MinVal" text="0.95"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

@@ -16,7 +16,7 @@ import com.dianping.cat.report.page.JsonBuilder;
 public class CityManager implements Initializable {
 
 	public Map<String, List<City>> maps = new LinkedHashMap<String, List<City>>();
-	
+
 	public String getCityInfo() {
 		return new JsonBuilder().toJson(maps);
 	}
@@ -24,31 +24,57 @@ public class CityManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		try {
-			String content = Files.forIO().readFrom(this.getClass().getResourceAsStream("/config/city"), "utf-8");
-			String[] cities = content.split("\n");
-
-			for (String temp : cities) {
-				String[] tabs = temp.split("\\|");
-
-				if (tabs.length > 3) {
-					String province = tabs[1];
-					String city = tabs[2];
-
-					List<City> list = maps.get(province);
-
-					if (list == null) {
-						list = new ArrayList<City>();
-
-						if (province.length() > 0) {
-							list.add(new City(province, ""));
-						}
-						maps.put(province, list);
-					}
-					list.add(new City(province, city));
-				}
-			}
+			loadChinaCities();
+			loadForeignCities();
 		} catch (IOException e) {
 			Cat.logError(e);
+		}
+	}
+
+	private void loadChinaCities() throws IOException {
+		String content = Files.forIO().readFrom(this.getClass().getResourceAsStream("/config/city"), "utf-8");
+		String[] cities = content.split("\n");
+
+		for (String temp : cities) {
+			String[] tabs = temp.split("\\|");
+
+			if (tabs.length > 3) {
+				String province = tabs[1];
+				String city = tabs[2];
+
+				List<City> list = maps.get(province);
+
+				if (list == null) {
+					list = new ArrayList<City>();
+
+					if (province.length() > 0) {
+						list.add(new City(province, ""));
+					}
+					maps.put(province, list);
+				}
+				list.add(new City(province, city));
+			}
+		}
+	}
+
+	private void loadForeignCities() throws IOException {
+		String foreginContent = Files.forIO().readFrom(this.getClass().getResourceAsStream("/config/city_foreign"),
+		      "utf-8");
+		String[] foreignCities = foreginContent.split("\n");
+
+		for (String city : foreignCities) {
+			String province = "国外";
+			List<City> list = maps.get(province);
+
+			if (list == null) {
+				list = new ArrayList<City>();
+
+				if (province.length() > 0) {
+					list.add(new City(province, ""));
+				}
+				maps.put(province, list);
+			}
+			list.add(new City(province, city));
 		}
 	}
 

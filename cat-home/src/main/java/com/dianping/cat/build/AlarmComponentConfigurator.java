@@ -8,6 +8,8 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -22,11 +24,13 @@ import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
+import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
+import com.dianping.cat.report.task.alert.sender.decorator.AppDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
@@ -35,6 +39,8 @@ import com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDeco
 import com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.WebDecorator;
+import com.dianping.cat.report.task.alert.sender.receiver.AppContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
@@ -43,6 +49,7 @@ import com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionConta
 import com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor;
+import com.dianping.cat.report.task.alert.sender.receiver.WebContactor;
 import com.dianping.cat.report.task.alert.sender.sender.MailSender;
 import com.dianping.cat.report.task.alert.sender.sender.Sender;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
@@ -66,14 +73,17 @@ import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
+import com.dianping.cat.report.task.alert.web.WebAlert;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
+import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.WebRuleConfigManager;
 
 class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -102,8 +112,12 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
 		      AggregationConfigManager.class, AlertConfigManager.class));
 
+		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class));
+
+		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class));
+
 		all.add(C(ContactorManager.class));
-		
+
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class));
 
@@ -117,6 +131,10 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
+
+		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
+
+		all.add(C(Decorator.class, WebDecorator.ID, WebDecorator.class));
 
 		all.add(C(DecoratorManager.class));
 
@@ -153,6 +171,13 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
+		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
+		      DataChecker.class, AlertInfo.class));
+
+		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
+		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
+		      .req(UrlPatternConfigManager.class));
+
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
 		all.add(C(ExceptionAlert.class)
@@ -165,7 +190,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ThirdPartyAlertBuilder.class).req(HttpConnector.class, ThirdPartyAlert.class,
 		      ThirdPartyConfigManager.class));
-		
+
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
 		all.add(C(ErrorModelGenerator.class).req(ModelService.class, ProblemAnalyzer.ID));
