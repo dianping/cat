@@ -12,7 +12,8 @@ import java.util.Set;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class TransactionReportCountFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+public class TransactionReportCountFilter extends
+      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 	private int m_maxItems = 400;
 
 	private void mergeName(TransactionName old, TransactionName other) {
@@ -79,23 +80,22 @@ public class TransactionReportCountFilter extends com.dianping.cat.consumer.tran
 			for (int i = m_maxItems; i < size; i++) {
 				mergeName(other, all.get(i));
 			}
-		}
 
-		List<String> toRemove = new ArrayList<String>();
-		TransactionName other = type.findOrCreateName("OTHERS");
+			List<String> toRemove = new ArrayList<String>();
 
-		transactionNames = type.getNames();
-		for (Entry<String, TransactionName> entry : type.getNames().entrySet()) {
-			TransactionName tansactionName = entry.getValue();
+			transactionNames = type.getNames();
+			for (Entry<String, TransactionName> entry : type.getNames().entrySet()) {
+				TransactionName tansactionName = entry.getValue();
 
-			if (tansactionName.getTotalCount() == 1) {
-				toRemove.add(entry.getKey());
-				mergeName(other, tansactionName);
+				if (tansactionName.getTotalCount() == 1) {
+					toRemove.add(entry.getKey());
+					mergeName(other, tansactionName);
+				}
 			}
-		}
 
-		for (String name : toRemove) {
-			transactionNames.remove(name);
+			for (String name : toRemove) {
+				transactionNames.remove(name);
+			}
 		}
 		super.visitType(type);
 	}
