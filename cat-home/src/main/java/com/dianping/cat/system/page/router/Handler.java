@@ -44,9 +44,9 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		Date date = payload.getDate();
-		Date end = new Date(date.getTime() + TimeUtil.ONE_DAY);
-		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, date, end);
+		Date start = payload.getDate();
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, start, end);
 
 		switch (action) {
 		case API:

@@ -37,9 +37,11 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
 				      DailyReportEntity.READSET_FULL);
-				config = queryFromDailyBinary(report.getId(), domain);
+				config = queryFromDailyBinary(report.getId());
 
-				m_configs.put(time, config);
+				if (config != null) {
+					m_configs.put(time, config);
+				}
 				return config;
 			} catch (DalNotFoundException e) {
 				// ignore
@@ -52,7 +54,7 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 		}
 	}
 
-	private RouterConfig queryFromDailyBinary(int id, String domain) throws DalException {
+	private RouterConfig queryFromDailyBinary(int id) throws DalException {
 		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
 
 		if (content != null) {
