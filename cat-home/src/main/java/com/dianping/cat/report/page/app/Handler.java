@@ -13,6 +13,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
@@ -63,21 +64,30 @@ public class Handler implements PageHandler<Context> {
 			QueryEntity linechartEntity1 = payload.getQueryEntity1();
 			QueryEntity linechartEntity2 = payload.getQueryEntity2();
 			String type = payload.getType();
-			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
-			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
-			Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
+			try {
+				LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
+				List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1,
+				      field);
+				Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
 
-			model.setLineChart(lineChart);
-			model.setAppDataSpreadInfos(appDataSpreadInfos);
+				model.setLineChart(lineChart);
+				model.setAppDataSpreadInfos(appDataSpreadInfos);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
-			      field);
-			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new Sorter(sortBy).buildPieChartInfoComparator());
-			
-			model.setPieChart(pair.getKey());
-			model.setPieChartDetailInfos(infos);
+			try {
+				Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+				      field);
+				List<PieChartDetailInfo> infos = pair.getValue();
+				Collections.sort(infos, new Sorter(sortBy).buildPieChartInfoComparator());
+
+				model.setPieChart(pair.getKey());
+				model.setPieChartDetailInfos(infos);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		}
 

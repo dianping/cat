@@ -20,13 +20,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.Constrants;
-import com.dianping.cat.broker.api.page.IpService;
-import com.dianping.cat.broker.api.page.IpService.IpInfo;
 import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.IpService.IpInfo;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 

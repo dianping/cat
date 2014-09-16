@@ -155,6 +155,7 @@
 						<option value="中国联通">中国联通</option>
 						<option value="中国铁通">中国铁通</option>
 						<option value="其他">其他</option>
+						<option value="国外其他">其他</option>
 				</select> 查询类型 <select style="width: 120px;" name="type" id="type">
 						<option value="info">访问情况</option>
 						<option value="httpStatus">HttpStatus</option>

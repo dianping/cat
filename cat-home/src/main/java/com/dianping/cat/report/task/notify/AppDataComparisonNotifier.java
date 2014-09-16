@@ -55,7 +55,7 @@ public class AppDataComparisonNotifier {
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public void doNotifying(Date period) {
-		Transaction t = Cat.newTransaction("AppDataComparitonInformer", m_sdf.format(period));
+		Transaction t = Cat.newTransaction("AppDataComparitonNotifier", m_sdf.format(period));
 
 		try {
 			Map<String, AppDataComparisonResult> results = buildAppDataComparisonResults(period,

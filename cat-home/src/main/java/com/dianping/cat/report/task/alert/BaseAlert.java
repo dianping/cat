@@ -39,7 +39,7 @@ public abstract class BaseAlert {
 	protected AlertInfo m_alertInfo;
 
 	@Inject
-	private DataChecker m_dataChecker;
+	protected DataChecker m_dataChecker;
 
 	@Inject
 	protected ProductLineConfigManager m_productLineConfigManager;
@@ -56,8 +56,6 @@ public abstract class BaseAlert {
 	protected static final int DATA_AREADY_MINUTE = 1;
 
 	protected static final long DURATION = TimeUtil.ONE_MINUTE;
-
-	private static final Long ONE_MINUTE_MILLSEC = 60000L;
 
 	protected Logger m_logger;
 
@@ -190,7 +188,7 @@ public abstract class BaseAlert {
 
 		try {
 			ruleStartTime = buildMillsByString(config.getStarttime());
-			ruleEndTime = buildMillsByString(config.getEndtime()) + ONE_MINUTE_MILLSEC;
+			ruleEndTime = buildMillsByString(config.getEndtime()) + TimeUtil.ONE_MINUTE;
 		} catch (Exception ex) {
 			ruleStartTime = 0L;
 			ruleEndTime = 86400000L;
@@ -203,7 +201,7 @@ public abstract class BaseAlert {
 		return true;
 	}
 
-	private double[] mergerArray(double[] from, double[] to) {
+	protected double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
 		double[] result = new double[fromLength + toLength];
@@ -272,7 +270,7 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	private Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
+	protected Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
 		int maxMinute = 0;
 		List<Condition> conditions = new ArrayList<Condition>();
 		Iterator<Config> iterator = configs.iterator();

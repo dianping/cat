@@ -4,25 +4,28 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
+import com.dianping.cat.report.chart.MetricDataFetcher;
 
 public class metricReportDataFetcher extends ComponentTestCase {
 
-	private MetricGraphCreator m_graphCreator;
-
 	private DataExtractor m_dataExtractor;
+
+	protected MetricDataFetcher m_pruductDataFetcher;
+
+	protected CachedMetricReportService m_metricReportService;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -31,11 +34,9 @@ public class metricReportDataFetcher extends ComponentTestCase {
 		super.setUp();
 
 		try {
-			m_graphCreator = lookup(MetricGraphCreator.class);
 			m_dataExtractor = lookup(DataExtractor.class);
-
-			Assert.assertNotNull(m_graphCreator);
-			Assert.assertNotNull(m_dataExtractor);
+			m_pruductDataFetcher = lookup(MetricDataFetcher.class);
+			m_metricReportService = lookup(CachedMetricReportService.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,11 +56,10 @@ public class metricReportDataFetcher extends ComponentTestCase {
 		end = new Date(start.getTime() + TimeUtil.ONE_DAY);
 
 		for (String productLine : productLines) {
-			Map<String, double[]> oldCurrentValues = m_graphCreator.prepareAllData(productLine, start, end);
+			Map<String, double[]> oldCurrentValues = prepareAllData(productLine, start, end);
 			Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
-			Map<String, double[]> dataWithOutFutures = m_graphCreator.removeFutureData(end, allCurrentValues);
 
-			for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
+			for (Entry<String, double[]> entry : allCurrentValues.entrySet()) {
 				String key = entry.getKey();
 				double[] value = entry.getValue();
 
@@ -71,6 +71,57 @@ public class metricReportDataFetcher extends ComponentTestCase {
 					String time = hour + ":" + minute;
 
 					System.out.println(time + ", " + value[i]);
+				}
+			}
+		}
+	}
+
+	public Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+		long start = startDate.getTime(), end = endDate.getTime();
+		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
+		int index = 0;
+
+		for (; start < end; start += TimeUtil.ONE_HOUR) {
+			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
+
+			mergeMap(oldCurrentValues, currentValues, totalSize, index);
+			index++;
+		}
+		return oldCurrentValues;
+	}
+
+	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
+		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
+		Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(metricReport);
+		double sum = 0;
+
+		for (Entry<String, double[]> entry : currentValues.entrySet()) {
+			double[] value = entry.getValue();
+			int length = value.length;
+
+			for (int i = 0; i < length; i++) {
+				sum = sum + value[i];
+			}
+		}
+		return currentValues;
+	}
+
+	protected void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
+		for (Entry<String, double[]> entry : item.entrySet()) {
+			String key = entry.getKey();
+			double[] value = entry.getValue();
+			double[] result = all.get(key);
+
+			if (result == null) {
+				result = new double[size];
+				all.put(key, result);
+			}
+			if (value != null) {
+				int length = value.length;
+				int pos = index * 60;
+				for (int i = 0; i < length && pos < size; i++, pos++) {
+					result[pos] = value[i];
 				}
 			}
 		}

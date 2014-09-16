@@ -78,7 +78,11 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		for (int i = 0; i < datas.size(); i++) {
 			Double[] data = datas.get(i);
 
-			lineChart.add("查询" + (i + 1), data);
+			if (i == 0) {
+				lineChart.add("当前值", data);
+			} else if (i == 1) {
+				lineChart.add("对比值", data);
+			}
 		}
 		return lineChart;
 	}

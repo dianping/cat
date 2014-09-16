@@ -195,7 +195,7 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 
 		for (; start < end; start += TimeUtil.ONE_HOUR) {
 			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
-
+			
 			if (Monitor.TYPE_INFO.equals(type)) {
 				Map<String, double[]> currentValues = fetchMetricInfoData(report);
 
