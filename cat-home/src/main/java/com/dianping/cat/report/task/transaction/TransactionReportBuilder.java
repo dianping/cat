@@ -14,7 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -173,7 +173,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+		new TransactionReportCountFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 
