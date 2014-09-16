@@ -1,10 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.broker.api.page.IpService</role>
-			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 			<implementation>com.dianping.cat.broker.api.page.RequestUtils</implementation>
 		</component>
@@ -16,7 +12,7 @@
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.IpService</role>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -90,7 +86,7 @@
 			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.IpService</role>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
@@ -98,8 +94,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.page.IpService</role>
-			<implementation>com.dianping.cat.broker.api.page.IpService</implementation>
+			<role>com.dianping.cat.service.IpService</role>
+			<implementation>com.dianping.cat.service.IpService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
@@ -134,7 +130,7 @@
 					<role>com.dianping.cat.broker.api.app.AppDataConsumer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.broker.api.page.IpService</role>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
