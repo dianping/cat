@@ -39,7 +39,7 @@ public abstract class BaseAlert {
 	protected AlertInfo m_alertInfo;
 
 	@Inject
-   protected DataChecker m_dataChecker;
+	protected DataChecker m_dataChecker;
 
 	@Inject
 	protected ProductLineConfigManager m_productLineConfigManager;
@@ -55,7 +55,7 @@ public abstract class BaseAlert {
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
-	protected static final long DURATION = 10000;//TimeUtil.ONE_MINUTE;
+	protected static final long DURATION = TimeUtil.ONE_MINUTE;
 
 	protected Logger m_logger;
 
