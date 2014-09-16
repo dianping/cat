@@ -99,7 +99,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 
 		for (AlertResultEntity alertResult : alertResults) {
-			System.out.println(alertResult.toString());
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
