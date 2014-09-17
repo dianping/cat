@@ -32,6 +32,7 @@ import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -46,6 +47,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 
+		all.add(C(IpService.class));
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));

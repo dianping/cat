@@ -15,10 +15,10 @@ import com.dianping.cat.report.page.JsonBuilder;
 
 public class CityManager implements Initializable {
 
-	public Map<String, List<City>> maps = new LinkedHashMap<String, List<City>>();
+	public Map<String, List<City>> m_maps = new LinkedHashMap<String, List<City>>();
 
 	public String getCityInfo() {
-		return new JsonBuilder().toJson(maps);
+		return new JsonBuilder().toJson(m_maps);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class CityManager implements Initializable {
 				String province = tabs[1];
 				String city = tabs[2];
 
-				List<City> list = maps.get(province);
+				List<City> list = m_maps.get(province);
 
 				if (list == null) {
 					list = new ArrayList<City>();
@@ -50,7 +50,7 @@ public class CityManager implements Initializable {
 					if (province.length() > 0) {
 						list.add(new City(province, ""));
 					}
-					maps.put(province, list);
+					m_maps.put(province, list);
 				}
 				list.add(new City(province, city));
 			}
@@ -63,8 +63,8 @@ public class CityManager implements Initializable {
 		String[] foreignCities = foreginContent.split("\n");
 
 		for (String city : foreignCities) {
-			String province = "国外";
-			List<City> list = maps.get(province);
+			String province = city;
+			List<City> list = m_maps.get(province);
 
 			if (list == null) {
 				list = new ArrayList<City>();
@@ -72,10 +72,22 @@ public class CityManager implements Initializable {
 				if (province.length() > 0) {
 					list.add(new City(province, ""));
 				}
-				maps.put(province, list);
+				m_maps.put(province, list);
 			}
 			list.add(new City(province, city));
 		}
+
+		String foreign = "国外其他";
+		List<City> foreigns = m_maps.get(foreign);
+
+		if (foreigns == null) {
+			foreigns = new ArrayList<City>();
+
+			foreigns.add(new City(foreign, ""));
+			foreigns.add(new City(foreign, foreign));
+			m_maps.put(foreign, foreigns);
+		}
+
 	}
 
 	public class City {
