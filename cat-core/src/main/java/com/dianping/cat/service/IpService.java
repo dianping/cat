@@ -1,8 +1,8 @@
 package com.dianping.cat.service;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -134,9 +134,9 @@ public class IpService implements Initializable {
 		}
 	}
 
-	private void initAreaMap(String areaFile) {
+	private void initAreaMap(InputStream areaFile) {
 		try {
-			BufferedReader areaReader = new BufferedReader(new InputStreamReader(new FileInputStream(areaFile)));
+			BufferedReader areaReader = new BufferedReader(new InputStreamReader(areaFile));
 			String line;
 			String[] strs;
 			int id;
@@ -160,9 +160,9 @@ public class IpService implements Initializable {
 		}
 	}
 
-	private void initForeignAreaMap(String areaFile) {
+	private void initForeignAreaMap(InputStream areaFile) {
 		try {
-			BufferedReader areaReader = new BufferedReader(new InputStreamReader(new FileInputStream(areaFile)));
+			BufferedReader areaReader = new BufferedReader(new InputStreamReader(areaFile));
 			String line;
 			String[] strs;
 			String[] ids;
@@ -172,8 +172,8 @@ public class IpService implements Initializable {
 				strs = line.split(":");
 				ids = strs[1].split(",");
 				Area area = new Area();
-				area.setNation("");
-				area.setProvince("");
+				area.setNation("国外");
+				area.setProvince(strs[0]);
 				area.setCity(strs[0]);
 
 				for (String id : ids) {
@@ -186,9 +186,9 @@ public class IpService implements Initializable {
 		}
 	}
 
-	private void initCorpMap(String corpFile) {
+	private void initCorpMap(InputStream corpFile) {
 		try {
-			BufferedReader corpReader = new BufferedReader(new InputStreamReader(new FileInputStream(corpFile)));
+			BufferedReader corpReader = new BufferedReader(new InputStreamReader(corpFile));
 			String line;
 			String[] strs;
 			int id;
@@ -211,27 +211,27 @@ public class IpService implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		String areaFile = IpService.class.getResource("/config/area_china").getFile();
-		String corpFile = IpService.class.getResource("/config/corp_china").getFile();
-		String ipFile = IpService.class.getResource("/config/iptable_china").getFile();
+		InputStream areaFile = IpService.class.getClassLoader().getResourceAsStream("config/area_china");
+		InputStream corpFile = IpService.class.getClassLoader().getResourceAsStream("config/corp_china");
+		InputStream ipFile = IpService.class.getClassLoader().getResourceAsStream("config/iptable_china");
 
 		initAreaMap(areaFile);
 		initCorpMap(corpFile);
 		initIpTable(ipFile);
 
-		String foreignAreaFile = IpService.class.getResource("/config/area_foreign").getFile();
-		String foreignIpFile = IpService.class.getResource("/config/iptable_foreign").getFile();
+		InputStream foreignAreaFile = IpService.class.getClassLoader().getResourceAsStream("config/area_foreign");
+		InputStream foreignIpFile = IpService.class.getClassLoader().getResourceAsStream("config/iptable_foreign");
 
 		initForeignAreaMap(foreignAreaFile);
 		initForeignIpTable(foreignIpFile);
 
 	}
 
-	public void initIpTable(String ipFile) {
+	public void initIpTable(InputStream ipFile) {
 		BufferedReader reader = null;
 
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(ipFile)));
+			reader = new BufferedReader(new InputStreamReader(ipFile));
 			int size = Integer.parseInt(reader.readLine());
 			String line;
 			String[] strs;
@@ -260,11 +260,11 @@ public class IpService implements Initializable {
 		}
 	}
 
-	public void initForeignIpTable(String ipFile) {
+	public void initForeignIpTable(InputStream ipFile) {
 		BufferedReader reader = null;
 
 		try {
-			reader = new BufferedReader(new InputStreamReader(new FileInputStream(ipFile)));
+			reader = new BufferedReader(new InputStreamReader(ipFile));
 			int size = Integer.parseInt(reader.readLine());
 			String line;
 			String[] strs;

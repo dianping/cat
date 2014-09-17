@@ -13,6 +13,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.service.IpService</role>
+			<implementation>com.dianping.cat.service.IpService</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.task.TaskManager</role>
 			<implementation>com.dianping.cat.task.TaskManager</implementation>
 			<requirements>
