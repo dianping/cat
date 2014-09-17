@@ -37,7 +37,7 @@ public class RequestUtils {
 	}
 
 	public String getRemoteIp(HttpServletRequest request) {
-		return filterXForwardedForIP(request.getRemoteAddr() + "," + request.getHeader("x-forwarded-for"));
+		return filterXForwardedForIP(request.getHeader("x-forwarded-for") + "," + request.getRemoteAddr());
 	}
 
 }
