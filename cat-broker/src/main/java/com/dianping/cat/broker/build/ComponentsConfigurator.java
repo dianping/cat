@@ -8,7 +8,6 @@ import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.broker.api.IpService;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
@@ -16,6 +15,7 @@ import com.dianping.cat.build.AppDatabaseConfigurator;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
+import com.dianping.cat.service.IpService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
