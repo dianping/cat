@@ -198,7 +198,7 @@
 					$("#operator").val(words[8]);
 					
 					var datePair = {};
-					datePair["查询1"]=$("#time").val();
+					datePair["当前值"]=$("#time").val();
 
 					if (query2 != null && query2 != '') {
 						$('#history').slideDown();
@@ -211,7 +211,7 @@
 							$("#time2").val(words[0]);
 						}
 						
-						datePair["查询2"]=$("#time2").val();
+						datePair["对比值"]=$("#time2").val();
 
 						$("#command2").val(words[1]);
 						command2Change();
