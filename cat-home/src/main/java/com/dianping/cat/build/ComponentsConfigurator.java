@@ -176,7 +176,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineMetricComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(IpService.class));
 		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class)
 		      .req(ModelService.class, MetricAnalyzer.ID).req(ReportServiceManager.class).req(IpService.class));
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
