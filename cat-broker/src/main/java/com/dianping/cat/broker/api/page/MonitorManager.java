@@ -17,13 +17,13 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Monitor;
+import com.dianping.cat.broker.api.IpService;
+import com.dianping.cat.broker.api.IpService.IpInfo;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
 import com.site.lookup.util.StringUtils;
 
 public class MonitorManager implements Initializable, LogEnabled {
