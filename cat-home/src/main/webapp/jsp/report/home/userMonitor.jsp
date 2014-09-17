@@ -23,8 +23,8 @@
 		<tr><td>ts</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>tu</td><td>targetUrl</td><td>调用的URL或API</td><td>String</td></tr>
 		<tr><td>d</td><td>duration</td><td>访问耗时</td><td>long 毫秒</td></tr>
-		<tr><td>hs</td><td>httpStatus</td><td>httpStatus</td><td>String</td></tr>
-		<tr><td>ec</td><td>errorCode</td><td>ErrorCode</td><td>String，如果没有的话，传空串</td></tr>
+		<tr><td>hs</td><td>httpStatus</td><td>httpStatus</td><td>整型</td></tr>
+		<tr><td>ec</td><td>errorCode</td><td>ErrorCode</td><td>整型，如果没有的话，传空</td></tr>
 	</table>
 
 自定义 HttpStatus 表
