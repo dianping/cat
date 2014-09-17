@@ -249,10 +249,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.IpService</role>
-			<implementation>com.dianping.cat.service.IpService</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>

@@ -7,11 +7,11 @@
            <li class='nav-header'>端到端监控配置</li>
 	       <li class="text-left" id="aggregationList"><a href="?op=aggregations">JS报错配置</a></li>
 	       <li class="text-left" id="urlPatternList"><a href="?op=urlPatterns">WEB监控配置</a></li>
-	       <li class="text-left" id="webRuleUpdate"><a href="?op=webRuleUpdate">WEB告警配置</a></li>
 	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
-	       <li class="text-left" id="appRuleUpdate"><a href="?op=appRuleUpdate">APP告警配置</a></li>
 	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
-	       <li class="text-left" id="thirdPartyConfigUpdate"><a href="?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
+	       <li class="text-left" id="webRuleUpdate"><a href="?op=webRuleUpdate">WEB告警配置</a></li>
+	       <li class="text-left" id="appRuleUpdate"><a href="?op=appRuleUpdate">APP告警配置</a></li>
+	       <li class="text-left" id="thirdPartyConfigUpdate"><a href="?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
            <li class='nav-header'>业务监控配置</li>
 	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控规则</a></li>
 	       <li class="text-left" id="metricGroupConfigUpdate"><a href="?op=metricGroupConfigUpdate">业务指标分组</a></li>

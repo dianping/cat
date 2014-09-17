@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
@@ -86,7 +86,7 @@ public class CachedReportTask implements Task, LogEnabled {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Month-" + domain);
 
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
-				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+				new TransactionReportCountFilter().visitTransactionReport(transactionReport);
 
 				m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, TransactionAnalyzer.ID),
 				      com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder.build(transactionReport));
@@ -129,7 +129,7 @@ public class CachedReportTask implements Task, LogEnabled {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Week-" + domain);
 
 				TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
-				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+				new TransactionReportCountFilter().visitTransactionReport(transactionReport);
 
 				m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, TransactionAnalyzer.ID),
 				      com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder.build(transactionReport));

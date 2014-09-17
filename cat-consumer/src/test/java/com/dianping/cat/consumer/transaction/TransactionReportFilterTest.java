@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
 public class TransactionReportFilterTest {
 
-	private final int MAX_URL_NUM = 199;
+	private final int MAX_URL_NUM = 399;
 
 	@Test
 	public void whether_url_has_max_names() throws Exception {
@@ -25,7 +25,7 @@ public class TransactionReportFilterTest {
 			type.addName(new TransactionName("Test" + i));
 		}
 
-		TransactionReportUrlFilter f1 = new TransactionReportUrlFilter();
+		TransactionReportCountFilter f1 = new TransactionReportCountFilter();
 		String filterReport = f1.buildXml(report);
 		TransactionReport newReport = DefaultSaxParser.parse(filterReport);
 

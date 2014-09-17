@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -43,7 +43,7 @@ public class TransactionMerger {
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 		transactionReport.setEndTime(end);
 
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+		new TransactionReportCountFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 

@@ -77,11 +77,11 @@
 		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRuleUpdate">WEB告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRuleUpdate">APP告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方监控配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRuleUpdate">WEB告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRuleUpdate">APP告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">业务监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控规则</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricGroupConfigUpdate">业务指标分组</a></li>

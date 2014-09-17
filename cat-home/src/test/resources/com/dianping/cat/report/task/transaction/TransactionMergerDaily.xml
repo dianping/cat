@@ -62,8 +62,6 @@
          <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.6" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236764447-0</successMessageUrl>
          </name>
-         <name id="OTHERS" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
-         </name>
       </type>
       <type id="Action" totalCount="1210" failCount="0" failPercent="0.00" min="0.26" max="13593.45" avg="735.8" sum="890313.0" sum2="9582520973.5" std="2716.3" tps="0.00" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
@@ -382,8 +380,6 @@
          </name>
          <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.6" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236764447-0</successMessageUrl>
-         </name>
-         <name id="OTHERS" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
          </name>
       </type>
       <type id="Action" totalCount="1210" failCount="0" failPercent="0.00" min="0.26" max="13593.45" avg="735.8" sum="890313.0" sum2="9582520973.5" std="2716.3" tps="0.00" line95Value="0.00" line99Value="0.00">
