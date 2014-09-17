@@ -172,8 +172,8 @@ public class IpService implements Initializable {
 				strs = line.split(":");
 				ids = strs[1].split(",");
 				Area area = new Area();
-				area.setNation("");
-				area.setProvince("");
+				area.setNation("国外");
+				area.setProvince(strs[0]);
 				area.setCity(strs[0]);
 
 				for (String id : ids) {
