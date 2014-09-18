@@ -20,7 +20,6 @@ public class RuleFTLDecorator implements Initializable {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
 		StringWriter sw = new StringWriter(5000);
 		jsonStr = jsonStr.replaceAll("\n", "").replace("\r", "");
-		System.out.println(jsonStr);
 
 		dataMap.put("link", link);
 		dataMap.put("rule", jsonStr);

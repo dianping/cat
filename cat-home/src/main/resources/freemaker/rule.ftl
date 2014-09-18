@@ -14,9 +14,7 @@
     }
 </style>
 <form>
-    <strong class="text-info">监控规则</strong>
-    <br>
-    规则ID： <input id="ruleId" type="text"/>
+    规则ID(必填)： <input id="ruleId" type="text"/>
 
     <div id="metrics">
         <strong class="text-success">匹配对象：</strong>
@@ -105,7 +103,7 @@
     <br>
 
     <br><br>
-    <button class="btn btn-primary" id="submit" type="button">提交</button>
+    <button class="btn btn-primary" id="modalSubmit" type="button" style="display:none">提交</button>
 </form>
 
 <script>
@@ -142,15 +140,20 @@ $(document).ready(function () {
 
     $("html").delegate("input[]")
 
-    $("#submit").click(function () {
+    $("#modalSubmit").click(function () {
         var configStr = generateConfigJsonString();
-        window.location.href="${link}&rule="+configStr
+        window.location.href="${link}&content="+configStr;
     })
 })
 
 function drawConfig() {
     var alertRuleText = '${rule}';
     var alertRule = {};
+    
+    if(alertRuleText == undefined || alertRuleText == ""){
+    	return;
+    }
+    
     try {
         alertRule = JSON.parse(alertRuleText);
     } catch (e) {

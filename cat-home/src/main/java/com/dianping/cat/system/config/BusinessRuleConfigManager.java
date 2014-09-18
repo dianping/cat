@@ -1,6 +1,5 @@
 package com.dianping.cat.system.config;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -33,14 +31,6 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
-
-	public String updateRule(String ruleContent) throws SAXException, IOException {
-		Rule rule = DefaultSaxParser.parseEntity(Rule.class, ruleContent);
-		String metricKey = rule.getId();
-
-		m_config.getRules().put(metricKey, rule);
-		return m_config.toString();
-	}
 
 	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
 		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();

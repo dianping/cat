@@ -22,6 +22,7 @@ import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.config.Handler.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
@@ -68,8 +69,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_bug;
 
 	private String m_content;
-	
-	private String m_metricItemConfigRule; 
+
+	private String m_metricItemConfigRule;
 
 	private Map<String, Domain> m_productLineToDomains;
 
@@ -77,10 +78,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<String> m_exceptionList;
 
+	private List<RuleItem> m_ruleItems;
+
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -226,6 +229,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 
+	public List<RuleItem> getRuleItems() {
+		return m_ruleItems;
+	}
+
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
 		return m_typeToProductLines;
 	}
@@ -332,6 +339,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
+	}
+
+	public void setRuleItems(List<RuleItem> ruleItems) {
+		m_ruleItems = ruleItems;
 	}
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
