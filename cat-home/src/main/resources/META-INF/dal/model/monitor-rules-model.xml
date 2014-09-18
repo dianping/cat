@@ -28,6 +28,7 @@
 		<entity-ref name="sub-condition" type="list" names="sub-conditions" />
 	</entity>
 	<entity name="sub-condition">
+		<attribute name="title" value-type="String" />
 		<attribute name="type" value-type="String" />
 		<attribute name="text" value-type="String" />
 	</entity>

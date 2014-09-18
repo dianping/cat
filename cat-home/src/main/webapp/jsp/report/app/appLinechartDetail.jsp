@@ -215,9 +215,9 @@
 			<td>${operator}</td>
 			</c:otherwise>
 		</c:choose>
- 		<td>${w:format(item.successRatio,'#0.0')}%</td>
+ 		<td>${w:format(item.successRatio,'#0.000')}%</td>
 		<td>${w:format(item.accessNumberSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.responseTimeAvg,'###,##0.0')}</td>
+		<td>${w:format(item.responseTimeAvg,'###,##0.000')}</td>
 		<td>${w:format(item.requestPackageAvg,'#,###,###,###,##0')}</td>
 		<td>${w:format(item.responsePackageAvg,'#,###,###,###,##0')}</td>
 		</tr>
