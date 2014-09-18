@@ -43,8 +43,10 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.alert.RuleFTLDecorator;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
@@ -133,6 +135,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ConfigModificationService m_modificationService;
+
+	@Inject
+	private RuleFTLDecorator m_ruleDecorator;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -572,9 +577,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void metricRuleAdd(Payload payload, Model model) {
+		String href = "?op=metricRuleAddSubmit";
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
+		String jsonStr = new DefaultJsonBuilder().build(m_businessRuleConfigManager.queryRule(
+		      payload.getProductLineName(), key));
+		String content = m_ruleDecorator.generateRuleHtml(href, jsonStr);
 
-		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key).toString());
+		model.setContent(content);
 	}
 
 	private boolean metricRuleAddSubmit(Payload payload, Model model) {

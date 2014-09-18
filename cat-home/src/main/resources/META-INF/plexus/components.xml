@@ -4690,6 +4690,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4814,6 +4817,10 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>
