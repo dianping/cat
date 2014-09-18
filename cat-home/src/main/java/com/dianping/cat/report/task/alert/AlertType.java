@@ -12,7 +12,11 @@ public enum AlertType {
 
 	ThirdParty("thirdParty"),
 
-	FrontEndException("frontEnd");
+	FrontEndException("frontEnd"),
+
+	App("app"),
+
+	Web("web");
 
 	private String m_name;
 

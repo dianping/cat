@@ -55,7 +55,7 @@
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox"
-					style="display: -webkit-inline-box">选择历史对比</label>
+					style="display: -webkit-inline-box">选择对比</label>
 				</th>
 			</tr>
 		</table>

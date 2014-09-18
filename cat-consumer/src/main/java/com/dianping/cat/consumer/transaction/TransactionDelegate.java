@@ -58,7 +58,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	public String buildXml(TransactionReport report) {
 		report.accept(m_computer);
 
-		String xml = new TransactionReportUrlFilter().buildXml(report);
+		String xml = new TransactionReportCountFilter().buildXml(report);
 
 		return xml;
 	}

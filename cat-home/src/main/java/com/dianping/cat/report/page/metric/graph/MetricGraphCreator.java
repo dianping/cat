@@ -66,7 +66,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		}
 	}
 
-	public Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
+	private Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 		List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
@@ -101,7 +101,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return buildChartData(productLine, oldCurrentValues, startDate, endDate, dataWithOutFutures);
 	}
 
-	public Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();

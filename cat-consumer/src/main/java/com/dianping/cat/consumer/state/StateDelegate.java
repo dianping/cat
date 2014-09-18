@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.state;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -45,7 +46,14 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_DATABASE_CAPACITY, TaskProlicy.ALL);
-		m_taskManager.createTask(startTime, domain, Constants.REPORT_NOTIFY, TaskProlicy.DAILY);
+
+		Calendar cal = Calendar.getInstance();
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+
+		// for daily report aggreation done.
+		if (hour >= 4) {
+			m_taskManager.createTask(startTime, domain, Constants.REPORT_NOTIFY, TaskProlicy.DAILY);
+		}
 		return m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 

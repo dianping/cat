@@ -37,89 +37,32 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 	@Inject
 	private RouterConfigManager m_configManager;
 
-	private boolean needRebuild(StateReport report, RouterConfig config) {
-		if (config != null) {
-			Map<String, Long> serverProcesses = new LinkedHashMap<String, Long>();
-			StateReportVisitor visitor = new StateReportVisitor();
-			visitor.visitStateReport(report);
-
-			Map<String, Long> numbers = visitor.getNumbers();
-
-			for (Entry<String, Long> entry : numbers.entrySet()) {
-				String domain = entry.getKey();
-				Long count = entry.getValue();
-				Domain serverConfig = config.findDomain(domain);
-
-				if (serverConfig != null) {
-					Server server = serverConfig.getServers().get(0);
-					String serverId = server.getId();
-					Long value = serverProcesses.get(serverId);
-
-					if (value == null) {
-						serverProcesses.put(serverId, count);
-					} else {
-						serverProcesses.put(serverId, count + value);
-					}
-				}
-			}
-
-			long min = Integer.MAX_VALUE;
-			long max = Integer.MIN_VALUE;
-
-			for (Entry<String, Long> entry : serverProcesses.entrySet()) {
-				long value = entry.getValue();
-
-				if (value > max) {
-					max = value;
-				}
-				if (value < min) {
-					min = value;
-				}
-			}
-
-			if (max * 1.0 / min > 1.4) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return true;
-		}
-	}
-
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Date yesterday = new Date(period.getTime() - TimeUtil.ONE_DAY);
-		RouterConfig yesterdayConfig = m_reportService.queryRouterConfigReport(Constants.CAT, yesterday, period);
 		Date start = period;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
 		StateReport report = m_reportService.queryStateReport(Constants.CAT, start, end);
-
-		boolean need = needRebuild(report, yesterdayConfig);
 		RouterConfig routerConfig;
 
-		if (need) {
-			routerConfig = new RouterConfig(Constants.CAT);
-			StateReportVisitor visitor = new StateReportVisitor();
+		routerConfig = new RouterConfig(Constants.CAT);
+		StateReportVisitor visitor = new StateReportVisitor();
 
-			visitor.visitStateReport(report);
+		visitor.visitStateReport(report);
 
-			Map<String, Long> numbers = visitor.getNumbers();
-			Comparator<Entry<String, Long>> compator = new Comparator<Map.Entry<String, Long>>() {
+		Map<String, Long> numbers = visitor.getNumbers();
+		Comparator<Entry<String, Long>> compator = new Comparator<Map.Entry<String, Long>>() {
 
-				@Override
-				public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
-					return (int) (o2.getValue() - o1.getValue());
-				}
-			};
-			numbers = MapUtils.sortMap(numbers, compator);
-			Map<Server, Long> servers = findAvaliableServers();
+			@Override
+			public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
+				return (int) (o2.getValue() - o1.getValue());
+			}
+		};
+		numbers = MapUtils.sortMap(numbers, compator);
+		Map<Server, Long> servers = findAvaliableServers();
 
-			processMainServer(servers, routerConfig, numbers);
-			processBackServer(servers, routerConfig, numbers);
-		} else {
-			routerConfig = yesterdayConfig;
-		}
+		processMainServer(servers, routerConfig, numbers);
+		processBackServer(servers, routerConfig, numbers);
+
 		routerConfig.setStartTime(start);
 		routerConfig.setEndTime(end);
 

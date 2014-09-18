@@ -299,7 +299,7 @@ public class ChannelManager implements Task {
 			}
 
 			try {
-				Thread.sleep(10 * 1000L); // check every 2 seconds
+				Thread.sleep(10 * 1000L); // check every 10 seconds
 			} catch (InterruptedException e) {
 				// ignore
 			}
