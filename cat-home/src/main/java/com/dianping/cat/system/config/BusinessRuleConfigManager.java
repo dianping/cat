@@ -64,14 +64,16 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		item.setMetricItemText(metricKey);
 
 		MetricItemConfig metricItem = m_metricConfigManager.queryMetricItemConfig(metricKey);
-		if (metricItem.isShowAvg()) {
-			item.setMonitorAvg(true);
-		}
-		if (metricItem.isShowCount()) {
-			item.setMonitorCount(true);
-		}
-		if (metricItem.isShowSum()) {
-			item.setMonitorSum(true);
+		if (metricItem != null) {
+			if (metricItem.isShowAvg()) {
+				item.setMonitorAvg(true);
+			}
+			if (metricItem.isShowCount()) {
+				item.setMonitorCount(true);
+			}
+			if (metricItem.isShowSum()) {
+				item.setMonitorSum(true);
+			}
 		}
 
 		rule.addMetricItem(item);
