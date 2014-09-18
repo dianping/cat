@@ -76,8 +76,14 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.METRIC_RULE_ADD_OR_UPDATE.getPath();
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.METRIC_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
-		case NETWORK_RULE_CONFIG_UPDATE:
-			return JspFile.NETWORK_RULE_CONFIG_UPDATE.getPath();
+		case NETWORK_RULE_CONFIG_LIST:
+			return JspFile.NETWORK_RULE_CONFIG_LIST.getPath();
+		case NETWORK_RULE_ADD_OR_UPDATE:
+			return JspFile.NETWORK_RULE_ADD_OR_UPDATE.getPath();
+		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
+			return JspFile.NETWORK_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
+		case NETWORK_RULE_DELETE:
+			return JspFile.NETWORK_RULE_DELETE.getPath();
 		case SYSTEM_RULE_CONFIG_UPDATE:
 			return JspFile.SYSTEM_RULE_CONFIG_UPDATE.getPath();
 		case ALERT_DEFAULT_RECEIVERS:

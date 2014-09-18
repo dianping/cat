@@ -37,7 +37,13 @@ public enum JspFile {
 
 	DOMAIN_METRIC_RULE_CONFIG_UPDATE("/jsp/system/domainMetricRule/domainMetricRuleConfig.jsp"),
 
-	NETWORK_RULE_CONFIG_UPDATE("/jsp/system/networkRule/networkRuleConfig.jsp"),
+	NETWORK_RULE_CONFIG_LIST("/jsp/system/networkRule/networkConfigs.jsp"),
+
+	NETWORK_RULE_ADD_OR_UPDATE("/jsp/system/networkRule/networkRuleAdd.jsp"),
+
+	NETWORK_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/networkRule/networkConfigs.jsp"),
+
+	NETWORK_RULE_DELETE("/jsp/system/networkRule/networkConfigs.jsp"),
 
 	SYSTEM_RULE_CONFIG_UPDATE("/jsp/system/systemRule/systemRuleConfig.jsp"),
 
@@ -64,11 +70,11 @@ public enum JspFile {
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
-	
+
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparisonConfig/appComparisonConfig.jsp"),
-	
+
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
-	
+
 	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
 
 	private String m_path;

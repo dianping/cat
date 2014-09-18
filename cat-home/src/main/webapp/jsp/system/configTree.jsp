@@ -18,7 +18,7 @@
 	       <li class="text-left" id="topylogyEdgeConfigList"><a href="?op=topologyGraphEdgeConfigList">拓扑依赖阀值</a></li>
 	       <li class="text-left" id="exceptionConfigList"><a href="?op=exception">异常告警配置</a></li>
            <li class='nav-header'>网络监控配置</li>
-	       <li class="text-left" id="networkRuleConfigUpdate"><a href="?op=networkRuleConfigUpdate">网络告警配置</a></li>
+	       <li class="text-left" id="networkRuleConfigList"><a href="?op=networkRuleConfigList">网络告警配置</a></li>
 	       <li class="text-left" id="netGraphConfigUpdate"><a href="?op=netGraphConfigUpdate">网络拓扑配置</a></li>
 	       <li class='nav-header'>监控告警配置</li>
 	       <li class="text-left" id="systemRuleConfigUpdate"><a href="?op=systemRuleConfigUpdate">系统告警配置</a></li>
