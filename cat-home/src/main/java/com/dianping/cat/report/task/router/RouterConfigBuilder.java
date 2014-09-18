@@ -60,8 +60,8 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		processMainServer(servers, routerConfig, numbers);
 		processBackServer(servers, routerConfig, numbers);
 
-		routerConfig.setStartTime(period);
-		routerConfig.setEndTime(end);
+		routerConfig.setStartTime(end);
+		routerConfig.setEndTime(new Date(end.getTime() + TimeUtil.ONE_DAY));
 
 		DailyReport dailyReport = new DailyReport();
 
@@ -70,7 +70,7 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		dailyReport.setDomain(domain);
 		dailyReport.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		dailyReport.setName(name);
-		dailyReport.setPeriod(period);
+		dailyReport.setPeriod(end);
 		dailyReport.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(routerConfig);
 
