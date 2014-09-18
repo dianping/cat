@@ -56,6 +56,7 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
