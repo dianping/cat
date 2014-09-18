@@ -52,6 +52,31 @@
 				});
 			});
 			
+			$(document).delegate('#alertRule', 'click', function(e){
+				var anchor = this,
+					el = $(anchor);
+				
+				if(e.ctrlKey || e.metaKey){
+					return true;
+				}else{
+					e.preventDefault();
+				}
+				$.ajax({
+					type: "post",
+					url: anchor.href,
+					success : function(response, textStatus) {
+						$('#ruleModalBody').html(response);
+						$('#ruleModal').modal();
+						$("#id").select2();
+						metricValidate();
+					}
+				});
+			});
+			
+			$(document).delegate("#ruleSubmitButton","click",function(){
+				$("#modalSubmit").trigger("click");
+			})
+			
 			var action = '${payload.action.name}';
 			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
 				var state = '${model.opState}';
@@ -73,6 +98,17 @@
 		<div class="span10">
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" style="width:800px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			</div>
+			<div id="ruleModal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
+				<div class="modal-header text-center">
+				    <h3 id="ruleLabel">规则配置</h3>
+				</div>
+				<div class="modal-body" id="ruleModalBody">
+				</div>
+				<div class="modal-footer">
+				    <button class="btn btn-primary" id="ruleSubmitButton">提交</button>
+				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
+				</div>
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
@@ -138,7 +174,7 @@
 					     		<td style="text-align:center;white-space: nowrap">
 					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">修改</a>
 						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>
-					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">告警规则</a>
+					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-small">告警规则</a>
 						     	</td>
 					     		</tr>
 					     	</c:forEach>
