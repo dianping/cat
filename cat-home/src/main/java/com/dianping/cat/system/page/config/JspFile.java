@@ -45,7 +45,13 @@ public enum JspFile {
 
 	NETWORK_RULE_DELETE("/jsp/system/networkRule/networkConfigs.jsp"),
 
-	SYSTEM_RULE_CONFIG_UPDATE("/jsp/system/systemRule/systemRuleConfig.jsp"),
+	SYSTEM_RULE_CONFIG_LIST("/jsp/system/systemRule/systemConfigs.jsp"),
+
+	SYSTEM_RULE_ADD_OR_UPDATE("/jsp/system/systemRule/systemRuleAdd.jsp"),
+
+	SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/systemRule/systemConfigs.jsp"),
+
+	SYSTEM_RULE_DELETE("/jsp/system/systemRule/systemConfigs.jsp"),
 
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 

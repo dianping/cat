@@ -389,16 +389,7 @@ public class Handler implements PageHandler<Context> {
 			generateRuleItemList(m_networkRuleConfigManager, model);
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE:
-			String key = payload.getKey();
-			String href = "?op=networkRuleSubmit";
-			String jsonStr = "";
-
-			if (!StringUtil.isEmpty(key)) {
-				jsonStr = new DefaultJsonBuilder().build(m_networkRuleConfigManager.queryRule(key));
-			}
-			String content = m_ruleDecorator.generateRuleHtml(href, jsonStr);
-
-			model.setContent(content);
+			generateRuleEditContent(payload.getKey(), "?op=networkRuleSubmit", m_networkRuleConfigManager, model);
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_networkRuleConfigManager, payload.getContent()));
@@ -408,14 +399,19 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(deleteRule(m_networkRuleConfigManager, payload.getKey()));
 			generateRuleItemList(m_networkRuleConfigManager, model);
 			break;
-		case SYSTEM_RULE_CONFIG_UPDATE:
-			String systemRuleConfig = payload.getContent();
-			if (!StringUtils.isEmpty(systemRuleConfig)) {
-				model.setOpState(m_systemRuleConfigManager.insert(systemRuleConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_systemRuleConfigManager.getMonitorRules().toString());
+		case SYSTEM_RULE_CONFIG_LIST:
+			generateRuleItemList(m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_ADD_OR_UPDATE:
+			generateRuleEditContent(payload.getKey(), "?op=systemRuleSubmit", m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_systemRuleConfigManager, payload.getContent()));
+			generateRuleItemList(m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_DELETE:
+			model.setOpState(deleteRule(m_systemRuleConfigManager, payload.getKey()));
+			generateRuleItemList(m_systemRuleConfigManager, model);
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();
@@ -543,6 +539,17 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void generateRuleEditContent(String key, String href, BaseRuleConfigManager manager, Model model) {
+		String jsonStr = "";
+
+		if (!StringUtil.isEmpty(key)) {
+			jsonStr = new DefaultJsonBuilder().build(manager.queryRule(key));
+		}
+		String content = m_ruleDecorator.generateRuleHtml(href, jsonStr);
+
+		model.setContent(content);
 	}
 
 	private void generateRuleItemList(BaseRuleConfigManager manager, Model model) {

@@ -70,8 +70,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	NETWORK_RULE_ADD_OR_UPDATE_SUBMIT("networkRuleSubmit"),
 
 	NETWORK_RULE_DELETE("networkRulDelete"),
+	
+	SYSTEM_RULE_CONFIG_LIST("systemRuleConfigList"),
 
-	SYSTEM_RULE_CONFIG_UPDATE("systemRuleConfigUpdate"),
+	SYSTEM_RULE_ADD_OR_UPDATE("systemRuleUpdate"),
+
+	SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT("systemRuleSubmit"),
+
+	SYSTEM_RULE_DELETE("systemRulDelete"),
 
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 
