@@ -39,12 +39,9 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Date start = period;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
-		StateReport report = m_reportService.queryStateReport(Constants.CAT, start, end);
-		RouterConfig routerConfig;
-
-		routerConfig = new RouterConfig(Constants.CAT);
+		Date end = new Date(period.getTime() + TimeUtil.ONE_DAY);
+		StateReport report = m_reportService.queryStateReport(Constants.CAT, period, end);
+		RouterConfig routerConfig = new RouterConfig(Constants.CAT);
 		StateReportVisitor visitor = new StateReportVisitor();
 
 		visitor.visitStateReport(report);
@@ -63,7 +60,7 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 		processMainServer(servers, routerConfig, numbers);
 		processBackServer(servers, routerConfig, numbers);
 
-		routerConfig.setStartTime(start);
+		routerConfig.setStartTime(period);
 		routerConfig.setEndTime(end);
 
 		DailyReport dailyReport = new DailyReport();
