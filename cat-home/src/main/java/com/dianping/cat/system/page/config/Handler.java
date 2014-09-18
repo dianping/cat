@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.config;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -43,14 +44,19 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.rule.entity.MetricItem;
+import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.alert.RuleFTLDecorator;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -101,7 +107,7 @@ public class Handler implements PageHandler<Context> {
 	private BusinessRuleConfigManager m_businessRuleConfigManager;
 
 	@Inject
-	private NetworkRuleConfigManager m_metricRuleConfigManager;
+	private NetworkRuleConfigManager m_networkRuleConfigManager;
 
 	@Inject
 	private SystemRuleConfigManager m_systemRuleConfigManager;
@@ -141,6 +147,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ConfigModificationService m_modificationService;
+
+	@Inject
+	private RuleFTLDecorator m_ruleDecorator;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -376,7 +385,7 @@ public class Handler implements PageHandler<Context> {
 			metricRuleAdd(payload, model);
 			break;
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpState(metricRuleAddSubmit(payload, model));
+			model.setOpState(addSubmitRule(m_businessRuleConfigManager, payload.getContent()));
 			metricConfigList(payload, model);
 			break;
 		case METRIC_CONFIG_LIST:
@@ -396,23 +405,33 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
 			break;
-		case NETWORK_RULE_CONFIG_UPDATE:
-			String networkRuleConfig = payload.getContent();
-			if (!StringUtils.isEmpty(networkRuleConfig)) {
-				model.setOpState(m_metricRuleConfigManager.insert(networkRuleConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_metricRuleConfigManager.getMonitorRules().toString());
+		case NETWORK_RULE_CONFIG_LIST:
+			generateRuleItemList(m_networkRuleConfigManager, model);
 			break;
-		case SYSTEM_RULE_CONFIG_UPDATE:
-			String systemRuleConfig = payload.getContent();
-			if (!StringUtils.isEmpty(systemRuleConfig)) {
-				model.setOpState(m_systemRuleConfigManager.insert(systemRuleConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_systemRuleConfigManager.getMonitorRules().toString());
+		case NETWORK_RULE_ADD_OR_UPDATE:
+			generateRuleEditContent(payload.getKey(), "?op=networkRuleSubmit", m_networkRuleConfigManager, model);
+			break;
+		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_networkRuleConfigManager, payload.getContent()));
+			generateRuleItemList(m_networkRuleConfigManager, model);
+			break;
+		case NETWORK_RULE_DELETE:
+			model.setOpState(deleteRule(m_networkRuleConfigManager, payload.getKey()));
+			generateRuleItemList(m_networkRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_CONFIG_LIST:
+			generateRuleItemList(m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_ADD_OR_UPDATE:
+			generateRuleEditContent(payload.getKey(), "?op=systemRuleSubmit", m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_systemRuleConfigManager, payload.getContent()));
+			generateRuleItemList(m_systemRuleConfigManager, model);
+			break;
+		case SYSTEM_RULE_DELETE:
+			model.setOpState(deleteRule(m_systemRuleConfigManager, payload.getKey()));
+			generateRuleItemList(m_systemRuleConfigManager, model);
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();
@@ -542,6 +561,41 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private void generateRuleEditContent(String key, String href, BaseRuleConfigManager manager, Model model) {
+		String jsonStr = "";
+
+		if (!StringUtil.isEmpty(key)) {
+			jsonStr = new DefaultJsonBuilder().build(manager.queryRule(key));
+		}
+		String content = m_ruleDecorator.generateRuleHtml(href, jsonStr);
+
+		model.setContent(content);
+	}
+
+	private void generateRuleItemList(BaseRuleConfigManager manager, Model model) {
+		Collection<Rule> rules = manager.getMonitorRules().getRules().values();
+		List<RuleItem> ruleItems = new ArrayList<RuleItem>();
+
+		for (Rule rule : rules) {
+			String id = rule.getId();
+			List<MetricItem> items = rule.getMetricItems();
+
+			if (items.size() > 0) {
+				MetricItem item = items.get(0);
+				String productText = item.getProductText();
+				String metricText = item.getMetricItemText();
+				RuleItem ruleItem = new RuleItem(id, productText, metricText);
+
+				ruleItem.setMonitorCount(item.isMonitorCount());
+				ruleItem.setMonitorAvg(item.isMonitorAvg());
+				ruleItem.setMonitorSum(item.isMonitorSum());
+
+				ruleItems.add(ruleItem);
+			}
+		}
+		model.setRuleItems(ruleItems);
+	}
+
 	private void loadExceptionConfig(Model model) {
 		model.setExceptionExcludes(m_exceptionConfigManager.queryAllExceptionExcludes());
 		model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
@@ -592,15 +646,28 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void metricRuleAdd(Payload payload, Model model) {
+		String href = "?op=metricRuleAddSubmit";
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
+		String jsonStr = new DefaultJsonBuilder().build(m_businessRuleConfigManager.queryRule(
+		      payload.getProductLineName(), key));
+		String content = m_ruleDecorator.generateRuleHtml(href, jsonStr);
 
-		model.setMetricItemConfigRule(m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key).toString());
+		model.setContent(content);
 	}
 
-	private boolean metricRuleAddSubmit(Payload payload, Model model) {
+	private boolean addSubmitRule(BaseRuleConfigManager manager, String content) {
 		try {
-			String xmlContent = m_businessRuleConfigManager.updateRule(payload.getContent());
-			return m_businessRuleConfigManager.insert(xmlContent);
+			String xmlContent = manager.updateRule(content);
+			return manager.insert(xmlContent);
+		} catch (Exception ex) {
+			return false;
+		}
+	}
+
+	private boolean deleteRule(BaseRuleConfigManager manager, String key) {
+		try {
+			String xmlContent = manager.deleteRule(key);
+			return manager.insert(xmlContent);
 		} catch (Exception ex) {
 			return false;
 		}
@@ -729,6 +796,74 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				return department1.compareTo(department2);
 			}
+		}
+	}
+
+	public class RuleItem {
+		private String m_id;
+
+		private String m_productlineText;
+
+		private String m_metricText;
+
+		private boolean m_monitorCount;
+
+		private boolean m_monitorSum;
+
+		private boolean m_monitorAvg;
+
+		public RuleItem(String id, String productlineText, String metricText) {
+			m_id = id;
+			m_productlineText = productlineText;
+			m_metricText = metricText;
+		}
+
+		public String getId() {
+			return m_id;
+		}
+
+		public String getMetricText() {
+			return m_metricText;
+		}
+
+		public String getProductlineText() {
+			return m_productlineText;
+		}
+
+		public boolean isMonitorAvg() {
+			return m_monitorAvg;
+		}
+
+		public boolean isMonitorCount() {
+			return m_monitorCount;
+		}
+
+		public boolean isMonitorSum() {
+			return m_monitorSum;
+		}
+
+		public void setId(String id) {
+			m_id = id;
+		}
+
+		public void setMetricText(String metricText) {
+			m_metricText = metricText;
+		}
+
+		public void setMonitorAvg(boolean monitorAvg) {
+			m_monitorAvg = monitorAvg;
+		}
+
+		public void setMonitorCount(boolean monitorCount) {
+			m_monitorCount = monitorCount;
+		}
+
+		public void setMonitorSum(boolean monitorSum) {
+			m_monitorSum = monitorSum;
+		}
+
+		public void setProductlineText(String productlineText) {
+			m_productlineText = productlineText;
 		}
 	}
 

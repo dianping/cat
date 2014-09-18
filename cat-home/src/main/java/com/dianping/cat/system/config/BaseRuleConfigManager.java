@@ -1,11 +1,13 @@
 package com.dianping.cat.system.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
@@ -14,6 +16,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.transform.DefaultJsonParser;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
@@ -27,6 +30,11 @@ public abstract class BaseRuleConfigManager {
 	protected int m_configId;
 
 	protected MonitorRules m_config;
+
+	public String deleteRule(String key) {
+		m_config.getRules().remove(key);
+		return m_config.toString();
+	}
 
 	protected abstract String getCategoryName();
 
@@ -76,6 +84,16 @@ public abstract class BaseRuleConfigManager {
 		return configs;
 	}
 
+	public Rule queryRule(String key) {
+		Rule rule = m_config.getRules().get(key);
+
+		if (rule != null) {
+			return rule;
+		} else {
+			return null;
+		}
+	}
+
 	protected boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -92,6 +110,14 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 		return true;
+	}
+
+	public String updateRule(String ruleContent) throws SAXException, IOException {
+		Rule rule = DefaultJsonParser.parse(Rule.class, ruleContent);
+		String metricKey = rule.getId();
+
+		m_config.getRules().put(metricKey, rule);
+		return m_config.toString();
 	}
 
 	public boolean validate(String productText, String metricKeyText, String product, String metricKey) {
