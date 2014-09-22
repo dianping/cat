@@ -148,7 +148,9 @@ public class AlertManager implements Initializable {
 	}
 
 	private String generateTypeStr(String type) {
-		switch (AlertType.getTypeByName(type)) {
+		AlertType typeByName = AlertType.getTypeByName(type);
+		
+		switch (typeByName) {
 		case Business:
 			return "业务告警";
 		case Network:
@@ -165,6 +167,8 @@ public class AlertManager implements Initializable {
 			return "手机端告警";
 		case Web:
 			return "web告警";
+		case HeartBeat:
+			return "心跳告警";
 		}
 		return type;
 	}

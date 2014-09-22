@@ -85,7 +85,7 @@ public class WebAlert extends BaseAlert implements Task {
 		String url = item.getName();
 		String group = item.getGroup();
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-		List<Rule> rules = queryRuelsForMe(url);
+		List<Rule> rules = queryRuelsForUrl(url);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
@@ -133,7 +133,7 @@ public class WebAlert extends BaseAlert implements Task {
 
 	}
 
-	private List<Rule> queryRuelsForMe(String url) {
+	private List<Rule> queryRuelsForUrl(String url) {
 		List<Rule> rules = new ArrayList<Rule>();
 
 		for (Entry<String, Rule> rule : m_ruleConfigManager.getMonitorRules().getRules().entrySet()) {
