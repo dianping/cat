@@ -24,7 +24,6 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
@@ -91,15 +90,7 @@ public class WebAlert extends BaseAlert implements Task {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (Rule rule : rules) {
-			String id = rule.getId();
-			String type = id.split(":")[1];
-			Map<String, String> pars = new HashMap<String, String>();
-
-			pars.put("metricType", Constants.METRIC_USER_MONITOR);
-			pars.put("type", Monitor.TYPE_INFO);
-			pars.put("city", id.split(";")[1]);
-			pars.put("channel", id.split(";")[2]);
-			alertResults.addAll(computeAlertForRule(minute, url, pars, rule.getConfigs(), type));
+			alertResults.addAll(computeAlertForRule(rule, url, minute));
 		}
 
 		for (AlertResultEntity alertResult : alertResults) {
@@ -113,20 +104,29 @@ public class WebAlert extends BaseAlert implements Task {
 
 	}
 
-	protected MetricReport fetchMetricReport(String url, Map<String, String> properties, ModelPeriod period) {
+	protected MetricReport fetchMetricReport(Rule rule, ModelPeriod period) {
+		String id = rule.getId();
+
 		MetricReport report = null;
 
 		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(url);
+			report = m_currentReports.get(id);
 		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(url);
+			report = m_lastReports.get(id);
 		} else {
 			throw new RuntimeException("Unknown ModelPeriod: " + period);
 		}
 
 		if (report == null) {
-			ModelRequest request = new ModelRequest(url, period.getStartTime());
-			request.getProperties().putAll(properties);
+			ModelRequest request = new ModelRequest(id, period.getStartTime());
+			Map<String, String> pars = new HashMap<String, String>();
+
+			pars.put("metricType", Constants.METRIC_USER_MONITOR);
+			pars.put("type", Monitor.TYPE_INFO);
+			pars.put("city", id.split(";")[1]);
+			pars.put("channel", id.split(";")[2]);
+			request.getProperties().putAll(pars);
+
 			report = m_service.invoke(request);
 		}
 		return report;
@@ -169,15 +169,15 @@ public class WebAlert extends BaseAlert implements Task {
 		return results;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(int minute, String url, Map<String, String> pars,
-	      List<Config> configs, String type) {
+	private List<AlertResultEntity> computeAlertForRule(Rule rule, String url, int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(rule.getConfigs());
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
+		String type = rule.getId().split(":")[1];
 
 		if (minute >= maxMinute - 1) {
-			MetricReport report = fetchMetricReport(url, pars, ModelPeriod.CURRENT);
+			MetricReport report = fetchMetricReport(rule, ModelPeriod.CURRENT);
 
 			if (report != null) {
 				int start = minute + 1 - maxMinute;
@@ -189,7 +189,7 @@ public class WebAlert extends BaseAlert implements Task {
 				}
 			}
 		} else if (minute < 0) {
-			MetricReport report = fetchMetricReport(url, pars, ModelPeriod.LAST);
+			MetricReport report = fetchMetricReport(rule, ModelPeriod.LAST);
 
 			if (report != null) {
 				int start = 60 + minute + 1 - (maxMinute);
@@ -201,8 +201,8 @@ public class WebAlert extends BaseAlert implements Task {
 				}
 			}
 		} else {
-			MetricReport currentReport = fetchMetricReport(url, pars, ModelPeriod.CURRENT);
-			MetricReport lastReport = fetchMetricReport(url, pars, ModelPeriod.LAST);
+			MetricReport currentReport = fetchMetricReport(rule, ModelPeriod.CURRENT);
+			MetricReport lastReport = fetchMetricReport(rule, ModelPeriod.LAST);
 
 			if (currentReport != null && lastReport != null) {
 				int currentStart = 0, currentEnd = minute;
