@@ -121,12 +121,12 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class));
 
-		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class).req(ProductLineConfigManager.class));
+		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
 
 		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class,
 		      AlertSummaryExecutor.class));
 
-		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class).req(ProductLineConfigManager.class));
+		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class));
 
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
 
@@ -172,7 +172,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
-		      DataChecker.class, AlertInfo.class));
+		      DataChecker.class));
 
 		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)

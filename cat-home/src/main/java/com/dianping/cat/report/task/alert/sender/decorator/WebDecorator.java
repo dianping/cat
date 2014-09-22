@@ -14,7 +14,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class WebDecorator extends DefaultDecorator implements Initializable {
+public class WebDecorator extends Decorator implements Initializable {
 
 	public static final String ID = AlertType.Web.getName();
 
@@ -45,35 +45,23 @@ public class WebDecorator extends DefaultDecorator implements Initializable {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		Map<Object, Object> dataMap = generateExceptionMap(alert);
+		String domain = alert.getDomain();
+		Map<Object, Object> datas = new HashMap<Object, Object>();
+
+		datas.put("domain", domain);
+		datas.put("content", alert.getContent());
+		datas.put("date", m_format.format(alert.getDate()));
+		
 		StringWriter sw = new StringWriter(5000);
 
 		try {
 			Template t = m_configuration.getTemplate("webAlert.ftl");
-			t.process(dataMap, sw);
+			t.process(datas, sw);
 		} catch (Exception e) {
 			Cat.logError("build front end content error:" + alert.toString(), e);
 		}
 
 		return sw.toString();
-	}
-
-	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
-		String domain = alert.getDomain();
-		String contactInfo = buildContactInfo(domain);
-		Map<Object, Object> map = new HashMap<Object, Object>();
-
-		map.put("domain", domain);
-		map.put("content", alert.getContent());
-		map.put("date", m_format.format(alert.getDate()));
-		map.put("contactInfo", contactInfo);
-
-		return map;
-	}
-
-	@Override
-	public String buildContactInfo(String group) {
-		return "";
 	}
 
 }

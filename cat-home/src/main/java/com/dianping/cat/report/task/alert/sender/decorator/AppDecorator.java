@@ -15,7 +15,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class AppDecorator extends DefaultDecorator implements Initializable {
+public class AppDecorator extends Decorator implements Initializable {
 
 	public static final String ID = AlertType.App.getName();
 
@@ -72,20 +72,13 @@ public class AppDecorator extends DefaultDecorator implements Initializable {
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		String domain = alert.getDomain();
-		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
-		map.put("contactInfo", contactInfo);
 
 		return map;
-	}
-
-	@Override
-	public String buildContactInfo(String group) {
-		return "";
 	}
 
 }

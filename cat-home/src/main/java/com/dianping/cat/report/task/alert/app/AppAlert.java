@@ -22,7 +22,6 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.DataChecker;
@@ -36,16 +35,13 @@ public class AppAlert implements Task {
 	private AppDataService m_appDataService;
 
 	@Inject
-	protected AlertManager m_sendManager;
+	private AlertManager m_sendManager;
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
 	private DataChecker m_dataChecker;
-
-	@Inject
-	protected AlertInfo m_alertInfo;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE * 5;
 
