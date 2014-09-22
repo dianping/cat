@@ -38,23 +38,25 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		Date startTime = report.getStartTime();
 		String domain = report.getDomain();
 
+		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_ALERT, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
-		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_DATABASE_CAPACITY, TaskProlicy.ALL);
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 
-		// for daily report aggreation done.
+		// for daily report aggreation done 
 		if (hour >= 4) {
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_NOTIFY, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
 		}
-		return m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		return true;
 	}
 
 	@Override

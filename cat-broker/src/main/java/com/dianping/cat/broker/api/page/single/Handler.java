@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			entity.setHttpStatus(httpStatus);
 			entity.setIp(userIp);
 			entity.setTargetUrl(payload.getTargetUrl());
-			entity.setTimestamp(payload.getTimestamp());
+			entity.setTimestamp(System.currentTimeMillis());
 			m_manager.offer(entity);
 		} else {
 			Cat.logEvent("unknownIp", "single", Event.SUCCESS, null);

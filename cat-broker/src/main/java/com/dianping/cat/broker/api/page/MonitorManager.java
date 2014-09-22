@@ -57,15 +57,17 @@ public class MonitorManager implements Initializable, LogEnabled {
 		if (duration > 0) {
 			logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
 		}
-		if ("200".equals(httpStatus)) {
-			String key = city + ":" + channel + ":" + Monitor.HIT;
 
-			logMetricForCount(timestamp, group, key, count);
-		} else {
+		String hitKey = city + ":" + channel + ":" + Monitor.HIT;
+
+		logMetricForCount(timestamp, group, hitKey, count);
+
+		if (!"200".equals(httpStatus)) {
 			String key = city + ":" + channel + ":" + Monitor.ERROR;
 
 			logMetricForCount(timestamp, group, key, count);
 		}
+
 		if (!StringUtils.isEmpty(httpStatus)) {
 			String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
 
