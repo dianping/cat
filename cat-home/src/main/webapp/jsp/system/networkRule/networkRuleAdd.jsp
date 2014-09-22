@@ -7,4 +7,7 @@
 
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-${model.content}
+<form>
+    规则ID： <input id="ruleId" type="text" value="${model.id}"/>
+	${model.content}
+</form>

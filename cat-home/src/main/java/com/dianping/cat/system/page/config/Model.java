@@ -80,6 +80,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<RuleItem> m_ruleItems;
 
+	private String m_id;
+
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
@@ -175,6 +177,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getExceptionList() {
 		return m_exceptionList;
+	}
+
+	public String getId() {
+		return m_id;
 	}
 
 	public String getIpAddress() {
@@ -291,6 +297,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
+	}
+
+	public void setId(String id) {
+		m_id = id;
 	}
 
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {

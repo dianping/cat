@@ -1,18 +1,16 @@
 package com.dianping.cat.system.config;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
@@ -97,7 +95,7 @@ public abstract class BaseRuleConfigManager {
 	protected boolean storeConfig() {
 		synchronized (this) {
 			try {
-				Config config = m_configDao.createLocal();
+				com.dianping.cat.core.config.Config config = m_configDao.createLocal();
 
 				config.setId(m_configId);
 				config.setKeyId(m_configId);
@@ -112,11 +110,18 @@ public abstract class BaseRuleConfigManager {
 		return true;
 	}
 
-	public String updateRule(String ruleContent) throws SAXException, IOException {
-		Rule rule = DefaultJsonParser.parse(Rule.class, ruleContent);
-		String metricKey = rule.getId();
+	public String updateRule(String id, String metricsStr, String configsStr) throws Exception {
+		Rule rule = new Rule(id);
+		List<MetricItem> metricItems = DefaultJsonParser.parseArray(MetricItem.class, metricsStr);
+		List<Config> configs = DefaultJsonParser.parseArray(Config.class, configsStr);
 
-		m_config.getRules().put(metricKey, rule);
+		for (MetricItem metricItem : metricItems) {
+			rule.addMetricItem(metricItem);
+		}
+		for (Config config : configs) {
+			rule.addConfig(config);
+		}
+		m_config.getRules().put(id, rule);
 		return m_config.toString();
 	}
 
