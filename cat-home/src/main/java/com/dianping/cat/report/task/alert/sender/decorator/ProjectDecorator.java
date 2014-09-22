@@ -7,7 +7,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
-public abstract class ProjectDecorator extends DefaultDecorator {
+public abstract class ProjectDecorator extends Decorator {
 
 	@Inject
 	protected ProjectService m_projectService;
