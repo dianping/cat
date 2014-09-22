@@ -79,7 +79,7 @@ public class HeartbeatAlert implements Task {
 
 	private void processIp(String domain, String ip, int minute) {
 		try {
-			double[] gcCount = new double[10];
+			double[] gcCounts = new double[10];
 			double systemLoadCount = 0;
 
 			if (minute < 9) {
@@ -93,13 +93,13 @@ public class HeartbeatAlert implements Task {
 					int length = 9 - minute;
 					int startIndex = 60 - length;
 
-					System.arraycopy(lastHourReport.getOldGcCount(), startIndex, gcCount, 0, length);
+					System.arraycopy(lastHourReport.getOldGcCount(), startIndex, gcCounts, 0, length);
 				}
 				if (currentHourReport != null) {
 					int copyLength = minute + 1;
 					int desStartIndex = 10 - copyLength;
 
-					System.arraycopy(currentHourReport.getOldGcCount(), 0, gcCount, desStartIndex, copyLength);
+					System.arraycopy(currentHourReport.getOldGcCount(), 0, gcCounts, desStartIndex, copyLength);
 					systemLoadCount = currentHourReport.getSystemLoadAverage()[minute];
 				}
 			} else {
@@ -110,7 +110,7 @@ public class HeartbeatAlert implements Task {
 				if (report != null) {
 					int srcStartIndex = minute - 9;
 
-					System.arraycopy(report.getOldGcCount(), srcStartIndex, gcCount, 0, 10);
+					System.arraycopy(report.getOldGcCount(), srcStartIndex, gcCounts, 0, 10);
 					systemLoadCount = report.getSystemLoadAverage()[minute];
 				}
 			}
@@ -123,6 +123,7 @@ public class HeartbeatAlert implements Task {
 
 				m_sendManager.addAlert(entity);
 			}
+			
 		} catch (Exception ex) {
 			Cat.logError(ex);
 		}
