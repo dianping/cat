@@ -43,9 +43,9 @@ public class HeartbeatAlert implements Task {
 
 	protected static final long DURATION = TimeUtil.ONE_MINUTE;
 
-	private static final float gcAvgThreshold = 1;
+	protected static final float gcAvgThreshold = 1;
 
-	private static final float systemLoadAvgThreshold = 1;
+	protected static final float systemLoadAvgThreshold = 1;
 
 	private DisplayHeartbeat generateReport(String domain, String ip, long date) {
 		ModelRequest request = new ModelRequest(domain, date) //

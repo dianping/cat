@@ -14,6 +14,7 @@ import java.util.regex.Pattern;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
@@ -60,11 +61,13 @@ public class WebAlert extends BaseAlert implements Task {
 				for (PatternItem item : m_urlPatternConfigManager.queryUrlPatternRules()) {
 					processUrl(item);
 				}
-
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
+				Cat.logError(e);
 			} finally {
+				m_currentReports.clear();
+				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;
@@ -83,19 +86,20 @@ public class WebAlert extends BaseAlert implements Task {
 		String url = item.getName();
 		String group = item.getGroup();
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-		List<Rule> rules = queryRuelsForMe(url);
+		List<Rule> rules = queryRuelsForUrl(url);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (Rule rule : rules) {
 			String id = rule.getId();
+			String type = id.split(":")[1];
 			Map<String, String> pars = new HashMap<String, String>();
 
 			pars.put("metricType", Constants.METRIC_USER_MONITOR);
 			pars.put("type", Monitor.TYPE_INFO);
 			pars.put("city", id.split(";")[1]);
 			pars.put("channel", id.split(";")[2]);
-			alertResults.addAll(computeAlertForRule(minute, url, pars, rule.getConfigs()));
+			alertResults.addAll(computeAlertForRule(minute, url, pars, rule.getConfigs(), type));
 		}
 
 		for (AlertResultEntity alertResult : alertResults) {
@@ -110,16 +114,26 @@ public class WebAlert extends BaseAlert implements Task {
 	}
 
 	protected MetricReport fetchMetricReport(String url, Map<String, String> properties, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(url, period.getStartTime());
+		MetricReport report = null;
 
-		request.getProperties().putAll(properties);
+		if (period == ModelPeriod.CURRENT) {
+			report = m_currentReports.get(url);
+		} else if (period == ModelPeriod.LAST) {
+			report = m_lastReports.get(url);
+		} else {
+			throw new RuntimeException("Unknown ModelPeriod: " + period);
+		}
 
-		MetricReport report = m_service.invoke(request);
-
+		if (report == null) {
+			ModelRequest request = new ModelRequest(url, period.getStartTime());
+			request.getProperties().putAll(properties);
+			report = m_service.invoke(request);
+		}
 		return report;
+
 	}
 
-	private List<Rule> queryRuelsForMe(String url) {
+	private List<Rule> queryRuelsForUrl(String url) {
 		List<Rule> rules = new ArrayList<Rule>();
 
 		for (Entry<String, Rule> rule : m_ruleConfigManager.getMonitorRules().getRules().entrySet()) {
@@ -144,9 +158,9 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
-	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, Condition condition) {
+	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, Condition condition,
+	      String type) {
 		List<AlertResultEntity> results = new LinkedList<AlertResultEntity>();
-		String type = condition.getTitle();
 		double[] data = datas.get(type);
 
 		if (data != null) {
@@ -156,7 +170,7 @@ public class WebAlert extends BaseAlert implements Task {
 	}
 
 	private List<AlertResultEntity> computeAlertForRule(int minute, String url, Map<String, String> pars,
-	      List<Config> configs) {
+	      List<Config> configs, String type) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
@@ -171,7 +185,7 @@ public class WebAlert extends BaseAlert implements Task {
 				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
 				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition));
+					results.addAll(computeAlertForCondition(datas, condition, type));
 				}
 			}
 		} else if (minute < 0) {
@@ -183,7 +197,7 @@ public class WebAlert extends BaseAlert implements Task {
 				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
 				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition));
+					results.addAll(computeAlertForCondition(datas, condition, type));
 				}
 			}
 		} else {
@@ -209,7 +223,7 @@ public class WebAlert extends BaseAlert implements Task {
 					}
 				}
 				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition));
+					results.addAll(computeAlertForCondition(datas, condition, type));
 				}
 			}
 		}

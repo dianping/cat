@@ -184,11 +184,11 @@ public abstract class BaseAlert {
 	private boolean judgeCurrentInConfigRange(Config config) {
 		long ruleStartTime;
 		long ruleEndTime;
-		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
-
+		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000L) % (24 * 60 * 60 * 1000L);
+		
 		try {
 			ruleStartTime = buildMillsByString(config.getStarttime());
-			ruleEndTime = buildMillsByString(config.getEndtime()) + TimeUtil.ONE_MINUTE;
+			ruleEndTime = buildMillsByString(config.getEndtime());
 		} catch (Exception ex) {
 			ruleStartTime = 0L;
 			ruleEndTime = 86400000L;

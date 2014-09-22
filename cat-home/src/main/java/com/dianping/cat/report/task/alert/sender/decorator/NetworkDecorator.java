@@ -3,7 +3,7 @@ package com.dianping.cat.report.task.alert.sender.decorator;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
-public class NetworkDecorator extends ProductlineDecorator {
+public class NetworkDecorator extends Decorator {
 
 	public static final String ID = AlertType.Network.getName();
 
@@ -19,5 +19,10 @@ public class NetworkDecorator extends ProductlineDecorator {
 		sb.append("[网络指标 ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
+
+	@Override
+   public String generateContent(AlertEntity alert) {
+	   return alert.getContent();
+   }
 
 }
