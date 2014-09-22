@@ -192,6 +192,7 @@ public class AppAlert implements Task {
 		cal.set(Calendar.MILLISECOND, 0);
 		String period = m_sdf.format(cal.getTime());
 		String split = ";";
+		
 		return new QueryEntity(period + split + conditions + split + startMinute + split + endMinute);
 	}
 

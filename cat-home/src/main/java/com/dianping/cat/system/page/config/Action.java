@@ -109,9 +109,21 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
-	WEB_RULE_UPDATE("webRuleUpdate"),
+	WEB_RULE_CONFIG_LIST("webRuleConfigList"),
 
-	APP_RULE_UPDATE("appRuleUpdate"),
+	WEB_RULE_ADD_OR_UPDATE("webRuleUpdate"),
+
+	WEB_RULE_ADD_OR_UPDATE_SUBMIT("webRuleSubmit"),
+
+	WEB_RULE_DELETE("webRulDelete"),
+
+	APP_RULE_CONFIG_LIST("appRuleConfigList"),
+
+	APP_RULE_ADD_OR_UPDATE("appRuleUpdate"),
+
+	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
+
+	APP_RULE_DELETE("appRulDelete"),
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
