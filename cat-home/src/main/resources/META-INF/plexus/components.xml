@@ -2430,11 +2430,6 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>network</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
@@ -2453,11 +2448,6 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>system</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
@@ -2668,9 +2658,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
