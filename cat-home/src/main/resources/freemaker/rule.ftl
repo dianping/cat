@@ -136,8 +136,6 @@ $(document).ready(function () {
 
     drawConfig();
 
-    $("html").delegate("input[]")
-
     $("#modalSubmit").click(function () {
         var configStr = generateConfigJsonString();
         window.location.href="${link}&content="+configStr;
