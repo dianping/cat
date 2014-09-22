@@ -10,6 +10,8 @@ public enum AlertType {
 
 	Exception("exception"),
 
+	HeartBeat("heartbeat"),
+
 	ThirdParty("thirdParty"),
 
 	FrontEndException("frontEnd"),

@@ -172,6 +172,25 @@ public class HostinfoService implements Initializable, LogEnabled {
 		return null;
 	}
 
+	public List<String> queryIpsByDomain(String domain) {
+		List<String> ips = new ArrayList<String>();
+		if (domain == null) {
+			return ips;
+		}
+
+		for (Hostinfo hostinfo : m_hostinfos.values()) {
+			if (domain.equals(hostinfo.getDomain())) {
+				String ip = hostinfo.getIp();
+
+				if (ip != null && ip.length() > 0) {
+					ips.add(ip);
+				}
+			}
+		}
+
+		return ips;
+	}
+
 	private void refresh() {
 		try {
 			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);

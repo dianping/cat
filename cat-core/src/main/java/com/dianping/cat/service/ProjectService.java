@@ -40,12 +40,12 @@ public class ProjectService implements Initializable {
 		m_domains.add(domain);
 	}
 
-	public Project createLocal() {
-		return m_projectDao.createLocal();
-	}
-
 	public boolean containsDomainInCat(String domain) {
 		return m_domains.contains(domain);
+	}
+
+	public Project createLocal() {
+		return m_projectDao.createLocal();
 	}
 
 	public boolean deleteProject(Project project) {
@@ -75,6 +75,10 @@ public class ProjectService implements Initializable {
 
 	public List<Project> findAll() throws DalException {
 		return new ArrayList<Project>(m_projects.values());
+	}
+
+	public Set<String> findAllDomain() {
+		return m_domains;
 	}
 
 	public Project findByDomain(String domainName) {
@@ -127,23 +131,6 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public void refresh() {
-		try {
-			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-			Map<String, Project> tmpProjects = new ConcurrentHashMap<String, Project>();
-			Set<String> tmpDomains = new HashSet<String>();
-
-			for (Project project : projects) {
-				tmpDomains.add(project.getDomain());
-				tmpProjects.put(project.getDomain(), project);
-			}
-			m_domains = tmpDomains;
-			m_projects = tmpProjects;
-		} catch (DalException e) {
-			Cat.logError("initialize ProjectService error", e);
-		}
-	}
-
 	public boolean insert(Project project) throws DalException {
 		m_projects.put(project.getDomain(), project);
 
@@ -172,6 +159,23 @@ public class ProjectService implements Initializable {
 		return false;
 	}
 
+	public void refresh() {
+		try {
+			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+			Map<String, Project> tmpProjects = new ConcurrentHashMap<String, Project>();
+			Set<String> tmpDomains = new HashSet<String>();
+
+			for (Project project : projects) {
+				tmpDomains.add(project.getDomain());
+				tmpProjects.put(project.getDomain(), project);
+			}
+			m_domains = tmpDomains;
+			m_projects = tmpProjects;
+		} catch (DalException e) {
+			Cat.logError("initialize ProjectService error", e);
+		}
+	}
+
 	public boolean updateProject(Project project) {
 		m_projects.put(project.getDomain(), project);
 
@@ -185,6 +189,11 @@ public class ProjectService implements Initializable {
 	}
 
 	public class ProjectReloadTask implements Task {
+
+		@Override
+		public String getName() {
+			return "project-reload";
+		}
 
 		@Override
 		public void run() {
@@ -203,11 +212,6 @@ public class ProjectService implements Initializable {
 					active = false;
 				}
 			}
-		}
-
-		@Override
-		public String getName() {
-			return "project-reload";
 		}
 
 		@Override
