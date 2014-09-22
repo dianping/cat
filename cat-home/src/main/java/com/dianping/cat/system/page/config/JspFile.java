@@ -74,10 +74,14 @@ public enum JspFile {
 	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
-	
-	WEB_RULE_UPDATE("/jsp/system/webRule/webRule.jsp"),
 
-	APP_RULE_UPDATE("/jsp/system/appRule/appRule.jsp"),
+	WEB_RULE_CONFIG_LIST("/jsp/system/webRule/webRuleConfigs.jsp"),
+	
+	WEB_RULE_ADD_OR_UPDATE("/jsp/system/webRule/webRuleAdd.jsp"),
+
+	APP_RULE_CONFIG_LIST("/jsp/system/appRule/appRuleConfigs.jsp"),
+	
+	APP_RULE_ADD_OR_UPDATE("/jsp/system/appRule/appRuleAdd.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 

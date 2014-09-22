@@ -50,6 +50,7 @@ import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.RuleFTLDecorator;
+import com.dianping.cat.report.task.alert.RuleWithoutMetricFTLDecorator;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.SystemPage;
@@ -150,6 +151,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RuleFTLDecorator m_ruleDecorator;
+
+	@Inject
+	private RuleWithoutMetricFTLDecorator m_ruleWithoutMetricFTLDecorator;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -300,20 +304,6 @@ public class Handler implements PageHandler<Context> {
 		case URL_PATTERN_DELETE:
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
-			break;
-		case WEB_RULE_UPDATE:
-			String webRule = payload.getContent();
-			if (!StringUtils.isEmpty(webRule)) {
-				model.setOpState(m_webRuleConfigManager.insert(webRule));
-			}
-			model.setContent(m_webRuleConfigManager.getMonitorRules().toString());
-			break;
-		case APP_RULE_UPDATE:
-			String appRule = payload.getContent();
-			if (!StringUtils.isEmpty(appRule)) {
-				model.setOpState(m_appRuleConfigManager.insert(appRule));
-			}
-			model.setContent(m_appRuleConfigManager.getMonitorRules().toString());
 			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
@@ -536,6 +526,34 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
 			break;
+		case WEB_RULE_CONFIG_LIST:
+			generateRuleWithoutMetricItemList(m_webRuleConfigManager, model);
+			break;
+		case WEB_RULE_ADD_OR_UPDATE:
+			generateRuleWithoutMetricEditContent(payload.getKey(), "?op=webRuleSubmit", m_webRuleConfigManager, model);
+			break;
+		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_webRuleConfigManager, payload.getContent()));
+			generateRuleWithoutMetricItemList(m_webRuleConfigManager, model);
+			break;
+		case WEB_RULE_DELETE:
+			model.setOpState(deleteRule(m_webRuleConfigManager, payload.getKey()));
+			generateRuleWithoutMetricItemList(m_webRuleConfigManager, model);
+			break;
+		case APP_RULE_CONFIG_LIST:
+			generateRuleWithoutMetricItemList(m_appRuleConfigManager, model);
+			break;
+		case APP_RULE_ADD_OR_UPDATE:
+			generateRuleWithoutMetricEditContent(payload.getKey(), "?op=appRuleSubmit", m_appRuleConfigManager, model);
+			break;
+		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_appRuleConfigManager, payload.getContent()));
+			generateRuleWithoutMetricItemList(m_appRuleConfigManager, model);
+			break;
+		case APP_RULE_DELETE:
+			model.setOpState(deleteRule(m_appRuleConfigManager, payload.getKey()));
+			generateRuleWithoutMetricItemList(m_appRuleConfigManager, model);
+			break;
 		case APP_COMPARISON_CONFIG_UPDATE:
 			String appComparisonConfig = payload.getContent();
 			if (!StringUtils.isEmpty(appComparisonConfig)) {
@@ -572,6 +590,17 @@ public class Handler implements PageHandler<Context> {
 		model.setContent(content);
 	}
 
+	private void generateRuleWithoutMetricEditContent(String key, String href, BaseRuleConfigManager manager, Model model) {
+		String jsonStr = "";
+
+		if (!StringUtil.isEmpty(key)) {
+			jsonStr = new DefaultJsonBuilder().build(manager.queryRule(key));
+		}
+		String content = m_ruleWithoutMetricFTLDecorator.generateRuleHtml(href, jsonStr);
+
+		model.setContent(content);
+	}
+
 	private void generateRuleItemList(BaseRuleConfigManager manager, Model model) {
 		Collection<Rule> rules = manager.getMonitorRules().getRules().values();
 		List<RuleItem> ruleItems = new ArrayList<RuleItem>();
@@ -592,6 +621,19 @@ public class Handler implements PageHandler<Context> {
 
 				ruleItems.add(ruleItem);
 			}
+		}
+		model.setRuleItems(ruleItems);
+	}
+
+	private void generateRuleWithoutMetricItemList(BaseRuleConfigManager manager, Model model) {
+		Collection<Rule> rules = manager.getMonitorRules().getRules().values();
+		List<RuleItem> ruleItems = new ArrayList<RuleItem>();
+
+		for (Rule rule : rules) {
+			String id = rule.getId();
+			RuleItem ruleItem = new RuleItem(id, "", "");
+
+			ruleItems.add(ruleItem);
 		}
 		model.setRuleItems(ruleItems);
 	}
