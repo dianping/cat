@@ -95,6 +95,15 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("allOnOrOff")
 	private String m_allOnOrOff;
 
+	@FieldMeta("ruleId")
+	private String m_ruleId;
+
+	@FieldMeta("metrics")
+	private String m_metrics;
+
+	@FieldMeta("configs")
+	private String m_configs;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -109,6 +118,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getBug() {
 		return m_bug;
+	}
+
+	public String getConfigs() {
+		return m_configs;
 	}
 
 	public String getContent() {
@@ -166,6 +179,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_metricKey;
 	}
 
+	public String getMetrics() {
+		return m_metrics;
+	}
+
 	@Override
 	public SystemPage getPage() {
 		return m_page;
@@ -203,6 +220,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_rule;
 	}
 
+	public String getRuleId() {
+		return m_ruleId;
+	}
+
 	public String getTo() {
 		return m_to;
 	}
@@ -221,6 +242,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setBug(String bug) {
 		m_bug = bug;
+	}
+
+	public void setConfigs(String configs) {
+		m_configs = configs;
 	}
 
 	public void setContent(String content) {
@@ -271,6 +296,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_metricKey = metricKey;
 	}
 
+	public void setMetrics(String metrics) {
+		m_metrics = metrics;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
@@ -302,6 +331,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRule(AggregationRule rule) {
 		m_rule = rule;
+	}
+
+	public void setRuleId(String ruleId) {
+		m_ruleId = ruleId;
 	}
 
 	public void setTo(String to) {
