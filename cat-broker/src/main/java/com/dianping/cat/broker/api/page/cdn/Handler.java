@@ -54,7 +54,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					String[] tabs = line.split("\t");
 					// timstampTABtargetUrlTABdnslookupTABtcpconnectTABrequestTABresponseENTER
 					if (tabs.length == 6) {
-						long timestamp = Long.parseLong(tabs[0]);
+						// long timestamp = Long.parseLong(tabs[0]);
+						long timestamp = System.currentTimeMillis();
 						MonitorEntity entity = createEntity(tabs[1] + "/dnsLookup", timestamp, Double.parseDouble(tabs[2]),
 						      userIp);
 

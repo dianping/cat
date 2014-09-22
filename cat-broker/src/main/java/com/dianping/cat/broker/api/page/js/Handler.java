@@ -44,7 +44,8 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "js")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Payload payload = ctx.getPayload();
-		long timestamp = payload.getTimestamp();
+		// long timestamp = payload.getTimestamp();
+		long timestamp = System.currentTimeMillis();
 		String error = payload.getError();
 		String host = parseHost();
 		String url = payload.getUrl();
