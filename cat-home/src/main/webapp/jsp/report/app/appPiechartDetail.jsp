@@ -88,7 +88,7 @@
 		<tr>
 		<td>${item.title}</td>
 		<td></a>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.successRatio,'#0.0%')}</td>
+		<td>${w:format(item.successRatio,'#0.000%')}</td>
 		</tr>
 	</c:forEach>
 	</tbody>
