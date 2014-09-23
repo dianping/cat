@@ -51,10 +51,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(domainNavManager);
 			Threads.forGroup("cat").start(taskConsumer);
 		}
-		AppAlert appAlert = ctx.lookup(AppAlert.class);
-		WebAlert webAlert = ctx.lookup(WebAlert.class);
-		Threads.forGroup("cat").start(appAlert);
-		Threads.forGroup("cat").start(webAlert);
 
 		if (serverConfigManager.isAlertMachine() && !serverConfigManager.isLocalMode()) {
 			BusinessAlert metricAlert = ctx.lookup(BusinessAlert.class);
@@ -64,8 +60,8 @@ public class CatHomeModule extends AbstractModule {
 			ProjectUpdateTask productUpdateTask = ctx.lookup(ProjectUpdateTask.class);
 			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
 			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
-//			AppAlert appAlert = ctx.lookup(AppAlert.class);
-//			WebAlert webAlert = ctx.lookup(WebAlert.class);
+			AppAlert appAlert = ctx.lookup(AppAlert.class);
+			WebAlert webAlert = ctx.lookup(WebAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(systemAlert);
