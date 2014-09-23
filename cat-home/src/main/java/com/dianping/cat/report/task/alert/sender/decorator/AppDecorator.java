@@ -41,7 +41,6 @@ public class AppDecorator extends Decorator implements Initializable {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 		String type = alert.getMetric();
-		System.out.println(alert.getDomain());
 		String title = "";
 
 		if (AppDataService.SUCCESS.equals(type)) {
