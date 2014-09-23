@@ -526,7 +526,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
 			break;
-		case WEB_RULE_CONFIG_LIST:
+		case WEB_RULE:
 			generateRuleWithoutMetricItemList(m_webRuleConfigManager, model);
 			break;
 		case WEB_RULE_ADD_OR_UPDATE:
@@ -540,10 +540,12 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(deleteRule(m_webRuleConfigManager, payload.getKey()));
 			generateRuleWithoutMetricItemList(m_webRuleConfigManager, model);
 			break;
-		case APP_RULE_CONFIG_LIST:
-			generateRuleWithoutMetricItemList(m_appRuleConfigManager, model);
+		case APP_RULE:
+			buildAppConfigInfo(m_appConfigManager, model);
+			model.setRules(m_appRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case APP_RULE_ADD_OR_UPDATE:
+			buildAppConfigInfo(m_appConfigManager, model);
 			generateRuleWithoutMetricEditContent(payload.getKey(), "?op=appRuleSubmit", m_appRuleConfigManager, model);
 			break;
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
@@ -577,6 +579,16 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildAppConfigInfo(AppConfigManager appConfigManager, Model model) {
+		model.setConnectionTypes(appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
+		model.setCities(appConfigManager.queryConfigItem(AppConfigManager.CITY));
+		model.setNetworks(appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
+		model.setOperators(appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setPlatforms(appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
+		model.setVersions(appConfigManager.queryConfigItem(AppConfigManager.VERSION));
+		model.setCommands(appConfigManager.queryCommands());
 	}
 
 	private void generateRuleEditContent(String key, String href, BaseRuleConfigManager manager, Model model) {

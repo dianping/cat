@@ -75,13 +75,13 @@ public enum JspFile {
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
-	WEB_RULE_CONFIG_LIST("/jsp/system/webRule/webRuleConfigs.jsp"),
+	WEB_RULE("/jsp/system/webRule/webRuleConfigs.jsp"),
 	
-	WEB_RULE_ADD_OR_UPDATE("/jsp/system/webRule/webRuleAdd.jsp"),
+	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleAdd.jsp"),
 
-	APP_RULE_CONFIG_LIST("/jsp/system/appRule/appRuleConfigs.jsp"),
+	APP_RULE("/jsp/system/appRule/appRule.jsp"),
 	
-	APP_RULE_ADD_OR_UPDATE("/jsp/system/appRule/appRuleAdd.jsp"),
+	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 
