@@ -47,7 +47,7 @@ public class AppAlert implements Task {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeUtil.ONE_MINUTE * 5;
 
 	private static final int DATA_AREADY_MINUTE = 10;
 
