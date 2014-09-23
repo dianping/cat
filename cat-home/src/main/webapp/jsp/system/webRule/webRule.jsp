@@ -49,17 +49,39 @@
 						<c:forEach var="i" items="${model.patternItems}">
 							<c:if test="${i.name eq urlId}"><td>${i.group}</td><td>${i.pattern}</td></c:if>
 						</c:forEach>
+						<c:choose>
+						<c:when test="${not empty city[0]}">
 						<c:forEach var="i" items="${model.cityInfos}">
 							<c:if test="${i.key eq city[0]}">
 								<td>${i.key}</td>
+								<c:choose>
+								<c:when test="${not empty city[1]}">
 								<c:forEach var="i2" items="${i.value}">
 								<c:if test="${i2.city eq city[1]}">
 								<td>${i2.city}</td>
 								</c:if>
 								</c:forEach>
+								</c:when>
+								<c:otherwise>
+								<td>All</td>
+								</c:otherwise>
+								</c:choose>
 							</c:if>
 						</c:forEach>
-						<td>${operator}</td>
+						</c:when>
+						<c:otherwise>
+							<td>All</td>
+							<td>All</td>
+						</c:otherwise>
+						</c:choose>
+						<c:choose>
+						<c:when test="${not empty operator}">
+							<td>${operator}</td>
+						</c:when>
+						<c:otherwise>
+							<td>All</td>
+						</c:otherwise>
+						</c:choose>
 						<td>
 							<c:if test="${type eq 'request'}">请求数</c:if> 
 							<c:if test="${type eq 'success'}">成功率</c:if>  

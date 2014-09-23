@@ -64,8 +64,17 @@ function update() {
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();
 		})
-		var words = "${payload.ruleId}".split(":")[0].split(";");
-		var metric = "${payload.ruleId}".split(":")[1];
+		var ruleId = "${payload.ruleId}";
+		if(ruleId.length > 0){
+			document.getElementById("group").disabled = true;
+			document.getElementById("url").disabled = true;
+			document.getElementById("province").disabled = true;
+			document.getElementById("city").disabled = true;
+			document.getElementById("operator").disabled = true;
+			document.getElementById("metric").disabled = true;
+		}
+		var words = ruleId.split(":")[0].split(";");
+		var metric = ruleId.split(":")[1];
 		var urlStr = words[0];
 		var cityStr = words[1];
 		var operatorStr = words[2];
@@ -155,11 +164,11 @@ function update() {
 		if(typeof(array) != 'undefined' && array.length==2){
 			$("#city").val(cityStr);
 		}
-		 
+		
 		for(var key in urlData){
 			for (var i=0; i<urlData[key].length; i++ ){
-				if(urlData[key][i] == urlStr){
-					$('#group').val(item.group);
+				if(urlData[key][i].name == urlStr){
+					$('#group').val(urlData[key][i].group);
 					break;
 				}
 			}

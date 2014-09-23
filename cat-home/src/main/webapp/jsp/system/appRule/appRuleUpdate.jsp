@@ -109,8 +109,20 @@ function update() {
 	$(document).ready(function() {
 		var commandSelector = $('#command');
 		commandSelector.on('change', commandChange);
-		var words = "${payload.ruleId}".split(":")[0].split(";");
-		var metric = "${payload.ruleId}".split(":")[1];
+		var ruleId = "${payload.ruleId}";
+		if(ruleId.length > 0){
+			document.getElementById("command").disabled = true;
+			document.getElementById("code").disabled = true;
+			document.getElementById("network").disabled = true;
+			document.getElementById("version").disabled = true;
+			document.getElementById("connectionType").disabled = true;
+			document.getElementById("platform").disabled = true;
+			document.getElementById("city").disabled = true;
+			document.getElementById("operator").disabled = true;
+			document.getElementById("metric").disabled = true;
+		}
+		var words = ruleId.split(":")[0].split(";");
+		var metric = ruleId.split(":")[1];
 		var command = words[0];
 		commandChange();
 		var code = words[1];
