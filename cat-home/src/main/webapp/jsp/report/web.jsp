@@ -72,12 +72,14 @@
 			  		if(city==''){
 				  		opt.html('ALL');
 			  		}else{
-				  		opt.html(value[prop].city);
+				  		opt.html(city);
 			  		}
-				  	if(value[prop].province==''){
+			  		
+			  		var province = value[prop].province;
+				  	if(province ==''){
 				  		opt.val('');
 				  	}else{
-					  	opt.val(value[prop].province+'-'+value[prop].city);
+					  	opt.val(province+'-' + city);
 				  	}
 			  		opt.appendTo(select);
 				}

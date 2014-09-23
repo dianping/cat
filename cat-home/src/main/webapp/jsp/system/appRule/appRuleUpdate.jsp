@@ -9,8 +9,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-${model.content}
-
 <a:body>
 	<div>
 		<div class="row-fluid">
@@ -19,38 +17,122 @@ ${model.content}
 		</div>
 		<div class="span10">
 		</br>
-			<form name="appRuleUpdate" id="form" method="post" action="${model.pageUri}?op=appRuleSubmit">
+			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-bordered'>
+			<tr>
+				<th align=left>命令字 <select id="command" style="width: 350px;">
+						<c:forEach var="item" items="${model.commands}" varStatus="status">
+							<option value='${item.id}'>${item.name}</option>
+						</c:forEach>
+				</select> 返回码 <select id="code" style="width: 120px;"><option value='-1'>All</option>
+				</select> 网络类型 <select id="network" style="width: 80px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.networks}" varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select>
+				</th>
+			</tr>
+			<tr>
+				<th align=left>版本 <select id="version" style="width: 100px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.versions}" varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select> 连接类型 <select id="connectionType" style="width: 100px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.connectionTypes}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select> 平台 <select id="platform" style="width: 100px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.platforms}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select> 地区 <select id="city" style="width: 100px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.cities}" varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select> 运营商 <select id="operator" style="width: 100px;">
+						<option value='-1'>All</option>
+						<c:forEach var="item" items="${model.operators}"
+							varStatus="status">
+							<option value='${item.value.id}'>${item.value.name}</option>
+						</c:forEach>
+				</select> 告警指标 <select id="metric" style="width: 100px;">
+						<option value='request'>请求数</option>
+						<option value='success'>成功率</option>
+						<option value='delay'>响应时间</option>
+				</select></th></tr>
+				<tr><th>${model.content}</th></tr>
 					<tr>
-						<td>报表类型</td>
-						<td><select id="reportType" name = "aggregation.type">	
-						
-						</select> </td>
-					</tr>
-					<tr>
-						<td>域名</td>
-						<td><input type="text" class="input-xlarge" value="FrontEnd" placeholder="聚合规则作用的域名" name="aggregation.domain" required value="${model.aggregationRule.domain}"/></td>
-					</tr>
-					<tr>
-						<td>模板</td>
-						<td><input type="text" class="input-xlarge"  placeholder="选择被聚合对象的模板" name="aggregation.pattern" required value="${model.aggregationRule.pattern}"/></td>
-					</tr>
-					<tr>
-						<td>告警阈值</td>
-						<td><input type="text" class="input-xlarge"  placeholder="告警阈值" name="aggregation.warn" required value="${model.aggregationRule.warn}"/></td>
-					</tr>
-					<tr>
-						<td>联系邮件</td>
-						<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="aggregation.mails" required value="${model.aggregationRule.mails}"/>（多个以逗号隔开）</td>
-					</tr>
-					<tr>
-						<td style='text-align:center' colspan='2'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
+						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-mini" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
 			</form> </div></div></div>
 </a:body>
+
 <script type="text/javascript">
+var commandInfo = ${model.commandJson};
+var commandChange = function commandChange() {
+	var key = $("#command").val();
+	var value = commandInfo[key];
+	var code = document.getElementById("code");
+	for ( var prop in value) {
+		var opt = $('<option />');
+
+		opt.html(value[prop].name);
+		opt.val(value[prop].id);
+		opt.appendTo(code);
+	}
+}
+
+function update() {
+    var configStr = generateConfigsJsonString();
+    var command = $("#command").val();
+    var code = $("#code").val();
+    var network = $("#network").val();
+    var version = $("#version").val();
+    var connectionType = $("#connectionType").val();
+    var platform = $("#platform").val();
+    var city = $("#city").val();
+    var operator = $("#operator").val();
+    var metric = $("#metric").val();
+    var split = ";";
+    var id = command + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + ":" + metric;
+    window.location.href = "?op=appRuleSubmit&key=" + "&{payload.key}" +"&configs=" + configStr + "&ruleId=" + id;
+}
+
 	$(document).ready(function() {
-		$('#aggregationList').addClass('active');
+		var commandSelector = $('#command');
+		commandSelector.on('change', commandChange);
+		var words = "${payload.ruleId}".split(":")[0].split(";");
+		var metric = "${payload.ruleId}".split(":")[1];
+		var command = words[0];
+		commandChange();
+		var code = words[1];
+		var network = words[2];
+		var version = words[3];
+		var connectionType = words[4];
+		var platform = words[5];
+		var city = words[6];
+		var operator = words[7];
+		$("#command").val(command);
+		$("#code").val(code);
+		$("#network").val(network);
+		$("#version").val(version);
+		$("#connectionType").val(connectionType);
+		$("#platform").val(platform);
+		$("#city").val(city);
+		$("#operator").val(operator);
+		$("#metric").val(metric);
+		
+		$('#appRule').addClass('active');
+		$(document).delegate("#ruleSubmitButton","click",function(){
+			update();
+		})
 	});
 </script>

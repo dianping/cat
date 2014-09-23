@@ -24,7 +24,7 @@
 		}
 	}
 		$(document).ready(function() {
-			$('#appRuleConfigList').addClass('active');
+			$('#appRule').addClass('active');
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
@@ -41,7 +41,7 @@
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
-					<th width="25%">命令字</th>
+					<th width="15%">命令字</th>
 					<th width="10%">返回码</th>
 					<th width="10%">网络类型</th>
 					<th width="10%">版本</th>
@@ -49,6 +49,7 @@
 					<th width="10%">平台</th>
 					<th width="10%">地区</th>
 					<th width="10%">运营商</th>
+					<th width="10%">告警指标</th>
 					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
@@ -172,8 +173,13 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						<td><a class='btn  btn-small btn-primary'href="?op=appRuleUpdate&id=${item.id}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=appRuleDelete&id=${item.id}">删除</a></td>
+						<td>
+							<c:if test="${type eq 'request'}">请求数</c:if> 
+							<c:if test="${type eq 'success'}">成功率</c:if>  
+							<c:if test="${type eq 'delay'}">响应时间</c:if> 
+						</td>
+						<td><a class='btn  btn-small btn-primary'href="?op=appRuleUpdate&ruleId=${item.id}">编辑</a>
+						<a class='delete btn  btn-small btn-danger' href="?op=appRuleDelete&ruleId=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

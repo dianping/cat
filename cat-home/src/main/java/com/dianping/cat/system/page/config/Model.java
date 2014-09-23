@@ -27,6 +27,7 @@ import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.JsonBuilder;
+import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.Handler.RuleItem;
 
@@ -88,6 +89,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Collection<Rule> m_rules;
 
+	private String m_id;
+
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
@@ -105,6 +108,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Item> m_platforms;
 
 	private List<Command> m_commands;
+
+	private Map<String, List<City>> m_citiyInfos;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -124,6 +129,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			}
 			temp.getEdgeConfigs().add(edge);
 		}
+	}
+
+	public Map<String, List<City>> getCityInfos() {
+		return m_citiyInfos;
+	}
+
+	public String getCityInfo() {
+		return new JsonBuilder().toJson(m_citiyInfos);
 	}
 
 	public AggregationRule getAggregationRule() {
@@ -164,7 +177,51 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 		return maps;
 	}
-	
+
+	public String getCommandJson() {
+		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
+
+		for (Command item : m_commands) {
+			List<Code> items = maps.get(item.getId());
+
+			if (items == null) {
+				items = new ArrayList<Code>();
+				maps.put(item.getId(), items);
+			}
+			items.addAll(item.getCodes().values());
+		}
+		return new JsonBuilder().toJson(maps);
+	}
+
+	public Map<String, List<PatternItem>> getGroup2PatternItems() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return maps;
+	}
+
+	public String getGroup2PatternItemJson() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return new JsonBuilder().toJson(maps);
+	}
 
 	public TopologyGraphConfig getConfig() {
 		return m_config;
@@ -229,6 +286,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getExceptionList() {
 		return m_exceptionList;
+	}
+
+	public String getId() {
+		return m_id;
 	}
 
 	public String getIpAddress() {
@@ -375,6 +436,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
+	public void setId(String id) {
+		m_id = id;
+	}
+
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
 		m_metricItemConfig = metricItemConfig;
 	}
@@ -449,6 +514,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setRules(Collection<Rule> rules) {
 		m_rules = rules;
+	}
+
+	public void setCityInfos(Map<String, List<City>> cityInfos) {
+		m_citiyInfos = cityInfos;
 	}
 
 	public static class Edge {

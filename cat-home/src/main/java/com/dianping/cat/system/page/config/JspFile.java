@@ -75,9 +75,9 @@ public enum JspFile {
 
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
-	WEB_RULE("/jsp/system/webRule/webRuleConfigs.jsp"),
+	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
 	
-	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleAdd.jsp"),
+	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
 
 	APP_RULE("/jsp/system/appRule/appRule.jsp"),
 	
