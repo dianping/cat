@@ -45,10 +45,8 @@ public class WebDecorator extends Decorator implements Initializable {
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		String domain = alert.getDomain();
 		Map<Object, Object> datas = new HashMap<Object, Object>();
 
-		datas.put("domain", domain);
 		datas.put("content", alert.getContent());
 		datas.put("date", m_format.format(alert.getDate()));
 		

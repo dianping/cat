@@ -8,6 +8,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -172,7 +173,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
-		      DataChecker.class));
+		      DataChecker.class, AppConfigManager.class));
 
 		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
