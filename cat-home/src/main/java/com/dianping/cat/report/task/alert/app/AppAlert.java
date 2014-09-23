@@ -150,11 +150,14 @@ public class AppAlert implements Task {
 	private boolean judgeCurrentInConfigRange(Config config) {
 		long ruleStartTime;
 		long ruleEndTime;
-		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000) % (24 * 60 * 60 * 1000);
+		Calendar cal = Calendar.getInstance();
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		int nowTime = hour * 60 * 60 * 1000 + minute * 60 * 1000;
 
 		try {
 			ruleStartTime = buildMillsByString(config.getStarttime());
-			ruleEndTime = buildMillsByString(config.getEndtime()) + TimeUtil.ONE_MINUTE;
+			ruleEndTime = buildMillsByString(config.getEndtime());
 		} catch (Exception ex) {
 			ruleStartTime = 0L;
 			ruleEndTime = 86400000L;
@@ -188,7 +191,7 @@ public class AppAlert implements Task {
 		cal.set(Calendar.MILLISECOND, 0);
 		String period = m_sdf.format(cal.getTime());
 		String split = ";";
-		
+
 		return new QueryEntity(period + split + conditions + split + startMinute + split + endMinute);
 	}
 

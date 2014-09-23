@@ -72,12 +72,14 @@
 			  		if(city==''){
 				  		opt.html('ALL');
 			  		}else{
-				  		opt.html(value[prop].city);
+				  		opt.html(city);
 			  		}
-				  	if(value[prop].province==''){
+			  		
+			  		var province = value[prop].province;
+				  	if(province ==''){
 				  		opt.val('');
 				  	}else{
-					  	opt.val(value[prop].province+'-'+value[prop].city);
+					  	opt.val(province+'-' + city);
 				  	}
 			  		opt.appendTo(select);
 				}
@@ -155,7 +157,7 @@
 						<option value="中国联通">中国联通</option>
 						<option value="中国铁通">中国铁通</option>
 						<option value="其他">其他</option>
-						<option value="国外其他">其他</option>
+						<option value="国外其他">国外其他</option>
 				</select> 查询类型 <select style="width: 120px;" name="type" id="type">
 						<option value="info">访问情况</option>
 						<option value="httpStatus">HttpStatus</option>

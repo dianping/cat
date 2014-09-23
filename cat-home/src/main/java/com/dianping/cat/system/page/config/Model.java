@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +12,9 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -21,6 +25,9 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.report.page.JsonBuilder;
+import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.Handler.RuleItem;
 
@@ -80,11 +87,29 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<RuleItem> m_ruleItems;
 
+	private Collection<Rule> m_rules;
+
 	private String m_id;
 
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
+
+	private Map<Integer, Item> m_cities;
+
+	private Map<Integer, Item> m_versions;
+
+	private Map<Integer, Item> m_connectionTypes;
+
+	private Map<Integer, Item> m_operators;
+
+	private Map<Integer, Item> m_networks;
+
+	private Map<Integer, Item> m_platforms;
+
+	private List<Command> m_commands;
+
+	private Map<String, List<City>> m_citiyInfos;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -106,8 +131,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public Map<String, List<City>> getCityInfos() {
+		return m_citiyInfos;
+	}
+
+	public String getCityInfo() {
+		return new JsonBuilder().toJson(m_citiyInfos);
+	}
+
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
+	}
+
+	public Collection<Rule> getRules() {
+		return m_rules;
 	}
 
 	public List<AggregationRule> getAggregationRules() {
@@ -118,8 +155,80 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_bug;
 	}
 
+	public Map<Integer, Item> getCities() {
+		return m_cities;
+	}
+
+	public List<Command> getCommands() {
+		return m_commands;
+	}
+
+	public Map<Integer, List<Code>> getCommand() {
+		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
+
+		for (Command item : m_commands) {
+			List<Code> items = maps.get(item.getId());
+
+			if (items == null) {
+				items = new ArrayList<Code>();
+				maps.put(item.getId(), items);
+			}
+			items.addAll(item.getCodes().values());
+		}
+		return maps;
+	}
+
+	public String getCommandJson() {
+		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
+
+		for (Command item : m_commands) {
+			List<Code> items = maps.get(item.getId());
+
+			if (items == null) {
+				items = new ArrayList<Code>();
+				maps.put(item.getId(), items);
+			}
+			items.addAll(item.getCodes().values());
+		}
+		return new JsonBuilder().toJson(maps);
+	}
+
+	public Map<String, List<PatternItem>> getGroup2PatternItems() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return maps;
+	}
+
+	public String getGroup2PatternItemJson() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return new JsonBuilder().toJson(maps);
+	}
+
 	public TopologyGraphConfig getConfig() {
 		return m_config;
+	}
+
+	public Map<Integer, Item> getConnectionTypes() {
+		return m_connectionTypes;
 	}
 
 	public String getContent() {
@@ -195,6 +304,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_metricItemConfigRule;
 	}
 
+	public Map<Integer, Item> getNetworks() {
+		return m_networks;
+	}
+
+	public Map<Integer, Item> getOperators() {
+		return m_operators;
+	}
+
 	public String getOpState() {
 		return m_opState;
 	}
@@ -205,6 +322,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Collection<PatternItem> getPatternItems() {
 		return m_patternItems;
+	}
+
+	public Map<Integer, Item> getPlatforms() {
+		return m_platforms;
 	}
 
 	public ProductLine getProductLine() {
@@ -243,6 +364,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_typeToProductLines;
 	}
 
+	public Map<Integer, Item> getVersions() {
+		return m_versions;
+	}
+
 	public void setAggregationRule(AggregationRule aggregationRule) {
 		m_aggregationRule = aggregationRule;
 	}
@@ -255,8 +380,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_bug = bug;
 	}
 
+	public void setCities(Map<Integer, Item> cities) {
+		m_cities = cities;
+	}
+
+	public void setCommands(List<Command> commands) {
+		m_commands = commands;
+	}
+
 	public void setConfig(TopologyGraphConfig config) {
 		m_config = config;
+	}
+
+	public void setConnectionTypes(Map<Integer, Item> connectionTypes) {
+		m_connectionTypes = connectionTypes;
 	}
 
 	public void setContent(String content) {
@@ -311,6 +448,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_metricItemConfigRule = metricItemConfigRule;
 	}
 
+	public void setNetworks(Map<Integer, Item> networks) {
+		m_networks = networks;
+	}
+
+	public void setOperators(Map<Integer, Item> operators) {
+		m_operators = operators;
+	}
+
 	public void setOpState(boolean result) {
 		if (result) {
 			m_opState = SUCCESS;
@@ -325,6 +470,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setPatternItems(Collection<PatternItem> patternItems) {
 		m_patternItems = patternItems;
+	}
+
+	public void setPlatforms(Map<Integer, Item> platforms) {
+		m_platforms = platforms;
 	}
 
 	public void setProductLine(ProductLine productLine) {
@@ -357,6 +506,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
+	}
+
+	public void setVersions(Map<Integer, Item> versions) {
+		m_versions = versions;
+	}
+
+	public void setRules(Collection<Rule> rules) {
+		m_rules = rules;
+	}
+
+	public void setCityInfos(Map<String, List<City>> cityInfos) {
+		m_citiyInfos = cityInfos;
 	}
 
 	public static class Edge {

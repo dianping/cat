@@ -114,7 +114,6 @@ public abstract class BaseRuleConfigManager {
 		Rule rule = new Rule(id);
 		List<MetricItem> metricItems = DefaultJsonParser.parseArray(MetricItem.class, metricsStr);
 		List<Config> configs = DefaultJsonParser.parseArray(Config.class, configsStr);
-
 		for (MetricItem metricItem : metricItems) {
 			rule.addMetricItem(metricItem);
 		}

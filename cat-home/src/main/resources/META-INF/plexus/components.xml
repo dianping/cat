@@ -4782,7 +4782,7 @@
 					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleWithoutMetricFTLDecorator</role>
+					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4930,10 +4930,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.RuleWithoutMetricFTLDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.RuleWithoutMetricFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>
