@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -32,6 +33,7 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.site.lookup.util.StringUtils;
 
 public class WebAlert extends BaseAlert implements Task {
 
@@ -81,6 +83,24 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
+	private String buildCondition(String condition) {
+		List<String> conditions = Splitters.by(";").split(condition);
+		String newCondition = "";
+
+		for (String con : conditions) {
+			if (StringUtils.isEmpty(con)) {
+				newCondition += ";All";
+			} else {
+				if (StringUtils.isEmpty(newCondition)) {
+					newCondition += con;
+				} else {
+					newCondition += ";" + con;
+				}
+			}
+		}
+		return newCondition;
+	}
+
 	private void processUrl(PatternItem item) {
 		String url = item.getName();
 		String group = item.getGroup();
@@ -93,10 +113,12 @@ public class WebAlert extends BaseAlert implements Task {
 			alertResults = computeAlertForRule(rule, url, minute);
 
 			for (AlertResultEntity alertResult : alertResults) {
-				String id = rule.getId();
-				String type = id.split(":")[1];
+				String[] ids = rule.getId().split(":");
+				String condition = ids[0];
+				String type = ids[1];
 				Map<String, Object> par = new HashMap<String, Object>();
 				par.put("type", type);
+				par.put("condition", buildCondition(condition));
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
@@ -105,7 +127,6 @@ public class WebAlert extends BaseAlert implements Task {
 				m_sendManager.addAlert(entity);
 			}
 		}
-
 	}
 
 	protected MetricReport fetchMetricReport(Rule rule, ModelPeriod period) {
@@ -121,15 +142,18 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 
 		if (report == null) {
-			String[] fields = id.split(":")[0].split(";");
+			List<String> fields = Splitters.by(";").split(id.split(":")[0]);
+			String url = fields.get(0);
+			String city = fields.get(1);
+			String channel = fields.get(2);
 
-			ModelRequest request = new ModelRequest(fields[0], period.getStartTime());
+			ModelRequest request = new ModelRequest(url, period.getStartTime());
 			Map<String, String> pars = new HashMap<String, String>();
 
 			pars.put("metricType", Constants.METRIC_USER_MONITOR);
 			pars.put("type", Monitor.TYPE_INFO);
-			pars.put("city", fields[1]);
-			pars.put("channel", fields[2]);
+			pars.put("city", city);
+			pars.put("channel", channel);
 			request.getProperties().putAll(pars);
 
 			report = m_service.invoke(request);
