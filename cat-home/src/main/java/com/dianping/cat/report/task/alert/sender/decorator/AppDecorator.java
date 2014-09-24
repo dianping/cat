@@ -51,7 +51,7 @@ public class AppDecorator extends Decorator implements Initializable {
 			title = "延时平均值（毫秒/5分钟）";
 		}
 
-		sb.append("[CAT APP告警] [命令字: " + alert.getGroup() + "] [监控项: ").append(title).append("]");
+		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(title).append("]");
 		return sb.toString();
 	}
 

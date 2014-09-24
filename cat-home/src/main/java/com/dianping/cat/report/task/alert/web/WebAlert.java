@@ -90,16 +90,20 @@ public class WebAlert extends BaseAlert implements Task {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (Rule rule : rules) {
-			alertResults.addAll(computeAlertForRule(rule, url, minute));
-		}
+			alertResults = computeAlertForRule(rule, url, minute);
 
-		for (AlertResultEntity alertResult : alertResults) {
-			AlertEntity entity = new AlertEntity();
+			for (AlertResultEntity alertResult : alertResults) {
+				String id = rule.getId();
+				String type = id.split(":")[1];
+				Map<String, Object> par = new HashMap<String, Object>();
+				par.put("type", type);
+				AlertEntity entity = new AlertEntity();
 
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(url).setType(getName()).setGroup(group);
-			m_sendManager.addAlert(entity);
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
+				entity.setMetric(url).setType(getName()).setGroup(group).setParas(par);
+				m_sendManager.addAlert(entity);
+			}
 		}
 
 	}
@@ -118,7 +122,7 @@ public class WebAlert extends BaseAlert implements Task {
 
 		if (report == null) {
 			String[] fields = id.split(":")[0].split(";");
-			
+
 			ModelRequest request = new ModelRequest(fields[0], period.getStartTime());
 			Map<String, String> pars = new HashMap<String, String>();
 
