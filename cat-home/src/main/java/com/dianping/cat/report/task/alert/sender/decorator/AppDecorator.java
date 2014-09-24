@@ -51,7 +51,7 @@ public class AppDecorator extends Decorator implements Initializable {
 			title = "延时平均值（毫秒/5分钟）";
 		}
 
-		sb.append("[手机端告警] [监控项: ").append(title).append("]");
+		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(title).append("]");
 		return sb.toString();
 	}
 
@@ -71,10 +71,8 @@ public class AppDecorator extends Decorator implements Initializable {
 	}
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
-		String domain = alert.getDomain();
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
-		map.put("domain", domain);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
 

@@ -90,23 +90,26 @@ public class WebAlert extends BaseAlert implements Task {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (Rule rule : rules) {
-			alertResults.addAll(computeAlertForRule(rule, url, minute));
-		}
+			alertResults = computeAlertForRule(rule, url, minute);
 
-		for (AlertResultEntity alertResult : alertResults) {
-			AlertEntity entity = new AlertEntity();
+			for (AlertResultEntity alertResult : alertResults) {
+				String id = rule.getId();
+				String type = id.split(":")[1];
+				Map<String, Object> par = new HashMap<String, Object>();
+				par.put("type", type);
+				AlertEntity entity = new AlertEntity();
 
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(url).setType(getName()).setGroup(group);
-			m_sendManager.addAlert(entity);
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
+				entity.setMetric(url).setType(getName()).setGroup(group).setParas(par);
+				m_sendManager.addAlert(entity);
+			}
 		}
 
 	}
 
 	protected MetricReport fetchMetricReport(Rule rule, ModelPeriod period) {
 		String id = rule.getId();
-
 		MetricReport report = null;
 
 		if (period == ModelPeriod.CURRENT) {
@@ -118,17 +121,26 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 
 		if (report == null) {
-			ModelRequest request = new ModelRequest(id, period.getStartTime());
+			String[] fields = id.split(":")[0].split(";");
+
+			ModelRequest request = new ModelRequest(fields[0], period.getStartTime());
 			Map<String, String> pars = new HashMap<String, String>();
 
 			pars.put("metricType", Constants.METRIC_USER_MONITOR);
 			pars.put("type", Monitor.TYPE_INFO);
-			pars.put("city", id.split(";")[1]);
-			pars.put("channel", id.split(";")[2]);
+			pars.put("city", fields[1]);
+			pars.put("channel", fields[2]);
 			request.getProperties().putAll(pars);
 
 			report = m_service.invoke(request);
+
+			if (period == ModelPeriod.CURRENT) {
+				m_currentReports.put(id, report);
+			} else if (period == ModelPeriod.LAST) {
+				m_lastReports.put(id, report);
+			}
 		}
+
 		return report;
 
 	}

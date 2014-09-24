@@ -14,6 +14,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.helper.TimeUtil;
@@ -42,6 +43,9 @@ public class AppAlert implements Task {
 
 	@Inject
 	private DataChecker m_dataChecker;
+
+	@Inject
+	private AppConfigManager m_appConfigManager;
 
 	private static final long DURATION = TimeUtil.ONE_MINUTE * 5;
 
@@ -102,10 +106,22 @@ public class AppAlert implements Task {
 	public void shutdown() {
 	}
 
+	private String queryCommand(int command) {
+		Map<String, Integer> commands = m_appConfigManager.getCommands();
+
+		for (Entry<String, Integer> entry : commands.entrySet()) {
+			if (entry.getValue() == command) {
+				return entry.getKey();
+			}
+		}
+		return "";
+	}
+
 	private void processRule(Rule rule) {
 		String id = rule.getId();
 		String[] array = id.split(":");
 		String conditions = array[0];
+		int command = Integer.valueOf(conditions.split(";")[0]);
 		String type = array[1];
 		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
 		QueryEntity queryEntity = buildQueryEntity(pair.getKey(), conditions);
@@ -118,7 +134,7 @@ public class AppAlert implements Task {
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(type).setType(getName()).setGroup(getName());
+			entity.setMetric(type).setType(getName()).setGroup(queryCommand(command));
 			m_sendManager.addAlert(entity);
 		}
 	}

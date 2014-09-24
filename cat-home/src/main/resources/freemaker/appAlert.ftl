@@ -1,2 +1,2 @@
-[CAT客户端告警] : ${content}[时间: ${date}] 
+[CAT APP告警] : ${content}[时间: ${date}] 
 <a href='http://cat.dianpingoa.com/cat/r/app'>点击此处查看详情</a><br/>
