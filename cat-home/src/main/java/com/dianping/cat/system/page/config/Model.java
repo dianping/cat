@@ -111,6 +111,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<String, List<City>> m_citiyInfos;
 
+	private String m_duplicateDomains;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -131,20 +133,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
-	public Map<String, List<City>> getCityInfos() {
-		return m_citiyInfos;
-	}
-
-	public String getCityInfo() {
-		return new JsonBuilder().toJson(m_citiyInfos);
-	}
-
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
-	}
-
-	public Collection<Rule> getRules() {
-		return m_rules;
 	}
 
 	public List<AggregationRule> getAggregationRules() {
@@ -159,8 +149,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_cities;
 	}
 
-	public List<Command> getCommands() {
-		return m_commands;
+	public String getCityInfo() {
+		return new JsonBuilder().toJson(m_citiyInfos);
+	}
+
+	public Map<String, List<City>> getCityInfos() {
+		return m_citiyInfos;
 	}
 
 	public Map<Integer, List<Code>> getCommand() {
@@ -193,34 +187,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return new JsonBuilder().toJson(maps);
 	}
 
-	public Map<String, List<PatternItem>> getGroup2PatternItems() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return maps;
-	}
-
-	public String getGroup2PatternItemJson() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return new JsonBuilder().toJson(maps);
+	public List<Command> getCommands() {
+		return m_commands;
 	}
 
 	public TopologyGraphConfig getConfig() {
@@ -260,6 +228,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return Collections.emptyList();
 	}
 
+	public String getDuplicateDomains() {
+		return m_duplicateDomains;
+	}
+
 	public EdgeConfig getEdgeConfig() {
 		return m_edgeConfig;
 	}
@@ -286,6 +258,36 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getExceptionList() {
 		return m_exceptionList;
+	}
+
+	public String getGroup2PatternItemJson() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return new JsonBuilder().toJson(maps);
+	}
+
+	public Map<String, List<PatternItem>> getGroup2PatternItems() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_patternItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return maps;
 	}
 
 	public String getId() {
@@ -360,6 +362,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_ruleItems;
 	}
 
+	public Collection<Rule> getRules() {
+		return m_rules;
+	}
+
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
 		return m_typeToProductLines;
 	}
@@ -384,6 +390,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_cities = cities;
 	}
 
+	public void setCityInfos(Map<String, List<City>> cityInfos) {
+		m_citiyInfos = cityInfos;
+	}
+
 	public void setCommands(List<Command> commands) {
 		m_commands = commands;
 	}
@@ -406,6 +416,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setDomainList(List<String> domainList) {
 		m_domainList = domainList;
+	}
+
+	public void setDuplicateDomains(String duplicateDomains) {
+		m_duplicateDomains = duplicateDomains;
 	}
 
 	public void setEdgeConfig(EdgeConfig edgeConfig) {
@@ -504,20 +518,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_ruleItems = ruleItems;
 	}
 
+	public void setRules(Collection<Rule> rules) {
+		m_rules = rules;
+	}
+
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public void setRules(Collection<Rule> rules) {
-		m_rules = rules;
-	}
-
-	public void setCityInfos(Map<String, List<City>> cityInfos) {
-		m_citiyInfos = cityInfos;
 	}
 
 	public static class Edge {

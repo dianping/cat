@@ -106,4 +106,11 @@
 			</table></div></c:forEach></div></div>
 		</div>
 	</div>
+	<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
+		<script>
+			$(document).ready(function(){
+				alert("无法添加项目：${model.duplicateDomains} 原因：以上项目属于其它产品线");
+			})
+		</script>
+	</c:if>
 </a:body>

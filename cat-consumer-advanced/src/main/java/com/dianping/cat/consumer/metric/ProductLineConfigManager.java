@@ -6,10 +6,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -20,6 +22,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -64,6 +67,45 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	public static final String NETWORK_F5_PREFIX = "f5-";
 
 	public static final String SYSTEM_MONITOR_PREFIX = "system-";
+
+	public void buildDefaultDashboard(ProductLine productLine, String domain) {
+		String line = productLine.getId();
+		boolean userMonitor = false;
+		boolean networkMonitor = false;
+		boolean systemMonitor = false;
+		boolean metricDashboard = false;
+
+		if (Constants.BROKER_SERVICE.equals(domain)) {
+			userMonitor = true;
+		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX)
+		      || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
+			networkMonitor = true;
+		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
+			systemMonitor = true;
+		} else {
+			metricDashboard = true;
+		}
+
+		productLine.setNetworkDashboard(networkMonitor);
+		productLine.setUserMonitorDashboard(userMonitor);
+		productLine.setSystemMonitorDashboard(systemMonitor);
+		productLine.setMetricDashboard(metricDashboard);
+		productLine.setDashboard(metricDashboard);
+	}
+
+	private Set<String> buildDomainIdSetWithoutProductline(String productlineId) {
+		Map<String, ProductLine> productLines = getCompany().getProductLines();
+		Set<String> domains = new HashSet<String>();
+
+		for (ProductLine product : productLines.values()) {
+			if (!product.getId().equals(productlineId)) {
+				for (Domain domain : product.getDomains().values()) {
+					domains.add(domain.getId());
+				}
+			}
+		}
+		return domains;
+	}
 
 	private Map<String, String> buildDomainToProductLines() {
 		Map<String, ProductLine> productLines = getCompany().getProductLines();
@@ -127,31 +169,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_domainToProductLines = buildDomainToProductLines();
 	}
 
-	public void buildDefaultDashboard(ProductLine productLine, String domain) {
-		String line = productLine.getId();
-		boolean userMonitor = false;
-		boolean networkMonitor = false;
-		boolean systemMonitor = false;
-		boolean metricDashboard = false;
-
-		if (Constants.BROKER_SERVICE.equals(domain)) {
-			userMonitor = true;
-		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX)
-		      || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
-			networkMonitor = true;
-		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
-			systemMonitor = true;
-		} else {
-			metricDashboard = true;
-		}
-
-		productLine.setNetworkDashboard(networkMonitor);
-		productLine.setUserMonitorDashboard(userMonitor);
-		productLine.setSystemMonitorDashboard(systemMonitor);
-		productLine.setMetricDashboard(metricDashboard);
-		productLine.setDashboard(metricDashboard);
-	}
-
 	public boolean insertIfNotExsit(String product, String domain) {
 		Company company = getCompany();
 
@@ -181,14 +198,20 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	public boolean insertProductLine(ProductLine line, String[] domains) {
+	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
+		Set<String> domainIds = buildDomainIdSetWithoutProductline(line.getId());
+		String duplicateDomains = "";
 		getCompany().removeProductLine(line.getId());
 		getCompany().addProductLine(line);
 
 		for (String domain : domains) {
-			line.addDomain(new Domain(domain));
+			if (domainIds.contains(domain)) {
+				duplicateDomains += domain + ", ";
+			} else {
+				line.addDomain(new Domain(domain));
+			}
 		}
-		return storeConfig();
+		return new Pair<Boolean, String>(storeConfig(), duplicateDomains);
 	}
 
 	public Map<String, ProductLine> queryAllProductLines() {
@@ -213,10 +236,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return domains;
-	}
-
-	public ProductLine queryProductLine(String id) {
-		return getCompany().findProductLine(id);
 	}
 
 	public Map<String, ProductLine> queryMetricProductLines() {
@@ -244,8 +263,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return productLines;
 	}
 
-	public String querySystemProductLine(String domain) {
-		return SYSTEM_MONITOR_PREFIX + domain;
+	public ProductLine queryProductLine(String id) {
+		return getCompany().findProductLine(id);
 	}
 
 	public String queryProductLineByDomain(String domain) {
@@ -253,7 +272,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		return productLine == null ? "Default" : productLine;
 	}
-	
+
+	public String querySystemProductLine(String domain) {
+		return SYSTEM_MONITOR_PREFIX + domain;
+	}
+
 	public Map<String, List<ProductLine>> queryTypeProductLines() {
 		Map<String, List<ProductLine>> productLines = new LinkedHashMap<String, List<ProductLine>>();
 

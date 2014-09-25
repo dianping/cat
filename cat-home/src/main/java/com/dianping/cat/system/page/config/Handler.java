@@ -20,6 +20,7 @@ import javax.servlet.http.Cookie;
 import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -228,7 +229,7 @@ public class Handler implements PageHandler<Context> {
 		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
 	}
 
-	private boolean graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
+	private Pair<Boolean, String> graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
 		ProductLine line = payload.getProductLine();
 		String[] domains = payload.getDomains();
 
@@ -353,7 +354,13 @@ public class Handler implements PageHandler<Context> {
 			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpState(graphProductLineConfigAddOrUpdateSubmit(payload, model));
+			Pair<Boolean, String> addProductlineResult = graphProductLineConfigAddOrUpdateSubmit(payload, model);
+			String duplicateDomains = addProductlineResult.getValue();
+
+			model.setOpState(addProductlineResult.getKey());
+			if (!StringUtil.isEmpty(duplicateDomains)) {
+				model.setDuplicateDomains(addProductlineResult.getValue());
+			}
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
