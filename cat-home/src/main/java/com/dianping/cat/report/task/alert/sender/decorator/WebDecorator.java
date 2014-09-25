@@ -60,6 +60,7 @@ public class WebDecorator extends Decorator implements Initializable {
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> datas = new HashMap<Object, Object>();
 
+		datas.put("condition", alert.getParas().get("condition"));
 		datas.put("content", alert.getContent());
 		datas.put("date", m_format.format(alert.getDate()));
 
