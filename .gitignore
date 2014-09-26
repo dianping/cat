@@ -7,7 +7,7 @@
 .*
 /*.bat
 !.travis.yml
-
+*.iml
 cat-client/src/main/resources/com/dianping/cat/configuration/client/config.xsd
 
 cat-client/src/main/resources/com/dianping/cat/status/model/status.xsd
