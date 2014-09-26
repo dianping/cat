@@ -21,6 +21,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -60,8 +61,6 @@ public class AppAlert implements Task {
 	private static final int ALL_CONDITION = -1;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-	private Map<Integer, String> m_commands = new HashMap<Integer, String>();
 
 	@Override
 	public void run() {
@@ -131,6 +130,7 @@ public class AppAlert implements Task {
 		for (AlertResultEntity alertResult : alertResults) {
 			Map<String, Object> par = new HashMap<String, Object>();
 			String condition = buildCondition(id);
+			
 			par.put("condition", condition);
 			AlertEntity entity = new AlertEntity();
 
@@ -142,20 +142,11 @@ public class AppAlert implements Task {
 	}
 
 	private String queryCommand(int command) {
-		String commandStr = m_commands.get(command);
+		Map<Integer, Command> commands = m_appConfigManager.getRawCommands();
+		Command value = commands.get(command);
 
-		if (commandStr == null) {
-			Map<String, Integer> commandMap = m_appConfigManager.getCommands();
-
-			for (Entry<String, Integer> entry : commandMap.entrySet()) {
-				String key = entry.getKey();
-				if (entry.getValue() == command) {
-					m_commands.put(command, key);
-					return key;
-				}
-			}
-		} else {
-			return commandStr;
+		if (value != null) {
+			return value.getName();
 		}
 		return "";
 	}
@@ -203,7 +194,6 @@ public class AppAlert implements Task {
 		int platform = Integer.valueOf(conditions.get(5));
 		int city = Integer.valueOf(conditions.get(6));
 		int operator = Integer.valueOf(conditions.get(7));
-
 		String commandName = queryCommand(command);
 		String codeName = queryCode(command, code);
 		String networkName = queryConfigItemName(network, AppConfigManager.NETWORK);

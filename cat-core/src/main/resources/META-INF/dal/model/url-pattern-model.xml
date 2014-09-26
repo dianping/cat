@@ -9,5 +9,6 @@
     <attribute name="group" value-type="String" />
     <attribute name="name" value-type="String" key="true"/>
     <attribute name="pattern" value-type="String" />
+    <attribute name="domain" value-type="String" />
   </entity>
 </model>

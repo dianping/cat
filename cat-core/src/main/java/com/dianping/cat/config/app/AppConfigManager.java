@@ -160,6 +160,10 @@ public class AppConfigManager implements Initializable {
 		return m_operators;
 	}
 
+	public Map<Integer, Command> getRawCommands() {
+		return m_config.getCommands();
+	}
+
 	private void refreshData() {
 		Collection<Command> commands = m_config.getCommands().values();
 		Map<String, Integer> commandMap = new HashMap<String, Integer>();
