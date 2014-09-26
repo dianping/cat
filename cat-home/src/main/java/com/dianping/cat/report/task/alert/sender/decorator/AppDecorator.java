@@ -72,7 +72,7 @@ public class AppDecorator extends Decorator implements Initializable {
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		Map<Object, Object> map = new HashMap<Object, Object>();
-
+		map.put("condition", alert.getParas().get("condition"));
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
 
