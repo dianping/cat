@@ -128,15 +128,16 @@
 					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
-				     			<th width="10%"><h5 class='text-center'>项目</h5></th>
-				     			<th width="5%"><h5 class='text-center'>类型</h5></th>
-				     			<th width="8%"><h5 class='text-center'>显示顺序</h5></th>
-				     			<th width="8%"><h5 class='text-center'>是否告警</h5></th>
-				     			<th width="16%"><h5 class='text-center'>MetricKey</h5></th>
+				     			<th width="9%"><h5 class='text-center'>项目</h5></th>
+				     			<th width="4%"><h5 class='text-center'>类型</h5></th>
+				     			<th width="6%"><h5 class='text-center'>显示顺序</h5></th>
+				     			<th width="6%"><h5 class='text-center'>是否告警</h5></th>
+				     			<th width="14%"><h5 class='text-center'>MetricKey</h5></th>
 				     			<th width="16%"><h5 class='text-center'>标题</h5></th>
 				     			<th width="8%"><h5 class='text-center'>显示次数</h5></th>
 				     			<th width="8%"><h5 class='text-center'>显示平均值</h5></th>
 				     			<th width="8%"><h5 class='text-center'>显示总和</h5></th>
+				     			<th width="8%"><h5 class='text-center'>标签</h5></th>
 				     			<th width="13%"><h5 class='text-center'>操作
 								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
  								--%></h5></th>
@@ -169,6 +170,11 @@
 				     			<td>${config.showSum}
 				     				<c:if test="${config.showSumDashboard}">
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+				     				</c:if>
+				     			</td>
+				     			<td>
+				     				<c:if test="${config.tag!=null}">
+				     					${config.tag}
 				     				</c:if>
 				     			</td>
 					     		<td style="text-align:center;white-space: nowrap">

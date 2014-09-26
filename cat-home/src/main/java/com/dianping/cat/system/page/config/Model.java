@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.unidal.web.mvc.ViewModel;
 
@@ -112,6 +113,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<String, List<City>> m_citiyInfos;
 
 	private String m_duplicateDomains;
+
+	private Set<String> m_tags;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -366,6 +369,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
+	public Set<String> getTags() {
+		return m_tags;
+	}
+
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
 		return m_typeToProductLines;
 	}
@@ -520,6 +527,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setRules(Collection<Rule> rules) {
 		m_rules = rules;
+	}
+
+	public void setTags(Set<String> tags) {
+		m_tags = tags;
 	}
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {

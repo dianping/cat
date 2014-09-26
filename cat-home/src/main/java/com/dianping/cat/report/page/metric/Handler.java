@@ -23,6 +23,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
+import com.dianping.cat.system.config.TagManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -39,6 +40,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private MetricGraphCreator m_graphCreator;
+
+	@Inject
+	private TagManager m_tagManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -67,15 +71,15 @@ public class Handler implements PageHandler<Context> {
 		case JSON:
 			String id = payload.getId();
 			LineChart lineChart = allCharts.get(id);
-			
+
 			if (lineChart != null) {
 				model.setJson(lineChart.getJsonString());
 			}
-			break; 
+			break;
 		}
-		Set<String> groups = m_metricGroupConfigManager.getMetricGroupConfig().getMetricGroups().keySet();
+		Set<String> tags = m_tagManager.queryTags();
 
-		model.setMetricGroups(new ArrayList<String>(groups));
+		model.setTags(new ArrayList<String>(tags));
 		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
 		m_jspViewer.view(ctx, model);
 	}
@@ -85,12 +89,12 @@ public class Handler implements PageHandler<Context> {
 		String productLine = payload.getProduct();
 
 		if (StringUtils.isEmpty(productLine)) {
-			String group = payload.getGroup();
+			String tag = payload.getTag();
 
-			if (StringUtils.isEmpty(group)) {
+			if (StringUtils.isEmpty(tag)) {
 				allCharts = m_graphCreator.buildDashboard(start, end);
 			} else {
-				allCharts = m_graphCreator.buildDashboardByGroup(start, end, group);
+				allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
 			}
 		} else {
 			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);

@@ -69,6 +69,7 @@ import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
+import com.dianping.cat.system.config.TagManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
@@ -156,6 +157,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CityManager m_cityManager;
+
+	@Inject
+	private TagManager m_tagManager;
 
 	private void deleteAggregationRule(Payload payload) {
 		m_aggreationConfigManager.deleteAggregationRule(payload.getPattern());
@@ -374,6 +378,9 @@ public class Handler implements PageHandler<Context> {
 				model.setProductLineToDomains(productLine.getDomains());
 			}
 			model.setProjects(queryAllProjects());
+
+			Set<String> tags = m_tagManager.queryTags();
+			model.setTags(tags);
 			break;
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(metricConfigAddSubmit(payload, model));
