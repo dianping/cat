@@ -17,6 +17,7 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
@@ -57,6 +58,7 @@ public class CatHomeModule extends AbstractModule {
 			NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
 			SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
+			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
 			ProjectUpdateTask productUpdateTask = ctx.lookup(ProjectUpdateTask.class);
 			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
 			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
@@ -67,6 +69,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(systemAlert);
 			Threads.forGroup("cat").start(metricAlert);
 			Threads.forGroup("cat").start(exceptionAlert);
+			Threads.forGroup("cat").start(heartbeatAlert);
 			Threads.forGroup("cat").start(productUpdateTask);
 			Threads.forGroup("cat").start(thirdPartyAlert);
 			Threads.forGroup("cat").start(alertBuildingTask);

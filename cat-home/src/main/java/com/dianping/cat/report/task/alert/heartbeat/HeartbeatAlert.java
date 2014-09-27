@@ -1,5 +1,6 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,6 +47,27 @@ public class HeartbeatAlert implements Task {
 	protected static final float gcAvgThreshold = 1;
 
 	protected static final float systemLoadAvgThreshold = 1;
+
+	private double calAvg(double[] counts) {
+		double sum = 0;
+		int length = counts.length;
+
+		for (double count : counts) {
+			sum += count;
+		}
+		return sum / length;
+	}
+
+	private String buildContent(double val, double threshold) {
+		StringBuilder sb = new StringBuilder();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		sb.append("[实际值:" + String.format("%.2f", val) + "] ");
+		sb.append("[基准值: " + String.format("%.2f", threshold) + "% ]");
+		sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+
+		return sb.toString();
+	}
 
 	private DisplayHeartbeat generateReport(String domain, String ip, long date) {
 		ModelRequest request = new ModelRequest(domain, date) //
@@ -115,15 +137,26 @@ public class HeartbeatAlert implements Task {
 				}
 			}
 
-			if (systemLoadCount > systemLoadAvgThreshold) {
+			double gcAvgCount = calAvg(gcCounts);
+			if (gcAvgCount > gcAvgThreshold) {
 				AlertEntity entity = new AlertEntity();
 
-				entity.setDate(new Date()).setContent("system load avg error").setLevel("error");
-				entity.setMetric(domain + " " + ip + "system load avg").setType(getName()).setGroup(domain);
+				entity.setDate(new Date()).setContent(buildContent(gcAvgCount, gcAvgThreshold)).setLevel("error");
+				entity.setMetric(domain + "_" + ip + ":full gc").setType(getName()).setGroup(domain);
 
 				m_sendManager.addAlert(entity);
 			}
-			
+
+			if (systemLoadCount > systemLoadAvgThreshold) {
+				AlertEntity entity = new AlertEntity();
+
+				entity.setDate(new Date()).setContent(buildContent(systemLoadCount, systemLoadAvgThreshold))
+				      .setLevel("error");
+				entity.setMetric(domain + "_" + ip + ":system load avg").setType(getName()).setGroup(domain);
+
+				m_sendManager.addAlert(entity);
+			}
+
 		} catch (Exception ex) {
 			Cat.logError(ex);
 		}

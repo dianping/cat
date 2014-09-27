@@ -334,9 +334,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.TagManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -2616,6 +2613,28 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.HostinfoService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>heartbeat</role-hint>
 				</requirement>
 			</requirements>
 		</component>
