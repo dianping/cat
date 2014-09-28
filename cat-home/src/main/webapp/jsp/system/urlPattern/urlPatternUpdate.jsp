@@ -36,6 +36,11 @@
 													<br/>部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
 					</tr>
 					<tr>
+						<th>项目组</th>
+						<td><input type="text" class="input-xlarge"  name="patternItem.domain" required value="${model.patternItem.domain}"/></td>
+						<td><span class="text-error">根据项目组查找需要发送告警的联系人信息</span></td>
+					</tr>
+					<tr>
 						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
 					</tr>
 				</table>

@@ -2397,6 +2397,12 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2406,6 +2412,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
