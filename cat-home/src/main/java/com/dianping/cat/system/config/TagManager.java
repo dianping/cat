@@ -1,6 +1,7 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -21,8 +22,10 @@ public class TagManager {
 		Set<String> tags = new HashSet<String>();
 
 		try {
-			for (MetricItemConfig metricItemConfig : m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
-			      .values()) {
+			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
+			      .values();
+			
+			for (MetricItemConfig metricItemConfig : configs) {
 				String tag = metricItemConfig.getTag();
 
 				if (!StringUtil.isEmpty(tag)) {
@@ -39,8 +42,10 @@ public class TagManager {
 		List<MetricItemConfig> metricItemConfigs = new ArrayList<MetricItemConfig>();
 
 		try {
-			for (MetricItemConfig metricItemConfig : m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
-			      .values()) {
+			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
+			      .values();
+			
+			for (MetricItemConfig metricItemConfig : configs) {
 				String itemTag = metricItemConfig.getTag();
 
 				if (tag.equals(itemTag)) {

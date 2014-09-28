@@ -37,6 +37,7 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
 				      DailyReportEntity.READSET_FULL);
+				
 				config = queryFromDailyBinary(report.getId());
 
 				if (config != null) {
