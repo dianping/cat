@@ -11,6 +11,7 @@ import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
+import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -19,6 +20,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.task.alert.AlertInfo;
@@ -29,6 +31,7 @@ import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.report.task.alert.sender.decorator.AppDecorator;
@@ -75,6 +78,7 @@ import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.alert.web.WebAlert;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
@@ -170,6 +174,9 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
+
+		all.add(C(HeartbeatAlert.class).req(ProjectService.class, HostinfoService.class, GraphBuilder.class,
+		      AlertManager.class).req(ModelService.class, HeartbeatAnalyzer.ID));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));

@@ -31,6 +31,8 @@ public class AlertPolicyManager implements Initializable {
 
 	private static final String CONFIG_NAME = "alertPolicy";
 
+	private static final String DEFAULT_TYPE = "default";
+
 	private static final String DEFAULT_GROUP = "default";
 
 	public AlertPolicy getAlertPolicy() {
@@ -106,6 +108,10 @@ public class AlertPolicyManager implements Initializable {
 
 	private Level queryLevel(String typeName, String groupName, String levelName) {
 		Type type = m_config.findType(typeName);
+		if (type == null) {
+			type = m_config.findType(DEFAULT_TYPE);
+		}
+
 		Group group = type.findGroup(groupName);
 
 		if (group == null) {
