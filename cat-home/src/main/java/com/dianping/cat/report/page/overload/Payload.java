@@ -69,7 +69,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		try {
 			return m_format.parse(m_startTime);
 		} catch (Exception e) {
-			return new Date(System.currentTimeMillis() - 8 * TimeUtil.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - TimeUtil.ONE_DAY);
 		}
 	}
 

@@ -188,6 +188,23 @@ public abstract class BaseAlert {
 		}
 	}
 
+	private boolean compareTime(String start, String end) {
+		String[] startTime = start.split(":");
+		int hourStart = Integer.parseInt(startTime[0]);
+		int minuteStart = Integer.parseInt(startTime[1]);
+		int startMinute = hourStart * 60 + minuteStart;
+
+		String[] endTime = start.split(":");
+		int hourEnd = Integer.parseInt(endTime[0]);
+		int minuteEnd = Integer.parseInt(endTime[1]);
+		int endMinute = hourEnd * 60 + minuteEnd;
+
+		Calendar cal = Calendar.getInstance();
+		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+		return current >= startMinute && current <= endMinute;
+	}
+
 	private boolean compareTime(String timeStr, Calendar currentCal, boolean isStartTime) {
 		String[] times = timeStr.split(":");
 		int hour = Integer.parseInt(times[0]);
@@ -199,7 +216,11 @@ public abstract class BaseAlert {
 			if (currentMinute == minute) {
 				return true;
 			} else {
-				return (currentMinute > minute) == isStartTime;
+				if (isStartTime) {
+					return currentMinute > minute;
+				} else {
+					return currentMinute < minute;
+				}
 			}
 		} else {
 			return (currentHour > hour) == isStartTime;

@@ -334,9 +334,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.TagManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
@@ -3652,9 +3649,6 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.metric.graph.MetricGraphCreator</role>
 				</requirement>
 				<requirement>
@@ -3674,15 +3668,6 @@
 		<component>
 			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
-			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3764,6 +3749,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+			<implementation>com.dianping.cat.system.config.MetricGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
