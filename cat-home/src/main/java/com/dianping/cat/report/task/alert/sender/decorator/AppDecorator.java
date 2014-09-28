@@ -8,7 +8,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 
@@ -41,17 +40,8 @@ public class AppDecorator extends Decorator implements Initializable {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 		String type = alert.getMetric();
-		String title = "";
 
-		if (AppDataService.SUCCESS.equals(type)) {
-			title = "成功率（%/5分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			title = "请求数（个/5分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			title = "延时平均值（毫秒/5分钟）";
-		}
-
-		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(title).append("]");
+		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(type).append("]");
 		return sb.toString();
 	}
 
@@ -72,7 +62,7 @@ public class AppDecorator extends Decorator implements Initializable {
 
 	protected Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		Map<Object, Object> map = new HashMap<Object, Object>();
-		map.put("condition", alert.getParas().get("condition"));
+		map.put("name", alert.getParas().get("name"));
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
 

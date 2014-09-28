@@ -19,6 +19,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
+import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -33,7 +34,6 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.site.lookup.util.StringUtils;
 
 public class WebAlert extends BaseAlert implements Task {
 
@@ -60,7 +60,11 @@ public class WebAlert extends BaseAlert implements Task {
 
 			try {
 				for (PatternItem item : m_urlPatternConfigManager.queryUrlPatternRules()) {
-					processUrl(item);
+					try {
+						processUrl(item);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -83,24 +87,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
-	private String buildCondition(String condition) {
-		List<String> conditions = Splitters.by(";").split(condition);
-		String newCondition = "";
-
-		for (String con : conditions) {
-			if (StringUtils.isEmpty(con)) {
-				newCondition += ";All";
-			} else {
-				if (StringUtils.isEmpty(newCondition)) {
-					newCondition += con;
-				} else {
-					newCondition += ";" + con;
-				}
-			}
-		}
-		return newCondition;
-	}
-
 	private void processUrl(PatternItem item) {
 		String url = item.getName();
 		String group = item.getGroup();
@@ -114,11 +100,11 @@ public class WebAlert extends BaseAlert implements Task {
 
 			for (AlertResultEntity alertResult : alertResults) {
 				String[] ids = rule.getId().split(":");
-				String condition = ids[0];
+				String name = ids[2];
 				String type = ids[1];
 				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("type", type);
-				par.put("condition", buildCondition(condition));
+				par.put("type", queryType(type));
+				par.put("name", name);
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
@@ -129,20 +115,34 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
+	private String queryType(String type) {
+		String title = "";
+
+		if (AppDataService.SUCCESS.equals(type)) {
+			title = "成功率（%/分钟）";
+		} else if (AppDataService.REQUEST.equals(type)) {
+			title = "请求数（个/分钟）";
+		} else if (AppDataService.DELAY.equals(type)) {
+			title = "延时平均值（毫秒/分钟）";
+		}
+		return title;
+	}
+
 	protected MetricReport fetchMetricReport(Rule rule, ModelPeriod period) {
 		String id = rule.getId();
+		String condition = id.split(":")[0];
 		MetricReport report = null;
 
 		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(id);
+			report = m_currentReports.get(condition);
 		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(id);
+			report = m_lastReports.get(condition);
 		} else {
 			throw new RuntimeException("Unknown ModelPeriod: " + period);
 		}
 
 		if (report == null) {
-			List<String> fields = Splitters.by(";").split(id.split(":")[0]);
+			List<String> fields = Splitters.by(";").split(condition);
 			String url = fields.get(0);
 			String city = fields.get(1);
 			String channel = fields.get(2);
@@ -159,9 +159,9 @@ public class WebAlert extends BaseAlert implements Task {
 			report = m_service.invoke(request);
 
 			if (period == ModelPeriod.CURRENT) {
-				m_currentReports.put(id, report);
+				m_currentReports.put(condition, report);
 			} else if (period == ModelPeriod.LAST) {
-				m_lastReports.put(id, report);
+				m_lastReports.put(condition, report);
 			}
 		}
 
