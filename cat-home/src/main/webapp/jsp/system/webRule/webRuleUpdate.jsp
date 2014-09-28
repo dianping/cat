@@ -21,8 +21,11 @@
 				<table style='width:100%' class='table table-striped table-bordered'>
 				<tr>
 				<th align=left>
-				组<select style="width: 100px;" name="group" id="group">
-				</select> URL <select style="width: 600px;" name="url" id="url"></select>
+				<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />
+				<c:set var="name" value="${strs[2]}" />
+				告警名<input id="name" value="${name}"/> 组 <select style="width: 100px;" name="group" id="group">
+				</select> URL <select style="width: 600px;" name="url" id="url"></select></th></tr>
+				<tr><th>
 				省份 <select style="width: 100px;" name="province" id="province">
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 运营商 <select style="width: 120px;" name="operator" id="operator">
@@ -51,13 +54,14 @@
 
 function update() {
     var configStr = generateConfigsJsonString();
+    var name = $("#name").val();
     var url = $("#url").val();
     var city = $("#city").val();
     var operator = $("#operator").val();
     var metric = $("#metric").val();
     var split = ";";
-    var id = url + split + city + split + operator + ":" +  metric;
-    window.location.href = "?op=webRuleSubmit&key=" + "&{payload.key}" +"&configs=" + configStr + "&ruleId=" + id;
+    var id = url + split + city + split + operator + ":" +  metric + ":" + name;
+    window.location.href = "?op=webRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
@@ -66,6 +70,7 @@ function update() {
 		})
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
+			document.getElementById("name").disabled = true;
 			document.getElementById("group").disabled = true;
 			document.getElementById("url").disabled = true;
 			document.getElementById("province").disabled = true;

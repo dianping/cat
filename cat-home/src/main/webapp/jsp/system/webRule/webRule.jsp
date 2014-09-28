@@ -29,13 +29,14 @@
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
-					<th width="15%">组</th>
+					<th width="15%">告警名</th>
+					<th width="10%">组</th>
 					<th width="35%">URL</th>
 					<th width="10%">省份</th>
 					<th width="10%">城市</th>
 					<th width="10%">运营商</th>
 					<th width="10%">告警指标</th>
-					<th width="10%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=webRuleUpdate">新增</a></th>
+					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=webRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">
@@ -45,7 +46,9 @@
 					<c:set var="city" value="${fn:split(conditions[1], '-')}" />
 					<c:set var="operator" value="${conditions[2]}" />
 					<c:set var="type" value="${strs[1]}" />
+					<c:set var="name" value="${strs[2]}" />
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+						<td>${name}</td>
 						<c:forEach var="i" items="${model.patternItems}">
 							<c:if test="${i.name eq urlId}"><td>${i.group}</td><td>${i.pattern}</td></c:if>
 						</c:forEach>

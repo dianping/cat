@@ -16,11 +16,14 @@
 		<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
+		
 		</br>
 			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-bordered'>
 			<tr>
-				<th align=left>命令字 <select id="command" style="width: 350px;">
+			<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />
+			<c:set var="name" value="${strs[2]}" />
+				<th align=left>告警名<input id="name" value="${name}"/> 命令字 <select id="command" style="width: 350px;">
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<option value='${item.id}'>${item.name}</option>
 						</c:forEach>
@@ -92,6 +95,7 @@ var commandChange = function commandChange() {
 
 function update() {
     var configStr = generateConfigsJsonString();
+    var name = $("#name").val();
     var command = $("#command").val();
     var code = $("#code").val();
     var network = $("#network").val();
@@ -102,8 +106,8 @@ function update() {
     var operator = $("#operator").val();
     var metric = $("#metric").val();
     var split = ";";
-    var id = command + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + ":" + metric;
-    window.location.href = "?op=appRuleSubmit&key=" + "&{payload.key}" +"&configs=" + configStr + "&ruleId=" + id;
+    var id = command + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + ":" + metric + ":" + name;
+    window.location.href = "?op=appRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
@@ -111,6 +115,7 @@ function update() {
 		commandSelector.on('change', commandChange);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
+			document.getElementById("name").disabled = true;
 			document.getElementById("command").disabled = true;
 			document.getElementById("code").disabled = true;
 			document.getElementById("network").disabled = true;
