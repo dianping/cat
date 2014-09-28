@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -79,15 +80,6 @@ public abstract class BaseAlert {
 			Cat.logError("extract domain error:" + metricKey, ex);
 			return null;
 		}
-	}
-
-	private Long buildMillsByString(String time) throws Exception {
-		String[] times = time.split(":");
-		int hour = Integer.parseInt(times[0]);
-		int minute = Integer.parseInt(times[1]);
-		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
-
-		return result;
 	}
 
 	protected List<AlertResultEntity> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
@@ -182,23 +174,36 @@ public abstract class BaseAlert {
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {
-		long ruleStartTime;
-		long ruleEndTime;
-		long nowTime = (System.currentTimeMillis() + 8 * 60 * 60 * 1000L) % (24 * 60 * 60 * 1000L);
-		
-		try {
-			ruleStartTime = buildMillsByString(config.getStarttime());
-			ruleEndTime = buildMillsByString(config.getEndtime());
-		} catch (Exception ex) {
-			ruleStartTime = 0L;
-			ruleEndTime = 86400000L;
-		}
+		Calendar cal = Calendar.getInstance();
 
-		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+		try {
+			if (compareTime(config.getStarttime(), cal, true) && compareTime(config.getEndtime(), cal, false)) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			Cat.logError("throw exception when judge time: " + config.toString(), ex);
 			return false;
 		}
+	}
 
-		return true;
+	private boolean compareTime(String timeStr, Calendar currentCal, boolean isStartTime) {
+		String[] times = timeStr.split(":");
+		int hour = Integer.parseInt(times[0]);
+		int minute = Integer.parseInt(times[1]);
+		int currentHour = currentCal.get(Calendar.HOUR_OF_DAY);
+		int currentMinute = currentCal.get(Calendar.MINUTE);
+
+		if (currentHour == hour) {
+			if (currentMinute == minute) {
+				return true;
+			} else {
+				return (currentMinute > minute) == isStartTime;
+			}
+		} else {
+			return (currentHour > hour) == isStartTime;
+		}
 	}
 
 	protected double[] mergerArray(double[] from, double[] to) {

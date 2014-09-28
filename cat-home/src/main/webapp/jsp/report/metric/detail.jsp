@@ -4,10 +4,9 @@
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
            <li class='nav-header' id="all"><a href="?op=dashboard&date=${model.date}&domain=${model.domain}&timeRange=${payload.timeRange}"><strong>业务大盘</strong></a></li>
-           
-           <c:forEach var="item" items="${model.metricGroups}" varStatus="status">
-		              <li class='nav-header' id="metric_${item}"><a href="?op=dashboard&group=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
-	       </c:forEach>
+	       <c:forEach var="item" items="${model.tags}" varStatus="status">
+            	 <li class='nav-header' id="metric_${item}"><a href="?op=dashboard&tag=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
+           </c:forEach>
            <c:forEach var="item" items="${model.productLines}" varStatus="status">
             		 <li class='nav-header' id="metric_${item.id}"><a href="?date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.title}</strong></a></li>
            </c:forEach>
@@ -26,12 +25,12 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
- 	var group = '${payload.group}';
+ 	var tag = '${payload.tag}';
  	
- 	if(group==''){
+ 	if(tag==''){
  		$('#all').addClass('active');
  	}else{
- 		$('#metric_'+group).addClass('active');
+ 		$('#metric_'+tag).addClass('active');
  	}
  });
  </script>

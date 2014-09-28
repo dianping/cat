@@ -33,6 +33,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("group")
 	private String m_group;
 
+	@FieldMeta("tag")
+	private String m_tag;
+
 	@FieldMeta("id")
 	private String m_id;
 
@@ -53,6 +56,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_group;
 	}
 
+	public String getId() {
+		return m_id;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -62,16 +69,20 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_product;
 	}
 
+	public String getTag() {
+		return m_tag;
+	}
+
 	public int getTimeRange() {
 		return m_timeRange;
 	}
 
-	public String getId() {
-		return m_id;
-	}
-
 	public boolean isFullScreen() {
 		return m_fullScreen;
+	}
+
+	public boolean isHideNav() {
+		return m_hideNav;
 	}
 
 	public boolean isRefresh() {
@@ -94,6 +105,14 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_group = group;
 	}
 
+	public void setHideNav(boolean hideNav) {
+		m_hideNav = hideNav;
+	}
+
+	public void setId(String id) {
+		m_id = id;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
@@ -107,16 +126,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_refresh = refresh;
 	}
 
-	public boolean isHideNav() {
-		return m_hideNav;
-	}
-
-	public void setHideNav(boolean hideNav) {
-		m_hideNav = hideNav;
-	}
-
-	public void setId(String id) {
-		m_id = id;
+	public void setTag(String tag) {
+		m_tag = tag;
 	}
 
 	@Override
