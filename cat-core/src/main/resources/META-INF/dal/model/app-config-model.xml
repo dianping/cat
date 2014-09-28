@@ -17,6 +17,7 @@
   <entity name="command">
     <attribute name="id" value-type="int" key="true"/>
     <attribute name="name" value-type="String" />
+    <attribute name="domain" value-type="String" />
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
   </entity>
   <entity name="code">

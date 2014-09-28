@@ -113,9 +113,11 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
 		      AggregationConfigManager.class, AlertConfigManager.class));
 
-		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class));
+		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
+		      AppConfigManager.class, ProjectService.class));
 
-		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class));
+		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class,
+		      ProjectService.class, UrlPatternConfigManager.class));
 
 		all.add(C(ContactorManager.class));
 

@@ -298,19 +298,7 @@ public class CatFilter implements Filter {
 
 				try {
 					ctx.handle();
-
-					// page uri and status are customizable
-					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
-					Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
-
-					if (t instanceof DefaultTransaction && catPageUri instanceof String) {
-						((DefaultTransaction) t).setName(catPageUri.toString());
-					}
-					if (catStatus != null) {
-						t.setStatus(catStatus.toString());
-					} else {
-						t.setStatus(Message.SUCCESS);
-					}
+                    customizeStatus(t, req);
 				} catch (ServletException e) {
 					Cat.logError(e);
 					t.setStatus(e);
@@ -328,9 +316,26 @@ public class CatFilter implements Filter {
 					t.setStatus(e);
 					throw e;
 				} finally {
+                    customizeUri(t, req);
 					t.complete();
 				}
 			}
+
+            private void customizeUri(Transaction t, HttpServletRequest req) {
+                Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+                if (t instanceof DefaultTransaction && catPageUri instanceof String) {
+                    ((DefaultTransaction) t).setName(catPageUri.toString());
+                }
+            }
+
+            private void customizeStatus(Transaction t, HttpServletRequest req) {
+                Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
+                if (catStatus != null) {
+                    t.setStatus(catStatus.toString());
+                } else {
+                    t.setStatus(Message.SUCCESS);
+                }
+            }
 		};
 	}
 

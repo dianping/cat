@@ -11,9 +11,12 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
 <a:body>
-		<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
-		<div style="height:24px"></div>
+	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+	<div style="height:24px"></div>
    <div class="row-fluid">
      <div class="span2">
 		<%@include file="../reportTree.jsp"%>
@@ -49,7 +52,8 @@
 			<br><br>
 		</div>
 		<div id="DatabaseReport">
-			<table	class="problem table table-striped table-bordered table-condensed table-hover">
+			<table	class="problem table table-striped table-bordered table-condensed table-hover" id="contents">
+				<thead>
 				<tr class="text-success">
 					<th width="20%">日期</th>
 					<th width="10%">报表类型</th>
@@ -59,6 +63,8 @@
 					<th width="10%">报表格式</th>
 					<th width="10%">报表长度</th>
 				</tr>
+				</thead>
+				<tbody>
 				<c:forEach var="report" items="${model.reports}" varStatus="status">
 					<tr class="reportType${report.reportType}">
 						<td>${report.period}</td>
@@ -96,10 +102,12 @@
 						<td><fmt:formatNumber type="number" maxFractionDigits="1" minFractionDigits="1" value="${report.reportLength}" /></td>
 					</tr>
 				</c:forEach>
+				</tbody>
 			</table>
 		</div></div></div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
+			  init();
 			  $('#overload').addClass("active");
 			  
 	        <c:if test="${payload.fullScreen}">

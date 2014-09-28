@@ -7,7 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-
 <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
@@ -45,7 +44,6 @@
 	<c:otherwise>
 		<a:body>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		
 		<div class="report">
 			<table class="header">
 				<tr>
@@ -80,8 +78,8 @@
 		          <div class="well sidebar-nav">
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"><a href="?op=dashboard&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>业务大盘</strong></a></li>
-			             <c:forEach var="item" items="${model.metricGroups}" varStatus="status">
-				              <li class='nav-header' id="metric_${item}"><a href="?op=dashboard&group=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
+			             <c:forEach var="item" items="${model.tags}" varStatus="status">
+				              <li class='nav-header' id="metric_${item}"><a href="?op=dashboard&tag=${item}&timeRange=${payload.timeRange}&date=${model.date}&domain=${model.domain}"><strong>${item}</strong></a></li>
 			             </c:forEach>
 			             
 			             <c:forEach var="item" items="${model.productLines}" varStatus="status">

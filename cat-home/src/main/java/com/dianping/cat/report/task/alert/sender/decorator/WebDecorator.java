@@ -50,7 +50,7 @@ public class WebDecorator extends Decorator implements Initializable {
 		} else if (AppDataService.DELAY.equals(type)) {
 			title = "延时平均值（毫秒/分钟）";
 		}
-		sb.append("[CAT Web告警] [组: ").append(alert.getGroup()).append("] [URL: ").append(alert.getMetric())
+		sb.append("[CAT Web告警] [组: ").append(alert.getMetric()).append("] [URL: ").append(alert.getGroup())
 		      .append("] [监控项: ").append(title).append("]");
 		;
 		return sb.toString();

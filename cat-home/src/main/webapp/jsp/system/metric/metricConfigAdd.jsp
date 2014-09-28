@@ -70,6 +70,30 @@
 			</td>
 		</tr>
 		<tr>
+			<td  style="text-align:right" class="text-success">标签</td>
+			<td >
+				<span id="inputTag">
+					<select class="span6" id="tags" name="metricItemConfig.tag">
+						<option value="">无标签</option>
+						<c:forEach var="item" items="${model.tags}">
+			            	<option value="${item}">${item}</option> 							
+						</c:forEach>
+					</select>
+				</span>
+				<button class="btn btn-success btn-small" id="addTag" type="button">
+	                添加新标签<i class="icon-plus icon-white"></i>
+	            </button>
+			</td>
+			<td style="text-align:right" class="text-success">标签类型</td>
+			<td >
+				<select class="span8" name="metricItemConfig.monitorTagType">
+					<option value="COUNT">次数</option>
+					<option value="AVG">平均值</option>
+					<option value="SUM">总和</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
 			<td style="text-align:right" class="text-success"  width="25%">显示次数曲线</td>
 			<td  width="25%">
 				<c:choose>
@@ -161,3 +185,21 @@
 		</tr>
 	</table>
 </form>
+<script>
+	$(document).ready(function(){
+		var tag = "${model.metricItemConfig.tag}";
+		if(tag != "" && tag != "null"){
+			$('select[name="metricItemConfig.tag"]').val(tag);
+		}
+		
+		var tagType = "${model.metricItemConfig.monitorTagType}";
+		if(tagType != "" && tagType != "null"){
+			$('select[name="metricItemConfig.monitorTagType"]').val(tagType);
+		}
+		
+		$("#addTag").click(function(){
+			$("#inputTag").empty();
+			$("#inputTag").append($('<input class="span6" name="metricItemConfig.tag" type="text"></input>'));
+		})
+	})
+</script>

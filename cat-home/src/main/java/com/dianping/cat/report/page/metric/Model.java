@@ -23,6 +23,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<String> m_metricGroups;
 
+	private List<String> m_tags;
+
 	private Date m_startTime;
 
 	private Date m_endTime;
@@ -56,6 +58,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_endTime;
 	}
 
+	public String getJson() {
+		return m_json;
+	}
+
 	public List<LineChart> getLineCharts() {
 		return m_lineCharts;
 	}
@@ -72,8 +78,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_startTime;
 	}
 
+	public List<String> getTags() {
+		return m_tags;
+	}
+
 	public void setEndTime(Date endTime) {
 		m_endTime = endTime;
+	}
+
+	public void setJson(String json) {
+		this.m_json = json;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {
@@ -92,12 +106,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_startTime = startTime;
 	}
 
-	public String getJson() {
-		return m_json;
-	}
-
-	public void setJson(String json) {
-		this.m_json = json;
+	public void setTags(List<String> tags) {
+		m_tags = tags;
 	}
 
 }

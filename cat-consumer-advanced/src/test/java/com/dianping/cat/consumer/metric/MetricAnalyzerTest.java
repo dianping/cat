@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -48,7 +49,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 	private MockBusinessReportDao m_businessReportDao;
 
-	private static  int m_bucketCount = 0;
+	private static int m_bucketCount = 0;
 
 	@Before
 	public void setUp() throws Exception {
@@ -265,8 +266,8 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 	public static class MockProductLineManager extends ProductLineConfigManager {
 
 		@Override
-		public boolean insertProductLine(ProductLine line, String[] domains) {
-			return true;
+		public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
+			return new Pair<Boolean, String>(true, null);
 		}
 
 		@Override
@@ -285,14 +286,14 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public ProductLine queryProductLine(String id) {
+		public ProductLine queryProductLine(String id) {
 			return null;
-      }
+		}
 
 		@Override
-      public boolean insertIfNotExsit(String product, String domain) {
+		public boolean insertIfNotExsit(String product, String domain) {
 			return true;
-      }
+		}
 	}
 
 }

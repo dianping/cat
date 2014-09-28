@@ -123,7 +123,7 @@ public class WebAlert extends BaseAlert implements Task {
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(url).setType(getName()).setGroup(group).setParas(par);
+				entity.setMetric(group).setType(getName()).setGroup(url).setParas(par);
 				m_sendManager.addAlert(entity);
 			}
 		}
