@@ -14,6 +14,7 @@ import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
+import com.site.lookup.util.StringUtils;
 
 public class AppContactor extends DefaultContactor implements Contactor {
 
@@ -52,15 +53,18 @@ public class AppContactor extends DefaultContactor implements Contactor {
 		List<String> mailReceivers = new ArrayList<String>();
 
 		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
-		
+
 		if (receiver != null && !receiver.isEnable()) {
 			return mailReceivers;
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(queryDomainByCommand(id));
-			if (project != null) {
-				mailReceivers.addAll(split(project.getEmail()));
+			String domain = queryDomainByCommand(id);
+			if (StringUtils.isNotEmpty(domain)) {
+				Project project = m_projectService.findByDomain(domain);
+				if (project != null) {
+					mailReceivers.addAll(split(project.getEmail()));
+				}
 			}
 			return mailReceivers;
 		}
@@ -76,10 +80,13 @@ public class AppContactor extends DefaultContactor implements Contactor {
 		} else {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(queryDomainByCommand(id));
+			String domain = queryDomainByCommand(id);
+			if (StringUtils.isNotEmpty(domain)) {
+				Project project = m_projectService.findByDomain(domain);
 
-			if (project != null) {
-				weixinReceivers.addAll(split(project.getEmail()));
+				if (project != null) {
+					weixinReceivers.addAll(split(project.getEmail()));
+				}
 			}
 			return weixinReceivers;
 		}
@@ -95,10 +102,13 @@ public class AppContactor extends DefaultContactor implements Contactor {
 		} else {
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(queryDomainByCommand(id));
+			String domain = queryDomainByCommand(id);
+			if (StringUtils.isNotEmpty(domain)) {
+				Project project = m_projectService.findByDomain(domain);
 
-			if (project != null) {
-				smsReceivers.addAll(split(project.getPhone()));
+				if (project != null) {
+					smsReceivers.addAll(split(project.getPhone()));
+				}
 			}
 			return smsReceivers;
 		}
