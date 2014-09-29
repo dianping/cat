@@ -1,5 +1,8 @@
 package com.dianping.cat.system.page.config;
 
+import java.util.List;
+
+import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -7,6 +10,7 @@ import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -104,6 +108,15 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("configs")
 	private String m_configs;
 
+	@FieldMeta("countTags")
+	private String m_countTags;
+
+	@FieldMeta("avgTags")
+	private String m_avgTags;
+
+	@FieldMeta("sumTags")
+	private String m_sumTags;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -116,6 +129,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_allOnOrOff;
 	}
 
+	public String getAvgTags() {
+		return m_avgTags;
+	}
+
 	public String getBug() {
 		return m_bug;
 	}
@@ -126,6 +143,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getContent() {
 		return m_content;
+	}
+
+	public String getCoungTags() {
+		return m_countTags;
 	}
 
 	public String getDomain() {
@@ -169,6 +190,44 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public MetricItemConfig getMetricItemConfig() {
+		List<Tag> tags = m_metricItemConfig.getTags();
+
+		if (!StringUtil.isEmpty(m_countTags)) {
+			for (String tag : m_countTags.split(",")) {
+				tag = tag.trim();
+				if (!StringUtil.isEmpty(tag)) {
+					Tag countTag = new Tag();
+
+					countTag.setName(tag).setType("COUNT");
+					tags.add(countTag);
+				}
+			}
+		}
+
+		if (!StringUtil.isEmpty(m_sumTags)) {
+			for (String tag : m_sumTags.split(",")) {
+				tag = tag.trim();
+				if (!StringUtil.isEmpty(tag)) {
+					Tag sumTag = new Tag();
+
+					sumTag.setName(tag).setType("SUM");
+					tags.add(sumTag);
+				}
+			}
+		}
+
+		if (!StringUtil.isEmpty(m_avgTags)) {
+			for (String tag : m_avgTags.split(",")) {
+				tag = tag.trim();
+				if (!StringUtil.isEmpty(tag)) {
+					Tag avgTag = new Tag();
+
+					avgTag.setName(tag).setType("AVG");
+					tags.add(avgTag);
+				}
+			}
+		}
+
 		return m_metricItemConfig;
 	}
 
@@ -224,6 +283,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_ruleId;
 	}
 
+	public String getSumTags() {
+		return m_sumTags;
+	}
+
 	public String getTo() {
 		return m_to;
 	}
@@ -240,6 +303,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_allOnOrOff = allOnOrOff;
 	}
 
+	public void setAvgTags(String avgTags) {
+		m_avgTags = avgTags;
+	}
+
 	public void setBug(String bug) {
 		m_bug = bug;
 	}
@@ -250,6 +317,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCoungTags(String coungTags) {
+		m_countTags = coungTags;
 	}
 
 	public void setDomain(String domain) {
@@ -335,6 +406,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRuleId(String ruleId) {
 		m_ruleId = ruleId;
+	}
+
+	public void setSumTags(String sumTags) {
+		m_sumTags = sumTags;
 	}
 
 	public void setTo(String to) {
