@@ -13,8 +13,8 @@
 	<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
-			<td width="25%" style="text-align:right" class="text-success" width="50%">项目名称</td>
-			<td width="25%" >
+			<td width="10%" style="text-align:right" class="text-success" width="50%">项目名称</td>
+			<td width="40%" >
 				<c:if test="${not empty model.metricItemConfig.domain}">
 					<input name="metricItemConfig.domain" value="${model.metricItemConfig.domain}" readonly required/>
 				</c:if>
@@ -88,8 +88,11 @@
 					</c:forEach>
 				</select>
 				<button class="btn btn-success btn-small" id="addCountTag" type="button">
-	                添加新标签<i class="icon-plus icon-white"></i>
+	                添加标签<i class="icon-plus icon-white"></i>
 	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteCountTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
 	            <input name="countTags" type="hidden"/>
 			</td>
 			<td  width="25%" style="text-align:right" class="text-success">显示业务监控大盘</td>
@@ -126,8 +129,11 @@
 					</c:forEach>
 				</select>
 				<button class="btn btn-success btn-small" id="addAvgTag" type="button">
-	                添加新标签<i class="icon-plus icon-white"></i>
+	                添加标签<i class="icon-plus icon-white"></i>
 	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteAvgTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
 	            <input name="avgTags" type="hidden"/>
 			</td>
 			<td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
@@ -164,8 +170,11 @@
 					</c:forEach>
 				</select>
 				<button class="btn btn-success btn-small" id="addSumTag" type="button">
-	                添加新标签<i class="icon-plus icon-white"></i>
+	                添加标签<i class="icon-plus icon-white"></i>
 	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteSumTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
 	            <input name="sumTags" type="hidden"/>
 			</td>
 			<td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
@@ -209,7 +218,7 @@
 		$('select').multipleSelect({
 			width: 100,
             multiple: true,
-            multipleWidth: 90,
+            multipleWidth: 100,
             selectAll: false
 		});
 		
@@ -250,7 +259,7 @@
 		$("#addCountTag").click(function(){
 			$(this).parent().find(".tags").remove();
 			if($(this).parent().find(".tagsInput").length == 0){
-				$(this).before($('<input class="tagsInput span6" id="countInput" type="text"></input>'));
+				$(this).before($('<input class="tagsInput span5" id="countInput" type="text"></input>'));
 			}
 			$(this).addClass("disabled")
 		})
@@ -258,7 +267,7 @@
 		$("#addSumTag").click(function(){
 			$(this).parent().find(".tags").remove();
 			if($(this).parent().find(".tagsInput").length == 0){
-				$(this).before($('<input class="tagsInput span6" id="sumInput" type="text"></input>'));
+				$(this).before($('<input class="tagsInput span5" id="sumInput" type="text"></input>'));
 			}
 			$(this).addClass("disabled")
 		})
@@ -266,9 +275,36 @@
 		$("#addAvgTag").click(function(){
 			$(this).parent().find(".tags").remove();
 			if($(this).parent().find(".tagsInput").length == 0){
-				$(this).before($('<input class="tagsInput span6" id="avgInput" type="text"></input>'));
+				$(this).before($('<input class="tagsInput span5" id="avgInput" type="text"></input>'));
 			}
 			$(this).addClass("disabled")
+		})
+		
+		$("#deleteCountTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="countInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
+		})
+		
+		$("#deleteAvgTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="avgInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
+		})
+		
+		$("#deleteSumTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="sumInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
 		})
 	})
 </script>
