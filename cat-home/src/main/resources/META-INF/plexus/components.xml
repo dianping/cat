@@ -1451,6 +1451,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
+			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
 			<role-hint>dailyNotify</role-hint>
 			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
@@ -4658,6 +4673,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -10,10 +10,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case SCHEDULED_REPORT_ADD:
-			return JspFile.SCHEDULED_REPORT_ADD.getPath();
-		case SCHEDULED_REPORT_ADD_SUBMIT:
-			return JspFile.SCHEDULED_REPORT_ADD_SUBMIT.getPath();
 		case SCHEDULED_REPORT_DELETE:
 			return JspFile.SCHEDULED_REPORT_DELETE.getPath();
 		case SCHEDULED_REPORT_LIST:

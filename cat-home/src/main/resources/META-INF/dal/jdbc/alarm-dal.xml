@@ -117,6 +117,15 @@
 					ORDER BY <FIELD name='domain'/> ASC
 				]]></statement>
 			</query>
+			<query name="find-by-domain" type="SELECT">
+			<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='domain'/> = ${domain}
+					ORDER BY <FIELD name='domain'/> ASC
+				]]></statement>
+			</query>
 			</query-defs>
 	</entity>
 </entities>

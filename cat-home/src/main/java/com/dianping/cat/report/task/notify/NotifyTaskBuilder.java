@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.notify;
 
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -107,7 +108,7 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 	}
 
 	private void sendDailyReport(Date period) {
-		List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
+		Collection<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
 		for (ScheduledReport report : reports) {
 			String domain = report.getDomain();
