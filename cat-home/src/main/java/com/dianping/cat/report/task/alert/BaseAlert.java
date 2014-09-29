@@ -174,10 +174,8 @@ public abstract class BaseAlert {
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {
-		Calendar cal = Calendar.getInstance();
-
 		try {
-			if (compareTime(config.getStarttime(), cal, true) && compareTime(config.getEndtime(), cal, false)) {
+			if (compareTime(config.getStarttime(), config.getEndtime())) {
 				return true;
 			} else {
 				return false;
@@ -203,28 +201,6 @@ public abstract class BaseAlert {
 		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
 
 		return current >= startMinute && current <= endMinute;
-	}
-
-	private boolean compareTime(String timeStr, Calendar currentCal, boolean isStartTime) {
-		String[] times = timeStr.split(":");
-		int hour = Integer.parseInt(times[0]);
-		int minute = Integer.parseInt(times[1]);
-		int currentHour = currentCal.get(Calendar.HOUR_OF_DAY);
-		int currentMinute = currentCal.get(Calendar.MINUTE);
-
-		if (currentHour == hour) {
-			if (currentMinute == minute) {
-				return true;
-			} else {
-				if (isStartTime) {
-					return currentMinute > minute;
-				} else {
-					return currentMinute < minute;
-				}
-			}
-		} else {
-			return (currentHour > hour) == isStartTime;
-		}
 	}
 
 	protected double[] mergerArray(double[] from, double[] to) {
