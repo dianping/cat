@@ -18,7 +18,10 @@
     <attribute name="show-sum-dashboard" value-type="boolean" primitive="true"/>
     <attribute name="show-dashboard-order" value-type="double" primitive="true"/>
     <attribute name="alarm" value-type="boolean" primitive="true"  default-value="false"/>
-    <attribute name="tag" value-type="String" />
-    <attribute name="monitor-tag-type" value-type="String" />
+    <entity-ref name="tag" type="list" names="tags" />
+  </entity>
+  <entity name="tag">
+    <attribute name="name" value-type="String"/>
+	<attribute name="type" value-type="String" />
   </entity>
 </model>
