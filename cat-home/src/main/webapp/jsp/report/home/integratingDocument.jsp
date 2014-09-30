@@ -35,7 +35,12 @@
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-core</artifactId>   
-             <version>1.0.4</version>
+             <version>1.1.3</version>
+             </dependency>
+       <dependency>
+             <groupId>com.dianping.cat</groupId>
+             <artifactId>cat-client</artifactId>   
+             <version>1.1.3</version>
              </dependency>
        <dependency>
               <groupId>com.dianping</groupId>
@@ -62,12 +67,12 @@
   <p  class="detailContent text-error"> 2、SQL调用依赖需要加载一个配置文件 /config/spring/common/appcontext-ds-monitor.xml，这个文件是在zebra-ds-monitor-client这个jar包下。
             web.xml 加载是需要加入classpath*:config/spring/common/appcontext-ds-monitor.xml</p>
   </dd>
-  <dt><h5 class="text-success">3.在资源文件中新建client.xml文件（可选）</h5></dt>
+  <dt><h5 class="text-success">3.在资源文件中新建client.xml文件</h5></dt>
   <dd><p class="detailContent">在resources资源文件META-INF下，新建cat文件夹，注意是<span class="text-error">src/main/resources/META-INF/cat/client.xml</span>文件，
   而不是<span class="text-error">webapps下的那个META-INF</span>,domain id表示项目名称<span class="text-error">此处为CMDB申请的名字，比如shop-web</span></p>
   <xmp class="well">
      <config mode="client">
-         <domain id="TuanGouApi"/>
+         <domain id="tuangou-web"/>
      </config>
   </xmp>
   </dd>
