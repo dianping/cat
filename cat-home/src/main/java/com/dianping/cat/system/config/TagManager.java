@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 
 public class TagManager {
@@ -22,14 +23,14 @@ public class TagManager {
 		Set<String> tags = new HashSet<String>();
 
 		try {
-			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
-			      .values();
-			
-			for (MetricItemConfig metricItemConfig : configs) {
-				String tag = metricItemConfig.getTag();
+			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
 
-				if (!StringUtil.isEmpty(tag)) {
-					tags.add(tag);
+			for (MetricItemConfig metricItemConfig : configs) {
+				for (Tag tag : metricItemConfig.getTags()) {
+					String tagName = tag.getName();
+					if (!StringUtil.isEmpty(tagName)) {
+						tags.add(tagName);
+					}
 				}
 			}
 		} catch (Exception ex) {
@@ -42,14 +43,16 @@ public class TagManager {
 		List<MetricItemConfig> metricItemConfigs = new ArrayList<MetricItemConfig>();
 
 		try {
-			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs()
-			      .values();
-			
-			for (MetricItemConfig metricItemConfig : configs) {
-				String itemTag = metricItemConfig.getTag();
+			Collection<MetricItemConfig> configs = m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values();
 
-				if (tag.equals(itemTag)) {
-					metricItemConfigs.add(metricItemConfig);
+			for (MetricItemConfig metricItemConfig : configs) {
+				for (Tag itemTag : metricItemConfig.getTags()) {
+					String tagName = itemTag.getName();
+
+					if (tag.equals(tagName)) {
+						metricItemConfigs.add(metricItemConfig);
+						break;
+					}
 				}
 			}
 		} catch (Exception ex) {

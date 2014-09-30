@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
@@ -270,10 +271,15 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			String metricType = metric.getType();
 			String type = metricType.equalsIgnoreCase("metric") ? "Metric" : metricType;
 			String key = metric.getMetricKey();
-			String monitorTagType = metric.getMonitorTagType();
-			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":" + monitorTagType;
 
-			put(allCharts, result, id);
+			for (Tag metricTag : metric.getTags()) {
+				if (tag.equals(metricTag.getName())) {
+					String tagType = metricTag.getType();
+					String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":" + tagType;
+
+					put(allCharts, result, id);
+				}
+			}
 		}
 		return result;
 	}

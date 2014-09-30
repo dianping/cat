@@ -14,6 +14,8 @@
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['multiple-select.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#metricConfigList').addClass('active');
@@ -44,7 +46,7 @@
 					type: "post",
 					url: anchor.href,
 					success : function(response, textStatus) {
-						$('#myModal').html(response);
+						$('#configModalBody').html(response);
 						$('#myModal').modal();
 						$("#id").select2();
 						metricValidate();
@@ -98,6 +100,11 @@
 		<div class="span10">
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" style="width:800px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-header text-center">
+				    <h3 class="text-error">修改业务监控节点配置信息</h3>
+				</div>
+				<div class="modal-body" id="configModalBody">
+				</div>
 			</div>
 			<div id="ruleModal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
 				<div class="modal-header text-center">
@@ -173,8 +180,10 @@
 				     				</c:if>
 				     			</td>
 				     			<td>
-				     				<c:if test="${config.tag!=null}">
-				     					${config.tag}
+				     				<c:if test="${config.tags!=null}">
+				     					<c:forEach var="tag" items="${config.tags}">
+				     						<span class="label label-info">${tag.name}</span>, 
+				     					</c:forEach>
 				     				</c:if>
 				     			</td>
 					     		<td style="text-align:center;white-space: nowrap">

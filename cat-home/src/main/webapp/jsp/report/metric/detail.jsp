@@ -25,12 +25,17 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
+	var product = '${payload.product}';
  	var tag = '${payload.tag}';
  	
- 	if(tag==''){
- 		$('#all').addClass('active');
+ 	if(product!=''){
+ 		$('#metric_'+product).addClass('active');
  	}else{
- 		$('#metric_'+tag).addClass('active');
+ 		if(tag==''){
+	 		$('#all').addClass('active');
+	 	}else{
+	 		$('#metric_'+tag).addClass('active');
+	 	}
  	}
  });
  </script>
