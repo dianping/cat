@@ -244,8 +244,7 @@ public abstract class BaseAlert {
 	}
 
 	protected void processProductLine(ProductLine productLine) {
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = getAlreadyMinute();
 		String product = productLine.getId();
 		MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
 
@@ -258,6 +257,13 @@ public abstract class BaseAlert {
 				}
 			}
 		}
+	}
+
+	protected int getAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		return minute;
 	}
 
 	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
