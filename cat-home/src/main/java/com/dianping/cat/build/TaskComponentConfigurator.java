@@ -21,6 +21,8 @@ import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
+import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
+import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
@@ -77,6 +79,7 @@ import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
@@ -157,7 +160,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportTaskBuilder.class, NetTopologyReportBuilder.ID, NetTopologyReportBuilder.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, NetGraphConfigManager.class));
-		
+
 		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(OverloadDao.class,
 		      HourlyReportContentDao.class, HourlyReportDao.class));
 
@@ -186,6 +189,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDataComparisonNotifier.class).req(AppDataService.class)
 		      .req(AppComparisonConfigManager.class, AppConfigManager.class)
 		      .req(SenderManager.class, MailRecordDao.class, AppDataComparisonRender.class));
+
+		all.add(C(ScheduledManager.class).req(ScheduledReportDao.class, ScheduledSubscriptionDao.class,
+		      ProjectService.class));
 
 		all.add(C(ReportTaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class)//

@@ -55,12 +55,6 @@ public class Handler implements PageHandler<Context> {
 		boolean result = false;
 
 		switch (action) {
-		case SCHEDULED_REPORT_ADD:
-			m_scheduledManager.scheduledReportAdd(payload, model);
-			break;
-		case SCHEDULED_REPORT_ADD_SUBMIT:
-			m_scheduledManager.scheduledReportAddSubmit(payload, model);
-			break;
 		case SCHEDULED_REPORT_DELETE:
 			m_scheduledManager.scheduledReportDelete(payload);
 			m_scheduledManager.queryScheduledReports(model, userName);

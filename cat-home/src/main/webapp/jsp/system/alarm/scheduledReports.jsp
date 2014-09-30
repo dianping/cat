@@ -31,7 +31,7 @@
 				<tr class="odd">
 					<th><span class="text-success">项目名</span></th>
 					<th><span class="text-success">报表内容</span></th>
-					<th><span class="text-success">操作</span>&nbsp;&nbsp;  <a class="btn btn-primary btn-small" href="?op=scheduledReportAdd&type=exception" target="_blank">新增</a></th>
+					<th><span class="text-success">操作</span>&nbsp;&nbsp;</th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.userReportSubStates}"
 					varStatus="status">

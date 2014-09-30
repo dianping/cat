@@ -6,10 +6,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	REPORT_RECORD_LIST("reportRecordList"),
 
-	SCHEDULED_REPORT_ADD("scheduledReportAdd"),
-
-	SCHEDULED_REPORT_ADD_SUBMIT("scheduledReportAddSubmit"),
-
 	SCHEDULED_REPORT_DELETE("scheduledReportDelete"),
 
 	SCHEDULED_REPORT_LIST("scheduledReports"),

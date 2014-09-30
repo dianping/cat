@@ -100,6 +100,21 @@ public class ProjectService implements Initializable {
 		}
 	}
 
+	public Project findByCmdbDomain(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			return project;
+		} catch (DalException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	public Map<String, Project> findAllProjects() {
+		return m_projects;
+	}
+
 	public Project findProject(int id) {
 		Iterator<Entry<String, Project>> iterator = m_projects.entrySet().iterator();
 

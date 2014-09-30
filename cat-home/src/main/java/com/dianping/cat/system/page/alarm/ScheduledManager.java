@@ -1,23 +1,33 @@
 package com.dianping.cat.system.page.alarm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscription;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionEntity;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
+import com.site.lookup.util.StringUtils;
 
 public class ScheduledManager implements Initializable {
 
@@ -26,6 +36,11 @@ public class ScheduledManager implements Initializable {
 
 	@Inject
 	private ScheduledSubscriptionDao m_scheduledReportSubscriptionDao;
+
+	@Inject
+	private ProjectService m_projectService;
+
+	private Map<String, ScheduledReport> m_reports = new HashMap<String, ScheduledReport>();
 
 	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
 		List<String> emails = new ArrayList<String>();
@@ -38,21 +53,14 @@ public class ScheduledManager implements Initializable {
 		return emails;
 	}
 
-	public List<ScheduledReport> queryScheduledReports() {
-		try {
-			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-
-			return reports;
-		} catch (DalException e) {
-			Cat.logError(e);
-			return new ArrayList<ScheduledReport>();
-		}
+	public Collection<ScheduledReport> queryScheduledReports() {
+		return m_reports.values();
 	}
 
 	public void queryScheduledReports(Model model, String userName) {
 		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
 		try {
-			List<ScheduledReport> lists = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+			Collection<ScheduledReport> lists = m_reports.values();
 
 			for (ScheduledReport report : lists) {
 				int scheduledReportId = report.getId();
@@ -68,34 +76,11 @@ public class ScheduledManager implements Initializable {
 					Cat.logError(e);
 				}
 			}
-		} catch (DalNotFoundException nfe) {
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		Collections.sort(userRules, new UserReportSubStateCompartor());
 		model.setUserReportSubStates(userRules);
-	}
-
-	public void scheduledReportAdd(Payload payload, Model model) {
-		List<String> domains = new ArrayList<String>();
-
-		model.setDomains(domains);
-	}
-
-	public void scheduledReportAddSubmit(Payload payload, Model model) {
-		String domain = payload.getDomain();
-		String content = payload.getContent();
-
-		ScheduledReport entity = m_scheduledReportDao.createLocal();
-		entity.setNames(content);
-		entity.setDomain(domain);
-
-		try {
-			m_scheduledReportDao.insert(entity);
-			model.setOpState(Handler.SUCCESS);
-		} catch (Exception e) {
-			model.setOpState(Handler.FAIL);
-		}
 	}
 
 	public void scheduledReportDelete(Payload payload) {
@@ -105,7 +90,13 @@ public class ScheduledManager implements Initializable {
 		proto.setKeyId(id);
 
 		try {
+			ScheduledReport report = m_scheduledReportDao.findByPK(id, ScheduledReportEntity.READSET_FULL);
+			String domain = report.getDomain();
 			m_scheduledReportDao.deleteByPK(proto);
+
+			if (StringUtils.isNotEmpty(domain)) {
+				m_reports.remove(domain);
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -140,6 +131,7 @@ public class ScheduledManager implements Initializable {
 
 		try {
 			ScheduledReport scheduledReport = m_scheduledReportDao.findByPK(id, ScheduledReportEntity.READSET_FULL);
+
 			model.setScheduledReport(scheduledReport);
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -163,5 +155,93 @@ public class ScheduledManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
+		try {
+			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+
+			for (ScheduledReport report : reports) {
+				String domain = report.getDomain();
+				Project project = m_projectService.findByCmdbDomain(domain);
+				
+				if (project != null) {
+					String cmdbDomain = project.getCmdbDomain();
+
+					if (StringUtils.isNotEmpty(cmdbDomain)) {
+						ScheduledReport entity = m_scheduledReportDao.createLocal();
+
+						entity.setKeyId(report.getKeyId());
+						entity.setId(report.getId());
+						entity.setNames(report.getNames());
+						entity.setDomain(cmdbDomain);
+
+						int succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
+						if (succ > 0) {
+							m_reports.put(cmdbDomain, report);
+						} else {
+							m_reports.put(domain, report);
+						}
+					} else {
+						m_reports.put(domain, report);
+					}
+				}
+			}
+			Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private void updateData(String domain) throws Exception {
+		ScheduledReport entity = m_scheduledReportDao.createLocal();
+
+		entity.setNames("transaction;event;problem;health");
+		entity.setDomain(domain);
+		m_scheduledReportDao.insert(entity);
+
+		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
+		m_reports.put(domain, report);
+	}
+
+	public void refreshScheduledReport() throws Exception {
+		Map<String, Project> projects = m_projectService.findAllProjects();
+
+		for (Entry<String, Project> entry : projects.entrySet()) {
+			String domain = entry.getKey();
+			String cmdbDomain = entry.getValue().getCmdbDomain();
+
+			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
+				updateData(cmdbDomain);
+			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
+				updateData(domain);
+			}
+		}
+	}
+
+	public class ScheduledReportUpdateTask implements Task {
+
+		@Override
+		public String getName() {
+			return "ScheduledReport-Domain-Update";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+			while (active) {
+				try {
+					refreshScheduledReport();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(TimeUtil.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 }
