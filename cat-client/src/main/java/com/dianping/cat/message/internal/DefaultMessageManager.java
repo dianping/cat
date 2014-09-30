@@ -132,9 +132,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return null;
 	}
 
-	public String getMetricType() {
-		return "";
-	}
+		public String getMetricType() {
+			return "";
+		}
 
 	@Override
 	public Transaction getPeekTransaction() {
