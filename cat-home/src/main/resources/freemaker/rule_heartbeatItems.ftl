@@ -21,7 +21,23 @@
 
     <div class="metric">
         项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea>
-        指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea>
+        指标：
+        <select name="metricText" class="metricText">
+        	<option value="ThreadCount">ThreadCount</option>
+        	<option value="DaemonCount">DaemonCount</option>
+        	<option value="TotalStartedCount">TotalStartedCount</option>
+        	<option value="CatThreadCount">CatThreadCount</option>
+        	<option value="PiegonThreadCount">PiegonThreadCount</option>
+        	<option value="HttpThreadCount">HttpThreadCount</option>
+        	<option value="NewGcCount">NewGcCount</option>
+        	<option value="OldGcCount">OldGcCount</option>
+        	<option value="MemoryFree">MemoryFree</option>
+        	<option value="HeapUsage">HeapUsage</option>
+        	<option value="NoneHeapUsage">NoneHeapUsage</option>
+        	<option value="SystemLoadAverage">SystemLoadAverage</option>
+        	<option value="CatMessageOverflow">CatMessageOverflow</option>
+        	<option value="CatMessageSize">CatMessageSize</option>
+        </select>
         <button class="btn btn-danger btn-small delete-metric-button" type="button">
             <i class="icon-trash icon-white"></i>
         </button>
@@ -35,7 +51,7 @@
 <script>
     $(document).ready(function () {
         $("#add-metric-button").click(function () {
-            var newMetric = $('<div class="metric"> 项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
+            var newMetric = $('<div class="metric"> 项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea> 指标：<select name="metricText" class="metricText"> <option value="ThreadCount">ThreadCount</option> <option value="DaemonCount">DaemonCount</option> <option value="TotalStartedCount">TotalStartedCount</option> <option value="CatThreadCount">CatThreadCount</option> <option value="PiegonThreadCount">PiegonThreadCount</option> <option value="HttpThreadCount">HttpThreadCount</option> <option value="NewGcCount">NewGcCount</option> <option value="OldGcCount">OldGcCount</option> <option value="MemoryFree">MemoryFree</option> <option value="HeapUsage">HeapUsage</option> <option value="NoneHeapUsage">NoneHeapUsage</option> <option value="SystemLoadAverage">SystemLoadAverage</option> <option value="CatMessageOverflow">CatMessageOverflow</option> <option value="CatMessageSize">CatMessageSize</option> </select> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
             $("#metrics").append(newMetric);
         })
 
