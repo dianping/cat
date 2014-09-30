@@ -18,12 +18,9 @@ import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.config.RouterConfigManager;
 
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
 
 	@Inject
 	private ReportServiceManager m_reportService;
@@ -83,12 +80,8 @@ public class Handler implements PageHandler<Context> {
 				model.setContent(report.toString());
 			}
 		}
-		model.setAction(action);
-		model.setPage(SystemPage.ROUTER);
 
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
-		}
+		ctx.getHttpServletResponse().getWriter().write(model.getContent());
 	}
 
 	private String buildServerStr(List<Server> servers) {
