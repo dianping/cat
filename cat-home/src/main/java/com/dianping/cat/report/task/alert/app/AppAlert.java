@@ -119,21 +119,80 @@ public class AppAlert implements Task {
 		int command = Integer.valueOf(conditions.split(";")[0]);
 		String type = array[1];
 		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
-		QueryEntity queryEntity = buildQueryEntity(pair.getKey(), conditions);
-		double[] datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
-		List<Condition> checkedConditions = pair.getValue();
-		List<AlertResultEntity> alertResults = m_dataChecker.checkData(datas, checkedConditions);
+		double[] datas = fetchDatas(conditions, type, pair.getKey());
 
-		for (AlertResultEntity alertResult : alertResults) {
-			Map<String, Object> par = new HashMap<String, Object>();
-			par.put("name", array[2]);
-			AlertEntity entity = new AlertEntity();
+		if (datas != null && datas.length > 0) {
+			List<Condition> checkedConditions = pair.getValue();
+			List<AlertResultEntity> alertResults = m_dataChecker.checkData(datas, checkedConditions);
 
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(queryType(type)).setType(getName()).setGroup(queryCommand(command)).setParas(par);
-			m_sendManager.addAlert(entity);
+			for (AlertResultEntity alertResult : alertResults) {
+				Map<String, Object> par = new HashMap<String, Object>();
+				par.put("name", array[2]);
+				AlertEntity entity = new AlertEntity();
+
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
+				entity.setMetric(queryType(type)).setType(getName()).setGroup(queryCommand(command)).setParas(par);
+				m_sendManager.addAlert(entity);
+			}
 		}
+	}
+
+	private QueryEntity buildQueryEntity(String period, String conditions) {
+		String split = ";";
+		return new QueryEntity(period + split + conditions + split + split);
+	}
+
+	private Calendar queryDayPeriod(int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, day);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+
+	private double[] fetchDatas(String conditions, String type, int minute) {
+		long time = (System.currentTimeMillis()) / 1000 / 60;
+		int endMinute = (int) (time % (60)) - DATA_AREADY_MINUTE;
+		int startMinute = endMinute - minute;
+		double[] datas = null;
+
+		if (startMinute < 0 && endMinute < 0) {
+			String period = m_sdf.format(queryDayPeriod(-1).getTime());
+			QueryEntity queryEntity = buildQueryEntity(period, conditions);
+			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
+		} else if (startMinute < 0 && endMinute >= 0) {
+			String last = m_sdf.format(queryDayPeriod(-1).getTime());
+			String current = m_sdf.format(queryDayPeriod(0).getTime());
+			QueryEntity lastQueryEntity = buildQueryEntity(last, conditions);
+			QueryEntity currentQueryEntity = buildQueryEntity(current, conditions);
+			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
+			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
+			datas = mergerArray(lastDatas, currentDatas);
+		} else if (startMinute >= 0) {
+			String period = m_sdf.format(queryDayPeriod(0).getTime());
+			QueryEntity queryEntity = buildQueryEntity(period, conditions);
+			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
+		}
+		return datas;
+	}
+
+	protected double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
+
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
+		}
+		return result;
 	}
 
 	private String queryType(String type) {
@@ -215,21 +274,4 @@ public class AppAlert implements Task {
 
 		return result;
 	}
-
-	private QueryEntity buildQueryEntity(int duration, String conditions) {
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int endMinute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-		int startMinute = endMinute - duration;
-
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		String period = m_sdf.format(cal.getTime());
-		String split = ";";
-
-		return new QueryEntity(period + split + conditions + split + startMinute + split + endMinute);
-	}
-
 }
