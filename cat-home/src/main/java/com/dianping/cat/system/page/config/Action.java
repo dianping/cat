@@ -70,7 +70,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	NETWORK_RULE_ADD_OR_UPDATE_SUBMIT("networkRuleSubmit"),
 
 	NETWORK_RULE_DELETE("networkRulDelete"),
-	
+
 	SYSTEM_RULE_CONFIG_LIST("systemRuleConfigList"),
 
 	SYSTEM_RULE_ADD_OR_UPDATE("systemRuleUpdate"),
@@ -78,6 +78,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT("systemRuleSubmit"),
 
 	SYSTEM_RULE_DELETE("systemRulDelete"),
+
+	HEARTBEAT_RULE_CONFIG_LIST("heartbeatRuleConfigList"),
+
+	HEARTBEAT_RULE_ADD_OR_UPDATE("heartbeatRuleUpdate"),
+
+	HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT("heartbeatRuleSubmit"),
+
+	HEARTBEAT_RULE_DELETE("heartbeatRulDelete"),
 
 	ALERT_DEFAULT_RECEIVERS("alertDefaultReceivers"),
 

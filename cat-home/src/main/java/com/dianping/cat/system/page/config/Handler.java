@@ -64,6 +64,7 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
@@ -115,6 +116,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SystemRuleConfigManager m_systemRuleConfigManager;
+
+	@Inject
+	private HeartbeatRuleConfigManager m_heartbeatRuleConfigManager;
 
 	@Inject
 	private WebRuleConfigManager m_webRuleConfigManager;
@@ -442,6 +446,22 @@ public class Handler implements PageHandler<Context> {
 		case SYSTEM_RULE_DELETE:
 			model.setOpState(deleteRule(m_systemRuleConfigManager, payload.getKey()));
 			generateRuleItemList(m_systemRuleConfigManager, model);
+			break;
+		case HEARTBEAT_RULE_CONFIG_LIST:
+			generateRuleItemList(m_heartbeatRuleConfigManager, model);
+			break;
+		case HEARTBEAT_RULE_ADD_OR_UPDATE:
+			generateRuleEditContent(payload.getKey(), "?op=heartbeatRuleSubmit", "rule_heartbeatItems.ftl",
+			      "rule_configs.ftl", m_heartbeatRuleConfigManager, model);
+			break;
+		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
+			      payload.getConfigs()));
+			generateRuleItemList(m_heartbeatRuleConfigManager, model);
+			break;
+		case HEARTBEAT_RULE_DELETE:
+			model.setOpState(deleteRule(m_heartbeatRuleConfigManager, payload.getKey()));
+			generateRuleItemList(m_heartbeatRuleConfigManager, model);
 			break;
 		case ALERT_DEFAULT_RECEIVERS:
 			String alertDefaultReceivers = payload.getContent();

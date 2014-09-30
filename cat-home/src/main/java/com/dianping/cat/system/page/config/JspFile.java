@@ -53,6 +53,14 @@ public enum JspFile {
 
 	SYSTEM_RULE_DELETE("/jsp/system/systemRule/systemConfigs.jsp"),
 
+	HEARTBEAT_RULE_CONFIG_LIST("/jsp/system/heartbeat/heartbeatConfigs.jsp"),
+
+	HEARTBEAT_RULE_ADD_OR_UPDATE("/jsp/system/heartbeat/heartbeatRuleAdd.jsp"),
+
+	HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/heartbeat/heartbeatConfigs.jsp"),
+
+	HEARTBEAT_RULE_DELETE("/jsp/system/heartbeat/heartbeatConfigs.jsp"),
+
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
 	ALERT_POLICY("/jsp/system/alert/policy.jsp"),
@@ -76,11 +84,11 @@ public enum JspFile {
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
 	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
-	
+
 	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
 
 	APP_RULE("/jsp/system/appRule/appRule.jsp"),
-	
+
 	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),

@@ -4795,6 +4795,9 @@
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -4895,6 +4898,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.HeartbeatRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
