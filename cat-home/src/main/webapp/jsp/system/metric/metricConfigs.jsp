@@ -182,7 +182,7 @@
 				     			<td>
 				     				<c:if test="${config.tags!=null}">
 				     					<c:forEach var="tag" items="${config.tags}">
-				     						${tag.name}, 
+				     						<span class="label label-info">${tag.name}</span>, 
 				     					</c:forEach>
 				     				</c:if>
 				     			</td>
