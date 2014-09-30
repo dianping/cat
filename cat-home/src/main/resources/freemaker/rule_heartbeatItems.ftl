@@ -20,18 +20,8 @@
     <br>
 
     <div class="metric">
-        项目：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea>
-        ip：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea>
-        监控类型：
-        <label class="checkbox inline">
-            <input name="count" class="count" type="checkbox">count
-        </label>
-        <label class="checkbox inline">
-            <input name="sum" class="sum" type="checkbox">sum
-        </label>
-        <label class="checkbox inline">
-            <input name="avg" class="avg" type="checkbox">avg
-        </label>
+        项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea>
+        指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea>
         <button class="btn btn-danger btn-small delete-metric-button" type="button">
             <i class="icon-trash icon-white"></i>
         </button>
@@ -45,7 +35,7 @@
 <script>
     $(document).ready(function () {
         $("#add-metric-button").click(function () {
-            var newMetric = $('<div class="metric"> 产品线：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea> 监控类型： <label class="checkbox inline"> <input name="count" class="count" type="checkbox">count </label> <label class="checkbox inline"> <input name="sum" class="sum" type="checkbox">sum </label> <label class="checkbox inline"> <input name="avg" class="avg" type="checkbox">avg </label> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
+            var newMetric = $('<div class="metric"> 项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
             $("#metrics").append(newMetric);
         })
 
@@ -92,15 +82,6 @@
                 if (metricText) {
                     metricForm.find(".metricText").val(metricText);
                 }
-                if (metric["monitorCount"]) {
-                    metricForm.find(".count").prop("checked", "true");
-                }
-                if (metric["monitorSum"]) {
-                    metricForm.find(".sum").prop("checked", "true");
-                }
-                if (metric["monitorAvg"]) {
-                    metricForm.find(".avg").prop("checked", "true");
-                }
             }
         }
     }
@@ -121,18 +102,6 @@
                 }
                 if (metricText != "") {
                     metric["metricItemText"] = metricText;
-                    hasPro = true;
-                }
-                if ($(this).find($("input[name='count']")).prop("checked") == true) {
-                    metric["monitorCount"] = true;
-                    hasPro = true;
-                }
-                if ($(this).find($("input[name='sum']")).prop("checked") == true) {
-                    metric["monitorSum"] = true;
-                    hasPro = true;
-                }
-                if ($(this).find($("input[name='avg']")).prop("checked") == true) {
-                    metric["monitorAvg"] = true;
                     hasPro = true;
                 }
 
