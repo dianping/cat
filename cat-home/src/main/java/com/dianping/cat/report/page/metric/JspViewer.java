@@ -12,8 +12,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		switch (action) {
 		case METRIC:
 			return JspFile.METRIC.getPath();
-		case DASHBOARD:
-			return JspFile.DASHBOARD.getPath();
 		case JSON:
 			return JspFile.JSON.getPath();
 		}

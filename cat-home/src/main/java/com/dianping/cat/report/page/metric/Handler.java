@@ -61,7 +61,6 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-		case DASHBOARD:
 			model.setLineCharts(new ArrayList<LineChart>(allCharts.values()));
 			break;
 		case JSON:

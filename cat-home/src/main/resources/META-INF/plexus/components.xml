@@ -342,6 +342,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.TagManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

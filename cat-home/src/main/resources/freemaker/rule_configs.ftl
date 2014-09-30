@@ -15,7 +15,7 @@
 </style>
 
 <div id="configs">
-    <strong class="text-success">监控规则配置：</strong>
+    <strong class="text-success">监控规则配置：&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i></strong>
 
     <div class="config">
         监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/>
@@ -23,9 +23,13 @@
         <br><br>
 
         <div class="condition">
-            <p class="text-center text-success">监控条件</p>
+            <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="conditionTip"></i></p>
             连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
-            告警级别：<input name="level" class="level input-mini" type="text"/>
+            告警级别：
+            <select name="level" class="level span2">
+            	<option value="warning">warning</option>
+            	<option value="error">error</option>
+            </select>
             <br>
 
             <p class="text-success">子条件</p>
@@ -75,13 +79,23 @@
 
 <script>
 $(document).ready(function () {
+	$("#configTip").tooltip({
+		"placement":"top",
+		"title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
+	});
+	
+	$("#conditionTip").tooltip({
+		"placement":"top",
+		"title":"监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"
+	});
+	
     $("#configs").delegate(".add-subCondition-button", "click", function () {
         var newSubCondition = $('<div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div>');
         $(this).prev().append(newSubCondition);
     })
 
     $("#configs").delegate(".add-condition-button", "click", function () {
-        var newCondition = $('<div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<input name="level" class="level input-mini" type="text"/> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div>');
+        var newCondition = $('<div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<select name="level" class="level span2"> <option value="warning">warning</option> <option value="error">error</option> </select> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div>');
         $(this).before(newCondition);
     })
 
@@ -90,7 +104,7 @@ $(document).ready(function () {
     })
 
     $("#add-config-button").click(function () {
-        var newConfig = $('<div class="config"> <strong class="text-success">监控规则：</strong> <br> 监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/> 监控结束时间：<input name="endMinute" class="endMinute input-small" type=" text" placeholder="格式如 24:00"/> <br><br> <div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<input name="level" class="level input-mini" type="text"/> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div> <button class="btn btn-success btn-small add-condition-button" type="button"> 添加监控条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-config-button" type="button"> 删除监控规则<i class="icon-trash icon-white"></i> </button> </div>');
+        var newConfig = $('<div class="config"> <strong class="text-success">监控规则：</strong> <br> 监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/> 监控结束时间：<input name="endMinute" class="endMinute input-small" type=" text" placeholder="格式如 24:00"/> <br><br> <div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<select name="level" class="level span2"> <option value="warning">warning</option> <option value="error">error</option> </select> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div> <button class="btn btn-success btn-small add-condition-button" type="button"> 添加监控条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-config-button" type="button"> 删除监控规则<i class="icon-trash icon-white"></i> </button> </div>');
         $("#configs").append(newConfig);
     })
 

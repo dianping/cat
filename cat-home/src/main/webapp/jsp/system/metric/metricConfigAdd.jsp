@@ -10,12 +10,11 @@
 
 <form name="metricConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSumbit">
 	<span class="text-center text-error" id="state">&nbsp;</span>
-	<p class="text-center text-error"><strong>修改业务监控节点配置信息</strong></p>
 	<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
-			<td width="25%" style="text-align:right" class="text-success" width="50%">项目名称</td>
-			<td width="25%" >
+			<td width="10%" style="text-align:right" class="text-success" width="50%">项目名称</td>
+			<td width="40%" >
 				<c:if test="${not empty model.metricItemConfig.domain}">
 					<input name="metricItemConfig.domain" value="${model.metricItemConfig.domain}" readonly required/>
 				</c:if>
@@ -70,30 +69,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td  style="text-align:right" class="text-success">标签</td>
-			<td >
-				<span id="inputTag">
-					<select class="span6" id="tags" name="metricItemConfig.tag">
-						<option value="">无标签</option>
-						<c:forEach var="item" items="${model.tags}">
-			            	<option value="${item}">${item}</option> 							
-						</c:forEach>
-					</select>
-				</span>
-				<button class="btn btn-success btn-small" id="addTag" type="button">
-	                添加新标签<i class="icon-plus icon-white"></i>
-	            </button>
-			</td>
-			<td style="text-align:right" class="text-success">标签类型</td>
-			<td >
-				<select class="span8" name="metricItemConfig.monitorTagType">
-					<option value="COUNT">次数</option>
-					<option value="AVG">平均值</option>
-					<option value="SUM">总和</option>
-				</select>
-			</td>
-		</tr>
-		<tr>
 			<td style="text-align:right" class="text-success"  width="25%">显示次数曲线</td>
 			<td  width="25%">
 				<c:choose>
@@ -106,7 +81,21 @@
 						<input type="radio" name="metricItemConfig.showCount" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td  width="25%" style="text-align:right" class="text-success">显示业务监控大盘</td>
+				<br><br>
+				<select class="tags" id="countSelect" multiple="multiple">
+					<c:forEach var="item" items="${model.tags}">
+		            	<option value="${item}">${item}</option>						
+					</c:forEach>
+				</select>
+				<button class="btn btn-success btn-small" id="addCountTag" type="button">
+	                添加标签<i class="icon-plus icon-white"></i>
+	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteCountTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
+	            <input name="countTags" type="hidden"/>
+			</td>
+			<td  width="25%" style="text-align:right" class="text-success">显示业务监控大盘</td>
 			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showCountDashboard}">
@@ -133,7 +122,21 @@
 						<input type="radio" name="metricItemConfig.showAvg" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
+				<br><br>
+				<select class="tags" id="avgSelect" multiple="multiple">
+					<c:forEach var="item" items="${model.tags}">
+		            	<option value="${item}">${item}</option>						
+					</c:forEach>
+				</select>
+				<button class="btn btn-success btn-small" id="addAvgTag" type="button">
+	                添加标签<i class="icon-plus icon-white"></i>
+	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteAvgTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
+	            <input name="avgTags" type="hidden"/>
+			</td>
+			<td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
 			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showAvgDashboard}">
@@ -160,7 +163,21 @@
 						<input type="radio" name="metricItemConfig.showSum" value="false" checked />否
 					</c:otherwise>
 				</c:choose>
-			</td><td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
+				<br><br>
+				<select class="tags" id="sumSelect" multiple="multiple">
+					<c:forEach var="item" items="${model.tags}">
+		            	<option value="${item}">${item}</option>						
+					</c:forEach>
+				</select>
+				<button class="btn btn-success btn-small" id="addSumTag" type="button">
+	                添加标签<i class="icon-plus icon-white"></i>
+	            </button>
+	            <button class="btn btn-danger btn-small" id="deleteSumTag" type="button">
+		            删除<i class="icon-trash icon-white"></i>
+		        </button>
+	            <input name="sumTags" type="hidden"/>
+			</td>
+			<td style="text-align:right" class="text-success"  width="25%">显示业务监控大盘</td>
 			<td  width="25%">
 				<c:choose>
 					<c:when test="${model.metricItemConfig.showSumDashboard}">
@@ -187,19 +204,107 @@
 </form>
 <script>
 	$(document).ready(function(){
-		var tag = "${model.metricItemConfig.tag}";
-		if(tag != "" && tag != "null"){
-			$('select[name="metricItemConfig.tag"]').val(tag);
-		}
+		var tagName, tagType;
+		<c:forEach var="tag" items="${model.metricItemConfig.tags}">
+			tagName = '${tag.name}';
+			tagType = '${tag.type}'.toLowerCase();
+			$("#"+tagType+"Select").children().each(function(){
+				if($(this).text() == tagName){
+					$(this).prop("selected","selected")
+				}
+			});
+		</c:forEach>
 		
-		var tagType = "${model.metricItemConfig.monitorTagType}";
-		if(tagType != "" && tagType != "null"){
-			$('select[name="metricItemConfig.monitorTagType"]').val(tagType);
-		}
+		$('select').multipleSelect({
+			width: 100,
+            multiple: true,
+            multipleWidth: 100,
+            selectAll: false
+		});
 		
-		$("#addTag").click(function(){
-			$("#inputTag").empty();
-			$("#inputTag").append($('<input class="span6" name="metricItemConfig.tag" type="text"></input>'));
+		$("#form").submit(function(){
+			var countTagStr;
+			var countSelect = $("#countSelect");
+			if(countSelect.length > 0){
+				countTagStr = countSelect.multipleSelect('getSelects', 'text');
+			}else{
+				countTagStr = $("#countInput").val();
+			}
+			$("input[name='countTags']").val(countTagStr);
+			
+			var avgTagStr;
+			var avgSelect = $("#avgSelect");
+			if(avgSelect.length > 0){
+				avgTagStr = avgSelect.multipleSelect('getSelects', 'text');
+			}else{
+				avgTagStr = $("#avgInput").val();
+			}
+			$("input[name='avgTags']").val(avgTagStr);
+			
+			var sumTagStr;
+			var sumSelect = $("#sumSelect");
+			if(sumSelect.length > 0){
+				sumTagStr = sumSelect.multipleSelect('getSelects', 'text');
+			}else{
+				sumTagStr = $("#sumInput").val();
+			}
+			$("input[name='sumTags']").val(sumTagStr);
+			
+			console.log("count:"+countTagStr)
+			console.log("avg:"+avgTagStr)
+			console.log("sum:"+sumTagStr)
+			return true;
+		})
+		
+		$("#addCountTag").click(function(){
+			$(this).parent().find(".tags").remove();
+			if($(this).parent().find(".tagsInput").length == 0){
+				$(this).before($('<input class="tagsInput span5" id="countInput" type="text"></input>'));
+			}
+			$(this).addClass("disabled")
+		})
+		
+		$("#addSumTag").click(function(){
+			$(this).parent().find(".tags").remove();
+			if($(this).parent().find(".tagsInput").length == 0){
+				$(this).before($('<input class="tagsInput span5" id="sumInput" type="text"></input>'));
+			}
+			$(this).addClass("disabled")
+		})
+		
+		$("#addAvgTag").click(function(){
+			$(this).parent().find(".tags").remove();
+			if($(this).parent().find(".tagsInput").length == 0){
+				$(this).before($('<input class="tagsInput span5" id="avgInput" type="text"></input>'));
+			}
+			$(this).addClass("disabled")
+		})
+		
+		$("#deleteCountTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="countInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
+		})
+		
+		$("#deleteAvgTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="avgInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
+		})
+		
+		$("#deleteSumTag").click(function(){
+			var addButton = $(this).prev();
+			$(this).parent().find(".tags").remove();
+			$(this).parent().find(".tagsInput").remove();
+			addButton.before($('<input class="tagsInput span5" id="sumInput" type="text" disabled></input>'));
+			addButton.addClass("disabled");
+			$(this).addClass("disabled");
 		})
 	})
 </script>

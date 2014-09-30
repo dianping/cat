@@ -14,5 +14,9 @@
     <attribute name="show-avg" value-type="boolean" />
     <attribute name="show-sum" value-type="boolean" />
   </entity>
+  <entity name="tag">
+    <attribute name="name" value-type="String"/>
+	<attribute name="type" value-type="String" />
+  </entity>
 </model>
 
