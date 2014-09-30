@@ -138,11 +138,6 @@ public class AppAlert implements Task {
 		}
 	}
 
-	private QueryEntity buildQueryEntity(String period, String conditions) {
-		String split = ";";
-		return new QueryEntity(period + split + conditions + split + split);
-	}
-
 	private Calendar queryDayPeriod(int day) {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, day);
@@ -161,19 +156,19 @@ public class AppAlert implements Task {
 
 		if (startMinute < 0 && endMinute < 0) {
 			String period = m_sdf.format(queryDayPeriod(-1).getTime());
-			QueryEntity queryEntity = buildQueryEntity(period, conditions);
+			QueryEntity queryEntity = new QueryEntity(period + ";" + conditions + ";;");
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		} else if (startMinute < 0 && endMinute >= 0) {
 			String last = m_sdf.format(queryDayPeriod(-1).getTime());
 			String current = m_sdf.format(queryDayPeriod(0).getTime());
-			QueryEntity lastQueryEntity = buildQueryEntity(last, conditions);
-			QueryEntity currentQueryEntity = buildQueryEntity(current, conditions);
+			QueryEntity lastQueryEntity = new QueryEntity(last + ";" + conditions + ";;");
+			QueryEntity currentQueryEntity = new QueryEntity(current + ";" + conditions + ";;");
 			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
 			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
 			datas = mergerArray(lastDatas, currentDatas);
 		} else if (startMinute >= 0) {
 			String period = m_sdf.format(queryDayPeriod(0).getTime());
-			QueryEntity queryEntity = buildQueryEntity(period, conditions);
+			QueryEntity queryEntity = new QueryEntity(period + ";" + conditions + ";;");
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		}
 		return datas;
