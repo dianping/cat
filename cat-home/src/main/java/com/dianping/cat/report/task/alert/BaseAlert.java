@@ -192,7 +192,7 @@ public abstract class BaseAlert {
 		int minuteStart = Integer.parseInt(startTime[1]);
 		int startMinute = hourStart * 60 + minuteStart;
 
-		String[] endTime = start.split(":");
+		String[] endTime = end.split(":");
 		int hourEnd = Integer.parseInt(endTime[0]);
 		int minuteEnd = Integer.parseInt(endTime[1]);
 		int endMinute = hourEnd * 60 + minuteEnd;
