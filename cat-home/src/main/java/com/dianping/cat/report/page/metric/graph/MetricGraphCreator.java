@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.metric.graph;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -156,44 +155,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return currentValues;
 	}
 
-	public Map<String, LineChart> buildDashboard(Date start, Date end) {
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
-		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
-
-		for (ProductLine productLine : productLines) {
-			if (showInDashboard(productLine.getId())) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
-			}
-		}
-		List<MetricItemConfig> configs = new ArrayList<MetricItemConfig>(m_metricConfigManager.getMetricConfig()
-		      .getMetricItemConfigs().values());
-
-		Collections.sort(configs, new Comparator<MetricItemConfig>() {
-			@Override
-			public int compare(MetricItemConfig o1, MetricItemConfig o2) {
-				return (int) (o1.getShowDashboardOrder() * 100 - o2.getShowDashboardOrder() * 100);
-			}
-		});
-
-		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
-		for (MetricItemConfig config : configs) {
-			String key = config.getId();
-			if (config.getShowAvg() && config.getShowAvgDashboard()) {
-				String avgKey = key + ":" + MetricType.AVG.name();
-				put(allCharts, result, avgKey);
-			}
-			if (config.getShowCount() && config.getShowCountDashboard()) {
-				String countKey = key + ":" + MetricType.COUNT.name();
-				put(allCharts, result, countKey);
-			}
-			if (config.getShowSum() && config.getShowSumDashboard()) {
-				String sumKey = key + ":" + MetricType.SUM.name();
-				put(allCharts, result, sumKey);
-			}
-		}
-		return result;
-	}
-
 	private boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
@@ -282,18 +243,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			}
 		}
 		return result;
-	}
-
-	private boolean showInDashboard(String productline) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productline);
-
-		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
-		for (MetricItemConfig config : configs) {
-			if (config.isShowAvgDashboard() || config.isShowCountDashboard() || config.isShowSumDashboard()) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	private String queryMetricItemDes(String type) {
