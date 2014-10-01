@@ -484,9 +484,6 @@ public class CatFilter implements Filter {
 			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":ReadCookie", m_cookie.getName());
 
 			event.setStatus(Event.SUCCESS);
-			event.addData("domain", m_cookie.getDomain());
-			event.addData("path", m_cookie.getPath());
-			event.addData("maxAge", m_cookie.getMaxAge());
 			event.complete();
 			return m_cookie.getValue();
 		}

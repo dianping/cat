@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.consumer.event.EventReportCountFilter;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.Machine;
@@ -42,6 +43,8 @@ public class EventMerger {
 		eventReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 		eventReport.setEndTime(end);
+		
+		new EventReportCountFilter().visitEventReport(eventReport);
 		return eventReport;
 	}
 

@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.event.EventReportCountFilter;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
@@ -157,6 +158,8 @@ public class EventReportBuilder implements ReportTaskBuilder {
 
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
+		
+		new EventReportCountFilter().visitEventReport(eventReport);
 		return eventReport;
 	}
 
