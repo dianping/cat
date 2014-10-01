@@ -18,6 +18,8 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+	
+	private EventReportCountFilter m_countFilter = new EventReportCountFilter();
 
 	@Override
 	public void afterLoad(Map<String, EventReport> reports) {
@@ -35,7 +37,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public String buildXml(EventReport report) {
-		return report.toString();
+		String xml = m_countFilter.buildXml(report);
+		
+		return xml;
 	}
 
 	@Override
