@@ -2383,6 +2383,19 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
 			<role-hint>thirdParty</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor</implementation>
 			<requirements>
@@ -2460,6 +2473,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>network</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.HeartbeatDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
@@ -2651,16 +2669,28 @@
 			<implementation>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -4813,6 +4843,9 @@
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -4913,6 +4946,15 @@
 		<component>
 			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.HeartbeatRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

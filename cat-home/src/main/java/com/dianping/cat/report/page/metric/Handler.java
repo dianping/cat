@@ -86,11 +86,7 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(productLine)) {
 			String tag = payload.getTag();
 
-			if (StringUtils.isEmpty(tag)) {
-				allCharts = m_graphCreator.buildDashboard(start, end);
-			} else {
-				allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
-			}
+			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
 		} else {
 			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);
 		}

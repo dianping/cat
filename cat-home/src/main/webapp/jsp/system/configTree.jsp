@@ -24,6 +24,7 @@
 	       <li class="text-left" id="netGraphConfigUpdate"><a href="?op=netGraphConfigUpdate">网络拓扑配置</a></li>
 	       <li class='nav-header'>监控告警配置</li>
 	       <li class="text-left" id="systemRuleConfigList"><a href="?op=systemRuleConfigList">系统告警配置</a></li>
+	       <li class="text-left" id="heartbeatRuleConfigList"><a href="?op=heartbeatRuleConfigList">心跳告警配置</a></li>
 	       <li class="text-left" id="policy"><a href="?op=alertPolicy">告警策略配置</a></li>
 	       <li class="text-left" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers">默认告警人配置</a></li>
 	       <li class='nav-header'>其他监控配置</li>

@@ -13,6 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.message.Transaction;
@@ -39,9 +40,33 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		return ID;
 	}
 
+	private boolean hasMonitorTag(MetricItemConfig config) {
+		String monitorTag = "业务大盘";
+		List<Tag> tags = config.getTags();
+
+		for (Tag tag : tags) {
+			if (monitorTag.equals(tag.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean hasMonitorTagAndType(MetricItemConfig config, String tagType) {
+		String monitorTag = "业务大盘";
+		List<Tag> tags = config.getTags();
+
+		for (Tag tag : tags) {
+			if (monitorTag.equals(tag.getName()) && tagType.equals(tag.getType())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public boolean needAlert(MetricItemConfig config) {
-		if ((config.getAlarm() || config.isShowAvgDashboard() || config.isShowSumDashboard() || config
-		      .isShowCountDashboard())) {
+		if (config.getAlarm() || config.isShowAvgDashboard() || config.isShowSumDashboard()
+		      || config.isShowCountDashboard() || hasMonitorTag(config)) {
 			return true;
 		} else {
 			return false;
@@ -56,13 +81,13 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
 			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 
-			if (config.isShowAvg()) {
+			if (config.isShowAvg() || hasMonitorTagAndType(config, MetricType.AVG.getName())) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
 			}
-			if (config.isShowCount()) {
+			if (config.isShowCount() || hasMonitorTagAndType(config, MetricType.COUNT.getName())) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.COUNT));
 			}
-			if (config.isShowSum()) {
+			if (config.isShowSum() || hasMonitorTagAndType(config, MetricType.SUM.getName())) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 

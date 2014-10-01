@@ -82,6 +82,26 @@ public abstract class BaseRuleConfigManager {
 		return configs;
 	}
 
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String groupText, String metricText) {
+		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> metricItems = rule.getMetricItems();
+
+			for (MetricItem metricItem : metricItems) {
+				String productPattern = metricItem.getProductText();
+				String metrciPattern = metricItem.getMetricItemText();
+
+				if (validate(productPattern, metrciPattern, groupText, metricText)) {
+					configs.addAll(rule.getConfigs());
+					Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, groupText);
+					break;
+				}
+			}
+		}
+		return configs;
+	}
+
 	public Rule queryRule(String key) {
 		Rule rule = m_config.getRules().get(key);
 

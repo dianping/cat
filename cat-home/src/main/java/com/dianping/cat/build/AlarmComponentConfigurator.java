@@ -20,7 +20,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.report.baseline.BaselineService;
-import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.task.alert.AlertInfo;
@@ -40,6 +39,7 @@ import com.dianping.cat.report.task.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.HeartbeatDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator;
@@ -50,6 +50,7 @@ import com.dianping.cat.report.task.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor;
+import com.dianping.cat.report.task.alert.sender.receiver.HeartbeatContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor;
@@ -78,13 +79,13 @@ import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.alert.web.WebAlert;
-import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
@@ -111,6 +112,9 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
+		all.add(C(Contactor.class, HeartbeatContactor.ID, ExceptionContactor.class).req(ProjectService.class,
+		      AlertConfigManager.class));
+
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
@@ -129,6 +133,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertSummaryExecutor.class));
 
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
+
+		all.add(C(Decorator.class, HeartbeatDecorator.ID, HeartbeatDecorator.class));
 
 		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class,
 		      AlertSummaryExecutor.class));
@@ -175,8 +181,9 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(HeartbeatAlert.class).req(ProjectService.class, HostinfoService.class, GraphBuilder.class,
-		      AlertManager.class).req(ModelService.class, HeartbeatAnalyzer.ID));
+		all.add(C(HeartbeatAlert.class).req(ProductLineConfigManager.class, BaselineService.class)
+		      .req(ProjectService.class, RemoteMetricReportService.class, HeartbeatRuleConfigManager.class,
+		            DataChecker.class, AlertManager.class, AlertInfo.class).req(ModelService.class, HeartbeatAnalyzer.ID));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
