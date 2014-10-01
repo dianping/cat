@@ -90,10 +90,10 @@
 						<td>${report.ip}</td>
 						<c:choose>
 						    <c:when test="${report.type eq 1}">
-						       <td>xml</td>
+						       <td>binary</td>
 						    </c:when>
 						    <c:when test="${report.type eq 2}">
-						       <td>json</td>
+						       <td>xml</td>
 						    </c:when>
 						    <c:otherwise>
 						        <td></td>
