@@ -116,6 +116,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Set<String> m_tags;
 
+	private String m_configHeader;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -558,5 +560,13 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		public NodeConfig getNodeConfig() {
 			return m_nodeConfig;
 		}
+	}
+
+	public void setConfigHeader(String configHeader) {
+	   m_configHeader= configHeader;
+   }
+	
+	public String getConfigHeader(){
+		return m_configHeader;
 	}
 }

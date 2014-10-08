@@ -34,8 +34,6 @@ public abstract class BaseRuleConfigManager {
 		return m_config.toString();
 	}
 
-	protected abstract String getCategoryName();
-
 	protected abstract String getConfigName();
 
 	public MonitorRules getMonitorRules() {
@@ -74,7 +72,7 @@ public abstract class BaseRuleConfigManager {
 
 				if (validate) {
 					configs.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
+					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 					break;
 				}
 			}
@@ -94,7 +92,7 @@ public abstract class BaseRuleConfigManager {
 
 				if (validate(productPattern, metrciPattern, groupText, metricText)) {
 					configs.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, groupText);
+					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, groupText);
 					break;
 				}
 			}

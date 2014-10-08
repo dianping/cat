@@ -24,13 +24,13 @@
         指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea>
         监控类型：
         <label class="checkbox inline">
-            <input name="count" class="count" type="checkbox">count
+            <input name="count" class="count" type="checkbox" checked="true"/>count
         </label>
         <label class="checkbox inline">
-            <input name="sum" class="sum" type="checkbox">sum
+            <input name="sum" class="sum" type="checkbox"/>sum
         </label>
         <label class="checkbox inline">
-            <input name="avg" class="avg" type="checkbox">avg
+            <input name="avg" class="avg" type="checkbox"/>avg
         </label>
         <button class="btn btn-danger btn-small delete-metric-button" type="button">
             <i class="icon-trash icon-white"></i>
