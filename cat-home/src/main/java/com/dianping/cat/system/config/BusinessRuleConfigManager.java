@@ -25,8 +25,6 @@ import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CATEGORY_NAME = "business";
-
 	private static final String CONFIG_NAME = "businessRuleConfig";
 
 	@Inject
@@ -69,11 +67,6 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		rule.addMetricItem(item);
 		rule.addConfig(buildDefaultConfig());
 		return rule;
-	}
-
-	@Override
-	protected String getCategoryName() {
-		return CATEGORY_NAME;
 	}
 
 	@Override
@@ -139,7 +132,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 			if (configs.size() == 0) {
 				configs.add(buildDefaultConfig());
 			} else {
-				Cat.logEvent("FindRule:" + getCategoryName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
+				Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 			}
 			return configs;
 		}

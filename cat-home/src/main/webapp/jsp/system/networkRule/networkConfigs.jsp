@@ -21,31 +21,6 @@
 				return confirm("确定要删除此规则吗(不可恢复)？");
 			});
 			
-			/* $(document).delegate('.update', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				$.ajax({
-					type: "post",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#ruleModalBody').html(response);
-						$('#ruleModal').modal();
-						$("#id").select2();
-						metricValidate();
-					}
-				});
-			}); */
-			
-			$(document).delegate("#ruleSubmitButton","click",function(){
-				$("#modalSubmit").trigger("click");
-			})
-			
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

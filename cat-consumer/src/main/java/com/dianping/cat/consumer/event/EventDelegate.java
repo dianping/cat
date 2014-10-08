@@ -18,7 +18,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
-	
+
 	private EventReportCountFilter m_countFilter = new EventReportCountFilter();
 
 	@Override
@@ -38,7 +38,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Override
 	public String buildXml(EventReport report) {
 		String xml = m_countFilter.buildXml(report);
-		
+
 		return xml;
 	}
 
@@ -78,12 +78,12 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	}
 
 	@Override
-   public byte[] buildBinary(EventReport report) {
+	public byte[] buildBinary(EventReport report) {
 		return DefaultNativeBuilder.build(report);
-   }
+	}
 
 	@Override
-   public EventReport parseBinary(byte[] bytes) {
+	public EventReport parseBinary(byte[] bytes) {
 		return DefaultNativeParser.parse(bytes);
-   }
+	}
 }

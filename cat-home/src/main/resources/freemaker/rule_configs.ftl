@@ -3,7 +3,6 @@
     .subCondition {
         margin-bottom: 5px;
     }
-
     .condition,
     .config {
         margin-bottom: 10px;
@@ -18,8 +17,8 @@
     <strong class="text-success">监控规则配置：&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i></strong>
 
     <div class="config">
-        监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/>
-        监控结束时间：<input name="endMinute" class="endMinute input-small" type=" text" placeholder="格式如 24:00"/>
+        监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
+        监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         <br><br>
 
         <div class="condition">
@@ -107,21 +106,7 @@ $(document).ready(function () {
         var newConfig = $('<div class="config"> <strong class="text-success">监控规则：</strong> <br> 监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/> 监控结束时间：<input name="endMinute" class="endMinute input-small" type=" text" placeholder="格式如 24:00"/> <br><br> <div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<select name="level" class="level span2"> <option value="warning">warning</option> <option value="error">error</option> </select> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div> <button class="btn btn-success btn-small add-condition-button" type="button"> 添加监控条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-config-button" type="button"> 删除监控规则<i class="icon-trash icon-white"></i> </button> </div>');
         $("#configs").append(newConfig);
     })
-
     drawConfigs();
-
-    $("#modalSubmit").click(function () {
-        var configStr = generateConfigsJsonString();
-        var id = "";
-        if($("#ruleId").length){
-        	id = "&ruleId="+$("#ruleId").val();
-        }
-        var metricsStr = ""
-        if($("#metricsStr").length){
-        	metricsStr = "&metrics="+$("#metricsStr").val();
-        }
-        window.location.href="${link}&configs="+configStr+metricsStr+id;
-    })
 })
 
 function drawConfigs() {

@@ -13,14 +13,7 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CATEGORY_NAME = "heartbeat";
-
 	private static final String CONFIG_NAME = "heartbeatRuleConfig";
-
-	@Override
-	protected String getCategoryName() {
-		return CATEGORY_NAME;
-	}
 
 	@Override
 	protected String getConfigName() {

@@ -17,6 +17,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.event.EventReportCountFilter;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixReportFilter;
@@ -135,6 +136,8 @@ public class CachedReportTask implements Task, LogEnabled {
 				      com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder.build(transactionReport));
 
 				EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
+				new EventReportCountFilter().visitEventReport(eventReport);
+				
 				m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, EventAnalyzer.ID),
 				      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
 

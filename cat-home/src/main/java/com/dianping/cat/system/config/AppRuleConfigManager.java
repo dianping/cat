@@ -13,8 +13,6 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CATEGORY_NAME = "app";
-
 	private static final String CONFIG_NAME = "appRule";
 
 	@Override
@@ -46,11 +44,6 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 		if (m_config == null) {
 			m_config = new MonitorRules();
 		}
-	}
-
-	@Override
-	protected String getCategoryName() {
-		return CATEGORY_NAME;
 	}
 
 	@Override

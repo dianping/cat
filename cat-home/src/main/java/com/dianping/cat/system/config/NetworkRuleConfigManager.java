@@ -15,15 +15,8 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class NetworkRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CATEGORY_NAME = "network";
-
 	private static final String CONFIG_NAME = "networkRuleConfig";
 
-	@Override
-	protected String getCategoryName() {
-		return CATEGORY_NAME;
-	}
-	
 	@Override
    protected String getConfigName() {
 	   return CONFIG_NAME;

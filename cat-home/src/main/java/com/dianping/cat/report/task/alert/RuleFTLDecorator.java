@@ -15,6 +15,21 @@ import freemarker.template.Template;
 public class RuleFTLDecorator implements Initializable {
 
 	public Configuration m_configuration;
+	
+	public String generateConfigsHtml(String templateValue) {
+		Map<Object, Object> dataMap = new HashMap<Object, Object>();
+		StringWriter sw = new StringWriter(5000);
+		templateValue = templateValue.replaceAll("\n", "").replace("\r", "");
+
+		dataMap.put("configs", templateValue);
+		try {
+			Template configsTemplate = m_configuration.getTemplate("rule_configs.ftl");
+			configsTemplate.process(dataMap, sw);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return sw.toString();
+	}
 
 	public String generateMetricItemsHtml(String metricsStr, String metricTemplateName) {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
