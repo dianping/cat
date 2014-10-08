@@ -420,7 +420,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE:
 			generateRuleConfigContent(payload.getKey(), m_networkRuleConfigManager, model);
-
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_networkRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
@@ -435,8 +434,7 @@ public class Handler implements PageHandler<Context> {
 			generateRuleItemList(m_systemRuleConfigManager, model);
 			break;
 		case SYSTEM_RULE_ADD_OR_UPDATE:
-			generateRuleEditContent(payload.getKey(), "?op=systemRuleSubmit", "rule_metricItems.ftl", "rule_configs.ftl",
-			      m_systemRuleConfigManager, model);
+			generateRuleConfigContent(payload.getKey(), m_systemRuleConfigManager, model);
 			break;
 		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_systemRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
@@ -451,8 +449,7 @@ public class Handler implements PageHandler<Context> {
 			generateRuleItemList(m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE:
-			generateRuleEditContent(payload.getKey(), "?op=heartbeatRuleSubmit", "rule_heartbeatItems.ftl",
-			      "rule_configs.ftl", m_heartbeatRuleConfigManager, model);
+			generateRuleConfigContent(payload.getKey(), m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
@@ -644,42 +641,23 @@ public class Handler implements PageHandler<Context> {
 		model.setCityInfos(m_cityManager.getCities());
 	}
 
-	private void generateRuleEditContent(String key, String href, String metricsTemplate, String configsTemplate,
-	      BaseRuleConfigManager manager, Model model) {
-		String metricsStr = "";
-		String configsStr = "";
-		String ruleId = "";
-
-		if (!StringUtil.isEmpty(key)) {
-			Rule rule = manager.queryRule(key);
-			ruleId = rule.getId();
-			metricsStr = new DefaultJsonBuilder().buildArray(rule.getMetricItems());
-			configsStr = new DefaultJsonBuilder().buildArray(rule.getConfigs());
-		}
-		String metricsContent = m_ruleDecorator.generateMetricItemsHtml(metricsStr, metricsTemplate);
-		String configsContent = m_ruleDecorator.generateConfigsHtml(href, configsStr, configsTemplate);
-
-		model.setId(ruleId);
-		model.setContent(metricsContent + configsContent);
-	}
-
 	private void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
-		String configsStr = "";
 		String ruleId = "";
+		String configHeader = "";
+		String configsStr = "";
+		Rule rule = manager.queryRule(key);
 
-		if (!StringUtil.isEmpty(key)) {
-			Rule rule = manager.queryRule(key);
+		if (rule != null) {
 			ruleId = rule.getId();
+			configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
 			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
-			
-			String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
-		
-			model.setConfigHeader(configHeader);
 		}
+
 		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
 
-		model.setContent(content);
 		model.setId(ruleId);
+		model.setConfigHeader(configHeader);
+		model.setContent(content);
 	}
 
 	private void generateRuleItemList(BaseRuleConfigManager manager, Model model) {
@@ -756,16 +734,22 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void metricRuleAdd(Payload payload, Model model) {
-		String href = "?op=metricRuleAddSubmit";
+		String ruleId = "";
+		String configHeader = "";
+		String configsStr = "";
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 		Rule rule = m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key);
-		String metricsStr = new DefaultJsonBuilder().buildArray(rule.getMetricItems());
-		String metricsContent = m_ruleDecorator.generateMetricItemsHtml(metricsStr, "rule_business_metricItems.ftl");
-		String configsStr = new DefaultJsonBuilder().buildArray(rule.getConfigs());
-		String configsContent = m_ruleDecorator.generateConfigsHtml(href, configsStr, "rule_configs.ftl");
 
-		model.setId(rule.getId());
-		model.setContent(metricsContent + configsContent);
+		if (rule != null) {
+			ruleId = rule.getId();
+			configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
+		}
+		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
+
+		model.setId(ruleId);
+		model.setConfigHeader(configHeader);
+		model.setContent(content);
 	}
 
 	private boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics, String configs) {

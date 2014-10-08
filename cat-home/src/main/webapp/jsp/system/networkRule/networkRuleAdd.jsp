@@ -14,8 +14,56 @@
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+
+	<div class="row-fluid">
+		<div class="span2">
+			<%@include file="../configTree.jsp"%>
+		</div>
+		<div class="span10">
+			</br>
+			<form method="post">
+				<h3 class="text-center text-success">编辑网络监控规则</h3>
+				
+				<div class="config">
+				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>
+				</div>
+				<div id="metrics" class="config">
+					<button class="btn btn-success btn-small" id="add-metric-button"
+						type="button">
+						添加匹配对象<i class="icon-plus icon-white"></i>
+					</button>
+					<div id="metricItem" class="metric config">
+						网络设备：
+						<textarea name="productlineText" class="productlineText "
+							type=" text" placeholder="支持正则"></textarea>
+						指标：
+						<textarea name="metricText" class="metricText " type=" text"
+							placeholder="支持正则"></textarea>
+						监控类型： <label class="checkbox inline"> <input name="count"
+							class="count" type="checkbox">count
+						</label> <label class="checkbox inline"> <input name="sum"
+							class="sum" type="checkbox">sum
+						</label> <label class="checkbox inline"> <input name="avg"
+							class="avg" type="checkbox">avg
+						</label>
+						<button class="btn btn-danger btn-small delete-metric-button"
+							type="button">
+							<i class="icon-trash icon-white"></i>
+						</button>
+					</div>
+				</div>
+				${model.content}
+				<div style='text-align: center'>
+					<input class="btn btn-primary" id="ruleSubmitButton" type="text"
+						name="submit" value="提交">
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	
 	<script type="text/javascript">
-		function drawMetricItems(metricsStr) {
+		function drawMetricItems(metricsStr, newMetric) {
 	        if (metricsStr == undefined || metricsStr == "") {
 	            return;
 	        }
@@ -32,7 +80,7 @@
 	                var metricText = metric["metricItemText"];
 
 	                if (count > 0) {
-	                    $("#add-metric-button").trigger("click");
+	                	addMetricHeader(newMetric);
 	                }
 	                var metricForm = $(".metric").last();
 	                if (productlineText) {
@@ -54,11 +102,11 @@
 	        }
 	    }
 		
-		function addMetricHeader(){
-			
-			
+		function addMetricHeader(newMetric){
+			$("#metrics").append(newMetric.clone());
 		}
-		 function generateMetricsJsonString() {
+		
+		function generateMetricsJsonString() {
 		        var metricLength = $(".metric").length;
 		        if (metricLength > 0) {
 		            var metricList = [];
@@ -101,74 +149,26 @@
 		        }
 		    }
 		 $(document).ready(function() {
-				$('#networkRuleConfigList').addClass('active');
-				
-				var configHeader = '${model.configHeader}';
-				
-				$(document).delegate("#ruleSubmitButton","click",function(){
-					var metrics = generateMetricsJsonString();
-					var key = $('#ruleId').val();
-					var configStr = generateConfigsJsonString();
-				    window.location.href = "?op=networkRuleSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
-				});
-				
-				$("#add-metric-button").click(function () {
-		            var newMetric = $('<div class="metric config">网络设备：<textarea name="productlineText" class="productlineText " type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText" type=" text" placeholder="支持正则"></textarea> 监控类型： <label class="checkbox inline"> <input name="count" class="count" type="checkbox">count </label> <label class="checkbox inline"> <input name="sum" class="sum" type="checkbox">sum </label> <label class="checkbox inline"> <input name="avg" class="avg" type="checkbox">avg </label> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
-		            $("#metrics").append(newMetric);
-		        });
-				
-				drawMetricItems(configHeader);
-				
-				$("#metrics").delegate(".delete-metric-button", "click", function () {
-		            $(this).parent().remove();
-		        });
+			$('#networkRuleConfigList').addClass('active');
+			var newMetric = $('#metricItem').clone();
+			
+			var configHeader = '${model.configHeader}';
+			drawMetricItems(configHeader, newMetric);
+			
+			$(document).delegate("#ruleSubmitButton","click",function(){
+				var key = $('#ruleId').val();
+				var metrics = generateMetricsJsonString();
+				var configStr = generateConfigsJsonString();
+			    window.location.href = "?op=networkRuleSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
 			});
+			
+			$("#add-metric-button").click(function(){
+				addMetricHeader(newMetric);
+			});
+			
+			$("#metrics").delegate(".delete-metric-button", "click", function () {
+	            $(this).parent().remove();
+	        });
+		});
 	</script>
-
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
-			<form method="post">
-				<h3 class="text-center text-success">新增网络监控规则</h3>
-				
-				<div class="config">
-				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>
-				</div>
-				<div id="metrics" class="config">
-					<strong class="text-success">匹配对象</strong> <input id="metricsStr"
-						type="hidden"></>
-						&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-small" id="add-metric-button"
-					type="button">
-					添加匹配对象<i class="icon-plus icon-white"></i>
-				</button>
-					<div id="metricItem" class="metric config">
-						网络设备：<textarea name="productlineText" class="productlineText "
-							type=" text" placeholder="支持正则"></textarea>
-						指标：<textarea name="metricText" class="metricText " type=" text"
-							placeholder="支持正则"></textarea>
-						监控类型： <label class="checkbox inline"> <input name="count"
-							class="count" type="checkbox">count
-						</label> <label class="checkbox inline"> <input name="sum"
-							class="sum" type="checkbox">sum
-						</label> <label class="checkbox inline"> <input name="avg"
-							class="avg" type="checkbox">avg
-						</label>
-						<button class="btn btn-danger btn-small delete-metric-button"
-							type="button">
-							<i class="icon-trash icon-white"></i>
-						</button>
-					</div>
-				</div>
-				${model.content}
-				<div style='text-align: center'>
-					<input class="btn btn-primary" id="ruleSubmitButton" type="text"
-						name="submit" value="提交">
-					</button>
-				</div>
-			</form>
-		</div>
-	</div>
 </a:body>

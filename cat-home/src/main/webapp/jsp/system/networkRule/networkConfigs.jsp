@@ -37,17 +37,6 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<div id="ruleModal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
-				<div class="modal-header text-center">
-				    <h3 id="ruleLabel">网络规则配置</h3>
-				</div>
-				<div class="modal-body" id="ruleModalBody">
-				</div>
-				<div class="modal-footer">
-				    <button class="btn btn-primary" id="ruleSubmitButton">提交</button>
-				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-				</div>
-			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<table class="table table-striped table-bordered table-condensed table-hover">
 	     		<tr class="text-success">
