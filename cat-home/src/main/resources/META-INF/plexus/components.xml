@@ -4979,9 +4979,6 @@
 					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
 				</requirement>
 				<requirement>
