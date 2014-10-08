@@ -18,7 +18,6 @@
     <strong class="text-success">匹配对象：</strong>
     <input id="metricsStr" type="hidden"></>
     <br>
-
     <div class="metric">
         网络设备：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea>
         指标：<textarea name="metricText" class="metricText input-small" type=" text" placeholder="支持正则"></textarea>
@@ -146,6 +145,5 @@
                 return "";
             }
         }
-
     }
 </script>

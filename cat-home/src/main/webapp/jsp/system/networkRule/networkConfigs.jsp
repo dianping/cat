@@ -11,7 +11,6 @@
 <a:body>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
@@ -22,7 +21,7 @@
 				return confirm("确定要删除此规则吗(不可恢复)？");
 			});
 			
-			$(document).delegate('.update', 'click', function(e){
+			/* $(document).delegate('.update', 'click', function(e){
 				var anchor = this,
 					el = $(anchor);
 				
@@ -41,7 +40,7 @@
 						metricValidate();
 					}
 				});
-			});
+			}); */
 			
 			$(document).delegate("#ruleSubmitButton","click",function(){
 				$("#modalSubmit").trigger("click");
@@ -83,7 +82,7 @@
 	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
 	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
 	     			<th width="4%"><h5 class='text-center'>总和</h5></th>
-	     			<th width="10%"><h5 class='text-center'>操作</h5></th>
+	     			<th width="10%"><h5 class='text-center'>操作 <a href="?op=networkRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-primary">新增</a></h5></th>
 	     		</tr>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
@@ -121,7 +120,6 @@
 		     		</tr>
 		     	</c:forEach>
 	     	</table>
-		    <a href="?op=networkRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-success">添加监控规则<i class="icon-plus icon-white"></i></a>
 		</div>
 	</div>
 </a:body>
