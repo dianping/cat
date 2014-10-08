@@ -35,7 +35,7 @@ public class CatHomeModule extends AbstractModule {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class);
-		if (!serverConfigManager.isLocalMode()) {
+		if (!serverConfigManager.isLocalMode() && !serverConfigManager.isLocalMode()) {
 			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
 			UploaderAndCleaner uploader = ctx.lookup(UploaderAndCleaner.class);
 
@@ -43,7 +43,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(uploader);
 		}
 
-		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
 			CachedReportTask cachedReportTask = ctx.lookup(CachedReportTask.class);
