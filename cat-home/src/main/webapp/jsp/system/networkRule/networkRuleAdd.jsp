@@ -19,7 +19,6 @@
 	        if (metricsStr == undefined || metricsStr == "") {
 	            return;
 	        }
-
 	        try {
 	            metrics = JSON.parse(metricsStr);
 	        } catch (e) {
@@ -54,6 +53,7 @@
 	            }
 	        }
 	    }
+		
 		 function generateMetricsJsonString() {
 		        var metricLength = $(".metric").length;
 		        if (metricLength > 0) {
@@ -100,7 +100,6 @@
 				$('#networkRuleConfigList').addClass('active');
 				
 				var configHeader = '${model.configHeader}';
-				drawMetricItems(configHeader);
 				
 				$(document).delegate("#ruleSubmitButton","click",function(){
 					var metrics = generateMetricsJsonString();
@@ -113,6 +112,8 @@
 		            var newMetric = $('<div class="metric"> 网络设备：<textarea name="productlineText" class="productlineText " type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText" type=" text" placeholder="支持正则"></textarea> 监控类型： <label class="checkbox inline"> <input name="count" class="count" type="checkbox">count </label> <label class="checkbox inline"> <input name="sum" class="sum" type="checkbox">sum </label> <label class="checkbox inline"> <input name="avg" class="avg" type="checkbox">avg </label> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
 		            $("#metrics").append(newMetric);
 		        });
+				
+				drawMetricItems(configHeader);
 				
 				$("#metrics").delegate(".delete-metric-button", "click", function () {
 		            $(this).parent().remove();
