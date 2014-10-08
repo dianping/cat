@@ -143,7 +143,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
-			$('#metricRuleConfigList').addClass('active');
+			$('#metricConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			
 			var configHeader = '${model.configHeader}';
@@ -153,7 +153,7 @@
 				var key = $('#ruleId').val();
 				var metrics = generateMetricsJsonString();
 				var configStr = generateConfigsJsonString();
-			    window.location.href = "?op=metricRuleSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
+			    window.location.href = "?op=metricRuleAddSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
 			});
 			
 			$("#add-metric-button").click(function(){

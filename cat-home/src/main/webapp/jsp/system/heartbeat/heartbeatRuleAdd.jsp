@@ -32,13 +32,13 @@
 					    添加匹配对象<i class="icon-plus icon-white"></i>
 					</button>
 					
-					<div id="metricItem" class="metric config">
+					<div id="metricItem" class="config">
 					    <strong class="text-success">匹配对象：</strong>
 					    <input id="metricsStr" type="hidden"></>
 					    <br>
 					
 					    <div class="metric">
-					        项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText input-small" type=" text" placeholder="支持正则"></textarea>
+					        项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText" type=" text" placeholder="支持正则"></textarea>
 					        指标：
 					        <select name="metricText" class="metricText">
 					        	<option value="ThreadCount">ThreadCount</option>

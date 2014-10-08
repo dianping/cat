@@ -89,16 +89,22 @@ public class MetricConfigProcessor extends BaseProcesser{
 	}
 
 	private void metricRuleAdd(Payload payload, Model model) {
-		String href = "?op=metricRuleAddSubmit";
+		String ruleId = "";
+		String configHeader = "";
+		String configsStr = "";
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 		Rule rule = m_businessRuleConfigManager.queryRule(payload.getProductLineName(), key);
-		String metricsStr = new DefaultJsonBuilder().buildArray(rule.getMetricItems());
-		String metricsContent = m_ruleDecorator.generateMetricItemsHtml(metricsStr, "rule_business_metricItems.ftl");
-		String configsStr = new DefaultJsonBuilder().buildArray(rule.getConfigs());
-		String configsContent = m_ruleDecorator.generateConfigsHtml(href, configsStr, "rule_configs.ftl");
 
-		model.setId(rule.getId());
-		model.setContent(metricsContent + configsContent);
+		if (rule != null) {
+			ruleId = rule.getId();
+			configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
+		}
+		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
+
+		model.setId(ruleId);
+		model.setConfigHeader(configHeader);
+		model.setContent(content);
 	}
 
 	public void process(Action action,Payload payload,Model model){
