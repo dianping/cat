@@ -54,6 +54,10 @@
 	        }
 	    }
 		
+		function addMetricHeader(){
+			
+			
+		}
 		 function generateMetricsJsonString() {
 		        var metricLength = $(".metric").length;
 		        if (metricLength > 0) {
@@ -109,7 +113,7 @@
 				});
 				
 				$("#add-metric-button").click(function () {
-		            var newMetric = $('<div class="metric"> 网络设备：<textarea name="productlineText" class="productlineText " type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText" type=" text" placeholder="支持正则"></textarea> 监控类型： <label class="checkbox inline"> <input name="count" class="count" type="checkbox">count </label> <label class="checkbox inline"> <input name="sum" class="sum" type="checkbox">sum </label> <label class="checkbox inline"> <input name="avg" class="avg" type="checkbox">avg </label> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
+		            var newMetric = $('<div class="metric config">网络设备：<textarea name="productlineText" class="productlineText " type=" text" placeholder="支持正则"></textarea> 指标：<textarea name="metricText" class="metricText" type=" text" placeholder="支持正则"></textarea> 监控类型： <label class="checkbox inline"> <input name="count" class="count" type="checkbox">count </label> <label class="checkbox inline"> <input name="sum" class="sum" type="checkbox">sum </label> <label class="checkbox inline"> <input name="avg" class="avg" type="checkbox">avg </label> <button class="btn btn-danger btn-small delete-metric-button" type="button"> <i class="icon-trash icon-white"></i> </button> </div>');
 		            $("#metrics").append(newMetric);
 		        });
 				
@@ -128,16 +132,22 @@
 		<div class="span10">
 			</br>
 			<form method="post">
-				规则ID： <input id="ruleId" type="text" value="${model.id}" />
-				<div id="metrics">
-					<strong class="text-success">匹配对象：</strong> <input id="metricsStr"
-						type="hidden"></> <br>
-					<div id="metricItem" class="metric">
-						网络设备：
-						<textarea name="productlineText" class="productlineText "
+				<h3 class="text-center text-success">新增网络监控规则</h3>
+				
+				<div class="config">
+				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>
+				</div>
+				<div id="metrics" class="config">
+					<strong class="text-success">匹配对象</strong> <input id="metricsStr"
+						type="hidden"></>
+						&nbsp;&nbsp;&nbsp;&nbsp;<button class="btn btn-success btn-small" id="add-metric-button"
+					type="button">
+					添加匹配对象<i class="icon-plus icon-white"></i>
+				</button>
+					<div id="metricItem" class="metric config">
+						网络设备：<textarea name="productlineText" class="productlineText "
 							type=" text" placeholder="支持正则"></textarea>
-						指标：
-						<textarea name="metricText" class="metricText " type=" text"
+						指标：<textarea name="metricText" class="metricText " type=" text"
 							placeholder="支持正则"></textarea>
 						监控类型： <label class="checkbox inline"> <input name="count"
 							class="count" type="checkbox">count
@@ -152,11 +162,7 @@
 						</button>
 					</div>
 				</div>
-				<button class="btn btn-success btn-small" id="add-metric-button"
-					type="button">
-					添加匹配对象<i class="icon-plus icon-white"></i>
-				</button>
-				<br> ${model.content}
+				${model.content}
 				<div style='text-align: center'>
 					<input class="btn btn-primary" id="ruleSubmitButton" type="text"
 						name="submit" value="提交">

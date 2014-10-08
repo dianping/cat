@@ -10,20 +10,27 @@
         border-radius: 6px;
         box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         margin-left: 20px;
+        margin-top:4px;
+        padding:4px 4px 4px 4px;
+    }
+    input[type="text"]{
+    	margin-bottom : 0px;
     }
 </style>
 
 <div id="configs">
-    <strong class="text-success">监控规则配置：&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i></strong>
 
     <div class="config">
-        监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
+    	<p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> <button class="btn btn-success btn-small" id="add-config-button" type="button">
+    添加监控规则<i class="icon-plus icon-white"></i>
+</button></p>
+       	<div class="config">
+       	监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
-        <br><br>
-
+        </div>
         <div class="condition">
             <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="conditionTip"></i></p>
-            连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
+            持续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
             告警级别：
             <select name="level" class="level span2">
             	<option value="warning">warning</option>
@@ -31,7 +38,7 @@
             </select>
             <br>
 
-            <p class="text-success">子条件</p>
+            <p class="text-success">子条件<span class="text-error">【必须全部满足才触发告警】</span></p>
 
             <div class="subconditions">
                 <div class="subCondition">
@@ -67,15 +74,6 @@
         </button>
     </div>
 </div>
-<br>
-<button class="btn btn-success btn-small" id="add-config-button" type="button">
-    添加监控规则<i class="icon-plus icon-white"></i>
-</button>
-<br>
-
-<br><br>
-<button class="btn btn-primary" id="modalSubmit" type="button" style="display:none">提交</button>
-
 <script>
 $(document).ready(function () {
 	$("#configTip").tooltip({
