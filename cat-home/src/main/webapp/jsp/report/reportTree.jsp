@@ -13,21 +13,6 @@
 	    <li id="summary"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 	    <li id="reportRecordList"><a href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
 	 	<li id="scheduledReports"><a href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
-	  
    </ul>
 </div>
-<style>
-	.nav-list  li  a{
-		padding:2px 15px;
-	}
-	.nav li  +.nav-header{
-		margin-top:2px;
-	}
-	.nav-header{
-		padding:5px 3px;
-	}
-	.row-fluid .span2{
-		width:12%;
-	}
-</style>
 

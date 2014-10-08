@@ -47,7 +47,7 @@
 	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
 	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
 	     			<th width="4%"><h5 class='text-center'>总和</h5></th>
-	     			<th width="10%"><h5 class='text-center'>操作&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-success">新增<i class="icon-plus icon-white"></i></a></h5></th>
+	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-primary">新增</a></h5></th>
 	     		</tr>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>

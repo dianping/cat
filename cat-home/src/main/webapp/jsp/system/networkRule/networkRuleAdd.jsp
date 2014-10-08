@@ -22,7 +22,7 @@
 		<div class="span10">
 			</br>
 			<form method="post">
-				<h3 class="text-center text-success">编辑网络监控规则</h3>
+				<h3 class="text-center text-success">修改网络监控规则</h3>
 				
 				<div class="config">
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>

@@ -29,8 +29,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
-	private TransactionReportCountFilter m_countFilter = new TransactionReportCountFilter();
-	
 	@Override
 	public void afterLoad(Map<String, TransactionReport> reports) {
 	}
@@ -60,7 +58,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	public String buildXml(TransactionReport report) {
 		report.accept(m_computer);
 
-		String xml = m_countFilter.buildXml(report);
+		String xml = new TransactionReportCountFilter().buildXml(report);
 
 		return xml;
 	}

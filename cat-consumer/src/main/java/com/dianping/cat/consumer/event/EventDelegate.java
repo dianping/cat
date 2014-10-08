@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
@@ -18,8 +19,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
-
-	private EventReportCountFilter m_countFilter = new EventReportCountFilter();
 
 	@Override
 	public void afterLoad(Map<String, EventReport> reports) {
@@ -37,7 +36,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public String buildXml(EventReport report) {
-		String xml = m_countFilter.buildXml(report);
+		String xml = new EventReportCountFilter().buildXml(report);
 
 		return xml;
 	}

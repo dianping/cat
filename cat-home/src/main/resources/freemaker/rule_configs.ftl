@@ -4,7 +4,8 @@
         margin-bottom: 5px;
     }
     .condition,
-    .config {
+    .config
+     {
         margin-bottom: 10px;
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 6px;
