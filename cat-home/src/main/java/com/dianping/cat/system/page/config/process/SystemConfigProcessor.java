@@ -8,7 +8,7 @@ import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
 public class SystemConfigProcessor extends BaseProcesser {
-	
+
 	@Inject
 	private SystemRuleConfigManager m_systemRuleConfigManager;
 
@@ -18,8 +18,7 @@ public class SystemConfigProcessor extends BaseProcesser {
 			generateRuleItemList(m_systemRuleConfigManager, model);
 			break;
 		case SYSTEM_RULE_ADD_OR_UPDATE:
-			generateRuleEditContent(payload.getKey(), "?op=systemRuleSubmit", "rule_metricItems.ftl", "rule_configs.ftl",
-			      m_systemRuleConfigManager, model);
+			generateRuleConfigContent(payload.getKey(), m_systemRuleConfigManager, model);
 			break;
 		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_systemRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
@@ -30,7 +29,6 @@ public class SystemConfigProcessor extends BaseProcesser {
 			model.setOpState(deleteRule(m_systemRuleConfigManager, payload.getKey()));
 			generateRuleItemList(m_systemRuleConfigManager, model);
 			break;
-			
 
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

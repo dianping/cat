@@ -57,25 +57,6 @@ public class BaseProcesser {
 		model.setId(ruleId);
 	}
 	
-	public void generateRuleEditContent(String key, String href, String metricsTemplate, String configsTemplate,
-	      BaseRuleConfigManager manager, Model model) {
-		String metricsStr = "";
-		String configsStr = "";
-		String ruleId = "";
-
-		if (!StringUtil.isEmpty(key)) {
-			Rule rule = manager.queryRule(key);
-			ruleId = rule.getId();
-			metricsStr = new DefaultJsonBuilder().buildArray(rule.getMetricItems());
-			configsStr = new DefaultJsonBuilder().buildArray(rule.getConfigs());
-		}
-		String metricsContent = m_ruleDecorator.generateMetricItemsHtml(metricsStr, metricsTemplate);
-		String configsContent = m_ruleDecorator.generateConfigsHtml(href, configsStr, configsTemplate);
-
-		model.setId(ruleId);
-		model.setContent(metricsContent + configsContent);
-	}
-
 	public void generateRuleItemList(BaseRuleConfigManager manager, Model model) {
 		Collection<Rule> rules = manager.getMonitorRules().getRules().values();
 		List<RuleItem> ruleItems = new ArrayList<RuleItem>();
