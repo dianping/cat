@@ -54,31 +54,6 @@
 				});
 			});
 			
-			$(document).delegate('#alertRule', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				$.ajax({
-					type: "post",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#ruleModalBody').html(response);
-						$('#ruleModal').modal();
-						$("#id").select2();
-						metricValidate();
-					}
-				});
-			});
-			
-			$(document).delegate("#ruleSubmitButton","click",function(){
-				$("#modalSubmit").trigger("click");
-			})
-			
 			var action = '${payload.action.name}';
 			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
 				var state = '${model.opState}';
@@ -104,17 +79,6 @@
 				    <h3 class="text-error">修改业务监控节点配置信息</h3>
 				</div>
 				<div class="modal-body" id="configModalBody">
-				</div>
-			</div>
-			<div id="ruleModal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
-				<div class="modal-header text-center">
-				    <h3 id="ruleLabel">规则配置</h3>
-				</div>
-				<div class="modal-body" id="ruleModalBody">
-				</div>
-				<div class="modal-footer">
-				    <button class="btn btn-primary" id="ruleSubmitButton">提交</button>
-				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
