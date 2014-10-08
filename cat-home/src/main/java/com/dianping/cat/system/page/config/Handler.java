@@ -420,7 +420,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE:
 			generateRuleConfigContent(payload.getKey(), m_networkRuleConfigManager, model);
-
 			break;
 		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(m_networkRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
@@ -664,22 +663,22 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void generateRuleConfigContent(String key, BaseRuleConfigManager manager, Model model) {
-		String configsStr = "";
 		String ruleId = "";
+		String configHeader = "";
+		String configsStr = "";
+		Rule rule = manager.queryRule(key);
 
-		if (!StringUtil.isEmpty(key)) {
-			Rule rule = manager.queryRule(key);
+		if (rule != null) {
 			ruleId = rule.getId();
+			configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
 			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
-			
-			String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
-		
-			model.setConfigHeader(configHeader);
 		}
+
 		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
 
-		model.setContent(content);
 		model.setId(ruleId);
+		model.setConfigHeader(configHeader);
+		model.setContent(content);
 	}
 
 	private void generateRuleItemList(BaseRuleConfigManager manager, Model model) {

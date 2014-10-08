@@ -18,6 +18,7 @@
 		<div class="span10">
 		
 		</br>
+			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-bordered'>
 			<tr>

@@ -19,12 +19,13 @@
 </style>
 
 <div id="configs">
-
-    <div class="config">
-    	<p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> <button class="btn btn-success btn-small" id="add-config-button" type="button">
-    添加监控规则<i class="icon-plus icon-white"></i>
-</button></p>
-       	<div class="config">
+    <div class="config" id="configSample">
+    	<p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
+	    	<button class="btn btn-success btn-small" id="add-config-button" type="button">
+			    添加监控规则<i class="icon-plus icon-white"></i>
+			</button>
+		</p>
+       	<div class="configDuration">
        	监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         </div>
@@ -75,6 +76,22 @@
     </div>
 </div>
 <script>
+var newSubCondition = $('.subCondition').eq(0).clone();
+var newCondition = $('.condition').eq(0).clone();
+var newConfig = $('#configSample').clone();
+
+function addSubCondition(currentElement, newSubCondition){
+	currentElement.prev().append(newSubCondition.clone());
+}
+
+function addCondition(currentElement, newCondition){
+	currentElement.before(newCondition.clone());
+}
+
+function addConfig(newConfig){
+	$('#configs').append(newConfig.clone());
+}
+
 $(document).ready(function () {
 	$("#configTip").tooltip({
 		"placement":"top",
@@ -87,23 +104,21 @@ $(document).ready(function () {
 	});
 	
     $("#configs").delegate(".add-subCondition-button", "click", function () {
-        var newSubCondition = $('<div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div>');
-        $(this).prev().append(newSubCondition);
+    	addSubCondition($(this), newSubCondition);
     })
 
     $("#configs").delegate(".add-condition-button", "click", function () {
-        var newCondition = $('<div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<select name="level" class="level span2"> <option value="warning">warning</option> <option value="error">error</option> </select> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div>');
-        $(this).before(newCondition);
+        addCondition($(this), newCondition);
+    })
+    
+    $("#configs").delegate("#add-config-button","click", function () {
+    	addConfig(newConfig);
     })
 
     $("#configs").delegate(".delete-condition-button, .delete-subcondition-button, .delete-config-button", "click", function () {
         $(this).parent().remove();
     })
 
-    $("#add-config-button").click(function () {
-        var newConfig = $('<div class="config"> <strong class="text-success">监控规则：</strong> <br> 监控开始时间：<input name="startMinute" class="startMinute input-small" type=" text" placeholder="格式如 00:00"/> 监控结束时间：<input name="endMinute" class="endMinute input-small" type=" text" placeholder="格式如 24:00"/> <br><br> <div class="condition"> <p class="text-center text-success">监控条件</p> 连续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/> 告警级别：<select name="level" class="level span2"> <option value="warning">warning</option> <option value="error">error</option> </select> <br> <p class="text-success">子条件</p> <div class="subconditions"> <div class="subCondition"> &nbsp;&nbsp;&nbsp;规则类型： <select name="ruleType" class="ruleType"> <option value="DescVal">下降值</option> <option value="DescPer">下降百分比</option> <option value="AscVal">上升值</option> <option value="AscPer">上升百分比</option> <option value="MaxVal">最大值</option> <option value="MinVal">最小值</option> <option value="FluAscPer">波动上升百分比</option> <option value="FluDescPer">波动下降百分比</option> </select> 阈值：<input name="value" class="value input-mini" type="text"/> <button class="btn btn-danger btn-small delete-subcondition-button" type="button"> 删除子条件<i class="icon-trash icon-white"></i> </button> </div> </div> <button class="btn btn-success btn-small add-subCondition-button" type="button"> 添加子条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-condition-button" type="button"> 删除监控条件<i class="icon-trash icon-white"></i> </button> </div> <button class="btn btn-success btn-small add-condition-button" type="button"> 添加监控条件<i class="icon-plus icon-white"></i> </button> <button class="btn btn-danger btn-small delete-config-button" type="button"> 删除监控规则<i class="icon-trash icon-white"></i> </button> </div>');
-        $("#configs").append(newConfig);
-    })
     drawConfigs();
 })
 
@@ -126,7 +141,7 @@ function drawConfigs() {
         for (count in configs) {
             var config = configs[count];
             if (count > 0) {
-                $("#add-config-button").trigger("click");
+                addConfig(newConfig);
             }
 
             var configForm = $(".config").last();
@@ -148,7 +163,7 @@ function drawConfigs() {
                     var subconditions = condition["sub-conditions"];
 
                     if (c > 0) {
-                        configForm.find(".add-condition-button").trigger("click");
+                        addCondition(configForm.find(".add-condition-button"), newCondition);
                     }
                     var conditionForm = configForm.find(".condition").last();
 
@@ -165,7 +180,7 @@ function drawConfigs() {
                             var text = subcondition["text"];
 
                             if (cou > 0) {
-                                conditionForm.find(".add-subCondition-button").trigger("click");
+                                addSubCondition(conditionForm.find(".add-subCondition-button"), newSubCondition);
                             }
                             var subconditionFrom = conditionForm.find(".subCondition").last();
 
