@@ -4804,91 +4804,37 @@
 					<role>com.dianping.cat.system.page.config.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
+					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.PatternConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.MetricConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.SystemConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.BugConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.AppConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.AlertConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.RouterConfigManager</role>
+					<role>com.dianping.cat.system.page.config.process.AlertConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.web.CityManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.TagManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4902,11 +4848,65 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.view.DomainNavManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.BugConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.RouterConfigManager</role>
+			<implementation>com.dianping.cat.system.config.RouterConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.PatternConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.PatternConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.web.CityManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4923,6 +4923,73 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.WebRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.MetricConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.MetricConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.TagManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.MetricGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.BusinessRuleConfigManager</implementation>
 			<requirements>
@@ -4931,6 +4998,36 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4944,11 +5041,35 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.config.process.SystemConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.SystemConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4962,26 +5083,26 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.WebRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.page.config.process.AppConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.AppConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
+					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AppRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.AlertConfigManager</role>
-			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -4998,26 +5119,29 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.config.process.AlertConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.process.AlertConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 			<implementation>com.dianping.cat.system.config.AlertPolicyManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.RouterConfigManager</role>
-			<implementation>com.dianping.cat.system.config.RouterConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5041,10 +5165,6 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>

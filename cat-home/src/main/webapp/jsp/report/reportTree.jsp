@@ -13,7 +13,6 @@
 	    <li id="summary"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 	    <li id="reportRecordList"><a href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
 	 	<li id="scheduledReports"><a href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
-	  
    </ul>
 </div>
 

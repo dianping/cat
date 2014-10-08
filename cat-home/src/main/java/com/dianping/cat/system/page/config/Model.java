@@ -30,7 +30,7 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.page.config.Handler.RuleItem;
+import com.dianping.cat.system.page.config.process.BaseProcesser.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 

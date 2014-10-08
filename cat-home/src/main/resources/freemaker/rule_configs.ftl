@@ -4,7 +4,8 @@
         margin-bottom: 5px;
     }
     .condition,
-    .config {
+    .config
+     {
         margin-bottom: 10px;
         border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 6px;
@@ -18,12 +19,11 @@
     }
 </style>
 
-<div id="configs">
+<div id="configs" class="box">
 
-    <div class="config">
     	<p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> <button class="btn btn-success btn-small" id="add-config-button" type="button">
-    添加监控规则<i class="icon-plus icon-white"></i>
-</button></p>
+    	添加监控规则<i class="icon-plus icon-white"></i>
+		</button></p>
        	<div class="config">
        	监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
