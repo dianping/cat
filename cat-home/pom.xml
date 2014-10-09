@@ -164,7 +164,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/alert-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-summary-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/thirdparty-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 							</manifest>
 						</configuration>
