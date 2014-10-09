@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.web.mvc.ViewModel;
 
@@ -114,7 +113,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_duplicateDomains;
 
-	private Set<String> m_tags;
+	private List<String> m_tags;
 
 	private String m_configHeader;
 
@@ -371,7 +370,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
-	public Set<String> getTags() {
+	public List<String> getTags() {
 		return m_tags;
 	}
 
@@ -531,7 +530,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
-	public void setTags(Set<String> tags) {
+	public void setTags(List<String> tags) {
 		m_tags = tags;
 	}
 
@@ -563,10 +562,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setConfigHeader(String configHeader) {
-	   m_configHeader= configHeader;
-   }
-	
-	public String getConfigHeader(){
+		m_configHeader = configHeader;
+	}
+
+	public String getConfigHeader() {
 		return m_configHeader;
 	}
 }

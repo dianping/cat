@@ -19,13 +19,12 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.MetricGroupConfigManager;
-import com.dianping.cat.system.config.TagManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
-public class MetricConfigProcessor extends BaseProcesser{
-	
+public class MetricConfigProcessor extends BaseProcesser {
+
 	@Inject
 	private GlobalConfigProcessor m_globalConfigManager;
 
@@ -36,20 +35,17 @@ public class MetricConfigProcessor extends BaseProcesser{
 	private MetricConfigManager m_metricConfigManager;
 
 	@Inject
-	private TagManager m_tagManager;
+	private BusinessRuleConfigManager m_businessRuleConfigManager;
 
 	@Inject
-	private BusinessRuleConfigManager m_businessRuleConfigManager;
-	
-	@Inject
 	private MetricGroupConfigManager m_metricGroupConfigManager;
-	
+
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
 
 		model.setMetricItemConfig(m_metricConfigManager.queryMetricItemConfig(key));
 	}
-	
+
 	private boolean metricConfigAddSubmit(Payload payload, Model model) {
 		MetricItemConfig config = payload.getMetricItemConfig();
 		String domain = config.getDomain();
@@ -107,7 +103,7 @@ public class MetricConfigProcessor extends BaseProcesser{
 		model.setContent(content);
 	}
 
-	public void process(Action action,Payload payload,Model model){
+	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			metricConfigAdd(payload, model);
@@ -119,7 +115,7 @@ public class MetricConfigProcessor extends BaseProcesser{
 			}
 			model.setProjects(m_globalConfigManager.queryAllProjects());
 
-			Set<String> tags = m_tagManager.queryTags();
+			List<String> tags = m_metricConfigManager.queryTags();
 			model.setTags(tags);
 			break;
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
@@ -160,7 +156,8 @@ public class MetricConfigProcessor extends BaseProcesser{
 			}
 			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
 			break;
-		default:	throw new RuntimeException("Error action name " + action.getName());
+		default:
+			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
 

@@ -26,16 +26,12 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.TagManager;
 import com.site.lookup.util.StringUtils;
 
 public class MetricGraphCreator extends AbstractGraphCreator {
 
 	@Inject
 	private ProjectService m_projectService;
-
-	@Inject
-	private TagManager m_tagManager;
 
 	protected String buildContactInfo(String domainName) {
 		try {
@@ -218,7 +214,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 
 	public Map<String, LineChart> buildDashboardByTag(Date start, Date end, String tag) {
 		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
-		List<MetricItemConfig> metricItemConfigs = m_tagManager.queryMetricItemConfigs(tag);
+		List<MetricItemConfig> metricItemConfigs = m_metricConfigManager.queryMetricItemConfigs(tag);
 		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
 		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
 
