@@ -39,23 +39,17 @@
 					</c:if>
 				</c:forEach>
             </ul> 
-        	 <ul class="nav">
-          		<li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Monitors<b class="caret"></b></a>
+            <ul class="nav">
+          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
           			<ul class="dropdown-menu">
-					<li class="nav-header">监控</li>
+					<li class="nav-header">监控报表</li>
 					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息监控</a></li>
-	          		</ul>
-          		</li>
-          	</ul>
-            <ul class="nav">
-          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
-          			<ul class="dropdown-menu">
-					<li class="nav-header">报表</li>
+					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息查询</a></li>
 	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">数据库容量报表</a></li>
+					<li class="nav-header">离线报表</li>
 					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">资源消耗统计</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">分BU统计异常</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行榜</a></li>
@@ -63,6 +57,7 @@
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
+					<li class="nav-header">订阅报表</li>
 				    <li><a style="padding:1px 30px" href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
 	  				<li><a style="padding:1px 30px" href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
 	          		</ul>
