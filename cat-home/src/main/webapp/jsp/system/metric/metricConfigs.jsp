@@ -32,28 +32,6 @@
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
 			
-			$(document).delegate('.update', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				//var cell = document.getElementById('');
-				$.ajax({
-					type: "post",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#configModalBody').html(response);
-						$('#myModal').modal();
-						$("#id").select2();
-						metricValidate();
-					}
-				});
-			});
-			
 			var action = '${payload.action.name}';
 			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
 				var state = '${model.opState}';
@@ -73,14 +51,6 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" style="width:800px" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-				<div class="modal-header text-center">
-				    <h3 class="text-error">修改业务监控节点配置信息</h3>
-				</div>
-				<div class="modal-body" id="configModalBody">
-				</div>
-			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs span2">
@@ -151,7 +121,7 @@
 				     				</c:if>
 				     			</td>
 					     		<td style="text-align:center;white-space: nowrap">
-					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn update btn-primary btn-small">修改</a>
+					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small">修改</a>
 						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>
 					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-small">告警规则</a>
 						     	</td>

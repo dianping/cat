@@ -32,6 +32,9 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 
 	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
 		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
+		config.setStarttime("00:00");
+		config.setEndtime("24:00");
+
 		Condition condition = new Condition();
 		SubCondition descPerSubcon = new SubCondition();
 		SubCondition descValSubcon = new SubCondition();

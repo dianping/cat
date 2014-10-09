@@ -192,6 +192,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.HeartbeatRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.AlertConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AlertConfigManager</implementation>
 			<requirements>
