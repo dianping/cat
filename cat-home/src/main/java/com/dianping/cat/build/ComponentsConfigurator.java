@@ -70,7 +70,6 @@ import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
-import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
@@ -160,7 +159,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
-		all.add(C(MetricGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
@@ -183,25 +181,25 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
-		all.add(C(CdnGraphCreator.class).req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class,
-		      CachedMetricReportService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		      MetricGroupConfigManager.class, AlertInfo.class));
+		all.add(C(CdnGraphCreator.class)
+		      .req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class, CachedMetricReportService.class,
+		            MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class));
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, ProjectService.class));
+		      ProductLineConfigManager.class, AlertInfo.class, ProjectService.class));
 		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, AlertInfo.class));
 		all.add(C(WebGraphCreator.class, DefaultWebGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, AlertInfo.class));
 		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class));
+		      ProductLineConfigManager.class, AlertInfo.class));
 
 		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, MetricGroupConfigManager.class, AlertInfo.class, AppConfigManager.class));
+		      ProductLineConfigManager.class, AlertInfo.class, AppConfigManager.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));

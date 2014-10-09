@@ -12,10 +12,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.alert.thirdParty.entity.Http;
-import com.dianping.cat.home.alert.thirdParty.entity.Socket;
-import com.dianping.cat.home.alert.thirdParty.entity.ThirdPartyConfig;
-import com.dianping.cat.home.alert.thirdParty.transform.DefaultSaxParser;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Socket;
+import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
+import com.dianping.cat.home.alert.thirdparty.transform.DefaultSaxParser;
 
 public class ThirdPartyConfigManager implements Initializable {
 

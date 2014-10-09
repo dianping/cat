@@ -14,8 +14,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.alert.thirdParty.entity.Http;
-import com.dianping.cat.home.alert.thirdParty.entity.Par;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 

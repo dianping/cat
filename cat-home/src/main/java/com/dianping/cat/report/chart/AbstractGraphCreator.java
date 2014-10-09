@@ -19,7 +19,6 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.system.config.MetricGroupConfigManager;
 
 public abstract class AbstractGraphCreator implements LogEnabled {
 	@Inject
@@ -39,9 +38,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 
 	@Inject
 	protected ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	protected MetricGroupConfigManager m_metricGroupConfigManager;
 
 	@Inject
 	protected AlertInfo m_alertInfo;

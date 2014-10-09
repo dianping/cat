@@ -63,8 +63,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	public boolean needAlert(MetricItemConfig config) {
-		if (config.getAlarm() || config.isShowAvgDashboard() || config.isShowSumDashboard()
-		      || config.isShowCountDashboard() || hasMonitorTag(config)) {
+		if (config.getAlarm() || hasMonitorTag(config)) {
 			return true;
 		} else {
 			return false;
