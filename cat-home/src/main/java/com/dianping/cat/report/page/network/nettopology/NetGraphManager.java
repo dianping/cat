@@ -34,6 +34,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
@@ -123,11 +124,11 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		return groups;
 	}
 
-	private Map<String, MetricReport> queryMetricReports(Set<String> groups, Date date) {
+	private Map<String, MetricReport> queryMetricReports(Set<String> groups, ModelPeriod period) {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groups) {
-			ModelRequest request = new ModelRequest(group, date.getTime());
+			ModelRequest request = new ModelRequest(group, period);
 			MetricReport report = m_service.invoke(request);
 
 			reports.put(group, report);
@@ -159,14 +160,13 @@ public class NetGraphManager implements Initializable, LogEnabled {
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 					Set<String> groups = queryAllGroups(netGraphTemplate);
-					Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, TimeUtil.getCurrentHour());
+					Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, ModelPeriod.CURRENT);
 					List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 
 					m_currentNetGraphSet = m_netGraphBuilder
 					      .buildGraphSet(netGraphTemplate, currentMetricReports, alertKeys);
 
-					Date lastHour = new Date(TimeUtil.getCurrentHour().getTime() - TimeUtil.ONE_HOUR);
-					Map<String, MetricReport> lastHourReports = queryMetricReports(groups, lastHour);
+					Map<String, MetricReport> lastHourReports = queryMetricReports(groups, ModelPeriod.LAST);
 
 					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports,
 					      new ArrayList<AlertMetric>());
