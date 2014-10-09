@@ -43,10 +43,7 @@
 	     		<tr class="text-success">
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
 	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
-	     			<th width="29%"><h5 class='text-center'>ip配置</h5></th>
-	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
-	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
-	     			<th width="4%"><h5 class='text-center'>总和</h5></th>
+	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
 	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-primary">新增</a></h5></th>
 	     		</tr>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
@@ -54,30 +51,6 @@
 	     			<td>${item.id}</td>
 	     			<td>${item.productlineText}</td>
 	     			<td>${item.metricText}</td>
-	     			<td>
-	     				<c:if test="${item.monitorCount}">
-	     					<span class="text-error">是</span>
-	     				</c:if>
-	     				<c:if test="${item.monitorCount == false}">
-	     					<span>否</span>
-	     				</c:if>
-	     			</td>
-	     			<td>
-	     				<c:if test="${item.monitorAvg}">
-	     					<span class="text-error">是</span>
-	     				</c:if>
-	     				<c:if test="${item.monitorAvg == false}">
-	     					<span>否</span>
-	     				</c:if>
-	     			</td>
-	     			<td>
-	     				<c:if test="${item.monitorSum}">
-	     					<span class="text-error">是</span>
-	     				</c:if>
-	     				<c:if test="${item.monitorSum == false}">
-	     					<span>否</span>
-	     				</c:if>
-	     			</td>
 		     		<td style="text-align:center;white-space: nowrap">
 		     			<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small">修改规则</a>
 			     		<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-primary btn-small btn-danger delete">删除</a>
