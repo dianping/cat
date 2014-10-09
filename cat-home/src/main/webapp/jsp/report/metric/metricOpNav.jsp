@@ -10,10 +10,10 @@
 	</div>
 	<div class="span4 text-center">
 		<div class='text-center'>
-			<a id="refresh10" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=10&domain=${model.domain}&timeRange=${payload.timeRange}">10秒</a>
-			<a id="refresh20" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=20&domain=${model.domain}&timeRange=${payload.timeRange}">20秒</a>
-			<a id="refresh30" class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=30&domain=${model.domain}&timeRange=${payload.timeRange}">30秒</a>
-			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&product=${payload.product}&group=${payload.group}&fullScreen=${!payload.fullScreen}&hideNav=${payload.hideNav}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}&timeRange=${payload.timeRange}">全屏</a>
+			<a id="refresh10" class='btn btn-small btn-primary' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=10&domain=${model.domain}&timeRange=${payload.timeRange}">10秒</a>
+			<a id="refresh20" class='btn btn-small btn-primary' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=20&domain=${model.domain}&timeRange=${payload.timeRange}">20秒</a>
+			<a id="refresh30" class='btn btn-small btn-primary' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${payload.fullScreen}&hideNav=${payload.hideNav}&refresh=true&frequency=30&domain=${model.domain}&timeRange=${payload.timeRange}">30秒</a>
+			<a id="fullScreen"  class='btn btn-small btn-primary' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${!payload.fullScreen}&hideNav=${payload.hideNav}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}&timeRange=${payload.timeRange}">全屏</a>
 		</div>
 	</div>
 </div>

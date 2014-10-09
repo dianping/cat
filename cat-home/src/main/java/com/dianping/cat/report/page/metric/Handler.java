@@ -3,26 +3,26 @@ package com.dianping.cat.report.page.metric;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
-import com.dianping.cat.system.config.TagManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -38,9 +38,7 @@ public class Handler implements PageHandler<Context> {
 	private MetricGraphCreator m_graphCreator;
 
 	@Inject
-	private TagManager m_tagManager;
-
-	private static final String DEFAULT_TAG = "业务大盘";
+	private MetricConfigManager m_metricConfigManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -74,9 +72,9 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		}
-		Set<String> tags = m_tagManager.queryTags();
+		List<String> tags = m_metricConfigManager.queryTags();
 
-		model.setTags(new ArrayList<String>(tags));
+		model.setTags(tags);
 		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
 		m_jspViewer.view(ctx, model);
 	}
@@ -89,7 +87,7 @@ public class Handler implements PageHandler<Context> {
 			String tag = payload.getTag();
 
 			if (StringUtils.isEmpty(tag)) {
-				tag = DEFAULT_TAG;
+				tag = MetricConfigManager.DEFAULT_TAG;
 				payload.setTag(tag);
 			}
 			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);

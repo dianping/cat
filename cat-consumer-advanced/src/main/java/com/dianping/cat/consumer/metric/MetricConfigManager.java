@@ -6,9 +6,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -16,11 +18,13 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
@@ -44,6 +48,8 @@ public class MetricConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "metricConfig";
 
+	public static final String DEFAULT_TAG = "业务大盘";
+
 	public String buildMetricKey(String domain, String type, String metricKey) {
 		return domain + ":" + type + ":" + metricKey;
 	}
@@ -51,6 +57,29 @@ public class MetricConfigManager implements Initializable {
 	public boolean deleteDomainConfig(String key) {
 		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();
+	}
+
+	private void deleteUnusedConfig() {
+		try {
+			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
+			List<String> unused = new ArrayList<String>();
+
+			for (MetricItemConfig config : configs.values()) {
+				String domain = config.getDomain();
+				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLine product = m_productLineConfigManager.queryProductLine(productLine);
+
+				if (product == null || !product.isMetricDashboard()) {
+					unused.add(config.getId());
+				}
+			}
+			for (String id : unused) {
+				m_metricConfig.removeMetricItemConfig(id);
+			}
+			storeConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public MetricConfig getMetricConfig() {
@@ -92,29 +121,6 @@ public class MetricConfigManager implements Initializable {
 		}
 
 		deleteUnusedConfig();
-	}
-
-	private void deleteUnusedConfig() {
-		try {
-			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
-			List<String> unused = new ArrayList<String>();
-
-			for (MetricItemConfig config : configs.values()) {
-				String domain = config.getDomain();
-				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
-				ProductLine product = m_productLineConfigManager.queryProductLine(productLine);
-
-				if (product == null || !product.isMetricDashboard()) {
-					unused.add(config.getId());
-				}
-			}
-			for (String id : unused) {
-				m_metricConfig.removeMetricItemConfig(id);
-			}
-			storeConfig();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
@@ -167,6 +173,62 @@ public class MetricConfigManager implements Initializable {
 			}
 		});
 		return configs;
+	}
+
+	public List<MetricItemConfig> queryMetricItemConfigs(String tag) {
+		List<MetricItemConfig> metricItemConfigs = new ArrayList<MetricItemConfig>();
+
+		try {
+			Collection<MetricItemConfig> configs = getMetricConfig().getMetricItemConfigs().values();
+
+			for (MetricItemConfig metricItemConfig : configs) {
+				for (Tag itemTag : metricItemConfig.getTags()) {
+					String tagName = itemTag.getName();
+
+					if (tag.equals(tagName)) {
+						metricItemConfigs.add(metricItemConfig);
+						break;
+					}
+				}
+			}
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+		return metricItemConfigs;
+	}
+
+	public List<String> queryTags() {
+		Set<String> tags = new HashSet<String>();
+		try {
+			Collection<MetricItemConfig> configs = getMetricConfig().getMetricItemConfigs().values();
+
+			for (MetricItemConfig metricItemConfig : configs) {
+				for (Tag tag : metricItemConfig.getTags()) {
+					String tagName = tag.getName();
+					if (!StringUtils.isEmpty(tagName)) {
+						tags.add(tagName);
+					}
+				}
+			}
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+		List<String> result = new ArrayList<String>(tags);
+		Collections.sort(result, new Comparator<String>() {
+
+			@Override
+			public int compare(String o1, String o2) {
+				if (o1.equals(DEFAULT_TAG)) {
+					return -1;
+				}
+				if (o2.endsWith(DEFAULT_TAG)) {
+					return 1;
+				}
+				return o1.compareTo(o2);
+			}
+		});
+
+		return result;
 	}
 
 	public void refreshMetricConfig() throws DalException, SAXException, IOException {

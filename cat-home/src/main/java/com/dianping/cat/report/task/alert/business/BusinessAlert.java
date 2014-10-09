@@ -26,8 +26,6 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	public static final String ID = AlertType.Business.getName();
-	
-	public static final String MONITOR_TAG= "业务大盘";
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
@@ -46,7 +44,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		List<Tag> tags = config.getTags();
 
 		for (Tag tag : tags) {
-			if (MONITOR_TAG.equals(tag.getName())) {
+			if (MetricConfigManager.DEFAULT_TAG.equals(tag.getName())) {
 				return true;
 			}
 		}
@@ -57,7 +55,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		List<Tag> tags = config.getTags();
 
 		for (Tag tag : tags) {
-			if (MONITOR_TAG.equals(tag.getName()) && tagType.equals(tag.getType())) {
+			if (MetricConfigManager.DEFAULT_TAG.equals(tag.getName()) && tagType.equals(tag.getType())) {
 				return true;
 			}
 		}
