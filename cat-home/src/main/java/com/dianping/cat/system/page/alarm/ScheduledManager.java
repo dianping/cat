@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -29,7 +26,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 import com.site.lookup.util.StringUtils;
 
-public class ScheduledManager implements Initializable {
+public class ScheduledManager  {
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
@@ -150,43 +147,6 @@ public class ScheduledManager implements Initializable {
 			model.setOpState(Handler.SUCCESS);
 		} catch (Exception e) {
 			model.setOpState(Handler.FAIL);
-		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		try {
-			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-
-			for (ScheduledReport report : reports) {
-				String domain = report.getDomain();
-				Project project = m_projectService.findByCmdbDomain(domain);
-				
-				if (project != null) {
-					String cmdbDomain = project.getCmdbDomain();
-
-					if (StringUtils.isNotEmpty(cmdbDomain)) {
-						ScheduledReport entity = m_scheduledReportDao.createLocal();
-
-						entity.setKeyId(report.getKeyId());
-						entity.setId(report.getId());
-						entity.setNames(report.getNames());
-						entity.setDomain(cmdbDomain);
-
-						int succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
-						if (succ > 0) {
-							m_reports.put(cmdbDomain, report);
-						} else {
-							m_reports.put(domain, report);
-						}
-					} else {
-						m_reports.put(domain, report);
-					}
-				}
-			}
-			Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
 	}
 

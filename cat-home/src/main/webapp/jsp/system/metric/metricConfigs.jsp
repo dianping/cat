@@ -66,7 +66,7 @@
 				     <c:set var="key" value="${product.id}"/>
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
-					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>表示放入总的业务监控大盘</h4>
+					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;业务大盘标签会默认进行基线告警</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th width="9%"><h5 class='text-center'>项目</h5></th>
@@ -75,10 +75,10 @@
 				     			<th width="6%"><h5 class='text-center'>是否告警</h5></th>
 				     			<th width="14%"><h5 class='text-center'>MetricKey</h5></th>
 				     			<th width="16%"><h5 class='text-center'>标题</h5></th>
-				     			<th width="8%"><h5 class='text-center'>显示次数</h5></th>
-				     			<th width="8%"><h5 class='text-center'>显示平均值</h5></th>
-				     			<th width="8%"><h5 class='text-center'>显示总和</h5></th>
-				     			<th width="8%"><h5 class='text-center'>标签</h5></th>
+				     			<th width="6%"><h5 class='text-center'>次数</h5></th>
+				     			<th width="6%"><h5 class='text-center'>平均值</h5></th>
+				     			<th width="6%"><h5 class='text-center'>总和</h5></th>
+				     			<th width="20%"><h5 class='text-center'>标签</h5></th>
 				     			<th width="13%"><h5 class='text-center'>操作
 								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
  								--%></h5></th>
@@ -98,18 +98,18 @@
 				     			</td>
 				     			<td style="word-wrap:break-word;word-break:break-all;">${config.metricKey}</td>
 				     			<td style="word-wrap:break-word;word-break:break-all;">${config.title}</td>
-				     			<td>${config.showCount}
-				     				<c:if test="${config.showCountDashboard}">
+				     			<td>
+				     				<c:if test="${config.showCount}">
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				     				</c:if>
 				     			</td>
-				     			<td>${config.showAvg}
-				     				<c:if test="${config.showAvgDashboard}">
+				     			<td>
+				     				<c:if test="${config.showAvg}">
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				     				</c:if>
 				     			</td>
-				     			<td>${config.showSum}
-				     				<c:if test="${config.showSumDashboard}">
+				     			<td>
+				     				<c:if test="${config.showSum}">
 				     					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
 				     				</c:if>
 				     			</td>
