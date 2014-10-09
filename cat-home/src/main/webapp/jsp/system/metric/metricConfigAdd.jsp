@@ -86,7 +86,7 @@
 				</tr>
 				<tr>
 					<td style="text-align:right" class="text-success" >显示次数曲线</td>
-					<td >
+					<td colspan='3'>
 						<c:choose>
 							<c:when test="${model.metricItemConfig.showCount}">
 								<input type="radio" name="metricItemConfig.showCount" value="true" checked />是	
@@ -111,23 +111,10 @@
 				        </button>
 			            <input name="countTags" type="hidden"/>
 					</td>
-					<td style="text-align:right" class="text-success">显示业务监控大盘</td>
-					<td>
-						<c:choose>
-							<c:when test="${model.metricItemConfig.showCountDashboard}">
-								<input type="radio" name="metricItemConfig.showCountDashboard" value="true" checked />是	
-								<input type="radio" name="metricItemConfig.showCountDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="metricItemConfig.showCountDashboard" value="true" />是
-								<input type="radio" name="metricItemConfig.showCountDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
-					</td>
 				</tr>
 				<tr>
 					<td style="text-align:right" class="text-success" >显示平均曲线</td>
-					<td >
+					<td colspan='3'>
 						<c:choose>
 							<c:when test="${model.metricItemConfig.showAvg}">
 								<input type="radio" name="metricItemConfig.showAvg" value="true" checked />是	
@@ -152,23 +139,10 @@
 				        </button>
 			            <input name="avgTags" type="hidden"/>
 					</td>
-					<td style="text-align:right" class="text-success" >显示业务监控大盘</td>
-					<td >
-						<c:choose>
-							<c:when test="${model.metricItemConfig.showAvgDashboard}">
-								<input type="radio" name="metricItemConfig.showAvgDashboard" value="true" checked />是	
-								<input type="radio" name="metricItemConfig.showAvgDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="metricItemConfig.showAvgDashboard" value="true" />是
-								<input type="radio" name="metricItemConfig.showAvgDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
-					</td>
 				</tr>
 				<tr>
 					<td style="text-align:right" class="text-success">显示求和曲线</td>
-					<td>
+					<td colspan='3'>
 						<c:choose>
 							<c:when test="${model.metricItemConfig.showSum}">
 								<input type="radio" name="metricItemConfig.showSum" value="true" checked />是	
@@ -192,19 +166,6 @@
 				            删除<i class="icon-trash icon-white"></i>
 				        </button>
 			            <input name="sumTags" type="hidden"/>
-					</td>
-					<td style="text-align:right" class="text-success">显示业务监控大盘</td>
-					<td>
-						<c:choose>
-							<c:when test="${model.metricItemConfig.showSumDashboard}">
-								<input type="radio" name="metricItemConfig.showSumDashboard" value="true" checked />是	
-								<input type="radio" name="metricItemConfig.showSumDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-						    	<input type="radio" name="metricItemConfig.showSumDashboard" value="true" />是
-								<input type="radio" name="metricItemConfig.showSumDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose>
 					</td>
 				</tr>
 				<tr>
