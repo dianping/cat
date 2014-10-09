@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <file path="thirdParty-codegen.xml" />
-  <file path="thirdParty-model.xml" />
+  <file path="thirdparty-codegen.xml" />
+  <file path="thirdparty-model.xml" />
 </manifest>
 

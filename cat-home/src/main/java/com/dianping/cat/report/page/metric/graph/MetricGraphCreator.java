@@ -20,7 +20,6 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.metric.group.entity.MetricKeyConfig;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
@@ -151,25 +150,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 		return currentValues;
 	}
 
-	private boolean isProductLineInGroup(String productLine, List<MetricKeyConfig> configs) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
-		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
-
-		for (MetricKeyConfig metric : configs) {
-			String domain = metric.getMetricDomain();
-			String type = metric.getMetricType();
-			String key = metric.getMetricKey();
-
-			for (MetricItemConfig item : metricConfig) {
-				if (item.getDomain().equalsIgnoreCase(domain) && item.getType().equalsIgnoreCase(type)
-				      && item.getMetricKey().equalsIgnoreCase(key)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	private boolean isProductLineInTag(String productLine, List<MetricItemConfig> configs) {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
 		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
@@ -187,29 +167,6 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			}
 		}
 		return false;
-	}
-
-	public Map<String, LineChart> buildDashboardByGroup(Date start, Date end, String metricGroup) {
-		Map<String, LineChart> result = new LinkedHashMap<String, LineChart>();
-		List<MetricKeyConfig> metricConfigs = m_metricGroupConfigManager.queryMetricGroupConfig(metricGroup);
-		Collection<ProductLine> productLines = m_productLineConfigManager.queryAllProductLines().values();
-		Map<String, LineChart> allCharts = new LinkedHashMap<String, LineChart>();
-
-		for (ProductLine productLine : productLines) {
-			if (isProductLineInGroup(productLine.getId(), metricConfigs)) {
-				allCharts.putAll(buildChartsByProductLine(productLine.getId(), start, end));
-			}
-		}
-		for (MetricKeyConfig metric : metricConfigs) {
-			String domain = metric.getMetricDomain();
-			String type = metric.getMetricType().equalsIgnoreCase("metric") ? "Metric" : metric.getMetricType();
-			String key = metric.getMetricKey();
-			String id = m_metricConfigManager.buildMetricKey(domain, type, key) + ":"
-			      + metric.getDisplayType().toUpperCase();
-
-			put(allCharts, result, id);
-		}
-		return result;
 	}
 
 	public Map<String, LineChart> buildDashboardByTag(Date start, Date end, String tag) {

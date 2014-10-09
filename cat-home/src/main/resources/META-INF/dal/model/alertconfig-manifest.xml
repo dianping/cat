@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="alertconfig-codegen.xml" />
-  <file path="alertconfig-model.xml" />
-</manifest>
-

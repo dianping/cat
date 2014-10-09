@@ -113,8 +113,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
 
-	METRIC_GROUP_CONFIG_UPDATE("metricGroupConfigUpdate"),
-
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
 	WEB_RULE("webRule"),
