@@ -13,6 +13,12 @@ public class ModelRequest {
 
 	private Map<String, String> m_properties = new LinkedHashMap<String, String>();
 
+	public ModelRequest(String domain, ModelPeriod period) {
+		m_domain = domain;
+		m_period = period;
+		m_startTime = period.getStartTime();
+	}
+
 	public ModelRequest(String domain, long startTime) {
 		m_domain = domain;
 		m_startTime = startTime;
