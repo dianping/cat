@@ -40,7 +40,10 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		return ID;
 	}
 
-	private boolean hasMonitorTag(MetricItemConfig config) {
+	public boolean needAlert(MetricItemConfig config) {
+		if (config.getAlarm()) {
+			return true;
+		}
 		List<Tag> tags = config.getTags();
 
 		for (Tag tag : tags) {
@@ -51,25 +54,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		return false;
 	}
 
-	private boolean hasMonitorTagAndType(MetricItemConfig config, String tagType) {
-		List<Tag> tags = config.getTags();
-
-		for (Tag tag : tags) {
-			if (MetricConfigManager.DEFAULT_TAG.equals(tag.getName()) && tagType.equals(tag.getType())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	public boolean needAlert(MetricItemConfig config) {
-		if (config.getAlarm() || hasMonitorTag(config)) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
 		if (needAlert(config)) {
 			String product = productLine.getId();
@@ -78,13 +62,13 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
 			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 
-			if (config.isShowAvg() || hasMonitorTagAndType(config, MetricType.AVG.getName())) {
+			if (config.isShowAvg()) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
 			}
-			if (config.isShowCount() || hasMonitorTagAndType(config, MetricType.COUNT.getName())) {
+			if (config.isShowCount()) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.COUNT));
 			}
-			if (config.isShowSum() || hasMonitorTagAndType(config, MetricType.SUM.getName())) {
+			if (config.isShowSum()) {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 

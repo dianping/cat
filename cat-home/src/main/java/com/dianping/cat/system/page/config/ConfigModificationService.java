@@ -12,7 +12,7 @@ import com.dianping.cat.report.page.JsonBuilder;
 public class ConfigModificationService {
 
 	@Inject
-	ConfigModificationDao m_configModificationDao;
+	private ConfigModificationDao m_configModificationDao;
 
 	public void store(String userName, String accountName, Payload payload) {
 		ConfigModification modification = m_configModificationDao.createLocal();

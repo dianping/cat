@@ -74,7 +74,7 @@
 						<th width="10%">标题</th>
 						<th width="5%">顺序</th>
 						<th width="5%">业务监控</th>
-						<th width="5%">外部监控</th>
+						<th width="5%">端到端监控</th>
 						<th width="5%">应用监控</th>
 						<th width="5%">网络监控</th>
 						<th width="5%">系统监控</th>
