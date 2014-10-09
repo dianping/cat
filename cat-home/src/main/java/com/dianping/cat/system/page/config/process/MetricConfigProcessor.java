@@ -18,7 +18,6 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
-import com.dianping.cat.system.config.MetricGroupConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -36,9 +35,6 @@ public class MetricConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private BusinessRuleConfigManager m_businessRuleConfigManager;
-
-	@Inject
-	private MetricGroupConfigManager m_metricGroupConfigManager;
 
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
@@ -137,15 +133,6 @@ public class MetricConfigProcessor extends BaseProcesser {
 			model.setOpState(m_metricConfigManager.deleteDomainConfig(m_metricConfigManager.buildMetricKey(
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
-			break;
-		case METRIC_GROUP_CONFIG_UPDATE:
-			String metricGroupConfig = payload.getContent();
-			if (!StringUtils.isEmpty(metricGroupConfig)) {
-				model.setOpState(m_metricGroupConfigManager.insert(metricGroupConfig));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_metricGroupConfigManager.getMetricGroupConfig().toString());
 			break;
 		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
 			String domainMetricRuleConfig = payload.getContent();
