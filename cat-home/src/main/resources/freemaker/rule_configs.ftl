@@ -247,9 +247,13 @@ function generateConfigsJsonString() {
 
                 if (starttime != "") {
                     config["starttime"] = starttime;
+                } else{
+                    config["starttime"] = "00:00";
                 }
                 if (endtime != "") {
                     config["endtime"] = endtime;
+                } else{
+                    config["endtime"] = "24:00";
                 }
                 configList.push(config);
             }

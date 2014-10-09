@@ -69,6 +69,7 @@ import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
@@ -162,6 +163,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));
@@ -179,9 +181,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
-		all.add(C(CdnGraphCreator.class).req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class,
-		      CachedMetricReportService.class, MetricConfigManager.class, ProductLineConfigManager.class,
-		      AlertInfo.class));
+		all.add(C(CdnGraphCreator.class)
+		      .req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class, CachedMetricReportService.class,
+		            MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class));
 		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class, ProjectService.class));
