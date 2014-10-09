@@ -40,6 +40,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private TagManager m_tagManager;
 
+	private static final String DEFAULT_TAG = "业务大盘";
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = MetricAnalyzer.ID)
@@ -86,6 +88,10 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(productLine)) {
 			String tag = payload.getTag();
 
+			if (StringUtils.isEmpty(tag)) {
+				tag = DEFAULT_TAG;
+				payload.setTag(tag);
+			}
 			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
 		} else {
 			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);
