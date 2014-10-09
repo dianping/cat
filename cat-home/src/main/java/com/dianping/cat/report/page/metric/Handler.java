@@ -88,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (StringUtils.isEmpty(tag)) {
 				tag = MetricConfigManager.DEFAULT_TAG;
-				payload.setTag(MetricConfigManager.DEFAULT_TAG);
+				payload.setTag(tag);
 			}
 			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
 		} else {
