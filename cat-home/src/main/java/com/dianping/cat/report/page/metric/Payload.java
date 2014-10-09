@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.metric;
 
-import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -71,11 +70,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getTag() {
-		if (StringUtil.isEmpty(m_tag)) {
-			return "业务大盘";
-		} else {
-			return m_tag;
-		}
+		return m_tag;
 	}
 
 	public int getTimeRange() {
