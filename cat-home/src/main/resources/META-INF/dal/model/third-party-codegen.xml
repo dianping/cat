@@ -1,4 +1,4 @@
-®<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="third-party-config" root="true">
     <entity-ref name="http" type="list" names="https" />
