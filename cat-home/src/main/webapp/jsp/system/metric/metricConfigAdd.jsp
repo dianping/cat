@@ -99,9 +99,16 @@
 						</c:choose>
 						<br><br>
 						<select class="tags" id="countSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addCountTag" type="button">
 			                添加标签<i class="icon-plus icon-white"></i>
@@ -140,9 +147,16 @@
 						</c:choose>
 						<br><br>
 						<select class="tags" id="avgSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addAvgTag" type="button">
 			                添加标签<i class="icon-plus icon-white"></i>
@@ -181,9 +195,16 @@
 						</c:choose>
 						<br><br>
 						<select class="tags" id="sumSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addSumTag" type="button">
 			                添加标签<i class="icon-plus icon-white"></i>
