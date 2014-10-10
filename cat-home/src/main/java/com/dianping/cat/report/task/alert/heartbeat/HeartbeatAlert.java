@@ -145,14 +145,14 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			double[] oldGcCounts = map.get("OldGcCount");
 			if (oldGcCounts == null) {
 				oldGcCounts = new double[60];
-				map.put("ThreadCount", oldGcCounts);
+				map.put("OldGcCount", oldGcCounts);
 			}
 			oldGcCounts[index] = period.getOldGcCount();
 
 			double[] memoryFrees = map.get("MemoryFree");
 			if (memoryFrees == null) {
 				memoryFrees = new double[60];
-				map.put("ThreadCount", memoryFrees);
+				map.put("MemoryFree", memoryFrees);
 			}
 			memoryFrees[index] = period.getMemoryFree();
 
