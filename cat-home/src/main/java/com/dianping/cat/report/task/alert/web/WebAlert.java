@@ -160,7 +160,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 
 		return report;
-
 	}
 
 	private List<Rule> queryRuelsForUrl(String url) {
