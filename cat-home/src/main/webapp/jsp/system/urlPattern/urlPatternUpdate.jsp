@@ -17,6 +17,7 @@
 		</div>
 		<div class="span10">
 		</br>
+			<h3 class="text-center text-success">修改Web端URL的规则</h3>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit">
 				<table style='width:100%' class='table table-striped table-bordered'>
 					<tr>
@@ -41,7 +42,7 @@
 						<td><span class="text-error">根据项目组查找需要发送告警的联系人信息</span></td>
 					</tr>
 					<tr>
-						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
+						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form> </div></div></div>

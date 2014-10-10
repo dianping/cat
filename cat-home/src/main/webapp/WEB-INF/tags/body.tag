@@ -40,8 +40,13 @@
 				</c:forEach>
             </ul> 
             <ul class="nav">
-          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Reports<b class="caret"></b></a>
+          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Monitors<b class="caret"></b></a>
           			<ul class="dropdown-menu">
+					<li class="nav-header">监控大盘</li>
+					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">系统报错大盘</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/metric?op=dashboard&domain=${model.domain}">业务监控大盘</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/network?op=dashboard&domain=${model.domain}">网络监控大盘</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控大盘</a></li>
 					<li class="nav-header">监控报表</li>
 					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>

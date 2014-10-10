@@ -13,7 +13,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("docName")
 	private String m_docName;
-
+	
+	@FieldMeta("subDocName")
+	private String m_subDocName;
+	
 	public Payload() {
 		super(ReportPage.HOME);
 	}
@@ -23,9 +26,21 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getSubDocName() {
+   	return m_subDocName;
+   }
+
+	public void setSubDocName(String subDocName) {
+   	m_subDocName = subDocName;
+   }
+
+	public void setAction(Action action) {
+   	m_action = action;
+   }
+
 	public String getDocName() {
 		if (StringUtils.isEmpty(m_docName)) {
-			return "dianping";
+			return "index";
 		} else {
 			return m_docName;
 		}
