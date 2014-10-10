@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.network.graph;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -111,16 +110,6 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			for (int i = 0; i < length; i++) {
 				sum = sum + value[i];
 			}
-		}
-		// if current report is not exist, use last day value replace it.
-		if (sum <= 0 && start < TimeUtil.getCurrentHour().getTime()) {
-			MetricReport lastMetricReport = m_metricReportService.queryMetricReport(productLine, new Date(start
-			      - TimeUtil.ONE_DAY));
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:ss");
-
-			m_logger.error("Replace error value, Metric report is not exsit, productLine:" + productLine + " ,date:"
-			      + sdf.format(new Date(start)));
-			return m_pruductDataFetcher.buildGraphData(lastMetricReport);
 		}
 		return currentValues;
 	}

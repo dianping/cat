@@ -3,9 +3,6 @@
 </br>
 
 </br>
-<a id="navdashboard" class="btn  btn-small btn-danger" href="/cat/s/config">修改项目分组【修改连接】</a>
-
-</br>
 </br>
 </br>
 <h4 class="text-error">CAT监控内部</h4>
