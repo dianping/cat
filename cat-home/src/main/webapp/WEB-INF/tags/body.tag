@@ -71,17 +71,17 @@
           	<ul class="nav">
          	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configs<b class="caret"></b></a>
           		<ul class="dropdown-menu">
-		           <li class='nav-header' style="margin-top:0px;">全局配置</li>
+		           <li class='nav-header' style="margin-top:0px;">项目配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRule">WEB告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appConfigUpdate">APP监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRule">APP告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>

@@ -1,17 +1,17 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <div class="well sidebar-nav" >
          <ul class="nav nav-list">
-           <li class='nav-header'>全局配置</li>
+           <li class='nav-header'>项目配置</li>
 	       <li class="text-left" id="projectList"><a href="?op=projects">项目信息配置</a></li>
 	       <li class="text-left" id="topologyProductLines"><a href="?op=topologyProductLines">项目分组配置</a></li>
 	       <li class="text-left" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate">机器分组配置</a></li>
            <li class='nav-header'>端到端监控配置</li>
 	       <li class="text-left" id="aggregationList"><a href="?op=aggregations">JS报错配置</a></li>
 	       <li class="text-left" id="urlPatternList"><a href="?op=urlPatterns">WEB监控配置</a></li>
-	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
-	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
 	       <li class="text-left" id="webRule"><a href="?op=webRule">WEB告警配置</a></li>
+	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
 	       <li class="text-left" id="appRule"><a href="?op=appRule">APP告警配置</a></li>
+	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
            <li class='nav-header'>应用监控配置</li>
 	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控配置</a></li>
 	       <li class="text-left" style="display:none" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate">业务XML规则</a></li>
