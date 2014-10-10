@@ -119,7 +119,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertMetric", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {

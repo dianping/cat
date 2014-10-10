@@ -40,7 +40,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("NetworkAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertNetwork", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {

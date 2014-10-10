@@ -90,7 +90,7 @@ public class ExceptionAlert implements Task {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertException", "M" + minuteStr);
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));

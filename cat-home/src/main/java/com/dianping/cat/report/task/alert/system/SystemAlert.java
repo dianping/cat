@@ -40,7 +40,7 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("SystemAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertSystem", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {

@@ -192,7 +192,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("HeartbeatAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertHeartbeat", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {

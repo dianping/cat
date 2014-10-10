@@ -70,7 +70,7 @@ public class AppAlert implements Task {
 			if (minute < 10) {
 				minuteStr = '0' + minuteStr;
 			}
-			Transaction t = Cat.newTransaction("AppAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertApp", "M" + minuteStr);
 			long current = System.currentTimeMillis();
 
 			try {
