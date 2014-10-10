@@ -30,7 +30,7 @@
 				省份 <select style="width: 100px;" name="province" id="province">
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 运营商 <select style="width: 120px;" name="operator" id="operator">
-						<option value="All">ALL</option>
+						<option value="">ALL</option>
 						<option value="中国电信">中国电信</option>
 						<option value="中国移动">中国移动</option>
 						<option value="中国联通">中国联通</option>
