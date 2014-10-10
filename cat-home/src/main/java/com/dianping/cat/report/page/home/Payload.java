@@ -12,11 +12,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("docName")
-	private String m_docName;
-	
+	private String m_docName = "userMonitor";
+
 	@FieldMeta("subDocName")
 	private String m_subDocName;
-	
+
 	public Payload() {
 		super(ReportPage.HOME);
 	}
@@ -27,23 +27,19 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getSubDocName() {
-   	return m_subDocName;
-   }
+		return m_subDocName;
+	}
 
 	public void setSubDocName(String subDocName) {
-   	m_subDocName = subDocName;
-   }
+		m_subDocName = subDocName;
+	}
 
 	public void setAction(Action action) {
-   	m_action = action;
-   }
+		m_action = action;
+	}
 
 	public String getDocName() {
-		if (StringUtils.isEmpty(m_docName)) {
-			return "index";
-		} else {
-			return m_docName;
-		}
+		return m_docName;
 	}
 
 	public void setAction(String action) {
