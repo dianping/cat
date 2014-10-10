@@ -15,5 +15,5 @@
 <p>用户只需要在command节点后面增加需要监控的命令字节点即可。</p>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor05.png"/>
 </br></br>
-<h4 class="text-error">3、APP端到端告警&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+<h4 class="text-error">3、APP端到端告警&nbsp;&nbsp;&nbsp;&nbsp;<a href="/cat/s/config?op=appRule">访问链接</a></h4>
 
