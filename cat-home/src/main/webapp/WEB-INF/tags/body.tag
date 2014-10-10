@@ -83,7 +83,7 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRule">WEB告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRule">APP告警配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控规则</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 			       <!-- <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">框架异常配置</a></li> -->
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=heartbeatRuleConfigList">心跳告警配置</a></li>
