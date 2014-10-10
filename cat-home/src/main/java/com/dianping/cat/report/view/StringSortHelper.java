@@ -1,57 +1,37 @@
 package com.dianping.cat.report.view;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import com.dianping.cat.Constants;
 
 public class StringSortHelper {
-	public static List<String> sort(List<String> lists) {
-		Collections.sort(lists);
-		return lists;
-	}
 
-	public static List<String> sort(Set<String> lists) {
-		if (lists == null) {
+	private static DomainComparator s_domainComparator = new DomainComparator();
+
+	private static IpComparator s_ipComparator = new IpComparator();
+
+	public static List<String> sortDomain(Collection<String> strs) {
+		if (strs == null) {
 			return null;
 		} else {
-			List<String> result = new ArrayList<String>();
-			for (String temp : lists) {
-				result.add(temp);
-			}
-			return sort(result);
+			List<String> result = new ArrayList<String>(strs);
+			Collections.sort(result, s_domainComparator);
+
+			return result;
 		}
 	}
 
-	public static List<String> sortDomain(List<String> lists) {
-		Collections.sort(lists, new DomainComparator());
-		return lists;
-	}
-
-	public static List<String> sortDomain(Set<String> lists) {
-		if (lists == null) {
+	public static List<String> sortIpAddress(Collection<String> strs) {
+		if (strs == null) {
 			return null;
 		} else {
-			List<String> result = new ArrayList<String>();
-			for (String domain : lists) {
-				result.add(domain);
-			}
-			return sortDomain(result);
-		}
-	}
+			List<String> result = new ArrayList<String>(strs);
+			Collections.sort(result, s_ipComparator);
 
-	public static List<String> sortString(Set<String> lists) {
-		if (lists == null) {
-			return null;
-		} else {
-			List<String> result = new ArrayList<String>();
-			for (String domain : lists) {
-				result.add(domain);
-			}
-			Collections.sort(result);
 			return result;
 		}
 	}
@@ -71,6 +51,27 @@ public class StringSortHelper {
 				return 1;
 			}
 			if (Constants.CAT.equals(d2)) {
+				return -1;
+			}
+			if (Constants.ALL.equals(d1)) {
+				return -1;
+			}
+			if (Constants.ALL.equals(d2)) {
+				return +1;
+			}
+
+			return d1.compareTo(d2);
+		}
+	}
+
+	public static class IpComparator implements Comparator<String> {
+		@Override
+		public int compare(String d1, String d2) {
+			if (d1 == null && d2 == null) {
+				return 0;
+			} else if (d1 == null) {
+				return 1;
+			} else if (d2 == null) {
 				return -1;
 			}
 			if (Constants.ALL.equals(d1)) {

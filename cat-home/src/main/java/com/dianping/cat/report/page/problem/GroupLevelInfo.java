@@ -78,7 +78,7 @@ public class GroupLevelInfo {
 	}
 
 	public List<String> getGroups() {
-		return StringSortHelper.sortString(m_groupStatistics.keySet());
+		return StringSortHelper.sortDomain(m_groupStatistics.keySet());
 	}
 
 	private String getShowDetailByMinte(int minute) {

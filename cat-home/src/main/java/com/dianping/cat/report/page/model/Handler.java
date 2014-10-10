@@ -146,7 +146,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				HeartbeatReport reportModel = (HeartbeatReport) dataModel;
 				Set<String> ips = reportModel.getIps();
 				if (ips.size() > 0) {
-					ipAddress = StringSortHelper.sort(ips).get(0);
+					ipAddress = StringSortHelper.sortIpAddress(ips).get(0);
 				}
 			}
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);

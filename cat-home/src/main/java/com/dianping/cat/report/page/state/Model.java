@@ -52,7 +52,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		}
-		return StringSortHelper.sort(m_report.getMachines().keySet());
+		return StringSortHelper.sortIpAddress(m_report.getMachines().keySet());
 	}
 
 	public String getMessage() {

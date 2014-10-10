@@ -93,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 		String ip = payload.getRealIp();
 
 		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
-			ip = StringSortHelper.sort(ips).get(0);
+			ip = StringSortHelper.sortIpAddress(ips).get(0);
 		}
 		return ip;
 	}
