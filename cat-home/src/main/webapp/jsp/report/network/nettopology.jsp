@@ -131,7 +131,7 @@ p {
 }
 </style>
 
-			<script type="text/javascript">
+<script type="text/javascript">
 
 <c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
 	$_netgraph.build("topo-${idx.index}",${topo.value});
@@ -156,24 +156,17 @@ function showOpNav() {
 
 </script>
 <style type="text/css">
-.row-fluid .span2{
-	width:10%;
-}
-.row-fluid .span10{
-	width:87%;
-}
-.well {
-padding: 10px 10px 10px 19p;
-}
-.nav-list  li  a{
-	padding:2px 15px;
+.row-fluid .span2 {
+	width: 15%;
 }
 
-.nav li  +.nav-header{
-	margin-top:2px;
+.row-fluid .span10 {
+	width: 82%;
 }
-.nav-header{
-	padding:5px 3px;
+
+.nav-list>li>a,.nav-list .nav-header {
+	margin-left: -19px;
+	margin-right: -19px;
 }
 </style>
 
