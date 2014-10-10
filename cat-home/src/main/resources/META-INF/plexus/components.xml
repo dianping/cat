@@ -4772,7 +4772,7 @@
 					<role>com.dianping.cat.system.page.config.process.AlertConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
+					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5074,15 +5074,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.config.ConfigModificationService</role>
-			<implementation>com.dianping.cat.system.page.config.ConfigModificationService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 				</requirement>
 			</requirements>
 		</component>
