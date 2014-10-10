@@ -13,7 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -52,7 +52,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 		if (result == null) {
 			Date start = new Date(date);
-			Date end = new Date(date + TimeUtil.ONE_HOUR);
+			Date end = new Date(date + TimeHelper.ONE_HOUR);
 
 			try {
 				result = m_reportService.queryMetricReport(product, start, end);

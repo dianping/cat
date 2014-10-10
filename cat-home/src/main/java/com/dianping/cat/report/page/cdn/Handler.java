@@ -11,7 +11,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.web.CityManager;
@@ -44,8 +44,8 @@ public class Handler implements PageHandler<Context> {
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
 
-		start = start - start % TimeUtil.ONE_HOUR;
-		end = end - end % TimeUtil.ONE_HOUR;
+		start = start - start % TimeHelper.ONE_HOUR;
+		end = end - end % TimeHelper.ONE_HOUR;
 
 		Date startDate = new Date(start);
 		Date endDate = new Date(end);

@@ -18,28 +18,36 @@
 </style>
 <br/>
 <br/>
-
-<div class="div_center" style="width:40%">
-		<h2 class="text-info">点评监控系统CAT</h2>
-		<form  class="form-horizontal" name="login" id="form" method="post" action="/cat/s/login">
-			<div class="control-group">
-				<label class="control-label text-success" for="account">用户名</label>
-				<div class="controls">
-					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
-						placeholder="域账号,例如yong.you" />
-				</div>
+<script>
+	$(document).ready(function() {
+		var url = window.location.href;
+		$('#rtnUrl').val(url);
+	});
+</script>
+<div class="div_center" style="width: 40%">
+	<h2 class="text-info">点评监控系统CAT</h2>
+	<form class="form-horizontal" name="login" id="form" method="post"
+		action="/cat/s/login">
+		<div class="control-group">
+			<label class="control-label text-success" for="account">用户名</label>
+			<div class="controls">
+				<input type="text" name="account" id="account" style="height: auto"
+					class="input-xlarge" placeholder="域账号,例如yong.you" />
 			</div>
-			<div class="control-group">
-				<label class="control-label text-success" for="password">密码</label>
-				<div class="controls">
-					<input type="password" name="password" id="password" style="height:auto" class="input-xlarge"
-						placeholder="域账号密码,例如xxx123" />
-				</div>
+		</div>
+		<div class="control-group">
+			<label class="control-label text-success" for="password">密码</label>
+			<div class="controls">
+				<input type="password" name="password" id="password"
+					style="height: auto" class="input-xlarge"
+					placeholder="域账号密码,例如xxx123" />
 			</div>
-			<div class="control-group">
-			    <div class="controls">
-			      <input type="submit" class="btn btn-primary" name="login" value="登录" />
-			    </div>
-			  </div>
-		</form>
-	</div>
+		</div>
+		<input type="hidden" id="rtnUrl" name="rtnUrl" value="" />
+		<div class="control-group">
+			<div class="controls">
+				<input type="submit" class="btn btn-primary" name="login" value="登录" />
+			</div>
+		</div>
+	</form>
+</div>

@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +17,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
@@ -65,7 +64,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			alerts = m_dataChecker.checkData(result, conditions);
 		} else if (minute < 0) {
 			long currentMill = new Date().getTime();
-			long lastHourMill = currentMill - currentMill % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR;
+			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 			HeartbeatReport lastHourReport = generateReport(domain, ip, lastHourMill);
 
 			if (lastHourReport != null) {
@@ -78,7 +77,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			}
 		} else {
 			long currentMill = new Date().getTime();
-			long lastHourMill = currentMill - currentMill % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR;
+			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 			HeartbeatReport lastHourReport = generateReport(domain, ip, lastHourMill);
 			double[] result = new double[maxMinute];
 
@@ -164,7 +163,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private void processDomain(String domain) {
 		long currentMill = new Date().getTime();
-		long currentHourMill = currentMill - currentMill % TimeUtil.ONE_HOUR;
+		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
 		HeartbeatReport report = generateReport(domain, null, currentHourMill);
 
 		for (Machine machine : report.getMachines().values()) {
@@ -186,13 +185,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			active = false;
 		}
 		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("HeartbeatAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertHeartbeat", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

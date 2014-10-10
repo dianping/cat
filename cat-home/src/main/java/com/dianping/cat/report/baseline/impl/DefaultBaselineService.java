@@ -14,7 +14,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
@@ -117,7 +117,7 @@ public class DefaultBaselineService implements BaselineService {
 	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
 		double[] result = new double[60];
 		Date today = TaskHelper.todayZero(reportPeriod);
-		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeUtil.ONE_HOUR);
+		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeHelper.ONE_HOUR);
 		double[] dayResult = queryDailyBaseline(reportName, key, today);
 
 		if (dayResult != null) {

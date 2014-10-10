@@ -46,6 +46,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
@@ -63,7 +64,6 @@ import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.web.graph.WebReportConvertor;
-import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -146,7 +146,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				HeartbeatReport reportModel = (HeartbeatReport) dataModel;
 				Set<String> ips = reportModel.getIps();
 				if (ips.size() > 0) {
-					ipAddress = StringSortHelper.sort(ips).get(0);
+					ipAddress = SortHelper.sortIpAddress(ips).get(0);
 				}
 			}
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);

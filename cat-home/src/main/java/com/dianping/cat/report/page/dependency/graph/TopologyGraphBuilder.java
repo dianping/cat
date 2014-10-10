@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
@@ -65,7 +65,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	}
 
 	private TopologyGraph findOrCreateGraph() {
-		long time = m_date.getTime() + m_minute * TimeUtil.ONE_MINUTE;
+		long time = m_date.getTime() + m_minute * TimeHelper.ONE_MINUTE;
 		TopologyGraph graph = m_graphs.get(time);
 
 		if (graph == null) {

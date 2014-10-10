@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 
@@ -70,8 +70,8 @@ public class ProblemRender {
 			temp.setType(type).setCount(count).setUrl(graphUrl);
 			m_types.add(temp);
 		}
-		Date lastDay = new Date(m_date.getTime() - TimeUtil.ONE_DAY);
-		Date lastWeek = new Date(m_date.getTime() - 7 * TimeUtil.ONE_DAY);
+		Date lastDay = new Date(m_date.getTime() - TimeHelper.ONE_DAY);
+		Date lastWeek = new Date(m_date.getTime() - 7 * TimeHelper.ONE_DAY);
 		String currentUrl = buildProblemUrl(m_date);
 		String lastDayUrl = buildProblemUrl(lastDay);
 		String lastWeekUrl = buildProblemUrl(lastWeek);

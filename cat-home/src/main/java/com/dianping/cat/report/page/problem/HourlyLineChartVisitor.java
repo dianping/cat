@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.LineChart;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
@@ -34,7 +34,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		m_state = state;
 
 		m_graphItem.setSize(SIZE);
-		m_graphItem.setStep(TimeUtil.ONE_MINUTE);
+		m_graphItem.setStep(TimeHelper.ONE_MINUTE);
 		m_graphItem.setStart(start);
 
 		String subTitle = type;

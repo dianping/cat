@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -33,7 +33,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 			if (report == null) {
 				report = new HeartbeatReport(domain);
 				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
 			}
 		}
 		return report;

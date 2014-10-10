@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.GraphEntity;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
@@ -30,7 +30,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private GraphDao m_graphDao;
 
 	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR);
 		Map<String, String[]> hourlyDate = getHourlyDatas(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
 	}
@@ -99,7 +99,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		item.setSize(size);
 		item.setTitle(title);
 		item.addSubTitle(title);
-		item.setStep(TimeUtil.ONE_MINUTE);
+		item.setStep(TimeHelper.ONE_MINUTE);
 		double[] activeThread = graphData.get(key);
 		item.addValue(activeThread);
 		return item;
@@ -153,7 +153,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private Map<String, String[]> getHourlyDatas(List<Graph> graphs, Date start, int size) {
 		Map<String, String[]> heartBeats = initial(size);
 		for (Graph graph : graphs) {
-			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
+			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_HOUR);
 			String detailContent = graph.getDetailContent();
 			String[] alldates = detailContent.split("\n");
 
@@ -207,7 +207,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
 		String queryType = payload.getType();
 

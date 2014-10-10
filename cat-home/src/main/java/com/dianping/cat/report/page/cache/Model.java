@@ -8,8 +8,8 @@ import java.util.Set;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta("cache")
 public class Model extends AbstractReportModel<Action, Context> {
@@ -44,7 +44,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
 
-			return StringSortHelper.sortDomain(domainNames);
+			return SortHelper.sortDomain(domainNames);
 		}
 	}
 
@@ -52,7 +52,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return StringSortHelper.sortDomain(m_report.getIps());
+			return SortHelper.sortDomain(m_report.getIps());
 		}
 	}
 

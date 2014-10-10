@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -41,7 +41,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	}
 
 	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryHeartbeatReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryHeartbeatReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

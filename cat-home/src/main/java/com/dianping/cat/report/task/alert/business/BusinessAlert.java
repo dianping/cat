@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.business;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +15,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
@@ -113,13 +113,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			active = false;
 		}
 		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("MetricAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertMetric", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

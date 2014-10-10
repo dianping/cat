@@ -19,7 +19,7 @@ import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
@@ -65,16 +65,16 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	public int computeQueryType(Date start, Date end) {
 		long duration = end.getTime() - start.getTime();
 
-		if (duration == TimeUtil.ONE_HOUR) {
+		if (duration == TimeHelper.ONE_HOUR) {
 			return s_hourly;
 		}
-		if (duration == TimeUtil.ONE_DAY) {
+		if (duration == TimeHelper.ONE_DAY) {
 			return s_daily;
 		}
 		Calendar startCal = Calendar.getInstance();
 		startCal.setTime(start);
 
-		if (duration == TimeUtil.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+		if (duration == TimeHelper.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
 			return s_weekly;
 		}
 		Calendar endCal = Calendar.getInstance();
@@ -98,7 +98,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			domains.addAll(queryAllDomains(new Date(startTime)));
 		}
 		return domains;

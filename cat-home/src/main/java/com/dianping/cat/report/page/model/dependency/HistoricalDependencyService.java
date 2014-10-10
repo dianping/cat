@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -42,7 +42,7 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 
 	private DependencyReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		return m_reportService
-		      .queryDependencyReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		      .queryDependencyReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

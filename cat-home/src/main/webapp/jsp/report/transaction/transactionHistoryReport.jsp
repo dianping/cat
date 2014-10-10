@@ -15,7 +15,7 @@
 	<tr style="text-align: left">
 		<th>机器:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
-   	  		<c:choose>
+   	  		    <c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}"
 									class="current">${ip}</a>

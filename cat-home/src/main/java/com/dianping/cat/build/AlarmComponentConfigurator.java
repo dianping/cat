@@ -60,7 +60,6 @@ import com.dianping.cat.report.task.alert.sender.sender.Sender;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.alert.sender.sender.SmsSender;
 import com.dianping.cat.report.task.alert.sender.sender.WeixinSender;
-import com.dianping.cat.report.task.alert.sender.spliter.DbSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.MailSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.SmsSpliter;
 import com.dianping.cat.report.task.alert.sender.spliter.Spliter;
@@ -158,8 +157,6 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Spliter.class, SmsSpliter.ID, SmsSpliter.class));
 
 		all.add(C(Spliter.class, WeixinSpliter.ID, WeixinSpliter.class));
-
-		all.add(C(Spliter.class, DbSpliter.ID, DbSpliter.class));
 
 		all.add(C(SpliterManager.class));
 

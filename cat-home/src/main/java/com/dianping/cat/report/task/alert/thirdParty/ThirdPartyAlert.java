@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.report.task.alert.AlertType;
@@ -27,7 +26,7 @@ public class ThirdPartyAlert implements Task {
 	@Inject
 	private AlertManager m_sendManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private BlockingQueue<ThirdPartyAlertEntity> m_entities = new ArrayBlockingQueue<ThirdPartyAlertEntity>(5000);
 
@@ -56,15 +55,9 @@ public class ThirdPartyAlert implements Task {
 			active = false;
 		}
 		while (active) {
+			Transaction t = Cat.newTransaction("AlertThirdParty", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ThirdPartyAlert", "M" + minuteStr);
-
+			
 			try {
 				List<ThirdPartyAlertEntity> alertEntities = new ArrayList<ThirdPartyAlertEntity>();
 

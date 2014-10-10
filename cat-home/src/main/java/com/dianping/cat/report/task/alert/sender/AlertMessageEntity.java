@@ -20,6 +20,10 @@ public class AlertMessageEntity {
 		m_content = content;
 		m_receivers = receivers;
 	}
+	
+	public void setContent(String content) {
+   	m_content = content;
+   }
 
 	public String getContent() {
 		return m_content;

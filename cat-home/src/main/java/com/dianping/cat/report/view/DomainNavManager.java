@@ -15,7 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.service.ProjectService;
 
 public class DomainNavManager implements Task, Initializable {
@@ -119,7 +119,7 @@ public class DomainNavManager implements Task, Initializable {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(3 * TimeUtil.ONE_MINUTE);
+				Thread.sleep(3 * TimeHelper.ONE_MINUTE);
 			} catch (InterruptedException e) {
 				active = false;
 			}

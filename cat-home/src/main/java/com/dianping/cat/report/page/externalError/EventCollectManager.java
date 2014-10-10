@@ -21,7 +21,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.EventEntity;
@@ -106,7 +106,7 @@ public class EventCollectManager implements Initializable, LogEnabled {
 	public List<Event> queryEvents(String domain, Date date) {
 		long current = System.currentTimeMillis();
 
-		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
+		if (current - date.getTime() < TimeHelper.ONE_HOUR * 2) {
 			return queryEventsByMemory(domain, date, 10);
 		} else {
 			return queryEventsByDB(domain, date, 10);
@@ -114,8 +114,8 @@ public class EventCollectManager implements Initializable, LogEnabled {
 	}
 
 	private List<Event> queryEventsByDB(String domain, Date date, int minute) {
-		Date start = new Date(date.getTime() - TimeUtil.ONE_MINUTE * minute);
-		Date end = new Date(date.getTime() + TimeUtil.ONE_MINUTE);
+		Date start = new Date(date.getTime() - TimeHelper.ONE_MINUTE * minute);
+		Date end = new Date(date.getTime() + TimeHelper.ONE_MINUTE);
 
 		try {
 			return m_eventDao.findByDomainTime(domain, start, end, EventEntity.READSET_FULL);
@@ -127,10 +127,10 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 	private List<Event> queryEventsByMemory(String domain, Date date, int minute) {
 		List<Event> result = new ArrayList<Event>();
-		long time = date.getTime() + TimeUtil.ONE_MINUTE - date.getTime() % TimeUtil.ONE_MINUTE;
+		long time = date.getTime() + TimeHelper.ONE_MINUTE - date.getTime() % TimeHelper.ONE_MINUTE;
 
 		for (int i = 0; i < minute; i++) {
-			List<Event> events = findEvents(time - i * TimeUtil.ONE_MINUTE, domain);
+			List<Event> events = findEvents(time - i * TimeHelper.ONE_MINUTE, domain);
 			if (events != null) {
 				result.addAll(events);
 			}
@@ -156,11 +156,11 @@ public class EventCollectManager implements Initializable, LogEnabled {
 						m_eventDao.insert(error);
 
 						long date = error.getDate().getTime();
-						long minute = date - date % TimeUtil.ONE_MINUTE;
+						long minute = date - date % TimeHelper.ONE_MINUTE;
 						String domain = error.getDomain();
 
 						findOrCreateEvents(minute, domain).add(error);
-						m_events.remove(minute - TimeUtil.ONE_HOUR * 3);
+						m_events.remove(minute - TimeHelper.ONE_HOUR * 3);
 					}
 				} catch (InterruptedException e) {
 					active = false;

@@ -12,7 +12,7 @@ public interface CapacityUpdater {
 
 	public static final int MONTHLY_TYPE = 4;
 	
-	public static final double CAPACITY = 5.0;
+	public static final double CAPACITY = 15.0;
 
 	public void updateDBCapacity(double capacity) throws DalException;
 

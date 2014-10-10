@@ -11,7 +11,7 @@
 <h4 class="text-error">2、Web端到端配置&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/config?op=urlPatterns">访问链接</a> </h4>
 <img  class="img-polaroid"  width='80%'  src="${model.webapp}/images/userMonitor04.png"/>
 </br></br>
-<h4 class="text-error">3、Web端到端告警&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+<h4 class="text-error">3、Web端到端告警&nbsp;&nbsp;&nbsp;&nbsp; <a href="/cat/s/config?op=webRule">访问链接</a> </h4>
 
 
 

@@ -15,7 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo;
@@ -57,11 +57,11 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		long endTime = 0;
 		long currentTime = System.currentTimeMillis();
 		if (end.getTime() > currentTime) {
-			endTime = currentTime - currentTime % TimeUtil.ONE_MINUTE - m_extraTime * TimeUtil.ONE_MINUTE;
+			endTime = currentTime - currentTime % TimeHelper.ONE_MINUTE - m_extraTime * TimeHelper.ONE_MINUTE;
 		} else {
 			endTime = end.getTime();
 		}
-		long start = endTime - minute * TimeUtil.ONE_MINUTE;
+		long start = endTime - minute * TimeHelper.ONE_MINUTE;
 		Set<Long> sets = new HashSet<Long>();
 
 		for (Entry<Long, Double> entry : current.entrySet()) {
@@ -74,7 +74,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		}
 
 		for (int i = minute; i > 0; i--) {
-			long time = endTime - i * TimeUtil.ONE_MINUTE;
+			long time = endTime - i * TimeHelper.ONE_MINUTE;
 			Double value = all.get(time);
 
 			if (value != null) {
@@ -100,7 +100,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		long startTime = start.getTime();
 
 		for (int i = 0; i < length; i++) {
-			map.put(startTime + step * i * TimeUtil.ONE_MINUTE, data[i]);
+			map.put(startTime + step * i * TimeHelper.ONE_MINUTE, data[i]);
 		}
 		return map;
 	}
@@ -111,9 +111,9 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 	}
 
 	private boolean isCurrentMode(Date date) {
-		Date current = TimeUtil.getCurrentHour();
+		Date current = TimeHelper.getCurrentHour();
 
-		return current.getTime() == date.getTime() - TimeUtil.ONE_HOUR;
+		return current.getTime() == date.getTime() - TimeHelper.ONE_HOUR;
 	}
 
 	protected void mergeMap(Map<String, double[]> all, Map<String, double[]> item, int size, int index) {
@@ -154,13 +154,13 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 	}
 
 	protected double[] queryBaseline(String key, Date start, Date end) {
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_MINUTE);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
 		double[] result = new double[size];
 		int index = 0;
 		long startLong = start.getTime();
 		long endLong = end.getTime();
 
-		for (; startLong < endLong; startLong += TimeUtil.ONE_HOUR) {
+		for (; startLong < endLong; startLong += TimeHelper.ONE_HOUR) {
 			double[] values = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, key, new Date(startLong));
 
 			if (values != null) {

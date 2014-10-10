@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -13,7 +12,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.message.Transaction;
@@ -30,7 +29,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 	@Inject
 	private ThirdPartyConfigManager m_configManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private Logger m_logger;
 
@@ -40,13 +39,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ThirdPartyAlertBuilder", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertThirdPartyBuilder", TimeHelper.getMinuteStr());
 
 			try {
 				buildAlertEntities(current);

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 
 public class BaseHistoryGraphs {
 	
@@ -25,11 +25,11 @@ public class BaseHistoryGraphs {
 
 		if (queryType.equals("day")) {
 			result.add(buildSingalTitle(date, size, step));
-			result.add(buildSingalTitle(new Date(date.getTime() - TimeUtil.ONE_DAY), size, step));
-			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeUtil.ONE_DAY), size, step));
+			result.add(buildSingalTitle(new Date(date.getTime() - TimeHelper.ONE_DAY), size, step));
+			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeHelper.ONE_DAY), size, step));
 		} else if (queryType.equals("week")) {
 			result.add(buildSingalTitle(date, size, step));
-			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeUtil.ONE_DAY), size, step));
+			result.add(buildSingalTitle(new Date(date.getTime() - 7 * TimeHelper.ONE_DAY), size, step));
 		} else if (queryType.equals("month")) {
 			result.add(buildSingalTitle(date, size, step));
 		}

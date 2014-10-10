@@ -23,7 +23,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
@@ -98,8 +98,8 @@ public class Handler implements PageHandler<Context> {
 
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
-		start = start - start % TimeUtil.ONE_HOUR;
-		end = end - end % TimeUtil.ONE_HOUR;
+		start = start - start % TimeHelper.ONE_HOUR;
+		end = end - end % TimeHelper.ONE_HOUR;
 		Date startDate = new Date(start);
 		Date endDate = new Date(end);
 

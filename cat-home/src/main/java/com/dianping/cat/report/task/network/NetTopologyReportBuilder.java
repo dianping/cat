@@ -13,7 +13,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.HourlyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.nettopo.entity.Connection;
 import com.dianping.cat.home.nettopo.entity.Interface;
 import com.dianping.cat.home.nettopo.entity.NetGraph;
@@ -60,7 +60,7 @@ public class NetTopologyReportBuilder implements ReportTaskBuilder {
 		Map<String, MetricReport> reports = new HashMap<String, MetricReport>();
 
 		for (String group : groups) {
-			Date end = new Date(period.getTime() + TimeUtil.ONE_HOUR);
+			Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
 			MetricReport report = m_reportService.queryMetricReport(group, period, end);
 
 			reports.put(group, report);

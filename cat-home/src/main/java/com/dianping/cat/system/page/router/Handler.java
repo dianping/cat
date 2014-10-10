@@ -13,7 +13,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
@@ -42,7 +42,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 		Date start = payload.getDate();
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, start, end);
 
 		switch (action) {

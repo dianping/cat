@@ -8,7 +8,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.site.lookup.util.StringUtils;
 
@@ -169,7 +169,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		try {
 			return m_format.parse(m_startTime);
 		} catch (Exception e) {
-			return new Date(System.currentTimeMillis() - TimeUtil.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR);
 		}
 	}
 

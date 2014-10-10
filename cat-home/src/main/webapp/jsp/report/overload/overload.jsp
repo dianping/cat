@@ -37,9 +37,9 @@
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
 			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
+			<%--<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
 			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>&nbsp;&nbsp;
-			<div class="btn-group" data-toggle="buttons-checkbox">
+			 <div class="btn-group" data-toggle="buttons-checkbox">
 			  <button id="hourlyButton" type="button" class="btn btn-info">小时</button>
 			  <button id="dailyButton" type="button" class="btn btn-info">天报</button>
 			  <button id="weeklyButton" type="button" class="btn btn-info">周报</button>
@@ -48,7 +48,7 @@
 			  <input type='hidden' id='dailyStatus' value='${payload.showDaily}'/>
 			  <input type='hidden' id='weeklyStatus' value='${payload.showWeekly}'/>
 			  <input type='hidden' id='monthlyStatus' value='${payload.showMonthly}' />
-			</div>
+			</div> --%>
 			<br><br>
 		</div>
 		<div id="DatabaseReport">

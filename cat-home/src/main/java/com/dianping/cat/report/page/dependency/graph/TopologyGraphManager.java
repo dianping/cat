@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.TopologyGraphEntity;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
@@ -189,13 +189,13 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private TopologyGraph queryGraphFromMemory(long time) {
 		TopologyGraph graph = m_topologyGraphs.get(time);
 		long current = System.currentTimeMillis();
-		long minute = current - current % TimeUtil.ONE_MINUTE;
+		long minute = current - current % TimeHelper.ONE_MINUTE;
 
-		if ((minute - time) <= 3 * TimeUtil.ONE_MINUTE && graph == null) {
-			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+		if ((minute - time) <= 3 * TimeHelper.ONE_MINUTE && graph == null) {
+			graph = m_topologyGraphs.get(time - TimeHelper.ONE_MINUTE);
 
 			if (graph == null) {
-				graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE * 2);
+				graph = m_topologyGraphs.get(time - TimeHelper.ONE_MINUTE * 2);
 			}
 		}
 		return graph;
@@ -225,7 +225,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
 					m_topologyGraphs.put(entry.getKey(), entry.getValue());
 
-					m_topologyGraphs.remove(entry.getKey() - TimeUtil.ONE_HOUR * 2);
+					m_topologyGraphs.remove(entry.getKey() - TimeHelper.ONE_HOUR * 2);
 				}
 				t.setStatus(Message.SUCCESS);
 			} catch (Exception e) {
@@ -237,7 +237,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 		private List<DependencyReport> fetchReport(Collection<String> domains) {
 			long current = System.currentTimeMillis();
-			long currentHour = current - current % TimeUtil.ONE_HOUR;
+			long currentHour = current - current % TimeHelper.ONE_HOUR;
 			List<DependencyReport> reports = new ArrayList<DependencyReport>();
 			Transaction t = Cat.newTransaction(DEPENDENCY, "FetchReport");
 

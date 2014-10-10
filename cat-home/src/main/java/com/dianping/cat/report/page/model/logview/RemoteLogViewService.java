@@ -9,7 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
@@ -34,9 +34,9 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 		if (period.isHistorical()) {
 			long time = Long.parseLong(request.getProperty("timestamp"));
 			long current = System.currentTimeMillis();
-			long currentHour = current - current % TimeUtil.ONE_HOUR;
+			long currentHour = current - current % TimeHelper.ONE_HOUR;
 
-			if (time == currentHour - 2 * TimeUtil.ONE_HOUR) {
+			if (time == currentHour - 2 * TimeHelper.ONE_HOUR) {
 				return true;
 			}
 		} else {

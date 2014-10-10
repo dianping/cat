@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.exception;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
@@ -42,7 +41,7 @@ public class ExceptionAlert implements Task {
 	@Inject
 	protected AlertManager m_sendManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private static final int ALERT_PERIOD = 1;
 
@@ -50,7 +49,7 @@ public class ExceptionAlert implements Task {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
-		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeUtil.ONE_MINUTE));
+		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
 	}
@@ -84,16 +83,10 @@ public class ExceptionAlert implements Task {
 		}
 		while (active) {
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ExceptionAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());
 
 			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeUtil.ONE_MINUTE * 2));
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));
 				Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
 				List<Item> itemList = new ArrayList<Item>();
 

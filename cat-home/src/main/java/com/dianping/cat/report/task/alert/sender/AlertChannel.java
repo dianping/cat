@@ -6,9 +6,7 @@ public enum AlertChannel {
 
 	SMS("sms"),
 
-	WEIXIN("weixin"),
-
-	DATABASE("database");
+	WEIXIN("weixin");
 
 	private String m_name;
 

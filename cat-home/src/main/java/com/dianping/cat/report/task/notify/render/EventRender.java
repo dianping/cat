@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.event.DisplayTypes;
 
 public class EventRender extends BaseVisitor {
@@ -64,8 +64,8 @@ public class EventRender extends BaseVisitor {
 	@Override
 	public void visitEventReport(EventReport eventReport) {
 		super.visitEventReport(eventReport);
-		Date lastDay = new Date(m_date.getTime() - TimeUtil.ONE_DAY);
-		Date lastWeek = new Date(m_date.getTime() - 7 * TimeUtil.ONE_DAY);
+		Date lastDay = new Date(m_date.getTime() - TimeHelper.ONE_DAY);
+		Date lastWeek = new Date(m_date.getTime() - 7 * TimeHelper.ONE_DAY);
 		String currentUrl = buildEventUrl(m_date);
 		String lastDayUrl = buildEventUrl(lastDay);
 		String lastWeekUrl = buildEventUrl(lastWeek);
@@ -90,7 +90,7 @@ public class EventRender extends BaseVisitor {
 			if (!types.contains(id)) {
 				Type temp = new Type();
 
-				type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);
+				type.setTps(type.getTotalCount() * 1000d / TimeHelper.ONE_DAY / m_totalDays);
 				temp.setType(type);
 				temp.setUrl(buildGraphUrl(type));
 				m_types.add(temp);

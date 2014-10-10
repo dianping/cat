@@ -32,7 +32,7 @@ import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
@@ -134,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
+		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
 		model.setDashboardGraphData(dashboardGraph);
 	}
@@ -152,7 +152,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildExceptionDashboard(Model model, Payload payload, long date) {
 		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
+		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
@@ -210,7 +210,7 @@ public class Handler implements PageHandler<Context> {
 		      m_externalInfoBuilder.buildZabbixHeader(payload, model), externalErrors);
 		m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1));
+		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		String build = new DefaultJsonBuilder().build(topologyGraph);
 
 		model.setTopologyGraph(build);
@@ -232,7 +232,7 @@ public class Handler implements PageHandler<Context> {
 
 		Action action = payload.getAction();
 		long date = payload.getDate();
-		Date reportTime = new Date(date + TimeUtil.ONE_MINUTE * model.getMinute());
+		Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
 
 		switch (action) {
 		case TOPOLOGY:
@@ -338,7 +338,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (report != null && report.getStartTime() == null) {
 				report.setStartTime(new Date(payload.getDate()));
-				report.setStartTime(new Date(payload.getDate() + TimeUtil.ONE_HOUR));
+				report.setStartTime(new Date(payload.getDate() + TimeHelper.ONE_HOUR));
 			}
 			return report;
 		} else {

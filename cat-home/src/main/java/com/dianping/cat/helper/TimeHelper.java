@@ -3,7 +3,7 @@ package com.dianping.cat.helper;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimeUtil {
+public class TimeHelper {
 
 	public static final long ONE_MINUTE = 60 * 1000L;
 
@@ -12,6 +12,17 @@ public class TimeUtil {
 	public static final long ONE_DAY = 24 * ONE_HOUR;
 
 	public static final long ONE_WEEK = 7 * ONE_DAY;
+
+	public static String getMinuteStr() {
+		int minute = Calendar.getInstance().get(Calendar.MINUTE);
+		String minuteStr = String.valueOf(minute);
+
+		if (minute < 10) {
+			minuteStr = '0' + minuteStr;
+		}
+
+		return "M" + minuteStr;
+	}
 
 	public static Date getCurrentDay() {
 		Calendar cal = Calendar.getInstance();
@@ -23,7 +34,7 @@ public class TimeUtil {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentDay(int index) {
 		Calendar cal = Calendar.getInstance();
 
@@ -35,7 +46,7 @@ public class TimeUtil {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentHour() {
 		Calendar cal = Calendar.getInstance();
 
@@ -45,7 +56,7 @@ public class TimeUtil {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentHour(int index) {
 		Calendar cal = Calendar.getInstance();
 
@@ -56,7 +67,7 @@ public class TimeUtil {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentMinute() {
 		Calendar cal = Calendar.getInstance();
 

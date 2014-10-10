@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.service.ReportServiceManager;
 
@@ -32,17 +32,17 @@ public class StateGraphs {
 	private LineChart getDailyGraph(String domain, Date start, Date end, String key, String ip) {
 		List<StateReport> reports = new ArrayList<StateReport>();
 
-		for (long date = start.getTime(); date < end.getTime(); date = date + TimeUtil.ONE_HOUR) {
+		for (long date = start.getTime(); date < end.getTime(); date = date + TimeHelper.ONE_HOUR) {
 			StateReport report = getHourlyReport(date, domain, ip);
 
 			if (report != null) {
 				reports.add(report);
 			}
 		}
-		int day = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
+		int day = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR);
 		LineChart item = new LineChart();
 
-		item.setStart(start).setSize(day).setTitle(key).setStep(TimeUtil.ONE_HOUR);
+		item.setStart(start).setSize(day).setTitle(key).setStep(TimeHelper.ONE_HOUR);
 		item.addSubTitle(key);
 		item.addValue(getDataFromHourlySummary(reports, start.getTime(), day, key, ip));
 		return item;
@@ -128,7 +128,7 @@ public class StateGraphs {
 			StateShow show = new StateShow(ip);
 
 			show.visitStateReport(report);
-			int i = (int) ((startTime.getTime() - start) / TimeUtil.ONE_HOUR);
+			int i = (int) ((startTime.getTime() - start) / TimeHelper.ONE_HOUR);
 
 			if (key.equalsIgnoreCase("total")) {
 				result[i] = show.getTotal().getTotal();
@@ -166,13 +166,13 @@ public class StateGraphs {
 	private LineChart getHourlyGraph(StateReport report, String domain, Date start, Date end, String key, String ip) {
 		LineChart item = new LineChart();
 
-		item.setStart(start).setSize(60).setTitle(key).setStep(TimeUtil.ONE_MINUTE);
+		item.setStart(start).setSize(60).setTitle(key).setStep(TimeHelper.ONE_MINUTE);
 		item.addSubTitle(key);
 		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
 		return item;
 	}
 
 	private StateReport getHourlyReport(long date, String domain, String ip) {
-		return m_reportService.queryStateReport(domain, new Date(date), new Date(date + TimeUtil.ONE_HOUR));
+		return m_reportService.queryStateReport(domain, new Date(date), new Date(date + TimeHelper.ONE_HOUR));
 	}
 }
