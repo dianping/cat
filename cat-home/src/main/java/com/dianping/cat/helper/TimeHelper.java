@@ -13,6 +13,17 @@ public class TimeHelper {
 
 	public static final long ONE_WEEK = 7 * ONE_DAY;
 
+	public static String getMinuteStr() {
+		int minute = Calendar.getInstance().get(Calendar.MINUTE);
+		String minuteStr = String.valueOf(minute);
+
+		if (minute < 10) {
+			minuteStr = '0' + minuteStr;
+		}
+
+		return "M" + minuteStr;
+	}
+
 	public static Date getCurrentDay() {
 		Calendar cal = Calendar.getInstance();
 
@@ -23,7 +34,7 @@ public class TimeHelper {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentDay(int index) {
 		Calendar cal = Calendar.getInstance();
 
@@ -35,7 +46,7 @@ public class TimeHelper {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentHour() {
 		Calendar cal = Calendar.getInstance();
 
@@ -45,7 +56,7 @@ public class TimeHelper {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentHour(int index) {
 		Calendar cal = Calendar.getInstance();
 
@@ -56,7 +67,7 @@ public class TimeHelper {
 
 		return cal.getTime();
 	}
-	
+
 	public static Date getCurrentMinute() {
 		Calendar cal = Calendar.getInstance();
 

@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -186,13 +185,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			active = false;
 		}
 		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("AlertHeartbeat", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertHeartbeat", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

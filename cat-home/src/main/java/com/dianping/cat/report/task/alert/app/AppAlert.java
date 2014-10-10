@@ -64,13 +64,7 @@ public class AppAlert implements Task {
 			active = false;
 		}
 		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("AlertApp", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertApp", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

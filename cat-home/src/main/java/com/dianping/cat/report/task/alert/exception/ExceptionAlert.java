@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.exception;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -84,13 +83,7 @@ public class ExceptionAlert implements Task {
 		}
 		while (active) {
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("AlertException", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));

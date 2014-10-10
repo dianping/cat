@@ -1,6 +1,5 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -40,13 +39,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ThirdPartyAlertBuilder", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("ThirdPartyAlertBuilder", TimeHelper.getMinuteStr());
 
 			try {
 				buildAlertEntities(current);

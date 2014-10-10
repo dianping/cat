@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.network.nettopology;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -148,15 +147,9 @@ public class NetGraphManager implements Initializable, LogEnabled {
 			boolean active = true;
 
 			while (active) {
+				Transaction t = Cat.newTransaction("NetGraph", TimeHelper.getMinuteStr());
 				long current = System.currentTimeMillis();
-				int minute = Calendar.getInstance().get(Calendar.MINUTE);
-				String minuteStr = String.valueOf(minute);
-
-				if (minute < 10) {
-					minuteStr = '0' + minuteStr;
-				}
-				Transaction t = Cat.newTransaction("NetGraph", "M" + minuteStr);
-
+				
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 					Set<String> groups = queryAllGroups(netGraphTemplate);

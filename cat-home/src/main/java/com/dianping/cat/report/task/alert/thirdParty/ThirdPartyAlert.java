@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,15 +55,9 @@ public class ThirdPartyAlert implements Task {
 			active = false;
 		}
 		while (active) {
+			Transaction t = Cat.newTransaction("AlertThirdParty", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("ThirdPartyAlert", "M" + minuteStr);
-
+			
 			try {
 				List<ThirdPartyAlertEntity> alertEntities = new ArrayList<ThirdPartyAlertEntity>();
 
