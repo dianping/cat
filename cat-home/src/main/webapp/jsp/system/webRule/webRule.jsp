@@ -43,8 +43,12 @@
 					<c:set var="strs" value="${fn:split(item.id, ':')}" />
 					<c:set var="conditions" value="${fn:split(strs[0], ';')}" />
 					<c:set var="urlId" value="${conditions[0]}" />
-					<c:set var="city" value="${fn:split(conditions[1], '-')}" />
-					<c:set var="operator" value="${conditions[2]}" />
+					<c:set var="index" value="${fn:indexOf(strs[0], ';')}" />
+					<c:set var="length" value="${fn:length(strs[0])}" />
+					<c:set var="cityOperator" value="${fn:substring(strs[0], index + 1, length)}" />
+					<c:set var="cityStr" value="${fn:substringBefore(cityOperator, ';')}" />
+					<c:set var="city" value="${fn:split(cityStr, '-')}" />
+					<c:set var="operator" value="${fn:substringAfter(cityOperator, ';')}" />
 					<c:set var="type" value="${strs[1]}" />
 					<c:set var="name" value="${strs[2]}" />
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
@@ -54,23 +58,15 @@
 						</c:forEach>
 						<c:choose>
 						<c:when test="${not empty city[0]}">
-						<c:forEach var="i" items="${model.cityInfos}">
-							<c:if test="${i.key eq city[0]}">
-								<td>${i.key}</td>
-								<c:choose>
-								<c:when test="${not empty city[1]}">
-								<c:forEach var="i2" items="${i.value}">
-								<c:if test="${i2.city eq city[1]}">
-								<td>${i2.city}</td>
-								</c:if>
-								</c:forEach>
-								</c:when>
-								<c:otherwise>
+							<td>${city[0]}</td>
+							<c:choose>
+							<c:when test="${not empty city[1]}">
+								<td>${city[1]}</td>
+							</c:when>
+							<c:otherwise>
 								<td>All</td>
-								</c:otherwise>
-								</c:choose>
-							</c:if>
-						</c:forEach>
+							</c:otherwise>
+							</c:choose>
 						</c:when>
 						<c:otherwise>
 							<td>All</td>
