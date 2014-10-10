@@ -16,7 +16,7 @@
 	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控规则</a></li>
 	       <li class="text-left" style="display:none" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate">业务XML规则</a></li>
 	       <li class="text-left" id="exceptionConfigList"><a href="?op=exception">异常告警配置</a></li>
-	       <li class="text-left" id="bugConfigUpdate"><a href="?op=bugConfigUpdate">框架异常配置</a></li>
+	       <!-- <li class="text-left" id="bugConfigUpdate"><a href="?op=bugConfigUpdate">框架异常配置</a></li> -->
 	       <li class="text-left" id="heartbeatRuleConfigList"><a href="?op=heartbeatRuleConfigList">心跳告警配置</a></li>
 	       <li class="text-left" id="thirdPartyConfigUpdate"><a href="?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
 	       <li class="text-left" id="topylogyNodeConfigList"><a href="?op=topologyGraphNodeConfigList">应用阀值配置</a></li>
