@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.home;
 
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
