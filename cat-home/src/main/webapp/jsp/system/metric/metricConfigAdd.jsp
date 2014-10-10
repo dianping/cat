@@ -98,9 +98,16 @@
 							</c:otherwise>
 						</c:choose>
 						<select class="tags" id="countSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addCountTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
@@ -126,9 +133,16 @@
 							</c:otherwise>
 						</c:choose>
 						<select class="tags" id="avgSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addAvgTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
@@ -154,9 +168,16 @@
 							</c:otherwise>
 						</c:choose>
 						<select class="tags" id="sumSelect" multiple="multiple">
-							<c:forEach var="item" items="${model.tags}">
-				            	<option value="${item}">${item}</option>						
-							</c:forEach>
+							<c:choose> 
+      							<c:when test="${empty model.tags}"> 
+      								<option value="业务大盘">业务大盘</option>	
+      							</c:when>
+      							<c:otherwise>
+      								<c:forEach var="item" items="${model.tags}">
+						            	<option value="${item}">${item}</option>						
+									</c:forEach>
+      							</c:otherwise>
+      						</c:choose>
 						</select>
 						<button class="btn btn-success btn-small" id="addSumTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
@@ -235,7 +256,7 @@
 			$("#addCountTag").click(function(){
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span6" id="countInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="countInput" type="text"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
@@ -243,7 +264,7 @@
 			$("#addSumTag").click(function(){
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span6" id="sumInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="sumInput" type="text"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
@@ -251,7 +272,7 @@
 			$("#addAvgTag").click(function(){
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span6" id="avgInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="avgInput" type="text"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
@@ -260,7 +281,7 @@
 				var addButton = $(this).prev();
 				$(this).parent().find(".tags").remove();
 				$(this).parent().find(".tagsInput").remove();
-				addButton.before($('<input class="tagsInput span6" id="countInput" type="text" disabled></input>'));
+				addButton.before($('<input class="tagsInput span4" id="countInput" type="text" disabled></input>'));
 				addButton.addClass("disabled");
 				$(this).addClass("disabled");
 			})
@@ -269,7 +290,7 @@
 				var addButton = $(this).prev();
 				$(this).parent().find(".tags").remove();
 				$(this).parent().find(".tagsInput").remove();
-				addButton.before($('<input class="tagsInput span6" id="avgInput" type="text" disabled></input>'));
+				addButton.before($('<input class="tagsInput span4" id="avgInput" type="text" disabled></input>'));
 				addButton.addClass("disabled");
 				$(this).addClass("disabled");
 			})
@@ -278,7 +299,7 @@
 				var addButton = $(this).prev();
 				$(this).parent().find(".tags").remove();
 				$(this).parent().find(".tagsInput").remove();
-				addButton.before($('<input class="tagsInput span6" id="sumInput" type="text" disabled></input>'));
+				addButton.before($('<input class="tagsInput span4" id="sumInput" type="text" disabled></input>'));
 				addButton.addClass("disabled");
 				$(this).addClass("disabled");
 			})
