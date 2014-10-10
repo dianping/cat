@@ -24,8 +24,8 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.MapUtils;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.entity.Exception;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -297,11 +297,11 @@ public class Handler implements PageHandler<Context> {
 		String name = action.getName();
 		if ((!name.startsWith("history")) && (action != Action.BUG_HTTP_JSON)) {
 			if (payload.getPeriod().isCurrent()) {
-				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+				start = new Date(payload.getDate() - TimeHelper.ONE_HOUR);
+				end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 			} else {
 				start = new Date(payload.getDate());
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+				end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 			}
 		} else {
 			start = payload.getHistoryStartDate();
@@ -371,7 +371,7 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 		};
-		errors = MapUtils.sortMap(errors, errorCompator);
+		errors = SortHelper.sortMap(errors, errorCompator);
 
 		for (ErrorStatis temp : errors.values()) {
 			Comparator<java.util.Map.Entry<String, ExceptionItem>> compator = new Comparator<java.util.Map.Entry<String, ExceptionItem>>() {
@@ -385,8 +385,8 @@ public class Handler implements PageHandler<Context> {
 			Map<String, ExceptionItem> bugs = temp.getBugs();
 			Map<String, ExceptionItem> exceptions = temp.getExceptions();
 
-			temp.setBugs(MapUtils.sortMap(bugs, compator));
-			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
+			temp.setBugs(SortHelper.sortMap(bugs, compator));
+			temp.setExceptions(SortHelper.sortMap(exceptions, compator));
 		}
 		return errors;
 	}

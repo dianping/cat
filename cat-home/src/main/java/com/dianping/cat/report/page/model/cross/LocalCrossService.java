@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -34,7 +34,7 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 			if (report == null) {
 				report = new CrossReport(domain);
 				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
 			}
 		}
 		return report;

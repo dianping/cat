@@ -15,7 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
@@ -193,7 +193,7 @@ public class ScheduledManager  {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(TimeUtil.ONE_MINUTE);
+					Thread.sleep(TimeHelper.ONE_MINUTE);
 				} catch (InterruptedException e) {
 					active = false;
 				}

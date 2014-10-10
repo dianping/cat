@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -42,7 +42,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 
 	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		return m_reportService.queryTransactionReport(domain, new Date(timestamp),
-		      new Date(timestamp + TimeUtil.ONE_HOUR));
+		      new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -10,7 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 
 public class AlertInfo implements Initializable {
 
@@ -34,7 +34,7 @@ public class AlertInfo implements Initializable {
 		for (Entry<AlertMetric, Long> entry : m_alertInfos.entrySet()) {
 			Long value = entry.getValue();
 
-			if (currentTimeMillis - value < TimeUtil.ONE_MINUTE * minute) {
+			if (currentTimeMillis - value < TimeHelper.ONE_MINUTE * minute) {
 				keys.add(entry.getKey());
 			}
 		}

@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -36,7 +36,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		try {
 			return m_sdf.parse(m_date);
 		} catch (Exception e) {
-			return TimeUtil.getCurrentDay(-1);
+			return TimeHelper.getCurrentDay(-1);
 		}
 	}
 

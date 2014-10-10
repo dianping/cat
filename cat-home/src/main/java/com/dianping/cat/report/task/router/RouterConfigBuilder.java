@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.helper.MapUtils;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
@@ -39,7 +39,7 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Date end = new Date(period.getTime() + TimeUtil.ONE_DAY);
+		Date end = new Date(period.getTime() + TimeHelper.ONE_DAY);
 		StateReport report = m_reportService.queryStateReport(Constants.CAT, period, end);
 		RouterConfig routerConfig = new RouterConfig(Constants.CAT);
 		StateReportVisitor visitor = new StateReportVisitor();
@@ -54,14 +54,14 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 				return (int) (o2.getValue() - o1.getValue());
 			}
 		};
-		numbers = MapUtils.sortMap(numbers, compator);
+		numbers = SortHelper.sortMap(numbers, compator);
 		Map<Server, Long> servers = findAvaliableServers();
 
 		processMainServer(servers, routerConfig, numbers);
 		processBackServer(servers, routerConfig, numbers);
 
 		routerConfig.setStartTime(end);
-		routerConfig.setEndTime(new Date(end.getTime() + TimeUtil.ONE_DAY));
+		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
 
 		DailyReport dailyReport = new DailyReport();
 

@@ -22,7 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.nettopo.entity.Connection;
 import com.dianping.cat.home.nettopo.entity.Interface;
 import com.dianping.cat.home.nettopo.entity.NetGraph;
@@ -64,7 +64,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	protected Logger m_logger;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -75,17 +75,17 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		JsonBuilder jb = new JsonBuilder();
 		List<Pair<String, String>> netGraphData = new ArrayList<Pair<String, String>>();
 		long current = System.currentTimeMillis();
-		long currentHours = current - current % TimeUtil.ONE_HOUR;
+		long currentHours = current - current % TimeHelper.ONE_HOUR;
 		long startTime = start.getTime();
 		NetGraphSet netGraphSet = null;
 
 		if (startTime >= currentHours) {
 			netGraphSet = m_currentNetGraphSet;
-		} else if (startTime == currentHours - TimeUtil.ONE_HOUR) {
+		} else if (startTime == currentHours - TimeHelper.ONE_HOUR) {
 			netGraphSet = m_lastNetGraphSet;
 		} else {
 			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, new Date(start.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 		}
 
 		if (netGraphSet != null) {

@@ -18,7 +18,7 @@ import com.dianping.cat.core.dal.DailyGraphEntity;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.GraphEntity;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
@@ -95,7 +95,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public Map<String, double[]> buildGraphDatasForDaily(Date start, Date end, String type, String name,
 	      List<DailyGraph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_DAY);
 		double[] totalCount = new double[size];
 		double[] failureCount = new double[size];
 		double[] sum = new double[size];
@@ -108,7 +108,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (DailyGraph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_DAY);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 				
@@ -124,7 +124,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
 			for (DailyGraph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_DAY);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_DAY);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				
@@ -149,7 +149,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
 	      List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
 		double[] sum = new double[size];
@@ -162,7 +162,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 				
@@ -178,7 +178,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				
@@ -207,13 +207,13 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
+		long step = TimeHelper.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
 		if (queryType.equalsIgnoreCase("week") || queryType.equalsIgnoreCase("month")) {
-			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-			step = TimeUtil.ONE_DAY;
+			size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_DAY);
+			step = TimeHelper.ONE_DAY;
 		}
 
 		List<Map<String, double[]>> allDatas = null;
@@ -242,18 +242,18 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 		if (queryType.equalsIgnoreCase("day")) {
 			Map<String, double[]> currentGraph = getGraphDatasFromHour(start, end, domain, type, name, ip);
-			Map<String, double[]> lastDayGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
-			      new Date(end.getTime() - TimeUtil.ONE_DAY), domain, type, name, ip);
-			Map<String, double[]> lastWeekGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
-			      new Date(end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
+			Map<String, double[]> lastDayGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeHelper.ONE_DAY),
+			      new Date(end.getTime() - TimeHelper.ONE_DAY), domain, type, name, ip);
+			Map<String, double[]> lastWeekGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeHelper.ONE_WEEK),
+			      new Date(end.getTime() - TimeHelper.ONE_WEEK), domain, type, name, ip);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastDayGraph);
 			allDatas.add(lastWeekGraph);
 		} else if (queryType.equalsIgnoreCase("week")) {
 			Map<String, double[]> currentGraph = getGraphDatasFromDaily(start, end, domain, type, name, ip);
-			Map<String, double[]> lastWeek = getGraphDatasFromDaily(new Date(start.getTime() - TimeUtil.ONE_WEEK),
-			      new Date(end.getTime() - TimeUtil.ONE_WEEK), domain, type, name, ip);
+			Map<String, double[]> lastWeek = getGraphDatasFromDaily(new Date(start.getTime() - TimeHelper.ONE_WEEK),
+			      new Date(end.getTime() - TimeHelper.ONE_WEEK), domain, type, name, ip);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastWeek);
@@ -295,13 +295,13 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String ip = model.getIpAddress();
 
 		String display = name != null ? name : type;
-		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
-		long step = TimeUtil.ONE_MINUTE;
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
+		long step = TimeHelper.ONE_MINUTE;
 		String queryType = payload.getReportType();
 
 		if (queryType.equalsIgnoreCase("month") || queryType.equalsIgnoreCase("week")) {
-			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-			step = TimeUtil.ONE_DAY;
+			size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_DAY);
+			step = TimeHelper.ONE_DAY;
 		}
 		List<Map<String, double[]>> allDatas = buildLineChartData(start, end, domain, type, name, ip, queryType);
 		LineChart item = buildAvg(allDatas, start, size, step, display, queryType);
@@ -319,7 +319,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String queryIp = "All".equalsIgnoreCase(ip) == true ? "All" : ip;
 		List<DailyGraph> graphs = new ArrayList<DailyGraph>();
 
-		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeHelper.ONE_DAY) {
 			try {
 				DailyGraph graph = m_dailyGraphDao.findByDomainNameIpDate(new Date(startLong), queryIp, domain,
 				      TransactionAnalyzer.ID, DailyGraphEntity.READSET_FULL);
@@ -337,7 +337,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		String queryIp = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> graphs = new ArrayList<Graph>();
 
-		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeHelper.ONE_HOUR) {
 			try {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
 				      TransactionAnalyzer.ID, GraphEntity.READSET_FULL);

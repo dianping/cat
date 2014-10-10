@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
@@ -64,7 +64,7 @@ public class HeartbeatReportBuilder implements ReportTaskBuilder {
 
 	private List<Graph> qeueryHourlyGraphs(String name, String domain, Date period) throws DalException {
 		HeartbeatReport report = m_reportService.queryHeartbeatReport(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_HOUR));
+		      + TimeHelper.ONE_HOUR));
 
 		return m_heartbeatGraphCreator.splitReportToGraphs(report.getStartTime(), report.getDomain(),
 		      HeartbeatAnalyzer.ID, report);

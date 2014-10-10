@@ -9,7 +9,7 @@ import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.service.ModelPeriod;
 
@@ -63,9 +63,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			m_date = cal.getTimeInMillis();
 		} else if ("week".equals(m_reportType)) {
 			int weekOfDay = cal.get(Calendar.DAY_OF_WEEK) % 7;
-			m_date = m_date - (TimeUtil.ONE_HOUR) * (weekOfDay % 7) * 24;
+			m_date = m_date - (TimeHelper.ONE_HOUR) * (weekOfDay % 7) * 24;
 			if (m_date > System.currentTimeMillis()) {
-				m_date = m_date - 7 * 24 * TimeUtil.ONE_HOUR;
+				m_date = m_date - 7 * 24 * TimeHelper.ONE_HOUR;
 			}
 			cal.setTimeInMillis(m_date);
 		}
@@ -75,9 +75,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 				cal.add(Calendar.MONTH, m_step);
 				m_date = cal.getTimeInMillis();
 			} else if ("week".equals(m_reportType)) {
-				m_date = m_date + 7 * (TimeUtil.ONE_HOUR * 24) * m_step;
+				m_date = m_date + 7 * (TimeHelper.ONE_HOUR * 24) * m_step;
 			} else if ("day".equals(m_reportType)) {
-				m_date = m_date + (TimeUtil.ONE_HOUR * 24) * m_step;
+				m_date = m_date + (TimeHelper.ONE_HOUR * 24) * m_step;
 			}
 		} else {
 			long temp = 0;
@@ -85,9 +85,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 				cal.add(Calendar.MONTH, m_step);
 				temp = cal.getTimeInMillis();
 			} else if ("week".equals(m_reportType)) {
-				temp = m_date + 7 * (TimeUtil.ONE_HOUR * 24) * m_step;
+				temp = m_date + 7 * (TimeHelper.ONE_HOUR * 24) * m_step;
 			} else if ("day".equals(m_reportType)) {
-				temp = m_date + (TimeUtil.ONE_HOUR * 24) * m_step;
+				temp = m_date + (TimeHelper.ONE_HOUR * 24) * m_step;
 			}
 			if (temp <= getCurrentStartDay()) {
 				m_date = temp;
@@ -98,7 +98,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public long getCurrentDate() {
 		long timestamp = System.currentTimeMillis();
 
-		return timestamp - timestamp % TimeUtil.ONE_HOUR;
+		return timestamp - timestamp % TimeHelper.ONE_HOUR;
 	}
 
 	public long getCurrentStartDay() {
@@ -113,7 +113,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public long getDate() {
 		long current = getCurrentDate();
 
-		long extra = m_step * TimeUtil.ONE_HOUR;
+		long extra = m_step * TimeHelper.ONE_HOUR;
 		if (m_reportType != null
 		      && (m_reportType.equals("day") || m_reportType.equals("month") || m_reportType.equals("week"))) {
 			extra = 0;
@@ -156,11 +156,11 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		cal.setTimeInMillis(m_date);
 		if ("month".equals(m_reportType)) {
 			int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-			temp = m_date + maxDay * (TimeUtil.ONE_HOUR * 24);
+			temp = m_date + maxDay * (TimeHelper.ONE_HOUR * 24);
 		} else if ("week".equals(m_reportType)) {
-			temp = m_date + 7 * (TimeUtil.ONE_HOUR * 24);
+			temp = m_date + 7 * (TimeHelper.ONE_HOUR * 24);
 		} else {
-			temp = m_date + (TimeUtil.ONE_HOUR * 24);
+			temp = m_date + (TimeHelper.ONE_HOUR * 24);
 		}
 		cal.setTimeInMillis(temp);
 		return cal.getTime();
@@ -274,7 +274,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			today.setTimeInMillis(current);
 			today.set(Calendar.HOUR_OF_DAY, 0);
 			if (m_date == today.getTimeInMillis()) {
-				m_date = m_date - 24 * TimeUtil.ONE_HOUR;
+				m_date = m_date - 24 * TimeHelper.ONE_HOUR;
 			}
 		}
 	}

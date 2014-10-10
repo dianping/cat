@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
@@ -120,7 +120,7 @@ public class TopMetric extends BaseVisitor {
 	public void visitError(Error error) {
 		String exception = error.getId();
 		long count = error.getCount();
-		Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+		Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeHelper.ONE_MINUTE);
 		String minuteStr = m_sdf.format(minute);
 
 		m_error.addError(minuteStr, m_currentDomain, exception, count);
@@ -130,15 +130,15 @@ public class TopMetric extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		m_currentMinute = segment.getId();
-		long time = m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE;
+		long time = m_currentStart.getTime() + m_currentMinute * TimeHelper.ONE_MINUTE;
 
 		if (m_start != null && m_end != null) {
 			if (time > m_end.getTime() || time < m_start.getTime()) {
 				return;
 			}
 		}
-		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
-			Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeUtil.ONE_MINUTE);
+		if (time <= m_currentTime + TimeHelper.ONE_MINUTE) {
+			Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeHelper.ONE_MINUTE);
 			String minuteStr = m_sdf.format(minute);
 
 			m_error.addIndex(minuteStr, m_currentDomain, segment.getError());

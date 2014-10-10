@@ -18,7 +18,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.utilization.entity.ApplicationState;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
@@ -68,7 +68,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		UtilizationReport utilizationReport = new UtilizationReport(Constants.CAT);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		TransactionReportVisitor transactionVisitor = new TransactionReportVisitor()
 		      .setUtilizationReport(utilizationReport);
@@ -96,7 +96,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
 				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
-				ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
+				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 				projectInfo.setHostinfoService(m_hostinfoService);
 				projectInfo.setClientIp(Constants.ALL);
@@ -162,7 +162,7 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -182,10 +182,10 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, new Date(startTime),
-				      new Date(startTime + TimeUtil.ONE_DAY));
+				      new Date(startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -203,10 +203,10 @@ public class UtilizationReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(domain));
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
 			UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

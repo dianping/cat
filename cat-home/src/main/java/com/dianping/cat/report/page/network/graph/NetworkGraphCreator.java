@@ -11,7 +11,7 @@ import java.util.Set;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
@@ -33,7 +33,7 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 			lineChart.setHtmlTitle(chartTitle);
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
-			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 			lineChart.setUnit(buildUnit(chartTitle));
 
 			for (String key : keyMapEntry.getValue()) {
@@ -85,11 +85,11 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);

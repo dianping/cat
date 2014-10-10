@@ -19,7 +19,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
@@ -49,7 +49,7 @@ public class AppAlert implements Task {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE * 5;
+	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 
 	private static final int DATA_AREADY_MINUTE = 10;
 

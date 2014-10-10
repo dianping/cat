@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
@@ -67,13 +67,13 @@ public class GraphBuilderTest extends ComponentTestCase {
 	@Test
 	public void testStateReportBuilder() throws Exception {
 		ReportServiceManager service = lookup(ReportServiceManager.class);
-		Date date = TimeUtil.getCurrentMonth();
+		Date date = TimeHelper.getCurrentMonth();
 		long start = date.getTime();
 		long end = System.currentTimeMillis();
 		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport("cat"));
 
-		for (; start < end; start = start + TimeUtil.ONE_DAY) {
-			StateReport stateReport = service.queryStateReport("cat", new Date(start), new Date(start + TimeUtil.ONE_DAY));
+		for (; start < end; start = start + TimeHelper.ONE_DAY) {
+			StateReport stateReport = service.queryStateReport("cat", new Date(start), new Date(start + TimeHelper.ONE_DAY));
 
 			stateReport.accept(merger);
 		}

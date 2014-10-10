@@ -7,7 +7,7 @@ import java.util.Date;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
@@ -147,7 +147,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
-			return new Date(System.currentTimeMillis() - TimeUtil.ONE_HOUR / 2);
+			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 2);
 		} else {
 			try {
 				return m_minSdf.parse(m_startTime);

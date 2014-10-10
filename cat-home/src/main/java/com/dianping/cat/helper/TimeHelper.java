@@ -3,7 +3,7 @@ package com.dianping.cat.helper;
 import java.util.Calendar;
 import java.util.Date;
 
-public class TimeUtil {
+public class TimeHelper {
 
 	public static final long ONE_MINUTE = 60 * 1000L;
 

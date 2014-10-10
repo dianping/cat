@@ -17,13 +17,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -74,8 +74,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildHistoryGraph(Model model, Payload payload) {
-		Date start = new Date(payload.getDate() + 23 * TimeUtil.ONE_HOUR);
-		Date end = new Date(payload.getDate() + 24 * TimeUtil.ONE_HOUR);
+		Date start = new Date(payload.getDate() + 23 * TimeHelper.ONE_HOUR);
+		Date end = new Date(payload.getDate() + 24 * TimeHelper.ONE_HOUR);
 		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
 
 		model.setReport(report);
@@ -93,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 		String ip = payload.getRealIp();
 
 		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
-			ip = StringSortHelper.sortIpAddress(ips).get(0);
+			ip = SortHelper.sortIpAddress(ips).get(0);
 		}
 		return ip;
 	}
@@ -107,7 +107,7 @@ public class Handler implements PageHandler<Context> {
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date),
-				      new Date(date + TimeUtil.ONE_HOUR), HeartbeatAnalyzer.ID);
+				      new Date(date + TimeHelper.ONE_HOUR), HeartbeatAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);

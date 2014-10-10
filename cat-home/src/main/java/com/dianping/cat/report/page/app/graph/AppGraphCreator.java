@@ -16,7 +16,7 @@ import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
@@ -95,7 +95,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		long time = startTime;
 
 		for (int i = 0; i < length; i++) {
-			time += step * TimeUtil.ONE_MINUTE;
+			time += step * TimeHelper.ONE_MINUTE;
 			map.put(time, data[i]);
 		}
 		return map;

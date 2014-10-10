@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 
 public class TransactionRender extends BaseVisitor {
 
@@ -70,8 +70,8 @@ public class TransactionRender extends BaseVisitor {
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
 
-		Date lastDay = new Date(m_date.getTime() - TimeUtil.ONE_DAY);
-		Date lastWeek = new Date(m_date.getTime() - 7 * TimeUtil.ONE_DAY);
+		Date lastDay = new Date(m_date.getTime() - TimeHelper.ONE_DAY);
+		Date lastWeek = new Date(m_date.getTime() - 7 * TimeHelper.ONE_DAY);
 		String currentUrl = buildTransactionUrl(m_date);
 		String lastDayUrl = buildTransactionUrl(lastDay);
 		String lastWeekUrl = buildTransactionUrl(lastWeek);
@@ -87,7 +87,7 @@ public class TransactionRender extends BaseVisitor {
 		if (m_currentIp.equals(Constants.ALL)) {
 			Type temp = new Type();
 
-			type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);
+			type.setTps(type.getTotalCount() * 1000d / TimeHelper.ONE_DAY / m_totalDays);
 			temp.setType(type);
 			temp.setUrl(buildGraphUrl(type));
 			m_types.add(temp);

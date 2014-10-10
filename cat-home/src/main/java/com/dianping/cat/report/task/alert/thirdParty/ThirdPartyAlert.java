@@ -15,7 +15,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.report.task.alert.AlertType;
@@ -27,7 +27,7 @@ public class ThirdPartyAlert implements Task {
 	@Inject
 	private AlertManager m_sendManager;
 
-	private static final long DURATION = TimeUtil.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private BlockingQueue<ThirdPartyAlertEntity> m_entities = new ArrayBlockingQueue<ThirdPartyAlertEntity>(5000);
 

@@ -14,7 +14,7 @@ import java.util.Set;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 
@@ -89,11 +89,11 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 	public Map<String, double[]> prepareAllData(String group, Map<String, String> pars, Set<String> ipAddrs,
 	      Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> sourceValue = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			MetricReport report = m_metricReportService.querySystemReport(group, pars, new Date(start));
 			Map<String, double[]> currentValues = m_pruductDataFetcher.buildGraphData(report);
 
@@ -123,7 +123,7 @@ public class SystemGraphCreator extends AbstractGraphCreator {
 			lineChart.setId(chartTitle);
 			lineChart.setStart(startDate);
 			lineChart.setUnit(buildUnit(chartTitle));
-			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 
 			if (keyMapEntry.getValue().entrySet().isEmpty()) {
 				lineChart.add("none", buildNoneData(startDate, endDate, 1));

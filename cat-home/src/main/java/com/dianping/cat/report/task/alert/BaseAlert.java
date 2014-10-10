@@ -21,7 +21,7 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -56,7 +56,7 @@ public abstract class BaseAlert {
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
-	protected static final long DURATION = TimeUtil.ONE_MINUTE;
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	protected Logger m_logger;
 

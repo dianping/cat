@@ -20,7 +20,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.Chinese;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
@@ -86,7 +86,7 @@ public class ExternalInfoBuilder {
 	}
 
 	public void buildNodeZabbixInfo(TopologyNode node, Model model, Payload payload) {
-		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
+		Date reportTime = new Date(payload.getDate() + TimeHelper.ONE_MINUTE * model.getMinute());
 		String domain = node.getId();
 		List<Event> events = m_eventManager.findEvents(reportTime.getTime(), domain);
 
@@ -121,13 +121,13 @@ public class ExternalInfoBuilder {
 		TopReport report = queryTopReport(payload);
 		List<String> excludeDomains = Arrays.asList(Constants.FRONT_END);
 		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
-		Date end = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
-		Date start = new Date(end.getTime() - TimeUtil.ONE_MINUTE * minuteCount);
+		Date end = new Date(payload.getDate() + TimeHelper.ONE_MINUTE * minute);
+		Date start = new Date(end.getTime() - TimeHelper.ONE_MINUTE * minuteCount);
 
 		topMetric.setStart(start).setEnd(end);
 		if (minuteCount > minute) {
 			Payload lastPayload = new Payload();
-			Date lastHour = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
+			Date lastHour = new Date(payload.getDate() - TimeHelper.ONE_HOUR);
 			lastPayload.setDate(new SimpleDateFormat("yyyyMMddHH").format(lastHour));
 
 			topMetric.visitTopReport(queryTopReport(lastPayload));
@@ -181,11 +181,11 @@ public class ExternalInfoBuilder {
 
 	public String buildZabbixHeader(Payload payload, Model model) {
 		StringBuilder sb = new StringBuilder();
-		long end = payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute();
+		long end = payload.getDate() + TimeHelper.ONE_MINUTE * model.getMinute();
 
 		sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 		sb.append("<span style='color:red'>").append(Chinese.ZABBIX_ERROR).append("(")
-		      .append(m_sdf.format(new Date(end - TimeUtil.ONE_MINUTE * 10))).append("-").append(m_sdf.format(end))
+		      .append(m_sdf.format(new Date(end - TimeHelper.ONE_MINUTE * 10))).append("-").append(m_sdf.format(end))
 		      .append(")").append("</span>").append(GraphConstrant.ENTER);
 
 		return sb.toString();
@@ -243,7 +243,7 @@ public class ExternalInfoBuilder {
 			TopReport report = response.getModel();
 			if (report == null || report.getDomains().size() == 0) {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
-				      + TimeUtil.ONE_HOUR));
+				      + TimeHelper.ONE_HOUR));
 			}
 			return report;
 		} else {

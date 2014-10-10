@@ -16,7 +16,7 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class DependencyReportService extends AbstractReportService<DependencyReport> {
@@ -52,7 +52,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		long endTime = end.getTime();
 		String name = DependencyAnalyzer.ID;
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
 				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,

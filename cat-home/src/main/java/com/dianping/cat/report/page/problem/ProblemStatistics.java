@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.helper.MapUtils;
+import com.dianping.cat.helper.SortHelper;
 
 public class ProblemStatistics extends BaseVisitor {
 
@@ -187,7 +187,7 @@ public class ProblemStatistics extends BaseVisitor {
 		}
 
 		public Map<String, StatusStatistics> getStatus() {
-			Map<String, StatusStatistics> result = MapUtils.sortMap(m_status,
+			Map<String, StatusStatistics> result = SortHelper.sortMap(m_status,
 			      new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
 				      @Override
 				      public int compare(java.util.Map.Entry<String, StatusStatistics> o1,

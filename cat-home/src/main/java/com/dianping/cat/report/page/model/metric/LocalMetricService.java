@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -33,7 +33,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 			if (report == null) {
 				report = new MetricReport(domain);
 				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeUtil.ONE_HOUR - 1));
+				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
 			}
 		}
 		return report;

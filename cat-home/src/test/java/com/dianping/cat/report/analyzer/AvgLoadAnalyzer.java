@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 
 public class AvgLoadAnalyzer extends ComponentTestCase {
@@ -51,7 +51,7 @@ public class AvgLoadAnalyzer extends ComponentTestCase {
 
 		for (String domain : domains) {
 			HeartbeatReport report = m_reportService.queryHeartbeatReport(domain, start, new Date(start.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			if(!"PhoenixAgent".equals(domain)){
 				new HeartbeatVisitor().visitHeartbeatReport(report);
@@ -110,7 +110,7 @@ public class AvgLoadAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryDomains(Date date) {
-		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeUtil.ONE_HOUR),
+		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),
 		      TransactionAnalyzer.ID);
 	}
 	

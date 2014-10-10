@@ -14,7 +14,7 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
 import com.dianping.cat.report.chart.MetricDataFetcher;
@@ -53,7 +53,7 @@ public class metricReportDataFetcher extends ComponentTestCase {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 
 		for (String productLine : productLines) {
 			Map<String, double[]> oldCurrentValues = prepareAllData(productLine, start, end);
@@ -78,11 +78,11 @@ public class metricReportDataFetcher extends ComponentTestCase {
 
 	public Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);

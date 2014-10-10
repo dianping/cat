@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
@@ -78,7 +78,7 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 			buildLineChartTitle(alertKeys, lineChart, key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
-			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 			double[] baselines = queryBaseline(key, startDate, endDate);
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
@@ -101,11 +101,11 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 
 	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);

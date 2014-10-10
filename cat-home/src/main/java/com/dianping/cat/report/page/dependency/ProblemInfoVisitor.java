@@ -11,8 +11,8 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
-import com.dianping.cat.helper.MapUtils;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 
 public class ProblemInfoVisitor extends BaseVisitor {
@@ -35,10 +35,10 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
 			sb.append(sdf.format(m_start)).append("-")
-			      .append(sdf.format(new Date(m_start.getTime() + TimeUtil.ONE_HOUR - 1))).append("）");
+			      .append(sdf.format(new Date(m_start.getTime() + TimeHelper.ONE_HOUR - 1))).append("）");
 			sb.append("</span>").append(GraphConstrant.ENTER);
 		}
-		m_errors = MapUtils.sortMap(m_errors, compator);
+		m_errors = SortHelper.sortMap(m_errors, compator);
 		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {
 			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue())
 			      .append(GraphConstrant.ENTER);

@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -223,7 +223,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Date start = new Date(payload.getDate());
-				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
+				Date end = new Date(payload.getDate() + TimeHelper.ONE_HOUR);
 
 				if (Constants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);

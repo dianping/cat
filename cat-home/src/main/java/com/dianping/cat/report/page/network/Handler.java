@@ -15,7 +15,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -55,8 +55,8 @@ public class Handler implements PageHandler<Context> {
 
 		long date = payload.getDate();
 		int timeRange = payload.getTimeRange();
-		Date start = new Date(date - (timeRange - 1) * TimeUtil.ONE_HOUR);
-		Date end = new Date(date + TimeUtil.ONE_HOUR);
+		Date start = new Date(date - (timeRange - 1) * TimeHelper.ONE_HOUR);
+		Date end = new Date(date + TimeHelper.ONE_HOUR);
 
 		switch (payload.getAction()) {
 		case METRIC:
@@ -85,15 +85,15 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 
 		if (payload.getAction().equals(Action.NETTOPOLOGY)) {
-			long current = System.currentTimeMillis() - TimeUtil.ONE_MINUTE;
-			int curMinute = (int) ((current - current % TimeUtil.ONE_MINUTE) % TimeUtil.ONE_HOUR / TimeUtil.ONE_MINUTE);
+			long current = System.currentTimeMillis() - TimeHelper.ONE_MINUTE;
+			int curMinute = (int) ((current - current % TimeHelper.ONE_MINUTE) % TimeHelper.ONE_HOUR / TimeHelper.ONE_MINUTE);
 			long startTime = payload.getDate();
 			int minute = payload.getMinute();
 
 			if (minute == -1) {
 				minute = curMinute;
 				if (curMinute == 59) {
-					startTime -= TimeUtil.ONE_HOUR;
+					startTime -= TimeHelper.ONE_HOUR;
 				}
 			}
 
@@ -103,7 +103,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			
 			Date start = new Date(startTime);
-			Date end = new Date(startTime + TimeUtil.ONE_HOUR - 1);
+			Date end = new Date(startTime + TimeHelper.ONE_HOUR - 1);
 			List<Integer> minutes = new ArrayList<Integer>();
 
 			for (int i = 0; i < 60; i++) {
@@ -120,8 +120,8 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayDomain(payload.getDomain());
 		} else {
 			int timeRange = payload.getTimeRange();
-			Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeUtil.ONE_HOUR);
-			Date endTime = new Date(payload.getDate() + TimeUtil.ONE_HOUR - 1);
+			Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeHelper.ONE_HOUR);
+			Date endTime = new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1);
 
 			model.setStartTime(startTime);
 			model.setEndTime(endTime);

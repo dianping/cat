@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Monitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
@@ -56,10 +56,10 @@ public class Payload extends AbstractReportPayload<Action> {
 			if (m_customEnd != null && m_customEnd.length() > 0) {
 				return m_format.parse(m_customEnd);
 			} else {
-				return TimeUtil.getCurrentHour(1);
+				return TimeHelper.getCurrentHour(1);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(1);
+			return TimeHelper.getCurrentHour(1);
 		}
 	}
 
@@ -69,10 +69,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 				return m_format.parse(m_customStart);
 			} else {
-				return TimeUtil.getCurrentHour(-2);
+				return TimeHelper.getCurrentHour(-2);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(-2);
+			return TimeHelper.getCurrentHour(-2);
 		}
 	}
 
