@@ -41,7 +41,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] <= 0 || values[i] / baselines[i] >= (1 - ruleValue / 100)) {
+				if (baselines[i] <= 0 || values[i] / baselines[i] > (1 - ruleValue / 100)) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -87,7 +87,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] - values[i] <= ruleValue) {
+				if (baselines[i] - values[i] < ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -132,7 +132,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (baselines[i] <= 0 || values[i] / baselines[i] <= (1 + ruleValue / 100)) {
+				if (baselines[i] <= 0 || values[i] / baselines[i] < (1 + ruleValue / 100)) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -177,7 +177,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] - baselines[i] <= ruleValue) {
+				if (values[i] - baselines[i] < ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -209,7 +209,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] <= ruleValue) {
+				if (values[i] < ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -241,7 +241,7 @@ public enum RuleType {
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
-				if (values[i] >= ruleValue) {
+				if (values[i] > ruleValue) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -292,7 +292,7 @@ public enum RuleType {
 			double baseVal = values[length - 1];
 
 			for (int i = 0; i <= length - 2; i++) {
-				if (baseVal / values[i] - 1 <= ruleValue / 100) {
+				if (baseVal / values[i] - 1 < ruleValue / 100) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
@@ -343,7 +343,7 @@ public enum RuleType {
 			double baseVal = values[length - 1];
 
 			for (int i = 0; i <= length - 2; i++) {
-				if (1 - baseVal / values[i] <= ruleValue / 100) {
+				if (1 - baseVal / values[i] < ruleValue / 100) {
 					return new Pair<Boolean, String>(false, "");
 				}
 			}
