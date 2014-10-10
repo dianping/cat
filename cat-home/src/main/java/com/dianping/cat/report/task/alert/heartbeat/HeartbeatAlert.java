@@ -39,6 +39,15 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_service;
 
+	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
+		double[] array = map.get(name);
+		if (array == null) {
+			array = new double[60];
+			map.put(name, array);
+		}
+		array[index] = value;
+	}
+
 	private List<AlertResultEntity> computeArgument(String domain, String ip, String metricText, int minute,
 	      double[] datas) {
 		String groupText = domain + ":" + ip;
@@ -93,103 +102,20 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		int index = 0;
 
 		for (Period period : machine.getPeriods()) {
-			double[] threadCounts = map.get("ThreadCount");
-			if (threadCounts == null) {
-				threadCounts = new double[60];
-				map.put("ThreadCount", threadCounts);
-			}
-			threadCounts[index] = period.getThreadCount();
-
-			double[] daemonCounts = map.get("DaemonCount");
-			if (daemonCounts == null) {
-				daemonCounts = new double[60];
-				map.put("DaemonCount", daemonCounts);
-			}
-			daemonCounts[index] = period.getDaemonCount();
-
-			double[] totalStartedCounts = map.get("TotalStartedCount");
-			if (totalStartedCounts == null) {
-				totalStartedCounts = new double[60];
-				map.put("TotalStartedCount", totalStartedCounts);
-			}
-			totalStartedCounts[index] = period.getTotalStartedCount();
-
-			double[] catThreadCounts = map.get("CatThreadCount");
-			if (catThreadCounts == null) {
-				catThreadCounts = new double[60];
-				map.put("CatThreadCount", catThreadCounts);
-			}
-			catThreadCounts[index] = period.getCatThreadCount();
-
-			double[] piegonThreadCounts = map.get("PiegonThreadCount");
-			if (piegonThreadCounts == null) {
-				piegonThreadCounts = new double[60];
-				map.put("PiegonThreadCount", piegonThreadCounts);
-			}
-			piegonThreadCounts[index] = period.getPigeonThreadCount();
-
-			double[] httpThreadCounts = map.get("HttpThreadCount");
-			if (httpThreadCounts == null) {
-				httpThreadCounts = new double[60];
-				map.put("HttpThreadCount", httpThreadCounts);
-			}
-			httpThreadCounts[index] = period.getHttpThreadCount();
-
-			double[] newGcCounts = map.get("NewGcCount");
-			if (newGcCounts == null) {
-				newGcCounts = new double[60];
-				map.put("NewGcCount", newGcCounts);
-			}
-			newGcCounts[index] = period.getNewGcCount();
-
-			double[] oldGcCounts = map.get("OldGcCount");
-			if (oldGcCounts == null) {
-				oldGcCounts = new double[60];
-				map.put("OldGcCount", oldGcCounts);
-			}
-			oldGcCounts[index] = period.getOldGcCount();
-
-			double[] memoryFrees = map.get("MemoryFree");
-			if (memoryFrees == null) {
-				memoryFrees = new double[60];
-				map.put("MemoryFree", memoryFrees);
-			}
-			memoryFrees[index] = period.getMemoryFree();
-
-			double[] heapUsages = map.get("HeapUsage");
-			if (heapUsages == null) {
-				heapUsages = new double[60];
-				map.put("HeapUsage", heapUsages);
-			}
-			heapUsages[index] = period.getHeapUsage();
-
-			double[] noneHeapUsages = map.get("NoneHeapUsage");
-			if (noneHeapUsages == null) {
-				noneHeapUsages = new double[60];
-				map.put("NoneHeapUsage", noneHeapUsages);
-			}
-			noneHeapUsages[index] = period.getNoneHeapUsage();
-
-			double[] systemLoadAverages = map.get("SystemLoadAverage");
-			if (systemLoadAverages == null) {
-				systemLoadAverages = new double[60];
-				map.put("SystemLoadAverage", systemLoadAverages);
-			}
-			systemLoadAverages[index] = period.getSystemLoadAverage();
-
-			double[] catMessageOverflows = map.get("CatMessageOverflow");
-			if (catMessageOverflows == null) {
-				catMessageOverflows = new double[60];
-				map.put("CatMessageOverflow", catMessageOverflows);
-			}
-			catMessageOverflows[index] = period.getCatMessageOverflow();
-
-			double[] catMessageSizes = map.get("CatMessageSize");
-			if (catMessageSizes == null) {
-				catMessageSizes = new double[60];
-				map.put("CatMessageSize", catMessageSizes);
-			}
-			catMessageSizes[index] = period.getCatMessageSize();
+			buildArray(map, index, "ThreadCount", period.getThreadCount());
+			buildArray(map, index, "DaemonCount", period.getDaemonCount());
+			buildArray(map, index, "TotalStartedCount", period.getTotalStartedCount());
+			buildArray(map, index, "CatThreadCount", period.getCatThreadCount());
+			buildArray(map, index, "PiegonThreadCount", period.getPigeonThreadCount());
+			buildArray(map, index, "HttpThreadCount", period.getHttpThreadCount());
+			buildArray(map, index, "NewGcCount", period.getNewGcCount());
+			buildArray(map, index, "OldGcCount", period.getOldGcCount());
+			buildArray(map, index, "MemoryFree", period.getMemoryFree());
+			buildArray(map, index, "HeapUsage", period.getHeapUsage());
+			buildArray(map, index, "NoneHeapUsage", period.getNoneHeapUsage());
+			buildArray(map, index, "SystemLoadAverage", period.getSystemLoadAverage());
+			buildArray(map, index, "CatMessageOverflow", period.getCatMessageOverflow());
+			buildArray(map, index, "CatMessageSize", period.getCatMessageSize());
 
 			index++;
 		}
