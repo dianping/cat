@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.config.process;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.app.AppComparisonConfigManager;
@@ -14,6 +15,7 @@ public class AppConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
+
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
@@ -31,7 +33,42 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	public void process(Action action, Payload payload, Model model) {
+		String domain, name;
+
 		switch (action) {
+		case APP_ADD:
+			domain = payload.getDomain();
+			name = payload.getName();
+			String title = payload.getTitle();
+
+			if (StringUtil.isEmpty(domain) || StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				try {
+					if (m_appConfigManager.addCommand(domain, title, name)) {
+						setUpdateResult(model, 1);
+					} else {
+						setUpdateResult(model, 2);
+					}
+				} catch (Exception e) {
+					setUpdateResult(model, 2);
+				}
+			}
+			break;
+		case APP_DELETE:
+			domain = payload.getDomain();
+			name = payload.getName();
+
+			if (StringUtil.isEmpty(domain) || StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				if (m_appConfigManager.deleteCommand(domain, name)) {
+					setUpdateResult(model, 1);
+				} else {
+					setUpdateResult(model, 2);
+				}
+			}
+			break;
 		case APP_CONFIG_UPDATE:
 			String appConfig = payload.getContent();
 			if (!StringUtils.isEmpty(appConfig)) {
@@ -69,4 +106,18 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 	}
 
+	private void setUpdateResult(Model model, int i) {
+		switch (i) {
+		case 0:
+			model.setContent("{\"status\":500, \"info\":\"lack arguments, domain and name are required.\"}");
+			break;
+		case 1:
+			model.setContent("{\"status\":200}");
+			break;
+		case 2:
+			model.setContent("{\"status\":500}");
+			break;
+		}
+
+	}
 }

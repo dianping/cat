@@ -117,6 +117,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("sumTags")
 	private String m_sumTags;
 
+	@FieldMeta("name")
+	private String m_name;
+
+	@FieldMeta("title")
+	private String m_title;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -242,6 +248,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_metrics;
 	}
 
+	public String getName() {
+		return m_name;
+	}
+
 	@Override
 	public SystemPage getPage() {
 		return m_page;
@@ -285,6 +295,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getSumTags() {
 		return m_sumTags;
+	}
+
+	public String getTitle() {
+		return m_title;
 	}
 
 	public String getTo() {
@@ -371,6 +385,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_metrics = metrics;
 	}
 
+	public void setName(String name) {
+		m_name = name;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
@@ -410,6 +428,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setSumTags(String sumTags) {
 		m_sumTags = sumTags;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 	public void setTo(String to) {

@@ -87,6 +87,8 @@ public enum JspFile {
 
 	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
 
+	APP_MODIFY_RESULT("/jsp/system/appConfig/result.jsp"),
+
 	APP_RULE("/jsp/system/appRule/appRule.jsp"),
 
 	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),

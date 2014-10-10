@@ -168,6 +168,8 @@ public class Handler implements PageHandler<Context> {
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
+		case APP_ADD:
+		case APP_DELETE:
 		case APP_CONFIG_UPDATE:
 		case APP_RULE:
 		case APP_RULE_ADD_OR_UPDATE:
