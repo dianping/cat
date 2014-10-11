@@ -14,17 +14,17 @@ import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
-public class PatternConfigProcessor  extends BaseProcesser {
+public class PatternConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
 	private AggregationConfigManager m_aggreationConfigManager;
-	
+
 	@Inject
 	private WebRuleConfigManager m_webRuleConfigManager;
-	
+
 	@Inject
 	private CityManager m_cityManager;
 
@@ -32,6 +32,7 @@ public class PatternConfigProcessor  extends BaseProcesser {
 		Collection<PatternItem> patterns = m_urlPatternConfigManager.queryUrlPatternRules();
 		model.setPatternItems(patterns);
 		model.setCityInfos(m_cityManager.getCities());
+		model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 	}
 
 	private void deleteAggregationRule(Payload payload) {
@@ -70,28 +71,24 @@ public class PatternConfigProcessor  extends BaseProcesser {
 			break;
 		case WEB_RULE:
 			buildWebConfigInfo(model);
-			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case WEB_RULE_ADD_OR_UPDATE:
 			buildWebConfigInfo(model);
 			generateRuleConfigContent(payload.getRuleId(), m_webRuleConfigManager, model);
-			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
 			buildWebConfigInfo(model);
 			model.setOpState(addSubmitRule(m_webRuleConfigManager, payload.getRuleId(), "", payload.getConfigs()));
-			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case WEB_RULE_DELETE:
 			buildWebConfigInfo(model);
 			model.setOpState(deleteRule(m_webRuleConfigManager, payload.getRuleId()));
-			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
-	
+
 	private void updateAggregationRule(Payload payload) {
 		AggregationRule proto = payload.getRule();
 		m_aggreationConfigManager.insertAggregationRule(proto);
