@@ -250,7 +250,7 @@
 	<div class="span2">
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
-			<li class='nav-header' id='trend'><a href="?op=view&showActivity=false"><strong>一天访问趋势</strong></a></li>
+			<li class='nav-header' id='trend'><a href="?op=view&showActivity=false"><strong>API访问趋势</strong></a></li>
 			<li class='nav-header' id='activity_trend'><a href="?op=view&showActivity=true"><strong>运营活动趋势</strong></a></li>
           	<li class='nav-header'><a href="?op=piechart"><strong>访问量分布</strong></a></li>
           </ul>
