@@ -81,6 +81,11 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public String handle(String input) {
 		boolean exist = m_orignals.contains(input);
 
@@ -205,10 +210,5 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 		m_logger.info(m_orignals.toString());
 		m_logger.info(m_urlToId.toString());
 		m_logger.info("register url pattern end");
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

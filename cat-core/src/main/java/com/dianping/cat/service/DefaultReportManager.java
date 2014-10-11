@@ -165,8 +165,24 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		return reports;
 	}
 
+	public void setBucketManager(BucketManager bucketManager) {
+		m_bucketManager = bucketManager;
+	}
+
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	public void setReportContentDao(HourlyReportContentDao reportContentDao) {
+		m_reportContentDao = reportContentDao;
+	}
+
+	public void setReportDao(HourlyReportDao reportDao) {
+		m_reportDao = reportDao;
+	}
+
+	public void setReportDelegate(ReportDelegate<T> reportDelegate) {
+		m_reportDelegate = reportDelegate;
 	}
 
 	@Override
@@ -261,22 +277,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		public boolean forFile() {
 			return this == FILE_AND_DB || this == FILE;
 		}
-	}
-
-	public void setReportDelegate(ReportDelegate<T> reportDelegate) {
-		m_reportDelegate = reportDelegate;
-	}
-
-	public void setBucketManager(BucketManager bucketManager) {
-		m_bucketManager = bucketManager;
-	}
-
-	public void setReportDao(HourlyReportDao reportDao) {
-		m_reportDao = reportDao;
-	}
-
-	public void setReportContentDao(HourlyReportContentDao reportContentDao) {
-		m_reportContentDao = reportContentDao;
 	}
 
 }

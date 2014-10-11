@@ -27,10 +27,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	private volatile boolean m_active = true;
 
-	public boolean isRawAnalyzer() {
-		return true;
-	}
-
 	@Override
 	public void analyze(MessageQueue queue) {
 		while (!isTimeout() && isActive()) {
@@ -106,6 +102,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
 
 		return manager.isLocalMode();
+	}
+
+	public boolean isRawAnalyzer() {
+		return true;
 	}
 
 	protected boolean isTimeout() {

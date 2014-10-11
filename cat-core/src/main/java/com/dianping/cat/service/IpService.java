@@ -33,44 +33,6 @@ public class IpService implements Initializable {
 
 	private long[] m_foreignStarts;
 
-	private IpInfo findIpInfo(long ip) {
-		IpInfo ipInfo = findChinaIp(ip);
-
-		if (ipInfo == null) {
-			ipInfo = findForeignIp(ip);
-		}
-		return ipInfo;
-	}
-
-	private IpInfo findForeignIp(long ip) {
-		int low = 0, high = m_foreignStarts.length - 1, mid;
-
-		while (low <= high) {
-			mid = (low + high) / 2;
-			if (ip >= m_foreignStarts[mid] && ip <= m_foreignEnds[mid]) {
-				IpInfo ipInfo = new IpInfo();
-
-				Area area = m_foreignAreas.get(m_foreignAreaIds[mid]);
-				if (area != null) {
-					ipInfo.setNation(area.getNation());
-					ipInfo.setProvince(area.getProvince());
-					ipInfo.setCity(area.getCity());
-				} else {
-					ipInfo.setNation("国外");
-					ipInfo.setProvince("国外其他");
-					ipInfo.setCity("国外其他");
-				}
-				ipInfo.setChannel("国外其他");
-				return ipInfo;
-			} else if (ip < m_foreignStarts[mid]) {
-				high = mid - 1;
-			} else {
-				low = mid + 1;
-			}
-		}
-		return buildDefaultIpInfo("国外", "国外其他");
-	}
-
 	private IpInfo buildDefaultIpInfo(String nation, String other) {
 		IpInfo ipInfo = new IpInfo();
 
@@ -114,6 +76,44 @@ public class IpService implements Initializable {
 			}
 		}
 		return null;
+	}
+
+	private IpInfo findForeignIp(long ip) {
+		int low = 0, high = m_foreignStarts.length - 1, mid;
+
+		while (low <= high) {
+			mid = (low + high) / 2;
+			if (ip >= m_foreignStarts[mid] && ip <= m_foreignEnds[mid]) {
+				IpInfo ipInfo = new IpInfo();
+
+				Area area = m_foreignAreas.get(m_foreignAreaIds[mid]);
+				if (area != null) {
+					ipInfo.setNation(area.getNation());
+					ipInfo.setProvince(area.getProvince());
+					ipInfo.setCity(area.getCity());
+				} else {
+					ipInfo.setNation("国外");
+					ipInfo.setProvince("国外其他");
+					ipInfo.setCity("国外其他");
+				}
+				ipInfo.setChannel("国外其他");
+				return ipInfo;
+			} else if (ip < m_foreignStarts[mid]) {
+				high = mid - 1;
+			} else {
+				low = mid + 1;
+			}
+		}
+		return buildDefaultIpInfo("国外", "国外其他");
+	}
+
+	private IpInfo findIpInfo(long ip) {
+		IpInfo ipInfo = findChinaIp(ip);
+
+		if (ipInfo == null) {
+			ipInfo = findForeignIp(ip);
+		}
+		return ipInfo;
 	}
 
 	public IpInfo findIpInfoByString(String ip) {
@@ -160,6 +160,29 @@ public class IpService implements Initializable {
 		}
 	}
 
+	private void initCorpMap(InputStream corpFile) {
+		try {
+			BufferedReader corpReader = new BufferedReader(new InputStreamReader(corpFile));
+			String line;
+			String[] strs;
+			int id;
+			m_corps = new LinkedHashMap<Integer, Corporation>();
+
+			while ((line = corpReader.readLine()) != null) {
+				strs = line.split(":");
+
+				Corporation corp = new Corporation();
+				id = Integer.parseInt(strs[1]);
+				corp.setCorporationId(id);
+				corp.setName(strs[0]);
+				m_corps.put(id, corp);
+			}
+			corpReader.close();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	private void initForeignAreaMap(InputStream areaFile) {
 		try {
 			BufferedReader areaReader = new BufferedReader(new InputStreamReader(areaFile));
@@ -186,26 +209,34 @@ public class IpService implements Initializable {
 		}
 	}
 
-	private void initCorpMap(InputStream corpFile) {
+	public void initForeignIpTable(InputStream ipFile) {
+		BufferedReader reader = null;
+
 		try {
-			BufferedReader corpReader = new BufferedReader(new InputStreamReader(corpFile));
+			reader = new BufferedReader(new InputStreamReader(ipFile));
+			int size = Integer.parseInt(reader.readLine());
 			String line;
 			String[] strs;
-			int id;
-			m_corps = new LinkedHashMap<Integer, Corporation>();
 
-			while ((line = corpReader.readLine()) != null) {
+			m_foreignStarts = new long[size];
+			m_foreignEnds = new long[size];
+			m_foreignAreaIds = new int[size];
+			for (int i = 0; i < size; i++) {
+				line = reader.readLine();
 				strs = line.split(":");
-
-				Corporation corp = new Corporation();
-				id = Integer.parseInt(strs[1]);
-				corp.setCorporationId(id);
-				corp.setName(strs[0]);
-				m_corps.put(id, corp);
+				m_foreignStarts[i] = Long.parseLong(strs[0]);
+				m_foreignEnds[i] = Long.parseLong(strs[1]);
+				m_foreignAreaIds[i] = Integer.parseInt(strs[2]);
 			}
-			corpReader.close();
-		} catch (Exception e) {
+
+		} catch (IOException e) {
 			Cat.logError(e);
+		} finally {
+			try {
+				reader.close();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 
@@ -247,37 +278,6 @@ public class IpService implements Initializable {
 				m_ends[i] = Long.parseLong(strs[1]);
 				m_areaIds[i] = Integer.parseInt(strs[2]);
 				m_corpIds[i] = Integer.parseInt(strs[3]);
-			}
-
-		} catch (IOException e) {
-			Cat.logError(e);
-		} finally {
-			try {
-				reader.close();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
-	public void initForeignIpTable(InputStream ipFile) {
-		BufferedReader reader = null;
-
-		try {
-			reader = new BufferedReader(new InputStreamReader(ipFile));
-			int size = Integer.parseInt(reader.readLine());
-			String line;
-			String[] strs;
-
-			m_foreignStarts = new long[size];
-			m_foreignEnds = new long[size];
-			m_foreignAreaIds = new int[size];
-			for (int i = 0; i < size; i++) {
-				line = reader.readLine();
-				strs = line.split(":");
-				m_foreignStarts[i] = Long.parseLong(strs[0]);
-				m_foreignEnds[i] = Long.parseLong(strs[1]);
-				m_foreignAreaIds[i] = Integer.parseInt(strs[2]);
 			}
 
 		} catch (IOException e) {

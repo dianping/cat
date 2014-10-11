@@ -19,28 +19,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 	private Logger m_logger;
 
-	private Map<String, TrieTreeNode> findOrCreateTrieTreeNodes(int type) {
-		Map<String, TrieTreeNode> nodes = m_formats.get(type);
-
-		if (nodes == null) {
-			nodes = new HashMap<String, TrieTreeNode>();
-			m_formats.put(type, nodes);
-		}
-
-		return nodes;
-	}
-
-	private TrieTreeNode findOrCreateTrieTreeNode(int type, String domain) {
-		Map<String, TrieTreeNode> nodes = findOrCreateTrieTreeNodes(type);
-		TrieTreeNode node = nodes.get(domain);
-
-		if (node == null) {
-			node = new TrieTreeNode();
-			nodes.put(domain, node);
-		}
-		return node;
-	}
-
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
 	 * 
@@ -94,6 +72,33 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 		}
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	private TrieTreeNode findOrCreateTrieTreeNode(int type, String domain) {
+		Map<String, TrieTreeNode> nodes = findOrCreateTrieTreeNodes(type);
+		TrieTreeNode node = nodes.get(domain);
+
+		if (node == null) {
+			node = new TrieTreeNode();
+			nodes.put(domain, node);
+		}
+		return node;
+	}
+
+	private Map<String, TrieTreeNode> findOrCreateTrieTreeNodes(int type) {
+		Map<String, TrieTreeNode> nodes = m_formats.get(type);
+
+		if (nodes == null) {
+			nodes = new HashMap<String, TrieTreeNode>();
+			m_formats.put(type, nodes);
+		}
+
+		return nodes;
+	}
+
 	private TrieTreeNode getFormatTree(int type, String domain) {
 		if (m_formats == null) {
 			return null;
@@ -103,6 +108,16 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 			return null;
 		}
 		return domainToFormatMap.get(domain);
+	}
+
+	@Override
+	public String handle(int type, String domain, String input) {
+		TrieTreeNode formatTree = getFormatTree(type, domain);
+
+		if (formatTree == null) {
+			return input;
+		}
+		return parse(formatTree, input);
 	}
 
 	/**
@@ -179,16 +194,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 	}
 
 	@Override
-	public String handle(int type, String domain, String input) {
-		TrieTreeNode formatTree = getFormatTree(type, domain);
-
-		if (formatTree == null) {
-			return input;
-		}
-		return parse(formatTree, input);
-	}
-
-	@Override
 	public void register(List<AggregationRule> rules) {
 		m_logger.info("aggregation rule start!");
 		m_formats.clear();
@@ -224,10 +229,5 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 		}
 
 		m_logger.info("aggregation rule end!");
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

@@ -25,6 +25,31 @@ public class TaskManager {
 
 	private static final int STATUS_TODO = 1;
 
+	private void createDailyTask(Date period, String domain, String name) throws DalException {
+		createTask(period, domain, name, ReportType.DAILY);
+	}
+
+	private void createHourlyTask(Date period, String domain, String name) throws DalException {
+		createTask(period, domain, name, ReportType.HOUR);
+	}
+
+	private void createMonthlyTask(Date period, String domain, String name) throws DalException {
+		createTask(period, domain, name, ReportType.MONTH);
+	}
+
+	protected void createTask(Date period, String domain, String name, int reportType) throws DalException {
+		Task task = m_taskDao.createLocal();
+
+		task.setCreationDate(new Date());
+		task.setProducer(m_ip);
+		task.setReportDomain(domain);
+		task.setReportName(name);
+		task.setReportPeriod(period);
+		task.setStatus(STATUS_TODO);
+		task.setTaskType(reportType);
+		m_taskDao.insert(task);
+	}
+
 	public boolean createTask(Date period, String domain, String name, TaskCreationPolicy prolicy) {
 		try {
 			if (prolicy.shouldCreateHourlyTask()) {
@@ -63,34 +88,9 @@ public class TaskManager {
 		}
 	}
 
-	protected void createTask(Date period, String domain, String name, int reportType) throws DalException {
-		Task task = m_taskDao.createLocal();
-
-		task.setCreationDate(new Date());
-		task.setProducer(m_ip);
-		task.setReportDomain(domain);
-		task.setReportName(name);
-		task.setReportPeriod(period);
-		task.setStatus(STATUS_TODO);
-		task.setTaskType(reportType);
-		m_taskDao.insert(task);
-	}
-
-	private void createHourlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.HOUR);
-	}
-
-	private void createDailyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.DAILY);
-	}
-
 	private void createWeeklyTask(Date period, String domain, String name) throws DalException {
 		createTask(period, domain, name, ReportType.WEEK);
 
-	}
-
-	private void createMonthlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.MONTH);
 	}
 
 	public static interface TaskCreationPolicy {
@@ -108,22 +108,22 @@ public class TaskManager {
 
 		ALL {
 			@Override
-			public boolean shouldCreateHourlyTask() {
-				return true;
-			}
-
-			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
 			}
 
 			@Override
-			public boolean shouldCreateWeeklyTask() {
+			public boolean shouldCreateHourlyTask() {
 				return true;
 			}
 
 			@Override
 			public boolean shouldCreateMonthTask() {
+				return true;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
 				return true;
 			}
 		},
@@ -131,22 +131,22 @@ public class TaskManager {
 		HOULY {
 
 			@Override
-			public boolean shouldCreateHourlyTask() {
-				return true;
-			}
-
-			@Override
 			public boolean shouldCreateDailyTask() {
 				return false;
 			}
 
 			@Override
-			public boolean shouldCreateWeeklyTask() {
-				return false;
+			public boolean shouldCreateHourlyTask() {
+				return true;
 			}
 
 			@Override
 			public boolean shouldCreateMonthTask() {
+				return false;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
 				return false;
 			}
 		},
@@ -154,22 +154,22 @@ public class TaskManager {
 		ALL_EXCLUED_HOURLY {
 
 			@Override
-			public boolean shouldCreateHourlyTask() {
-				return false;
-			}
-
-			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
 			}
 
 			@Override
-			public boolean shouldCreateWeeklyTask() {
-				return true;
+			public boolean shouldCreateHourlyTask() {
+				return false;
 			}
 
 			@Override
 			public boolean shouldCreateMonthTask() {
+				return true;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
 				return true;
 			}
 		},
@@ -177,22 +177,22 @@ public class TaskManager {
 		DAILY {
 
 			@Override
-			public boolean shouldCreateHourlyTask() {
-				return false;
-			}
-
-			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
 			}
 
 			@Override
-			public boolean shouldCreateWeeklyTask() {
+			public boolean shouldCreateHourlyTask() {
 				return false;
 			}
 
 			@Override
 			public boolean shouldCreateMonthTask() {
+				return false;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
 				return false;
 			}
 		};

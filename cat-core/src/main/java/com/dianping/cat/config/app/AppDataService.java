@@ -70,6 +70,25 @@ public class AppDataService {
 		return field2Datas;
 	}
 
+	public Double[] computeDelayAvg(AppDataCommandMap convertedData) {
+		int n = convertedData.getDuration();
+		Double[] value = new Double[n];
+
+		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
+			for (AppDataCommand data : entry.getValue()) {
+				long count = data.getAccessNumberSum();
+				long sum = data.getResponseSumTimeSum();
+				double avg = sum / count;
+				int index = data.getMinuteOrder() / 5;
+
+				if (index < n) {
+					value[index] = avg;
+				}
+			}
+		}
+		return value;
+	}
+
 	public Double[] computeRequestCount(AppDataCommandMap convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
@@ -271,23 +290,22 @@ public class AppDataService {
 		return datas;
 	}
 
-	public Double[] computeDelayAvg(AppDataCommandMap convertedData) {
-		int n = convertedData.getDuration();
-		Double[] value = new Double[n];
+	private int queryAppDataDuration(Date period, int defaultValue) {
+		Calendar cal = Calendar.getInstance();
 
-		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getAppDataCommands().entrySet()) {
-			for (AppDataCommand data : entry.getValue()) {
-				long count = data.getAccessNumberSum();
-				long sum = data.getResponseSumTimeSum();
-				double avg = sum / count;
-				int index = data.getMinuteOrder() / 5;
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
 
-				if (index < n) {
-					value[index] = avg;
-				}
-			}
+		if (period.equals(cal.getTime())) {
+			long start = cal.getTimeInMillis();
+			long current = System.currentTimeMillis();
+			int length = (int) (current - current % 300000 - start) / 300000 - 1;
+
+			return length < 0 ? 0 : length;
 		}
-		return value;
+		return defaultValue;
 	}
 
 	private int queryFieldValue(AppDataCommand data, AppDataGroupByField field) {
@@ -322,24 +340,6 @@ public class AppDataService {
 			}
 		}
 		return size > 0 ? delaySum / size : -1;
-	}
-
-	private int queryAppDataDuration(Date period, int defaultValue) {
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		if (period.equals(cal.getTime())) {
-			long start = cal.getTimeInMillis();
-			long current = System.currentTimeMillis();
-			int length = (int) (current - current % 300000 - start) / 300000 - 1;
-
-			return length < 0 ? 0 : length;
-		}
-		return defaultValue;
 	}
 
 	public Double[] queryValue(QueryEntity entity, String type) {

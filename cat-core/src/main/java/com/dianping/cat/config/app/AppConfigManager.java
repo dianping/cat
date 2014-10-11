@@ -60,8 +60,24 @@ public class AppConfigManager implements Initializable {
 
 	public static String CONNECT_TYPE = "连接类型";
 
+	public Map<String, Integer> getCities() {
+		return m_cities;
+	}
+
+	public Map<String, Integer> getCommands() {
+		return m_commands;
+	}
+
 	public AppConfig getConfig() {
 		return m_config;
+	}
+
+	public Map<String, Integer> getOperators() {
+		return m_operators;
+	}
+
+	public Map<Integer, Command> getRawCommands() {
+		return m_config.getCommands();
 	}
 
 	@Override
@@ -148,20 +164,30 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public Map<String, Integer> getCommands() {
-		return m_commands;
+	public Collection<Item> queryConfigItems(String key) {
+		ConfigItem configs = m_config.findConfigItem(key);
+
+		if (configs != null) {
+			return configs.getItems().values();
+		} else {
+			return new ArrayList<Item>();
+		}
 	}
 
-	public Map<String, Integer> getCities() {
-		return m_cities;
-	}
+	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
 
-	public Map<String, Integer> getOperators() {
-		return m_operators;
-	}
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				AppConfig appConfig = DefaultSaxParser.parse(content);
 
-	public Map<Integer, Command> getRawCommands() {
-		return m_config.getCommands();
+				m_config = appConfig;
+				m_modifyTime = modifyTime;
+				refreshData();
+			}
+		}
 	}
 
 	private void refreshData() {
@@ -188,32 +214,6 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
-	}
-
-	public Collection<Item> queryConfigItems(String key) {
-		ConfigItem configs = m_config.findConfigItem(key);
-
-		if (configs != null) {
-			return configs.getItems().values();
-		} else {
-			return new ArrayList<Item>();
-		}
-	}
-
-	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		long modifyTime = config.getModifyDate().getTime();
-
-		synchronized (this) {
-			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				AppConfig appConfig = DefaultSaxParser.parse(content);
-
-				m_config = appConfig;
-				m_modifyTime = modifyTime;
-				refreshData();
-			}
-		}
 	}
 
 	private boolean storeConfig() {

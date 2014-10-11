@@ -64,16 +64,6 @@ public class TrieTreeNode {
 		}
 
 		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + m_ch;
-			result = prime * result + (m_isPrefix ? 1231 : 1237);
-			return result;
-		}
-
-		@Override
 		public boolean equals(Object obj) {
 			if (this == obj) {
 				return true;
@@ -99,6 +89,16 @@ public class TrieTreeNode {
 
 		private TrieTreeNode getOuterType() {
 			return TrieTreeNode.this;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + m_ch;
+			result = prime * result + (m_isPrefix ? 1231 : 1237);
+			return result;
 		}
 
 		@Override
