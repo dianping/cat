@@ -89,30 +89,63 @@
 				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
-			<div class="span10">
-				<h4 id="state" class="text-center text-error">&nbsp;</h4>
-				<div>
-				</br>
-				<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
-				<thead>
-					<tr class="odd">
-						<th width="20%">名称</th>
-						<th width="35%">项目</th>
-						<th width="30%">标题</th>
-						<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
-					</tr></thead><tbody>
-	
-					<c:forEach var="item" items="${model.commands}">
-						<tr>
-							<td>${item.name }</td>
-							<td>${item.domain }</td>
-							<td>${item.title }</td>
-							<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}">编辑</a>
-							<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}">删除</a></td>
-						</tr>
-					</c:forEach></tbody>
-					</tbody>
-				</table>
+			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
+				<ul class="nav nav-tabs span2">
+				    <li id="tab-api" class="text-right active"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-error">API命令字</h5></a></li>
+				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-error">活动命令字</h5></a></li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane active" id="tabContent-api">
+						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+							<thead>
+							<tr class="odd">
+								<th width="20%">名称</th>
+								<th width="35%">项目</th>
+								<th width="30%">标题</th>
+								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
+							</tr>
+							</thead>
+							<tbody>
+							<c:forEach var="item" items="${model.commands}">
+								<c:if test="${item.id le 200}">
+									<tr>
+										<td>${item.name }</td>
+										<td>${item.domain }</td>
+										<td>${item.title }</td>
+										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}">编辑</a>
+										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}">删除</a></td>
+									</tr>
+								</c:if>
+							</c:forEach>
+							</tbody>
+						</table>
+					</div>
+					<div class="tab-pane" id="tabContent-activity">
+						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+							<thead>
+							<tr class="odd">
+								<th width="20%">名称</th>
+								<th width="35%">项目</th>
+								<th width="30%">标题</th>
+								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
+							</tr></thead>
+							
+							<tbody>
+							<c:forEach var="item" items="${model.commands}">
+								<c:if test="${item.id ge 1000}">
+									<tr>
+										<td>${item.name }</td>
+										<td>${item.domain }</td>
+										<td>${item.title }</td>
+										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}">编辑</a>
+										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}">删除</a></td>
+									</tr>
+								</c:if>
+							</c:forEach>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 		</div>
