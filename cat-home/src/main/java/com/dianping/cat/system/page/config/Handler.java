@@ -172,8 +172,6 @@ public class Handler implements PageHandler<Context> {
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
-		case APP_ADD:
-		case APP_DELETE:
 		case APP_LIST:
 		case APP_UPDATE:
 		case APP_SUBMIT:
@@ -210,7 +208,7 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(ex);
 		}
 	}
-	
+
 	private void storeModifyInfo(Context ctx, Payload payload) {
 		Cookie cookie = ctx.getCookie("ct");
 		Action action = payload.getAction();

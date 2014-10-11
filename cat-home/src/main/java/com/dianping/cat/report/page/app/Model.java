@@ -42,6 +42,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<Command> m_commands;
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
+	
+	private String m_content;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -76,6 +78,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
+	}
+
+	public String getContent() {
+		return m_content;
 	}
 
 	@Override
@@ -135,6 +141,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setConnectionTypes(Map<Integer, Item> map) {
 		m_connectionTypes = map;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
 	}
 
 	public void setLineChart(LineChart lineChart) {
