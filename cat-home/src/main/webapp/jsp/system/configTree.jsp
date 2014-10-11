@@ -8,12 +8,15 @@
            <li class='nav-header'>端到端监控配置</li>
 	       <li class="text-left" id="aggregationList"><a href="?op=aggregations">JS报错配置</a></li>
 	       <li class="text-left" id="urlPatternList"><a href="?op=urlPatterns">WEB监控配置</a></li>
+	       <li class="text-left" id="appList"><a href="?op=appList">APP监控配置</a></li>
+	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate" style="display:none">APP全局配置</a></li>
+	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
 	       <li class="text-left" id="webRule"><a href="?op=webRule">WEB告警配置</a></li>
-	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
 	       <li class="text-left" id="appRule"><a href="?op=appRule">APP告警配置</a></li>
 	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
            <li class='nav-header'>应用监控配置</li>
-	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控配置</a></li>
+	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控规则</a></li>
+	       <li class="text-left" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate" style="display:none">业务全局规则</a></li>
 	       <li class="text-left" style="display:none" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate">业务XML规则</a></li>
 	       <li class="text-left" id="exceptionConfigList"><a href="?op=exception">异常告警配置</a></li>
 	       <!-- <li class="text-left" id="bugConfigUpdate"><a href="?op=bugConfigUpdate">框架异常配置</a></li> -->
