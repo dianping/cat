@@ -110,6 +110,20 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		}
 	}
 
+	private void processLongCall(Machine machine, Transaction transaction, MessageTree tree) {
+		long duration = transaction.getDurationInMillis();
+		String domain = tree.getDomain();
+
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defalutLongCallDuration, m_longCallThresholds);
+		if (nomarizeDuration > 0) {
+			String type = ProblemType.LONG_CALL.getName();
+			String status = transaction.getName();
+
+			Entry entry = findOrCreateEntry(machine, type, status);
+			updateEntry(tree, entry, (int) nomarizeDuration);
+		}
+	}
+
 	private void processLongService(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
@@ -130,20 +144,6 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 					updateEntry(tree, entry, (int) nomarizeDuration);
 				}
 			}
-		}
-	}
-
-	private void processLongCall(Machine machine, Transaction transaction, MessageTree tree) {
-		long duration = transaction.getDurationInMillis();
-		String domain = tree.getDomain();
-
-		long nomarizeDuration = computeLongDuration(duration, domain, m_defalutLongCallDuration, m_longCallThresholds);
-		if (nomarizeDuration > 0) {
-			String type = ProblemType.LONG_CALL.getName();
-			String status = transaction.getName();
-
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, (int) nomarizeDuration);
 		}
 	}
 

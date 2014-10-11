@@ -34,6 +34,11 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(EventReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(EventReport report) {
 		String xml = new EventReportCountFilter().buildXml(report);
 
@@ -69,19 +74,14 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	}
 
 	@Override
+	public EventReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public EventReport parseXml(String xml) throws Exception {
 		EventReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(EventReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public EventReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

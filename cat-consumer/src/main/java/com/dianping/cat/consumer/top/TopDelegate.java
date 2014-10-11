@@ -20,6 +20,11 @@ public class TopDelegate implements ReportDelegate<TopReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(TopReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(TopReport report) {
 		return report.toString();
 	}
@@ -53,19 +58,14 @@ public class TopDelegate implements ReportDelegate<TopReport> {
 	}
 
 	@Override
+	public TopReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public TopReport parseXml(String xml) throws Exception {
 		TopReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(TopReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public TopReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }
