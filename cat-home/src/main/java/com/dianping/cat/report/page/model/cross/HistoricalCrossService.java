@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -41,7 +41,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	}
 
 	private CrossReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryCrossReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryCrossReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private CrossReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

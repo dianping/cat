@@ -17,7 +17,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultNativeBuilder;
@@ -60,12 +60,12 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		ServiceReport serviceReport = new ServiceReport(Constants.CAT);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
 		for (String domainName : domains) {
 			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
-			ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
+			ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 			projectInfo.setHostinfoService(m_hostinfoService);
 			projectInfo.setClientIp(Constants.ALL);
@@ -110,7 +110,7 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -139,10 +139,10 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				ServiceReport reportModel = m_reportService.queryServiceReport(domain, new Date(startTime), new Date(
-				      startTime + TimeUtil.ONE_DAY));
+				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -160,10 +160,10 @@ public class ServiceReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		ServiceReportMerger merger = new ServiceReportMerger(new ServiceReport(domain));
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
 			ServiceReport reportModel = m_reportService.queryServiceReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

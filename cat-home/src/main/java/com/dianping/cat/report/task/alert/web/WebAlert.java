@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.web;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -25,6 +24,7 @@ import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
@@ -49,13 +49,7 @@ public class WebAlert extends BaseAlert implements Task {
 			active = false;
 		}
 		while (active) {
-			int minute = Calendar.getInstance().get(Calendar.MINUTE);
-			String minuteStr = String.valueOf(minute);
-
-			if (minute < 10) {
-				minuteStr = '0' + minuteStr;
-			}
-			Transaction t = Cat.newTransaction("WebAlert", "M" + minuteStr);
+			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {
@@ -166,7 +160,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 
 		return report;
-
 	}
 
 	private List<Rule> queryRuelsForUrl(String url) {

@@ -2,6 +2,7 @@ package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -14,6 +15,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.home.dal.report.ConfigModification;
+import com.dianping.cat.home.dal.report.ConfigModificationDao;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.process.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.process.AppConfigProcessor;
@@ -61,7 +65,7 @@ public class Handler implements PageHandler<Context> {
 	private AlertConfigProcessor m_alertConfigProcessor;
 
 	@Inject
-	private ConfigModificationService m_modificationService;
+	private ConfigModificationDao m_configModificationDao;
 
 	@Override
 	@PreInboundActionMeta("login")
@@ -191,6 +195,22 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	public void store(String userName, String accountName, Payload payload) {
+		ConfigModification modification = m_configModificationDao.createLocal();
+
+		modification.setUserName(userName);
+		modification.setAccountName(accountName);
+		modification.setActionName(payload.getAction().getName());
+		modification.setDate(new Date());
+		modification.setArgument(new JsonBuilder().toJson(payload));
+
+		try {
+			m_configModificationDao.insert(modification);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+	}
+	
 	private void storeModifyInfo(Context ctx, Payload payload) {
 		Cookie cookie = ctx.getCookie("ct");
 		Action action = payload.getAction();
@@ -210,7 +230,7 @@ public class Handler implements PageHandler<Context> {
 					}
 					userName = URLDecoder.decode(userName, "UTF-8");
 
-					m_modificationService.store(userName, account, payload);
+					store(userName, account, payload);
 				} catch (Exception ex) {
 					Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
 				}

@@ -95,6 +95,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_fullScreen;
 	}
 
+	public boolean isHideNav() {
+   	return m_hideNav;
+   }
+
 	public boolean isRefresh() {
 		return m_refresh;
 	}
@@ -114,6 +118,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setFullScreen(boolean fullScreen) {
 		m_fullScreen = fullScreen;
 	}
+
+	public void setHideNav(boolean hideNav) {
+   	m_hideNav = hideNav;
+   }
 
 	public void setMinute(String minute) {
 		this.m_minute = minute;
@@ -154,13 +162,5 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.LINE_CHART;
 		}
 	}
-
-	public boolean isHideNav() {
-   	return m_hideNav;
-   }
-
-	public void setHideNav(boolean hideNav) {
-   	m_hideNav = hideNav;
-   }
 
 }

@@ -15,16 +15,16 @@ public class Token implements IToken {
 		m_userName = userName;
 	}
 
+	@Override
+	public String getName() {
+		return TOKEN;
+	}
+
 	public String getRealName() {
 		return m_realName;
 	}
 
 	public String getUserName() {
 		return m_userName;
-	}
-
-	@Override
-	public String getName() {
-		return TOKEN;
 	}
 }

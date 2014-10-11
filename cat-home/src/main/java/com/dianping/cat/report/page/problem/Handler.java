@@ -25,7 +25,7 @@ import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -65,6 +65,15 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_jsonBuilder;
+
+	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
+		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
+			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
+
+			pieChart.visitProblemReport(report);
+			model.setDistributionChart(pieChart.getPieChart().getJsonString());
+		}
+	}
 
 	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
@@ -111,7 +120,7 @@ public class Handler implements PageHandler<Context> {
 			ProblemReport report = response.getModel();
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), ProblemAnalyzer.ID);
+				      new Date(payload.getDate() + TimeHelper.ONE_HOUR), ProblemAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -271,15 +280,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
-		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
-			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
-
-			pieChart.visitProblemReport(report);
-			model.setDistributionChart(pieChart.getPieChart().getJsonString());
-		}
 	}
 
 	private void normalize(Model model, Payload payload) {

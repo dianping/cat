@@ -15,7 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
@@ -78,6 +78,21 @@ public class ScheduledManager  {
 		}
 		Collections.sort(userRules, new UserReportSubStateCompartor());
 		model.setUserReportSubStates(userRules);
+	}
+
+	public void refreshScheduledReport() throws Exception {
+		Map<String, Project> projects = m_projectService.findAllProjects();
+
+		for (Entry<String, Project> entry : projects.entrySet()) {
+			String domain = entry.getKey();
+			String cmdbDomain = entry.getValue().getCmdbDomain();
+
+			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
+				updateData(cmdbDomain);
+			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
+				updateData(domain);
+			}
+		}
 	}
 
 	public void scheduledReportDelete(Payload payload) {
@@ -161,21 +176,6 @@ public class ScheduledManager  {
 		m_reports.put(domain, report);
 	}
 
-	public void refreshScheduledReport() throws Exception {
-		Map<String, Project> projects = m_projectService.findAllProjects();
-
-		for (Entry<String, Project> entry : projects.entrySet()) {
-			String domain = entry.getKey();
-			String cmdbDomain = entry.getValue().getCmdbDomain();
-
-			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
-				updateData(cmdbDomain);
-			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
-				updateData(domain);
-			}
-		}
-	}
-
 	public class ScheduledReportUpdateTask implements Task {
 
 		@Override
@@ -193,7 +193,7 @@ public class ScheduledManager  {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(TimeUtil.ONE_MINUTE);
+					Thread.sleep(TimeHelper.ONE_MINUTE);
 				} catch (InterruptedException e) {
 					active = false;
 				}

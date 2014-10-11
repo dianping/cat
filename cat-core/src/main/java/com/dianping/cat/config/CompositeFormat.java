@@ -16,6 +16,14 @@ public class CompositeFormat extends Format {
 
 	private AggregationMessageFormat m_aggregationMessageFormat;
 
+	public CompositeFormat(AggregationMessageFormat amf) {
+		m_aggregationMessageFormat = amf;
+	}
+
+	public AggregationMessageFormat getAmf() {
+		return m_aggregationMessageFormat;
+	}
+
 	@Override
 	public String parse(String input) throws ParseException {
 		Object[] tokens = m_aggregationMessageFormat.getMessageFormat().parse(input);
@@ -31,14 +39,6 @@ public class CompositeFormat extends Format {
 			index++;
 		}
 		return m_aggregationMessageFormat.getMessageFormat().format(items.toArray()).toString();
-	}
-
-	public CompositeFormat(AggregationMessageFormat amf) {
-		m_aggregationMessageFormat = amf;
-	}
-
-	public AggregationMessageFormat getAmf() {
-		return m_aggregationMessageFormat;
 	}
 
 	public void setAmf(AggregationMessageFormat amf) {

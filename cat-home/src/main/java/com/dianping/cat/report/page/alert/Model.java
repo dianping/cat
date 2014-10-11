@@ -28,14 +28,6 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return m_alerts;
 	}
 
-	public String getDomain() {
-		return Constants.CAT;
-	}
-
-	public String getIpAddress() {
-		return null;
-	}
-
 	public Date getDate() {
 		return new Date();
 	}
@@ -43,6 +35,14 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	public String getDomain() {
+		return Constants.CAT;
+	}
+
+	public String getIpAddress() {
+		return null;
 	}
 
 	public void setAlertResult(String alertResult) {

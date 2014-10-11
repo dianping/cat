@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
@@ -60,7 +60,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		BugReport bugReport = new BugReport(Constants.CAT);
 		ProblemReportVisitor visitor = new ProblemReportVisitor().setReport(bugReport);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 
 		for (String domainName : domains) {
@@ -110,7 +110,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		BugReport bugReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeUtil.ONE_WEEK));
+		BugReport bugReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeHelper.ONE_WEEK));
 
 		for (Domain d : bugReport.getDomains().values()) {
 			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=week&domain=%s&date=%s",
@@ -140,10 +140,10 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		HistoryBugReportMerger merger = new HistoryBugReportMerger(new BugReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				BugReport reportModel = m_reportService.queryBugReport(domain, new Date(startTime), new Date(startTime
-				      + TimeUtil.ONE_DAY));
+				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -160,10 +160,10 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		BugReportMerger merger = new BugReportMerger(new BugReport(domain));
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
 			BugReport reportModel = m_reportService.queryBugReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

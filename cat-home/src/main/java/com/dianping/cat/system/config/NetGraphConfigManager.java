@@ -24,16 +24,12 @@ public class NetGraphConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "netGraphConfig";
 
-	public NetGraphSet getConfig() {
-		return m_config;
-	}
-
-	public void setConfig(NetGraphSet config) {
-		m_config = config;
-	}
-
 	public static String getConfigName() {
 		return CONFIG_NAME;
+	}
+
+	public NetGraphSet getConfig() {
+		return m_config;
 	}
 
 	@Override
@@ -77,6 +73,10 @@ public class NetGraphConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public void setConfig(NetGraphSet config) {
+		m_config = config;
 	}
 
 	private boolean storeConfig() {

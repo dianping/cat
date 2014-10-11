@@ -24,15 +24,6 @@ public class AppDataSpreadInfo {
 
 	private double m_responsePackageAvg;
 
-	public double getSuccessRatio() {
-		return m_successRatio;
-	}
-
-	public AppDataSpreadInfo setSuccessRatio(double successRatio) {
-		m_successRatio = successRatio;
-		return this;
-	}
-
 	public long getAccessNumberSum() {
 		return m_accessNumberSum;
 	}
@@ -71,6 +62,10 @@ public class AppDataSpreadInfo {
 
 	public double getResponseTimeAvg() {
 		return m_responseTimeAvg;
+	}
+
+	public double getSuccessRatio() {
+		return m_successRatio;
 	}
 
 	public AppDataSpreadInfo setAccessNumberSum(long accessNumberSum) {
@@ -120,6 +115,11 @@ public class AppDataSpreadInfo {
 
 	public AppDataSpreadInfo setResponseTimeAvg(double responseTimeSum) {
 		m_responseTimeAvg = responseTimeSum;
+		return this;
+	}
+
+	public AppDataSpreadInfo setSuccessRatio(double successRatio) {
+		m_successRatio = successRatio;
 		return this;
 	}
 

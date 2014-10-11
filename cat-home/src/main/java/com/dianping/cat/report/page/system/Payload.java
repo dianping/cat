@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
@@ -40,13 +40,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public String getIpAddrs() {
-		return m_ipAddrs;
+	public String getDomain() {
+		return m_domain;
 	}
 
 	public Date getHistoryEndDate() {
@@ -54,10 +49,10 @@ public class Payload extends AbstractReportPayload<Action> {
 			if (m_customEnd != null && m_customEnd.length() > 0) {
 				return m_format.parse(m_customEnd);
 			} else {
-				return TimeUtil.getCurrentHour(1);
+				return TimeHelper.getCurrentHour(1);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(1);
+			return TimeHelper.getCurrentHour(1);
 		}
 	}
 
@@ -67,32 +62,32 @@ public class Payload extends AbstractReportPayload<Action> {
 
 				return m_format.parse(m_customStart);
 			} else {
-				return TimeUtil.getCurrentHour(-2);
+				return TimeHelper.getCurrentHour(-2);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(-2);
+			return TimeHelper.getCurrentHour(-2);
 		}
+	}
+
+	public String getIpAddrs() {
+		return m_ipAddrs;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
 	}
 
 	public String getProductLine() {
 		return m_productLine;
 	}
 
-	public String getDomain() {
-		return m_domain;
+	public String getType() {
+		return m_type;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.SYSTEM);
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.SYSTEM);
-	}
-
-	public void setProductLine(String productLine) {
-		m_productLine = productLine;
 	}
 
 	public void setDomain(String domain) {
@@ -104,17 +99,22 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	@Override
-	public void validate(ActionContext<?> ctx) {
-		if (m_action == null) {
-			m_action = Action.SYSTEM;
-		}
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.SYSTEM);
 	}
 
-	public String getType() {
-		return m_type;
+	public void setProductLine(String productLine) {
+		m_productLine = productLine;
 	}
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.SYSTEM;
+		}
 	}
 }

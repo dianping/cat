@@ -68,7 +68,7 @@ public class ClientConfigManager implements LogEnabled {
 	 */
 	public int getMaxMessageLength() {
 		if (m_config == null) {
-			return 2000;
+			return 5000;
 		} else {
 			return getDomain().getMaxMessageSize();
 		}
@@ -90,6 +90,25 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		return value;
+	}
+
+	public String getServerConfigUrl() {
+		if (m_config == null) {
+			return null;
+		} else {
+			List<Server> servers = m_config.getServers();
+
+			for (Server server : servers) {
+				Integer httpPort = server.getHttpPort();
+
+				if (httpPort == null || httpPort == 0) {
+					httpPort = 8080;
+				}
+				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp().trim(), httpPort, getDomain()
+				      .getId());
+			}
+		}
+		return null;
 	}
 
 	public List<Server> getServers() {
@@ -140,6 +159,26 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+	}
+
+	public boolean isCatEnabled() {
+		if (m_config == null) {
+			return false;
+		} else {
+			return m_config.isEnabled();
+		}
+	}
+
+	public boolean isDumpLocked() {
+		if (m_config == null) {
+			return false;
+		} else {
+			return m_config.isDumpLocked();
+		}
+	}
+
+	public boolean isInitialized() {
+		return m_config != null;
 	}
 
 	private ClientConfig loadConfigFromEnviroment() {
@@ -209,44 +248,5 @@ public class ClientConfigManager implements LogEnabled {
 			}
 		}
 		return null;
-	}
-
-	public String getServerConfigUrl() {
-		if (m_config == null) {
-			return null;
-		} else {
-			List<Server> servers = m_config.getServers();
-
-			for (Server server : servers) {
-				Integer httpPort = server.getHttpPort();
-
-				if (httpPort == null || httpPort == 0) {
-					httpPort = 8080;
-				}
-				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp().trim(), httpPort, getDomain()
-				      .getId());
-			}
-		}
-		return null;
-	}
-
-	public boolean isCatEnabled() {
-		if (m_config == null) {
-			return false;
-		} else {
-			return m_config.isEnabled();
-		}
-	}
-
-	public boolean isDumpLocked() {
-		if (m_config == null) {
-			return false;
-		} else {
-			return m_config.isDumpLocked();
-		}
-	}
-
-	public boolean isInitialized() {
-		return m_config != null;
 	}
 }

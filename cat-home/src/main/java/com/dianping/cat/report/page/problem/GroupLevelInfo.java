@@ -11,8 +11,8 @@ import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.view.ProblemReportHelper;
-import com.dianping.cat.report.view.StringSortHelper;
 
 public class GroupLevelInfo {
 	private List<String> m_datas = new ArrayList<String>();
@@ -78,7 +78,7 @@ public class GroupLevelInfo {
 	}
 
 	public List<String> getGroups() {
-		return StringSortHelper.sortString(m_groupStatistics.keySet());
+		return SortHelper.sortDomain(m_groupStatistics.keySet());
 	}
 
 	private String getShowDetailByMinte(int minute) {

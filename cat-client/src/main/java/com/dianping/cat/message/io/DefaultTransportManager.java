@@ -54,12 +54,11 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 			}
 
 			m_logger.info("Remote CAT servers: " + addresses);
-			
+
 			if (addresses.isEmpty()) {
 				throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
 			} else {
-				TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class,
-						TcpSocketSender.ID);
+				TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, TcpSocketSender.ID);
 
 				sender.setServerAddresses(addresses);
 				sender.initialize();

@@ -41,25 +41,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("batch")
 	private String m_batch;
 
-	public String getBatch() {
-		return m_batch;
-	}
-
-	public void setBatch(String batch) {
-		m_batch = batch;
-	}
-
-	public double getValue() {
-		return m_value;
-	}
-
-	public void setValue(double value) {
-		m_value = value;
-		m_count = (long) value;
-		m_avg = value;
-		m_sum = value;
-	}
-
 	public Payload() {
 		super(ReportPage.MONITOR);
 	}
@@ -71,6 +52,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public double getAvg() {
 		return m_avg;
+	}
+
+	public String getBatch() {
+		return m_batch;
 	}
 
 	public long getCount() {
@@ -101,12 +86,20 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_type;
 	}
 
+	public double getValue() {
+		return m_value;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.COUNT_API);
 	}
 
 	public void setAvg(double avg) {
 		m_avg = avg;
+	}
+
+	public void setBatch(String batch) {
+		m_batch = batch;
 	}
 
 	public void setCount(int count) {
@@ -135,6 +128,13 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public void setValue(double value) {
+		m_value = value;
+		m_count = (long) value;
+		m_avg = value;
+		m_sum = value;
 	}
 
 	@Override

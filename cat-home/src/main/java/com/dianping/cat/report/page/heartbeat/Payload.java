@@ -28,6 +28,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_realIp;
 	}
 
+	@Override
+   public String getReportType() {
+	   return "day";
+   }
+
 	public String getType() {
 		return m_type;
 	}
@@ -43,11 +48,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
-
-	@Override
-   public String getReportType() {
-	   return "day";
-   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

@@ -31,7 +31,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 
 public class CachedReportTask implements Task, LogEnabled {
@@ -78,8 +78,8 @@ public class CachedReportTask implements Task, LogEnabled {
 	}
 
 	private void reloadCurrentMonthly() {
-		Date start = TimeUtil.getCurrentMonth();
-		Date end = TimeUtil.getCurrentDay();
+		Date start = TimeHelper.getCurrentMonth();
+		Date end = TimeHelper.getCurrentDay();
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
@@ -121,8 +121,8 @@ public class CachedReportTask implements Task, LogEnabled {
 	}
 
 	private void reloadCurrentWeekly() {
-		Date start = TimeUtil.getCurrentWeek();
-		Date end = TimeUtil.getCurrentDay();
+		Date start = TimeHelper.getCurrentWeek();
+		Date end = TimeHelper.getCurrentDay();
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
@@ -170,7 +170,7 @@ public class CachedReportTask implements Task, LogEnabled {
 		boolean active = true;
 
 		while (active) {
-			Date date = TimeUtil.getCurrentDay();
+			Date date = TimeHelper.getCurrentDay();
 			long time = date.getTime();
 			Calendar cal = Calendar.getInstance();
 

@@ -58,6 +58,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_endTime;
 	}
 
+	public Collection<String> getIpAddrs() {
+		return m_ipAddrs;
+	}
+
 	public List<LineChart> getLineCharts() {
 		return m_lineCharts;
 	}
@@ -70,28 +74,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_productLines;
 	}
 
-	public Date getStartTime() {
-		return m_startTime;
-	}
-
 	public String getProjectsInfo() {
 		return m_projectsInfo;
 	}
 
-	public Collection<String> getIpAddrs() {
-		return m_ipAddrs;
-	}
-
-	public void setIpAddrs(Collection<String> ipAddrs) {
-		m_ipAddrs = ipAddrs;
-	}
-
-	public void setProjectsInfo(String projectsInfo) {
-		m_projectsInfo = projectsInfo;
+	public Date getStartTime() {
+		return m_startTime;
 	}
 
 	public void setEndTime(Date endTime) {
 		m_endTime = endTime;
+	}
+
+	public void setIpAddrs(Collection<String> ipAddrs) {
+		m_ipAddrs = ipAddrs;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {
@@ -104,6 +100,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setProductLines(Collection<ProductLine> productLines) {
 		m_productLines = productLines;
+	}
+
+	public void setProjectsInfo(String projectsInfo) {
+		m_projectsInfo = projectsInfo;
 	}
 
 	public void setStartTime(Date startTime) {

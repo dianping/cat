@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -41,7 +41,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	}
 
 	private StateReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryStateReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
+		return m_reportService.queryStateReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

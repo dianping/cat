@@ -95,6 +95,15 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	}
 
 	@Override
+	public void visitName(TransactionName name) {
+		Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+		TransactionType curentType = machine.findOrCreateType(m_currentType);
+		TransactionName currentName = curentType.findOrCreateName(name.getId());
+		
+		mergeName(currentName, name);
+	}
+
+	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		m_currentDomain = transactionReport.getDomain();
 		m_report.setStartTime(transactionReport.getStartTime());
@@ -114,14 +123,5 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 		if (typeName.startsWith("Cache.")) {
 			super.visitType(type);
 		}
-	}
-
-	@Override
-	public void visitName(TransactionName name) {
-		Machine machine = m_report.findOrCreateMachine(m_currentDomain);
-		TransactionType curentType = machine.findOrCreateType(m_currentType);
-		TransactionName currentName = curentType.findOrCreateName(name.getId());
-		
-		mergeName(currentName, name);
 	}
 }

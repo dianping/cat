@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Monitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
@@ -51,15 +51,19 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_city;
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	public Date getHistoryEndDate() {
 		try {
 			if (m_customEnd != null && m_customEnd.length() > 0) {
 				return m_format.parse(m_customEnd);
 			} else {
-				return TimeUtil.getCurrentHour(1);
+				return TimeHelper.getCurrentHour(1);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(1);
+			return TimeHelper.getCurrentHour(1);
 		}
 	}
 
@@ -69,10 +73,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 				return m_format.parse(m_customStart);
 			} else {
-				return TimeUtil.getCurrentHour(-2);
+				return TimeHelper.getCurrentHour(-2);
 			}
 		} catch (Exception e) {
-			return TimeUtil.getCurrentHour(-2);
+			return TimeHelper.getCurrentHour(-2);
 		}
 	}
 
@@ -101,6 +105,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_city = city;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.WEB);
@@ -112,14 +120,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setUrl(String url) {
 		m_url = url;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
 	}
 
 	@Override

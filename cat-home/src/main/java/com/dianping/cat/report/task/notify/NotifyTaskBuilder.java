@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
@@ -73,7 +73,7 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 		int transactionFlag = names.indexOf(TransactionAnalyzer.ID);
 		int eventFlag = names.indexOf(EventAnalyzer.ID);
 		int problemFlag = names.indexOf(ProblemAnalyzer.ID);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);

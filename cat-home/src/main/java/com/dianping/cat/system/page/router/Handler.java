@@ -13,7 +13,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
@@ -27,6 +27,15 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigManager m_configManager;
+
+	private String buildServerStr(List<Server> servers) {
+		StringBuilder sb = new StringBuilder();
+
+		for (Server server : servers) {
+			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
+		}
+		return sb.toString();
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -42,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 		Date start = payload.getDate();
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, start, end);
 
 		switch (action) {
@@ -82,14 +91,5 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
-	}
-
-	private String buildServerStr(List<Server> servers) {
-		StringBuilder sb = new StringBuilder();
-
-		for (Server server : servers) {
-			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
-		}
-		return sb.toString();
 	}
 }

@@ -23,7 +23,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
@@ -46,13 +46,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProductLineConfigManager m_productLineManager;
-
-	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "system")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
-	}
 
 	public String buildProject2Domains() {
 		List<Project> projects = new ArrayList<Project>();
@@ -81,6 +74,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "system")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
+	}
+
+	@Override
 	@OutboundActionMeta(name = "system")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -98,8 +98,8 @@ public class Handler implements PageHandler<Context> {
 
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
-		start = start - start % TimeUtil.ONE_HOUR;
-		end = end - end % TimeUtil.ONE_HOUR;
+		start = start - start % TimeHelper.ONE_HOUR;
+		end = end - end % TimeHelper.ONE_HOUR;
 		Date startDate = new Date(start);
 		Date endDate = new Date(end);
 

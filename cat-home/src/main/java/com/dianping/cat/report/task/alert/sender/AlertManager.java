@@ -11,6 +11,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -98,10 +99,6 @@ public class AlertManager implements Initializable {
 
 		Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
 		String title = pair.getKey();
-		String dbContent = m_splitterManager.process(pair.getValue(), AlertChannel.DATABASE);
-		AlertMessageEntity dbMessage = new AlertMessageEntity(group, title, type, dbContent, null);
-
-		m_alertEntityService.storeAlert(alert, dbMessage);
 
 		if (suspendMinute > 0) {
 			if (isSuspend(alertKey, suspendMinute)) {
@@ -110,6 +107,7 @@ public class AlertManager implements Initializable {
 				m_sendedAlerts.put(alertKey, alert);
 			}
 		}
+		AlertMessageEntity message = null;
 
 		for (AlertChannel channel : channels) {
 			String rawContent = pair.getValue();
@@ -118,12 +116,17 @@ public class AlertManager implements Initializable {
 			}
 			String content = m_splitterManager.process(rawContent, channel);
 			List<String> receivers = m_contactorManager.queryReceivers(group, channel, type);
-			AlertMessageEntity message = new AlertMessageEntity(group, title, type, content, receivers);
+			message = new AlertMessageEntity(group, title, type, content, receivers);
 
 			if (m_senderManager.sendAlert(channel, message)) {
 				result = true;
 			}
 		}
+
+		String dbContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(pair.getValue())
+		      .replaceAll("");
+		message.setContent(dbContent);
+		m_alertEntityService.storeAlert(alert, message);
 		return result;
 	}
 
@@ -149,7 +152,7 @@ public class AlertManager implements Initializable {
 
 	private String generateTypeStr(String type) {
 		AlertType typeByName = AlertType.getTypeByName(type);
-		
+
 		switch (typeByName) {
 		case Business:
 			return "业务告警";

@@ -24,7 +24,7 @@ import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
@@ -92,7 +92,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
 		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
-		      + TimeUtil.ONE_HOUR));
+		      + TimeHelper.ONE_HOUR));
 		
 		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
 	}
@@ -134,7 +134,7 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -159,10 +159,10 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		long endTime = end.getTime();
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
-				      new Date(startTime + TimeUtil.ONE_DAY));
+				      new Date(startTime + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -184,9 +184,9 @@ public class TransactionReportBuilder implements ReportTaskBuilder, LogEnabled {
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
-			      startTime + TimeUtil.ONE_HOUR));
+			      startTime + TimeHelper.ONE_HOUR));
 
 			reports.add(report);
 		}

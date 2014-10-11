@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.LineChart;
 
 public class LineGraphBuilder extends BaseVisitor {
@@ -47,7 +47,7 @@ public class LineGraphBuilder extends BaseVisitor {
 		LineChart result = new LineChart();
 
 		result.setSize(60);
-		result.setStep(TimeUtil.ONE_MINUTE);
+		result.setStep(TimeHelper.ONE_MINUTE);
 		result.setTitle(title);
 		result.setStart(m_start);
 		if (items != null) {

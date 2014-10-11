@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 
 public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
@@ -49,9 +49,9 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		long start = m_sdf.parse(m_start).getTime();
 		long end = m_sdf.parse(m_end).getTime();
 
-		for (; start < end; start = start + TimeUtil.ONE_DAY) {
+		for (; start < end; start = start + TimeHelper.ONE_DAY) {
 			Date current = new Date(start);
-			Date next = new Date(current.getTime() + TimeUtil.ONE_HOUR);
+			Date next = new Date(current.getTime() + TimeHelper.ONE_HOUR);
 			Set<String> domains = queryDomains(current);
 			System.out.println("Process " + m_sdf.format(current));
 
@@ -138,7 +138,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryDomains(Date date) {
-		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeUtil.ONE_HOUR),
+		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),
 		      TransactionAnalyzer.ID);
 	}
 

@@ -64,6 +64,19 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
+	private MetricReport findOrCreateReport(String product) {
+		MetricReport report = m_reports.get(product);
+
+		if (report == null) {
+			report = new MetricReport(product);
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+
+			m_reports.put(product, report);
+		}
+		return report;
+	}
+
 	public MetricReport getReport(String group) {
 		MetricReport report = m_reports.get(group);
 
@@ -147,19 +160,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		} else if (message instanceof Metric) {
 			processMetric(report, tree, (Metric) message);
 		}
-	}
-
-	private MetricReport findOrCreateReport(String product) {
-		MetricReport report = m_reports.get(product);
-
-		if (report == null) {
-			report = new MetricReport(product);
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
-			m_reports.put(product, report);
-		}
-		return report;
 	}
 
 	private int processMetric(MetricReport report, MessageTree tree, Metric metric) {

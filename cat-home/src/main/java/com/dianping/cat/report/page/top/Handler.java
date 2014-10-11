@@ -16,7 +16,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (report == null || report.getDomains().size() == 0) {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
-				      + TimeUtil.ONE_HOUR));
+				      + TimeHelper.ONE_HOUR));
 			}
 			return report;
 		} else {

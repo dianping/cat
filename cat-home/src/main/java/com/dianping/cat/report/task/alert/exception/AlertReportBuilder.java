@@ -12,7 +12,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -51,7 +51,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		AlertReport alertReport = new AlertReport(Constants.CAT);
 		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
 		      m_exceptionConfigManager);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(end);
@@ -94,7 +94,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		AlertReport alertReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -115,10 +115,10 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				AlertReport reportModel = m_reportService.queryAlertReport(domain, new Date(startTime), new Date(startTime
-				      + TimeUtil.ONE_DAY));
+				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -135,10 +135,10 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 		long endTime = endDate.getTime();
 		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
 			AlertReport reportModel = m_reportService.queryAlertReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

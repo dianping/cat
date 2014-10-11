@@ -18,7 +18,7 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.MonthlyReportContent;
@@ -48,7 +48,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 		long endTime = end.getTime();
 		String name = Constants.REPORT_HEAVY;
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
@@ -121,7 +121,7 @@ public class HeavyReportService extends AbstractReportService<HeavyReport> {
 		long endTime = end.getTime();
 		String name = Constants.REPORT_HEAVY;
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
 				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,

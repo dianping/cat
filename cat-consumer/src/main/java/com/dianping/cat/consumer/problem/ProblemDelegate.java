@@ -59,6 +59,16 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	}
 
 
+	@Override
+	public byte[] buildBinary(ProblemReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
+	public String buildXml(ProblemReport report) {
+		return report.toString();
+	}
+
 	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
 		ProblemReport report = new ProblemReport(Constants.ALL);
 		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
@@ -75,11 +85,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			Cat.logError(e);
 		}
 		return report;
-	}
-
-	@Override
-	public String buildXml(ProblemReport report) {
-		return report.toString();
 	}
 
 	@Override
@@ -121,19 +126,14 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	}
 
 	@Override
+	public ProblemReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public ProblemReport parseXml(String xml) throws Exception {
 		ProblemReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(ProblemReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public ProblemReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

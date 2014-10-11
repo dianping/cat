@@ -17,12 +17,12 @@ public class CityManager implements Initializable {
 
 	public Map<String, List<City>> m_cities = new LinkedHashMap<String, List<City>>();
 
-	public String getCityInfo() {
-		return new JsonBuilder().toJson(m_cities);
-	}
-
 	public Map<String, List<City>> getCities() {
 		return m_cities;
+	}
+
+	public String getCityInfo() {
+		return new JsonBuilder().toJson(m_cities);
 	}
 
 	@Override

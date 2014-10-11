@@ -123,13 +123,13 @@ public class LocalMessageBucket implements MessageBucket {
 		return null;
 	}
 
-	public MessageBlockWriter getWriter() {
-		return m_writer;
-	}
-
 	@Override
 	public long getLastAccessTime() {
 		return m_lastAccessTime;
+	}
+
+	public MessageBlockWriter getWriter() {
+		return m_writer;
 	}
 
 	@Override

@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
@@ -59,7 +59,7 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 		LineChart lineChart = new LineChart();
 		int step = m_dataExtractor.getStep();
 		lineChart.setStart(startDate);
-		lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+		lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 		PieChart pieChart = new PieChart();
 		List<PieChart.Item> items = new ArrayList<PieChart.Item>();
 
@@ -95,7 +95,7 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 			lineChart.setTitle(key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
-			lineChart.setStep(step * TimeUtil.ONE_MINUTE);
+			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
@@ -187,13 +187,13 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 	private Map<String, double[]> prepareAllData(MetricReport all, String url, Map<String, String> pars, Date startDate,
 	      Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeUtil.ONE_MINUTE);
+		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> sourceValue = new LinkedHashMap<String, double[]>();
 		int index = 0;
 		String type = pars.get("type");
 		MetricReportMerger merger = new MetricReportMerger(all);
 
-		for (; start < end; start += TimeUtil.ONE_HOUR) {
+		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
 			
 			if (Monitor.TYPE_INFO.equals(type)) {

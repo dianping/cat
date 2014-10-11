@@ -12,8 +12,8 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta(HeartbeatAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
@@ -96,6 +96,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_daemonThreadGraph;
 	}
 
+	public Map<String, Map<String, String>> getDalGraph() {
+		return m_dalGraph;
+	}
+
+	public int getDalTableHeight() {
+		int size = 0;
+		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
+			size = entry.getValue().size();
+			break;
+		}
+
+		if (size % 3 == 0) {
+			return (size / 3) * 190;
+		} else {
+			return ((size / 3) + 1) * 190;
+		}
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -136,25 +154,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
 
-			return StringSortHelper.sortDomain(domainNames);
-		}
-	}
-
-	public Map<String, Map<String, String>> getDalGraph() {
-		return m_dalGraph;
-	}
-
-	public int getDalTableHeight() {
-		int size = 0;
-		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
-			size = entry.getValue().size();
-			break;
-		}
-
-		if (size % 3 == 0) {
-			return (size / 3) * 190;
-		} else {
-			return ((size / 3) + 1) * 190;
+			return SortHelper.sortDomain(domainNames);
 		}
 	}
 
@@ -179,7 +179,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return StringSortHelper.sort(m_report.getIps());
+			return SortHelper.sortIpAddress(m_report.getIps());
 		}
 	}
 

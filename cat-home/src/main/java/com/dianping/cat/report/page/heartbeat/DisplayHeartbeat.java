@@ -246,6 +246,42 @@ public class DisplayHeartbeat {
 		return m_daemonThreads;
 	}
 
+	public Map<String, Map<String, String>> getDalGraph() {
+		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
+		Map<String, double[]> dalData = m_extensions.get(DAL);
+
+		if (dalData == null) {
+			return graphs;
+		}
+
+		for (Entry<String, double[]> entry : dalData.entrySet()) {
+			String key = entry.getKey();
+
+			int pos = key.lastIndexOf('-');
+
+			if (pos > 0) {
+				String db = key.substring(0, pos);
+				String title = key.substring(pos + 1);
+
+				Map<String, String> map = graphs.get(db);
+				if (map == null) {
+					map = new HashMap<String, String>();
+					graphs.put(db, map);
+				}
+				if (!DAL_INDEX.containsKey(title)) {
+					DAL_INDEX.put(title, DAL_INDEX_COUNTER.getAndIncrement());
+				}
+
+				map.put(title,
+						m_builder.build(new HeartbeatPayload(DAL_INDEX
+								.get(title), title, "Minute", "Count", entry
+								.getValue())));
+			}
+		}
+
+		return graphs;
+	}
+
 	public String getDeamonThreadGraph() {
 		return m_builder.build(new HeartbeatPayload(6, "Daemon Thread",
 				"Minute", "Count", m_daemonThreads));
@@ -418,45 +454,9 @@ public class DisplayHeartbeat {
 		return m_builder.build(new HeartbeatPayload(2, "Total Started Thread",
 				"Minute", "Count", m_totalThreads));
 	}
-
+	
 	public double[] getTotalThreads() {
 		return m_totalThreads;
-	}
-	
-	public Map<String, Map<String, String>> getDalGraph() {
-		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
-		Map<String, double[]> dalData = m_extensions.get(DAL);
-
-		if (dalData == null) {
-			return graphs;
-		}
-
-		for (Entry<String, double[]> entry : dalData.entrySet()) {
-			String key = entry.getKey();
-
-			int pos = key.lastIndexOf('-');
-
-			if (pos > 0) {
-				String db = key.substring(0, pos);
-				String title = key.substring(pos + 1);
-
-				Map<String, String> map = graphs.get(db);
-				if (map == null) {
-					map = new HashMap<String, String>();
-					graphs.put(db, map);
-				}
-				if (!DAL_INDEX.containsKey(title)) {
-					DAL_INDEX.put(title, DAL_INDEX_COUNTER.getAndIncrement());
-				}
-
-				map.put(title,
-						m_builder.build(new HeartbeatPayload(DAL_INDEX
-								.get(title), title, "Minute", "Count", entry
-								.getValue())));
-			}
-		}
-
-		return graphs;
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {

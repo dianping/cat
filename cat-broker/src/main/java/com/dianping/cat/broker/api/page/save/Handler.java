@@ -16,7 +16,7 @@ import com.dianping.cat.broker.api.app.AppDataConsumer;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	protected JspViewer m_jspViewer;
-	
+
 	@Inject
 	private AppDataConsumer m_appDataConsumer;
 
@@ -31,9 +31,9 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "save")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		HttpServletResponse response = ctx.getHttpServletResponse();
-		
+
 		m_appDataConsumer.save();
-		
+
 		response.getWriter().write("OK");
 	}
 }

@@ -18,6 +18,10 @@ import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -37,9 +41,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessagePathBuilder.class));
 
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

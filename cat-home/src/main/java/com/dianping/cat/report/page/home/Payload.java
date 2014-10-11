@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.home;
 
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -12,11 +11,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	private Action m_action;
 
 	@FieldMeta("docName")
-	private String m_docName;
-	
+	private String m_docName = "userMonitor";
+
 	@FieldMeta("subDocName")
 	private String m_subDocName;
-	
+
 	public Payload() {
 		super(ReportPage.HOME);
 	}
@@ -26,24 +25,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public String getSubDocName() {
-   	return m_subDocName;
-   }
+	public String getDocName() {
+		return m_docName;
+	}
 
-	public void setSubDocName(String subDocName) {
-   	m_subDocName = subDocName;
-   }
+	public String getSubDocName() {
+		return m_subDocName;
+	}
 
 	public void setAction(Action action) {
-   	m_action = action;
-   }
-
-	public String getDocName() {
-		if (StringUtils.isEmpty(m_docName)) {
-			return "index";
-		} else {
-			return m_docName;
-		}
+		m_action = action;
 	}
 
 	public void setAction(String action) {
@@ -52,6 +43,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setDocName(String docName) {
 		m_docName = docName;
+	}
+
+	public void setSubDocName(String subDocName) {
+		m_subDocName = subDocName;
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
@@ -30,39 +30,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 	@Inject
 	private AppConfigManager m_manager;
-
-	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
-		List<Double[]> datas = new LinkedList<Double[]>();
-
-		if (queryEntity1 != null) {
-			Double[] data1 = prepareQueryData(queryEntity1, type);
-			datas.add(data1);
-		}
-
-		if (queryEntity2 != null) {
-			Double[] values2 = prepareQueryData(queryEntity2, type);
-			datas.add(values2);
-		}
-		return buildChartData(datas, type);
-	}
-
-	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
-		Double[] value = m_appDataService.queryValue(queryEntity, type);
-
-		return value;
-	}
-
-	private String queryType(String type) {
-		if (AppDataService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-	}
 
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
@@ -87,32 +54,19 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return lineChart;
 	}
 
-	@Override
-	protected Map<Long, Double> convertToMap(double[] data, Date start, int step) {
-		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
-		int length = data.length;
-		long startTime = start.getTime();
-		long time = startTime;
+	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
+		List<Double[]> datas = new LinkedList<Double[]>();
 
-		for (int i = 0; i < length; i++) {
-			time += step * TimeUtil.ONE_MINUTE;
-			map.put(time, data[i]);
-		}
-		return map;
-	}
-
-	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
-		double sum = 0;
-
-		for (PieChartDetailInfo item : items) {
-			sum += item.getRequestSum();
+		if (queryEntity1 != null) {
+			Double[] data1 = prepareQueryData(queryEntity1, type);
+			datas.add(data1);
 		}
 
-		if (sum > 0) {
-			for (PieChartDetailInfo item : items) {
-				item.setSuccessRatio(item.getRequestSum() / sum);
-			}
+		if (queryEntity2 != null) {
+			Double[] values2 = prepareQueryData(queryEntity2, type);
+			datas.add(values2);
 		}
+		return buildChartData(datas, type);
 	}
 
 	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
@@ -227,5 +181,51 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 		item.setTitle(pair.getValue());
 		return new Pair<Integer, Item>(pair.getKey(), item);
+	}
+
+	@Override
+	protected Map<Long, Double> convertToMap(double[] data, Date start, int step) {
+		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
+		int length = data.length;
+		long startTime = start.getTime();
+		long time = startTime;
+
+		for (int i = 0; i < length; i++) {
+			time += step * TimeHelper.ONE_MINUTE;
+			map.put(time, data[i]);
+		}
+		return map;
+	}
+
+	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
+		Double[] value = m_appDataService.queryValue(queryEntity, type);
+
+		return value;
+	}
+
+	private String queryType(String type) {
+		if (AppDataService.SUCCESS.equals(type)) {
+			return "成功率（%/5分钟）";
+		} else if (AppDataService.REQUEST.equals(type)) {
+			return "请求数（个/5分钟）";
+		} else if (AppDataService.DELAY.equals(type)) {
+			return "延时平均值（毫秒/5分钟）";
+		} else {
+			throw new RuntimeException("unexpected query type, type:" + type);
+		}
+	}
+
+	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
+		double sum = 0;
+
+		for (PieChartDetailInfo item : items) {
+			sum += item.getRequestSum();
+		}
+
+		if (sum > 0) {
+			for (PieChartDetailInfo item : items) {
+				item.setSuccessRatio(item.getRequestSum() / sum);
+			}
+		}
 	}
 }

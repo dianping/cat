@@ -81,6 +81,21 @@ public class ProjectService implements Initializable {
 		return m_domains;
 	}
 
+	public Map<String, Project> findAllProjects() {
+		return m_projects;
+	}
+
+	public Project findByCmdbDomain(String domainName) {
+		try {
+			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
+			return project;
+		} catch (DalException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
 	public Project findByDomain(String domainName) {
 		Project project = m_projects.get(domainName);
 
@@ -98,21 +113,6 @@ public class ProjectService implements Initializable {
 			}
 			return null;
 		}
-	}
-
-	public Project findByCmdbDomain(String domainName) {
-		try {
-			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
-			return project;
-		} catch (DalException e) {
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
-	public Map<String, Project> findAllProjects() {
-		return m_projects;
 	}
 
 	public Project findProject(int id) {

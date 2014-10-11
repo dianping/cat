@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
@@ -67,7 +67,7 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -86,10 +86,10 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				MatrixReport reportModel = m_reportService.queryMatrixReport(domain, new Date(startTime), new Date(
-				      startTime + TimeUtil.ONE_DAY));
+				      startTime + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -110,10 +110,10 @@ public class MatrixReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
 			MatrixReport reportModel = m_reportService.queryMatrixReport(domain, date, new Date(date.getTime()
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

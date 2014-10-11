@@ -21,6 +21,10 @@ import com.dianping.cat.agent.monitor.paas.DataBuilder;
 import com.dianping.cat.agent.monitor.paas.PaasTask;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -52,9 +56,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// Please keep it as last
 		all.addAll(new WebComponentConfigurator().defineComponents());
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

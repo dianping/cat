@@ -32,7 +32,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Inject
 	private IpConvertManager m_ipConvertManager;
-	
+
 	private static final String UNKNOWN = "UnknownIp";
 
 	@Override
@@ -163,6 +163,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 	}
 
+	public void setIpConvertManager(IpConvertManager ipConvertManager) {
+		m_ipConvertManager = ipConvertManager;
+	}
+
+	public void setReportManager(ReportManager<CrossReport> reportManager) {
+		m_reportManager = reportManager;
+	}
+
+	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
+		m_serverConfigManager = serverConfigManager;
+	}
+
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
 		String localIp = info.getLocalAddress();
 		String remoteIp = info.getRemoteAddress();
@@ -238,16 +250,4 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 	}
 
-	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
-		m_serverConfigManager = serverConfigManager;
-	}
-
-	public void setIpConvertManager(IpConvertManager ipConvertManager) {
-   	m_ipConvertManager = ipConvertManager;
-   }
-
-	public void setReportManager(ReportManager<CrossReport> reportManager) {
-   	m_reportManager = reportManager;
-   }
-	
 }

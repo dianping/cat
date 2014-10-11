@@ -33,21 +33,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_cityInfo;
 
-	public String getItems() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_pattermItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return new JsonBuilder().toJson(maps);
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -77,6 +62,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Date getEnd() {
 		return m_end;
+	}
+
+	public String getItems() {
+		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
+
+		for (PatternItem item : m_pattermItems) {
+			List<PatternItem> items = maps.get(item.getGroup());
+
+			if (items == null) {
+				items = new ArrayList<PatternItem>();
+				maps.put(item.getGroup(), items);
+			}
+			items.add(item);
+		}
+		return new JsonBuilder().toJson(maps);
 	}
 
 	public LineChart getLineChart() {

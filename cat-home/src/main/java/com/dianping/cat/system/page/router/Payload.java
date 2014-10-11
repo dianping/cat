@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -24,38 +24,38 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
+	@Override
+	public Action getAction() {
+		return m_action;
 	}
 
 	public Date getDate() {
 		try {
 			return m_sdf.parse(m_date);
 		} catch (Exception e) {
-			return TimeUtil.getCurrentDay(-1);
+			return TimeHelper.getCurrentDay(-1);
 		}
 	}
 
-	public void setDate(String date) {
-		m_date = date;
+	public String getDomain() {
+		return m_domain;
+	}
+
+	@Override
+	public SystemPage getPage() {
+		return m_page;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.API);
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action;
+	public void setDate(String date) {
+		m_date = date;
 	}
 
-	@Override
-	public SystemPage getPage() {
-		return m_page;
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	@Override

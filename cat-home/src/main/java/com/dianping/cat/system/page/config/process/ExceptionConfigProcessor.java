@@ -10,7 +10,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
@@ -91,8 +91,8 @@ public class ExceptionConfigProcessor {
 		}
 	}	private List<String> queryExceptionList() {
 		long current = System.currentTimeMillis();
-		Date start = new Date(current - current % TimeUtil.ONE_HOUR - TimeUtil.ONE_HOUR - TimeUtil.ONE_DAY);
-		Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		Date start = new Date(current - current % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR - TimeHelper.ONE_DAY);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
 		Set<String> keys = new HashSet<String>();
 		List<String> exceptions = new ArrayList<String>();

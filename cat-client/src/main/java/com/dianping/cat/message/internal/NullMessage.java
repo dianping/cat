@@ -79,12 +79,12 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	public String getParentMessageId() {
-	   return null;
-   }
+		return null;
+	}
 
 	public String getRootMessageId() {
-	   return null;
-   }
+		return null;
+	}
 
 	@Override
 	public String getStatus() {
@@ -135,6 +135,6 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-   public void start() {
-   }
+	public void start() {
+	}
 }

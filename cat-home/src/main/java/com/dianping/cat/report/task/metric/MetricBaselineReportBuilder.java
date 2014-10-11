@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.baseline.BaselineConfig;
 import com.dianping.cat.report.baseline.BaselineConfigManager;
@@ -67,16 +67,16 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 			BaselineConfig baselineConfig = m_baselineConfigManager.queryBaseLineConfig(key);
 			List<Integer> days = baselineConfig.getDays();
 			List<Double> weights = baselineConfig.getWeights();
-			Date targetDate = new Date(reportPeriod.getTime() + baselineConfig.getTargetDate() * TimeUtil.ONE_DAY);
+			Date targetDate = new Date(reportPeriod.getTime() + baselineConfig.getTargetDate() * TimeHelper.ONE_DAY);
 			List<double[]> values = new ArrayList<double[]>();
 
 			for (Integer day : days) {
 				List<MetricItem> metricItems = new ArrayList<MetricItem>();
-				Date currentDate = new Date(reportPeriod.getTime() + day * TimeUtil.ONE_DAY);
+				Date currentDate = new Date(reportPeriod.getTime() + day * TimeHelper.ONE_DAY);
 
 				for (int i = 0; i < 24; i++) {
-					Date start = new Date(currentDate.getTime() + i * TimeUtil.ONE_HOUR);
-					Date end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+					Date start = new Date(currentDate.getTime() + i * TimeHelper.ONE_HOUR);
+					Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 					String metricReportKey = productLine + ":" + start.getTime();
 					MetricReport report = reports.get(metricReportKey);
 
@@ -105,7 +105,7 @@ public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnable
 			baseline.setReportPeriod(targetDate);
 			m_baselineService.insertBaseline(baseline);
 
-			Date tomorrow = new Date(reportPeriod.getTime() + TimeUtil.ONE_DAY);
+			Date tomorrow = new Date(reportPeriod.getTime() + TimeHelper.ONE_DAY);
 			double[] baseLine = m_baselineService.queryDailyBaseline(reportName, key, tomorrow);
 
 			if (baseLine == null) {

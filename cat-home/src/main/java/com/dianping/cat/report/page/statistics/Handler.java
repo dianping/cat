@@ -24,8 +24,8 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.MapUtils;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.entity.Exception;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -68,6 +68,21 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlertSummaryExecutor m_executor;
 
+	private void builAlertDetails(Model model, Payload payload) {
+		AlertReport alertReport = queryAlertReport(payload);
+		List<com.dianping.cat.home.alert.report.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
+		      payload.getDomain());
+
+		model.setAlertExceptions(sortedExceptions);
+	}
+
+	private void buildAlertInfo(Model model, Payload payload) {
+		AlertReport alertReport = queryAlertReport(payload);
+		model.setAlertReport(alertReport);
+		List<com.dianping.cat.home.alert.report.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
+		model.setAlertDomains(sortedDomains);
+	}
+
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
 		BugReportVisitor visitor = new BugReportVisitor();
@@ -83,21 +98,6 @@ public class Handler implements PageHandler<Context> {
 		model.setBugReport(bugReport);
 	}
 
-	private void buildAlertInfo(Model model, Payload payload) {
-		AlertReport alertReport = queryAlertReport(payload);
-		model.setAlertReport(alertReport);
-		List<com.dianping.cat.home.alert.report.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
-		model.setAlertDomains(sortedDomains);
-	}
-
-	private void builAlertDetails(Model model, Payload payload) {
-		AlertReport alertReport = queryAlertReport(payload);
-		List<com.dianping.cat.home.alert.report.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
-		      payload.getDomain());
-
-		model.setAlertExceptions(sortedExceptions);
-	}
-
 	private void buildHeavyInfo(Model model, Payload payload) {
 		HeavyReport heavyReport = queryHeavyReport(payload);
 
@@ -110,6 +110,50 @@ public class Handler implements PageHandler<Context> {
 		List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
 		model.setServiceList(dHisList);
 		model.setServiceReport(serviceReport);
+	}
+
+	private List<com.dianping.cat.home.alert.report.entity.Exception> buildSortedAlertDetails(AlertReport report,
+	      String domainName) {
+		List<com.dianping.cat.home.alert.report.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>();
+		com.dianping.cat.home.alert.report.entity.Domain domain = report.getDomains().get(domainName);
+
+		if (domain != null && !domain.getExceptions().isEmpty()) {
+			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions()
+			      .values());
+			Comparator<com.dianping.cat.home.alert.report.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Exception>() {
+
+				@Override
+				public int compare(Exception o1, Exception o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
+
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
+
+			Collections.sort(exceptions, exceptionCompator);
+		}
+		return exceptions;
+	}
+
+	private List<com.dianping.cat.home.alert.report.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
+		List<com.dianping.cat.home.alert.report.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>();
+
+		if (!report.getDomains().values().isEmpty()) {
+			domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>(report.getDomains().values());
+			Comparator<com.dianping.cat.home.alert.report.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Domain>() {
+
+				@Override
+				public int compare(com.dianping.cat.home.alert.report.entity.Domain o1,
+				      com.dianping.cat.home.alert.report.entity.Domain o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
+
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
+
+			Collections.sort(domains, domainCompator);
+		}
+		return domains;
 	}
 
 	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
@@ -144,50 +188,6 @@ public class Handler implements PageHandler<Context> {
 			model.setCacheUrls(cacheUrls);
 			model.setCacheServices(cacheServices);
 		}
-	}
-
-	private List<com.dianping.cat.home.alert.report.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
-		List<com.dianping.cat.home.alert.report.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>();
-
-		if (!report.getDomains().values().isEmpty()) {
-			domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>(report.getDomains().values());
-			Comparator<com.dianping.cat.home.alert.report.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Domain>() {
-
-				@Override
-				public int compare(com.dianping.cat.home.alert.report.entity.Domain o1,
-				      com.dianping.cat.home.alert.report.entity.Domain o2) {
-					int gap = o2.getErrorNumber() - o1.getErrorNumber();
-
-					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-				}
-			};
-
-			Collections.sort(domains, domainCompator);
-		}
-		return domains;
-	}
-
-	private List<com.dianping.cat.home.alert.report.entity.Exception> buildSortedAlertDetails(AlertReport report,
-	      String domainName) {
-		List<com.dianping.cat.home.alert.report.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>();
-		com.dianping.cat.home.alert.report.entity.Domain domain = report.getDomains().get(domainName);
-
-		if (domain != null && !domain.getExceptions().isEmpty()) {
-			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions()
-			      .values());
-			Comparator<com.dianping.cat.home.alert.report.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Exception>() {
-
-				@Override
-				public int compare(Exception o1, Exception o2) {
-					int gap = o2.getErrorNumber() - o1.getErrorNumber();
-
-					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-				}
-			};
-
-			Collections.sort(exceptions, exceptionCompator);
-		}
-		return exceptions;
 	}
 
 	private void buildUtilizationInfo(Model model, Payload payload) {
@@ -266,6 +266,12 @@ public class Handler implements PageHandler<Context> {
 		return !bugConfig.contains(exception);
 	}
 
+	private AlertReport queryAlertReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
+	}
+
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
@@ -276,12 +282,6 @@ public class Handler implements PageHandler<Context> {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
 		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
-	}
-
-	private AlertReport queryAlertReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-
-		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {
@@ -297,11 +297,11 @@ public class Handler implements PageHandler<Context> {
 		String name = action.getName();
 		if ((!name.startsWith("history")) && (action != Action.BUG_HTTP_JSON)) {
 			if (payload.getPeriod().isCurrent()) {
-				start = new Date(payload.getDate() - TimeUtil.ONE_HOUR);
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+				start = new Date(payload.getDate() - TimeHelper.ONE_HOUR);
+				end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 			} else {
 				start = new Date(payload.getDate());
-				end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+				end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 			}
 		} else {
 			start = payload.getHistoryStartDate();
@@ -371,7 +371,7 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 		};
-		errors = MapUtils.sortMap(errors, errorCompator);
+		errors = SortHelper.sortMap(errors, errorCompator);
 
 		for (ErrorStatis temp : errors.values()) {
 			Comparator<java.util.Map.Entry<String, ExceptionItem>> compator = new Comparator<java.util.Map.Entry<String, ExceptionItem>>() {
@@ -385,8 +385,8 @@ public class Handler implements PageHandler<Context> {
 			Map<String, ExceptionItem> bugs = temp.getBugs();
 			Map<String, ExceptionItem> exceptions = temp.getExceptions();
 
-			temp.setBugs(MapUtils.sortMap(bugs, compator));
-			temp.setExceptions(MapUtils.sortMap(exceptions, compator));
+			temp.setBugs(SortHelper.sortMap(bugs, compator));
+			temp.setExceptions(SortHelper.sortMap(exceptions, compator));
 		}
 		return errors;
 	}

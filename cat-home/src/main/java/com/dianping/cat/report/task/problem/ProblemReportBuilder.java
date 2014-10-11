@@ -22,7 +22,7 @@ import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
@@ -75,7 +75,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
 		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
-		      + TimeUtil.ONE_HOUR));
+		      + TimeHelper.ONE_HOUR));
 
 		return m_problemGraphCreator.splitReportToGraphs(period, domain, ProblemAnalyzer.ID, report);
 	}
@@ -134,7 +134,7 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeUtil.ONE_WEEK));
+		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setContent("");
@@ -153,10 +153,10 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		long endTime = end.getTime();
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
 				ProblemReport reportModel = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(
-				      startTime + TimeUtil.ONE_DAY));
+				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -176,9 +176,9 @@ public class ProblemReportBuilder implements ReportTaskBuilder {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 
-		for (; startTime < endTime; startTime = startTime + TimeUtil.ONE_HOUR) {
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
-			      + TimeUtil.ONE_HOUR));
+			      + TimeHelper.ONE_HOUR));
 
 			reports.add(report);
 		}

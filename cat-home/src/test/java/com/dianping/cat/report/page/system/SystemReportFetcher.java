@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.chart.DataExtractor;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 
@@ -61,7 +61,7 @@ public class SystemReportFetcher extends ComponentTestCase {
 			Date end = null;
 			try {
 				start = m_sdf.parse(date);
-				end = new Date(start.getTime() + TimeUtil.ONE_DAY);
+				end = new Date(start.getTime() + TimeHelper.ONE_DAY);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}

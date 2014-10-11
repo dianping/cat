@@ -11,7 +11,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
@@ -39,7 +39,7 @@ public class DependencyReportBuilder implements ReportTaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String reportDomain, Date reportPeriod) {
-		Date end = new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR);
+		Date end = new Date(reportPeriod.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(reportPeriod, end, DependencyAnalyzer.ID);
 		boolean result = true;
 

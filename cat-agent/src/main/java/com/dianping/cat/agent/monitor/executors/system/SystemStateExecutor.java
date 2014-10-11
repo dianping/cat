@@ -31,98 +31,6 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 
 	private String m_ipAddr;
 
-	@Override
-	public void initialize() throws InitializationException {
-		m_hostName = fetchHostName();
-		m_ipAddr = m_envConfig.getIp();
-
-		try {
-			m_md5String = readFileContent(m_envConfig.getMd5Path());
-		} catch (IOException e) {
-			Cat.logError(e);
-		}
-	}
-
-	public String fetchHostName() {
-		String hostname = "";
-		try {
-			hostname = InetAddress.getLocalHost().getHostName();
-		} catch (Exception exc) {
-			try {
-				hostname = m_sigar.getNetInfo().getHostName();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-		return hostname;
-	}
-
-	@Override
-	public List<DataEntity> execute() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-
-		entities.addAll(buildUptimeInfo());
-		entities.addAll(buildHostIpAddInfo());
-		entities.addAll(buildHostNameInfo());
-		entities.addAll(buildSshdInfo());
-
-		return entities;
-	}
-
-	public String readFileContent(String path) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(path));
-		try {
-			StringBuilder sb = new StringBuilder();
-			String line = br.readLine();
-
-			while (line != null) {
-				sb.append(line).append(System.getProperty("line.separator"));
-				line = br.readLine();
-			}
-			return sb.toString();
-		} catch (Exception e) {
-			Cat.logError(e);
-		} finally {
-			br.close();
-		}
-		return null;
-	}
-
-	public List<DataEntity> buildUptimeInfo() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-
-		try {
-			Uptime uptime = m_sigar.getUptime();
-			double time = uptime.getUptime() / 60;
-			Map<String, Double> values = new HashMap<String, Double>();
-
-			values.put(buildSystemId("uptime"), time);
-			entities.addAll(buildEntities(values, AVG_TYPE));
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return entities;
-	}
-
-	public boolean hostIpAddrChanged() {
-		try {
-			String ifNames[] = m_sigar.getNetInterfaceList();
-
-			for (int i = 0; i < ifNames.length; i++) {
-				String name = ifNames[i];
-				NetInterfaceConfig ifconfig = m_sigar.getNetInterfaceConfig(name);
-				String currentIp = ifconfig.getAddress();
-
-				if (currentIp.equals(m_ipAddr)) {
-					return false;
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return true;
-	}
-
 	public List<DataEntity> buildHostIpAddInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		double value = 0;
@@ -172,8 +80,100 @@ public class SystemStateExecutor extends AbstractExecutor implements Initializab
 		return entities;
 	}
 
+	public List<DataEntity> buildUptimeInfo() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
+		try {
+			Uptime uptime = m_sigar.getUptime();
+			double time = uptime.getUptime() / 60;
+			Map<String, Double> values = new HashMap<String, Double>();
+
+			values.put(buildSystemId("uptime"), time);
+			entities.addAll(buildEntities(values, AVG_TYPE));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return entities;
+	}
+
+	@Override
+	public List<DataEntity> execute() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
+		entities.addAll(buildUptimeInfo());
+		entities.addAll(buildHostIpAddInfo());
+		entities.addAll(buildHostNameInfo());
+		entities.addAll(buildSshdInfo());
+
+		return entities;
+	}
+
+	public String fetchHostName() {
+		String hostname = "";
+		try {
+			hostname = InetAddress.getLocalHost().getHostName();
+		} catch (Exception exc) {
+			try {
+				hostname = m_sigar.getNetInfo().getHostName();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return hostname;
+	}
+
 	@Override
 	public String getId() {
 		return ID;
+	}
+
+	public boolean hostIpAddrChanged() {
+		try {
+			String ifNames[] = m_sigar.getNetInterfaceList();
+
+			for (int i = 0; i < ifNames.length; i++) {
+				String name = ifNames[i];
+				NetInterfaceConfig ifconfig = m_sigar.getNetInterfaceConfig(name);
+				String currentIp = ifconfig.getAddress();
+
+				if (currentIp.equals(m_ipAddr)) {
+					return false;
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return true;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_hostName = fetchHostName();
+		m_ipAddr = m_envConfig.getIp();
+
+		try {
+			m_md5String = readFileContent(m_envConfig.getMd5Path());
+		} catch (IOException e) {
+			Cat.logError(e);
+		}
+	}
+
+	public String readFileContent(String path) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(path));
+		try {
+			StringBuilder sb = new StringBuilder();
+			String line = br.readLine();
+
+			while (line != null) {
+				sb.append(line).append(System.getProperty("line.separator"));
+				line = br.readLine();
+			}
+			return sb.toString();
+		} catch (Exception e) {
+			Cat.logError(e);
+		} finally {
+			br.close();
+		}
+		return null;
 	}
 }

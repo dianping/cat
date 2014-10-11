@@ -38,9 +38,6 @@ public class Cat {
 
 	private PlexusContainer m_container;
 
-	private Cat() {
-	}
-
 	private static void checkAndInitialize() {
 		if (s_instance.m_container == null) {
 			synchronized (s_instance) {
@@ -273,6 +270,9 @@ public class Cat {
 		}
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
+	}
+
+	private Cat() {
 	}
 
 	void setContainer(PlexusContainer container) {

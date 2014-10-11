@@ -15,12 +15,12 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.top.TopMetric;
-import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta(DependencyAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
@@ -101,7 +101,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
 
-			return StringSortHelper.sortDomain(domainNames);
+			return SortHelper.sortDomain(domainNames);
 		}
 	}
 
@@ -120,6 +120,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public int getMaxMinute() {
 		return m_maxMinute;
 	}
+
+	public String getMessage() {
+   	return m_message;
+   }
 
 	public int getMinute() {
 		return m_minute;
@@ -193,6 +197,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_maxMinute = maxMinute;
 	}
 
+	public void setMessage(String message) {
+   	m_message = message;
+   }
+
 	public void setMinute(int minute) {
 		m_minute = minute;
 	}
@@ -236,13 +244,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTopReport(TopReport topReport) {
 		m_topReport = topReport;
 	}
-
-	public String getMessage() {
-   	return m_message;
-   }
-
-	public void setMessage(String message) {
-   	m_message = message;
-   }
 	
 }

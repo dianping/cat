@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -86,52 +86,6 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNamePieChart(displayNames.getResults(), model);
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
-		}
-	}
-
-	private void transformTo60MinuteData(TransactionName transactionName) {
-		Map<Integer, Range> rangeMap = transactionName.getRanges();
-		Map<Integer, Range> rangeMapCopy = new LinkedHashMap<Integer, Range>();
-		Set<Integer> keys = rangeMap.keySet();
-		int minute, completeMinute, count, fails;
-		double sum, avg;
-		boolean tranform = true;
-
-		if (keys.size() <= 12) {
-			for (int key : keys) {
-				if (key % 5 != 0) {
-					tranform = false;
-					break;
-				}
-			}
-		} else {
-			tranform = false;
-		}
-
-		if (tranform) {
-			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
-				Range range = entry.getValue();
-				Range r = new Range(range.getValue()).setCount(range.getCount()).setSum(range.getSum())
-				      .setFails(range.getFails()).setAvg(range.getAvg());
-
-				rangeMapCopy.put(entry.getKey(), r);
-			}
-
-			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
-				Range range = entry.getValue();
-				minute = range.getValue();
-				count = range.getCount() / 5;
-				fails = range.getFails() / 5;
-				sum = range.getSum() / 5;
-				avg = range.getAvg();
-
-				for (int i = 0; i < 5; i++) {
-					completeMinute = minute + i;
-
-					transactionName.findOrCreateRange(completeMinute).setCount(count).setFails(fails).setSum(sum)
-					      .setAvg(avg);
-				}
-			}
 		}
 	}
 
@@ -223,7 +177,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Date start = new Date(payload.getDate());
-				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
+				Date end = new Date(payload.getDate() + TimeHelper.ONE_HOUR);
 
 				if (Constants.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
@@ -382,6 +336,52 @@ public class Handler implements PageHandler<Context> {
 		String queryName = payload.getQueryName();
 		if (queryName != null) {
 			model.setQueryName(queryName);
+		}
+	}
+
+	private void transformTo60MinuteData(TransactionName transactionName) {
+		Map<Integer, Range> rangeMap = transactionName.getRanges();
+		Map<Integer, Range> rangeMapCopy = new LinkedHashMap<Integer, Range>();
+		Set<Integer> keys = rangeMap.keySet();
+		int minute, completeMinute, count, fails;
+		double sum, avg;
+		boolean tranform = true;
+
+		if (keys.size() <= 12) {
+			for (int key : keys) {
+				if (key % 5 != 0) {
+					tranform = false;
+					break;
+				}
+			}
+		} else {
+			tranform = false;
+		}
+
+		if (tranform) {
+			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
+				Range range = entry.getValue();
+				Range r = new Range(range.getValue()).setCount(range.getCount()).setSum(range.getSum())
+				      .setFails(range.getFails()).setAvg(range.getAvg());
+
+				rangeMapCopy.put(entry.getKey(), r);
+			}
+
+			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
+				Range range = entry.getValue();
+				minute = range.getValue();
+				count = range.getCount() / 5;
+				fails = range.getFails() / 5;
+				sum = range.getSum() / 5;
+				avg = range.getAvg();
+
+				for (int i = 0; i < 5; i++) {
+					completeMinute = minute + i;
+
+					transactionName.findOrCreateRange(completeMinute).setCount(count).setFails(fails).setSum(sum)
+					      .setAvg(avg);
+				}
+			}
 		}
 	}
 

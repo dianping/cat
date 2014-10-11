@@ -26,7 +26,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -78,47 +78,6 @@ public class Handler implements PageHandler<Context> {
 			buildEventNamePieChart(displayNames.getResults(), model);
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), report));
-		}
-	}
-
-	private void transformTo60MinuteData(EventName eventName) {
-		Map<Integer, Range> rangeMap = eventName.getRanges();
-		Map<Integer, Range> rangeMapCopy = new LinkedHashMap<Integer, Range>();
-		Set<Integer> keys = rangeMap.keySet();
-		int minute, completeMinute, count, fails;
-		boolean tranform = true;
-
-		if (keys.size() <= 12) {
-			for (int key : keys) {
-				if (key % 5 != 0) {
-					tranform = false;
-					break;
-				}
-			}
-		} else {
-			tranform = false;
-		}
-
-		if (tranform) {
-			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
-				Range range = entry.getValue();
-				Range r = new Range(range.getValue()).setCount(range.getCount()).setFails(range.getFails());
-
-				rangeMapCopy.put(entry.getKey(), r);
-			}
-
-			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
-				Range range = entry.getValue();
-				minute = range.getValue();
-				count = range.getCount() / 5;
-				fails = range.getFails() / 5;
-
-				for (int i = 0; i < 5; i++) {
-					completeMinute = minute + i;
-
-					eventName.findOrCreateRange(completeMinute).setCount(count).setFails(fails);
-				}
-			}
 		}
 	}
 
@@ -219,7 +178,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), EventAnalyzer.ID);
+				      new Date(payload.getDate() + TimeHelper.ONE_HOUR), EventAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -342,6 +301,47 @@ public class Handler implements PageHandler<Context> {
 
 		if (StringUtils.isEmpty(payload.getType())) {
 			payload.setType(null);
+		}
+	}
+
+	private void transformTo60MinuteData(EventName eventName) {
+		Map<Integer, Range> rangeMap = eventName.getRanges();
+		Map<Integer, Range> rangeMapCopy = new LinkedHashMap<Integer, Range>();
+		Set<Integer> keys = rangeMap.keySet();
+		int minute, completeMinute, count, fails;
+		boolean tranform = true;
+
+		if (keys.size() <= 12) {
+			for (int key : keys) {
+				if (key % 5 != 0) {
+					tranform = false;
+					break;
+				}
+			}
+		} else {
+			tranform = false;
+		}
+
+		if (tranform) {
+			for (Entry<Integer, Range> entry : rangeMap.entrySet()) {
+				Range range = entry.getValue();
+				Range r = new Range(range.getValue()).setCount(range.getCount()).setFails(range.getFails());
+
+				rangeMapCopy.put(entry.getKey(), r);
+			}
+
+			for (Entry<Integer, Range> entry : rangeMapCopy.entrySet()) {
+				Range range = entry.getValue();
+				minute = range.getValue();
+				count = range.getCount() / 5;
+				fails = range.getFails() / 5;
+
+				for (int i = 0; i < 5; i++) {
+					completeMinute = minute + i;
+
+					eventName.findOrCreateRange(completeMinute).setCount(count).setFails(fails);
+				}
+			}
 		}
 	}
 

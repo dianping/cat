@@ -13,8 +13,6 @@ import com.dianping.cat.message.spi.MessageTree;
 public abstract class ProblemHandler {
 	public static final int MAX_LOG_SIZE = 60;
 
-	public abstract void handle(Machine machine, MessageTree tree);
-
 	// TODO fix performance issue
 	protected Entry findOrCreateEntry(Machine machine, String type, String status) {
 		List<Entry> entries = machine.getEntries();
@@ -32,6 +30,16 @@ public abstract class ProblemHandler {
 		entries.add(entry);
 		return entry;
 	}
+
+	protected int getSegmentByMessage(MessageTree tree) {
+		Message message = tree.getMessage();
+		long current = message.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
+
+		return min;
+	}
+
+	public abstract void handle(Machine machine, MessageTree tree);
 
 	public void updateEntry(MessageTree tree, Entry entry, int value) {
 		Duration duration = entry.findOrCreateDuration(value);
@@ -59,13 +67,5 @@ public abstract class ProblemHandler {
 		if (segmentMessages.size() < MAX_LOG_SIZE) {
 			segmentMessages.add(tree.getMessageId());
 		}
-	}
-
-	protected int getSegmentByMessage(MessageTree tree) {
-		Message message = tree.getMessage();
-		long current = message.getTimestamp() / 1000 / 60;
-		int min = (int) (current % (60));
-
-		return min;
 	}
 }

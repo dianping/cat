@@ -88,10 +88,6 @@ public class AggregationConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public List<AggregationRule> queryAggregationRules() {
-		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
-	}
-
 	public List<AggregationRule> queryAggrarationRulesFromDB() {
 		try {
 			m_aggregation = queryAggreation();
@@ -119,26 +115,8 @@ public class AggregationConfigManager implements Initializable {
 		return new Aggregation();
 	}
 
-	private boolean storeConfig() {
-		try {
-			Config config = m_configDao.createLocal();
-
-			config.setId(m_configId);
-			config.setKeyId(m_configId);
-			config.setName(CONFIG_NAME);
-			config.setContent(m_aggregation.toString());
-			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
-	}
-
-	public void refreshRule() {
-		List<AggregationRule> rules = queryAggrarationRulesFromDB();
-
-		m_handler.register(rules);
+	public List<AggregationRule> queryAggregationRules() {
+		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
 	}
 
 	public void refreshAggreationConfig() throws DalException, SAXException, IOException {
@@ -155,6 +133,28 @@ public class AggregationConfigManager implements Initializable {
 				m_modifyTime = modifyTime;
 			}
 		}
+	}
+
+	public void refreshRule() {
+		List<AggregationRule> rules = queryAggrarationRulesFromDB();
+
+		m_handler.register(rules);
+	}
+
+	private boolean storeConfig() {
+		try {
+			Config config = m_configDao.createLocal();
+
+			config.setId(m_configId);
+			config.setKeyId(m_configId);
+			config.setName(CONFIG_NAME);
+			config.setContent(m_aggregation.toString());
+			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
 	}
 	
 	public class ConfigReloadTask implements Task {
