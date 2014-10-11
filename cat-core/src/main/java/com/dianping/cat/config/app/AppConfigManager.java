@@ -82,12 +82,11 @@ public class AppConfigManager implements Initializable {
 	}
 
 	public boolean deleteCommand(String domain, String name) {
-		Set<Entry<Integer, Command>> entries = m_config.getCommands().entrySet();
+		Collection<Command> commands = m_config.getCommands().values();
 		List<Integer> needDeleteIds = new ArrayList<Integer>();
 
-		for (Entry<Integer, Command> entry : entries) {
-			Command command = entry.getValue();
-			if (domain.equals(command.getName()) && name.equals(command.getName())) {
+		for (Command command : commands) {
+			if (domain.equals(command.getDomain()) && name.equals(command.getName())) {
 				needDeleteIds.add(command.getId());
 			}
 		}
