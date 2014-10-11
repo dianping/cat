@@ -117,6 +117,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_configHeader;
 
+	private Command m_updateCommand;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -197,6 +199,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public TopologyGraphConfig getConfig() {
 		return m_config;
+	}
+
+	public String getConfigHeader() {
+		return m_configHeader;
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -378,6 +384,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_typeToProductLines;
 	}
 
+	public Command getUpdateCommand() {
+		return m_updateCommand;
+	}
+
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
@@ -408,6 +418,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setConfig(TopologyGraphConfig config) {
 		m_config = config;
+	}
+
+	public void setConfigHeader(String configHeader) {
+		m_configHeader = configHeader;
 	}
 
 	public void setConnectionTypes(Map<Integer, Item> connectionTypes) {
@@ -538,6 +552,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_typeToProductLines = typeToProductLines;
 	}
 
+	public void setUpdateCommand(Command updateCommand) {
+		m_updateCommand = updateCommand;
+	}
+
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
 	}
@@ -559,13 +577,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		public NodeConfig getNodeConfig() {
 			return m_nodeConfig;
 		}
-	}
-
-	public void setConfigHeader(String configHeader) {
-		m_configHeader = configHeader;
-	}
-
-	public String getConfigHeader() {
-		return m_configHeader;
 	}
 }

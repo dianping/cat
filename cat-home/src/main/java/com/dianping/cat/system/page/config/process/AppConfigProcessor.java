@@ -1,11 +1,14 @@
 package com.dianping.cat.system.page.config.process;
 
+import java.util.List;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -34,6 +37,8 @@ public class AppConfigProcessor extends BaseProcesser {
 
 	public void process(Action action, Payload payload, Model model) {
 		String domain, name;
+		int id;
+		Command command;
 
 		switch (action) {
 		case APP_ADD:
@@ -41,7 +46,7 @@ public class AppConfigProcessor extends BaseProcesser {
 			name = payload.getName();
 			String title = payload.getTitle();
 
-			if (StringUtil.isEmpty(domain) || StringUtil.isEmpty(name)) {
+			if (StringUtil.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
 				try {
@@ -59,7 +64,7 @@ public class AppConfigProcessor extends BaseProcesser {
 			domain = payload.getDomain();
 			name = payload.getName();
 
-			if (StringUtil.isEmpty(domain) || StringUtil.isEmpty(name)) {
+			if (StringUtil.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
 				if (m_appConfigManager.deleteCommand(domain, name)) {
@@ -68,6 +73,53 @@ public class AppConfigProcessor extends BaseProcesser {
 					setUpdateResult(model, 2);
 				}
 			}
+			break;
+		case APP_LIST:
+			generateCommandsForModel(model);
+			break;
+		case APP_UPDATE:
+			id = payload.getId();
+			command = m_appConfigManager.getConfig().findCommand(id);
+
+			if (command == null) {
+				command = new Command();
+			}
+			model.setUpdateCommand(command);
+			break;
+		case APP_SUBMIT:
+			id = payload.getId();
+			domain = payload.getDomain();
+			name = payload.getName();
+			title = payload.getTitle();
+
+			if (m_appConfigManager.containCommand(id)) {
+				if (m_appConfigManager.updateCommand(id, domain, name, title)) {
+					model.setOpState(true);
+				} else {
+					model.setOpState(false);
+				}
+			} else {
+				try {
+					if (m_appConfigManager.addCommand(domain, title, name)) {
+						model.setOpState(true);
+					} else {
+						model.setOpState(false);
+					}
+				} catch (Exception e) {
+					model.setOpState(false);
+				}
+			}
+			generateCommandsForModel(model);
+			break;
+		case APP_PAGE_DELETE:
+			id = payload.getId();
+
+			if (m_appConfigManager.deleteCommand(id)) {
+				model.setOpState(true);
+			} else {
+				model.setOpState(false);
+			}
+			generateCommandsForModel(model);
 			break;
 		case APP_CONFIG_UPDATE:
 			String appConfig = payload.getContent();
@@ -106,10 +158,15 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 	}
 
+	private void generateCommandsForModel(Model model) {
+		List<Command> commands = m_appConfigManager.queryCommands();
+		model.setCommands(commands);
+	}
+
 	private void setUpdateResult(Model model, int i) {
 		switch (i) {
 		case 0:
-			model.setContent("{\"status\":500, \"info\":\"lack arguments, domain and name are required.\"}");
+			model.setContent("{\"status\":500, \"info\":\"name is required.\"}");
 			break;
 		case 1:
 			model.setContent("{\"status\":200}");

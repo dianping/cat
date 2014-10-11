@@ -81,18 +81,44 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean updateCommand(int id, String domain, String name, String title) {
+		Command command = m_config.findCommand(id);
+
+		command.setDomain(domain);
+		command.setName(name);
+		command.setTitle(title);
+		return storeConfig();
+	}
+
+	public boolean containCommand(int id) {
+		Set<Integer> keys = m_config.getCommands().keySet();
+
+		if (keys.contains(id)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean deleteCommand(String domain, String name) {
 		Collection<Command> commands = m_config.getCommands().values();
 		List<Integer> needDeleteIds = new ArrayList<Integer>();
 
 		for (Command command : commands) {
-			if (domain.equals(command.getDomain()) && name.equals(command.getName())) {
-				needDeleteIds.add(command.getId());
+			if (name.equals(command.getName())) {
+				if (domain == null || (domain != null && domain.equals(command.getDomain()))) {
+					needDeleteIds.add(command.getId());
+				}
 			}
 		}
 		for (int id : needDeleteIds) {
 			m_config.removeCommand(id);
 		}
+		return storeConfig();
+	}
+
+	public boolean deleteCommand(int id) {
+		m_config.removeCommand(id);
 		return storeConfig();
 	}
 
