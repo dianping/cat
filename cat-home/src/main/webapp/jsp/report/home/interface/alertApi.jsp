@@ -1,5 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8"%>
-<h4 class="text-success">告警Http API</h4>
+<h4 class="text-error">告警Http API</h4>
 <p>Cat支持其它系统通过调用HTTP API来发送信息。目前支持三种发送渠道：邮件、短信、微信（需要邮箱和“爱点评”微信订阅号绑定）</p>
 <pre>
 	http请求方式: GET或者POST
