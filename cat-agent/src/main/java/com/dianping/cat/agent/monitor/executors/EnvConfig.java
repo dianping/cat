@@ -38,50 +38,6 @@ public class EnvConfig implements Initializable {
 
 	private List<String> DISK_LIST = Arrays.asList("/", "/data", "/usr", "/var");
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public String getGroup() {
-		return "system-" + m_domain;
-	}
-
-	public String getIp() {
-		return m_ip;
-	}
-
-	public String getHostName() {
-		return m_hostName;
-	}
-
-	public String getMonitors() {
-		return m_monitors;
-	}
-
-	public String getConfig() {
-		return CONFIG_FILE;
-	}
-
-	public String getCatalinaPath() {
-		return CATALINA_PATH;
-	}
-
-	public List<String> getTrafficInterfaceList() {
-		return TRAFFIC_INTERFACE_LIST;
-	}
-
-	public String getPackageInterface() {
-		return PACKAGE_INTERFACE;
-	}
-
-	public List<String> getDiskList() {
-		return DISK_LIST;
-	}
-
-	public String getMd5Path() {
-		return MD5_PATH;
-	}
-
 	// host.name 配置规则:
 	// [${domain}01.nh0] [${domain}01.beta] [${domain}-ppe01.hm] [${domain}-sl-**] [${domain}-gp-**]
 	private String buildDomain(String hostName) {
@@ -99,6 +55,70 @@ public class EnvConfig implements Initializable {
 			throw new RuntimeException("Unrecognized hostName [" + hostName + "] occurs");
 		}
 		return domain;
+	}
+
+	public String getCatalinaPath() {
+		return CATALINA_PATH;
+	}
+
+	public String getConfig() {
+		return CONFIG_FILE;
+	}
+
+	public List<String> getDiskList() {
+		return DISK_LIST;
+	}
+
+	public String getDomain() {
+		return m_domain;
+	}
+
+	public String getGroup() {
+		return "system-" + m_domain;
+	}
+
+	public String getHostName() {
+		return m_hostName;
+	}
+
+	public String getIp() {
+		return m_ip;
+	}
+
+	public String getMd5Path() {
+		return MD5_PATH;
+	}
+
+	public String getMonitors() {
+		return m_monitors;
+	}
+
+	public String getPackageInterface() {
+		return PACKAGE_INTERFACE;
+	}
+
+	public List<String> getTrafficInterfaceList() {
+		return TRAFFIC_INTERFACE_LIST;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		String agent = System.getProperty("agent", "executors");
+
+		if ("executors".equals(agent)) {
+			File configFile = new File(getConfig());
+			String envMoniotors = System.getenv("MONITORS");
+			String defaultMonitors = StringUtils.isEmpty(envMoniotors) ? "system" : envMoniotors;
+
+			if (configFile.exists()) {
+				loadFromConfig(defaultMonitors);
+			} else {
+				m_domain = "unset";
+				m_monitors = defaultMonitors;
+				m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
+			}
+		}
 	}
 
 	private void loadFromConfig(String defaultMonitors) {
@@ -137,26 +157,6 @@ public class EnvConfig implements Initializable {
 				} catch (IOException e) {
 					Cat.logError(e);
 				}
-			}
-		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		String agent = System.getProperty("agent", "executors");
-
-		if ("executors".equals(agent)) {
-			File configFile = new File(getConfig());
-			String envMoniotors = System.getenv("MONITORS");
-			String defaultMonitors = StringUtils.isEmpty(envMoniotors) ? "system" : envMoniotors;
-
-			if (configFile.exists()) {
-				loadFromConfig(defaultMonitors);
-			} else {
-				m_domain = "unset";
-				m_monitors = defaultMonitors;
-				m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 			}
 		}
 	}

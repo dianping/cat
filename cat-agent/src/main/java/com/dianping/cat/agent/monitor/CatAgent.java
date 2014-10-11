@@ -10,6 +10,21 @@ public class CatAgent {
 
 	private final static Logger logger = Logger.getLogger(CatAgent.class);
 
+	public static void addTerminateSingalHandler(final Server server) {
+		// not officially supported API
+		sun.misc.Signal.handle(new sun.misc.Signal("TERM"), new sun.misc.SignalHandler() {
+			@Override
+			public void handle(sun.misc.Signal signal) {
+				logger.info(String.format("%s signal received, try to stop jetty server", signal));
+				try {
+					server.stop();
+				} catch (Exception e) {
+					logger.error("error stop jetty server", e);
+				}
+			}
+		});
+	}
+
 	public static void main(String[] args) throws Exception {
 
 		if (args.length != 3) {
@@ -42,21 +57,6 @@ public class CatAgent {
 		server.setHandler(context);
 		server.start();
 
-	}
-
-	public static void addTerminateSingalHandler(final Server server) {
-		// not officially supported API
-		sun.misc.Signal.handle(new sun.misc.Signal("TERM"), new sun.misc.SignalHandler() {
-			@Override
-			public void handle(sun.misc.Signal signal) {
-				logger.info(String.format("%s signal received, try to stop jetty server", signal));
-				try {
-					server.stop();
-				} catch (Exception e) {
-					logger.error("error stop jetty server", e);
-				}
-			}
-		});
 	}
 
 }

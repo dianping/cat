@@ -21,29 +21,69 @@ public class DataBuilder {
 
 	private Map<String, String> m_ip2Md5 = new HashMap<String, String>();
 
-	public String getPaasMonintor() {
-		return System.getProperty("user.dir") + "/paas-monitor.py";
+	private void add2Entities(List<DataEntity> entities, DataEntity entity) {
+		if (entity != null) {
+			entities.add(entity);
+		}
 	}
 
-	private double findOrCreateSumValue(String key) {
-		Double value = m_lastValues.get(key);
+	public List<DataEntity> buildData(String id) {
+		String cmd = "/usr/bin/python " + getPaasMonintor() + " " + id;
+		List<String> outputs = null;
 
-		if (value == null) {
-			value = new Double(-1D);
-			m_lastValues.put(key, value);
+		try {
+			outputs = m_commandUtils.runShell(cmd);
+			
+			return convert2DataEntities(outputs);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		return value;
+		return new ArrayList<DataEntity>();
 	}
 
-	private String findOrCreateMd5Info(String key) {
-		String md5Info = m_ip2Md5.get(key);
+	private String buildGroup(String domain) {
+		return "system-" + domain;
+	}
 
-		if (md5Info == null) {
-			md5Info = "";
+	private DataEntity buildMd5Info(String domain, String type, String realKey, String key, String value) {
+		String md5Info = findOrCreateMd5Info(key);
+		DataEntity entity = null;
 
-			m_ip2Md5.put(key, md5Info);
+		if (StringUtils.isNotEmpty(md5Info)) {
+			entity = new DataEntity();
+			entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
+			      .setType(type);
+			if (md5Info.equals(value)) {
+				entity.setValue(1);
+			} else {
+				entity.setValue(0);
+			}
+		} else {
+			m_ip2Md5.put(key, value);
 		}
-		return md5Info;
+		return entity;
+	}
+
+	private DataEntity buildSumEntity(String domain, String type, String realKey, String key, String value) {
+		DataEntity entity = null;
+
+		try {
+			double currentValue = Double.parseDouble(value);
+			double lastValue = findOrCreateSumValue(key);
+
+			if (lastValue >= 0) {
+				double gap = currentValue - lastValue;
+				entity = new DataEntity();
+
+				entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
+				      .setType(type).setValue(gap);
+			}
+			m_lastValues.put(key, currentValue);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return entity;
 	}
 
 	private List<DataEntity> convert2DataEntities(List<String> lines) {
@@ -83,55 +123,29 @@ public class DataBuilder {
 		return dataEntities;
 	}
 
-	private void add2Entities(List<DataEntity> entities, DataEntity entity) {
-		if (entity != null) {
-			entities.add(entity);
+	private String findOrCreateMd5Info(String key) {
+		String md5Info = m_ip2Md5.get(key);
+
+		if (md5Info == null) {
+			md5Info = "";
+
+			m_ip2Md5.put(key, md5Info);
 		}
+		return md5Info;
 	}
 
-	private DataEntity buildSumEntity(String domain, String type, String realKey, String key, String value) {
-		DataEntity entity = null;
+	private double findOrCreateSumValue(String key) {
+		Double value = m_lastValues.get(key);
 
-		try {
-			double currentValue = Double.parseDouble(value);
-			double lastValue = findOrCreateSumValue(key);
-
-			if (lastValue >= 0) {
-				double gap = currentValue - lastValue;
-				entity = new DataEntity();
-
-				entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
-				      .setType(type).setValue(gap);
-			}
-			m_lastValues.put(key, currentValue);
-		} catch (Exception e) {
-			Cat.logError(e);
+		if (value == null) {
+			value = new Double(-1D);
+			m_lastValues.put(key, value);
 		}
-
-		return entity;
+		return value;
 	}
 
-	private DataEntity buildMd5Info(String domain, String type, String realKey, String key, String value) {
-		String md5Info = findOrCreateMd5Info(key);
-		DataEntity entity = null;
-
-		if (StringUtils.isNotEmpty(md5Info)) {
-			entity = new DataEntity();
-			entity.setGroup(buildGroup(domain)).setDomain(domain).setId(realKey).setTime(System.currentTimeMillis())
-			      .setType(type);
-			if (md5Info.equals(value)) {
-				entity.setValue(1);
-			} else {
-				entity.setValue(0);
-			}
-		} else {
-			m_ip2Md5.put(key, value);
-		}
-		return entity;
-	}
-
-	private String buildGroup(String domain) {
-		return "system-" + domain;
+	public String getPaasMonintor() {
+		return System.getProperty("user.dir") + "/paas-monitor.py";
 	}
 
 	public List<String> queryInstances() {
@@ -144,19 +158,5 @@ public class DataBuilder {
 			Cat.logError(e);
 		}
 		return outputs;
-	}
-
-	public List<DataEntity> buildData(String id) {
-		String cmd = "/usr/bin/python " + getPaasMonintor() + " " + id;
-		List<String> outputs = null;
-
-		try {
-			outputs = m_commandUtils.runShell(cmd);
-			
-			return convert2DataEntities(outputs);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new ArrayList<DataEntity>();
 	}
 }

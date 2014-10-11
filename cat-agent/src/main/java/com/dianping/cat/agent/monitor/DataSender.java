@@ -30,6 +30,25 @@ public class DataSender implements Task, Initializable {
 
 	private static final int MAX_ENTITIES = 20;
 
+	private String buildBatchEntities(List<DataEntity> entities) {
+		StringBuilder sb = new StringBuilder();
+
+		for (DataEntity entity : entities) {
+			sb.append(entity.buildBatchContent());
+		}
+		return sb.toString();
+	}
+
+	@Override
+	public String getName() {
+		return "data-sender";
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("cat").start(this);
+	}
+
 	public boolean put(List<DataEntity> entities) {
 		boolean result = true;
 
@@ -44,56 +63,6 @@ public class DataSender implements Task, Initializable {
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);
-		}
-		return false;
-	}
-
-	private String buildBatchEntities(List<DataEntity> entities) {
-		StringBuilder sb = new StringBuilder();
-
-		for (DataEntity entity : entities) {
-			sb.append(entity.buildBatchContent());
-		}
-		return sb.toString();
-	}
-
-	private boolean sendData(String server, String content) {
-		boolean flag = false;
-		String url = m_catServers.buildSystemUrl(server);
-
-		try {
-			URLConnection conn = new URL(url).openConnection();
-
-			conn.setDoOutput(true);
-			conn.setDoInput(true);
-
-			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-			writer.write(content);
-			writer.flush();
-
-			InputStream in = conn.getInputStream();
-			String result = Files.forIO().readFrom(in, "utf-8");
-
-			if (result.contains("{\"statusCode\":\"0\"}")) {
-				flag = true;
-			}
-		} catch (Exception e) {
-			Cat.logEvent("DataSender", "Failed", Event.SUCCESS, "server [" + server + "] is not reachable.");
-		}
-		return flag;
-	}
-
-	private boolean sendBatchEntities(List<DataEntity> entities) {
-		List<String> servers = m_catServers.getServers();
-
-		for (String server : servers) {
-			String entityContent = buildBatchEntities(entities);
-			String content = "&batch=" + entityContent;
-
-			if (sendData(server, content)) {
-				return true;
-			}
 		}
 		return false;
 	}
@@ -140,17 +109,48 @@ public class DataSender implements Task, Initializable {
 		}
 	}
 
-	@Override
-	public String getName() {
-		return "data-sender";
+	private boolean sendBatchEntities(List<DataEntity> entities) {
+		List<String> servers = m_catServers.getServers();
+
+		for (String server : servers) {
+			String entityContent = buildBatchEntities(entities);
+			String content = "&batch=" + entityContent;
+
+			if (sendData(server, content)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private boolean sendData(String server, String content) {
+		boolean flag = false;
+		String url = m_catServers.buildSystemUrl(server);
+
+		try {
+			URLConnection conn = new URL(url).openConnection();
+
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+
+			OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+			writer.write(content);
+			writer.flush();
+
+			InputStream in = conn.getInputStream();
+			String result = Files.forIO().readFrom(in, "utf-8");
+
+			if (result.contains("{\"statusCode\":\"0\"}")) {
+				flag = true;
+			}
+		} catch (Exception e) {
+			Cat.logEvent("DataSender", "Failed", Event.SUCCESS, "server [" + server + "] is not reachable.");
+		}
+		return flag;
 	}
 
 	@Override
 	public void shutdown() {
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Threads.forGroup("cat").start(this);
 	}
 }

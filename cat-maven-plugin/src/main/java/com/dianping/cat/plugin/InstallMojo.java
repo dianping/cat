@@ -87,6 +87,12 @@ public class InstallMojo extends AbstractMojo {
 		}
 	}
 
+	private void debug(String info) {
+		if (m_verbose) {
+			getLog().debug(info);
+		}
+	}
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		getLog().info("Preparing Cat environment...");
@@ -163,12 +169,6 @@ public class InstallMojo extends AbstractMojo {
 		}
 
 		return isSuccess;
-	}
-
-	private void debug(String info) {
-		if (m_verbose) {
-			getLog().debug(info);
-		}
 	}
 
 	private boolean setupDatabase() throws MojoFailureException {

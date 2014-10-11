@@ -53,82 +53,6 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 	private volatile boolean m_active = true;
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public String getName() {
-		return "DumpUploader";
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
-		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("logview");
-	}
-
-	private boolean isActive() {
-		synchronized (this) {
-			return m_active;
-		}
-	}
-
-	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
-		StringBuilder baseDir = new StringBuilder(32);
-		FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
-		Path file = new Path(baseDir.toString(), path);
-		FSDataOutputStream out;
-
-		try {
-			out = fs.create(file);
-		} catch (RemoteException re) {
-			fs.delete(file, false);
-
-			out = fs.create(file);
-		} catch (AlreadyBeingCreatedException e) {
-			fs.delete(file, false);
-
-			out = fs.create(file);
-		}
-		return out;
-	}
-
-	@Override
-	public void run() {
-		while (isActive()) {
-			try {
-				if (Cat.isInitialized()) {
-					Calendar cal = Calendar.getInstance();
-
-					if (cal.get(Calendar.MINUTE) >= 10) {
-						uploadLogviewFile();
-						deleteOldReports();
-					}
-				}
-			} catch (Exception e) {
-				m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
-			}
-			try {
-				Thread.sleep(m_sleepPeriod);
-			} catch (InterruptedException e) {
-				m_active = false;
-			}
-		}
-	}
-
-	public void setSleepPeriod(long period) {
-		m_sleepPeriod = period;
-	}
-
-	@Override
-	public void shutdown() {
-		synchronized (this) {
-			m_active = false;
-		}
-	}
-
 	public void deleteOldReports() {
 		Transaction t = Cat.newTransaction("System", "DeleteReport");
 		try {
@@ -173,6 +97,48 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		}
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public String getName() {
+		return "DumpUploader";
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
+		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("logview");
+	}
+
+	private boolean isActive() {
+		synchronized (this) {
+			return m_active;
+		}
+	}
+
+	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
+		StringBuilder baseDir = new StringBuilder(32);
+		FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
+		Path file = new Path(baseDir.toString(), path);
+		FSDataOutputStream out;
+
+		try {
+			out = fs.create(file);
+		} catch (RemoteException re) {
+			fs.delete(file, false);
+
+			out = fs.create(file);
+		} catch (AlreadyBeingCreatedException e) {
+			fs.delete(file, false);
+
+			out = fs.create(file);
+		}
+		return out;
+	}
+
 	private void removeEmptyDir(File baseFile) {
 		// the path has two depth
 		for (int i = 0; i < 2; i++) {
@@ -196,6 +162,40 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 				} catch (Exception e) {
 				}
 			}
+		}
+	}
+
+	@Override
+	public void run() {
+		while (isActive()) {
+			try {
+				if (Cat.isInitialized()) {
+					Calendar cal = Calendar.getInstance();
+
+					if (cal.get(Calendar.MINUTE) >= 10) {
+						uploadLogviewFile();
+						deleteOldReports();
+					}
+				}
+			} catch (Exception e) {
+				m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
+			}
+			try {
+				Thread.sleep(m_sleepPeriod);
+			} catch (InterruptedException e) {
+				m_active = false;
+			}
+		}
+	}
+
+	public void setSleepPeriod(long period) {
+		m_sleepPeriod = period;
+	}
+
+	@Override
+	public void shutdown() {
+		synchronized (this) {
+			m_active = false;
 		}
 	}
 

@@ -13,14 +13,6 @@ public class JVMStateExecutor extends AbstractExecutor {
 
 	public static final String ID = "JVMStateExecutor";
 
-	@Override
-	public List<DataEntity> execute() {
-		List<DataEntity> entities = new ArrayList<DataEntity>();
-
-		entities.addAll(buildCatalinaLogInfo());
-		return entities;
-	}
-
 	public List<DataEntity> buildCatalinaLogInfo() {
 		List<DataEntity> entities = new ArrayList<DataEntity>();
 		File logFile = new File(m_envConfig.getCatalinaPath());
@@ -32,6 +24,14 @@ public class JVMStateExecutor extends AbstractExecutor {
 			values.put(JVM_TYPE + "_catalinaLogSize_" + m_envConfig.getIp(), bytes);
 			entities.addAll(buildEntities(values, AVG_TYPE));
 		}
+		return entities;
+	}
+
+	@Override
+	public List<DataEntity> execute() {
+		List<DataEntity> entities = new ArrayList<DataEntity>();
+
+		entities.addAll(buildCatalinaLogInfo());
 		return entities;
 	}
 
