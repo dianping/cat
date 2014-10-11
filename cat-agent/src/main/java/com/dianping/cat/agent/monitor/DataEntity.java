@@ -14,6 +14,14 @@ public class DataEntity {
 
 	private String m_domain;
 
+	public String buildBatchContent() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(getGroup()).append("\t").append(getDomain()).append("\t").append(getId()).append("\t")
+		      .append(getType()).append("\t").append(getTime()).append("\t").append(getValue()).append("\n");
+		return sb.toString();
+	}
+
 	public String getDomain() {
 		return m_domain;
 	}
@@ -66,14 +74,6 @@ public class DataEntity {
 	public DataEntity setValue(double value) {
 		m_value = value;
 		return this;
-	}
-
-	public String buildBatchContent() {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(getGroup()).append("\t").append(getDomain()).append("\t").append(getId()).append("\t")
-		      .append(getType()).append("\t").append(getTime()).append("\t").append(getValue()).append("\n");
-		return sb.toString();
 	}
 
 	@Override

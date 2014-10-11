@@ -11,10 +11,6 @@ public class Payload implements ActionPayload<CorePage, Action> {
    @FieldMeta("op")
    private Action m_action;
 
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
-   }
-
    @Override
    public Action getAction() {
       return m_action;
@@ -23,6 +19,10 @@ public class Payload implements ActionPayload<CorePage, Action> {
    @Override
    public CorePage getPage() {
       return m_page;
+   }
+
+   public void setAction(String action) {
+      m_action = Action.getByName(action, Action.VIEW);
    }
 
    @Override

@@ -30,22 +30,10 @@ public abstract class AbstractExecutor implements Executor {
 
 	public static final String NGINX_TYPE = "nginx";
 
-	protected String buildSystemId(String id) {
-		return SYSTEM_TYPE + "_" + id + "_" + m_envConfig.getIp();
-	}
-
-	protected String buildJVMId(String id, String pid) {
-		return JVM_TYPE + "_" + id + "@" + pid + "_" + m_envConfig.getIp();
-	}
-
-	protected String buildNginxId(String id) {
-		return NGINX_TYPE + "_" + id + "_" + m_envConfig.getIp();
-	}
-
 	protected void addGroupDomainInfo(DataEntity entity) {
 		entity.setGroup(m_envConfig.getGroup()).setDomain(m_envConfig.getDomain());
 	}
-	
+
 	protected List<DataEntity> buildEntities(Map<String, Double> values, String type) {
 		ArrayList<DataEntity> entities = new ArrayList<DataEntity>();
 		long time = System.currentTimeMillis();
@@ -60,6 +48,18 @@ public abstract class AbstractExecutor implements Executor {
 			entities.add(entity);
 		}
 		return entities;
+	}
+
+	protected String buildJVMId(String id, String pid) {
+		return JVM_TYPE + "_" + id + "@" + pid + "_" + m_envConfig.getIp();
+	}
+
+	protected String buildNginxId(String id) {
+		return NGINX_TYPE + "_" + id + "_" + m_envConfig.getIp();
+	}
+	
+	protected String buildSystemId(String id) {
+		return SYSTEM_TYPE + "_" + id + "_" + m_envConfig.getIp();
 	}
 
 }

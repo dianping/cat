@@ -24,6 +24,11 @@ public class PaasTask implements Task, Initializable {
 	private static final int DURATION = 5 * 1000;
 
 	@Override
+	public String getName() {
+		return "paas-task";
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		String agent = System.getProperty("agent", "executors");
 
@@ -65,11 +70,6 @@ public class PaasTask implements Task, Initializable {
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	public String getName() {
-		return "paas-task";
 	}
 
 	@Override

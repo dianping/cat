@@ -17,14 +17,6 @@ public enum CorePage implements Page {
 
    private boolean m_standalone;
 
-   private CorePage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
-
    public static CorePage getByName(String name, CorePage defaultPage) {
       for (CorePage action : CorePage.values()) {
          if (action.getName().equals(name)) {
@@ -33,6 +25,14 @@ public enum CorePage implements Page {
       }
 
       return defaultPage;
+   }
+
+   private CorePage(String name, String path, String title, String description, boolean standalone) {
+      m_name = name;
+      m_path = path;
+      m_title = title;
+      m_description = description;
+      m_standalone = standalone;
    }
 
    public String getDescription() {
@@ -63,11 +63,11 @@ public enum CorePage implements Page {
       return m_title;
    }
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
-
    public CorePage[] getValues() {
       return CorePage.values();
+   }
+
+   public boolean isStandalone() {
+      return m_standalone;
    }
 }
