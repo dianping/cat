@@ -35,7 +35,7 @@ public enum JspFile {
 
 	METRIC_CONFIG_LIST("/jsp/system/metric/metricConfigs.jsp"),
 
-	DOMAIN_METRIC_RULE_CONFIG_UPDATE("/jsp/system/domainMetricRule/domainMetricRuleConfig.jsp"),
+	METRIC_RULE_CONFIG_UPDATE("/jsp/system/metric/metricRuleConfig.jsp"),
 
 	NETWORK_RULE_CONFIG_LIST("/jsp/system/networkRule/networkConfigs.jsp"),
 

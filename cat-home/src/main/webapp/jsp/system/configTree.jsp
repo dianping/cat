@@ -14,6 +14,7 @@
 	       <li class="text-left" id="appRule"><a href="?op=appRule">APP告警配置</a></li>
            <li class='nav-header'>应用监控配置</li>
 	       <li class="text-left" id="metricConfigList"><a href="?op=metricConfigList">业务监控规则</a></li>
+	       <li class="text-left" id="metricRuleConfigUpdate"><a href="?op=metricRuleConfigUpdate" style="display:none">业务监控规则</a></li>
 	       <li class="text-left" style="display:none" id="domainMetricRuleConfigUpdate"><a href="?op=domainMetricRuleConfigUpdate">业务XML规则</a></li>
 	       <li class="text-left" id="exceptionConfigList"><a href="?op=exception">异常告警配置</a></li>
 	       <li class="text-left" id="bugConfigUpdate"><a href="?op=bugConfigUpdate">框架异常配置</a></li>

@@ -134,7 +134,7 @@ public class MetricConfigProcessor extends BaseProcesser {
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
 			break;
-		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
+		case METRIC_RULE_CONFIG_UPDATE:
 			String domainMetricRuleConfig = payload.getContent();
 			if (!StringUtils.isEmpty(domainMetricRuleConfig)) {
 				model.setOpState(m_businessRuleConfigManager.insert(domainMetricRuleConfig));

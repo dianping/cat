@@ -130,7 +130,7 @@ public class Handler implements PageHandler<Context> {
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
 		case METRIC_CONFIG_LIST:
 		case METRIC_CONFIG_DELETE:
-		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
+		case METRIC_RULE_CONFIG_UPDATE:
 			m_metricConfigProcessor.process(action, payload, model);
 			break;
 

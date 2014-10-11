@@ -61,7 +61,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
 
-	DOMAIN_METRIC_RULE_CONFIG_UPDATE("domainMetricRuleConfigUpdate"),
+	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
 
 	NETWORK_RULE_CONFIG_LIST("networkRuleConfigList"),
 
