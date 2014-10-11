@@ -11,20 +11,20 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-   @FieldMeta("c")
-   private String  m_content;
-   
+	@FieldMeta("c")
+	private String m_content;
+
 	@FieldMeta("v")
 	private String m_version;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
 	public String getContent() {
-   	return m_content;
-   }
+		return m_content;
+	}
 
 	@Override
 	public ApiPage getPage() {
@@ -32,16 +32,16 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	}
 
 	public String getVersion() {
-   	return m_version;
-   }
+		return m_version;
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
-	
+
 	public void setContent(String content) {
-   	m_content = content;
-   }
+		m_content = content;
+	}
 
 	@Override
 	public void setPage(String page) {
@@ -49,8 +49,8 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	}
 
 	public void setVersion(String version) {
-   	m_version = version;
-   }
+		m_version = version;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

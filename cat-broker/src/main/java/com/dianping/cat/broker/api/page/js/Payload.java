@@ -26,20 +26,12 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 
 	@FieldMeta("data")
 	private String m_data;
-	
+
 	@FieldMeta("url")
 	private String m_url;
-	
+
 	@FieldMeta("v")
 	private String m_version;
-	
-	public String getUrl() {
-   	return m_url;
-   }
-
-	public void setUrl(String url) {
-   	m_url = url;
-   }
 
 	@Override
 	public Action getAction() {
@@ -71,9 +63,13 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 		return m_timestamp;
 	}
 
+	public String getUrl() {
+		return m_url;
+	}
+
 	public String getVersion() {
-   	return m_version;
-   }
+		return m_version;
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
@@ -108,9 +104,13 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 		m_timestamp = timestamp;
 	}
 
+	public void setUrl(String url) {
+		m_url = url;
+	}
+
 	public void setVersion(String version) {
-   	m_version = version;
-   }
+		m_version = version;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

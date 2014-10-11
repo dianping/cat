@@ -18,6 +18,10 @@ import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.service.IpService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -38,9 +42,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

@@ -30,6 +30,23 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private Logger m_logger;
 
+	private MonitorEntity createEntity(String url, long timestamp, double duration, String userIp) {
+		MonitorEntity entity = new MonitorEntity();
+
+		entity.setTimestamp(timestamp);
+		entity.setTargetUrl(url);
+		entity.setDuration(duration);
+		entity.setHttpStatus("200");
+		entity.setErrorCode("200");
+		entity.setIp(userIp);
+		return entity;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "cdn")
@@ -79,22 +96,5 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 		response.getWriter().write("OK");
-	}
-
-	private MonitorEntity createEntity(String url, long timestamp, double duration, String userIp) {
-		MonitorEntity entity = new MonitorEntity();
-
-		entity.setTimestamp(timestamp);
-		entity.setTargetUrl(url);
-		entity.setDuration(duration);
-		entity.setHttpStatus("200");
-		entity.setErrorCode("200");
-		entity.setIp(userIp);
-		return entity;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

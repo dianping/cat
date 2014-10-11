@@ -95,6 +95,73 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
+	private void offerQueue(AppData appData) {
+		boolean success = m_appDataConsumer.enqueue(appData);
+
+		if (!success) {
+			m_error++;
+
+			if (m_error % 1000 == 0) {
+				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
+				m_logger.error("Error when offer appData to queue , discard number " + m_error);
+			}
+		}
+	}
+
+	private void processOneRecord(int cityId, int operatorId, String record) {
+		String items[] = record.split("\t");
+
+		if (items.length == 10) {
+			AppData appData = new AppData();
+
+			try {
+				String url = URLDecoder.decode(items[4], "utf-8");
+				Integer command = m_appConfigManager.getCommands().get(url);
+
+				if (command != null) {
+					// appData.setTimestamp(Long.parseLong(items[0]));
+					appData.setTimestamp(System.currentTimeMillis());
+					appData.setCommand(command);
+					appData.setNetwork(Integer.parseInt(items[1]));
+					appData.setVersion(Integer.parseInt(items[2]));
+					appData.setConnectType(Integer.parseInt(items[3]));
+					appData.setCode(Integer.parseInt(items[5]));
+					appData.setPlatform(Integer.parseInt(items[6]));
+					appData.setRequestByte(Integer.parseInt(items[7]));
+					appData.setResponseByte(Integer.parseInt(items[8]));
+					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					appData.setCount(1);
+
+					int responseTime = appData.getResponseTime();
+
+					if (responseTime < 60 * 1000 && responseTime >= 0) {
+						offerQueue(appData);
+
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
+					} else if (responseTime > 0) {
+						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
+
+						if (tooLong != null) {
+							appData.setCommand(tooLong);
+							offerQueue(appData);
+						}
+						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+					} else {
+						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+					}
+				} else {
+					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
+				}
+			} catch (Exception e) {
+				m_logger.error(e.getMessage(), e);
+			}
+		} else {
+			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
+		}
+	}
+
 	private void processVersion1(Payload payload, HttpServletRequest request, String userIp) {
 		try {
 			String content = payload.getContent();
@@ -159,73 +226,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 			} else {
 				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
-			}
-		}
-	}
-
-	private void processOneRecord(int cityId, int operatorId, String record) {
-		String items[] = record.split("\t");
-
-		if (items.length == 10) {
-			AppData appData = new AppData();
-
-			try {
-				String url = URLDecoder.decode(items[4], "utf-8");
-				Integer command = m_appConfigManager.getCommands().get(url);
-
-				if (command != null) {
-					// appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setTimestamp(System.currentTimeMillis());
-					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
-					appData.setCity(cityId);
-					appData.setOperator(operatorId);
-					appData.setCount(1);
-
-					int responseTime = appData.getResponseTime();
-
-					if (responseTime < 60 * 1000 && responseTime >= 0) {
-						offerQueue(appData);
-
-						Cat.logEvent("Command", url, Event.SUCCESS, null);
-					} else if (responseTime > 0) {
-						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
-
-						if (tooLong != null) {
-							appData.setCommand(tooLong);
-							offerQueue(appData);
-						}
-						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
-					} else {
-						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
-					}
-				} else {
-					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
-				}
-			} catch (Exception e) {
-				m_logger.error(e.getMessage(), e);
-			}
-		} else {
-			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
-		}
-	}
-
-	private void offerQueue(AppData appData) {
-		boolean success = m_appDataConsumer.enqueue(appData);
-
-		if (!success) {
-			m_error++;
-
-			if (m_error % 1000 == 0) {
-				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
-				m_logger.error("Error when offer appData to queue , discard number " + m_error);
 			}
 		}
 	}
