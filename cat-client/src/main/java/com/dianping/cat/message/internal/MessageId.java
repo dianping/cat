@@ -15,13 +15,6 @@ public class MessageId {
 
 	private int m_index;
 
-	MessageId(String domain, String ipAddressInHex, long timestamp, int index) {
-		m_domain = domain;
-		m_ipAddressInHex = ipAddressInHex;
-		m_timestamp = timestamp;
-		m_index = index;
-	}
-
 	public static MessageId parse(String messageId) {
 		List<String> list = Splitters.by('-').split(messageId);
 		int len = list.size();
@@ -52,6 +45,13 @@ public class MessageId {
 		}
 
 		throw new RuntimeException("Invalid message id format: " + messageId);
+	}
+
+	MessageId(String domain, String ipAddressInHex, long timestamp, int index) {
+		m_domain = domain;
+		m_ipAddressInHex = ipAddressInHex;
+		m_timestamp = timestamp;
+		m_index = index;
 	}
 
 	public String getDomain() {

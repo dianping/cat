@@ -52,7 +52,7 @@ public class CatFilter implements Filter {
 
 		ctx.handle();
 	}
-	
+
 	protected String getOriginalUrl(ServletRequest request) {
 		return ((HttpServletRequest) request).getRequestURI();
 	}
@@ -86,7 +86,7 @@ public class CatFilter implements Filter {
 			protected int detectMode(HttpServletRequest req) {
 				String source = req.getHeader("X-CAT-SOURCE");
 				String id = req.getHeader("X-CAT-ID");
-				
+
 				Cat.setup(null);
 
 				if ("container".equals(source)) {
@@ -270,6 +270,22 @@ public class CatFilter implements Filter {
 
 		LOG_SPAN {
 
+			private void customizeStatus(Transaction t, HttpServletRequest req) {
+				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
+				if (catStatus != null) {
+					t.setStatus(catStatus.toString());
+				} else {
+					t.setStatus(Message.SUCCESS);
+				}
+			}
+
+			private void customizeUri(Transaction t, HttpServletRequest req) {
+				Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+				if (t instanceof DefaultTransaction && catPageUri instanceof String) {
+					((DefaultTransaction) t).setName(catPageUri.toString());
+				}
+			}
+
 			private String getRequestURI(HttpServletRequest req) {
 				String requestURI = req.getRequestURI();
 
@@ -298,7 +314,7 @@ public class CatFilter implements Filter {
 
 				try {
 					ctx.handle();
-                    customizeStatus(t, req);
+					customizeStatus(t, req);
 				} catch (ServletException e) {
 					Cat.logError(e);
 					t.setStatus(e);
@@ -316,26 +332,10 @@ public class CatFilter implements Filter {
 					t.setStatus(e);
 					throw e;
 				} finally {
-                    customizeUri(t, req);
+					customizeUri(t, req);
 					t.complete();
 				}
 			}
-
-            private void customizeUri(Transaction t, HttpServletRequest req) {
-                Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
-                if (t instanceof DefaultTransaction && catPageUri instanceof String) {
-                    ((DefaultTransaction) t).setName(catPageUri.toString());
-                }
-            }
-
-            private void customizeStatus(Transaction t, HttpServletRequest req) {
-                Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
-                if (catStatus != null) {
-                    t.setStatus(catStatus.toString());
-                } else {
-                    t.setStatus(Message.SUCCESS);
-                }
-            }
 		};
 	}
 

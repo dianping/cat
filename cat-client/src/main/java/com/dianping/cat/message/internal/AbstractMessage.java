@@ -20,7 +20,7 @@ public abstract class AbstractMessage implements Message {
 	private CharSequence m_data;
 
 	private boolean m_completed;
-	
+
 	public AbstractMessage(String type, String name) {
 		m_type = String.valueOf(type);
 		m_name = String.valueOf(name);
@@ -104,8 +104,8 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	public void setName(String name) {
-   	m_name = name;
-   }
+		m_name = name;
+	}
 
 	@Override
 	public void setStatus(String status) {
@@ -122,8 +122,8 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	public void setType(String type) {
-   	m_type = type;
-   }
+		m_type = type;
+	}
 
 	@Override
 	public String toString() {

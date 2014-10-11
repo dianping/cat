@@ -98,7 +98,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 						sendInternal(tree);
 						tree.setMessage(null);
 					}
-					
+
 				} catch (Throwable t) {
 					m_logger.error("Error when sending message over TCP socket!", t);
 				}

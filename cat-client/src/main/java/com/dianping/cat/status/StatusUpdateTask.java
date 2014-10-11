@@ -63,6 +63,19 @@ public class StatusUpdateTask implements Task, Initializable {
 		}
 	}
 
+	private void buildExtensionData(StatusInfo status) {
+		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
+		List<StatusExtension> extensions = res.getStatusExtension();
+
+		for (StatusExtension extension : extensions) {
+			String id = extension.getId();
+			String des = extension.getDescription();
+			Map<String, String> propertis = extension.getProperties();
+
+			status.findOrCreateExtension(id).setDescription(des).getDynamicAttributes().putAll(propertis);
+		}
+	}
+
 	@Override
 	public String getName() {
 		return "StatusUpdateTask";
@@ -114,9 +127,7 @@ public class StatusUpdateTask implements Task, Initializable {
 		Transaction reboot = cat.newTransaction("System", "Reboot");
 
 		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("Reboot",
-				NetworkInterfaceManager.INSTANCE.getLocalHostAddress(),
-				Message.SUCCESS, null);
+		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
 		reboot.complete();
 
 		while (m_active) {
@@ -129,11 +140,9 @@ public class StatusUpdateTask implements Task, Initializable {
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
 				try {
-					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(
-							m_statistics, m_jars);
+					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jars);
 
-					status.accept(statusInfoCollector.setDumpLocked(m_manager
-							.isDumpLocked()));
+					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
@@ -156,20 +165,6 @@ public class StatusUpdateTask implements Task, Initializable {
 					break;
 				}
 			}
-		}
-	}
-
-	private void buildExtensionData(StatusInfo status) {
-		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
-		List<StatusExtension> extensions = res.getStatusExtension();
-
-		for (StatusExtension extension : extensions) {
-			String id = extension.getId();
-			String des = extension.getDescription();
-			Map<String, String> propertis = extension.getProperties();
-
-			status.findOrCreateExtension(id).setDescription(des)
-					.getDynamicAttributes().putAll(propertis);
 		}
 	}
 

@@ -35,7 +35,7 @@ public class MessageIdFactory {
 	}
 
 	private File createMarkFile(String domain) {
-	   File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
+		File mark = new File("/data/appdatas/cat/", "cat-" + domain + ".mark");
 
 		if (!mark.exists()) {
 			boolean success = true;
@@ -50,13 +50,13 @@ public class MessageIdFactory {
 		} else if (!mark.canWrite()) {
 			mark = createTempFile(domain);
 		}
-	   return mark;
-   }
+		return mark;
+	}
 
 	private File createTempFile(String domain) {
 		String tmpDir = System.getProperty("java.io.tmpdir");
 		File mark = new File(tmpDir, "cat-" + domain + ".mark");
-		
+
 		return mark;
 	}
 
