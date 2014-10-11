@@ -3,7 +3,6 @@ package com.dianping.cat.system.page.config.process;
 import java.util.List;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.app.AppComparisonConfigManager;
@@ -36,50 +35,15 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	public void process(Action action, Payload payload, Model model) {
-		String domain, name;
 		int id;
-		Command command;
 
 		switch (action) {
-		case APP_ADD:
-			domain = payload.getDomain();
-			name = payload.getName();
-			String title = payload.getTitle();
-
-			if (StringUtil.isEmpty(name)) {
-				setUpdateResult(model, 0);
-			} else {
-				try {
-					if (m_appConfigManager.addCommand(domain, title, name)) {
-						setUpdateResult(model, 1);
-					} else {
-						setUpdateResult(model, 2);
-					}
-				} catch (Exception e) {
-					setUpdateResult(model, 2);
-				}
-			}
-			break;
-		case APP_DELETE:
-			domain = payload.getDomain();
-			name = payload.getName();
-
-			if (StringUtil.isEmpty(name)) {
-				setUpdateResult(model, 0);
-			} else {
-				if (m_appConfigManager.deleteCommand(domain, name)) {
-					setUpdateResult(model, 1);
-				} else {
-					setUpdateResult(model, 2);
-				}
-			}
-			break;
 		case APP_LIST:
 			generateCommandsForModel(model);
 			break;
 		case APP_UPDATE:
 			id = payload.getId();
-			command = m_appConfigManager.getConfig().findCommand(id);
+			Command command = m_appConfigManager.getConfig().findCommand(id);
 
 			if (command == null) {
 				command = new Command();
@@ -88,9 +52,9 @@ public class AppConfigProcessor extends BaseProcesser {
 			break;
 		case APP_SUBMIT:
 			id = payload.getId();
-			domain = payload.getDomain();
-			name = payload.getName();
-			title = payload.getTitle();
+			String domain = payload.getDomain();
+			String name = payload.getName();
+			String title = payload.getTitle();
 
 			if (m_appConfigManager.containCommand(id)) {
 				if (m_appConfigManager.updateCommand(id, domain, name, title)) {
@@ -163,18 +127,4 @@ public class AppConfigProcessor extends BaseProcesser {
 		model.setCommands(commands);
 	}
 
-	private void setUpdateResult(Model model, int i) {
-		switch (i) {
-		case 0:
-			model.setContent("{\"status\":500, \"info\":\"name is required.\"}");
-			break;
-		case 1:
-			model.setContent("{\"status\":200}");
-			break;
-		case 2:
-			model.setContent("{\"status\":500}");
-			break;
-		}
-
-	}
 }

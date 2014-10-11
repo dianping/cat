@@ -32,6 +32,12 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("showActivity")
 	private boolean m_showActivity;
+	
+	@FieldMeta("name")
+	private String m_name;
+	
+	@FieldMeta("title")
+	private String m_title;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -44,6 +50,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public AppDataGroupByField getGroupByField() {
 		return m_groupByField;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 	@Override
@@ -79,6 +89,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sort;
 	}
 
+	public String getTitle() {
+		return m_title;
+	}
+
 	public String getType() {
 		return m_type;
 	}
@@ -93,6 +107,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setGroupByField(String groupByField) {
 		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
+	}
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
@@ -114,6 +132,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setSort(String sort) {
 		m_sort = sort;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 	public void setType(String type) {

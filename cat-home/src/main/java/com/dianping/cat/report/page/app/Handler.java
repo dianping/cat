@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
@@ -114,6 +115,39 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case APP_ADD:
+			String domain = payload.getDomain();
+			String name = payload.getName();
+			String title = payload.getTitle();
+
+			if (StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				try {
+					if (m_manager.addCommand(domain, title, name)) {
+						setUpdateResult(model, 1);
+					} else {
+						setUpdateResult(model, 2);
+					}
+				} catch (Exception e) {
+					setUpdateResult(model, 2);
+				}
+			}
+			break;
+		case APP_DELETE:
+			domain = payload.getDomain();
+			name = payload.getName();
+
+			if (StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				if (m_manager.deleteCommand(domain, name)) {
+					setUpdateResult(model, 1);
+				} else {
+					setUpdateResult(model, 2);
+				}
+			}
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -132,5 +166,19 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
 		m_normalizePayload.normalize(model, payload);
+	}
+
+	private void setUpdateResult(Model model, int i) {
+		switch (i) {
+		case 0:
+			model.setContent("{\"status\":500, \"info\":\"name is required.\"}");
+			break;
+		case 1:
+			model.setContent("{\"status\":200}");
+			break;
+		case 2:
+			model.setContent("{\"status\":500}");
+			break;
+		}
 	}
 }
