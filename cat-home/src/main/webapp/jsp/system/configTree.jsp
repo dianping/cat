@@ -12,7 +12,6 @@
 	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate" style="display:none">APP全局配置</a></li>
 	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
 	       <li class="text-left" id="webRule"><a href="?op=webRule">WEB告警配置</a></li>
-	       <li class="text-left" id="appConfigUpdate"><a href="?op=appConfigUpdate">APP监控配置</a></li>
 	       <li class="text-left" id="appRule"><a href="?op=appRule">APP告警配置</a></li>
 	       <li class="text-left" id="appComparisonConfigUpdate"><a href="?op=appComparisonConfigUpdate">美团对比报表</a></li>
            <li class='nav-header'>应用监控配置</li>
