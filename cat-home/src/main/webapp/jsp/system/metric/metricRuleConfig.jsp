@@ -35,7 +35,7 @@
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#domainMetricRuleConfigUpdate').addClass('active');
+			$('#metricRuleConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

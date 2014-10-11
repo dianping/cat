@@ -134,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
 		case METRIC_CONFIG_LIST:
 		case METRIC_CONFIG_DELETE:
-		case DOMAIN_METRIC_RULE_CONFIG_UPDATE:
+		case METRIC_RULE_CONFIG_UPDATE:
 			m_metricConfigProcessor.process(action, payload, model);
 			break;
 
@@ -172,6 +172,12 @@ public class Handler implements PageHandler<Context> {
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
+		case APP_ADD:
+		case APP_DELETE:
+		case APP_LIST:
+		case APP_UPDATE:
+		case APP_SUBMIT:
+		case APP_PAGE_DELETE:
 		case APP_CONFIG_UPDATE:
 		case APP_RULE:
 		case APP_RULE_ADD_OR_UPDATE:

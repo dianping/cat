@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.app;
 
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-import com.dianping.cat.config.app.AppDataGroupByField;
-
-import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -29,6 +29,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("sort")
 	private String m_sort = AppDataService.SUCCESS;
+
+	@FieldMeta("showActivity")
+	private boolean m_showActivity;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -80,6 +83,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_type;
 	}
 
+	public boolean isShowActivity() {
+		return m_showActivity;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -99,6 +106,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setQuery2(String query2) {
 		m_query2 = query2;
+	}
+
+	public void setShowActivity(boolean showActivity) {
+		m_showActivity = showActivity;
 	}
 
 	public void setSort(String sort) {

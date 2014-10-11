@@ -18,7 +18,14 @@
 						</span>
 					</div> 命令字 <select id="command" style="width: 350px;">
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
-							<option value='${item.id}'>${item.name}</option>
+							<c:choose>
+								<c:when test="${empty item.title}">
+									<option value='${item.id}'>${item.name}</option>
+								</c:when>
+								<c:otherwise>
+									<option value='${item.id}'>${item.title}</option>
+								</c:otherwise>
+							</c:choose>
 						</c:forEach>
 				</select> 返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">

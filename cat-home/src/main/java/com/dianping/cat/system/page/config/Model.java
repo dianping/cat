@@ -117,6 +117,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_configHeader;
 
+	private Command m_updateCommand;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -382,6 +384,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_typeToProductLines;
 	}
 
+	public Command getUpdateCommand() {
+		return m_updateCommand;
+	}
+
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
@@ -544,6 +550,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
+	}
+
+	public void setUpdateCommand(Command updateCommand) {
+		m_updateCommand = updateCommand;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

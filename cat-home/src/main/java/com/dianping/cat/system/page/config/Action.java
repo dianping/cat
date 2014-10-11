@@ -61,7 +61,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
 
-	DOMAIN_METRIC_RULE_CONFIG_UPDATE("domainMetricRuleConfigUpdate"),
+	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
 
 	NETWORK_RULE_CONFIG_LIST("networkRuleConfigList"),
 
@@ -122,6 +122,18 @@ public enum Action implements org.unidal.web.mvc.Action {
 	WEB_RULE_ADD_OR_UPDATE_SUBMIT("webRuleSubmit"),
 
 	WEB_RULE_DELETE("webRuleDelete"),
+
+	APP_ADD("appAdd"),
+
+	APP_DELETE("appDelete"),
+
+	APP_LIST("appList"),
+
+	APP_UPDATE("appUpdate"),
+
+	APP_SUBMIT("appSubmit"),
+
+	APP_PAGE_DELETE("appPageDelete"),
 
 	APP_RULE("appRule"),
 

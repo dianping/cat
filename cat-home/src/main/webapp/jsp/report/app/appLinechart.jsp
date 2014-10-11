@@ -168,6 +168,11 @@
 
 		$(document).ready(
 				function() {
+					if(${payload.showActivity}){
+						$('#activity_trend').addClass('active');
+					} else {
+						$('#trend').addClass('active');
+					}
 					$('#datetimepicker1').datetimepicker();
 					$('#datetimepicker2').datetimepicker();
 
@@ -245,7 +250,8 @@
 	<div class="span2">
         <div class="well sidebar-nav">
           <ul class="nav nav-list">
-			<li class='nav-header active'><a href="?op=view"><strong>一天访问趋势</strong></a></li>
+			<li class='nav-header' id='trend'><a href="?op=view&showActivity=false"><strong>一天访问趋势</strong></a></li>
+			<li class='nav-header' id='activity_trend'><a href="?op=view&showActivity=true"><strong>运营活动趋势</strong></a></li>
           	<li class='nav-header'><a href="?op=piechart"><strong>访问量分布</strong></a></li>
           </ul>
         </div>

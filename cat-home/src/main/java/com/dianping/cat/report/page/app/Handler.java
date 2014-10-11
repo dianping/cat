@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.config.app.QueryEntity;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -40,6 +42,28 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	private void filterCommands(Model model, boolean isShowActivity) {
+		List<Command> commands = model.getCommands();
+		List<Command> remainCommands = new ArrayList<Command>();
+
+		if (isShowActivity) {
+			for (Command command : commands) {
+				int commandId = command.getId();
+				if (commandId >= 1000 && commandId <= 1500) {
+					remainCommands.add(command);
+				}
+			}
+		} else {
+			for (Command command : commands) {
+				int commandId = command.getId();
+				if (commandId >= 0 && commandId <= 200) {
+					remainCommands.add(command);
+				}
+			}
+		}
+		model.setCommands(remainCommands);
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -72,6 +96,7 @@ public class Handler implements PageHandler<Context> {
 
 				model.setLineChart(lineChart);
 				model.setAppDataSpreadInfos(appDataSpreadInfos);
+				filterCommands(model, payload.isShowActivity());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -22,9 +23,9 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.app.entity.AppConfig;
 import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -59,6 +60,91 @@ public class AppConfigManager implements Initializable {
 	public static String CITY = "城市";
 
 	public static String CONNECT_TYPE = "连接类型";
+
+	public static final String ACTIVITY_PREFIX = "http://tgapp.dianping.com/activity/";
+
+	public boolean addCommand(String domain, String title, String name) throws Exception {
+		Command command = new Command();
+
+		command.setDomain(domain);
+		command.setTitle(title);
+		command.setName(name);
+
+		boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
+		if (isActivityCommand) {
+			command.setId(findAvailableId(1000, 1500));
+		} else {
+			command.setId(findAvailableId(1, 200));
+		}
+
+		m_config.addCommand(command);
+		return storeConfig();
+	}
+
+	public boolean updateCommand(int id, String domain, String name, String title) {
+		Command command = m_config.findCommand(id);
+
+		command.setDomain(domain);
+		command.setName(name);
+		command.setTitle(title);
+		return storeConfig();
+	}
+
+	public boolean containCommand(int id) {
+		Set<Integer> keys = m_config.getCommands().keySet();
+
+		if (keys.contains(id)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean deleteCommand(String domain, String name) {
+		Collection<Command> commands = m_config.getCommands().values();
+		List<Integer> needDeleteIds = new ArrayList<Integer>();
+
+		for (Command command : commands) {
+			if (name.equals(command.getName())) {
+				if (domain == null || (domain != null && domain.equals(command.getDomain()))) {
+					needDeleteIds.add(command.getId());
+				}
+			}
+		}
+		for (int id : needDeleteIds) {
+			m_config.removeCommand(id);
+		}
+		return storeConfig();
+	}
+
+	public boolean deleteCommand(int id) {
+		m_config.removeCommand(id);
+		return storeConfig();
+	}
+
+	private int findAvailableId(int startIndex, int endIndex) throws Exception {
+		Set<Integer> keys = m_config.getCommands().keySet();
+		int maxKey = 0;
+
+		for (int key : keys) {
+			if (key >= startIndex && key <= endIndex && key > maxKey) {
+				maxKey = key;
+			}
+		}
+		if (maxKey < endIndex) {
+			return maxKey + 1;
+		} else {
+			for (int i = startIndex; i <= endIndex; i++) {
+				if (!keys.contains(i)) {
+					return i;
+				}
+			}
+
+			Exception ex = new RuntimeException();
+			Cat.logError("app config range is full: " + startIndex + " - " + endIndex, ex);
+			throw ex;
+		}
+	}
 
 	public Map<String, Integer> getCities() {
 		return m_cities;
