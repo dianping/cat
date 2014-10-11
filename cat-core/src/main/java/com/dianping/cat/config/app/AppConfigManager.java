@@ -131,7 +131,7 @@ public class AppConfigManager implements Initializable {
 				maxKey = key;
 			}
 		}
-		if (maxKey < endIndex) {
+		if (maxKey < endIndex && maxKey >= startIndex) {
 			return maxKey + 1;
 		} else {
 			for (int i = startIndex; i <= endIndex; i++) {
