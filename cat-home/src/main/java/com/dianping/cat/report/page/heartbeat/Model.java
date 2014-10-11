@@ -96,6 +96,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_daemonThreadGraph;
 	}
 
+	public Map<String, Map<String, String>> getDalGraph() {
+		return m_dalGraph;
+	}
+
+	public int getDalTableHeight() {
+		int size = 0;
+		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
+			size = entry.getValue().size();
+			break;
+		}
+
+		if (size % 3 == 0) {
+			return (size / 3) * 190;
+		} else {
+			return ((size / 3) + 1) * 190;
+		}
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -137,24 +155,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 			Set<String> domainNames = m_report.getDomainNames();
 
 			return SortHelper.sortDomain(domainNames);
-		}
-	}
-
-	public Map<String, Map<String, String>> getDalGraph() {
-		return m_dalGraph;
-	}
-
-	public int getDalTableHeight() {
-		int size = 0;
-		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
-			size = entry.getValue().size();
-			break;
-		}
-
-		if (size % 3 == 0) {
-			return (size / 3) * 190;
-		} else {
-			return ((size / 3) + 1) * 190;
 		}
 	}
 

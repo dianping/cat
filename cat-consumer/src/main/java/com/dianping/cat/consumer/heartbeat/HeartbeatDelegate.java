@@ -34,6 +34,11 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 	}
 
 	@Override
+   public byte[] buildBinary(HeartbeatReport report) {
+		return DefaultNativeBuilder.build(report);
+   }
+
+	@Override
 	public String buildXml(HeartbeatReport report) {
 		return report.toString();
 	}
@@ -65,6 +70,11 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 		other.accept(merger);
 		return old;
 	}
+	
+	@Override
+   public HeartbeatReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+   }
 
 	@Override
 	public HeartbeatReport parseXml(String xml) throws Exception {
@@ -72,14 +82,4 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 		return report;
 	}
-	
-	@Override
-   public byte[] buildBinary(HeartbeatReport report) {
-		return DefaultNativeBuilder.build(report);
-   }
-
-	@Override
-   public HeartbeatReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
-   }
 }

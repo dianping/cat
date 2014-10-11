@@ -51,6 +51,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_city;
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	public Date getHistoryEndDate() {
 		try {
 			if (m_customEnd != null && m_customEnd.length() > 0) {
@@ -101,6 +105,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_city = city;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.WEB);
@@ -112,14 +120,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setUrl(String url) {
 		m_url = url;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
 	}
 
 	@Override

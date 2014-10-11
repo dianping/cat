@@ -87,6 +87,31 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 	}
 
 	@SuppressWarnings("rawtypes")
+	private NamingEnumeration getInfo(String sAMAccountName) throws NamingException {
+		Hashtable<String, String> solidEnv = new Hashtable<String, String>();
+		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
+		solidEnv.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
+		solidEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
+		solidEnv.put(Context.SECURITY_PRINCIPAL, "cn=" + m_LDAPConfigManager.getSolidUsername() + ","
+		      + m_LDAPConfigManager.getSolidDN());
+		solidEnv.put(Context.SECURITY_CREDENTIALS, m_LDAPConfigManager.getSolidPwd());
+		LdapContext solidContext = new InitialLdapContext(solidEnv, null);
+		SearchControls constraints = new SearchControls();
+		constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
+		NamingEnumeration en = solidContext.search("", m_LDAPConfigManager.getLoginAttribute() + "=" + sAMAccountName,
+		      constraints);
+
+		if (en == null) {
+			Cat.logEvent("LoginError", "Have no NamingEnumeration.");
+		}
+		if (!en.hasMoreElements()) {
+			Cat.logEvent("LoginError", "Have no element.");
+		}
+
+		return en;
+	}
+
+	@SuppressWarnings("rawtypes")
 	private Token getUserInfo(String cn, LdapContext ctx, String userName) {
 		String realName = null;
 
@@ -119,30 +144,5 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 			Cat.logEvent("LoginError", "Exception in search():" + e);
 		}
 		return null;
-	}
-
-	@SuppressWarnings("rawtypes")
-	private NamingEnumeration getInfo(String sAMAccountName) throws NamingException {
-		Hashtable<String, String> solidEnv = new Hashtable<String, String>();
-		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
-		solidEnv.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
-		solidEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
-		solidEnv.put(Context.SECURITY_PRINCIPAL, "cn=" + m_LDAPConfigManager.getSolidUsername() + ","
-		      + m_LDAPConfigManager.getSolidDN());
-		solidEnv.put(Context.SECURITY_CREDENTIALS, m_LDAPConfigManager.getSolidPwd());
-		LdapContext solidContext = new InitialLdapContext(solidEnv, null);
-		SearchControls constraints = new SearchControls();
-		constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		NamingEnumeration en = solidContext.search("", m_LDAPConfigManager.getLoginAttribute() + "=" + sAMAccountName,
-		      constraints);
-
-		if (en == null) {
-			Cat.logEvent("LoginError", "Have no NamingEnumeration.");
-		}
-		if (!en.hasMoreElements()) {
-			Cat.logEvent("LoginError", "Have no element.");
-		}
-
-		return en;
 	}
 }

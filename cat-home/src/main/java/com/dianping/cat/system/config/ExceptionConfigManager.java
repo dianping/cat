@@ -34,6 +34,13 @@ public class ExceptionConfigManager implements Initializable {
 
 	public static String TOTAL_STRING = "Total";
 
+	public boolean deleteExceptionExclude(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
+
+		domainConfig.removeExceptionExclude(exceptionName);
+		return storeConfig();
+	}
+
 	public boolean deleteExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
 		domainConfig.removeExceptionLimit(exceptionName);
@@ -71,55 +78,17 @@ public class ExceptionConfigManager implements Initializable {
 		}
 	}
 
-	public boolean insertExceptionLimit(ExceptionLimit limit) {
-		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
-		domainConfig.getExceptionLimits().put(limit.getId(), limit);
-		
-		return storeConfig();
-	}
-
-	public List<ExceptionLimit> queryAllExceptionLimits() {
-		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
-		
-		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
-			result.addAll(domainConfig.getExceptionLimits().values());
-		}
-		return result;
-	}
-
-	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
-		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
-		ExceptionLimit result = null;
-		
-		if (domainConfig == null) {
-			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
-		}
-		if (domainConfig != null) {
-			result = domainConfig.getExceptionLimits().get(exceptionName);
-		}
-		return result;
-	}
-
-	public ExceptionLimit queryDomainTotalLimit(String domain) {
-		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
-
-		if (result == null) {
-			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
-		}
-		return result;
-	}
-
-	public boolean deleteExceptionExclude(String domain, String exceptionName) {
-		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(domain);
-
-		domainConfig.removeExceptionExclude(exceptionName);
-		return storeConfig();
-	}
-
 	public boolean insertExceptionExclude(ExceptionExclude exception) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
 
 		domainConfig.getExceptionExcludes().put(exception.getId(), exception);
+		return storeConfig();
+	}
+
+	public boolean insertExceptionLimit(ExceptionLimit limit) {
+		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
+		domainConfig.getExceptionLimits().put(limit.getId(), limit);
+		
 		return storeConfig();
 	}
 
@@ -128,6 +97,15 @@ public class ExceptionConfigManager implements Initializable {
 
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionExcludes().values());
+		}
+		return result;
+	}
+
+	public List<ExceptionLimit> queryAllExceptionLimits() {
+		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
+		
+		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
+			result.addAll(domainConfig.getExceptionLimits().values());
 		}
 		return result;
 	}
@@ -157,6 +135,28 @@ public class ExceptionConfigManager implements Initializable {
 			if (result == null) {
 				result = queryDefaultExceptionExclude(exceptionName);
 			}
+		}
+		return result;
+	}
+
+	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
+		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
+		ExceptionLimit result = null;
+		
+		if (domainConfig == null) {
+			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
+		}
+		if (domainConfig != null) {
+			result = domainConfig.getExceptionLimits().get(exceptionName);
+		}
+		return result;
+	}
+
+	public ExceptionLimit queryDomainTotalLimit(String domain) {
+		ExceptionLimit result = queryDomainExceptionLimit(domain, TOTAL_STRING);
+
+		if (result == null) {
+			result = queryDomainExceptionLimit(DEFAULT_STRING, TOTAL_STRING);
 		}
 		return result;
 	}

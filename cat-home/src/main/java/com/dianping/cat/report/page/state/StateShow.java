@@ -235,19 +235,19 @@ public class StateShow extends BaseVisitor {
 		}
 	}
 
-	public static class DomainCompartor implements Comparator<ProcessDomain> {
-
-		@Override
-		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return o1.getName().compareTo(o2.getName());
-		}
-	}
-
 	public static class AvgCompartor implements Comparator<ProcessDomain> {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return (int) (o2.getAvg() * 100 - o1.getAvg() * 100);
+		}
+	}
+
+	public static class DomainCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return o1.getName().compareTo(o2.getName());
 		}
 	}
 

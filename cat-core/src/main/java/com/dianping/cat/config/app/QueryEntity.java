@@ -86,6 +86,50 @@ public class QueryEntity {
 		return current;
 	}
 
+	public int getChannel() {
+		return m_channel;
+	}
+
+	public int getCity() {
+		return m_city;
+	}
+
+	public int getCode() {
+		return m_code;
+	}
+
+	public int getCommand() {
+		return m_command;
+	}
+
+	public Date getDate() {
+		return m_date;
+	}
+
+	public int getEndMinuteOrder() {
+		return m_endMinuteOrder;
+	}
+
+	public int getNetwork() {
+		return m_network;
+	}
+
+	public int getOperator() {
+		return m_operator;
+	}
+
+	public int getPlatfrom() {
+		return m_platfrom;
+	}
+
+	public int getStartMinuteOrder() {
+		return m_startMinuteOrder;
+	}
+
+	public int getVersion() {
+		return m_version;
+	}
+
 	private int parseValue(String str) {
 		if (StringUtils.isEmpty(str)) {
 			return DEFAULT_VALUE;
@@ -94,92 +138,48 @@ public class QueryEntity {
 		}
 	}
 
-	public Date getDate() {
-		return m_date;
-	}
-
-	public void setDate(Date date) {
-		m_date = date;
-	}
-
-	public int getCommand() {
-		return m_command;
-	}
-
-	public void setCommand(int command) {
-		m_command = command;
-	}
-
-	public int getCode() {
-		return m_code;
-	}
-
-	public void setCode(int code) {
-		m_code = code;
-	}
-
-	public int getNetwork() {
-		return m_network;
-	}
-
-	public void setNetwork(int network) {
-		m_network = network;
-	}
-
-	public int getVersion() {
-		return m_version;
-	}
-
-	public void setVersion(int version) {
-		m_version = version;
-	}
-
-	public int getChannel() {
-		return m_channel;
-	}
-
 	public void setChannel(int channel) {
 		m_channel = channel;
-	}
-
-	public int getPlatfrom() {
-		return m_platfrom;
-	}
-
-	public void setPlatfrom(int platfrom) {
-		m_platfrom = platfrom;
-	}
-
-	public int getCity() {
-		return m_city;
 	}
 
 	public void setCity(int city) {
 		m_city = city;
 	}
 
-	public int getOperator() {
-		return m_operator;
+	public void setCode(int code) {
+		m_code = code;
+	}
+
+	public void setCommand(int command) {
+		m_command = command;
+	}
+
+	public void setDate(Date date) {
+		m_date = date;
+	}
+
+	public void setEndMinuteOrder(int endMinuteOrder) {
+		m_endMinuteOrder = endMinuteOrder;
+	}
+
+	public void setNetwork(int network) {
+		m_network = network;
 	}
 
 	public void setOperator(int operator) {
 		m_operator = operator;
 	}
 
-	public int getStartMinuteOrder() {
-		return m_startMinuteOrder;
+	public void setPlatfrom(int platfrom) {
+		m_platfrom = platfrom;
 	}
 
 	public void setStartMinuteOrder(int startMinuteOrder) {
 		m_startMinuteOrder = startMinuteOrder;
 	}
 
-	public int getEndMinuteOrder() {
-		return m_endMinuteOrder;
-	}
-
-	public void setEndMinuteOrder(int endMinuteOrder) {
-		m_endMinuteOrder = endMinuteOrder;
+	public void setVersion(int version) {
+		m_version = version;
 	}
 
 	@Override

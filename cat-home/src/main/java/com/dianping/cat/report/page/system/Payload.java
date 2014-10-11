@@ -40,13 +40,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public String getIpAddrs() {
-		return m_ipAddrs;
+	public String getDomain() {
+		return m_domain;
 	}
 
 	public Date getHistoryEndDate() {
@@ -74,25 +69,25 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
+	public String getIpAddrs() {
+		return m_ipAddrs;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
 	public String getProductLine() {
 		return m_productLine;
 	}
 
-	public String getDomain() {
-		return m_domain;
+	public String getType() {
+		return m_type;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.SYSTEM);
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.SYSTEM);
-	}
-
-	public void setProductLine(String productLine) {
-		m_productLine = productLine;
 	}
 
 	public void setDomain(String domain) {
@@ -104,17 +99,22 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	@Override
-	public void validate(ActionContext<?> ctx) {
-		if (m_action == null) {
-			m_action = Action.SYSTEM;
-		}
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.SYSTEM);
 	}
 
-	public String getType() {
-		return m_type;
+	public void setProductLine(String productLine) {
+		m_productLine = productLine;
 	}
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.SYSTEM;
+		}
 	}
 }

@@ -121,6 +121,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_maxMinute;
 	}
 
+	public String getMessage() {
+   	return m_message;
+   }
+
 	public int getMinute() {
 		return m_minute;
 	}
@@ -193,6 +197,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_maxMinute = maxMinute;
 	}
 
+	public void setMessage(String message) {
+   	m_message = message;
+   }
+
 	public void setMinute(int minute) {
 		m_minute = minute;
 	}
@@ -236,13 +244,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTopReport(TopReport topReport) {
 		m_topReport = topReport;
 	}
-
-	public String getMessage() {
-   	return m_message;
-   }
-
-	public void setMessage(String message) {
-   	m_message = message;
-   }
 	
 }

@@ -35,16 +35,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Collections.emptySet();
 	}
 
+	@Override
+	public List<String> getIps() {
+		return new ArrayList<String>();
+	}
+
 	public void setContent(String content) {
 		m_content = content;
 	}
 
 	public void setDomain(String domain) {
 		m_domain = domain;
-	}
-
-	@Override
-	public List<String> getIps() {
-		return new ArrayList<String>();
 	}
 }

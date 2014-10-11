@@ -28,6 +28,17 @@ public class CatAppender extends AppenderSkeleton {
 		}
 	}
 
+	private String buildExceptionStack(Throwable exception) {
+		if (exception != null) {
+			StringWriter writer = new StringWriter(2048);
+
+			exception.printStackTrace(new PrintWriter(writer));
+			return writer.toString();
+		} else {
+			return "";
+		}
+	}
+
 	@Override
 	public void close() {
 	}
@@ -54,17 +65,6 @@ public class CatAppender extends AppenderSkeleton {
 			} else {
 				cat.logError(exception);
 			}
-		}
-	}
-
-	private String buildExceptionStack(Throwable exception) {
-		if (exception != null) {
-			StringWriter writer = new StringWriter(2048);
-
-			exception.printStackTrace(new PrintWriter(writer));
-			return writer.toString();
-		} else {
-			return "";
 		}
 	}
 

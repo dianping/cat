@@ -81,6 +81,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_detailStatistics;
 	}
 
+	public String getDistributionChart() {
+   	return m_distributionChart;
+   }
+
 	@Override
 	public String getDomain() {
 		if (m_report == null) {
@@ -186,6 +190,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_detailStatistics = detailStatistics;
 	}
 
+	public void setDistributionChart(String distributionChart) {
+   	m_distributionChart = distributionChart;
+   }
+
 	public void setErrorsTrend(String errorsTrend) {
 		m_errorsTrend = errorsTrend;
 	}
@@ -225,13 +233,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
 	}
-
-	public String getDistributionChart() {
-   	return m_distributionChart;
-   }
-
-	public void setDistributionChart(String distributionChart) {
-   	m_distributionChart = distributionChart;
-   }
 	
 }

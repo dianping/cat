@@ -43,6 +43,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
 
+	public Model(Context ctx) {
+		super(ctx);
+	}
+
+	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
+		return m_appDataSpreadInfos;
+	}
+
+	public Map<Integer, Item> getCities() {
+		return m_cities;
+	}
+
 	public String getCommand() {
 		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
 
@@ -58,24 +70,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(maps);
 	}
 
-	public Map<Integer, Item> getPlatforms() {
-		return m_platforms;
-	}
-
-	public void setPlatforms(Map<Integer, Item> platforms) {
-		m_platforms = platforms;
-	}
-
-	public Model(Context ctx) {
-		super(ctx);
-	}
-
-	public Map<Integer, Item> getCities() {
-		return m_cities;
-	}
-
 	public List<Command> getCommands() {
 		return m_commands;
+	}
+
+	public Map<Integer, Item> getConnectionTypes() {
+		return m_connectionTypes;
 	}
 
 	@Override
@@ -93,6 +93,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new ArrayList<String>();
 	}
 
+	public LineChart getLineChart() {
+		return m_lineChart;
+	}
+
 	public Map<Integer, Item> getNetworks() {
 		return m_networks;
 	}
@@ -101,16 +105,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_operators;
 	}
 
+	public PieChart getPieChart() {
+		return m_pieChart;
+	}
+
+	public List<PieChartDetailInfo> getPieChartDetailInfos() {
+		return m_pieChartDetailInfos;
+	}
+
+	public Map<Integer, Item> getPlatforms() {
+		return m_platforms;
+	}
+
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
 
-	public Map<Integer, Item> getConnectionTypes() {
-		return m_connectionTypes;
-	}
-
-	public void setConnectionTypes(Map<Integer, Item> map) {
-		m_connectionTypes = map;
+	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
+		m_appDataSpreadInfos = appDatas;
 	}
 
 	public void setCities(Map<Integer, Item> cities) {
@@ -121,6 +133,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_commands = commands;
 	}
 
+	public void setConnectionTypes(Map<Integer, Item> map) {
+		m_connectionTypes = map;
+	}
+
+	public void setLineChart(LineChart lineChart) {
+		m_lineChart = lineChart;
+	}
+
 	public void setNetworks(Map<Integer, Item> networks) {
 		m_networks = networks;
 	}
@@ -129,40 +149,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_operators = operators;
 	}
 
-	public void setVersions(Map<Integer, Item> versions) {
-		m_versions = versions;
-	}
-
-	public LineChart getLineChart() {
-		return m_lineChart;
-	}
-
-	public void setLineChart(LineChart lineChart) {
-		m_lineChart = lineChart;
-	}
-
-	public PieChart getPieChart() {
-		return m_pieChart;
-	}
-
 	public void setPieChart(PieChart pieChart) {
 		m_pieChart = pieChart;
 	}
 
-	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
-		m_appDataSpreadInfos = appDatas;
-	}
-
-	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
-		return m_appDataSpreadInfos;
-	}
-
-	public List<PieChartDetailInfo> getPieChartDetailInfos() {
-		return m_pieChartDetailInfos;
-	}
-
 	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
 		m_pieChartDetailInfos = pieChartDetailInfos;
+	}
+
+	public void setPlatforms(Map<Integer, Item> platforms) {
+		m_platforms = platforms;
+	}
+
+	public void setVersions(Map<Integer, Item> versions) {
+		m_versions = versions;
 	}
 
 }

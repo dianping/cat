@@ -24,7 +24,7 @@ public class CdnFilter implements Filter {
 	private static final String TENG_XUN = "TengXun";
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void destroy() {
 	}
 
 	@Override
@@ -45,35 +45,6 @@ public class CdnFilter implements Filter {
 			Cat.logError(e);
 		}
 		chain.doFilter(request, response);
-	}
-
-	private String querySourceIp(HttpServletRequest request) {
-		return filterXForwardedForIP(request.getHeader("x-forwarded-for"));
-	}
-
-	private String queryVip(HttpServletRequest request) {
-		String serverName = request.getServerName();
-
-		if (serverName != null) {
-			if (serverName.contains("s1.dpfile.com")) {
-				return DI_LIAN;
-			}
-			if (serverName.contains("i1.dpfile.com") || serverName.contains("i3.dpfile.com")
-			      || serverName.contains("t2.dpfile.com")) {
-				return DI_LIAN;
-			}
-			if (serverName.contains("s2.dpfile.com")) {
-				return WANG_SU;
-			}
-			if (serverName.contains("i2.dpfile.com") || serverName.contains("t1.dpfile.com")
-			      || serverName.contains("t3.dpfile.com")) {
-				return WANG_SU;
-			}
-			if (serverName.contains("s3.dpfile.com")) {
-				return TENG_XUN;
-			}
-		}
-		return null;
 	}
 
 	private String filterXForwardedForIP(String ip) {
@@ -119,7 +90,36 @@ public class CdnFilter implements Filter {
 	}
 
 	@Override
-	public void destroy() {
+	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	private String querySourceIp(HttpServletRequest request) {
+		return filterXForwardedForIP(request.getHeader("x-forwarded-for"));
+	}
+
+	private String queryVip(HttpServletRequest request) {
+		String serverName = request.getServerName();
+
+		if (serverName != null) {
+			if (serverName.contains("s1.dpfile.com")) {
+				return DI_LIAN;
+			}
+			if (serverName.contains("i1.dpfile.com") || serverName.contains("i3.dpfile.com")
+			      || serverName.contains("t2.dpfile.com")) {
+				return DI_LIAN;
+			}
+			if (serverName.contains("s2.dpfile.com")) {
+				return WANG_SU;
+			}
+			if (serverName.contains("i2.dpfile.com") || serverName.contains("t1.dpfile.com")
+			      || serverName.contains("t3.dpfile.com")) {
+				return WANG_SU;
+			}
+			if (serverName.contains("s3.dpfile.com")) {
+				return TENG_XUN;
+			}
+		}
+		return null;
 	}
 
 }

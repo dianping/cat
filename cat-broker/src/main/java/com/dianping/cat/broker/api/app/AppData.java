@@ -26,24 +26,28 @@ public class AppData {
 	private int m_responseByte;
 
 	private int m_responseTime;
-	
-	public void setCount(int count) {
-   	m_count = count;
-   }
-
-	public void setRequestByte(int requestByte) {
-   	m_requestByte = requestByte;
-   }
-
-	public void setResponseByte(int responseByte) {
-   	m_responseByte = responseByte;
-   }
-
-	public void setResponseTime(int responseTime) {
-   	m_responseTime = responseTime;
-   }
 
 	public AppData() {
+	}
+
+	public AppData addCount(int count) {
+		m_count = m_count + count;
+		return this;
+	}
+
+	public AppData addRequestByte(int requestByte) {
+		m_requestByte = m_requestByte + requestByte;
+		return this;
+	}
+
+	public AppData addResponseByte(int responseByte) {
+		m_responseByte = m_responseByte + responseByte;
+		return this;
+	}
+
+	public AppData addResponseTime(int responseTime) {
+		m_responseTime = m_responseTime + responseTime;
+		return this;
 	}
 
 	public int getCity() {
@@ -118,6 +122,10 @@ public class AppData {
 		return this;
 	}
 
+	public void setCount(int count) {
+		m_count = count;
+	}
+
 	public AppData setNetwork(int network) {
 		m_network = network;
 		return this;
@@ -133,24 +141,16 @@ public class AppData {
 		return this;
 	}
 
-	public AppData addCount(int count) {
-		m_count = m_count + count;
-		return this;
+	public void setRequestByte(int requestByte) {
+		m_requestByte = requestByte;
 	}
 
-	public AppData addRequestByte(int requestByte) {
-		m_requestByte = m_requestByte + requestByte;
-		return this;
+	public void setResponseByte(int responseByte) {
+		m_responseByte = responseByte;
 	}
 
-	public AppData addResponseByte(int responseByte) {
-		m_responseByte = m_responseByte + responseByte;
-		return this;
-	}
-
-	public AppData addResponseTime(int responseTime) {
-		m_responseTime = m_responseTime + responseTime;
-		return this;
+	public void setResponseTime(int responseTime) {
+		m_responseTime = responseTime;
 	}
 
 	public AppData setTimestamp(long timestamp) {
@@ -162,5 +162,5 @@ public class AppData {
 		m_version = version;
 		return this;
 	}
-	
+
 }

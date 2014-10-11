@@ -41,6 +41,10 @@ import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -88,9 +92,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new StorageComponentConfigurator().defineComponents());
 
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

@@ -28,45 +28,8 @@ public class ThirdPartyConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "thirdPartyConfig";
 
-	public List<Http> queryHttps() {
-		return m_thirdPartyConfig.getHttps();
-	}
-
-	public List<Socket> querSockets() {
-		return m_thirdPartyConfig.getSockets();
-	}
-
 	public ThirdPartyConfig getConfig() {
 		return m_thirdPartyConfig;
-	}
-
-	public boolean insert(String xml) {
-		try {
-			m_thirdPartyConfig = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				Config config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_thirdPartyConfig.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		return true;
 	}
 
 	@Override
@@ -98,5 +61,42 @@ public class ThirdPartyConfigManager implements Initializable {
 		if (m_thirdPartyConfig == null) {
 			m_thirdPartyConfig = new ThirdPartyConfig();
 		}
+	}
+
+	public boolean insert(String xml) {
+		try {
+			m_thirdPartyConfig = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	public List<Socket> querSockets() {
+		return m_thirdPartyConfig.getSockets();
+	}
+
+	public List<Http> queryHttps() {
+		return m_thirdPartyConfig.getHttps();
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_thirdPartyConfig.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+		return true;
 	}
 }

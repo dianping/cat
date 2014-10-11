@@ -52,6 +52,17 @@ public class DefaultProblemHandler extends ProblemHandler {
 		}
 	}
 
+	private void processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
+		String type = heartbeat.getType().toLowerCase();
+
+		if ("heartbeat".equals(type)) {
+			String status = heartbeat.getName();
+			Entry entry = findOrCreateEntry(machine, type, status);
+
+			updateEntry(tree, entry, 0);
+		}
+	}
+
 	private void processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		String transactionStatus = transaction.getStatus();
 
@@ -85,17 +96,6 @@ public class DefaultProblemHandler extends ProblemHandler {
 			} else if (message instanceof Heartbeat) {
 				processHeartbeat(machine, (Heartbeat) message, tree);
 			}
-		}
-	}
-
-	private void processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
-		String type = heartbeat.getType().toLowerCase();
-
-		if ("heartbeat".equals(type)) {
-			String status = heartbeat.getName();
-			Entry entry = findOrCreateEntry(machine, type, status);
-
-			updateEntry(tree, entry, 0);
 		}
 	}
 

@@ -63,14 +63,6 @@ public class Handler implements PageHandler<Context> {
 		return buildMetric(group, domain, key, type, time, value);
 	}
 
-	private boolean isNetwork(String group) {
-		return group.startsWith("f5") || group.startsWith("switch");
-	}
-
-	private boolean isSystem(String group) {
-		return group.startsWith("system");
-	}
-
 	private Metric buildMetric(String group, String domain, String key, String type, long time, double value) {
 		Metric metric = Cat.getProducer().newMetric(group, key);
 		DefaultMetric defaultMetric = (DefaultMetric) metric;
@@ -165,6 +157,14 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
+	}
+
+	private boolean isNetwork(String group) {
+		return group.startsWith("f5") || group.startsWith("switch");
+	}
+
+	private boolean isSystem(String group) {
+		return group.startsWith("system");
 	}
 
 }

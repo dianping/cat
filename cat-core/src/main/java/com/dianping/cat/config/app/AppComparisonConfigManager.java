@@ -61,6 +61,17 @@ public class AppComparisonConfigManager implements Initializable {
 		}
 	}
 
+	public boolean insert(String xml) {
+		try {
+			m_config = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
 	public Map<String, AppComparison> queryAppComparisons() {
 		return m_config.getAppComparisons();
 	}
@@ -82,17 +93,6 @@ public class AppComparisonConfigManager implements Initializable {
 			return appComparison.getEmails();
 		}
 		return null;
-	}
-
-	public boolean insert(String xml) {
-		try {
-			m_config = DefaultSaxParser.parse(xml);
-
-			return storeConfig();
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
 	}
 
 	private boolean storeConfig() {

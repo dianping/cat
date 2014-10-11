@@ -12,14 +12,6 @@ public class HeartbeatReportMerger extends DefaultMerger {
 	}
 	
 	@Override
-	public void visitHeartbeatReport(HeartbeatReport heartbeatReport) {
-		super.visitHeartbeatReport(heartbeatReport);
-
-		getHeartbeatReport().getDomainNames().addAll(heartbeatReport.getDomainNames());
-		getHeartbeatReport().getIps().addAll(heartbeatReport.getIps());
-	}
-
-	@Override
    protected void mergeDisk(Disk old, Disk disk) {
 	   super.mergeDisk(old, disk);
    }
@@ -53,5 +45,13 @@ public class HeartbeatReportMerger extends DefaultMerger {
 	   old.setThreadCount(period.getThreadCount());
 	   old.setTotalStartedCount(period.getTotalStartedCount());
    }
+
+	@Override
+	public void visitHeartbeatReport(HeartbeatReport heartbeatReport) {
+		super.visitHeartbeatReport(heartbeatReport);
+
+		getHeartbeatReport().getDomainNames().addAll(heartbeatReport.getDomainNames());
+		getHeartbeatReport().getIps().addAll(heartbeatReport.getIps());
+	}
 
 }

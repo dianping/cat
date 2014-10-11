@@ -34,19 +34,6 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private static final String CONFIG_NAME = "routerConfig";
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	public RouterConfig getRouterConfig() {
-		return m_routerConfig;
-	}
-
-	public Server queryBackUpServer() {
-		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
-	}
-
 	private void addServerList(List<Server> servers, Server server) {
 		for (Server s : servers) {
 			if (s.getId().equals(server.getId())) {
@@ -56,39 +43,13 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		servers.add(server);
 	}
 
-	public List<Server> queryServersByDomain(String domain) {
-		Domain domainConfig = m_routerConfig.findDomain(domain);
-		List<Server> result = new ArrayList<Server>();
-
-		if (domainConfig == null) {
-			List<Server> servers = queryEnableServers();
-			int length = servers.size();
-			int hashCode = domain.hashCode();
-
-			for (int i = 0; i < 2; i++) {
-				int index = Math.abs((hashCode + i)) % length;
-
-				addServerList(result, servers.get(index));
-			}
-			addServerList(result, queryBackUpServer());
-		} else {
-			for (Server server : domainConfig.getServers()) {
-				result.add(server);
-			}
-		}
-		return result;
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
-	public List<Server> queryEnableServers() {
-		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
-		List<Server> result = new ArrayList<Server>();
-
-		for (DefaultServer server : servers) {
-			if (server.isEnable()) {
-				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
-			}
-		}
-		return result;
+	public RouterConfig getRouterConfig() {
+		return m_routerConfig;
 	}
 
 	@Override
@@ -133,6 +94,45 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			m_logger.error(e.getMessage(), e);
 			return false;
 		}
+	}
+
+	public Server queryBackUpServer() {
+		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
+	}
+
+	public List<Server> queryEnableServers() {
+		List<DefaultServer> servers = m_routerConfig.getDefaultServers();
+		List<Server> result = new ArrayList<Server>();
+
+		for (DefaultServer server : servers) {
+			if (server.isEnable()) {
+				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
+			}
+		}
+		return result;
+	}
+
+	public List<Server> queryServersByDomain(String domain) {
+		Domain domainConfig = m_routerConfig.findDomain(domain);
+		List<Server> result = new ArrayList<Server>();
+
+		if (domainConfig == null) {
+			List<Server> servers = queryEnableServers();
+			int length = servers.size();
+			int hashCode = domain.hashCode();
+
+			for (int i = 0; i < 2; i++) {
+				int index = Math.abs((hashCode + i)) % length;
+
+				addServerList(result, servers.get(index));
+			}
+			addServerList(result, queryBackUpServer());
+		} else {
+			for (Server server : domainConfig.getServers()) {
+				result.add(server);
+			}
+		}
+		return result;
 	}
 
 	private boolean storeConfig() {

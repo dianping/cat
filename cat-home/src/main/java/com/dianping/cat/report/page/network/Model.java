@@ -65,6 +65,26 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_lineCharts;
 	}
 
+	public int getMaxMinute() {
+		return m_maxMinute;
+	}
+
+	public int getMinute() {
+		return m_minute;
+	}
+
+	public List<Integer> getMinutes() {
+		return m_minutes;
+	}
+
+	public List<Pair<String, String>> getNetGraphData() {
+		return m_netGraphData;
+	}
+
+	public Collection<ProductLine> getProductLines() {
+		return m_productLines;
+	}
+
 	public Date getStartTime() {
 		return m_startTime;
 	}
@@ -77,48 +97,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_lineCharts = lineCharts;
 	}
 
-	public void setStartTime(Date startTime) {
-		m_startTime = startTime;
-	}
-
-	public Collection<ProductLine> getProductLines() {
-		return m_productLines;
-	}
-
-	public void setProductLines(Collection<ProductLine> productLines) {
-		m_productLines = productLines;
-	}
-
-	public List<Pair<String, String>> getNetGraphData() {
-		return m_netGraphData;
-	}
-
-	public void setNetGraphData(List<Pair<String, String>> netGraphData) {
-		m_netGraphData = netGraphData;
-	}
-
-	public int getMinute() {
-		return m_minute;
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
 	}
 
 	public void setMinute(int minute) {
 		m_minute = minute;
 	}
 
-	public int getMaxMinute() {
-		return m_maxMinute;
-	}
-
-	public void setMaxMinute(int maxMinute) {
-		m_maxMinute = maxMinute;
-	}
-
-	public List<Integer> getMinutes() {
-		return m_minutes;
-	}
-
 	public void setMinutes(List<Integer> minutes) {
 		m_minutes = minutes;
+	}
+
+	public void setNetGraphData(List<Pair<String, String>> netGraphData) {
+		m_netGraphData = netGraphData;
+	}
+
+	public void setProductLines(Collection<ProductLine> productLines) {
+		m_productLines = productLines;
+	}
+
+	public void setStartTime(Date startTime) {
+		m_startTime = startTime;
 	}
 
 }

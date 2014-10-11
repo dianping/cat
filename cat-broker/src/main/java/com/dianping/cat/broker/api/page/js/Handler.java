@@ -77,16 +77,6 @@ public class Handler implements PageHandler<Context> {
 		response.getWriter().write("OK");
 	}
 
-	private String parseUrl(String url) {
-		String result = m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, url);
-
-		if (result.equals(url)) {
-			return subUrl(url);
-		} else {
-			return result;
-		}
-	}
-
 	private String parseHost() {
 		MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 		Message message = tree.getMessage();
@@ -113,6 +103,16 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return ACCESS;
+	}
+
+	private String parseUrl(String url) {
+		String result = m_manager.handle(AggregationConfigManager.PROBLEM_TYPE, Constants.FRONT_END, url);
+
+		if (result.equals(url)) {
+			return subUrl(url);
+		} else {
+			return result;
+		}
 	}
 
 	public String parseValue(final String key, final String data) {

@@ -4,6 +4,9 @@ import java.text.ParseException;
 
 public class DefaultFormat extends Format {
 
+	public static void main(String[] str) {
+	}
+
 	@Override
 	public String parse(String input) throws ParseException {
 		String pattern = getPattern();
@@ -44,8 +47,5 @@ public class DefaultFormat extends Format {
 			}
 		}
 		return ("{" + pattern + "}");
-	}
-
-	public static void main(String[] str) {
 	}
 }

@@ -149,7 +149,6 @@ public class BucketHandler implements Task {
 				appData.setResponseTime(Integer.parseInt(items[10]));
 				appData.setRequestByte(Integer.parseInt(items[11]));
 				appData.setResponseByte(Integer.parseInt(items[12]));
-				
 
 				enqueue(appData);
 			}

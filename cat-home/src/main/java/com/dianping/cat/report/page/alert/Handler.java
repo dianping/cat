@@ -38,6 +38,24 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlertDao m_alertDao;
 
+	private Map<String, List<Alert>> generateAlertMap(List<Alert> alerts) {
+		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Map<String, List<Alert>> map = new LinkedHashMap<String, List<Alert>>();
+
+		for (Alert alert : alerts) {
+			String time = format.format(alert.getAlertTime());
+			List<Alert> alertsInMinute = map.get(time);
+			if (alertsInMinute == null) {
+				alertsInMinute = new ArrayList<Alert>();
+				map.put(time, alertsInMinute);
+			}
+
+			alertsInMinute.add(alert);
+		}
+
+		return map;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "alert")
@@ -97,24 +115,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private Map<String, List<Alert>> generateAlertMap(List<Alert> alerts) {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Map<String, List<Alert>> map = new LinkedHashMap<String, List<Alert>>();
-
-		for (Alert alert : alerts) {
-			String time = format.format(alert.getAlertTime());
-			List<Alert> alertsInMinute = map.get(time);
-			if (alertsInMinute == null) {
-				alertsInMinute = new ArrayList<Alert>();
-				map.put(time, alertsInMinute);
-			}
-
-			alertsInMinute.add(alert);
-		}
-
-		return map;
 	}
 
 	private void setAlertResult(Model model, int status) {

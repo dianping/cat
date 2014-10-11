@@ -28,6 +28,15 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private RouterConfigManager m_configManager;
 
+	private String buildServerStr(List<Server> servers) {
+		StringBuilder sb = new StringBuilder();
+
+		for (Server server : servers) {
+			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
+		}
+		return sb.toString();
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "router")
@@ -82,14 +91,5 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
-	}
-
-	private String buildServerStr(List<Server> servers) {
-		StringBuilder sb = new StringBuilder();
-
-		for (Server server : servers) {
-			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
-		}
-		return sb.toString();
 	}
 }

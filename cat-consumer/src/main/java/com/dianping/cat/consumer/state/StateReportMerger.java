@@ -14,6 +14,13 @@ public class StateReportMerger extends DefaultMerger {
 	}
 
 	@Override
+	protected void mergeDetail(Detail old, Detail detail) {
+		old.setSize(detail.getSize() + old.getSize());
+		old.setTotal(detail.getTotal() + old.getTotal());
+		old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
+	}
+
+	@Override
 	protected void mergeMachine(Machine old, Machine machine) {
 		double oldCount = 0;
 		double newCount = 0;
@@ -78,13 +85,6 @@ public class StateReportMerger extends DefaultMerger {
 		old.setSize(old.getSize() + processDomain.getSize());
 		old.setTotal(old.getTotal() + processDomain.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + processDomain.getTotalLoss());
-	}
-
-	@Override
-	protected void mergeDetail(Detail old, Detail detail) {
-		old.setSize(detail.getSize() + old.getSize());
-		old.setTotal(detail.getTotal() + old.getTotal());
-		old.setTotalLoss(detail.getTotalLoss() + old.getTotalLoss());
 	}
 
 	@Override

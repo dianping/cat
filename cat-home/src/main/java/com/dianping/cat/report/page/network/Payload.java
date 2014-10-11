@@ -36,14 +36,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("minute")
 	private int m_minute = -1;
 
-	public String getGroup() {
-		return m_group;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
 	public Payload() {
 		super(ReportPage.NETWORK);
 	}
@@ -55,6 +47,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public int getFrequency() {
 		return m_frequency;
+	}
+
+	public String getGroup() {
+		return m_group;
+	}
+
+	public int getMinute() {
+		return m_minute;
 	}
 
 	@Override
@@ -74,6 +74,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_fullScreen;
 	}
 
+	public boolean isHideNav() {
+		return m_hideNav;
+	}
+
 	public boolean isRefresh() {
 		return m_refresh;
 	}
@@ -90,6 +94,18 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_fullScreen = fullScreen;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
+	public void setHideNav(boolean hideNav) {
+		m_hideNav = hideNav;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.NETWORK);
@@ -103,27 +119,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_refresh = refresh;
 	}
 
-	public boolean isHideNav() {
-		return m_hideNav;
-	}
-
-	public void setHideNav(boolean hideNav) {
-		m_hideNav = hideNav;
-	}
-
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
 			m_action = Action.NETTOPOLOGY;
 		}
-	}
-
-	public int getMinute() {
-		return m_minute;
-	}
-
-	public void setMinute(int minute) {
-		m_minute = minute;
 	}
 	
 }

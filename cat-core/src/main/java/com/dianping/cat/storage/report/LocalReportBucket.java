@@ -114,6 +114,10 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		}
 	}
 
+	public String getBaseDir() {
+		return m_baseDir;
+	}
+
 	@Override
 	public Collection<String> getIds() {
 		return m_idToOffsets.keySet();
@@ -121,10 +125,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	public String getLogicalPath() {
 		return m_logicalPath;
-	}
-
-	public String getBaseDir() {
-		return m_baseDir;
 	}
 
 	@Override

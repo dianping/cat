@@ -29,6 +29,11 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(StateReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(StateReport report) {
 		return report.toString();
 	}
@@ -83,19 +88,14 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 	}
 
 	@Override
+	public StateReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public StateReport parseXml(String xml) throws Exception {
 		StateReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(StateReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public StateReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

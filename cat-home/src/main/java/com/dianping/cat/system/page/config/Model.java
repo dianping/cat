@@ -199,6 +199,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_config;
 	}
 
+	public String getConfigHeader() {
+		return m_configHeader;
+	}
+
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
@@ -410,6 +414,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
+	public void setConfigHeader(String configHeader) {
+		m_configHeader = configHeader;
+	}
+
 	public void setConnectionTypes(Map<Integer, Item> connectionTypes) {
 		m_connectionTypes = connectionTypes;
 	}
@@ -559,13 +567,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		public NodeConfig getNodeConfig() {
 			return m_nodeConfig;
 		}
-	}
-
-	public void setConfigHeader(String configHeader) {
-		m_configHeader = configHeader;
-	}
-
-	public String getConfigHeader() {
-		return m_configHeader;
 	}
 }
