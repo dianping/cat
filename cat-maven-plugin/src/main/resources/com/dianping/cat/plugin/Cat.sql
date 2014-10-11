@@ -131,9 +131,7 @@ CREATE TABLE `businessReport` (
   `content` longblob COMMENT '用于存放报表的具体内容',
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
-  KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
-  KEY `IX_Name_Period` (`name`,`period`),
-  KEY `IX_Period` (`period`)
+  KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqltable` (
@@ -241,8 +239,11 @@ CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(200) NOT NULL COMMENT '项目名称',
   `cmdb_domain` varchar(200) DEFAULT  NULL COMMENT 'cmdb项目名称',
+  `level` int(5) DEFAULT NULL COMMENT '项目级别', 
   `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
   `department` varchar(50) DEFAULT NULL COMMENT '关联项目组名称',  
+  `bu` varchar(50) DEFAULT NULL COMMENT 'BU',
+  `cmdb_productline` varchar(50) DEFAULT NULL COMMENT 'CMDB产品线',
   `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
   `email` varchar(200)  DEFAULT NULL COMMENT '项目组邮件',
   `phone` varchar(200)  DEFAULT NULL COMMENT '联系电话',
@@ -295,8 +296,7 @@ CREATE TABLE `baseline` (
   `data` blob,
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `ix_indexkey_reportperiod` (`index_key`,`report_period`),
-  KEY `ix_reportperiod` (`report_period`)
+  KEY `period_name_key` (`report_period`,`report_name`,`index_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `alteration` (
@@ -309,7 +309,7 @@ CREATE TABLE `alteration` (
   `date` datetime NOT NULL COMMENT '变更时间',
   `user` varchar(45) NOT NULL COMMENT '变更用户',
   `alt_group` varchar(45) DEFAULT NULL COMMENT '变更组别',
-  `content` text NOT NULL COMMENT '变更内容',
+  `content` longtext NOT NULL COMMENT '变更内容',
   `url` varchar(200) DEFAULT NULL COMMENT '变更链接',
   `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
   PRIMARY KEY (`id`),
@@ -322,7 +322,7 @@ CREATE TABLE `alert` (
   `alert_time` datetime NOT NULL COMMENT '告警时间',
   `category` varchar(64) NOT NULL COMMENT '告警分类:network/business/system/exception -alert',
   `type` varchar(64) NOT NULL COMMENT '告警类型:error/warning',
-  `content` text NOT NULL COMMENT '告警内容',
+  `content` longtext NOT NULL COMMENT '告警内容',
   `metric` varchar(128) NOT NULL COMMENT '告警指标',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
@@ -332,12 +332,23 @@ CREATE TABLE `alert_summary` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `domain` varchar(128) NOT NULL COMMENT '告警项目',
   `alert_time` datetime NOT NULL COMMENT '告警时间',
-  `content` text NOT NULL COMMENT '统一告警内容',
+  `content` longtext NOT NULL COMMENT '统一告警内容',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一告警信息';
 
-CREATE TABLE `app_data_command` (
+CREATE TABLE `operation` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `user` varchar(128) NOT NULL COMMENT '用户名',
+  `module` varchar(128) NOT NULL COMMENT '模块',
+  `operation` varchar(128) NOT NULL COMMENT '操作',
+  `time` datetime NOT NULL COMMENT '修改时间',
+  `content` longtext NOT NULL COMMENT '修改内容',
+  `creation_date` datetime NOT NULL COMMENT '数据插入时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户操作日志';
+
+CREATE TABLE `app_data_command_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `period` date NOT NULL COMMENT '时间',
   `minute_order` smallint NOT NULL COMMENT '分钟',
@@ -355,11 +366,34 @@ CREATE TABLE `app_data_command` (
   `status` smallint NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
+  KEY IX_period_minute (period,minute_order),
   KEY IX_period_city_minute (period,city,minute_order),
-  KEY IX_period_operator_minute (period,network,minute_order),
+  KEY IX_period_operator_minute (period,operator,minute_order),
   KEY IX_period_network_minute (period,network,minute_order),
   KEY IX_period_version_minute (period,app_version,minute_order),
   KEY IX_period_connnect_minute (period,connnect_type,minute_order),
   KEY IX_period_platform_minute (period,platform,minute_order),
   KEY IX_period_code_minute (period,code,minute_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
+
+CREATE TABLE `overload` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `report_id` int(11) NOT NULL COMMENT '报告id',
+  `report_type` tinyint(4) NOT NULL COMMENT '报告类型 1:hourly 2:daily 3:weekly 4:monthly',
+  `report_size` double NOT NULL COMMENT '报告大小 单位MB',
+  `period` datetime NOT NULL COMMENT '报表时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `period` (`rperiod`)
+) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='过大容量表';
+
+CREATE TABLE `config_modification` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `user_name` varchar(64) NOT NULL COMMENT '用户名',
+  `account_name` varchar(64) NOT NULL COMMENT '账户名',
+  `action_name` varchar(64) NOT NULL COMMENT 'action名',
+  `argument` longtext COMMENT '参数内容',
+  `date` datetime NOT NULL COMMENT '修改时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';

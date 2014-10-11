@@ -173,13 +173,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		} else if ("ABTest".equals(t.getType())) {
 			return;
 		} else {
-			String ip = tree.getIpAddress();
-			TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-			TransactionName name = type.findOrCreateName(t.getName());
-			String messageId = tree.getMessageId();
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
 
 			if (pair.getKey().booleanValue()) {
+				String ip = tree.getIpAddress();
+				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
+				TransactionName name = type.findOrCreateName(t.getName());
+				String messageId = tree.getMessageId();
+				
 				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
 			}
 
