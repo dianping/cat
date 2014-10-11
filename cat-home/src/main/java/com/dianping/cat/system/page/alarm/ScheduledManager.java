@@ -80,6 +80,21 @@ public class ScheduledManager  {
 		model.setUserReportSubStates(userRules);
 	}
 
+	public void refreshScheduledReport() throws Exception {
+		Map<String, Project> projects = m_projectService.findAllProjects();
+
+		for (Entry<String, Project> entry : projects.entrySet()) {
+			String domain = entry.getKey();
+			String cmdbDomain = entry.getValue().getCmdbDomain();
+
+			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
+				updateData(cmdbDomain);
+			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
+				updateData(domain);
+			}
+		}
+	}
+
 	public void scheduledReportDelete(Payload payload) {
 		int id = payload.getScheduledReportId();
 		ScheduledReport proto = m_scheduledReportDao.createLocal();
@@ -159,21 +174,6 @@ public class ScheduledManager  {
 
 		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
 		m_reports.put(domain, report);
-	}
-
-	public void refreshScheduledReport() throws Exception {
-		Map<String, Project> projects = m_projectService.findAllProjects();
-
-		for (Entry<String, Project> entry : projects.entrySet()) {
-			String domain = entry.getKey();
-			String cmdbDomain = entry.getValue().getCmdbDomain();
-
-			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
-				updateData(cmdbDomain);
-			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
-				updateData(domain);
-			}
-		}
 	}
 
 	public class ScheduledReportUpdateTask implements Task {

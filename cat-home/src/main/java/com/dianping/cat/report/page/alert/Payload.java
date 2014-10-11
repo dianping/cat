@@ -205,16 +205,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_showException;
 	}
 
+	public boolean isShowFrontEndException() {
+		return m_frontEndException;
+	}
+
 	public boolean isShowNetwork() {
 		return m_showNetwork;
 	}
 
 	public boolean isShowSystem() {
 		return m_showSystem;
-	}
-
-	public boolean isShowFrontEndException() {
-		return m_frontEndException;
 	}
 
 	public boolean isShowThirdParty() {

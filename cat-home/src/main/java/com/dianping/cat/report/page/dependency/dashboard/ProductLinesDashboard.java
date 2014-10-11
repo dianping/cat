@@ -17,14 +17,9 @@ public class ProductLinesDashboard {
 
 	private transient Map<String, TopologyNode> m_nodes = new LinkedHashMap<String, TopologyNode>();
 
-	public String toJson() {
-		String str = new JsonBuilder().toJson(this);
-
-		return str;
-	}
-
-	public boolean exsit(TopologyNode node) {
-		return m_nodes.containsKey(node.getId());
+	public ProductLinesDashboard addEdge(TopologyEdge edge) {
+		m_edges.add(edge);
+		return this;
 	}
 
 	public ProductLinesDashboard addNode(String productLine, TopologyNode node) {
@@ -39,17 +34,22 @@ public class ProductLinesDashboard {
 		return this;
 	}
 
-	public ProductLinesDashboard addEdge(TopologyEdge edge) {
-		m_edges.add(edge);
-		return this;
+	public boolean exsit(TopologyNode node) {
+		return m_nodes.containsKey(node.getId());
+	}
+
+	public List<TopologyEdge> getEdges() {
+		return m_edges;
 	}
 
 	public Map<String, List<TopologyNode>> getNodes() {
 		return m_productLines;
 	}
 
-	public List<TopologyEdge> getEdges() {
-		return m_edges;
+	public String toJson() {
+		String str = new JsonBuilder().toJson(this);
+
+		return str;
 	}
 
 }

@@ -66,6 +66,15 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
+	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
+		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
+			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
+
+			pieChart.visitProblemReport(report);
+			model.setDistributionChart(pieChart.getPieChart().getJsonString());
+		}
+	}
+
 	private ProblemReport filterReportByGroup(ProblemReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 		List<String> removes = new ArrayList<String>();
@@ -271,15 +280,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
-		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
-			PieGraphChartVisitor pieChart = new PieGraphChartVisitor(payload.getType(), payload.getStatus());
-
-			pieChart.visitProblemReport(report);
-			model.setDistributionChart(pieChart.getPieChart().getJsonString());
-		}
 	}
 
 	private void normalize(Model model, Payload payload) {

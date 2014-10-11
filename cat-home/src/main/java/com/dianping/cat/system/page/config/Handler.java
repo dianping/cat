@@ -189,6 +189,22 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	public void store(String userName, String accountName, Payload payload) {
+		ConfigModification modification = m_configModificationDao.createLocal();
+
+		modification.setUserName(userName);
+		modification.setAccountName(accountName);
+		modification.setActionName(payload.getAction().getName());
+		modification.setDate(new Date());
+		modification.setArgument(new JsonBuilder().toJson(payload));
+
+		try {
+			m_configModificationDao.insert(modification);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		}
+	}
+	
 	private void storeModifyInfo(Context ctx, Payload payload) {
 		Cookie cookie = ctx.getCookie("ct");
 		Action action = payload.getAction();
@@ -215,22 +231,6 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				Cat.logError("cannot get cookie info", new RuntimeException());
 			}
-		}
-	}
-	
-	public void store(String userName, String accountName, Payload payload) {
-		ConfigModification modification = m_configModificationDao.createLocal();
-
-		modification.setUserName(userName);
-		modification.setAccountName(accountName);
-		modification.setActionName(payload.getAction().getName());
-		modification.setDate(new Date());
-		modification.setArgument(new JsonBuilder().toJson(payload));
-
-		try {
-			m_configModificationDao.insert(modification);
-		} catch (Exception ex) {
-			Cat.logError(ex);
 		}
 	}
 

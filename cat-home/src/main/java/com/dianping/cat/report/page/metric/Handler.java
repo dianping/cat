@@ -40,6 +40,24 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
 
+	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
+		Map<String, LineChart> allCharts = null;
+		String productLine = payload.getProduct();
+
+		if (StringUtils.isEmpty(productLine)) {
+			String tag = payload.getTag();
+
+			if (StringUtils.isEmpty(tag)) {
+				tag = MetricConfigManager.DEFAULT_TAG;
+				payload.setTag(tag);
+			}
+			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
+		} else {
+			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);
+		}
+		return allCharts;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = MetricAnalyzer.ID)
@@ -77,24 +95,6 @@ public class Handler implements PageHandler<Context> {
 		model.setTags(tags);
 		model.setProductLines(m_productLineConfigManager.queryMetricProductLines().values());
 		m_jspViewer.view(ctx, model);
-	}
-
-	private Map<String, LineChart> buildLineCharts(Payload payload, Date start, Date end) {
-		Map<String, LineChart> allCharts = null;
-		String productLine = payload.getProduct();
-
-		if (StringUtils.isEmpty(productLine)) {
-			String tag = payload.getTag();
-
-			if (StringUtils.isEmpty(tag)) {
-				tag = MetricConfigManager.DEFAULT_TAG;
-				payload.setTag(tag);
-			}
-			allCharts = m_graphCreator.buildDashboardByTag(start, end, tag);
-		} else {
-			allCharts = m_graphCreator.buildChartsByProductLine(productLine, start, end);
-		}
-		return allCharts;
 	}
 
 	private void normalize(Model model, Payload payload) {

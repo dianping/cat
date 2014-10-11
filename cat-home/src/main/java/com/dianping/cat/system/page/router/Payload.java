@@ -24,12 +24,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
+	@Override
+	public Action getAction() {
+		return m_action;
 	}
 
 	public Date getDate() {
@@ -40,22 +37,25 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		}
 	}
 
-	public void setDate(String date) {
-		m_date = date;
+	public String getDomain() {
+		return m_domain;
+	}
+
+	@Override
+	public SystemPage getPage() {
+		return m_page;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.API);
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action;
+	public void setDate(String date) {
+		m_date = date;
 	}
 
-	@Override
-	public SystemPage getPage() {
-		return m_page;
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	@Override

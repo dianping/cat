@@ -68,6 +68,21 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlertSummaryExecutor m_executor;
 
+	private void builAlertDetails(Model model, Payload payload) {
+		AlertReport alertReport = queryAlertReport(payload);
+		List<com.dianping.cat.home.alert.report.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
+		      payload.getDomain());
+
+		model.setAlertExceptions(sortedExceptions);
+	}
+
+	private void buildAlertInfo(Model model, Payload payload) {
+		AlertReport alertReport = queryAlertReport(payload);
+		model.setAlertReport(alertReport);
+		List<com.dianping.cat.home.alert.report.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
+		model.setAlertDomains(sortedDomains);
+	}
+
 	private void buildBugInfo(Model model, Payload payload) {
 		BugReport bugReport = queryBugReport(payload);
 		BugReportVisitor visitor = new BugReportVisitor();
@@ -83,21 +98,6 @@ public class Handler implements PageHandler<Context> {
 		model.setBugReport(bugReport);
 	}
 
-	private void buildAlertInfo(Model model, Payload payload) {
-		AlertReport alertReport = queryAlertReport(payload);
-		model.setAlertReport(alertReport);
-		List<com.dianping.cat.home.alert.report.entity.Domain> sortedDomains = buildSortedAlertInfo(alertReport, model);
-		model.setAlertDomains(sortedDomains);
-	}
-
-	private void builAlertDetails(Model model, Payload payload) {
-		AlertReport alertReport = queryAlertReport(payload);
-		List<com.dianping.cat.home.alert.report.entity.Exception> sortedExceptions = buildSortedAlertDetails(alertReport,
-		      payload.getDomain());
-
-		model.setAlertExceptions(sortedExceptions);
-	}
-
 	private void buildHeavyInfo(Model model, Payload payload) {
 		HeavyReport heavyReport = queryHeavyReport(payload);
 
@@ -110,6 +110,50 @@ public class Handler implements PageHandler<Context> {
 		List<com.dianping.cat.home.service.entity.Domain> dHisList = sort(serviceReport, payload.getSortBy());
 		model.setServiceList(dHisList);
 		model.setServiceReport(serviceReport);
+	}
+
+	private List<com.dianping.cat.home.alert.report.entity.Exception> buildSortedAlertDetails(AlertReport report,
+	      String domainName) {
+		List<com.dianping.cat.home.alert.report.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>();
+		com.dianping.cat.home.alert.report.entity.Domain domain = report.getDomains().get(domainName);
+
+		if (domain != null && !domain.getExceptions().isEmpty()) {
+			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions()
+			      .values());
+			Comparator<com.dianping.cat.home.alert.report.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Exception>() {
+
+				@Override
+				public int compare(Exception o1, Exception o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
+
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
+
+			Collections.sort(exceptions, exceptionCompator);
+		}
+		return exceptions;
+	}
+
+	private List<com.dianping.cat.home.alert.report.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
+		List<com.dianping.cat.home.alert.report.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>();
+
+		if (!report.getDomains().values().isEmpty()) {
+			domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>(report.getDomains().values());
+			Comparator<com.dianping.cat.home.alert.report.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Domain>() {
+
+				@Override
+				public int compare(com.dianping.cat.home.alert.report.entity.Domain o1,
+				      com.dianping.cat.home.alert.report.entity.Domain o2) {
+					int gap = o2.getErrorNumber() - o1.getErrorNumber();
+
+					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
+				}
+			};
+
+			Collections.sort(domains, domainCompator);
+		}
+		return domains;
 	}
 
 	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
@@ -144,50 +188,6 @@ public class Handler implements PageHandler<Context> {
 			model.setCacheUrls(cacheUrls);
 			model.setCacheServices(cacheServices);
 		}
-	}
-
-	private List<com.dianping.cat.home.alert.report.entity.Domain> buildSortedAlertInfo(AlertReport report, Model model) {
-		List<com.dianping.cat.home.alert.report.entity.Domain> domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>();
-
-		if (!report.getDomains().values().isEmpty()) {
-			domains = new ArrayList<com.dianping.cat.home.alert.report.entity.Domain>(report.getDomains().values());
-			Comparator<com.dianping.cat.home.alert.report.entity.Domain> domainCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Domain>() {
-
-				@Override
-				public int compare(com.dianping.cat.home.alert.report.entity.Domain o1,
-				      com.dianping.cat.home.alert.report.entity.Domain o2) {
-					int gap = o2.getErrorNumber() - o1.getErrorNumber();
-
-					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-				}
-			};
-
-			Collections.sort(domains, domainCompator);
-		}
-		return domains;
-	}
-
-	private List<com.dianping.cat.home.alert.report.entity.Exception> buildSortedAlertDetails(AlertReport report,
-	      String domainName) {
-		List<com.dianping.cat.home.alert.report.entity.Exception> exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>();
-		com.dianping.cat.home.alert.report.entity.Domain domain = report.getDomains().get(domainName);
-
-		if (domain != null && !domain.getExceptions().isEmpty()) {
-			exceptions = new ArrayList<com.dianping.cat.home.alert.report.entity.Exception>(domain.getExceptions()
-			      .values());
-			Comparator<com.dianping.cat.home.alert.report.entity.Exception> exceptionCompator = new Comparator<com.dianping.cat.home.alert.report.entity.Exception>() {
-
-				@Override
-				public int compare(Exception o1, Exception o2) {
-					int gap = o2.getErrorNumber() - o1.getErrorNumber();
-
-					return gap == 0 ? o2.getWarnNumber() - o1.getWarnNumber() : gap;
-				}
-			};
-
-			Collections.sort(exceptions, exceptionCompator);
-		}
-		return exceptions;
 	}
 
 	private void buildUtilizationInfo(Model model, Payload payload) {
@@ -266,6 +266,12 @@ public class Handler implements PageHandler<Context> {
 		return !bugConfig.contains(exception);
 	}
 
+	private AlertReport queryAlertReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
+	}
+
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
@@ -276,12 +282,6 @@ public class Handler implements PageHandler<Context> {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
 		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
-	}
-
-	private AlertReport queryAlertReport(Payload payload) {
-		Pair<Date, Date> pair = queryStartEndTime(payload);
-
-		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {

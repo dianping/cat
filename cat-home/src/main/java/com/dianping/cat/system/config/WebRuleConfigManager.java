@@ -16,6 +16,11 @@ public class WebRuleConfigManager extends BaseRuleConfigManager implements Initi
 	private static final String CONFIG_NAME = "webRule";
 
 	@Override
+	protected String getConfigName() {
+		return CONFIG_NAME;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
@@ -44,11 +49,6 @@ public class WebRuleConfigManager extends BaseRuleConfigManager implements Initi
 		if (m_config == null) {
 			m_config = new MonitorRules();
 		}
-	}
-
-	@Override
-	protected String getConfigName() {
-		return CONFIG_NAME;
 	}
 
 }

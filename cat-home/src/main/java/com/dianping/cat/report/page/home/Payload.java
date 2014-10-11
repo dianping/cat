@@ -25,20 +25,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getDocName() {
+		return m_docName;
+	}
+
 	public String getSubDocName() {
 		return m_subDocName;
 	}
 
-	public void setSubDocName(String subDocName) {
-		m_subDocName = subDocName;
-	}
-
 	public void setAction(Action action) {
 		m_action = action;
-	}
-
-	public String getDocName() {
-		return m_docName;
 	}
 
 	public void setAction(String action) {
@@ -47,6 +43,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setDocName(String docName) {
 		m_docName = docName;
+	}
+
+	public void setSubDocName(String subDocName) {
+		m_subDocName = subDocName;
 	}
 
 	@Override

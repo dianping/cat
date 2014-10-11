@@ -49,6 +49,34 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_configManager;
 
+	private String buildCatInfoMessage(StateReport report) {
+		int realSize = report.getMachines().size();
+		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
+		int excepeted = servers.size();
+		Set<String> errorServers = new HashSet<String>();
+
+		if (realSize != excepeted) {
+			for (Pair<String, Integer> server : servers) {
+				String serverIp = server.getKey();
+
+				if (report.getMachines().get(serverIp) == null) {
+					errorServers.add(serverIp);
+				}
+			}
+		}
+		for (Machine machine : report.getMachines().values()) {
+			if (machine.getTotalLoss() > 100 * 10000) {
+				errorServers.add(machine.getIp());
+			}
+		}
+
+		if (errorServers.size() > 0) {
+			return errorServers.toString();
+		} else {
+			return null;
+		}
+	}
+
 	public StateReport getHistoryReport(Payload payload) {
 		String domain = Constants.CAT;
 		Date start = payload.getHistoryStartDate();
@@ -120,34 +148,6 @@ public class Handler implements PageHandler<Context> {
 			model.setGraph(new JsonBuilder().toJson(item));
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private String buildCatInfoMessage(StateReport report) {
-		int realSize = report.getMachines().size();
-		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
-		int excepeted = servers.size();
-		Set<String> errorServers = new HashSet<String>();
-
-		if (realSize != excepeted) {
-			for (Pair<String, Integer> server : servers) {
-				String serverIp = server.getKey();
-
-				if (report.getMachines().get(serverIp) == null) {
-					errorServers.add(serverIp);
-				}
-			}
-		}
-		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > 100 * 10000) {
-				errorServers.add(machine.getIp());
-			}
-		}
-
-		if (errorServers.size() > 0) {
-			return errorServers.toString();
-		} else {
-			return null;
-		}
 	}
 
 	private void normalize(Model model, Payload payload) {

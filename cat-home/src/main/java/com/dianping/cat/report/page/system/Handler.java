@@ -47,13 +47,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProductLineConfigManager m_productLineManager;
 
-	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "system")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
-	}
-
 	public String buildProject2Domains() {
 		List<Project> projects = new ArrayList<Project>();
 		Map<String, Set<String>> project2Domains = new HashMap<String, Set<String>>();
@@ -78,6 +71,13 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return new JsonBuilder().toJson(project2Domains);
+	}
+
+	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "system")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
 	}
 
 	@Override

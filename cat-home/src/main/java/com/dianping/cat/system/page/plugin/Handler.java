@@ -41,29 +41,14 @@ public class Handler implements PageHandler<Context> {
 		m_serverMapping.put("192.168.7.70:8080", "cat.qa.dianpingoa.com");
 	}
 
-	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "plugin")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
-	}
+	private void addResourceFiles(ZipOutputStream zos, String baseDir, String... paths) throws IOException {
+		for (String path : paths) {
+			ZipEntry entry = new ZipEntry(path);
+			String resource = baseDir + "/" + path;
+			byte[] data = Files.forIO().readFrom(getClass().getResourceAsStream(resource));
 
-	@Override
-	@OutboundActionMeta(name = "plugin")
-	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
-		Payload payload = ctx.getPayload();
-		String type = payload.getType();
-
-		model.setPage(SystemPage.PLUGIN);
-		model.setAction(Action.VIEW);
-
-		if ("chrome".equals(type)) {
-			downloadChromeExtension(ctx);
-		}
-
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
+			zos.putNextEntry(entry);
+			zos.write(data);
 		}
 	}
 
@@ -113,14 +98,29 @@ public class Handler implements PageHandler<Context> {
 		ctx.stopProcess();
 	}
 
-	private void addResourceFiles(ZipOutputStream zos, String baseDir, String... paths) throws IOException {
-		for (String path : paths) {
-			ZipEntry entry = new ZipEntry(path);
-			String resource = baseDir + "/" + path;
-			byte[] data = Files.forIO().readFrom(getClass().getResourceAsStream(resource));
+	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "plugin")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
+	}
 
-			zos.putNextEntry(entry);
-			zos.write(data);
+	@Override
+	@OutboundActionMeta(name = "plugin")
+	public void handleOutbound(Context ctx) throws ServletException, IOException {
+		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
+		String type = payload.getType();
+
+		model.setPage(SystemPage.PLUGIN);
+		model.setAction(Action.VIEW);
+
+		if ("chrome".equals(type)) {
+			downloadChromeExtension(ctx);
+		}
+
+		if (!ctx.isProcessStopped()) {
+			m_jspViewer.view(ctx, model);
 		}
 	}
 }

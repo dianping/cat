@@ -17,17 +17,6 @@ public class SortHelper {
 
 	private static IpComparator s_ipComparator = new IpComparator();
 
-	public static <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
-		Map<K, V> result = new LinkedHashMap<K, V>();
-		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
-		Collections.sort(entries, compator);
-
-		for (Entry<K, V> entry : entries) {
-			result.put(entry.getKey(), entry.getValue());
-		}
-		return result;
-	}
-	
 	public static List<String> sortDomain(Collection<String> strs) {
 		if (strs == null) {
 			return null;
@@ -38,7 +27,7 @@ public class SortHelper {
 			return result;
 		}
 	}
-
+	
 	public static List<String> sortIpAddress(Collection<String> strs) {
 		if (strs == null) {
 			return null;
@@ -48,6 +37,17 @@ public class SortHelper {
 
 			return result;
 		}
+	}
+
+	public static <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+		Map<K, V> result = new LinkedHashMap<K, V>();
+		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
+		Collections.sort(entries, compator);
+
+		for (Entry<K, V> entry : entries) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+		return result;
 	}
 
 	public static class DomainComparator implements Comparator<String> {

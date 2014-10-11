@@ -34,6 +34,28 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.APP);
 	}
 
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public AppDataGroupByField getGroupByField() {
+		return m_groupByField;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	public String getQuery1() {
+		return m_query1;
+	}
+
+	public String getQuery2() {
+		return m_query2;
+	}
+
 	public QueryEntity getQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new QueryEntity(m_query1);
@@ -50,18 +72,20 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action;
+	public String getSort() {
+		return m_sort;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
+	public String getType() {
+		return m_type;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setGroupByField(String groupByField) {
+		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
 	}
 
 	@Override
@@ -69,44 +93,20 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_page = ReportPage.getByName(page, ReportPage.APP);
 	}
 
-	public void setGroupByField(String groupByField) {
-		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
-	}
-
-	public AppDataGroupByField getGroupByField() {
-		return m_groupByField;
-	}
-
-	public String getQuery1() {
-		return m_query1;
-	}
-
 	public void setQuery1(String query1) {
 		m_query1 = query1;
-	}
-
-	public String getQuery2() {
-		return m_query2;
 	}
 
 	public void setQuery2(String query2) {
 		m_query2 = query2;
 	}
 
-	public void setType(String type) {
-		m_type = type;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public String getSort() {
-		return m_sort;
-	}
-
 	public void setSort(String sort) {
 		m_sort = sort;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
