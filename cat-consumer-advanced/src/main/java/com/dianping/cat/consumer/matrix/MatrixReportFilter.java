@@ -17,6 +17,10 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 
 	private static final String OTHERS = "OTHERS";
 
+	public void setMaxSize(int maxSize) {
+		m_maxSize = maxSize;
+	}
+
 	@Override
 	public void visitMatrixReport(MatrixReport matrixReport) {
 		Map<String, Matrix> matrixs = matrixReport.getMatrixs();
@@ -36,7 +40,7 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 			Matrix value = new Matrix(OTHERS);
 			for (int i = m_maxSize; i < size; i++) {
 				Matrix item = matrixList.get(i);
-				
+
 				value.setType(item.getType());
 				value.setCount(item.getCount() + value.getCount());
 			}
@@ -45,10 +49,6 @@ public class MatrixReportFilter extends DefaultXmlBuilder {
 
 		super.visitMatrixReport(matrixReport);
 	}
-	
-	public void setMaxSize(int maxSize) {
-   	m_maxSize = maxSize;
-   }
 
 	public static class MeatricCompartor implements Comparator<Matrix> {
 

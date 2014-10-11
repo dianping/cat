@@ -36,13 +36,19 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(MatrixReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(MatrixReport report) {
 		return report.toString();
 	}
 
 	@Override
 	public boolean createHourlyTask(MatrixReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), MatrixAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), MatrixAnalyzer.ID,
+		      TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
 	@Override
@@ -69,19 +75,14 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 	}
 
 	@Override
+	public MatrixReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public MatrixReport parseXml(String xml) throws Exception {
 		MatrixReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(MatrixReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public MatrixReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

@@ -34,6 +34,11 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(DependencyReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(DependencyReport report) {
 		return report.toString();
 	}
@@ -67,19 +72,14 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 	}
 
 	@Override
+	public DependencyReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public DependencyReport parseXml(String xml) throws Exception {
 		DependencyReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(DependencyReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public DependencyReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

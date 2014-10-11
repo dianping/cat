@@ -34,13 +34,19 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 	}
 
 	@Override
+	public byte[] buildBinary(CrossReport report) {
+		return DefaultNativeBuilder.build(report);
+	}
+
+	@Override
 	public String buildXml(CrossReport report) {
 		return report.toString();
 	}
 
 	@Override
 	public boolean createHourlyTask(CrossReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), CrossAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), CrossAnalyzer.ID,
+		      TaskProlicy.ALL_EXCLUED_HOURLY);
 	}
 
 	@Override
@@ -67,19 +73,14 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 	}
 
 	@Override
+	public CrossReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
+	}
+
+	@Override
 	public CrossReport parseXml(String xml) throws Exception {
 		CrossReport report = DefaultSaxParser.parse(xml);
 
 		return report;
-	}
-
-	@Override
-	public byte[] buildBinary(CrossReport report) {
-		return DefaultNativeBuilder.build(report);
-	}
-
-	@Override
-	public CrossReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
 	}
 }

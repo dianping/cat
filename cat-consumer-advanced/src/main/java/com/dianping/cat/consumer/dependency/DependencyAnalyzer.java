@@ -63,6 +63,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		m_logger = logger;
 	}
 
+	private DependencyReport findOrCreateReport(String domain) {
+		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
+	}
+
 	@Override
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
@@ -71,8 +75,8 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return report;
 	}
 
-	private DependencyReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
+	private boolean isCache(String type) {
+		return type.startsWith("Cache.");
 	}
 
 	@Override
@@ -211,10 +215,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		if (isCache(type)) {
 			updateDependencyInfo(report, t, type, "Cache");
 		}
-	}
-
-	private boolean isCache(String type) {
-		return type.startsWith("Cache.");
 	}
 
 	private void updateDependencyInfo(DependencyReport report, Transaction t, String target, String type) {
