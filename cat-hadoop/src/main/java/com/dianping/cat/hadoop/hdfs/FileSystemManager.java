@@ -79,6 +79,10 @@ public class FileSystemManager implements Initializable {
 
 		config.setInt("io.file.buffer.size", 8192);
 
+		if (m_configManager.isOffline()) {
+			config.setInt("dfs.replication", 1);
+		}
+
 		for (Map.Entry<String, String> property : properties.entrySet()) {
 			config.set(property.getKey(), property.getValue());
 		}

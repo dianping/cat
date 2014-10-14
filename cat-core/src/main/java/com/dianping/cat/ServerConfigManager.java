@@ -357,4 +357,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return !domain.equals(Constants.FRONT_END) && filterDomain(domain);
 	}
 
+	public boolean isOffline() {
+		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if (address.startsWith("192.168")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }
