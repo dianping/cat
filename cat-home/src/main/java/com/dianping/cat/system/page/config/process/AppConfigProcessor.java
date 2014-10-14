@@ -64,7 +64,7 @@ public class AppConfigProcessor extends BaseProcesser {
 				}
 			} else {
 				try {
-					if (m_appConfigManager.addCommand(domain, title, name)) {
+					if (m_appConfigManager.addCommand(domain, title, name).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
