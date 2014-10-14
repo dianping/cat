@@ -42,7 +42,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<Command> m_commands;
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
-	
+
 	private String m_content;
 
 	public Model(Context ctx) {
@@ -97,6 +97,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
+	}
+
+	public String getDomainToCommandsJson() {
+		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+
+		for (Command command : m_commands) {
+			String domain = command.getDomain();
+			List<Command> commands = map.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+				map.put(domain, commands);
+			}
+			commands.add(command);
+		}
+		return new JsonBuilder().toJson(map);
 	}
 
 	public LineChart getLineChart() {
