@@ -27,6 +27,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -43,6 +44,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private AppRuleConfigManager m_appRuleConfigManager;
 
 	private void filterCommands(Model model, boolean isShowActivity) {
 		List<Command> commands = model.getCommands();
@@ -124,8 +128,11 @@ public class Handler implements PageHandler<Context> {
 				setUpdateResult(model, 0);
 			} else {
 				try {
-					if (m_manager.addCommand(domain, title, name)) {
+					Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name);
+
+					if (addCommandResult.getKey()) {
 						setUpdateResult(model, 1);
+						m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
 					} else {
 						setUpdateResult(model, 2);
 					}
@@ -141,8 +148,10 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtil.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
-				if (m_manager.deleteCommand(domain, name)) {
+				Pair<Boolean, List<Integer>> deleteCommandResult = m_manager.deleteCommand(domain, name);
+				if (deleteCommandResult.getKey()) {
 					setUpdateResult(model, 1);
+					m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
 				} else {
 					setUpdateResult(model, 2);
 				}

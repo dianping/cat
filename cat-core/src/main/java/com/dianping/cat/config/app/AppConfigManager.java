@@ -18,6 +18,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -63,7 +64,7 @@ public class AppConfigManager implements Initializable {
 
 	public static final String ACTIVITY_PREFIX = "http://tgapp.dianping.com/activity/";
 
-	public boolean addCommand(String domain, String title, String name) throws Exception {
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name) throws Exception {
 		Command command = new Command();
 
 		command.setDomain(domain);
@@ -71,14 +72,16 @@ public class AppConfigManager implements Initializable {
 		command.setName(name);
 
 		boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
+		int commandId;
 		if (isActivityCommand) {
-			command.setId(findAvailableId(1000, 1500));
+			commandId = findAvailableId(1000, 1500);
 		} else {
-			command.setId(findAvailableId(1, 200));
+			commandId = findAvailableId(1, 200);
 		}
+		command.setId(commandId);
 
 		m_config.addCommand(command);
-		return storeConfig();
+		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
 
 	public boolean updateCommand(int id, String domain, String name, String title) {
@@ -100,7 +103,7 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public boolean deleteCommand(String domain, String name) {
+	public Pair<Boolean, List<Integer>> deleteCommand(String domain, String name) {
 		Collection<Command> commands = m_config.getCommands().values();
 		List<Integer> needDeleteIds = new ArrayList<Integer>();
 
@@ -114,7 +117,7 @@ public class AppConfigManager implements Initializable {
 		for (int id : needDeleteIds) {
 			m_config.removeCommand(id);
 		}
-		return storeConfig();
+		return new Pair<Boolean, List<Integer>>(storeConfig(), needDeleteIds);
 	}
 
 	public boolean deleteCommand(int id) {
@@ -131,7 +134,7 @@ public class AppConfigManager implements Initializable {
 				maxKey = key;
 			}
 		}
-		if (maxKey < endIndex) {
+		if (maxKey < endIndex && maxKey >= startIndex) {
 			return maxKey + 1;
 		} else {
 			for (int i = startIndex; i <= endIndex; i++) {
