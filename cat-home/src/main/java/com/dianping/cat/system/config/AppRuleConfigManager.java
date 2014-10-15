@@ -29,7 +29,6 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 		m_config.addRule(rule);
 		if (!storeConfig()) {
 			Cat.logError("store app command rule error: " + name + " " + " " + commandId, new RuntimeException());
-			;
 		}
 	}
 

@@ -355,6 +355,68 @@ public enum RuleType {
 		public String getId() {
 			return "FluDescPer";
 		}
+	},
+
+	SumMaxValue {
+		@Override
+		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
+			sb.append("[实际值总和:").append(convertDoubleToString(calSum(values))).append("] ");
+			sb.append("[总和最大阈值: " + convertDoubleToString(ruleValue) + " ]");
+			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+
+			return sb.toString();
+		}
+
+		@Override
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+			double totalVal = calSum(values);
+
+			if (totalVal < ruleValue) {
+				return new Pair<Boolean, String>(false, "");
+			}
+
+			return new Pair<Boolean, String>(true, buildRuleMessage(values, baselines, ruleValue));
+		}
+
+		@Override
+		public String getId() {
+			return "SumMaxVal";
+		}
+	},
+
+	SumMinValue {
+		@Override
+		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
+			StringBuilder sb = new StringBuilder();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
+			sb.append("[实际值总和:").append(convertDoubleToString(calSum(values))).append("] ");
+			sb.append("[总和最小阈值: " + convertDoubleToString(ruleValue) + " ]");
+			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+
+			return sb.toString();
+		}
+
+		@Override
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+			double totalVal = calSum(values);
+
+			if (totalVal > ruleValue) {
+				return new Pair<Boolean, String>(false, "");
+			}
+
+			return new Pair<Boolean, String>(true, buildRuleMessage(values, baselines, ruleValue));
+		}
+
+		@Override
+		public String getId() {
+			return "SumMinVal";
+		}
 	};
 
 	static Map<String, RuleType> s_map = new LinkedHashMap<String, RuleType>();
@@ -401,6 +463,15 @@ public enum RuleType {
 		}
 
 		return builder.toString();
+	}
+
+	protected double calSum(double[] values) {
+		double totalVal = 0;
+
+		for (double value : values) {
+			totalVal += value;
+		}
+		return totalVal;
 	}
 
 	public abstract Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue);

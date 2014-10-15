@@ -54,6 +54,8 @@
                         <option value="MinVal">最小值</option>
                         <option value="FluAscPer">波动上升百分比</option>
                         <option value="FluDescPer">波动下降百分比</option>
+                        <option value="SumMaxVal">总和最大值</option>
+                        <option value="SumMinVal">总和最小值</option>
                     </select>
                     阈值：<input name="value" class="value input-mini" type="text"/>
                     <button class="btn btn-danger btn-small delete-subcondition-button" type="button">
