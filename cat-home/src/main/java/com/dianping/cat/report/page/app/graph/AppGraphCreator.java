@@ -54,9 +54,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		lineChart.setHtmlTitle(queryType(type));
 
 		if (AppDataService.SUCCESS.equals(type)) {
-			double min = queryMinYlable(datas);
-			System.out.println(min);
-			lineChart.setMinYlable(min);
+			lineChart.setMinYlable(queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
 
