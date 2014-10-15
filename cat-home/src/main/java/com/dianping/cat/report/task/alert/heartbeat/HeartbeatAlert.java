@@ -174,10 +174,10 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			for (AlertResultEntity alertResult : alertResults) {
 				AlertEntity entity = new AlertEntity();
 
-				entity.setDate(alertResult.getAlertTime()).setContent(ip + ":\n" + alertResult.getContent())
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
 				entity.setMetric(metric).setType(getName()).setGroup(domain);
-
+				entity.getParas().put("ip", ip);
 				m_sendManager.addAlert(entity);
 			}
 		}
