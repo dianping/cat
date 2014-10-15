@@ -49,7 +49,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private List<AlertResultEntity> computeArgument(String domain, String ip, String metricText, int minute,
 	      double[] datas) {
-		String groupText = domain + ":" + ip;
+		String groupText = domain;
 		List<Config> configs = m_ruleConfigManager.queryConfigs(groupText, metricText);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
@@ -96,6 +96,22 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		return alerts;
 	}
 
+	private void convertToDeltaArray(Map<String, double[]> map, String name) {
+		double[] sources = map.get(name);
+		double[] targets = new double[60];
+
+		for (int i = 1; i < 60; i++) {
+			if (sources[i - 1] > 0) {
+				double delta = sources[i] - sources[i - 1];
+
+				if (delta >= 0) {
+					targets[i] = delta;
+				}
+			}
+		}
+		map.put(name, targets);
+	}
+
 	private Map<String, double[]> generateArgumentMap(Machine machine) {
 		Map<String, double[]> map = new HashMap<String, double[]>();
 		int index = 0;
@@ -118,6 +134,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 			index++;
 		}
+		convertToDeltaArray(map, "TotalStartedCount");
+		convertToDeltaArray(map, "NewGcCount");
+		convertToDeltaArray(map, "OldGcCount");
+		convertToDeltaArray(map, "CatMessageSize");
+		convertToDeltaArray(map, "CatMessageOverflow");
 		return map;
 	}
 
