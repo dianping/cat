@@ -227,7 +227,7 @@
 <script>
 	var domainToCommandsJson = ${model.domainToCommandsJson};
 
-	function changeDomain(domainId, commandId){
+	function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
 		if(typeof domainId == 'object'){
 			if($(this).attr("id")=="domains"){
 				var domain = $("#domains").val();
@@ -237,8 +237,10 @@
 				var commandSelect = $("#command2");
 			}
 		}else{
-			var domain = $("#"+domainId).val();
+			var domain = domainInitVal;
 			var commandSelect = $("#"+commandId);
+			
+			$("#"+domainId).val(domainInitVal);
 		}
 		var commands = domainToCommandsJson[domain];
 		commandSelect.empty();
@@ -251,10 +253,13 @@
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
 			}
 		}
+		if(typeof domainId != 'object'){
+			commandSelect.val(commandInitVal);
+		}
 	}
 	
-	function initDomain(domainId, commandId){
-		var domainsSelect = $("#"+domainId);
+	function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
+		var domainsSelect = $("#"+domainSelectId);
 		for(var domain in domainToCommandsJson){
 			if(domain=='null'){
 				domainsSelect.append($("<option value='"+domain+"'>default</option>"))
@@ -262,12 +267,12 @@
 				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 			}
 		}
-		changeDomain(domainId, commandId);
+		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
 		domainsSelect.on('change', changeDomain)
 	}
 
 	$(document).ready(function(){
-		initDomain('domains', 'command');
-		initDomain('domains2', 'command2');
+		initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
+		initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
 	})
 </script>
