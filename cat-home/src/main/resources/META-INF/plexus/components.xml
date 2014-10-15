@@ -4392,6 +4392,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4463,6 +4466,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.AppRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5026,15 +5038,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.AppRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>

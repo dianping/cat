@@ -9,18 +9,11 @@
 							class="add-on"> <i data-time-icon="icon-time"
 							data-date-icon="icon-calendar"> </i>
 						</span>
-					</div> 命令字 <select id="command" style="width: 350px;">
-						<c:forEach var="item" items="${model.commands}" varStatus="status">
-							<c:choose>
-								<c:when test="${empty item.title}">
-									<option value='${item.id}'>${item.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value='${item.id}'>${item.title}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
+					</div> 
+						项目<select id="domains" style="width: 100px;"></select>
+						命令字 <select id="command" style="width: 240px;">
+						</select> 
+				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
@@ -76,18 +69,11 @@
 							class="add-on"> <i data-time-icon="icon-time"
 							data-date-icon="icon-calendar"> </i>
 						</span>
-					</div> 命令字 <select id="command2" style="width: 350px;">
-						<c:forEach var="item" items="${model.commands}" varStatus="status">
-							<c:choose>
-								<c:when test="${empty item.title}">
-									<option value='${item.id}'>${item.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value='${item.id}'>${item.title}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-				</select> 返回码 <select id="code2" style="width: 120px;">
+					</div> 
+						项目<select id="domains2" style="width: 100px;"></select>
+						命令字 <select id="command2" style="width: 240px;">
+						</select> 
+						 返回码 <select id="code2" style="width: 120px;">
 						<option value=''>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
 						<option value=''>All</option>
@@ -238,3 +224,50 @@
 	</c:forEach>
 	</tbody>
 </table>
+<script>
+	var domainToCommandsJson = ${model.domainToCommandsJson};
+
+	function changeDomain(domainId, commandId){
+		if(typeof domainId == 'object'){
+			if($(this).attr("id")=="domains"){
+				var domain = $("#domains").val();
+				var commandSelect = $("#command");
+			}else{
+				var domain = $("#domains2").val();
+				var commandSelect = $("#command2");
+			}
+		}else{
+			var domain = $("#"+domainId).val();
+			var commandSelect = $("#"+commandId);
+		}
+		var commands = domainToCommandsJson[domain];
+		commandSelect.empty();
+		
+		for(var cou in commands){
+			var command = commands[cou]
+			if(command['title'] != undefined){
+				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+			}else{
+				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+			}
+		}
+	}
+	
+	function initDomain(domainId, commandId){
+		var domainsSelect = $("#"+domainId);
+		for(var domain in domainToCommandsJson){
+			if(domain=='null'){
+				domainsSelect.append($("<option value='"+domain+"'>default</option>"))
+			}else{
+				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+			}
+		}
+		changeDomain(domainId, commandId);
+		domainsSelect.on('change', changeDomain)
+	}
+
+	$(document).ready(function(){
+		initDomain('domains', 'command');
+		initDomain('domains2', 'command2');
+	})
+</script>
