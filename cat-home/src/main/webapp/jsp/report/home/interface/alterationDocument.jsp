@@ -1,6 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-error">变更监控文档</h4>
-</br>
 <h4 class="text-info">记录及展示变更内容</h4>
 <h4 class="text-success">HTTP API调用方式</h4>
 <p>接口调用请求说明(插入数据)</p>

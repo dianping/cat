@@ -43,6 +43,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
 
+	private String m_content;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -78,6 +80,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_connectionTypes;
 	}
 
+	public String getContent() {
+		return m_content;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -91,6 +97,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
+	}
+
+	public String getDomainToCommandsJson() {
+		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+
+		for (Command command : m_commands) {
+			String domain = command.getDomain();
+			List<Command> commands = map.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+				map.put(domain, commands);
+			}
+			commands.add(command);
+		}
+		return new JsonBuilder().toJson(map);
 	}
 
 	public LineChart getLineChart() {
@@ -135,6 +157,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setConnectionTypes(Map<Integer, Item> map) {
 		m_connectionTypes = map;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
 	}
 
 	public void setLineChart(LineChart lineChart) {

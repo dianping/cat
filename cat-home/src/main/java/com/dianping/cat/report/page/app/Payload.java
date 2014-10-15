@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.app;
 
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-import com.dianping.cat.config.app.AppDataGroupByField;
-
-import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -30,6 +30,15 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("sort")
 	private String m_sort = AppDataService.SUCCESS;
 
+	@FieldMeta("showActivity")
+	private boolean m_showActivity;
+	
+	@FieldMeta("name")
+	private String m_name;
+	
+	@FieldMeta("title")
+	private String m_title;
+
 	public Payload() {
 		super(ReportPage.APP);
 	}
@@ -41,6 +50,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public AppDataGroupByField getGroupByField() {
 		return m_groupByField;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 	@Override
@@ -76,8 +89,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sort;
 	}
 
+	public String getTitle() {
+		return m_title;
+	}
+
 	public String getType() {
 		return m_type;
+	}
+
+	public boolean isShowActivity() {
+		return m_showActivity;
 	}
 
 	public void setAction(String action) {
@@ -86,6 +107,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setGroupByField(String groupByField) {
 		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
+	}
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
@@ -101,8 +126,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_query2 = query2;
 	}
 
+	public void setShowActivity(boolean showActivity) {
+		m_showActivity = showActivity;
+	}
+
 	public void setSort(String sort) {
 		m_sort = sort;
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 	public void setType(String type) {

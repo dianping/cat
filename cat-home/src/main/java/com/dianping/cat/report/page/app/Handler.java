@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
@@ -19,11 +21,13 @@ import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.config.app.QueryEntity;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -40,6 +44,31 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private AppRuleConfigManager m_appRuleConfigManager;
+
+	private void filterCommands(Model model, boolean isShowActivity) {
+		List<Command> commands = model.getCommands();
+		List<Command> remainCommands = new ArrayList<Command>();
+
+		if (isShowActivity) {
+			for (Command command : commands) {
+				int commandId = command.getId();
+				if (commandId >= 1000 && commandId <= 1500) {
+					remainCommands.add(command);
+				}
+			}
+		} else {
+			for (Command command : commands) {
+				int commandId = command.getId();
+				if (commandId >= 0 && commandId <= 200) {
+					remainCommands.add(command);
+				}
+			}
+		}
+		model.setCommands(remainCommands);
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -72,6 +101,7 @@ public class Handler implements PageHandler<Context> {
 
 				model.setLineChart(lineChart);
 				model.setAppDataSpreadInfos(appDataSpreadInfos);
+				filterCommands(model, payload.isShowActivity());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -87,6 +117,44 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChartDetailInfos(infos);
 			} catch (Exception e) {
 				Cat.logError(e);
+			}
+			break;
+		case APP_ADD:
+			String domain = payload.getDomain();
+			String name = payload.getName();
+			String title = payload.getTitle();
+
+			if (StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				try {
+					Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name);
+
+					if (addCommandResult.getKey()) {
+						setUpdateResult(model, 1);
+						m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
+					} else {
+						setUpdateResult(model, 2);
+					}
+				} catch (Exception e) {
+					setUpdateResult(model, 2);
+				}
+			}
+			break;
+		case APP_DELETE:
+			domain = payload.getDomain();
+			name = payload.getName();
+
+			if (StringUtil.isEmpty(name)) {
+				setUpdateResult(model, 0);
+			} else {
+				Pair<Boolean, List<Integer>> deleteCommandResult = m_manager.deleteCommand(domain, name);
+				if (deleteCommandResult.getKey()) {
+					setUpdateResult(model, 1);
+					m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
+				} else {
+					setUpdateResult(model, 2);
+				}
 			}
 			break;
 		}
@@ -107,5 +175,19 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
 		m_normalizePayload.normalize(model, payload);
+	}
+
+	private void setUpdateResult(Model model, int i) {
+		switch (i) {
+		case 0:
+			model.setContent("{\"status\":500, \"info\":\"name is required.\"}");
+			break;
+		case 1:
+			model.setContent("{\"status\":200}");
+			break;
+		case 2:
+			model.setContent("{\"status\":500}");
+			break;
+		}
 	}
 }

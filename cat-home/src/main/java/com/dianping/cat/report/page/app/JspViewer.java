@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.app;
 
-import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.view.BaseJspViewer;
+
+import com.dianping.cat.report.ReportPage;
 
 public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
 	@Override
@@ -13,6 +14,9 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.VIEW.getPath();
 		case PIECHART:
 			return JspFile.PIECHART.getPath();
+		case APP_ADD:
+		case APP_DELETE:
+			return JspFile.APP_MODIFY_RESULT.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

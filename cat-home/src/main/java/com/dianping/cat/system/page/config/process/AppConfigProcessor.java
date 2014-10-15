@@ -1,10 +1,13 @@
 package com.dianping.cat.system.page.config.process;
 
+import java.util.List;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -14,6 +17,7 @@ public class AppConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
+
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
@@ -31,7 +35,56 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	public void process(Action action, Payload payload, Model model) {
+		int id;
+
 		switch (action) {
+		case APP_LIST:
+			generateCommandsForModel(model);
+			break;
+		case APP_UPDATE:
+			id = payload.getId();
+			Command command = m_appConfigManager.getConfig().findCommand(id);
+
+			if (command == null) {
+				command = new Command();
+			}
+			model.setUpdateCommand(command);
+			break;
+		case APP_SUBMIT:
+			id = payload.getId();
+			String domain = payload.getDomain();
+			String name = payload.getName();
+			String title = payload.getTitle();
+
+			if (m_appConfigManager.containCommand(id)) {
+				if (m_appConfigManager.updateCommand(id, domain, name, title)) {
+					model.setOpState(true);
+				} else {
+					model.setOpState(false);
+				}
+			} else {
+				try {
+					if (m_appConfigManager.addCommand(domain, title, name).getKey()) {
+						model.setOpState(true);
+					} else {
+						model.setOpState(false);
+					}
+				} catch (Exception e) {
+					model.setOpState(false);
+				}
+			}
+			generateCommandsForModel(model);
+			break;
+		case APP_PAGE_DELETE:
+			id = payload.getId();
+
+			if (m_appConfigManager.deleteCommand(id)) {
+				model.setOpState(true);
+			} else {
+				model.setOpState(false);
+			}
+			generateCommandsForModel(model);
+			break;
 		case APP_CONFIG_UPDATE:
 			String appConfig = payload.getContent();
 			if (!StringUtils.isEmpty(appConfig)) {
@@ -67,6 +120,11 @@ public class AppConfigProcessor extends BaseProcesser {
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
+	}
+
+	private void generateCommandsForModel(Model model) {
+		List<Command> commands = m_appConfigManager.queryCommands();
+		model.setCommands(commands);
 	}
 
 }

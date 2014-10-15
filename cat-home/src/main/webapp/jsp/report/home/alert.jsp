@@ -9,7 +9,6 @@
     <li><a href="#exception" data-toggle="tab"><strong>异常告警</strong></a></a></li>
     <li><a href="#thirdPartyException" data-toggle="tab"><strong>第三方告警</strong></a></a></li>
     <li><a href="#frontendException" data-toggle="tab"><strong>前端告警</strong></a></a></li>
-    <li><a href="#api" data-toggle="tab"><strong>HTTP接口</strong></a></a></li>
   </ul>
   
   <div class="tab-content">
@@ -20,6 +19,5 @@
     <div class="tab-pane" id="exception"><%@ include file="alertDocument/exception.jsp"%></div>
     <div class="tab-pane" id="thirdPartyException"><%@ include file="alertDocument/thirdPartyException.jsp"%></div>
     <div class="tab-pane" id="frontendException"><%@ include file="alertDocument/frontendException.jsp"%></div>
-    <div class="tab-pane" id="api"><%@ include file="alertDocument/api.jsp"%></div>
    </div>
 </div>
