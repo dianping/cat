@@ -273,11 +273,7 @@
 	function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
 		var domainsSelect = $("#"+domainSelectId);
 		for(var domain in domainToCommandsJson){
-			if(domain=='null'){
-				domainsSelect.append($("<option value='"+domain+"'>default</option>"))
-			}else{
-				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
-			}
+			domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 		}
 		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
 		domainsSelect.on('change', changeDomainByChange);
