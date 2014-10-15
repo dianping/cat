@@ -19,9 +19,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
-import com.dianping.cat.broker.api.page.Constrants;
-import com.dianping.cat.broker.api.page.MonitorEntity;
-import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
@@ -38,9 +35,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
-
-	@Inject
-	private MonitorManager m_manager;
 
 	@Inject
 	private RequestUtils m_util;
@@ -75,7 +69,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		if (userIp != null) {
 			if ("1".equals(version)) {
-				processVersion1(payload, request, userIp);
 			} else if ("2".equals(version)) {
 				processVersion2(payload, request, userIp);
 			} else {
@@ -115,7 +108,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			AppData appData = new AppData();
 
 			try {
-				String url = URLDecoder.decode(items[4], "utf-8");
+				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command != null) {
@@ -162,47 +155,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void processVersion1(Payload payload, HttpServletRequest request, String userIp) {
-		try {
-			String content = payload.getContent();
-			String[] lines = content.split("\n");
-			long time = System.currentTimeMillis();
-
-			for (String line : lines) {
-				String[] tabs = line.split("\t");
-				// timstampTABtargetUrlTABdurationTABhttpCodeTABerrorCodeENTER
-				if (tabs.length == 5 && validate(tabs[3], tabs[4])) {
-					MonitorEntity entity = new MonitorEntity();
-					String httpStatus = tabs[3];
-					String errorCode = tabs[4];
-
-					if (StringUtils.isEmpty(errorCode)) {
-						errorCode = Constrants.NOT_SET;
-					}
-					if (StringUtils.isEmpty(httpStatus)) {
-						httpStatus = Constrants.NOT_SET;
-					}
-					// entity.setTimestamp(Long.parseLong(tabs[0]));
-					entity.setTimestamp(time);
-					entity.setTargetUrl(tabs[1]);
-					entity.setDuration(Double.parseDouble(tabs[2]));
-					entity.setHttpStatus(httpStatus);
-					entity.setErrorCode(errorCode);
-					entity.setIp(userIp);
-
-					if ("200".equals(httpStatus)) {
-						entity.setCount(10);
-					} else {
-						entity.setCount(1);
-					}
-					m_manager.offer(entity);
-				}
-			}
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
-		}
-	}
-
 	private void processVersion2(Payload payload, HttpServletRequest request, String userIp) {
 		String content = payload.getContent();
 		String records[] = content.split("\n");
@@ -227,20 +179,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			} else {
 				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
 			}
-		}
-	}
-
-	private boolean validate(String errorCode, String httpStatus) {
-		try {
-			if (StringUtils.isNotEmpty(errorCode) && !Constrants.NOT_SET.equals(errorCode)) {
-				Double.parseDouble(errorCode);
-			}
-			if (StringUtils.isNotEmpty(httpStatus) && !Constrants.NOT_SET.equals(httpStatus)) {
-				Double.parseDouble(httpStatus);
-			}
-			return true;
-		} catch (Exception e) {
-			return false;
 		}
 	}
 
