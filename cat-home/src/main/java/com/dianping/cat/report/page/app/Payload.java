@@ -38,6 +38,18 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("title")
 	private String m_title;
+	
+	@FieldMeta("domains")
+	private String m_domains;
+	
+	@FieldMeta("commandId")
+	private String m_commandId;
+	
+	@FieldMeta("domains2")
+	private String m_domains2;
+
+	@FieldMeta("commandId2")
+	private String m_commandId2;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -48,10 +60,26 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getCommandId() {
+		return m_commandId;
+	}
+
+	public String getCommandId2() {
+		return m_commandId2;
+	}
+
+	public String getDomains() {
+		return m_domains;
+	}
+
+	public String getDomains2() {
+		return m_domains2;
+	}
+
 	public AppDataGroupByField getGroupByField() {
 		return m_groupByField;
 	}
-
+	
 	public String getName() {
 		return m_name;
 	}
@@ -103,6 +131,22 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setCommandId(String commandId) {
+		this.m_commandId = commandId;
+	}
+
+	public void setCommandId2(String commandId2) {
+		this.m_commandId2 = commandId2;
+	}
+
+	public void setDomains(String domains) {
+		m_domains = domains;
+	}
+
+	public void setDomains2(String domains2) {
+		m_domains2 = domains2;
 	}
 
 	public void setGroupByField(String groupByField) {
