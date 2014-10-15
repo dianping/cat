@@ -55,13 +55,14 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
 		List<AlertResultEntity> alerts = new ArrayList<AlertResultEntity>();
+		double[] baseline = new double[maxMinute];
 
 		if (minute >= maxMinute - 1) {
 			int start = minute + 1 - maxMinute;
 			double[] result = new double[maxMinute];
 			System.arraycopy(datas, start, result, 0, maxMinute);
 
-			alerts = m_dataChecker.checkData(result, conditions);
+			alerts = m_dataChecker.checkData(result, baseline, conditions);
 		} else if (minute < 0) {
 			long currentMill = new Date().getTime();
 			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
@@ -73,7 +74,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				double[] result = new double[maxMinute];
 
 				System.arraycopy(lastArguments.get(metricText), start, result, 0, maxMinute);
-				alerts = m_dataChecker.checkData(result, conditions);
+				alerts = m_dataChecker.checkData(result, baseline, conditions);
 			}
 		} else {
 			long currentMill = new Date().getTime();
@@ -89,7 +90,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 				System.arraycopy(datas, 0, result, length + 1, minute + 1);
 
-				alerts = m_dataChecker.checkData(result, conditions);
+				alerts = m_dataChecker.checkData(result, baseline, conditions);
 			}
 		}
 
