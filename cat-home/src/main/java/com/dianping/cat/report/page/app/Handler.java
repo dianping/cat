@@ -94,6 +94,8 @@ public class Handler implements PageHandler<Context> {
 			QueryEntity linechartEntity2 = payload.getQueryEntity2();
 			String type = payload.getType();
 			try {
+				filterCommands(model, payload.isShowActivity());
+				
 				LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
 				List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1,
 				      field);
@@ -101,7 +103,6 @@ public class Handler implements PageHandler<Context> {
 
 				model.setLineChart(lineChart);
 				model.setAppDataSpreadInfos(appDataSpreadInfos);
-				filterCommands(model, payload.isShowActivity());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

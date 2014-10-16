@@ -49,19 +49,20 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private List<AlertResultEntity> computeArgument(String domain, String ip, String metricText, int minute,
 	      double[] datas) {
-		String groupText = domain + ":" + ip;
+		String groupText = domain;
 		List<Config> configs = m_ruleConfigManager.queryConfigs(groupText, metricText);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
 		List<AlertResultEntity> alerts = new ArrayList<AlertResultEntity>();
+		double[] baseline = new double[maxMinute];
 
 		if (minute >= maxMinute - 1) {
 			int start = minute + 1 - maxMinute;
 			double[] result = new double[maxMinute];
 			System.arraycopy(datas, start, result, 0, maxMinute);
 
-			alerts = m_dataChecker.checkData(result, conditions);
+			alerts = m_dataChecker.checkData(result, baseline, conditions);
 		} else if (minute < 0) {
 			long currentMill = new Date().getTime();
 			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
@@ -73,7 +74,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				double[] result = new double[maxMinute];
 
 				System.arraycopy(lastArguments.get(metricText), start, result, 0, maxMinute);
-				alerts = m_dataChecker.checkData(result, conditions);
+				alerts = m_dataChecker.checkData(result, baseline, conditions);
 			}
 		} else {
 			long currentMill = new Date().getTime();
@@ -89,11 +90,27 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 				System.arraycopy(datas, 0, result, length + 1, minute + 1);
 
-				alerts = m_dataChecker.checkData(result, conditions);
+				alerts = m_dataChecker.checkData(result, baseline, conditions);
 			}
 		}
 
 		return alerts;
+	}
+
+	private void convertToDeltaArray(Map<String, double[]> map, String name) {
+		double[] sources = map.get(name);
+		double[] targets = new double[60];
+
+		for (int i = 1; i < 60; i++) {
+			if (sources[i - 1] > 0) {
+				double delta = sources[i] - sources[i - 1];
+
+				if (delta >= 0) {
+					targets[i] = delta;
+				}
+			}
+		}
+		map.put(name, targets);
 	}
 
 	private Map<String, double[]> generateArgumentMap(Machine machine) {
@@ -118,6 +135,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 			index++;
 		}
+		convertToDeltaArray(map, "TotalStartedCount");
+		convertToDeltaArray(map, "NewGcCount");
+		convertToDeltaArray(map, "OldGcCount");
+		convertToDeltaArray(map, "CatMessageSize");
+		convertToDeltaArray(map, "CatMessageOverflow");
 		return map;
 	}
 
@@ -154,8 +176,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(metric).setType(getName()).setGroup(domain + ":" + ip);
-
+				entity.setMetric(metric).setType(getName()).setGroup(domain);
+				entity.getParas().put("ip", ip);
 				m_sendManager.addAlert(entity);
 			}
 		}

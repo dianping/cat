@@ -2363,7 +2363,7 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
 			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.HeartbeatContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>

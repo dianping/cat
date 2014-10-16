@@ -167,7 +167,8 @@
 			var commandId2 = $('#command2').val();
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
 					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
-					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
+					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2
+					+"&showActivity=${payload.showActivity}";
 			window.location.href = href;
 		}
 

@@ -131,4 +131,7 @@ public class DefaultDataChecker implements DataChecker {
 		return Double.parseDouble(text);
 	}
 
+	public interface MonitorRule {
+		public Pair<Boolean, String> checkData(double[] values, double[] baselineValues);
+	}
 }

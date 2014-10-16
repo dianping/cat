@@ -38,7 +38,7 @@
 					    <br>
 					
 					    <div class="metric">
-					        项目及ip(冒号连接)：<textarea name="productlineText" class="productlineText" type=" text" placeholder="支持正则"></textarea>
+					        项目：<textarea name="productlineText" class="productlineText" type=" text" placeholder="支持正则,为空即为全局规则"></textarea>
 					        指标：
 					        <select name="metricText" class="metricText">
 					        	<option value="ThreadCount">ThreadCount</option>

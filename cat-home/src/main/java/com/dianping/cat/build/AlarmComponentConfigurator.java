@@ -111,7 +111,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, HeartbeatContactor.ID, ExceptionContactor.class).req(ProjectService.class,
+		all.add(C(Contactor.class, HeartbeatContactor.ID, HeartbeatContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
@@ -178,7 +178,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
-		all.add(C(HeartbeatAlert.class).req(ProductLineConfigManager.class, BaselineService.class)
+		all.add(C(HeartbeatAlert.class)
+		      .req(ProductLineConfigManager.class, BaselineService.class)
 		      .req(ProjectService.class, RemoteMetricReportService.class, HeartbeatRuleConfigManager.class,
 		            DataChecker.class, AlertManager.class, AlertInfo.class).req(ModelService.class, HeartbeatAnalyzer.ID));
 
