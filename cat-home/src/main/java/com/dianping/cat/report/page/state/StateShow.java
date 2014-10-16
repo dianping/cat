@@ -85,6 +85,8 @@ public class StateShow extends BaseVisitor {
 			Collections.sort(domains, new SizeCompartor());
 		} else if (m_sortType.equals("avg")) {
 			Collections.sort(domains, new AvgCompartor());
+		} else if (m_sortType.equals("machine")) {
+			Collections.sort(domains, new MachineCompartor());
 		} else {
 			Collections.sort(domains, new DomainCompartor());
 		}
@@ -272,6 +274,14 @@ public class StateShow extends BaseVisitor {
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return (int) (o2.getTotal() - o1.getTotal());
+		}
+	}
+
+	public static class MachineCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return (int) (o2.getIps().size() - o1.getIps().size());
 		}
 	}
 }

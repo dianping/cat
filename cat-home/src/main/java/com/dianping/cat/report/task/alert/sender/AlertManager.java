@@ -125,6 +125,10 @@ public class AlertManager implements Initializable {
 
 		String dbContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(pair.getValue())
 		      .replaceAll("");
+
+		if (message == null) {
+			message = new AlertMessageEntity(group, title, type, "", null);
+		}
 		message.setContent(dbContent);
 		m_alertEntityService.storeAlert(alert, message);
 		return result;
