@@ -15,8 +15,8 @@ public class HeartbeatDecorator extends Decorator {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[心跳告警] [机器： ").append(alert.getGroup()).append("]").append("[指标: ").append(alert.getMetric())
-		      .append("]");
+		sb.append("[心跳告警] [项目: ").append(alert.getGroup()).append("][ip: ").append(alert.getParas().get("ip"))
+		      .append("][指标: ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 

@@ -228,47 +228,55 @@
 	var domainToCommandsJson = ${model.domainToCommandsJson};
 
 	function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
-		if(typeof domainId == 'object'){
-			if($(this).attr("id")=="domains"){
-				var domain = $("#domains").val();
-				var commandSelect = $("#command");
-			}else{
-				var domain = $("#domains2").val();
-				var commandSelect = $("#command2");
-			}
-		}else{
-			var domain = domainInitVal;
-			var commandSelect = $("#"+commandId);
-			
-			$("#"+domainId).val(domainInitVal);
+		if(domainInitVal == ""){
+			domainInitVal = $("#"+domainId).val()
 		}
-		var commands = domainToCommandsJson[domain];
-		commandSelect.empty();
+		var commandSelect = $("#"+commandId);
+		var commands = domainToCommandsJson[domainInitVal];
 		
+		$("#"+domainId).val(domainInitVal);
+		commandSelect.empty();
 		for(var cou in commands){
-			var command = commands[cou]
+			var command = commands[cou];
 			if(command['title'] != undefined){
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
 			}else{
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
 			}
 		}
-		if(typeof domainId != 'object'){
+		if(commandInitVal != ''){
 			commandSelect.val(commandInitVal);
+		}
+	}
+	
+	function changeDomainByChange(){
+		if($(this).attr("id")=="domains"){
+			var domain = $("#domains").val();
+			var commandSelect = $("#command");
+		}else{
+			var domain = $("#domains2").val();
+			var commandSelect = $("#command2");
+		}
+		var commands = domainToCommandsJson[domain];
+		commandSelect.empty();
+		
+		for(var cou in commands){
+			var command = commands[cou];
+			if(command['title'] != undefined){
+				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+			}else{
+				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+			}
 		}
 	}
 	
 	function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
 		var domainsSelect = $("#"+domainSelectId);
 		for(var domain in domainToCommandsJson){
-			if(domain=='null'){
-				domainsSelect.append($("<option value='"+domain+"'>default</option>"))
-			}else{
-				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
-			}
+			domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 		}
 		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
-		domainsSelect.on('change', changeDomain)
+		domainsSelect.on('change', changeDomainByChange);
 	}
 
 	$(document).ready(function(){

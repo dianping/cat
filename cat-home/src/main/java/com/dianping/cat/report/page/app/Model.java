@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.config.app.AppDataSpreadInfo;
@@ -104,6 +105,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 		for (Command command : m_commands) {
 			String domain = command.getDomain();
+			if (StringUtil.isEmpty(domain)) {
+				domain = "default";
+			}
 			List<Command> commands = map.get(domain);
 
 			if (commands == null) {
