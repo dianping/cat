@@ -15,19 +15,19 @@
         padding:4px 4px 4px 4px;
     }
     input[type="text"]{
-    	margin-bottom : 0px;
+        margin-bottom : 0px;
     }
 </style>
 
 <div id="configs">
     <div class="config" id="configSample">
-    	<p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
-	    	<button class="btn btn-success btn-small" id="add-config-button" type="button">
-			    添加监控规则<i class="icon-plus icon-white"></i>
-			</button>
-		</p>
-       	<div class="configDuration">
-       	监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
+        <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
+            <button class="btn btn-success btn-small" id="add-config-button" type="button">
+                添加监控规则<i class="icon-plus icon-white"></i>
+            </button>
+        </p>
+        <div class="configDuration">
+        监控开始时间：<input name="startMinute" class="startMinute input-small" value="00:00" type=" text" placeholder="格式如 00:00"/>
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         </div>
         <div class="condition">
@@ -35,8 +35,8 @@
             持续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
             告警级别：
             <select name="level" class="level span2">
-            	<option value="warning">warning</option>
-            	<option value="error">error</option>
+                <option value="warning">warning</option>
+                <option value="error">error</option>
             </select>
             <br>
 
@@ -69,6 +69,9 @@
             <button class="btn btn-danger btn-small delete-condition-button" type="button">
                 删除监控条件<i class="icon-trash icon-white"></i>
             </button>
+            <button class="btn btn-info btn-small define-button" type="button">
+                自定义监控规则<i class="icon-user icon-white"></i>
+            </button>
         </div>
         <button class="btn btn-success btn-small add-condition-button" type="button">
             添加监控条件<i class="icon-plus icon-white"></i>
@@ -78,36 +81,75 @@
         </button>
     </div>
 </div>
+<div class="subCondition" style="display:none">
+    <input name="ruleType" class="ruleType" type="hidden" value="UserDefine"/>
+    <textarea name="value" class="value" rows=20 style="width:700px">
+	    import org.unidal.tuple.Pair;
+	    import com.dianping.cat.report.task.alert.RuleType.MonitorRule;
+	    
+	    public class UserDefinedRule implements MonitorRule{
+	        /*
+	         * 请编写checkData()方法, 除了import标准库，其余部分不能改变
+	         * 该方法接受两个参数： values:当前值数组  baselineValue:基线值数组
+	         * 该方法返回一个Pair对象，key是boolean类型，表明是否触发告警； value是String类型，表明告警内容
+	         * 如：没有触发，返回：return new Pair<Boolean, String>(false, "");
+	         * 触发报警，返回：return new Pair<Boolean, String>(true, "alert info");
+	        */  
+	        @Override
+	         public Pair<Boolean, String> checkData(double[] values, double[] baselineValues) {
+	            return null;
+	        }
+	    }
+    </textarea>
+</div>
+
 <script>
 var newSubCondition = $('.subCondition').eq(0).clone();
 var newCondition = $('.condition').eq(0).clone();
 var newConfig = $('#configSample').clone();
+var newUserDefineCondition = $(".subCondition").last().clone();
+newUserDefineCondition.css('display','block');
 
 function addSubCondition(currentElement, newSubCondition){
-	currentElement.prev().append(newSubCondition.clone());
+    currentElement.prev().append(newSubCondition.clone());
 }
 
 function addCondition(currentElement, newCondition){
-	currentElement.before(newCondition.clone());
+    currentElement.before(newCondition.clone());
 }
 
 function addConfig(newConfig){
-	$('#configs').append(newConfig.clone());
+    $('#configs').append(newConfig.clone());
+}
+
+function changeToUserDefine(currentElement){
+    var parentNode = currentElement.parent();
+    var subChilds = parentNode.children('.subconditions');
+    subChilds.empty();
+    subChilds.append(newUserDefineCondition.clone());
+    
+    var addSubConditionButton = parentNode.children('.add-subCondition-button');
+    var userDefineButton = parentNode.children('.define-button');
+    
+    addSubConditionButton.addClass('disabled');
+    userDefineButton.addClass('disabled');
+    addSubConditionButton.off('click');
+    userDefineButton.off('click');
 }
 
 $(document).ready(function () {
-	$("#configTip").tooltip({
-		"placement":"top",
-		"title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
-	});
-	
-	$("#conditionTip").tooltip({
-		"placement":"top",
-		"title":"监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"
-	});
-	
+    $("#configTip").tooltip({
+        "placement":"top",
+        "title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
+    });
+    
+    $("#conditionTip").tooltip({
+        "placement":"top",
+        "title":"监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"
+    });
+    
     $("#configs").delegate(".add-subCondition-button", "click", function () {
-    	addSubCondition($(this), newSubCondition);
+        addSubCondition($(this), newSubCondition);
     })
 
     $("#configs").delegate(".add-condition-button", "click", function () {
@@ -115,13 +157,17 @@ $(document).ready(function () {
     })
     
     $("#configs").delegate("#add-config-button","click", function () {
-    	addConfig(newConfig);
+        addConfig(newConfig);
+    })
+    
+    $("#configs").delegate(".define-button","click", function () {
+        changeToUserDefine($(this));
     })
 
     $("#configs").delegate(".delete-condition-button, .delete-subcondition-button, .delete-config-button", "click", function () {
         $(this).parent().remove();
     })
-
+    
     drawConfigs();
 })
 
@@ -130,13 +176,14 @@ function drawConfigs() {
     var configs = null;
     
     if(configsText == undefined || configsText == ""){
-    	return;
+        return;
     }
     
     try {
         configs = JSON.parse(configsText);
     } catch (e) {
         alert("读取规则错误！请刷新重试或联系leon.li@dianping.com");
+        console.log(configsText);
         return;
     }
 
@@ -181,6 +228,12 @@ function drawConfigs() {
                             var subcondition = subconditions[cou];
                             var type = subcondition["type"];
                             var text = subcondition["text"];
+                            
+                            if(type=="UserDefine"){
+                                changeToUserDefine(conditionForm.find(".add-subCondition-button"));
+                                conditionForm.find(".value").val(text);
+                                break;
+                            }
 
                             if (cou > 0) {
                                 addSubCondition(conditionForm.find(".add-subCondition-button"), newSubCondition);
@@ -263,7 +316,7 @@ function generateConfigsJsonString() {
         if (configList.length > 0) {
             return JSON.stringify(configList);
         }else {
-        	return "";
+            return "";
         }
     }
 }
