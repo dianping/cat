@@ -8,8 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -26,7 +29,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 import com.site.lookup.util.StringUtils;
 
-public class ScheduledManager  {
+public class ScheduledManager implements Initializable {
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
@@ -174,6 +177,11 @@ public class ScheduledManager  {
 
 		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
 		m_reports.put(domain, report);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("Cat").start(new ScheduledReportUpdateTask());
 	}
 
 	public class ScheduledReportUpdateTask implements Task {
