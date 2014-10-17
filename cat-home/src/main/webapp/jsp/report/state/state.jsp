@@ -160,8 +160,8 @@
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">Analyzer丢失消息总量</a></td>
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
-		<td width="5%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
-		<td width="5%">机器总数</td>
+		<td width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
+		<td width="5%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine">机器总数</a></td>
 		<td>项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
