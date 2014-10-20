@@ -71,6 +71,24 @@ public abstract class BaseRuleConfigManager {
 		return configs;
 	}
 
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigsByGroup(String groupText) {
+		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> metricItems = rule.getMetricItems();
+
+			for (MetricItem metricItem : metricItems) {
+				String productPattern = metricItem.getProductText();
+
+				if (validateRegex(productPattern, groupText)) {
+					configs.addAll(rule.getConfigs());
+					break;
+				}
+			}
+		}
+		return configs;
+	}
+
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
 
@@ -143,18 +161,18 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	public boolean validate(String productText, String metricKeyText, String product, String metricKey) {
-		if (StringUtils.isEmpty(productText)) {
+		if (validateRegex(productText, product)) {
 			return validateRegex(metricKeyText, metricKey);
 		} else {
-			if (validateRegex(productText, product)) {
-				return validateRegex(metricKeyText, metricKey);
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 
 	public boolean validateRegex(String regexText, String text) {
+		if (StringUtils.isEmpty(regexText)) {
+			return true;
+		}
+
 		Pattern p = Pattern.compile(regexText);
 		Matcher m = p.matcher(text);
 
