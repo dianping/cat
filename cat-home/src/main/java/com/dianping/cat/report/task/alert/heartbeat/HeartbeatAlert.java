@@ -153,7 +153,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 					for (String metric : m_metrics) {
 						try {
-							double[] values = extract(arguments.get(metric), maxMinute, 59);
+							double[] values = extract(arguments.get(metric), maxMinute, minute);
 
 							processMeitrc(domain, ip, metric, values);
 						} catch (Exception ex) {
@@ -176,7 +176,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 					for (String metric : m_metrics) {
 						try {
-							double[] values = extract(arguments.get(metric), maxMinute, minute);
+							double[] values = extract(arguments.get(metric), maxMinute, 59);
 
 							processMeitrc(domain, ip, metric, values);
 						} catch (Exception ex) {
