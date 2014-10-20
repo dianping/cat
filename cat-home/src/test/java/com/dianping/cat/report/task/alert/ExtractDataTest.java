@@ -5,13 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 public class ExtractDataTest {
-	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute) {
-		int currentLength = currentHourValues.length;
-		if (currentLength >= maxMinute) {
-			return extract(currentHourValues, maxMinute);
-		}
-
-		int lastLength = maxMinute - currentLength;
+	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute, int alreadyMinute) {
+		int lastLength = maxMinute - alreadyMinute - 1;
 		double[] result = new double[maxMinute];
 
 		for (int i = 0; i < lastLength; i++) {
@@ -23,28 +18,23 @@ public class ExtractDataTest {
 		return result;
 	}
 
-	private double[] extract(double[] values, int maxMinute) {
-		int length = values.length;
-		if (length <= maxMinute) {
-			return values;
-		}
-
+	private double[] extract(double[] values, int maxMinute, int alreadyMinute) {
 		double[] result = new double[maxMinute];
 
 		for (int i = 0; i < maxMinute; i++) {
-			result[i] = values[length - maxMinute + i];
+			result[i] = values[alreadyMinute + 1 - maxMinute + i];
 		}
 		return result;
 	}
 
 	@Test
 	public void testCurrentData() {
-		double[] values = new double[10];
+		double[] values = new double[60];
 		for (int i = 0; i < 10; i++) {
 			values[i] = i;
 		}
 
-		double[] result = extract(values, 5);
+		double[] result = extract(values, 5, 9);
 		Assert.assertEquals(5.0, result[0]);
 	}
 
@@ -55,7 +45,7 @@ public class ExtractDataTest {
 			values[i] = i;
 		}
 
-		double[] result = extract(values, 5);
+		double[] result = extract(values, 5, 59);
 		Assert.assertEquals(55.0, result[0]);
 	}
 
@@ -71,7 +61,7 @@ public class ExtractDataTest {
 			currentValues[i] = i;
 		}
 
-		double[] result = extract(lastValues, currentValues, 15);
+		double[] result = extract(lastValues, currentValues, 15, 9);
 		Assert.assertEquals(55.0, result[0]);
 	}
 }

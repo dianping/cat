@@ -64,13 +64,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		map.put(name, targets);
 	}
 
-	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute) {
-		int currentLength = currentHourValues.length;
-		if (currentLength >= maxMinute) {
-			return extract(currentHourValues, maxMinute);
-		}
-
-		int lastLength = maxMinute - currentLength;
+	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute, int alreadyMinute) {
+		int lastLength = maxMinute - alreadyMinute - 1;
 		double[] result = new double[maxMinute];
 
 		for (int i = 0; i < lastLength; i++) {
@@ -82,16 +77,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		return result;
 	}
 
-	private double[] extract(double[] values, int maxMinute) {
-		int length = values.length;
-		if (length <= maxMinute) {
-			return values;
-		}
-
+	private double[] extract(double[] values, int maxMinute, int alreadyMinute) {
 		double[] result = new double[maxMinute];
 
 		for (int i = 0; i < maxMinute; i++) {
-			result[i] = values[length - maxMinute + i];
+			result[i] = values[alreadyMinute + 1 - maxMinute + i];
 		}
 		return result;
 	}
@@ -163,7 +153,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 					for (String metric : m_metrics) {
 						try {
-							double[] values = extract(arguments.get(metric), maxMinute);
+							double[] values = extract(arguments.get(metric), maxMinute, 59);
 
 							processMeitrc(domain, ip, metric, values);
 						} catch (Exception ex) {
@@ -186,7 +176,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 					for (String metric : m_metrics) {
 						try {
-							double[] values = extract(arguments.get(metric), maxMinute);
+							double[] values = extract(arguments.get(metric), maxMinute, minute);
 
 							processMeitrc(domain, ip, metric, values);
 						} catch (Exception ex) {
@@ -214,7 +204,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 					for (String metric : m_metrics) {
 						try {
 							double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
-							      maxMinute);
+							      maxMinute, minute);
 
 							processMeitrc(domain, ip, metric, values);
 						} catch (Exception ex) {
