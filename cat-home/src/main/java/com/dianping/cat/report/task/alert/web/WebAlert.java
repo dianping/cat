@@ -26,6 +26,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
+import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
@@ -90,12 +91,16 @@ public class WebAlert extends BaseAlert implements Task {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
 		for (Rule rule : rules) {
-			alertResults = computeAlertForRule(rule, url, minute);
+			String id = rule.getId();
+			int index1 = id.indexOf(":");
+			int index2 = id.indexOf(":", index1 + 1);
+			String idPrefix = id.substring(0, index1);
+			String type = id.substring(index1 + 1, index2);
+			String name = id.substring(index2 + 1);
+			
+			alertResults = computeAlertForRule(idPrefix, type, rule.getConfigs(), url, minute);
 
 			for (AlertResultEntity alertResult : alertResults) {
-				String[] ids = rule.getId().split(":");
-				String name = ids[2];
-				String type = ids[1];
 				Map<String, Object> par = new HashMap<String, Object>();
 				par.put("type", queryType(type));
 				par.put("name", name);
@@ -122,21 +127,19 @@ public class WebAlert extends BaseAlert implements Task {
 		return title;
 	}
 
-	protected MetricReport fetchMetricReport(Rule rule, ModelPeriod period) {
-		String id = rule.getId();
-		String condition = id.split(":")[0];
+	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
 		MetricReport report = null;
 
 		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(condition);
+			report = m_currentReports.get(idPrefix);
 		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(condition);
+			report = m_lastReports.get(idPrefix);
 		} else {
 			throw new RuntimeException("Unknown ModelPeriod: " + period);
 		}
 
 		if (report == null) {
-			List<String> fields = Splitters.by(";").split(condition);
+			List<String> fields = Splitters.by(";").split(idPrefix);
 			String url = fields.get(0);
 			String city = fields.get(1);
 			String channel = fields.get(2);
@@ -153,9 +156,9 @@ public class WebAlert extends BaseAlert implements Task {
 			report = m_service.invoke(request);
 
 			if (period == ModelPeriod.CURRENT) {
-				m_currentReports.put(condition, report);
+				m_currentReports.put(idPrefix, report);
 			} else if (period == ModelPeriod.LAST) {
-				m_lastReports.put(condition, report);
+				m_lastReports.put(idPrefix, report);
 			}
 		}
 
@@ -198,15 +201,15 @@ public class WebAlert extends BaseAlert implements Task {
 		return results;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(Rule rule, String url, int minute) {
+	private List<AlertResultEntity> computeAlertForRule(String idPrefix, String type, List<Config> configs, String url,
+	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(rule.getConfigs());
+		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
-		String type = rule.getId().split(":")[1];
 
 		if (minute >= maxMinute - 1) {
-			MetricReport report = fetchMetricReport(rule, ModelPeriod.CURRENT);
+			MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
 
 			if (report != null) {
 				int start = minute + 1 - maxMinute;
@@ -218,7 +221,7 @@ public class WebAlert extends BaseAlert implements Task {
 				}
 			}
 		} else if (minute < 0) {
-			MetricReport report = fetchMetricReport(rule, ModelPeriod.LAST);
+			MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST);
 
 			if (report != null) {
 				int start = 60 + minute + 1 - (maxMinute);
@@ -230,8 +233,8 @@ public class WebAlert extends BaseAlert implements Task {
 				}
 			}
 		} else {
-			MetricReport currentReport = fetchMetricReport(rule, ModelPeriod.CURRENT);
-			MetricReport lastReport = fetchMetricReport(rule, ModelPeriod.LAST);
+			MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
+			MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST);
 
 			if (currentReport != null && lastReport != null) {
 				int currentStart = 0, currentEnd = minute;
