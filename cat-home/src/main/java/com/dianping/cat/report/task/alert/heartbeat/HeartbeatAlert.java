@@ -156,15 +156,19 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			Set<String> ips = currentReport.getIps();
 
 			for (String ip : ips) {
-				Map<String, double[]> arguments = generateArgumentMap(currentReport.getMachines().get(ip));
+				Machine machine = currentReport.getMachines().get(ip);
 
-				for (String metric : m_metrics) {
-					try {
-						double[] values = extract(arguments.get(metric), maxMinute);
+				if (machine != null) {
+					Map<String, double[]> arguments = generateArgumentMap(machine);
 
-						processMeitrc(domain, ip, metric, values);
-					} catch (Exception ex) {
-						Cat.logError(ex);
+					for (String metric : m_metrics) {
+						try {
+							double[] values = extract(arguments.get(metric), maxMinute);
+
+							processMeitrc(domain, ip, metric, values);
+						} catch (Exception ex) {
+							Cat.logError(ex);
+						}
 					}
 				}
 			}
@@ -175,15 +179,19 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			Set<String> ips = lastReport.getIps();
 
 			for (String ip : ips) {
-				Map<String, double[]> arguments = generateArgumentMap(lastReport.getMachines().get(ip));
+				Machine machine = lastReport.getMachines().get(ip);
 
-				for (String metric : m_metrics) {
-					try {
-						double[] values = extract(arguments.get(metric), maxMinute);
+				if (machine != null) {
+					Map<String, double[]> arguments = generateArgumentMap(machine);
 
-						processMeitrc(domain, ip, metric, values);
-					} catch (Exception ex) {
-						Cat.logError(ex);
+					for (String metric : m_metrics) {
+						try {
+							double[] values = extract(arguments.get(metric), maxMinute);
+
+							processMeitrc(domain, ip, metric, values);
+						} catch (Exception ex) {
+							Cat.logError(ex);
+						}
 					}
 				}
 			}
@@ -196,16 +204,22 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			Set<String> ips = lastReport.getIps();
 
 			for (String ip : ips) {
-				Map<String, double[]> lastHourArguments = generateArgumentMap(lastReport.getMachines().get(ip));
-				Map<String, double[]> currentHourArguments = generateArgumentMap(currentReport.getMachines().get(ip));
+				Machine lastMachine = lastReport.getMachines().get(ip);
+				Machine currentMachine = currentReport.getMachines().get(ip);
 
-				for (String metric : m_metrics) {
-					try {
-						double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric), maxMinute);
+				if (lastMachine != null && currentMachine != null) {
+					Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
+					Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
 
-						processMeitrc(domain, ip, metric, values);
-					} catch (Exception ex) {
-						Cat.logError(ex);
+					for (String metric : m_metrics) {
+						try {
+							double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
+							      maxMinute);
+
+							processMeitrc(domain, ip, metric, values);
+						} catch (Exception ex) {
+							Cat.logError(ex);
+						}
 					}
 				}
 			}
