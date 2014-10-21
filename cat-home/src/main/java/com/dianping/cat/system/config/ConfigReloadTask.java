@@ -14,6 +14,9 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
+	
+	@Inject
+	private RouterConfigManager m_routerConfigManager;
 
 	@Override
 	public String getName() {
@@ -27,6 +30,7 @@ public class ConfigReloadTask implements Task {
 			try {
 				m_productLineConfigManager.refreshProductLineConfig();
 				m_metricConfigManager.refreshMetricConfig();
+				m_routerConfigManager.refreshRouterConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
