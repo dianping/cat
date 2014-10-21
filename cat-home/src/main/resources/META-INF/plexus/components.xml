@@ -117,6 +117,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+			<implementation>com.dianping.cat.system.config.UserDefinedRuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.UserDefineRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
 			<requirements>
@@ -159,6 +168,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -171,6 +183,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -179,6 +194,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -189,6 +207,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -197,6 +218,21 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2089,6 +2125,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>user-define-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>user-define-rule</logical-table-name>
+				<physical-table-name>user_define_rule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>weekly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2181,6 +2227,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.UserDefineRuleDao</role>
+			<implementation>com.dianping.cat.home.dal.report.UserDefineRuleDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4476,6 +4531,27 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+			<implementation>com.dianping.cat.system.config.UserDefinedRuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.UserDefineRuleDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.UserDefineRuleDao</role>
+			<implementation>com.dianping.cat.home.dal.report.UserDefineRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4879,6 +4955,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4940,6 +5019,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4979,6 +5061,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5000,6 +5085,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5020,6 +5108,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>
