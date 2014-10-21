@@ -395,3 +395,10 @@ CREATE TABLE `config_modification` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';
+
+CREATE TABLE `user_define_rule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `content` text NOT NULL COMMENT '用户定义规则',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
