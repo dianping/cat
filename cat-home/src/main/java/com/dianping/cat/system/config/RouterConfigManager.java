@@ -1,15 +1,19 @@
 package com.dianping.cat.system.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
@@ -31,6 +35,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	private RouterConfig m_routerConfig;
 
 	private Logger m_logger;
+
+	private long m_modifyTime;
 
 	private static final String CONFIG_NAME = "routerConfig";
 
@@ -60,18 +66,22 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 			m_configId = config.getId();
 			m_routerConfig = DefaultSaxParser.parse(content);
+			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = Files.forIO().readFrom(
 				      this.getClass().getResourceAsStream("/config/default-router-config.xml"), "utf-8");
 				Config config = m_configDao.createLocal();
+				Date now = new Date();
 
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
+				config.setModifyDate(now);
 				m_configDao.insert(config);
 
 				m_configId = config.getId();
 				m_routerConfig = DefaultSaxParser.parse(content);
+				m_modifyTime = now.getTime();
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -133,6 +143,21 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return result;
+	}
+
+	public void refreshRouterConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				RouterConfig routerConfig = DefaultSaxParser.parse(content);
+
+				m_routerConfig = routerConfig;
+				m_modifyTime = modifyTime;
+			}
+		}
 	}
 
 	private boolean storeConfig() {

@@ -174,7 +174,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class));
-		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
+		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      RouterConfigManager.class));
 
 		return all;
 	}

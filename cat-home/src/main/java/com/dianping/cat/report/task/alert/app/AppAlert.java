@@ -108,10 +108,12 @@ public class AppAlert implements Task {
 
 	private void processRule(Rule rule) {
 		String id = rule.getId();
-		String[] array = id.split(":");
-		String conditions = array[0];
+		int index1 = id.indexOf(":");
+		int index2 = id.indexOf(":", index1 + 1);
+		String conditions = id.substring(0, index1);
+		String type = id.substring(index1 + 1, index2);
+		String name = id.substring(index2 + 1);
 		int command = Integer.valueOf(conditions.split(";")[0]);
-		String type = array[1];
 		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
 		double[] datas = fetchDatas(conditions, type, pair.getKey());
 
@@ -121,7 +123,7 @@ public class AppAlert implements Task {
 
 			for (AlertResultEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("name", array[2]);
+				par.put("name", name);
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
