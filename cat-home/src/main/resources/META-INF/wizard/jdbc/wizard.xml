@@ -20,6 +20,7 @@
          <table name="alert_summary"/>
          <table name="overload"/>
          <table name="config_modification"/>
+         <table name="user_define_rule"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="mailRecord"/>

@@ -1,12 +1,23 @@
 package com.dianping.cat.report.task.alert;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+
 import org.unidal.tuple.Pair;
+
+import com.dianping.cat.Cat;
 
 public enum RuleType {
 
@@ -37,7 +48,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -83,7 +95,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -128,7 +141,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -173,7 +187,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -205,7 +220,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -237,7 +253,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			for (int i = 0; i < length; i++) {
@@ -282,7 +299,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			if (length <= 1) {
@@ -333,7 +351,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			int length = values.length;
 
 			if (length <= 1) {
@@ -372,7 +391,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			double totalVal = calSum(values);
 
 			if (totalVal < ruleValue) {
@@ -403,7 +423,8 @@ public enum RuleType {
 		}
 
 		@Override
-		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue) {
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			double ruleValue = parseStringToDouble(rawValue);
 			double totalVal = calSum(values);
 
 			if (totalVal > ruleValue) {
@@ -416,6 +437,62 @@ public enum RuleType {
 		@Override
 		public String getId() {
 			return "SumMinVal";
+		}
+	},
+
+	UserDefine {
+		private static final String USER_DEFINED_FOLDER = "/data/appdatas/cat/user_defined_class/";
+
+		private static final String USER_DEFINED_CLASS_NAME = "UserDefinedRule.java";
+
+		@Override
+		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
+			return null;
+		}
+
+		@Override
+		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
+			try {
+				Pair<File, File> files = generateClassFile(rawValue);
+				File userDefinedFolder = files.getKey();
+				File userDefinedClassFile = files.getValue();
+				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+				compiler.run(null, null, null, userDefinedClassFile.getPath());
+
+				URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { userDefinedFolder.toURI().toURL() });
+				Class<?> cls = Class.forName("UserDefinedRule", true, classLoader);
+				MonitorRule instance = (MonitorRule) cls.newInstance();
+
+				return instance.checkData(values, baselines);
+			} catch (Exception e) {
+				Cat.logError("generate user defined rule error: " + rawValue, e);
+				return new Pair<Boolean, String>(false, "");
+			}
+		}
+
+		private Pair<File, File> generateClassFile(String rawValue) throws IOException {
+			File userDefinedFolder = new File(USER_DEFINED_FOLDER);
+			if (!userDefinedFolder.exists() || userDefinedFolder.isFile()) {
+				userDefinedFolder.mkdirs();
+			}
+
+			File userDefinedClassFile = new File(userDefinedFolder, USER_DEFINED_CLASS_NAME);
+			if (!userDefinedClassFile.exists() || userDefinedClassFile.isDirectory()) {
+				userDefinedClassFile.createNewFile();
+			}
+
+			OutputStream output = new FileOutputStream(userDefinedClassFile);
+			try {
+				output.write(rawValue.getBytes());
+			} finally {
+				output.close();
+			}
+			return new Pair<File, File>(userDefinedFolder, userDefinedClassFile);
+		}
+
+		@Override
+		public String getId() {
+			return "UserDefine";
 		}
 	};
 
@@ -434,6 +511,15 @@ public enum RuleType {
 	protected DecimalFormat m_df = new DecimalFormat("0.0");
 
 	protected abstract String buildRuleMessage(double[] values, double[] baselines, double ruleValue);
+
+	protected double calSum(double[] values) {
+		double totalVal = 0;
+
+		for (double value : values) {
+			totalVal += value;
+		}
+		return totalVal;
+	}
 
 	protected String convertDoublesToString(double[] values) {
 		StringBuilder builder = new StringBuilder();
@@ -465,21 +551,45 @@ public enum RuleType {
 		return builder.toString();
 	}
 
-	protected double calSum(double[] values) {
-		double totalVal = 0;
-
-		for (double value : values) {
-			totalVal += value;
-		}
-		return totalVal;
-	}
-
-	public abstract Pair<Boolean, String> executeRule(double[] values, double[] baselines, double ruleValue);
+	public abstract Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue);
 
 	public abstract String getId();
+
+	protected double parseStringToDouble(String text) {
+		if (text.endsWith("Mb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Mb/s", ""));
+			return value * 60 * 1024 * 1024 / 8;
+		} else if (text.endsWith("Gb/s")) {
+			double value = Double.parseDouble(text.replaceAll("Gb/s", ""));
+			return value * 60 * 1024 * 1024 * 1024 / 8;
+		} else if (text.endsWith("MB/s")) {
+			double value = Double.parseDouble(text.replaceAll("MB/s", ""));
+			return value * 60 * 1024 * 1024;
+		} else if (text.endsWith("GB/s")) {
+			double value = Double.parseDouble(text.replaceAll("GB/s", ""));
+			return value * 60 * 1024 * 1024 * 1024;
+		} else if (text.endsWith("Mb")) {
+			double value = Double.parseDouble(text.replaceAll("Mb", ""));
+			return value * 1024 * 1024 / 8;
+		} else if (text.endsWith("Gb")) {
+			double value = Double.parseDouble(text.replaceAll("Gb", ""));
+			return value * 1024 * 1024 * 1024 / 8;
+		} else if (text.endsWith("MB")) {
+			double value = Double.parseDouble(text.replaceAll("MB", ""));
+			return value * 1024 * 1024;
+		} else if (text.endsWith("GB")) {
+			double value = Double.parseDouble(text.replaceAll("GB", ""));
+			return value * 1024 * 1024 * 1024;
+		}
+
+		return Double.parseDouble(text);
+	}
 
 	public static RuleType getByTypeId(String typeId) {
 		return s_map.get(typeId);
 	}
 
+	public interface MonitorRule {
+		public Pair<Boolean, String> checkData(double[] values, double[] baselineValues);
+	}
 }

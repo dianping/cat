@@ -267,6 +267,23 @@
 			</query>
 	     </query-defs>
     </entity>
+    <entity name="user-define-rule" table="user_define_rule" alias="udr">
+    	<member name="max-id" value-type="int" all="false" select-expr="max(id)" length="19" nullable="false" />
+    	<member name="creation-date" insert-expr="NOW()" />
+    	<readsets>
+	    	<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+		</readsets>
+    	<query-defs>
+	     	<query name="find-max-id" type="SELECT" multiple="false">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+		</query-defs>
+    </entity>
     <entity name="config-modification" table="config_modification" alias="cm">
     	<member name="creation-date" insert-expr="NOW()" />
     </entity>
