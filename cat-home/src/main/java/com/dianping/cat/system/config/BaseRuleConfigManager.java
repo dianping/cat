@@ -5,19 +5,25 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultJsonParser;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.RuleType;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.site.lookup.util.StringUtils;
 
 public abstract class BaseRuleConfigManager {
@@ -25,12 +31,99 @@ public abstract class BaseRuleConfigManager {
 	@Inject
 	protected ConfigDao m_configDao;
 
+	@Inject
+	protected UserDefinedRuleManager m_manager;
+
 	protected int m_configId;
 
 	protected MonitorRules m_config;
 
+	protected Rule copyRuleWithDeepCopyConditions(Rule rule) {
+		Rule result = new Rule(rule.getId());
+
+		for (MetricItem item : rule.getMetricItems()) {
+			result.addMetricItem(item);
+		}
+		for (Config config : decorateConfigOnRead(rule.getConfigs())) {
+			transformConfig(config);
+			result.addConfig(config);
+		}
+		return result;
+	}
+
+	protected void decorateConfigOnDelete(List<Config> configs) {
+		for (Config config : configs) {
+			for (Condition condition : config.getConditions()) {
+				for (SubCondition subCondition : condition.getSubConditions()) {
+					if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
+						try {
+							String id = subCondition.getText();
+
+							m_manager.removeById(id);
+						} catch (DalException e) {
+							Cat.logError(e);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	protected List<Config> decorateConfigOnRead(List<Config> originConfigs) {
+		List<Config> configs = deepCopy(originConfigs);
+
+		for (Config config : configs) {
+			for (Condition condition : config.getConditions()) {
+				for (SubCondition subCondition : condition.getSubConditions()) {
+					if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
+						try {
+							String id = subCondition.getText();
+
+							subCondition.setText(m_manager.getUserDefineText(id));
+						} catch (DalException e) {
+							Cat.logError(e);
+						}
+					}
+				}
+			}
+		}
+		return configs;
+	}
+
+	private void decorateConfigOnStore(List<Config> configs) throws DalException {
+		for (Config config : configs) {
+			for (Condition condition : config.getConditions()) {
+				for (SubCondition subCondition : condition.getSubConditions()) {
+					if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
+						try {
+							String userDefinedText = subCondition.getText();
+
+							subCondition.setText(m_manager.addUserDefineText(userDefinedText));
+						} catch (DalException e) {
+							Cat.logError(e);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private List<Config> deepCopy(List<Config> originConfigs) {
+		Gson gson = new Gson();
+		String source = gson.toJson(originConfigs);
+		List<Config> result = gson.fromJson(source, new TypeToken<List<Config>>() {
+		}.getType());
+
+		return result;
+	}
+
 	public String deleteRule(String key) {
-		m_config.getRules().remove(key);
+		Rule rule = m_config.getRules().get(key);
+
+		if (rule != null) {
+			decorateConfigOnDelete(rule.getConfigs());
+			m_config.getRules().remove(key);
+		}
 		return m_config.toString();
 	}
 
@@ -68,7 +161,7 @@ public abstract class BaseRuleConfigManager {
 				}
 			}
 		}
-		return configs;
+		return decorateConfigOnRead(configs);
 	}
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
@@ -97,14 +190,32 @@ public abstract class BaseRuleConfigManager {
 				}
 			}
 		}
-		return configs;
+		return decorateConfigOnRead(configs);
+	}
+
+	public List<com.dianping.cat.home.rule.entity.Config> queryConfigsByGroup(String groupText) {
+		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> metricItems = rule.getMetricItems();
+
+			for (MetricItem metricItem : metricItems) {
+				String productPattern = metricItem.getProductText();
+
+				if (validateRegex(productPattern, groupText)) {
+					configs.addAll(rule.getConfigs());
+					break;
+				}
+			}
+		}
+		return decorateConfigOnRead(configs);
 	}
 
 	public Rule queryRule(String key) {
 		Rule rule = m_config.getRules().get(key);
 
 		if (rule != null) {
-			return rule;
+			return copyRuleWithDeepCopyConditions(rule);
 		} else {
 			return null;
 		}
@@ -128,6 +239,17 @@ public abstract class BaseRuleConfigManager {
 		return true;
 	}
 
+	private void transformConfig(Config config) {
+		for (Condition condition : config.getConditions()) {
+			for (SubCondition subCondition : condition.getSubConditions()) {
+				if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
+					String userDefineText = subCondition.getText();
+					subCondition.setText(userDefineText.replaceAll("\"", "\\\\\""));
+				}
+			}
+		}
+	}
+
 	public String updateRule(String id, String metricsStr, String configsStr) throws Exception {
 		Rule rule = new Rule(id);
 		List<MetricItem> metricItems = DefaultJsonParser.parseArray(MetricItem.class, metricsStr);
@@ -138,23 +260,24 @@ public abstract class BaseRuleConfigManager {
 		for (Config config : configs) {
 			rule.addConfig(config);
 		}
+		decorateConfigOnStore(rule.getConfigs());
 		m_config.getRules().put(id, rule);
 		return m_config.toString();
 	}
 
 	public boolean validate(String productText, String metricKeyText, String product, String metricKey) {
-		if (StringUtils.isEmpty(productText)) {
+		if (validateRegex(productText, product)) {
 			return validateRegex(metricKeyText, metricKey);
 		} else {
-			if (validateRegex(productText, product)) {
-				return validateRegex(metricKeyText, metricKey);
-			} else {
-				return false;
-			}
+			return false;
 		}
 	}
 
 	public boolean validateRegex(String regexText, String text) {
+		if (StringUtils.isEmpty(regexText)) {
+			return true;
+		}
+
 		Pattern p = Pattern.compile(regexText);
 		Matcher m = p.matcher(text);
 

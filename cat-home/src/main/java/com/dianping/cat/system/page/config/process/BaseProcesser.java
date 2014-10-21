@@ -7,6 +7,7 @@ import java.util.List;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
@@ -18,17 +19,18 @@ public class BaseProcesser {
 
 	@Inject
 	protected RuleFTLDecorator m_ruleDecorator;
-	
+
 	public boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics, String configs) {
 		try {
 			String xmlContent = manager.updateRule(id, metrics, configs);
 
 			return manager.insert(xmlContent);
 		} catch (Exception ex) {
+			Cat.logError(ex);
 			return false;
 		}
 	}
-	
+
 	public boolean deleteRule(BaseRuleConfigManager manager, String key) {
 		try {
 			String xmlContent = manager.deleteRule(key);
@@ -56,7 +58,7 @@ public class BaseProcesser {
 		model.setContent(content);
 		model.setId(ruleId);
 	}
-	
+
 	public void generateRuleItemList(BaseRuleConfigManager manager, Model model) {
 		Collection<Rule> rules = manager.getMonitorRules().getRules().values();
 		List<RuleItem> ruleItems = new ArrayList<RuleItem>();
@@ -80,7 +82,6 @@ public class BaseProcesser {
 		}
 		model.setRuleItems(ruleItems);
 	}
-
 
 	public class RuleItem {
 		private String m_id;
