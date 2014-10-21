@@ -83,8 +83,11 @@
 </div>
 <div class="subCondition" style="display:none">
     <input name="ruleType" class="ruleType" type="hidden" value="UserDefine"/>
-    <textarea name="value" class="value" rows=20 style="width:700px">
-	    import org.unidal.tuple.Pair;
+    <textarea name="value" class="value" rows=10 style="width:700px">
+    </textarea>
+    <pre>
+    &nbsp;&nbsp;&nbsp;&nbsp;代码示例如下：
+    	&nbsp;&nbsp;&nbsp;&nbsp;import org.unidal.tuple.Pair;
 	    import com.dianping.cat.report.task.alert.RuleType.MonitorRule;
 	    
 	    public class UserDefinedRule implements MonitorRule{
@@ -100,7 +103,9 @@
 	            return null;
 	        }
 	    }
-    </textarea>
+	    
+	 <span class="text-error">编写完代码后，请将代码合并在一行，然后提交到上方的textarea内。代码中不能存在任何换行。</span>
+	</pre>
 </div>
 
 <script>

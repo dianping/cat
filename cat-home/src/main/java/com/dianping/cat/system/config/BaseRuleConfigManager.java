@@ -45,6 +45,7 @@ public abstract class BaseRuleConfigManager {
 			result.addMetricItem(item);
 		}
 		for (Config config : decorateConfigOnRead(rule.getConfigs())) {
+			transformConfig(config);
 			result.addConfig(config);
 		}
 		return result;
@@ -236,6 +237,17 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 		return true;
+	}
+
+	private void transformConfig(Config config) {
+		for (Condition condition : config.getConditions()) {
+			for (SubCondition subCondition : condition.getSubConditions()) {
+				if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
+					String userDefineText = subCondition.getText();
+					subCondition.setText(userDefineText.replaceAll("\"", "\\\\\""));
+				}
+			}
+		}
 	}
 
 	public String updateRule(String id, String metricsStr, String configsStr) throws Exception {
