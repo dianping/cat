@@ -246,6 +246,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.RouterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
