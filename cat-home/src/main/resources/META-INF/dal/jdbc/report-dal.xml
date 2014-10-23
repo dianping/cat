@@ -102,6 +102,21 @@
 					ORDER BY <FIELD name='date'/> desc		
 					]]></statement>
 			</query>
+			<query name="find-by-domain-and-time" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="event" table="event" alias="e">

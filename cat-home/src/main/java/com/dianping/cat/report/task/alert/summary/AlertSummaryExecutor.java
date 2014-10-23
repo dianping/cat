@@ -10,7 +10,6 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
@@ -20,23 +19,29 @@ import com.site.lookup.util.StringUtils;
 
 public class AlertSummaryExecutor {
 
-	@Inject
-	private AlertSummaryGenerator m_alertSummaryGenerator;
+	@Inject(type = SummaryDataGenerator.class, value = AlertSummaryDataGenerator.ID)
+	private SummaryDataGenerator m_alertSummaryDataGenerator;
 
-	@Inject
-	private AlertSummaryManager m_alertSummaryManager;
+	@Inject(type = SummaryDataGenerator.class, value = FailureDataGenerator.ID)
+	private SummaryDataGenerator m_failureDataGenerator;
 
-	@Inject(type = AlertSummaryDecorator.class, value = AlertSummaryFTLDecorator.ID)
-	private AlertSummaryDecorator m_alertSummaryDecorator;
+	@Inject(type = SummaryDataGenerator.class, value = AlterationDataGenerator.ID)
+	private SummaryDataGenerator m_alterationDataGenerator;
 
-	@Inject
-	private ErrorModelGenerator m_failureContextGenerator;
+	@Inject(type = SummaryDecorator.class, value = AlertSummaryFTLDecorator.ID)
+	private SummaryDecorator m_alertSummaryDecorator;
+
+	@Inject(type = SummaryDecorator.class, value = FailureDecorator.ID)
+	private SummaryDecorator m_failureDecorator;
+
+	@Inject(type = SummaryDecorator.class, value = AlterationDecorator.ID)
+	private SummaryDecorator m_alterationDecorator;
 
 	@Inject
 	private SenderManager m_sendManager;
 
-	@Inject
-	private ErrorDecorator m_failureDecorator;
+	// fetch alerts during this period, time unit is ms, default value is 5 minnutes
+	public static final long SUMMARY_DURATION = 5 * 60 * 1000L;
 
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();
@@ -66,15 +71,22 @@ public class AlertSummaryExecutor {
 		Transaction t = Cat.newTransaction("AlertSummary", domain);
 
 		try {
-			AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
-			m_alertSummaryManager.insert(alertSummary);
-			String summaryContent = m_alertSummaryDecorator.generateHtml(alertSummary);
+			StringBuilder builder = new StringBuilder();
 
-			Map<Object, Object> failureModel = m_failureContextGenerator.generateFailureModel(domain, date);
+			Map<Object, Object> summaryModel = m_alertSummaryDataGenerator.generateModel(domain, date);
+			String summaryContent = m_alertSummaryDecorator.generateHtml(summaryModel);
+			builder.append(summaryContent);
+
+			Map<Object, Object> failureModel = m_failureDataGenerator.generateModel(domain, date);
 			String failureContext = m_failureDecorator.generateHtml(failureModel);
+			builder.append(failureContext);
+
+			Map<Object, Object> alterationModel = m_alterationDataGenerator.generateModel(domain, date);
+			String alterationContext = m_alterationDecorator.generateHtml(alterationModel);
+			builder.append(alterationContext);
 
 			t.setStatus(Transaction.SUCCESS);
-			return summaryContent + failureContext;
+			return builder.toString();
 		} catch (Exception e) {
 			t.setStatus(e);
 			Cat.logError("generate alert summary fail:" + domain + " " + date, e);
