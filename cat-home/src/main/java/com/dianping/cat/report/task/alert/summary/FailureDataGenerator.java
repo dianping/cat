@@ -19,7 +19,9 @@ import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
-public class ErrorModelGenerator {
+public class FailureDataGenerator extends SummaryDataGenerator {
+
+	public static final String ID = "FailureDataGenerator";
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -53,7 +55,8 @@ public class ErrorModelGenerator {
 		}
 	}
 
-	public Map<Object, Object> generateFailureModel(String domain, Date endTime) {
+	@Override
+	public Map<Object, Object> generateModel(String domain, Date endTime) {
 		Map<Object, Object> result = new HashMap<Object, Object>();
 		ModelRequest request = new ModelRequest(domain, getCurrentHour()).setProperty("queryType", "view");
 		request.setProperty("type", "error");
@@ -80,5 +83,10 @@ public class ErrorModelGenerator {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		return cal.getTimeInMillis();
+	}
+
+	@Override
+	public String getID() {
+		return ID;
 	}
 }
