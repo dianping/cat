@@ -34,9 +34,6 @@ public class AlertSummaryGenerator {
 
 	public static final String PREFIX = "dependency_";
 
-	// fetch alerts during this period, time unit is ms, default value is 5 minnutes
-	private final long DURATION = 5 * 60 * 1000L;
-
 	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlert(List<TopologyEdge> edges,
 	      Date date) {
 		Map<String, com.dianping.cat.home.alert.summary.entity.Alert> alerts = new LinkedHashMap<String, com.dianping.cat.home.alert.summary.entity.Alert>();
@@ -120,7 +117,7 @@ public class AlertSummaryGenerator {
 	private Category generateCategoryByTimeCategory(Date date, String cate) {
 		Category category = new Category(cate);
 		String dbCategoryName = cate;
-		Date startTime = new Date(date.getTime() - DURATION);
+		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		try {
 			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
@@ -136,7 +133,7 @@ public class AlertSummaryGenerator {
 	private Category generateCategoryByTimeCateDomain(Date date, String cate, String domain) {
 		Category category = new Category(cate);
 		String dbCategoryName = cate;
-		Date startTime = new Date(date.getTime() - DURATION);
+		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		try {
 			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
@@ -153,7 +150,7 @@ public class AlertSummaryGenerator {
 		String categoryName = PREFIX + cate;
 		String dbCategoryName = cate;
 		Category category = new Category(categoryName);
-		Date startTime = new Date(date.getTime() - DURATION);
+		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		for (String domain : dependencyDomains) {
 			try {
