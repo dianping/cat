@@ -112,7 +112,36 @@
 		            <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>
 		      </c:forEach>
-		      </c:if>
+		<tr><td>&nbsp</td></tr>
+		<tr><td>&nbsp</td></tr>
+		</c:if>
+		
+		<c:if test="${!empty model.methodInfo.callerProjectsInfo}">
+		      <tr>
+		         <th class="left">Type</th>
+				 <th class="left">RemoteIp</th>
+				 <th class="left">Method</th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
+		         <th>QPS</th>
+		      </tr>
+		      <c:forEach var="callerInfo" items="${model.methodInfo.callerProjectsInfo}" varStatus="status">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		            <td class="left">${callerInfo.type}</td>
+					<td class="left">${callerInfo.ip}</td>
+					<td class="left">${callerInfo.id}</td>
+		            <td>${w:format(callerInfo.totalCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(callerInfo.failureCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(callerInfo.failurePercent,'0.0000%')}</td>
+		            <td>${w:format(callerInfo.avg,'0.00')}</td>
+		            <td>${w:format(callerInfo.tps,'0.00')}</td>
+		         </tr>
+		      </c:forEach>
+		 <tr><td>&nbsp</td></tr>
+		<tr><td>&nbsp</td></tr>
+		</c:if>
 </table>
 </jsp:body>
 </a:historyReport>

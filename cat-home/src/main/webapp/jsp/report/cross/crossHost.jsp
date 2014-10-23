@@ -91,6 +91,31 @@
 		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>
 		      </c:forEach>
+		      <tr><td>&nbsp</td></tr>
+			  <tr><td>&nbsp</td></tr>
+		</c:if>
+		      
+		<c:if test="${!empty model.hostInfo.callerProjectsInfo}">
+		      <tr>
+		         <th class="left">Type</th>
+		         <th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name">RemoteIp</a></th>
+		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
+		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
+		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+		         <th>QPS</th>
+		      </tr>
+		      <c:forEach var="callerInfo" items="${model.hostInfo.callerProjectsInfo}" varStatus="status">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		            <td class="left">${callerInfo.type}</td>
+		            <td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callerInfo.ip}&project=${payload.projectName}">${callerInfo.ip}</a></td>
+		            <td>${w:format(callerInfo.totalCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(callerInfo.failureCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(callerInfo.failurePercent,'0.0000%')}</td>
+		             <td>${w:format(callerInfo.avg,'0.00')}</td>
+		             <td>${w:format(callerInfo.tps,'0.00')}</td>
+		         </tr>
+		      </c:forEach>
 		      </c:if>
 </table>
 </jsp:body>

@@ -5,6 +5,7 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -19,7 +20,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ReportManager;
+import com.site.lookup.util.StringUtils;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -32,6 +35,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Inject
 	private IpConvertManager m_ipConvertManager;
+
+	@Inject
+	private HostinfoService m_hostinfoService;
 
 	private static final String UNKNOWN = "UnknownIp";
 
@@ -86,7 +92,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonCall.server")) {
 					crossInfo.setRemoteAddress(message.getName());
-					break;
+				}
+				if (message.getType().equals("PigeonCall.app")) {
+					crossInfo.setApp(message.getName());
 				}
 			}
 		}
@@ -95,6 +103,39 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		crossInfo.setRemoteRole("Pigeon.Server");
 		crossInfo.setDetailType("PigeonCall");
 		return crossInfo;
+	}
+
+	public Pair<String, CrossInfo> convertCrossInfo(String client, CrossInfo crossInfo) {
+		String localIp = crossInfo.getLocalAddress();
+		String remoteAddress = crossInfo.getRemoteAddress();
+		String domain = crossInfo.getApp();
+
+		if (StringUtils.isEmpty(domain)) {
+			domain = m_hostinfoService.queryDomainByIp(remoteAddress);
+		}
+
+		int index = remoteAddress.indexOf(":");
+		if (index > 0) {
+			remoteAddress = remoteAddress.substring(0, index);
+		}
+
+		CrossInfo info = new CrossInfo();
+		info.setLocalAddress(remoteAddress);
+		info.setRemoteAddress(localIp + ":Caller");
+		info.setRemoteRole("Pigeon.Caller");
+		info.setDetailType("PigeonCalled");
+		info.setApp(client);
+
+		return new Pair<String, CrossInfo>(domain, info);
+	}
+
+	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
+		if (!HostinfoService.UNKNOWN_PROJECT.equals(domain)) {
+			CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+
+			report.addIp(info.getLocalAddress());
+			updateCrossReport(report, t, info);
+		}
 	}
 
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
@@ -111,13 +152,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
-
 					String formatIp = m_ipConvertManager.convertHostNameToIP(name);
 
 					if (formatIp != null && formatIp.length() > 0) {
 						crossInfo.setRemoteAddress(formatIp);
 					}
-					break;
+				}
+				if (message.getType().equals("PigeonService.app")) {
+					crossInfo.setApp(message.getName());
 				}
 			}
 		}
@@ -149,9 +191,15 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
-		CrossInfo info = parseCorssTransaction(t, tree);
-		if (info != null) {
-			updateCrossReport(report, t, info);
+		CrossInfo crossInfo = parseCorssTransaction(t, tree);
+
+		if (crossInfo != null) {
+			updateCrossReport(report, t, crossInfo);
+
+			if (m_serverConfigManager.isClientCall(t.getType())) {
+				Pair<String, CrossInfo> pair = convertCrossInfo(tree.getDomain(), crossInfo);
+				updateServerCrossReport(t, pair.getKey(), pair.getValue());
+			}
 		}
 
 		List<Message> children = t.getChildren();
@@ -175,22 +223,27 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		m_serverConfigManager = serverConfigManager;
 	}
 
+	public void setHostinfoService(HostinfoService hostinfoService) {
+		m_hostinfoService = hostinfoService;
+	}
+
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
 		String localIp = info.getLocalAddress();
 		String remoteIp = info.getRemoteAddress();
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
-		Local client = report.findOrCreateLocal(localIp);
-		Remote server = client.findOrCreateRemote(remoteIp);
+		Local local = report.findOrCreateLocal(localIp);
+		Remote remote = local.findOrCreateRemote(remoteIp);
 
-		server.setRole(role);
+		remote.setRole(role);
+		remote.setApp(info.getApp());
 
-		Type type = server.getType();
+		Type type = remote.getType();
 
 		if (type == null) {
 			type = new Type();
 			type.setId(info.getDetailType());
-			server.setType(type);
+			remote.setType(type);
 		}
 
 		Name name = type.findOrCreateName(transactionName);
@@ -217,6 +270,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		private String m_detailType = UNKNOWN;
 
+		private String m_app = "";
+
 		public String getDetailType() {
 			return m_detailType;
 		}
@@ -233,6 +288,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			return m_remoteRole;
 		}
 
+		public String getApp() {
+			return m_app;
+		}
+
 		public void setDetailType(String detailType) {
 			m_detailType = detailType;
 		}
@@ -247,6 +306,16 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		public void setRemoteRole(String remoteRole) {
 			m_remoteRole = remoteRole;
+		}
+
+		public void setApp(String app) {
+			m_app = app;
+		}
+
+		@Override
+		public String toString() {
+			return "CrossInfo [m_remoteRole=" + m_remoteRole + ", m_LocalAddress=" + m_LocalAddress + ", m_RemoteAddress="
+			      + m_RemoteAddress + ", m_detailType=" + m_detailType + ", m_app=" + m_app + "]";
 		}
 	}
 

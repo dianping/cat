@@ -1,13 +1,16 @@
 package com.dianping.cat.consumer.cross;
 
+import static com.dianping.cat.Constants.HOUR;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.MockReportManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.service.ReportDelegate;
@@ -39,18 +42,27 @@ public class Configurator extends AbstractResourceConfigurator {
 	}
 
 	public static class MockCrossReportManager extends MockReportManager<CrossReport> {
-		private CrossReport m_report;
+		private Map<Long, Map<String, CrossReport>> m_reports = new ConcurrentHashMap<Long, Map<String, CrossReport>>();;
 
 		@Inject
 		private ReportDelegate<CrossReport> m_delegate;
 
 		@Override
 		public CrossReport getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
-			if (m_report == null) {
-				m_report = (CrossReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
+			Map<String, CrossReport> reports = m_reports.get(startTime);
+
+			if (reports == null && createIfNotExist) {
+				reports = new ConcurrentHashMap<String, CrossReport>();
+				m_reports.put(startTime, reports);
 			}
 
-			return m_report;
+			CrossReport report = reports.get(domain);
+
+			if (report == null && createIfNotExist) {
+				report = m_delegate.makeReport(domain, startTime, HOUR);
+				reports.put(domain, report);
+			}
+			return report;
 		}
 	}
 }
