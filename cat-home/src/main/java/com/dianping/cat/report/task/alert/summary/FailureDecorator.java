@@ -1,8 +1,8 @@
 package com.dianping.cat.report.task.alert.summary;
 
-public class AlertSummaryFTLDecorator extends SummaryDecorator {
+public class FailureDecorator extends SummaryDecorator {
 
-	public static final String ID = "AlertSummaryFTLDecorator";
+	public static final String ID = "FailureDecorator";
 
 	@Override
 	protected String getID() {
@@ -11,7 +11,7 @@ public class AlertSummaryFTLDecorator extends SummaryDecorator {
 
 	@Override
 	protected String getTemplateAddress() {
-		return "summary.ftl";
+		return "errorInfo.ftl";
 	}
 
 }
