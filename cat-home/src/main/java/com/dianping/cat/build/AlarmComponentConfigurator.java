@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
+import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -66,13 +67,17 @@ import com.dianping.cat.report.task.alert.sender.spliter.Spliter;
 import com.dianping.cat.report.task.alert.sender.spliter.SpliterManager;
 import com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter;
 import com.dianping.cat.report.task.alert.service.AlertEntityService;
-import com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryDataGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
-import com.dianping.cat.report.task.alert.summary.ErrorDecorator;
-import com.dianping.cat.report.task.alert.summary.ErrorModelGenerator;
+import com.dianping.cat.report.task.alert.summary.AlterationDataGenerator;
+import com.dianping.cat.report.task.alert.summary.AlterationDecorator;
+import com.dianping.cat.report.task.alert.summary.FailureDataGenerator;
+import com.dianping.cat.report.task.alert.summary.FailureDecorator;
+import com.dianping.cat.report.task.alert.summary.SummaryDataGenerator;
+import com.dianping.cat.report.task.alert.summary.SummaryDecorator;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
@@ -208,20 +213,32 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertEntityService.class).req(AlertDao.class));
 
-		all.add(C(ErrorModelGenerator.class).req(ModelService.class, ProblemAnalyzer.ID));
-
-		all.add(C(ErrorDecorator.class));
-
-		all.add(C(AlertSummaryExecutor.class)
-		      .req(AlertSummaryGenerator.class, AlertSummaryManager.class, SenderManager.class)
-		      .req(ErrorModelGenerator.class, ErrorDecorator.class)
-		      .req(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID));
-
-		all.add(C(AlertSummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
-
 		all.add(C(AlertSummaryGenerator.class).req(AlertDao.class, TopologyGraphManager.class));
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
+
+		all.add(C(SummaryDataGenerator.class, AlertSummaryDataGenerator.ID, AlertSummaryDataGenerator.class).req(
+		      AlertSummaryGenerator.class, AlertSummaryManager.class));
+
+		all.add(C(SummaryDataGenerator.class, FailureDataGenerator.ID, FailureDataGenerator.class).req(
+		      ModelService.class, ProblemAnalyzer.ID));
+
+		all.add(C(SummaryDataGenerator.class, AlterationDataGenerator.ID, AlterationDataGenerator.class).req(
+		      AlterationDao.class));
+
+		all.add(C(SummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
+
+		all.add(C(SummaryDecorator.class, FailureDecorator.ID, FailureDecorator.class));
+
+		all.add(C(SummaryDecorator.class, AlterationDecorator.ID, AlterationDecorator.class));
+
+		all.add(C(AlertSummaryExecutor.class).req(SenderManager.class)
+		      .req(SummaryDataGenerator.class, AlertSummaryDataGenerator.ID, "m_alertSummaryDataGenerator")
+		      .req(SummaryDataGenerator.class, FailureDataGenerator.ID, "m_failureDataGenerator")
+		      .req(SummaryDataGenerator.class, AlterationDataGenerator.ID, "m_alterationDataGenerator")
+		      .req(SummaryDecorator.class, AlertSummaryFTLDecorator.ID, "m_alertSummaryDecorator")
+		      .req(SummaryDecorator.class, FailureDecorator.ID, "m_failureDecorator")
+		      .req(SummaryDecorator.class, AlterationDecorator.ID, "m_alterationDecorator"));
 
 		return all;
 	}

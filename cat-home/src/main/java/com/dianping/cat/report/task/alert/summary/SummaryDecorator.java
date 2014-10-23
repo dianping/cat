@@ -11,16 +11,16 @@ import com.dianping.cat.Cat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public class ErrorDecorator implements Initializable {
+public abstract class SummaryDecorator implements Initializable {
 
 	public Configuration m_configuration;
 
-	public String generateHtml(Map<Object, Object> failureModel) {
+	public String generateHtml(Map<Object, Object> dataMap) {
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("errorInfo.ftl");
-			t.process(failureModel, sw);
+			Template t = m_configuration.getTemplate(getTemplateAddress());
+			t.process(dataMap, sw);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -38,4 +38,7 @@ public class ErrorDecorator implements Initializable {
 		}
 	}
 
+	protected abstract String getTemplateAddress();
+
+	protected abstract String getID();
 }

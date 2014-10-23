@@ -42,7 +42,7 @@ public class EventReportCountFilter extends com.dianping.cat.consumer.event.mode
 
 			for (int i = 0; i < length; i++) {
 				// invalidate char
-				if (temp.charAt(i) > 126 || temp.charAt(i) < 33) {
+				if (temp.charAt(i) > 126 || temp.charAt(i) < 32) {
 					invalidates.add(temp);
 					continue;
 				}

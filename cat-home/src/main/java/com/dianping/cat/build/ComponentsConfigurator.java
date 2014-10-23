@@ -24,6 +24,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
+import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
@@ -73,7 +74,9 @@ import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.UserDefinedRuleManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -155,20 +158,24 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class));
-		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class));
-		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class));
-		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class));
-		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class));
-		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class));
+		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
+		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
+		      UserDefinedRuleManager.class));
+		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
+		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
+		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
+		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class));
-		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class));
+		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
+		      RouterConfigManager.class));
 
 		return all;
 	}

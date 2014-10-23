@@ -137,7 +137,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 			} else {
 				Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
 			}
-			return configs;
+			return decorateConfigOnRead(configs);
 		}
 	}
 
@@ -145,7 +145,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		Rule rule = m_config.getRules().get(metricKey);
 
 		if (rule != null) {
-			return rule;
+			return copyRuleWithDeepCopyConditions(rule);
 		} else {
 			return buildDefaultRule(product, metricKey);
 		}
