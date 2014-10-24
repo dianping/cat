@@ -211,7 +211,7 @@ public class CacheReport {
 			return m_methodCounts;
 		}
 
-		public Long getMethodCount(String method) {
+		public long getMethodCount(String method) {
 			Long count = m_methodCounts.get(method);
 
 			if (count == null) {
@@ -262,7 +262,7 @@ public class CacheReport {
 				return o1.getName().getId().compareTo(o2.getName().getId());
 			} else if (m_sort.startsWith("method:")) {
 				String method = m_sort.substring(7);
-				return o1.getMethodCount(method).compareTo(o2.getMethodCount(method));
+				return (int) (o2.getMethodCount(method) - o1.getMethodCount(method));
 			}
 			return 0;
 		}
