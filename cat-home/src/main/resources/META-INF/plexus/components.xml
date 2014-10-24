@@ -2877,50 +2877,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.ErrorDecorator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
-					<role-hint>AlertSummaryFTLDecorator</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
-			<role-hint>AlertSummaryFTLDecorator</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
 			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
 			<requirements>
@@ -2938,6 +2894,94 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+			<role-hint>AlertSummaryDataGenerator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryDataGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+			<role-hint>FailureDataGenerator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.FailureDataGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+			<role-hint>AlterationDataGenerator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlterationDataGenerator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+			<role-hint>AlertSummaryFTLDecorator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+			<role-hint>FailureDecorator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.FailureDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+			<role-hint>AlterationDecorator</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlterationDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>AlertSummaryDataGenerator</role-hint>
+					<field-name>m_alertSummaryDataGenerator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>FailureDataGenerator</role-hint>
+					<field-name>m_failureDataGenerator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>AlterationDataGenerator</role-hint>
+					<field-name>m_alterationDataGenerator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+					<role-hint>AlertSummaryFTLDecorator</role-hint>
+					<field-name>m_alertSummaryDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+					<role-hint>FailureDecorator</role-hint>
+					<field-name>m_failureDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+					<role-hint>AlterationDecorator</role-hint>
+					<field-name>m_alterationDecorator</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4056,84 +4100,43 @@
 			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>AlertSummaryDataGenerator</role-hint>
+					<field-name>m_alertSummaryDataGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>FailureDataGenerator</role-hint>
+					<field-name>m_failureDataGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryDecorator</role>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDataGenerator</role>
+					<role-hint>AlterationDataGenerator</role-hint>
+					<field-name>m_alterationDataGenerator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
 					<role-hint>AlertSummaryFTLDecorator</role-hint>
 					<field-name>m_alertSummaryDecorator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+					<role-hint>FailureDecorator</role-hint>
+					<field-name>m_failureDecorator</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.summary.SummaryDecorator</role>
+					<role-hint>AlterationDecorator</role-hint>
+					<field-name>m_alterationDecorator</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.AlertDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AlertSummaryDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.ErrorModelGenerator</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.alert.summary.ErrorDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.ErrorDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
@@ -4578,6 +4581,15 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AlertDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
