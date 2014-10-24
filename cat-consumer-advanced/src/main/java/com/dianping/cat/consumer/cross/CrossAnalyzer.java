@@ -311,12 +311,5 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		public void setApp(String app) {
 			m_app = app;
 		}
-
-		@Override
-		public String toString() {
-			return "CrossInfo [m_remoteRole=" + m_remoteRole + ", m_LocalAddress=" + m_LocalAddress + ", m_RemoteAddress="
-			      + m_RemoteAddress + ", m_detailType=" + m_detailType + ", m_app=" + m_app + "]";
-		}
 	}
-
 }
