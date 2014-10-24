@@ -129,7 +129,14 @@
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<c:forEach var="method" items="${methods}">
-						<td>${w:format(item.methodCounts[method],'#,###,###,###,##0')}</td>
+						<c:choose>
+							<c:when test="${empty item.methodCounts[method]}">
+								<td>0</td>
+							</c:when>
+							<c:otherwise>
+								<td>${w:format(item.methodCounts[method],'#,###,###,###,##0')}</td>
+							</c:otherwise>
+						</c:choose>
 					</c:forEach>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.0000%')}</td>
