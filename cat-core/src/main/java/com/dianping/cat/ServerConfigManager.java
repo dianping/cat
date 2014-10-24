@@ -325,10 +325,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean isServerService(String type) {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
-	
-	public boolean isServiceCaller(String type) {
-		return "PigeonCaller".equals(type);
-	}
 
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
