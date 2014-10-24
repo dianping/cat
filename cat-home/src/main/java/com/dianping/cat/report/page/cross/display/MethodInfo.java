@@ -107,15 +107,12 @@ public class MethodInfo extends BaseVisitor {
 	public Collection<NameDetailInfo> getCallProjectsInfo() {
 		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_callProjectsInfo.values());
 
-		Collections.sort(values, new NameCompartor(m_callSortBy));
+		Collections.sort(values, new NameComparator(m_callSortBy));
 		return values;
 	}
 
-	public Collection<NameDetailInfo> getCallerProjectsInfo() {
-		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_callerProjectsInfo.values());
-
-		Collections.sort(values, new NameCompartor(m_serviceSortBy));
-		return values;
+	public Map<String, NameDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
 	}
 
 	public String getQuery() {
@@ -129,7 +126,7 @@ public class MethodInfo extends BaseVisitor {
 	public List<NameDetailInfo> getServiceProjectsInfo() {
 		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_serviceProjectsInfo.values());
 
-		Collections.sort(values, new NameCompartor(m_serviceSortBy));
+		Collections.sort(values, new NameComparator(m_serviceSortBy));
 		return values;
 	}
 

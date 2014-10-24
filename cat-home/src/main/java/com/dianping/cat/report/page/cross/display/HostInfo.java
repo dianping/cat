@@ -104,15 +104,12 @@ public class HostInfo extends BaseVisitor {
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 
-		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
 	}
 
-	public Collection<TypeDetailInfo> getCallerProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callerProjectsInfo.values());
-
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
-		return values;
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
 	}
 
 	public long getReportDuration() {
@@ -122,7 +119,7 @@ public class HostInfo extends BaseVisitor {
 	public List<TypeDetailInfo> getServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
 
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
+		Collections.sort(values, new TypeComparator(m_serviceSortBy));
 		return values;
 	}
 

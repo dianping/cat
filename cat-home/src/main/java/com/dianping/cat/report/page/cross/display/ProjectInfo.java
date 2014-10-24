@@ -59,14 +59,15 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallerProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (CrossAppSwitch.switchOn() && StringUtils.isEmpty(projectName)) {
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
+			System.out.println(projectName);
 		}
-		
+
 		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			m_callerProjectsInfo.put(ALL_SERVER, all);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
 		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
 		if (info == null) {
@@ -80,7 +81,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (CrossAppSwitch.switchOn() && StringUtils.isEmpty(projectName)) {
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
@@ -100,7 +101,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addServiceProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (CrossAppSwitch.switchOn() && StringUtils.isEmpty(projectName)) {
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
 
@@ -124,19 +125,17 @@ public class ProjectInfo extends BaseVisitor {
 
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
 	}
 
-	public List<TypeDetailInfo> getCallerProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callerProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
-		return values;
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
 	}
 
 	public List<TypeDetailInfo> getServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
+		Collections.sort(values, new TypeComparator(m_serviceSortBy));
 		return values;
 	}
 

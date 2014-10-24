@@ -44,7 +44,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 		if (ip.indexOf(":") > -1) {
 			ip = ip.substring(0, ip.indexOf(":"));
 		}
-		if (CrossAppSwitch.switchOn() && StringUtils.isEmpty(domain)) {
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(domain)) {
 			domain = m_hostinfoService.queryDomainByIp(ip);
 		}
 

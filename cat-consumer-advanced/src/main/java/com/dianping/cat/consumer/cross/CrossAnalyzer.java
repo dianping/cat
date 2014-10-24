@@ -123,7 +123,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		info.setLocalAddress(remoteAddress);
 		info.setRemoteAddress(localIp + ":Caller");
 		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCalled");
+		info.setDetailType("PigeonCall");
 		info.setApp(client);
 
 		return new Pair<String, CrossInfo>(domain, info);
