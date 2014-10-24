@@ -149,20 +149,23 @@ public class Handler implements PageHandler<Context> {
 			if (payload.getIpAddress().equals(Constants.ALL)) {
 				List<TypeDetailInfo> details = projectInfo.getServiceProjectsInfo();
 
-				for (TypeDetailInfo info : details) {
-					String projectName = info.getProjectName();
-					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
-					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
-						continue;
-					}
-					ProjectInfo temp = buildCallProjectInfo(projectName, payload.getPeriod(),
-					      String.valueOf(payload.getDate()), payload.getHourDuration());
+				if (projectInfo.getCallerProjectsInfo().isEmpty()) {
+					for (TypeDetailInfo info : details) {
+						String projectName = info.getProjectName();
+						if (projectName.equalsIgnoreCase(payload.getDomain())
+						      || projectName.equalsIgnoreCase("UnknownProject")
+						      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
+							continue;
+						}
+						ProjectInfo temp = buildCallProjectInfo(projectName, payload.getPeriod(),
+						      String.valueOf(payload.getDate()), payload.getHourDuration());
 
-					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
+						TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
 
-					if (detail != null) {
-						detail.setProjectName(projectName);
-						projectInfo.addAllCallProjectInfo(projectName, detail);
+						if (detail != null) {
+							detail.setProjectName(projectName);
+							projectInfo.addCallerProjectInfo(projectName, detail);
+						}
 					}
 				}
 			}
@@ -204,22 +207,25 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getIpAddress().equals(Constants.ALL)) {
 				List<TypeDetailInfo> details = historyProjectInfo.getServiceProjectsInfo();
+				
+				if (historyProjectInfo.getCallerProjectsInfo().isEmpty()) {
+					for (TypeDetailInfo info : details) {
+						String projectName = info.getProjectName();
+						if (projectName.equalsIgnoreCase(payload.getDomain())
+						      || projectName.equalsIgnoreCase("UnknownProject")
+						      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
+							continue;
+						}
+						Date start = payload.getHistoryStartDate();
+						Date end = payload.getHistoryEndDate();
+						ProjectInfo temp = buildHistoryCallProjectInfo(projectName, start, end);
 
-				for (TypeDetailInfo info : details) {
-					String projectName = info.getProjectName();
-					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
-					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
-						continue;
-					}
-					Date start = payload.getHistoryStartDate();
-					Date end = payload.getHistoryEndDate();
-					ProjectInfo temp = buildHistoryCallProjectInfo(projectName, start, end);
+						TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
 
-					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
-
-					if (detail != null) {
-						detail.setProjectName(projectName);
-						historyProjectInfo.addAllCallProjectInfo(projectName, detail);
+						if (detail != null) {
+							detail.setProjectName(projectName);
+							historyProjectInfo.addCallerProjectInfo(projectName, detail);
+						}
 					}
 				}
 			}

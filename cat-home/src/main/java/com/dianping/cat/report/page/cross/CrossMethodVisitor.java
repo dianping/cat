@@ -3,8 +3,10 @@ package com.dianping.cat.report.page.cross;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
+import com.dianping.cat.report.page.cross.display.CrossAppSwitch;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.service.HostinfoService;
+import com.site.lookup.util.StringUtils;
 
 public class CrossMethodVisitor extends BaseVisitor {
 
@@ -13,6 +15,8 @@ public class CrossMethodVisitor extends BaseVisitor {
 	private String m_remoteIp;
 
 	private String m_method;
+
+	private String m_app;
 
 	private MethodQueryInfo m_info = new MethodQueryInfo();
 
@@ -34,11 +38,14 @@ public class CrossMethodVisitor extends BaseVisitor {
 	@Override
 	public void visitName(Name name) {
 		String methodName = name.getId();
-		String domain = m_hostinfoService.queryDomainByIp(m_remoteIp);
 		String ip = m_remoteIp;
+		String domain = m_app;
 
 		if (ip.indexOf(":") > -1) {
 			ip = ip.substring(0, ip.indexOf(":"));
+		}
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(domain)) {
+			domain = m_hostinfoService.queryDomainByIp(ip);
 		}
 
 		if (methodName.indexOf(m_method) > -1) {
@@ -50,6 +57,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 	public void visitRemote(Remote remote) {
 		m_remoteIp = remote.getId();
 		m_currentRole = remote.getRole();
+		m_app = remote.getApp();
 		super.visitRemote(remote);
 	}
 

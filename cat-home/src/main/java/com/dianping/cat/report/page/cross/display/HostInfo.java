@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 import com.dianping.cat.service.HostinfoService;
+import com.site.lookup.util.StringUtils;
 
 public class HostInfo extends BaseVisitor {
 
@@ -23,6 +24,8 @@ public class HostInfo extends BaseVisitor {
 	private Map<String, TypeDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
 	private Map<String, TypeDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
+
+	private Map<String, TypeDetailInfo> m_callerProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
 	private String m_callSortBy = "Avg";
 
@@ -59,6 +62,26 @@ public class HostInfo extends BaseVisitor {
 		all.mergeType(type);
 	}
 
+	private void addCallerProject(String ip, Type type) {
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT_IP);
+
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration);
+			all.setIp(ALL_CLIENT_IP);
+			m_callerProjectsInfo.put(ALL_CLIENT_IP, all);
+		}
+		String realIp = ip.substring(0, ip.indexOf(":Caller"));
+		TypeDetailInfo info = m_callerProjectsInfo.get(realIp);
+
+		if (info == null) {
+			info = new TypeDetailInfo(m_reportDuration);
+			info.setIp(realIp);
+			m_callerProjectsInfo.put(realIp, info);
+		}
+		info.mergeType(type);
+		all.mergeType(type);
+	}
+
 	private void addServiceProject(String ip, Type type) {
 		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT_IP);
 
@@ -81,8 +104,12 @@ public class HostInfo extends BaseVisitor {
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 
-		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
+	}
+
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
 	}
 
 	public long getReportDuration() {
@@ -92,30 +119,35 @@ public class HostInfo extends BaseVisitor {
 	public List<TypeDetailInfo> getServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
 
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
+		Collections.sort(values, new TypeComparator(m_serviceSortBy));
 		return values;
 	}
 
-	public boolean projectContains(String ip, String projectName, String role) {
+	public boolean projectContains(String ip, String app, String projectName, String role) {
 		if (role.endsWith("Server")) {
 			if (ProjectInfo.ALL_SERVER.equals(projectName)) {
 				return true;
 			}
-		} else if (role.endsWith("Client")) {
+		} else if (role.endsWith("Client") || role.endsWith("Caller")) {
 			if (ProjectInfo.ALL_CLIENT.equals(projectName)) {
 				return true;
 			}
 		}
 
-		if (ip.indexOf(':') > 0) {
-			ip = ip.substring(0, ip.indexOf(':'));
-		}
-		String domain = m_hostinfoService.queryDomainByIp(ip);
-		if (projectName.equalsIgnoreCase(domain)) {
-			return true;
+		if (CrossAppSwitch.switchOn() && StringUtils.isNotEmpty(app)) {
+			if (app.equalsIgnoreCase(projectName)) {
+				return true;
+			}
 		} else {
-			return false;
+			if (ip.indexOf(':') > 0) {
+				ip = ip.substring(0, ip.indexOf(':'));
+			}
+			String domain = m_hostinfoService.queryDomainByIp(ip);
+			if (projectName.equalsIgnoreCase(domain)) {
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public HostInfo setCallSortBy(String callSoryBy) {
@@ -158,14 +190,16 @@ public class HostInfo extends BaseVisitor {
 	public void visitRemote(Remote remote) {
 		String remoteIp = remote.getId();
 		String role = remote.getRole();
-		boolean flag = projectContains(remoteIp, m_projectName, role);
+		String app = remote.getApp();
+		boolean flag = projectContains(remoteIp, app, m_projectName, role);
 
 		if (flag) {
-
 			if (role != null && role.endsWith("Client")) {
 				addServiceProject(remoteIp, remote.getType());
 			} else if (role != null && role.endsWith("Server")) {
 				addCallProject(remoteIp, remote.getType());
+			} else if (role != null && role.endsWith("Caller") && remoteIp.endsWith(":Caller")) {
+				addCallerProject(remoteIp, remote.getType());
 			}
 		}
 	}

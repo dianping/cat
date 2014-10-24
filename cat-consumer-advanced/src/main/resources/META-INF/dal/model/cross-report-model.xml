@@ -13,6 +13,8 @@
 	</entity>
 	<entity name="remote">
 		<attribute name="id" value-type="String" key="true" />
+		<attribute name="role" value-type="String" />
+		<attribute name="app" value-type="String" />
 		<entity-ref name="type" />
 	</entity>
 	<entity name="type">
