@@ -109,7 +109,7 @@
 									href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<c:forEach var="method" items="${methods}">
 						<th><a
-									href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=${method}&queryname=${model.queryName}">${method}</a></th>
+									href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
 			</c:forEach>
 			<th><a
 									href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>

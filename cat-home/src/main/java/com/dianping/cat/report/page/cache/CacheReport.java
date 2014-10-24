@@ -211,6 +211,16 @@ public class CacheReport {
 			return m_methodCounts;
 		}
 
+		public Long getMethodCount(String method) {
+			Long count = m_methodCounts.get(method);
+
+			if (count == null) {
+				return 0L;
+			} else {
+				return count;
+			}
+		}
+
 		public void setHited(double hited) {
 			m_hited = hited;
 		}
@@ -250,6 +260,9 @@ public class CacheReport {
 				return (int) (o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000);
 			} else if (m_sort.equals("name")) {
 				return o1.getName().getId().compareTo(o2.getName().getId());
+			} else if (m_sort.startsWith("method:")) {
+				String method = m_sort.substring(7);
+				return o1.getMethodCount(method).compareTo(o2.getMethodCount(method));
 			}
 			return 0;
 		}

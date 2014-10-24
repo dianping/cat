@@ -115,7 +115,7 @@
 									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<c:forEach var="method" items="${methods}">
 						<th><a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=${method}&queryname=${model.queryName}">${method}</a></th>
+									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
 			</c:forEach>
 			<th><a
 									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
