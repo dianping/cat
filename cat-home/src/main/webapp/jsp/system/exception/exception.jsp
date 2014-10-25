@@ -102,10 +102,10 @@
 							<thead>
 								<tr class="odd">
 									<th width="25%">域名</th>
-									<th width="60%">异常名称</th>
+									<th width="40%">异常名称</th>
 									<th width="10%">Warning阈值</th>
 									<th width="10%">Error阈值</th>
-									<th width="5%">操作&nbsp;&nbsp; <a
+									<th width="15%">操作&nbsp;&nbsp; <a
 										class='create btn btn-primary btn-small'
 										href="?op=exceptionThresholdAdd">新增</a></th>
 								</tr>
@@ -136,8 +136,8 @@
 							<thead>
 								<tr class="odd">
 									<th width="25%">域名</th>
-									<th width="65%">异常名称</th>
-									<th width="10%">操作&nbsp;&nbsp; <a
+									<th width="60%">异常名称</th>
+									<th width="15%">操作&nbsp;&nbsp; <a
 										class='create btn btn-primary btn-small'
 										href="?op=exceptionExcludeAdd">新增</a></th>
 								</tr>

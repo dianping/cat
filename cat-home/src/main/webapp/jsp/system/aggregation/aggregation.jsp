@@ -30,12 +30,12 @@
 				<tr class="odd">
 					<th width="15%">报表类型</th>
 					<th width="10%">域名</th>
-					<th width="60%">规则</th>
+					<th width="40%">规则</th>
 					<th width="10%">告警阈值</th>
 					<th width="15%">联系邮件</th>
 					<!-- <th width="15%">显示名称</th>
 					<th width="8%">示例</th> -->
-					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=aggregationUpdate">新增</a></th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=aggregationUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.aggregationRules}"

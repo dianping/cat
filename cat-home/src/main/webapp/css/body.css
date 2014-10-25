@@ -35,46 +35,47 @@ table {
 	font-size: 14px;
 }
 
-tr.head th {
+.data{
+	border:1px solid #dddddd;
+	border-radius:4px;
+}
+
+.data tr.head th {
 	background-color: #f2f2f2;
-	border-bottom: 1px solid #c4c4c4;
 }
 
-tr th {
+.data tr th {
 	background-color: #f2f2f2;
 }
 
-tr.odd td {
+.data tr.odd td {
 	background-color: #eee;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
-tr.even td {
+.data tr.even td {
 	background-color: white;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
-tr.odd th {
+.data tr.odd th {
 	background-color: #eee;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
-tr.even th {
+.data tr.even th {
 	background-color: white;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
-td.odd {
+.data td.odd {
 	background-color: #eee;
+}
+
+.data td.even {
+	background-color: white;
+}
+
+th{
 	word-break: break-all;
 }
-
-td.even {
-	background-color: white;
+td{
 	word-break: break-all;
 }
 

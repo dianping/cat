@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <res:bean id="res"/>
-<table class="problem">
+<table class="data">
 	<tr>
 		<td title="time\group">T\G</td>
 			<c:forEach var="group" items="${model.groupLevelInfo.groups}"

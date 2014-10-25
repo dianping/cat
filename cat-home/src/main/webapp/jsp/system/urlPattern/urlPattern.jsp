@@ -30,9 +30,9 @@
 				<tr class="odd">
 					<th width="15%">唯一ID</th>
 					<th width="15%">属于组</th>
-					<th width="47%">Pattern内容</th>
-					<th width="15">项目组</th>
-					<th width="8%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=urlPatternUpdate">新增</a></th>
+					<th width="42%">Pattern内容</th>
+					<th width="15%">项目组</th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=urlPatternUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.patternItems}"

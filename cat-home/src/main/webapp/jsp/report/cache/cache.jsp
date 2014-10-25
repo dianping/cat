@@ -24,25 +24,21 @@
 	<tr style="text-align: left">
 		<th>机器: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a
-								href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
+					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a
-								href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a
-									href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a
-									href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -54,16 +50,11 @@
 		<c:when test="${empty payload.type}">
 		<table class="data">
 		<tr>
-						<th class="left"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
+			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
 			<th>QPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.report.typeItems}"
@@ -108,21 +99,15 @@
 			</script>
 			<tr>
 			<th class="left">
-			<a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
+			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
 								</th>
-			<th><a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<c:forEach var="method" items="${methods}">
-						<th><a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
+						<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
 			</c:forEach>
-			<th><a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
-			<th><a
-									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
-			<th><a
-									href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th>QPS</th>
 							</tr>
 			<c:forEach var="item" items="${model.report.nameItems}"

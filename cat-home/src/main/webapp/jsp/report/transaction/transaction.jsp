@@ -62,21 +62,21 @@
 		</th>
 	</tr>
 </table>
-<table class='data'>
+<table class='data' style="min-width:1100px;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-				<th>Sample Link</th>
-				<th>Min(ms)</th>
-				<th>Max(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
-				<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">99.9Line</a>(ms)</th>
-				<th>Std(ms)</th>
-				<th>QPS</th>
+				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+				<th class="right">Sample Link</th>
+				<th class="right">Min(ms)</th>
+				<th class="right">Max(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">99.9Line</a>(ms)</th>
+				<th class="right">Std(ms)</th>
+				<th class="right">QPS</th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -87,7 +87,7 @@
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
 					<td>&nbsp;${w:format(e.failPercent/100,'0.0000%')}</td>
-					<td class="center"><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.min,'###,##0.#')}</td>
 					<td>${w:format(e.max,'###,##0.#')}</td>
 					<td>${w:format(e.avg,'###,##0.0')}</td>
@@ -153,7 +153,7 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="	"><td colspan="12"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

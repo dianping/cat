@@ -29,14 +29,14 @@
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
-					<th width="15%">告警名</th>
+					<th width="10%">告警名</th>
 					<th width="10%">组</th>
 					<th width="35%">URL</th>
-					<th width="10%">省份</th>
-					<th width="10%">城市</th>
-					<th width="10%">运营商</th>
-					<th width="10%">告警指标</th>
-					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=webRuleUpdate">新增</a></th>
+					<th width="8%">省份</th>
+					<th width="8%">城市</th>
+					<th width="8%">运营商</th>
+					<th width="8%">告警指标</th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=webRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">

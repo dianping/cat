@@ -46,10 +46,8 @@
 		</th>
 	</tr>
 </table>
-<table width="80%">
+<table  class="data" width="80%">
 	<tr>
-		
-			<tr>
 		<th width="35%" colspan=2>指标</th>
 		<th width="20%">值</th>
 		<th width="45%">备注</th>
@@ -215,7 +213,7 @@
 			</tr>
 </table>
 </br>
-<table width="100%">
+<table  class="data" width="100%">
 	<tr class='odd'>
 		<td width="15%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
 		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
