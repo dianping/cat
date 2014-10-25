@@ -52,9 +52,13 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		}
 
 		CrossReport report = m_analyzer.getReport(m_domain);
-
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+
+		CrossReport reportCaller = m_analyzer.getReport("server");
+		String expectedCaller = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_caller.xml"),
+		      "utf-8");
+		Assert.assertEquals(expectedCaller.replaceAll("\r", ""), reportCaller.toString().replaceAll("\r", ""));
 	}
 
 	protected MessageTree generateMessageTree(int i) {
@@ -74,6 +78,12 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
+
+			DefaultEvent eventApp = new DefaultEvent("PigeonCall.app", "server");
+
+			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
+			eventApp.setStatus(Message.SUCCESS);
+			t.addChild(eventApp);
 		} else {
 			t = new DefaultTransaction("PigeonService", "Cat-Test-Service", null);
 			DefaultEvent event = new DefaultEvent("PigeonService.client", "192.168.1.2:3000:class:method2");
@@ -81,6 +91,12 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
+
+			DefaultEvent eventApp = new DefaultEvent("PigeonService.app", "client");
+
+			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
+			eventApp.setStatus(Message.SUCCESS);
+			t.addChild(eventApp);
 		}
 
 		t.complete();

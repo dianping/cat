@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cross-report domain="server" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domain>group</domain>
+   <ip>192.168.1.0</ip>
+   <local id="192.168.1.0">
+      <remote id="192.168.1.1:Caller" role="Pigeon.Caller" app="group">
+         <type id="PigeonCall" totalCount="50" failCount="50" failPercent="0.00" avg="0.00" sum="5100.00" tps="0.00">
+            <name id="Cat-Test-Call" totalCount="50" failCount="50" failPercent="0.00" avg="0.00" sum="5100.00" tps="0.00"/>
+         </type>
+      </remote>
+   </local>
+</cross-report>

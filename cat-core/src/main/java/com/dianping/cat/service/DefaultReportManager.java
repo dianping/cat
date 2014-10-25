@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,8 +29,8 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
- * one machine for a couple of hours.
+ * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
+ * for a couple of hours.
  */
 public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Inject
@@ -94,6 +95,10 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			}
 		}
 
+		if (reports == null) {
+			reports = new LinkedHashMap<String, T>();
+		}
+		
 		T report = reports.get(domain);
 
 		if (report == null && createIfNotExist) {

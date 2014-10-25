@@ -44,8 +44,9 @@
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>
-<table class='data'>
+<table class='table table-striped table-condensed '>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
+		<tr><td colspan="7" style="text-align:center"><h4>调用其他Pigeon服务</h4></td></tr>
 		<tr>
 			<th class="left">Type</th>
 			<th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=name">RemoteIp</a></th>
@@ -66,11 +67,15 @@
 		             <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
 		</c:forEach>
-		<tr><td>&nbsp</td></tr>
-		<tr><td>&nbsp</td></tr>
 		</c:if>
-
+		
 		<c:if test="${!empty model.hostInfo.serviceProjectsInfo}">
+			<tr><td colspan="7" style="text-align:center"><h4>提供Pigeon服务 [ 服务器端数据 ]</h4></td>
+			<c:if test="${!empty model.hostInfo.callerProjectsInfo}">
+				<td></td>
+				<td colspan="7" style="text-align:center"><h4>提供Pigeon服务 [ 客户端数据 ]</h4></td>
+			</c:if>
+			</tr>
 		      <tr>
 		         <th class="left">Type</th>
 		         <th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name">RemoteIp</a></th>
@@ -79,6 +84,16 @@
 		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
 		         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
 		         <th>QPS</th>
+		         <c:if test="${!empty model.hostInfo.callerProjectsInfo}">
+		         	 <th></th>
+			         <th class="left">Type</th>
+			         <th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name">RemoteIp</a></th>
+			         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
+			         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
+			         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+			         <th><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+			         <th>QPS</th>
+		         </c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.hostInfo.serviceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
@@ -87,11 +102,23 @@
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failurePercent,'0.0000%')}</td>
-		             <td>${w:format(serviceInfo.avg,'0.00')}</td>
-		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
+		            <td>${w:format(serviceInfo.avg,'0.00')}</td>
+		            <td>${w:format(serviceInfo.tps,'0.00')}</td>
+		            <c:set var="ip" value="${serviceInfo.ip}"/>
+		            <c:set var="callerInfo" value="${model.hostInfo.callerProjectsInfo}"/>
+		            <c:if test="${!empty callerInfo}">
+		            	<td></td>
+			            <td class="left">${callerInfo[ip].type}</td>
+		            	<td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callerInfo[ip].ip}&project=${payload.projectName}">${callerInfo[ip].ip}</a></td>
+		            	<td>${w:format(callerInfo[ip].totalCount,'#,###,###,###,##0')}</td>
+		            	<td>${w:format(callerInfo[ip].failureCount,'#,###,###,###,##0')}</td>
+		            	<td>${w:format(callerInfo[ip].failurePercent,'0.0000%')}</td>
+		             	<td>${w:format(callerInfo[ip].avg,'0.00')}</td>
+		             	<td>${w:format(callerInfo[ip].tps,'0.00')}</td>
+		            </c:if>
 		         </tr>
 		      </c:forEach>
-		      </c:if>
+		</c:if>
 </table>
 </jsp:body>
 </a:report>

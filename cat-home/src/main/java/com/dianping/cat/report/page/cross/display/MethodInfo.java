@@ -24,6 +24,8 @@ public class MethodInfo extends BaseVisitor {
 
 	private Map<String, NameDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, NameDetailInfo>();
 
+	private Map<String, NameDetailInfo> m_callerProjectsInfo = new LinkedHashMap<String, NameDetailInfo>();
+
 	private String m_remoteProject;
 
 	private String m_clientIp;
@@ -66,6 +68,24 @@ public class MethodInfo extends BaseVisitor {
 		all.mergeName(name);
 	}
 
+	private void addCallerProject(String type, Name name) {
+		String id = name.getId();
+		NameDetailInfo all = m_callerProjectsInfo.get(ALL_METHOD);
+
+		if (all == null) {
+			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
+			m_callerProjectsInfo.put(ALL_METHOD, all);
+		}
+		NameDetailInfo info = m_callerProjectsInfo.get(id);
+
+		if (info == null) {
+			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
+			m_callerProjectsInfo.put(id, info);
+		}
+		info.mergeName(name);
+		all.mergeName(name);
+	}
+
 	private void addServiceProject(String type, Name name) {
 		String id = name.getId();
 		NameDetailInfo all = m_serviceProjectsInfo.get(ALL_METHOD);
@@ -87,8 +107,12 @@ public class MethodInfo extends BaseVisitor {
 	public Collection<NameDetailInfo> getCallProjectsInfo() {
 		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_callProjectsInfo.values());
 
-		Collections.sort(values, new NameCompartor(m_callSortBy));
+		Collections.sort(values, new NameComparator(m_callSortBy));
 		return values;
+	}
+
+	public Map<String, NameDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
 	}
 
 	public String getQuery() {
@@ -102,7 +126,7 @@ public class MethodInfo extends BaseVisitor {
 	public List<NameDetailInfo> getServiceProjectsInfo() {
 		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_serviceProjectsInfo.values());
 
-		Collections.sort(values, new NameCompartor(m_serviceSortBy));
+		Collections.sort(values, new NameComparator(m_serviceSortBy));
 		return values;
 	}
 
@@ -119,23 +143,27 @@ public class MethodInfo extends BaseVisitor {
 		return false;
 	}
 
-	private boolean projectContains(String projectName, String ip, String role) {
+	private boolean projectContains(String projectName, String app, String ip, String role) {
 		if (m_remoteIp.startsWith("All")) {
-			if (m_remoteProject.startsWith("AllClient") && role.endsWith("Client")) {
+			if (m_remoteProject.startsWith("AllClient") && (role.endsWith("Client") || role.endsWith("Caller"))) {
 				return true;
 			} else if (m_remoteProject.startsWith("AllServer") && role.endsWith("Server")) {
 				return true;
 			}
-			if (ip.indexOf(':') > 0) {
-				ip = ip.substring(0, ip.indexOf(':'));
-			}
-			String domain = m_hostinfoService.queryDomainByIp(ip);
-
-			if (projectName.equalsIgnoreCase(domain)) {
-				return true;
+			if (CrossAppSwitch.switchOn() && StringUtils.isNotEmpty(app)) {
+				if (app.equalsIgnoreCase(projectName)) {
+					return true;
+				}
 			} else {
-				return false;
+				if (ip.indexOf(':') > 0) {
+					ip = ip.substring(0, ip.indexOf(':'));
+				}
+				String domain = m_hostinfoService.queryDomainByIp(ip);
+				if (projectName.equalsIgnoreCase(domain)) {
+					return true;
+				}
 			}
+			return false;
 		}
 		return false;
 	}
@@ -189,6 +217,8 @@ public class MethodInfo extends BaseVisitor {
 				addServiceProject(m_currentType, name);
 			} else if (role != null && role.endsWith("Server")) {
 				addCallProject(m_currentType, name);
+			} else if (role != null && role.endsWith("Caller")) {
+				addCallerProject(m_currentType, name);
 			}
 		}
 	}
@@ -197,8 +227,13 @@ public class MethodInfo extends BaseVisitor {
 	public void visitRemote(Remote remote) {
 		String role = remote.getRole();
 		String ip = remote.getId();
-		if (projectContains(m_remoteProject, ip, role) || m_remoteIp.equals(remote.getId())) {
-			m_currentRole = remote.getRole();
+		String app = remote.getApp();
+
+		if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
+			ip = ip.substring(0, ip.indexOf(":Caller"));
+		}
+		if (projectContains(m_remoteProject, app, ip, role) || m_remoteIp.equals(ip)) {
+			m_currentRole = role;
 			super.visitRemote(remote);
 		}
 	}

@@ -62,7 +62,7 @@
 		</th>
 	</tr>
 </table>
-<table class='data'>
+<table class='data' style="min-width:1100px;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
@@ -153,7 +153,7 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

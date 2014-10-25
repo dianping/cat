@@ -28,7 +28,7 @@ public class ProjectInfo extends BaseVisitor {
 
 	private Map<String, TypeDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
-	private Map<String, TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
+	private Map<String, TypeDetailInfo> m_callerProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
 	private String m_clientIp;
 
@@ -44,21 +44,46 @@ public class ProjectInfo extends BaseVisitor {
 		m_reportDuration = reportDuration;
 	}
 
-	public void addAllCallProjectInfo(String domain, TypeDetailInfo info) {
-		TypeDetailInfo all = m_callServiceProjectsInfo.get(ALL_CLIENT);
+	public void addCallerProjectInfo(String domain, TypeDetailInfo info) {
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
 
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			all.setType(info.getType());
-			m_callServiceProjectsInfo.put(ALL_CLIENT, all);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
 		all.mergeTypeDetailInfo(info);
-		m_callServiceProjectsInfo.put(domain, info);
+		m_callerProjectsInfo.put(domain, info);
 	}
 
-	private void addCallProject(String ip, Type type) {
-		String projectName = getProjectName(ip);
+	private void addCallerProject(String ip, String app, Type type) {
+		String projectName = app;
 
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+			projectName = getProjectName(ip);
+			System.out.println(projectName);
+		}
+
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
+		}
+		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
+		if (info == null) {
+			info = new TypeDetailInfo(m_reportDuration, projectName);
+			m_callerProjectsInfo.put(projectName, info);
+		}
+		info.mergeType(type);
+		all.mergeType(type);
+	}
+
+	private void addCallProject(String ip, String app, Type type) {
+		String projectName = app;
+
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+			projectName = getProjectName(ip);
+		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_SERVER);
@@ -73,8 +98,12 @@ public class ProjectInfo extends BaseVisitor {
 		all.mergeType(type);
 	}
 
-	private void addServiceProject(String ip, Type type) {
-		String projectName = getProjectName(ip);
+	private void addServiceProject(String ip, String app, Type type) {
+		String projectName = app;
+
+		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+			projectName = getProjectName(ip);
+		}
 
 		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
 		if (all == null) {
@@ -96,13 +125,17 @@ public class ProjectInfo extends BaseVisitor {
 
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
 	}
 
-	public List<TypeDetailInfo> getCallServiceProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
+	}
+
+	public List<TypeDetailInfo> getServiceProjectsInfo() {
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
+		Collections.sort(values, new TypeComparator(m_serviceSortBy));
 		return values;
 	}
 
@@ -118,12 +151,6 @@ public class ProjectInfo extends BaseVisitor {
 
 	public long getReportDuration() {
 		return m_reportDuration;
-	}
-
-	public List<TypeDetailInfo> getServiceProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
-		return values;
 	}
 
 	public ProjectInfo setCallSortBy(String callSoryBy) {
@@ -161,11 +188,14 @@ public class ProjectInfo extends BaseVisitor {
 	public void visitRemote(Remote remote) {
 		String remoteIp = remote.getId();
 		String role = remote.getRole();
+		String app = remote.getApp();
 
 		if (role != null && role.endsWith("Client")) {
-			addServiceProject(remoteIp, remote.getType());
+			addServiceProject(remoteIp, app, remote.getType());
 		} else if (role != null && role.endsWith("Server")) {
-			addCallProject(remoteIp, remote.getType());
+			addCallProject(remoteIp, app, remote.getType());
+		} else if (role != null && role.endsWith("Caller") && remoteIp.endsWith(":Caller")) {
+			addCallerProject(remoteIp, app, remote.getType());
 		}
 	}
 

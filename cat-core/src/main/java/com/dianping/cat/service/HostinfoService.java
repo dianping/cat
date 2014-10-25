@@ -48,9 +48,9 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	private Map<String, Hostinfo> m_hostinfos = new ConcurrentHashMap<String, Hostinfo>();
 
-	private static final String UNKNOWN_IP = "UnknownIp";
+	public static final String UNKNOWN_IP = "UnknownIp";
 
-	private static final String UNKNOWN_PROJECT = "UnknownProject";
+	public static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 

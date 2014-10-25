@@ -4,6 +4,7 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.cache.Context"
 	scope="request" />
@@ -85,8 +86,9 @@
 		<div class="row-fluid">
 		<div class="span7">
 		<table class="data">
+			<c:set var="methods" value="${model.report.allMethods}"/>
 			<tr>
-								<th class="left" colspan='6'><input type="text"
+								<th class="left" colspan='${fn:length(methods) + 6}'><input type="text"
 									name="queryname" id="queryname" size="40"
 									value="${model.queryName}">
 		    <input id="queryname" style="WIDTH: 60px"
@@ -111,6 +113,10 @@
 								</th>
 			<th><a
 									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<c:forEach var="method" items="${methods}">
+						<th><a
+									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
+			</c:forEach>
 			<th><a
 									href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
 			<th><a
@@ -127,6 +133,16 @@
 					<td
 										style="text-align: left; word-wrap: break-word; word-break: break-all;">${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
+					<c:forEach var="method" items="${methods}">
+						<c:choose>
+							<c:when test="${empty item.methodCounts[method]}">
+								<td>0</td>
+							</c:when>
+							<c:otherwise>
+								<td>${w:format(item.methodCounts[method],'#,###,###,###,##0')}</td>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>

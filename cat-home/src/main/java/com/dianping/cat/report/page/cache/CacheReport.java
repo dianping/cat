@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hsqldb.lib.StringUtil;
+
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -37,8 +39,14 @@ public class CacheReport {
 	private Map<String, CacheTypeItem> m_typeItems = new HashMap<String, CacheTypeItem>();
 
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
-		String key = transactionName.getId();
-		CacheNameItem item = m_nameItems.get(key);
+		String arrays[] = transactionName.getId().split(":");
+		String categroy = arrays[0];
+		String method = "";
+
+		if (arrays.length > 1) {
+			method = arrays[1];
+		}
+		CacheNameItem item = m_nameItems.get(categroy);
 		CacheNameItem all = m_nameItems.get(ALL);
 
 		if (all == null) {
@@ -46,17 +54,14 @@ public class CacheReport {
 			all.setName(new TransactionName(ALL));
 			m_nameItems.put(ALL, all);
 		}
-		all.add(transactionName, eventName);
+		all.add(transactionName, eventName, method);
 
 		if (item == null) {
 			item = new CacheNameItem();
-			item.setName(transactionName);
-			item.setMissed(eventName.getTotalCount());
-			item.setHited(1 - (double) eventName.getTotalCount() / transactionName.getTotalCount());
-			m_nameItems.put(key, item);
-		} else {
-			throw new RuntimeException("duplicate transaction name in cache report!");
+			item.setName(new TransactionName(categroy));
+			m_nameItems.put(categroy, item);
 		}
+		item.add(transactionName, eventName, method);
 	}
 
 	public void addNewTypeItem(TransactionType transactionType, EventType eventType) {
@@ -96,6 +101,16 @@ public class CacheReport {
 		List<CacheNameItem> result = new ArrayList<CacheNameItem>(m_nameItems.values());
 		Collections.sort(result, new CacheNameItemCompator(m_sortBy));
 		return result;
+	}
+
+	public List<String> getAllMethods() {
+		CacheNameItem allItem = m_nameItems.get(ALL);
+
+		if (allItem != null) {
+			return new ArrayList<String>(allItem.getMethodCounts().keySet());
+		} else {
+			return new ArrayList<String>();
+		}
 	}
 
 	public java.util.Date getStartTime() {
@@ -145,15 +160,35 @@ public class CacheReport {
 
 		private long m_missed;
 
+		private long m_getCount;
+
 		private TransactionName m_name;
 
-		public void add(TransactionName transactionName, EventName eventName) {
-			m_name.setTotalCount(m_name.getTotalCount() + transactionName.getTotalCount());
+		private String m_category;
+
+		private Map<String, Long> m_methodCounts = new HashMap<String, Long>();
+
+		public void add(TransactionName transactionName, EventName eventName, String method) {
+			long transactionTotalCount = transactionName.getTotalCount();
+
+			m_name.setTotalCount(m_name.getTotalCount() + transactionTotalCount);
 			m_name.setSum(m_name.getSum() + transactionName.getSum());
 			m_name.setAvg((double) m_name.getSum() / m_name.getTotalCount());
 			m_name.setTps(m_name.getTps() + transactionName.getTps());
-			m_missed = m_missed + eventName.getTotalCount();
-			m_hited = 1 - (double) m_missed / m_name.getTotalCount();
+
+			if (!StringUtil.isEmpty(method)) {
+				Long value = m_methodCounts.get(method);
+
+				if (value == null) {
+					value = 0L;
+				}
+				m_methodCounts.put(method, value + transactionTotalCount);
+				if ("get".equals(method)) {
+					m_missed = m_missed + eventName.getTotalCount();
+					m_getCount = m_getCount + transactionTotalCount;
+					m_hited = 1 - (double) m_missed / m_getCount;
+				}
+			}
 		}
 
 		public double getHited() {
@@ -166,6 +201,24 @@ public class CacheReport {
 
 		public TransactionName getName() {
 			return m_name;
+		}
+
+		public String getCategory() {
+			return m_category;
+		}
+
+		public Map<String, Long> getMethodCounts() {
+			return m_methodCounts;
+		}
+
+		public long getMethodCount(String method) {
+			Long count = m_methodCounts.get(method);
+
+			if (count == null) {
+				return 0L;
+			} else {
+				return count;
+			}
 		}
 
 		public void setHited(double hited) {
@@ -207,6 +260,9 @@ public class CacheReport {
 				return (int) (o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000);
 			} else if (m_sort.equals("name")) {
 				return o1.getName().getId().compareTo(o2.getName().getId());
+			} else if (m_sort.startsWith("method:")) {
+				String method = m_sort.substring(7);
+				return (int) (o2.getMethodCount(method) - o1.getMethodCount(method));
 			}
 			return 0;
 		}

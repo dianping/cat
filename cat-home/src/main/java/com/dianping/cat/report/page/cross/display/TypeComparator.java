@@ -2,11 +2,11 @@ package com.dianping.cat.report.page.cross.display;
 
 import java.util.Comparator;
 
-public class TypeCompartor implements Comparator<TypeDetailInfo> {
+public class TypeComparator implements Comparator<TypeDetailInfo> {
 
 	private String m_sorted;
 
-	public TypeCompartor(String sort) {
+	public TypeComparator(String sort) {
 		m_sorted = sort;
 	}
 

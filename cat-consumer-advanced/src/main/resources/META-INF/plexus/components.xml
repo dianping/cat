@@ -20,6 +20,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.HostinfoService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
