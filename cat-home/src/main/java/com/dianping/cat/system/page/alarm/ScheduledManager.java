@@ -167,42 +167,42 @@ public class ScheduledManager implements Initializable {
 		}
 
 		for (ScheduledReport report : reports) {
-			String domain = report.getDomain();
-			Project project = m_projectService.findByDomain(domain);
+			try {
+				String domain = report.getDomain();
+				Project project = m_projectService.findByDomain(domain);
 
-			if (project == null) {
-				project = m_projectService.findByCmdbDomain(domain);
-			}
+				if (project == null) {
+					project = m_projectService.findByCmdbDomain(domain);
+				}
 
-			if (project != null) {
-				String cmdbDomain = project.getCmdbDomain();
+				if (project != null) {
+					String cmdbDomain = project.getCmdbDomain();
 
-				if (StringUtils.isNotEmpty(cmdbDomain) && !report.getDomain().equals(cmdbDomain)
-				      && !m_reports.containsKey(cmdbDomain)) {
-					ScheduledReport entity = m_scheduledReportDao.createLocal();
+					if (StringUtils.isNotEmpty(cmdbDomain) && !report.getDomain().equals(cmdbDomain)
+					      && !m_reports.containsKey(cmdbDomain)) {
+						ScheduledReport entity = m_scheduledReportDao.createLocal();
 
-					entity.setKeyId(report.getKeyId());
-					entity.setId(report.getId());
-					entity.setNames(report.getNames());
-					entity.setDomain(cmdbDomain);
+						entity.setKeyId(report.getKeyId());
+						entity.setId(report.getId());
+						entity.setNames(report.getNames());
+						entity.setDomain(cmdbDomain);
 
-					int succ = 0;
-					try {
+						int succ = 0;
 						succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
-					} catch (DalException e) {
-						Cat.logError(e);
-					}
-					if (succ > 0) {
-						report.setDomain(cmdbDomain);
-						m_reports.put(cmdbDomain, report);
+						if (succ > 0) {
+							report.setDomain(cmdbDomain);
+							m_reports.put(cmdbDomain, report);
+						} else {
+							m_reports.put(domain, report);
+						}
 					} else {
 						m_reports.put(domain, report);
 					}
 				} else {
 					m_reports.put(domain, report);
 				}
-			} else {
-				m_reports.put(domain, report);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
