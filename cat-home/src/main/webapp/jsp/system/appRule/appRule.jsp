@@ -44,14 +44,14 @@
 					<th width="15%">告警名</th>
 					<th width="15%">命令字</th>
 					<th width="10%">返回码</th>
-					<th width="10%">网络类型</th>
-					<th width="10%">版本</th>
-					<th width="10%">连接类型</th>
-					<th width="10%">平台</th>
-					<th width="10%">地区</th>
-					<th width="10%">运营商</th>
-					<th width="10%">告警指标</th>
-					<th width="5%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appRuleUpdate">新增</a></th>
+					<th width="6%">网络类型</th>
+					<th width="6%">版本</th>
+					<th width="6%">连接类型</th>
+					<th width="6%">平台</th>
+					<th width="6%">地区</th>
+					<th width="6%">运营商</th>
+					<th width="6%">告警指标</th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">

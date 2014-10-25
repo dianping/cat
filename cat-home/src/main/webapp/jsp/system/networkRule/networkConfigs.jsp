@@ -78,7 +78,7 @@
 	     				</c:if>
 	     			</td>
 		     		<td style="text-align:center;white-space: nowrap">
-		     			<a href="?op=networkRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small">修改规则</a>
+		     			<a href="?op=networkRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small">修改</a>
 			     		<a href="?op=networkRulDelete&key=${item.id}" class="btn btn-primary btn-small btn-danger delete">删除</a>
 			     	</td>
 		     		</tr>

@@ -156,42 +156,42 @@ public class ScheduledManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		try {
-//			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-//
-//			for (ScheduledReport report : reports) {
-//				String domain = report.getDomain();
-//				Project project = m_projectService.findByDomain(domain);
-//
-//				if (project == null) {
-//					project = m_projectService.findByCmdbDomain(domain);
-//				}
-//
-//				if (project != null) {
-//					String cmdbDomain = project.getCmdbDomain();
-//
-//					if (StringUtils.isNotEmpty(cmdbDomain) && !report.getDomain().equals(cmdbDomain)
-//					      && !m_reports.containsKey(cmdbDomain)) {
-//						ScheduledReport entity = m_scheduledReportDao.createLocal();
-//
-//						entity.setKeyId(report.getKeyId());
-//						entity.setId(report.getId());
-//						entity.setNames(report.getNames());
-//						entity.setDomain(cmdbDomain);
-//
-//						int succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
-//						if (succ > 0) {
-//							report.setDomain(cmdbDomain);
-//							m_reports.put(cmdbDomain, report);
-//						} else {
-//							m_reports.put(domain, report);
-//						}
-//					} else {
-//						m_reports.put(domain, report);
-//					}
-//				} else {
-//					m_reports.put(domain, report);
-//				}
-//			}
+			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+
+			for (ScheduledReport report : reports) {
+				String domain = report.getDomain();
+				Project project = m_projectService.findByDomain(domain);
+
+				if (project == null) {
+					project = m_projectService.findByCmdbDomain(domain);
+				}
+
+				if (project != null) {
+					String cmdbDomain = project.getCmdbDomain();
+
+					if (StringUtils.isNotEmpty(cmdbDomain) && !report.getDomain().equals(cmdbDomain)
+					      && !m_reports.containsKey(cmdbDomain)) {
+						ScheduledReport entity = m_scheduledReportDao.createLocal();
+
+						entity.setKeyId(report.getKeyId());
+						entity.setId(report.getId());
+						entity.setNames(report.getNames());
+						entity.setDomain(cmdbDomain);
+
+						int succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
+						if (succ > 0) {
+							report.setDomain(cmdbDomain);
+							m_reports.put(cmdbDomain, report);
+						} else {
+							m_reports.put(domain, report);
+						}
+					} else {
+						m_reports.put(domain, report);
+					}
+				} else {
+					m_reports.put(domain, report);
+				}
+			}
 			Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
 		} catch (Exception e) {
 			Cat.logError(e);

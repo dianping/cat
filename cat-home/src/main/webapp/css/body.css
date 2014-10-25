@@ -40,10 +40,6 @@ table {
 	border-radius:4px;
 }
 
-.data tr{
-	border:1px solid #dddddd;
-}
-
 .data tr.head th {
 	background-color: #f2f2f2;
 }
@@ -54,35 +50,32 @@ table {
 
 .data tr.odd td {
 	background-color: #eee;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
 .data tr.even td {
 	background-color: white;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
 .data tr.odd th {
 	background-color: #eee;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
 .data tr.even th {
 	background-color: white;
-	white-space: nowrap;
-	vertical-align: top;
 }
 
 .data td.odd {
 	background-color: #eee;
-	word-break: break-all;
 }
 
 .data td.even {
 	background-color: white;
+}
+
+th{
+	word-break: break-all;
+}
+td{
 	word-break: break-all;
 }
 

@@ -100,10 +100,10 @@
 						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 							<thead>
 							<tr class="odd">
-								<th width="20%">名称</th>
-								<th width="35%">项目</th>
-								<th width="30%">标题</th>
-								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
+								<th width="40%">名称</th>
+								<th width="20%">项目</th>
+								<th width="20%">标题</th>
+								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
 							</tr>
 							</thead>
 							<tbody>

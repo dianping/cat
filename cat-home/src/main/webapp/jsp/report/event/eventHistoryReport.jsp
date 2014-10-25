@@ -50,7 +50,7 @@
 	</tr>
 </table>
 
-<table class='data'>
+<table class='data' style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>

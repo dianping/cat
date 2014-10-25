@@ -123,7 +123,7 @@
 					     		<td style="text-align:center;white-space: nowrap">
 					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small">修改</a>
 						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>
-					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-small">告警规则</a>
+					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-small">告警</a>
 						     	</td>
 					     		</tr>
 					     	</c:forEach>

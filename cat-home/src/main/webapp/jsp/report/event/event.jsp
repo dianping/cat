@@ -64,16 +64,16 @@
 		</th>
 	</tr>
 </table>
-<table class='data'>
+<table class='data' style="min-width:1100px;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th>
-			<th>QPS</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<th class="right">Sample Link</th>
+			<th class="right">QPS</th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}" />
@@ -86,7 +86,7 @@
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
 					<td>&nbsp;${w:format(e.failPercent/100,'0.0000%')}</td>
-					<td class="center"><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
 				<tr class="graphs">

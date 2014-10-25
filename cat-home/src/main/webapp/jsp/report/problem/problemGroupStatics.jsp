@@ -80,7 +80,7 @@
 		</th>
 	</tr>
 </table>
-<table class="problem"  style="width:100%">
+<table class="data"  style="width:100%">
 	<tr>
 		<th width="15%">Type</th>
 		<th width="5%">Total</th>
