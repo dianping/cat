@@ -208,14 +208,19 @@ public class ScheduledManager implements Initializable {
 	}
 
 	private void updateData(String domain) throws Exception {
-		ScheduledReport entity = m_scheduledReportDao.createLocal();
-
-		entity.setNames("transaction;event;problem;health");
-		entity.setDomain(domain);
-		m_scheduledReportDao.insert(entity);
-
 		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
-		m_reports.put(domain, report);
+
+		if (report == null) {
+			ScheduledReport entity = m_scheduledReportDao.createLocal();
+			entity.setNames("transaction;event;problem;health");
+			entity.setDomain(domain);
+
+			int n = m_scheduledReportDao.insert(entity);
+			if (n > 0) {
+				ScheduledReport r = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
+				m_reports.put(domain, r);
+			}
+		}
 	}
 
 	public void refreshScheduledReport() throws Exception {
@@ -225,9 +230,9 @@ public class ScheduledManager implements Initializable {
 			String domain = entry.getKey();
 			String cmdbDomain = entry.getValue().getCmdbDomain();
 
-			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
+			if (StringUtils.isNotEmpty(cmdbDomain)) {
 				updateData(cmdbDomain);
-			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
+			} else if (StringUtils.isEmpty(cmdbDomain)) {
 				updateData(domain);
 			}
 		}
