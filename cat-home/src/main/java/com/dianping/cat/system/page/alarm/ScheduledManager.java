@@ -223,17 +223,21 @@ public class ScheduledManager implements Initializable {
 		}
 	}
 
-	public void refreshScheduledReport() throws Exception {
+	public void refreshScheduledReport() {
 		Map<String, Project> projects = m_projectService.findAllProjects();
 
 		for (Entry<String, Project> entry : projects.entrySet()) {
 			String domain = entry.getKey();
 			String cmdbDomain = entry.getValue().getCmdbDomain();
 
-			if (StringUtils.isNotEmpty(cmdbDomain)) {
-				updateData(cmdbDomain);
-			} else if (StringUtils.isEmpty(cmdbDomain)) {
-				updateData(domain);
+			try {
+				if (StringUtils.isNotEmpty(cmdbDomain)) {
+					updateData(cmdbDomain);
+				} else if (StringUtils.isEmpty(cmdbDomain)) {
+					updateData(domain);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
