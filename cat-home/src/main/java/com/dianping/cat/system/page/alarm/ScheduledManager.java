@@ -155,10 +155,19 @@ public class ScheduledManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		try {
-			List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+		Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
+	}
 
-			for (ScheduledReport report : reports) {
+	private void loadData() {
+		List<ScheduledReport> reports = new ArrayList<ScheduledReport>();
+		try {
+			reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+		} catch (DalException e1) {
+			Cat.logError(e1);
+		}
+
+		for (ScheduledReport report : reports) {
+			try {
 				String domain = report.getDomain();
 				Project project = m_projectService.findByDomain(domain);
 
@@ -178,7 +187,8 @@ public class ScheduledManager implements Initializable {
 						entity.setNames(report.getNames());
 						entity.setDomain(cmdbDomain);
 
-						int succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
+						int succ = 0;
+						succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
 						if (succ > 0) {
 							report.setDomain(cmdbDomain);
 							m_reports.put(cmdbDomain, report);
@@ -191,36 +201,43 @@ public class ScheduledManager implements Initializable {
 				} else {
 					m_reports.put(domain, report);
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
-		} catch (Exception e) {
-			Cat.logError(e);
-			e.printStackTrace();
 		}
 	}
 
 	private void updateData(String domain) throws Exception {
-		ScheduledReport entity = m_scheduledReportDao.createLocal();
-
-		entity.setNames("transaction;event;problem;health");
-		entity.setDomain(domain);
-		m_scheduledReportDao.insert(entity);
-
 		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
-		m_reports.put(domain, report);
+
+		if (report == null) {
+			ScheduledReport entity = m_scheduledReportDao.createLocal();
+			entity.setNames("transaction;event;problem;health");
+			entity.setDomain(domain);
+
+			int n = m_scheduledReportDao.insert(entity);
+			if (n > 0) {
+				ScheduledReport r = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
+				m_reports.put(domain, r);
+			}
+		}
 	}
 
-	public void refreshScheduledReport() throws Exception {
+	public void refreshScheduledReport() {
 		Map<String, Project> projects = m_projectService.findAllProjects();
 
 		for (Entry<String, Project> entry : projects.entrySet()) {
 			String domain = entry.getKey();
 			String cmdbDomain = entry.getValue().getCmdbDomain();
 
-			if (StringUtils.isNotEmpty(cmdbDomain) && !m_reports.containsKey(cmdbDomain)) {
-				updateData(cmdbDomain);
-			} else if (StringUtils.isEmpty(cmdbDomain) && !m_reports.containsKey(domain)) {
-				updateData(domain);
+			try {
+				if (StringUtils.isNotEmpty(cmdbDomain)) {
+					updateData(cmdbDomain);
+				} else if (StringUtils.isEmpty(cmdbDomain)) {
+					updateData(domain);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
@@ -234,6 +251,8 @@ public class ScheduledManager implements Initializable {
 
 		@Override
 		public void run() {
+			loadData();
+
 			boolean active = true;
 			while (active) {
 				try {
@@ -242,7 +261,7 @@ public class ScheduledManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
+					Thread.sleep(TimeHelper.ONE_HOUR);
 				} catch (InterruptedException e) {
 					active = false;
 				}
