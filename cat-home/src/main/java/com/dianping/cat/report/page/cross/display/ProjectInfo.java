@@ -61,7 +61,6 @@ public class ProjectInfo extends BaseVisitor {
 
 		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
-			System.out.println(projectName);
 		}
 
 		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);

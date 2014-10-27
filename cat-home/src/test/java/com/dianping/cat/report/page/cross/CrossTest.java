@@ -30,7 +30,7 @@ public class CrossTest {
 			tClient3.setStatus(Transaction.SUCCESS);
 			Thread.sleep(100);
 			tClient3.complete();
-
+			
 			Transaction tServer = Cat.newTransaction("PigeonService", "Cat-Test-Call");
 			MessageTree tree2 = Cat.getManager().getThreadLocalMessageTree();
 			((DefaultMessageTree) tree2).setDomain("cat");
@@ -66,6 +66,26 @@ public class CrossTest {
 			Cat.logEvent("PigeonService.app", "cat");
 			tServer3.setStatus(Transaction.SUCCESS);
 			tServer3.complete();
+			
+			Transaction tClient6 = Cat.newTransaction("PigeonCall", "Cat-Test-Call");
+			MessageTree tree7 = Cat.getManager().getThreadLocalMessageTree();
+			((DefaultMessageTree) tree7).setDomain("Unipay");
+			((DefaultMessageTree) tree7).setIpAddress("10.1.4.99");
+			Cat.logEvent("PigeonCall.server", "10.1.2.17:3000");
+			Cat.logEvent("PigeonCall.app", "catServer");
+			tClient6.setStatus(Transaction.SUCCESS);
+			Thread.sleep(100);
+			tClient6.complete();
+			
+			Transaction tServer4 = Cat.newTransaction("PigeonService", "new-call-2");
+			MessageTree tree8 = Cat.getManager().getThreadLocalMessageTree();
+			((DefaultMessageTree) tree8).setDomain("catServer");
+			((DefaultMessageTree) tree8).setIpAddress("10.1.2.17");
+			Cat.logEvent("PigeonService.client", "10.1.4.99");
+			Cat.logEvent("PigeonService.app", "cat");
+			tServer4.setStatus(Transaction.SUCCESS);
+			tServer4.complete();
+	
 
 			try {
 				Thread.sleep(500);
