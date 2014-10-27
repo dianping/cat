@@ -40,7 +40,6 @@ public class AlertSummaryExecutor {
 	@Inject
 	private SenderManager m_sendManager;
 
-	// fetch alerts during this period, time unit is ms, default value is 5 minnutes
 	public static final long SUMMARY_DURATION = 5 * 60 * 1000L;
 
 	private List<String> builderReceivers(String str) {
