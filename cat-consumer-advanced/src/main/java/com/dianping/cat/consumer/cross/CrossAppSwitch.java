@@ -1,7 +1,7 @@
 package com.dianping.cat.consumer.cross;
 
 public class CrossAppSwitch {
-	public boolean m_turnOn = true;
+	public boolean m_turnOn = false;
 
 	public CrossAppSwitch() {
 	}
