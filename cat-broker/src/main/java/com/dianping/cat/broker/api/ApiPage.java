@@ -13,7 +13,9 @@ public enum ApiPage implements Page {
 
    CDN("cdn", "cdn", "Cdn", "Cdn", true),
 
-   SAVE("save", "save", "Save", "Save", true);
+   SAVE("save", "save", "Save", "Save", true),
+
+   LOG("log", "log", "Log", "Log", true);
 
    private String m_name;
 

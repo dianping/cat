@@ -7,6 +7,10 @@
 		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
 	</filter>
 	<servlet>
+		<servlet-name>log-servlet</servlet-name>
+		<servlet-class>com.dianping.cat.broker.api.log.LogServlet</servlet-class>
+	</servlet>
+	<servlet>
 		<servlet-name>mvc-servlet</servlet-name>
 		<servlet-class>org.unidal.web.MVC</servlet-class>
 		<init-param>
@@ -33,6 +37,10 @@
 	<servlet-mapping>
 		<servlet-name>mvc-servlet</servlet-name>
 		<url-pattern>/api/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>log-servlet</servlet-name>
+		<url-pattern>/log/*</url-pattern>
 	</servlet-mapping>
 	<jsp-config>
 		<taglib>
