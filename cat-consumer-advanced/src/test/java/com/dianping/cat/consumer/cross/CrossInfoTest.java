@@ -28,6 +28,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
+		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
 
 		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -42,6 +43,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
+		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
 
 		DefaultTransaction t = new DefaultTransaction("Call", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -70,6 +72,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
+		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -98,6 +101,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
+		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();

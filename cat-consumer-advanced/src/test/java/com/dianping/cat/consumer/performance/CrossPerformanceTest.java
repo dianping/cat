@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -18,7 +17,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.service.HostinfoService;
 
 public class CrossPerformanceTest extends ComponentTestCase {
 
@@ -29,7 +27,6 @@ public class CrossPerformanceTest extends ComponentTestCase {
 		analyzer.setIpConvertManager(new IpConvertManager());
 		analyzer.setServerConfigManager(new ServerConfigManager());
 		analyzer.setReportManager(new MockCrossReportManager());
-		analyzer.setHostinfoService(new MockHostinfoService());
 
 		MessageTree tree = buildMessage();
 
@@ -68,17 +65,6 @@ public class CrossPerformanceTest extends ComponentTestCase {
 				reports.put(domain, report);
 			}
 			return report;
-		}
-	}
-
-	public static class MockHostinfoService extends HostinfoService {
-		@Override
-		public void initialize() throws InitializationException {
-		}
-
-		@Override
-		public String queryDomainByIp(String ip) {
-			return "Cat-CatTest";
 		}
 	}
 

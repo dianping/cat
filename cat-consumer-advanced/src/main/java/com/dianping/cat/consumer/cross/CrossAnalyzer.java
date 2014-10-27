@@ -5,7 +5,6 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -36,10 +35,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Inject
 	private IpConvertManager m_ipConvertManager;
 
-	@Inject
-	private HostinfoService m_hostinfoService;
-
 	private static final String UNKNOWN = "UnknownIp";
+
+	private CrossAppSwitch m_crossAppSwitch = new CrossAppSwitch();
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -93,7 +91,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				if (message.getType().equals("PigeonCall.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app")) {
+				if (message.getType().equals("PigeonCall.app") && m_crossAppSwitch.switchOn()) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -105,15 +103,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		return crossInfo;
 	}
 
-	public Pair<String, CrossInfo> convertCrossInfo(String client, CrossInfo crossInfo) {
+	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
 		String localIp = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
-		String domain = crossInfo.getApp();
-
-		if (StringUtils.isEmpty(domain)) {
-			domain = m_hostinfoService.queryDomainByIp(remoteAddress);
-		}
-
 		int index = remoteAddress.indexOf(":");
 		if (index > 0) {
 			remoteAddress = remoteAddress.substring(0, index);
@@ -126,7 +118,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		info.setDetailType("PigeonCall");
 		info.setApp(client);
 
-		return new Pair<String, CrossInfo>(domain, info);
+		return info;
 	}
 
 	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
@@ -158,7 +150,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						crossInfo.setRemoteAddress(formatIp);
 					}
 				}
-				if (message.getType().equals("PigeonService.app")) {
+				if (message.getType().equals("PigeonService.app") && m_crossAppSwitch.switchOn()) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -196,12 +188,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		if (crossInfo != null) {
 			updateCrossReport(report, t, crossInfo);
 
-			if (m_serverConfigManager.isClientCall(t.getType())) {
-				Pair<String, CrossInfo> pair = convertCrossInfo(tree.getDomain(), crossInfo);
-				updateServerCrossReport(t, pair.getKey(), pair.getValue());
+			String domain = crossInfo.getApp();
+			if (m_serverConfigManager.isClientCall(t.getType()) && StringUtils.isNotEmpty(domain)) {
+				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
+
+				updateServerCrossReport(t, domain, info);
 			}
 		}
-
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
@@ -223,8 +216,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		m_serverConfigManager = serverConfigManager;
 	}
 
-	public void setHostinfoService(HostinfoService hostinfoService) {
-		m_hostinfoService = hostinfoService;
+	public void setCrossAppSwitch(CrossAppSwitch crossAppSwitch) {
+		m_crossAppSwitch = crossAppSwitch;
 	}
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {

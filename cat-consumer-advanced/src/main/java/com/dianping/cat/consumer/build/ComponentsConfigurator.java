@@ -100,7 +100,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(IpConvertManager.class));
 		all.add(C(MessageAnalyzer.class, ID, CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class, IpConvertManager.class, HostinfoService.class));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class, IpConvertManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //

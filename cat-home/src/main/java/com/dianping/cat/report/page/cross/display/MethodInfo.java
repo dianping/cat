@@ -150,7 +150,7 @@ public class MethodInfo extends BaseVisitor {
 			} else if (m_remoteProject.startsWith("AllServer") && role.endsWith("Server")) {
 				return true;
 			}
-			if (CrossAppSwitch.switchOn() && StringUtils.isNotEmpty(app)) {
+			if (StringUtils.isNotEmpty(app)) {
 				if (app.equalsIgnoreCase(projectName)) {
 					return true;
 				}
