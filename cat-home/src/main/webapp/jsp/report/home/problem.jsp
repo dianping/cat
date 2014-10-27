@@ -3,6 +3,7 @@
 <h3 class="text-error">常见问题说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th>常见问题</th><th>问题解答</th></tr>
+	<tr style="color:red"><td>在cat上显示两个不同项目名</<td><td>由于phoenix灰度升级，业务可以直接升级至1.1.3，解决问题。</td></tr>
 	<tr style="color:red"><td>CAT实时接口文档</<td><td><a href="https://docs.google.com/a/dianping.com/spreadsheet/ccc?key=0AsZINNb1ERcAdDdjQk5oaUZ1bmF6WmZlMjNxLUpwOWc&usp=drive_web" target="blank">接口文档</a></td></tr>
 	<tr style="color:red"><td>Job打包不能执行</<td><td>请检查系统临时目录，运行程序是否有写的权限</td></tr>
 	<tr style="color:red"><td>Job打包出错</<td><td>升级maven-assembly-plugin至2.2-beta-5版本</td></tr>

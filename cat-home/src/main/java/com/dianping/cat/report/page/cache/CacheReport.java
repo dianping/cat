@@ -161,13 +161,13 @@ public class CacheReport {
 		private long m_missed;
 
 		private long m_getCount;
-
+		
 		private TransactionName m_name;
 
 		private String m_category;
 
 		private Map<String, Long> m_methodCounts = new HashMap<String, Long>();
-
+		
 		public void add(TransactionName transactionName, EventName eventName, String method) {
 			long transactionTotalCount = transactionName.getTotalCount();
 

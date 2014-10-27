@@ -9,6 +9,7 @@ import java.net.URLClassLoader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -445,6 +446,8 @@ public enum RuleType {
 
 		private static final String USER_DEFINED_CLASS_NAME = "UserDefinedRule.java";
 
+		private Map<String, MonitorRule> m_rules = new HashMap<String, MonitorRule>();
+
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			return null;
@@ -452,22 +455,27 @@ public enum RuleType {
 
 		@Override
 		public Pair<Boolean, String> executeRule(double[] values, double[] baselines, String rawValue) {
-			try {
-				Pair<File, File> files = generateClassFile(rawValue);
-				File userDefinedFolder = files.getKey();
-				File userDefinedClassFile = files.getValue();
-				JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-				compiler.run(null, null, null, userDefinedClassFile.getPath());
+			MonitorRule instance = m_rules.get(rawValue);
 
-				URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { userDefinedFolder.toURI().toURL() });
-				Class<?> cls = Class.forName("UserDefinedRule", true, classLoader);
-				MonitorRule instance = (MonitorRule) cls.newInstance();
+			if (instance == null) {
+				try {
+					Pair<File, File> files = generateClassFile(rawValue);
+					File userDefinedFolder = files.getKey();
+					File userDefinedClassFile = files.getValue();
+					JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+					compiler.run(null, null, null, userDefinedClassFile.getPath());
 
-				return instance.checkData(values, baselines);
-			} catch (Exception e) {
-				Cat.logError("generate user defined rule error: " + rawValue, e);
-				return new Pair<Boolean, String>(false, "");
+					URLClassLoader classLoader = URLClassLoader.newInstance(new URL[] { userDefinedFolder.toURI().toURL() });
+					Class<?> cls = Class.forName("UserDefinedRule", true, classLoader);
+					instance = (MonitorRule) cls.newInstance();
+
+					m_rules.put(rawValue, instance);
+				} catch (Exception e) {
+					Cat.logError("generate user defined rule error: " + rawValue, e);
+					return new Pair<Boolean, String>(false, "");
+				}
 			}
+			return instance.checkData(values, baselines);
 		}
 
 		private Pair<File, File> generateClassFile(String rawValue) throws IOException {
