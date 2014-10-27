@@ -32,19 +32,19 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("showActivity")
 	private boolean m_showActivity;
-	
+
 	@FieldMeta("name")
 	private String m_name;
-	
+
 	@FieldMeta("title")
 	private String m_title;
-	
+
 	@FieldMeta("domains")
 	private String m_domains;
-	
+
 	@FieldMeta("commandId")
 	private String m_commandId;
-	
+
 	@FieldMeta("domains2")
 	private String m_domains2;
 
@@ -79,7 +79,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public AppDataGroupByField getGroupByField() {
 		return m_groupByField;
 	}
-	
+
 	public String getName() {
 		return m_name;
 	}

@@ -44,10 +44,4 @@ public class PieChartDetailInfo {
 		m_title = title;
 		return this;
 	}
-
-	@Override
-   public String toString() {
-	   return "PieChartDetailInfo [m_id=" + m_id + ", m_title=" + m_title + ", m_requestSum=" + m_requestSum
-	         + ", m_successRatio=" + m_successRatio + "]";
-   }
 }

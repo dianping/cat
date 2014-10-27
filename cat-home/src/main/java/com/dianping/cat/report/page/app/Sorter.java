@@ -9,6 +9,10 @@ public class Sorter {
 
 	private String m_sortBy;
 
+	public Sorter() {
+		this(AppDataService.REQUEST);
+	}
+
 	public Sorter(String sortBy) {
 		m_sortBy = sortBy;
 	}
@@ -47,13 +51,7 @@ public class Sorter {
 
 		@Override
 		public int compare(PieChartDetailInfo o1, PieChartDetailInfo o2) {
-			if (AppDataService.SUCCESS.equals(m_sortBy)) {
-				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
-			} else if (AppDataService.REQUEST.equals(m_sortBy)) {
-				return (int) (o2.getRequestSum() - o1.getRequestSum());
-			} else {
-				return 0;
-			}
+			return (int) (o2.getRequestSum() - o1.getRequestSum());
 		}
 	}
 

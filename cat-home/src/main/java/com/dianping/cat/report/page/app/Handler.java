@@ -95,7 +95,7 @@ public class Handler implements PageHandler<Context> {
 			String type = payload.getType();
 			try {
 				filterCommands(model, payload.isShowActivity());
-				
+
 				LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
 				List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1,
 				      field);
@@ -112,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 				Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 				      field);
 				List<PieChartDetailInfo> infos = pair.getValue();
-				Collections.sort(infos, new Sorter(sortBy).buildPieChartInfoComparator());
+				Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
 
 				model.setPieChart(pair.getKey());
 				model.setPieChartDetailInfos(infos);

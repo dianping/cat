@@ -35,7 +35,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 	private double queryMinYlable(final List<Double[]> datas) {
 		double min = Double.MAX_VALUE;
-		
+
 		for (Double[] data : datas) {
 			List<Double> dataList = Arrays.asList(data);
 			double tmp = Collections.min(dataList);
@@ -152,6 +152,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
 				title = connectType.getName();
 			}
+			break;
 		case NETWORK:
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_manager
 			      .queryConfigItem(AppConfigManager.NETWORK);
@@ -195,7 +196,6 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 		item.setNumber(data.getAccessNumberSum());
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
-
 		item.setTitle(pair.getValue());
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
