@@ -45,10 +45,34 @@
 	});
 </script>
 <table class='table table-striped table-condensed '>
-		<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+		
+		<c:choose>
+		<c:when test="${!empty model.methodInfo.callProjectsInfo}">
+			<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
+		</c:when>
+		<c:otherwise>
+			<c:choose>
+			<c:when test="${!empty model.methodInfo.serviceProjectsInfo && !empty model.methodInfo.callerProjectsInfo}">
+				<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+			    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
+				支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+				</th></tr>
+			</c:when>
+			<c:otherwise>
+				<c:if test="${!empty model.methodInfo.serviceProjectsInfo}">
+				<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+			    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
+				支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+				</th></tr>
+				</c:if>
+			</c:otherwise>
+			</c:choose>
+		</c:otherwise>
+		</c:choose>
+		
 		<script>
 			function filterByName(date,domain,ip){
 				var queryName=$("#queryname").val();
