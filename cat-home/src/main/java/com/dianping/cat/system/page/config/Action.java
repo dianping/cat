@@ -141,6 +141,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
+	APP_CONFIG_DOWNLOAD("appConfigDownload"),
+
 	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
 
 	THIRD_PARTY_CONFIG_UPDATE("thirdPartyConfigUpdate"),

@@ -17,6 +17,9 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case APP_ADD:
 		case APP_DELETE:
 			return JspFile.APP_MODIFY_RESULT.getPath();
+		case LINECHART_JSON:
+		case PIECHART_JSON:
+			return JspFile.JSON.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

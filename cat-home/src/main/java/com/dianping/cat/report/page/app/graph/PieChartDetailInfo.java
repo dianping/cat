@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app;
+package com.dianping.cat.report.page.app.graph;
 
 public class PieChartDetailInfo {
 

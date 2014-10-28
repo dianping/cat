@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -23,10 +25,13 @@ import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.graph.Sorter;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -90,35 +95,36 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			QueryEntity linechartEntity1 = payload.getQueryEntity1();
-			QueryEntity linechartEntity2 = payload.getQueryEntity2();
-			String type = payload.getType();
-			try {
-				filterCommands(model, payload.isShowActivity());
+			Pair<LineChart, List<AppDataSpreadInfo>> lineChartPair = buildLineChart(model, payload, field, sortBy);
 
-				LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
-				List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1,
-				      field);
-				Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
-
-				model.setLineChart(lineChart);
-				model.setAppDataSpreadInfos(appDataSpreadInfos);
-			} catch (Exception e) {
-				Cat.logError(e);
+			if (lineChartPair != null) {
+				model.setLineChart(lineChartPair.getKey());
+				model.setAppDataSpreadInfos(lineChartPair.getValue());
 			}
 			break;
-		case PIECHART:
-			try {
-				Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
-				      field);
-				List<PieChartDetailInfo> infos = pair.getValue();
-				Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
+		case LINECHART_JSON:
+			Pair<LineChart, List<AppDataSpreadInfo>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
+			Map<String, Object> lineChartObjs = new HashMap<String, Object>();
 
-				model.setPieChart(pair.getKey());
-				model.setPieChartDetailInfos(infos);
-			} catch (Exception e) {
-				Cat.logError(e);
+			lineChartObjs.put("lineCharts", lineChartJsonPair.getKey());
+			lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
+			model.setJson(new JsonBuilder().toJson(lineChartObjs));
+			break;
+		case PIECHART:
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(model, payload, field);
+
+			if (pieChartPair != null) {
+				model.setPieChart(pieChartPair.getKey());
+				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
+			break;
+		case PIECHART_JSON:
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(model, payload, field);
+			Map<String, Object> pieChartObjs = new HashMap<String, Object>();
+
+			pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
+			pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
+			model.setJson(new JsonBuilder().toJson(pieChartObjs));
 			break;
 		case APP_ADD:
 			String domain = payload.getDomain();
@@ -163,6 +169,43 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Model model, Payload payload,
+	      AppDataGroupByField field) {
+		try {
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			      field);
+			List<PieChartDetailInfo> infos = pair.getValue();
+			Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
+
+			return pair;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	private Pair<LineChart, List<AppDataSpreadInfo>> buildLineChart(Model model, Payload payload,
+	      AppDataGroupByField field, String sortBy) {
+		QueryEntity linechartEntity1 = payload.getQueryEntity1();
+		QueryEntity linechartEntity2 = payload.getQueryEntity2();
+		String type = payload.getType();
+
+		try {
+			filterCommands(model, payload.isShowActivity());
+
+			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
+			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
+			Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
+
+			model.setLineChart(lineChart);
+			model.setAppDataSpreadInfos(appDataSpreadInfos);
+			return new Pair<LineChart, List<AppDataSpreadInfo>>(lineChart, appDataSpreadInfos);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
 	}
 
 	private void normalize(Model model, Payload payload) {
