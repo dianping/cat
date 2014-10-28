@@ -122,6 +122,8 @@
 </table>
 <br/>
 <h4 class="text-success">用户端监控报表&nbsp;  <a  target="_blank" href="/cat/r/userMonitor?domain=&ip=&date=&reportType=&op=urlPatternUpdate">链接</a></h4>
+<br/>
+
 
 	
 	
