@@ -1,12 +1,6 @@
 package com.dianping.cat.system.page.config.process;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.zip.GZIPOutputStream;
-
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
@@ -42,7 +36,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		model.setCommands(appConfigManager.queryCommands());
 	}
 
-	public void process(Action action, Payload payload, Model model, HttpServletResponse httpResponse) {
+	public void process(Action action, Payload payload, Model model) {
 		int id;
 
 		switch (action) {
@@ -100,24 +94,15 @@ public class AppConfigProcessor extends BaseProcesser {
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
 			break;
-		case APP_CONFIG_DOWNLOAD:
+		case APP_CONFIG_FETCH:
 			String type = payload.getType();
 
-			if (StringUtils.isEmpty(type)) {
-				type = "json";
-			}
 			try {
 				if ("xml".equalsIgnoreCase(type)) {
-					ServletOutputStream outputStream = httpResponse.getOutputStream();
-					byte[] compress = compress(m_appConfigManager.getConfig().toString());
-
-					httpResponse.setContentType("application/xml;charset=utf-8");
-					httpResponse.addHeader("Content-Encoding", "gzip");
-					outputStream.write(compress);
-				} else if ("json".equalsIgnoreCase(type)) {
-					model.setAppConfigJson(new JsonBuilder().toJson(m_appConfigManager.getConfig()));
+					model.setAppConfig(m_appConfigManager.getConfig().toString());
+				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
+					model.setAppConfig(new JsonBuilder().toJson(m_appConfigManager.getConfig()));
 				}
-
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -150,14 +135,6 @@ public class AppConfigProcessor extends BaseProcesser {
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
-	}
-
-	private byte[] compress(String str) throws IOException {
-		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);
-		GZIPOutputStream gzip = new GZIPOutputStream(out);
-		gzip.write(str.getBytes());
-		gzip.close();
-		return out.toByteArray();
 	}
 
 	private void generateCommandsForModel(Model model) {

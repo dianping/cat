@@ -6,7 +6,6 @@ import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -84,7 +83,6 @@ public class Handler implements PageHandler<Context> {
 
 		model.setPage(SystemPage.CONFIG);
 		Action action = payload.getAction();
-		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		storeModifyInfo(ctx, payload);
 		model.setAction(action);
@@ -179,13 +177,13 @@ public class Handler implements PageHandler<Context> {
 		case APP_SUBMIT:
 		case APP_PAGE_DELETE:
 		case APP_CONFIG_UPDATE:
-		case APP_CONFIG_DOWNLOAD:
+		case APP_CONFIG_FETCH:
 		case APP_RULE:
 		case APP_RULE_ADD_OR_UPDATE:
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
 		case APP_RULE_DELETE:
 		case APP_COMPARISON_CONFIG_UPDATE:
-			m_appConfigProcessor.process(action, payload, model, response);
+			m_appConfigProcessor.process(action, payload, model);
 			break;
 
 		case ALERT_DEFAULT_RECEIVERS:
@@ -193,18 +191,7 @@ public class Handler implements PageHandler<Context> {
 			m_alertConfigProcessor.process(action, payload, model);
 			break;
 		}
-		if (needJspViewer(action, payload)) {
-			m_jspViewer.view(ctx, model);
-		}
-	}
-
-	private boolean needJspViewer(Action action, Payload payload) {
-		if (Action.APP_CONFIG_DOWNLOAD.equals(action) && "xml".equalsIgnoreCase(payload.getType())) {
-			return false;
-		} else {
-			return true;
-		}
-
+		m_jspViewer.view(ctx, model);
 	}
 
 	public void store(String userName, String accountName, Payload payload) {
