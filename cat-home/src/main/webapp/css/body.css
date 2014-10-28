@@ -271,3 +271,7 @@ ul, ol{
 .aleration_workflow{
 	background:#87CEEB;
 }
+.table-condensed th, .table-condensed td{
+padding: 2px 3px;
+vertical-align:middle;
+}
