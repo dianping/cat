@@ -33,6 +33,25 @@ import com.dianping.cat.system.page.config.process.BaseProcesser.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
+	public static class Edge {
+		private List<EdgeConfig> m_edgeConfigs;
+
+		private NodeConfig m_nodeConfig;
+
+		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
+			m_edgeConfigs = edgeConfigs;
+			m_nodeConfig = nodeConfig;
+		}
+
+		public List<EdgeConfig> getEdgeConfigs() {
+			return m_edgeConfigs;
+		}
+
+		public NodeConfig getNodeConfig() {
+			return m_nodeConfig;
+		}
+	}
+
 	private Project m_project;
 
 	private List<Project> m_projects;
@@ -76,6 +95,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_bug;
 
 	private String m_content;
+
+	private String m_appConfigJson;
 
 	private String m_metricItemConfigRule;
 
@@ -145,6 +166,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<AggregationRule> getAggregationRules() {
 		return m_aggregationRules;
+	}
+
+	public String getAppConfigJson() {
+		return m_appConfigJson;
 	}
 
 	public String getBug() {
@@ -400,6 +425,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_aggregationRules = aggregationRules;
 	}
 
+	public void setAppConfigJson(String appConfigJson) {
+		m_appConfigJson = appConfigJson;
+	}
+
 	public void setBug(String bug) {
 		m_bug = bug;
 	}
@@ -558,24 +587,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public static class Edge {
-		private List<EdgeConfig> m_edgeConfigs;
-
-		private NodeConfig m_nodeConfig;
-
-		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
-			m_edgeConfigs = edgeConfigs;
-			m_nodeConfig = nodeConfig;
-		}
-
-		public List<EdgeConfig> getEdgeConfigs() {
-			return m_edgeConfigs;
-		}
-
-		public NodeConfig getNodeConfig() {
-			return m_nodeConfig;
-		}
 	}
 }

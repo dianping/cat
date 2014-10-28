@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
@@ -87,28 +89,54 @@ public class Handler implements PageHandler<Context> {
 		pars.put("channel", channel);
 		pars.put("city", city);
 
-		if (url != null) {
-			if (Monitor.TYPE_INFO.equals(type)) {
-				Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate, url,
-				      pars);
-				Map<String, LineChart> lineCharts = charts.getKey();
-				List<PieChart> pieCharts = charts.getValue();
+		Action action = payload.getAction();
 
-				model.setLineCharts(lineCharts);
-				model.setPieCharts(pieCharts);
-			} else {
-				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+		switch (action) {
+		case VIEW:
+			if (url != null) {
+				if (Monitor.TYPE_INFO.equals(type)) {
+					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
+					      url, pars);
+					Map<String, LineChart> lineCharts = charts.getKey();
+					List<PieChart> pieCharts = charts.getValue();
 
-				model.setLineChart(pair.getKey());
-				model.setPieChart(pair.getValue());
+					model.setLineCharts(lineCharts);
+					model.setPieCharts(pieCharts);
+				} else {
+					Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+
+					model.setLineChart(pair.getKey());
+					model.setPieChart(pair.getValue());
+				}
 			}
+			model.setStart(startDate);
+			model.setEnd(endDate);
+			model.setPattermItems(rules);
+			model.setAction(Action.VIEW);
+			model.setPage(ReportPage.WEB);
+			model.setCityInfo(m_cityManager.getCityInfo());
+			break;
+
+		case JSON:
+			if (url != null) {
+				Map<String, Object> jsonObjs = new HashMap<String, Object>();
+
+				if (Monitor.TYPE_INFO.equals(type)) {
+					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
+					      url, pars);
+
+					jsonObjs.put("lineCharts", charts.getKey());
+					jsonObjs.put("pieCharts", charts.getValue());
+				} else {
+					Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+
+					jsonObjs.put("lineChart", pair.getKey());
+					jsonObjs.put("pieChart", pair.getValue());
+				}
+				model.setJson(new JsonBuilder().toJson(jsonObjs));
+			}
+			break;
 		}
-		model.setStart(startDate);
-		model.setEnd(endDate);
-		model.setPattermItems(rules);
-		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.WEB);
-		model.setCityInfo(m_cityManager.getCityInfo());
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
