@@ -7,7 +7,7 @@ public class CrossAppSwitch {
 	}
 
 	public CrossAppSwitch(boolean turnOn) {
-		m_turnOn = true;
+		m_turnOn = turnOn;
 	}
 
 	public boolean switchOn() {

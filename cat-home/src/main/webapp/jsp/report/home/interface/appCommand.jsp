@@ -24,5 +24,34 @@
 	<span class="text-error">{"status":500} ——> 失败</span>
 	<span class="text-error">{"status":500, "info":"name is required."} ——> 失败 [缺少name参数]</span>
 </pre>
-</br></br>
+
+<br/>
+<h4 class="text-error">APP监控配置查询API&nbsp;&nbsp;&nbsp;&nbsp; </h4>
+<p>Cat支持通过curl等方式获取APP监控配置（XML或JSON）</p>
+<pre>
+	http请求方式: GET或POST
+	http://主机域名:端口/cat/s/config?
+</pre>
+<p>参数说明</p>
+<table style="width:70%" class="table table-striped table-bordered table-condensed">
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><td>op</td><td>执行操作<span class="text-error">  必需[为appConfigFetch]</span></td></tr>
+	<tr><td>type</td><td>配置格式<span class="text-error">  可选[默认为JSON]</span></td></tr>
+</table>
+<p> url示例（get方式）</p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=json
+	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=xml
+</pre>
+<p>返回说明</p>
+<pre>
+	<span class="text-success">配置文件数据 ——> 成功</span>
+	<span class="text-error">空或其他错误 ——> 失败</span>
+</pre>
+<p class="text-error">注意，在浏览器中查看XML格式数据会显示为空，应该在代码中进行数据的读取（需要设置cookie）。例如：</p>
+<pre>
+	curl -b "ct=%E5%AD%99%E4%BD%B3%E6%9E%97|jialin.sun|1414490474065|10.1.1.109|***" -d "type=xml" http://cat.dp/cat/s/config?op=appConfigFetch
+</pre>
+	
+<br/>
 
