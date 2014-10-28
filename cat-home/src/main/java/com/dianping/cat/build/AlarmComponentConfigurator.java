@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
@@ -185,8 +186,9 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HeartbeatAlert.class)
 		      .req(ProductLineConfigManager.class, BaselineService.class)
-		      .req(ProjectService.class, RemoteMetricReportService.class, HeartbeatRuleConfigManager.class,
-		            DataChecker.class, AlertManager.class, AlertInfo.class).req(ModelService.class, HeartbeatAnalyzer.ID));
+		      .req(RemoteMetricReportService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
+		            AlertManager.class, AlertInfo.class).req(ModelService.class, HeartbeatAnalyzer.ID, "m_service")
+		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));

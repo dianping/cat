@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,6 +15,8 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -25,15 +28,14 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ProjectService;
 
 public class HeartbeatAlert extends BaseAlert implements Task {
 
-	@Inject
-	private ProjectService m_projectService;
-
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_service;
+
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
+	private ModelService<TransactionReport> m_transactionService;
 
 	private static final String[] m_metrics = { "ThreadCount", "DaemonCount", "TotalStartedCount", "CatThreadCount",
 	      "PiegonThreadCount", "HttpThreadCount", "NewGcCount", "OldGcCount", "MemoryFree", "HeapUsage",
@@ -220,6 +222,17 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		}
 	}
 
+	private Set<String> queryDomains() {
+		Set<String> domains = new HashSet<String>();
+		ModelRequest request = new ModelRequest("cat", System.currentTimeMillis());
+
+		if (m_transactionService.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+			domains.addAll(response.getModel().getDomainNames());
+		}
+		return domains;
+	}
+
 	@Override
 	public void run() {
 		boolean active = true;
@@ -234,7 +247,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			long current = System.currentTimeMillis();
 
 			try {
-				for (String domain : m_projectService.findAllDomain()) {
+				Set<String> domains = queryDomains();
+
+				for (String domain : domains) {
 					try {
 						processDomain(domain);
 					} catch (Exception e) {

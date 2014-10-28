@@ -2707,9 +2707,6 @@
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
@@ -2727,6 +2724,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>heartbeat</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionService</field-name>
 				</requirement>
 			</requirements>
 		</component>
