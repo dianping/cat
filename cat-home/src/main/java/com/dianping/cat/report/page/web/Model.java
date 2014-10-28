@@ -33,6 +33,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_cityInfo;
 
+	private String m_json;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -79,6 +81,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(maps);
 	}
 
+	public String getJson() {
+		return m_json;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
@@ -117,6 +123,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setEnd(Date end) {
 		m_end = end;
+	}
+
+	public void setJson(String json) {
+		m_json = json;
 	}
 
 	public void setLineChart(LineChart lineChart) {
