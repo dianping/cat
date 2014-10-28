@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task.alert.summary;
 
 import java.io.StringWriter;
+import java.util.Date;
 import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -11,11 +12,14 @@ import com.dianping.cat.Cat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public abstract class SummaryDecorator implements Initializable {
+public abstract class SummaryContentGenerator implements Initializable {
 
 	public Configuration m_configuration;
 
-	public String generateHtml(Map<Object, Object> dataMap) {
+	protected abstract Map<Object, Object> generateModel(String domain, Date date);
+
+	public String generateHtml(String domain, Date date) {
+		Map<Object, Object> dataMap = generateModel(domain, date);
 		StringWriter sw = new StringWriter(5000);
 
 		try {
@@ -40,5 +44,5 @@ public abstract class SummaryDecorator implements Initializable {
 
 	protected abstract String getTemplateAddress();
 
-	protected abstract String getID();
+	public abstract String getID();
 }

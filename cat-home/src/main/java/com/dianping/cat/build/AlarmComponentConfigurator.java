@@ -68,17 +68,13 @@ import com.dianping.cat.report.task.alert.sender.spliter.Spliter;
 import com.dianping.cat.report.task.alert.sender.spliter.SpliterManager;
 import com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter;
 import com.dianping.cat.report.task.alert.service.AlertEntityService;
-import com.dianping.cat.report.task.alert.summary.AlertSummaryDataGenerator;
+import com.dianping.cat.report.task.alert.summary.AlertSummaryContentGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
-import com.dianping.cat.report.task.alert.summary.AlertSummaryFTLDecorator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryManager;
-import com.dianping.cat.report.task.alert.summary.AlterationDataGenerator;
-import com.dianping.cat.report.task.alert.summary.AlterationDecorator;
-import com.dianping.cat.report.task.alert.summary.FailureDataGenerator;
-import com.dianping.cat.report.task.alert.summary.FailureDecorator;
-import com.dianping.cat.report.task.alert.summary.SummaryDataGenerator;
-import com.dianping.cat.report.task.alert.summary.SummaryDecorator;
+import com.dianping.cat.report.task.alert.summary.AlterationSummaryContentGenerator;
+import com.dianping.cat.report.task.alert.summary.FailureSummaryContentGenerator;
+import com.dianping.cat.report.task.alert.summary.SummaryContentGenerator;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
@@ -219,28 +215,20 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
-		all.add(C(SummaryDataGenerator.class, AlertSummaryDataGenerator.ID, AlertSummaryDataGenerator.class).req(
+		all.add(C(SummaryContentGenerator.class, AlertSummaryContentGenerator.ID, AlertSummaryContentGenerator.class).req(
 		      AlertSummaryGenerator.class, AlertSummaryManager.class));
 
-		all.add(C(SummaryDataGenerator.class, FailureDataGenerator.ID, FailureDataGenerator.class).req(
+		all.add(C(SummaryContentGenerator.class, FailureSummaryContentGenerator.ID, FailureSummaryContentGenerator.class).req(
 		      ModelService.class, ProblemAnalyzer.ID));
 
-		all.add(C(SummaryDataGenerator.class, AlterationDataGenerator.ID, AlterationDataGenerator.class).req(
+		all.add(C(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID, AlterationSummaryContentGenerator.class).req(
 		      AlterationDao.class));
 
-		all.add(C(SummaryDecorator.class, AlertSummaryFTLDecorator.ID, AlertSummaryFTLDecorator.class));
-
-		all.add(C(SummaryDecorator.class, FailureDecorator.ID, FailureDecorator.class));
-
-		all.add(C(SummaryDecorator.class, AlterationDecorator.ID, AlterationDecorator.class));
-
-		all.add(C(AlertSummaryExecutor.class).req(SenderManager.class)
-		      .req(SummaryDataGenerator.class, AlertSummaryDataGenerator.ID, "m_alertSummaryDataGenerator")
-		      .req(SummaryDataGenerator.class, FailureDataGenerator.ID, "m_failureDataGenerator")
-		      .req(SummaryDataGenerator.class, AlterationDataGenerator.ID, "m_alterationDataGenerator")
-		      .req(SummaryDecorator.class, AlertSummaryFTLDecorator.ID, "m_alertSummaryDecorator")
-		      .req(SummaryDecorator.class, FailureDecorator.ID, "m_failureDecorator")
-		      .req(SummaryDecorator.class, AlterationDecorator.ID, "m_alterationDecorator"));
+		all.add(C(AlertSummaryExecutor.class)
+		      .req(SenderManager.class)
+		      .req(SummaryContentGenerator.class, AlertSummaryContentGenerator.ID, "m_alertSummaryContentGenerator")
+		      .req(SummaryContentGenerator.class, FailureSummaryContentGenerator.ID, "m_failureSummaryContentGenerator")
+		      .req(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID, "m_alterationSummaryContentGenerator"));
 
 		return all;
 	}

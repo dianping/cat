@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -19,23 +18,14 @@ import com.site.lookup.util.StringUtils;
 
 public class AlertSummaryExecutor {
 
-	@Inject(type = SummaryDataGenerator.class, value = AlertSummaryDataGenerator.ID)
-	private SummaryDataGenerator m_alertSummaryDataGenerator;
+	@Inject(type = SummaryContentGenerator.class, value = AlertSummaryContentGenerator.ID)
+	private SummaryContentGenerator m_alertSummaryContentGenerator;
 
-	@Inject(type = SummaryDataGenerator.class, value = FailureDataGenerator.ID)
-	private SummaryDataGenerator m_failureDataGenerator;
+	@Inject(type = SummaryContentGenerator.class, value = FailureSummaryContentGenerator.ID)
+	private SummaryContentGenerator m_failureSummaryContentGenerator;
 
-	@Inject(type = SummaryDataGenerator.class, value = AlterationDataGenerator.ID)
-	private SummaryDataGenerator m_alterationDataGenerator;
-
-	@Inject(type = SummaryDecorator.class, value = AlertSummaryFTLDecorator.ID)
-	private SummaryDecorator m_alertSummaryDecorator;
-
-	@Inject(type = SummaryDecorator.class, value = FailureDecorator.ID)
-	private SummaryDecorator m_failureDecorator;
-
-	@Inject(type = SummaryDecorator.class, value = AlterationDecorator.ID)
-	private SummaryDecorator m_alterationDecorator;
+	@Inject(type = SummaryContentGenerator.class, value = AlterationSummaryContentGenerator.ID)
+	private SummaryContentGenerator m_alterationSummaryContentGenerator;
 
 	@Inject
 	private SenderManager m_sendManager;
@@ -72,16 +62,13 @@ public class AlertSummaryExecutor {
 		try {
 			StringBuilder builder = new StringBuilder();
 
-			Map<Object, Object> summaryModel = m_alertSummaryDataGenerator.generateModel(domain, date);
-			String summaryContent = m_alertSummaryDecorator.generateHtml(summaryModel);
+			String summaryContent = m_alertSummaryContentGenerator.generateHtml(domain, date);
 			builder.append(summaryContent);
 
-			Map<Object, Object> failureModel = m_failureDataGenerator.generateModel(domain, date);
-			String failureContext = m_failureDecorator.generateHtml(failureModel);
+			String failureContext = m_failureSummaryContentGenerator.generateHtml(domain, date);
 			builder.append(failureContext);
 
-			Map<Object, Object> alterationModel = m_alterationDataGenerator.generateModel(domain, date);
-			String alterationContext = m_alterationDecorator.generateHtml(alterationModel);
+			String alterationContext = m_alterationSummaryContentGenerator.generateHtml(domain, date);
 			builder.append(alterationContext);
 
 			t.setStatus(Transaction.SUCCESS);

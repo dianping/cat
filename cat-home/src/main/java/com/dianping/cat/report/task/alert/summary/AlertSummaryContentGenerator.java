@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 
-public class AlertSummaryDataGenerator extends SummaryDataGenerator {
+public class AlertSummaryContentGenerator extends SummaryContentGenerator {
 
 	@Inject
 	private AlertSummaryGenerator m_alertSummaryGenerator;
@@ -18,7 +18,7 @@ public class AlertSummaryDataGenerator extends SummaryDataGenerator {
 	@Inject
 	private AlertSummaryManager m_alertSummaryManager;
 
-	public static final String ID = "AlertSummaryDataGenerator";
+	public static final String ID = "AlertSummaryContentGenerator";
 
 	@SuppressWarnings("unchecked")
 	private Map<Object, Object> gatherDomainsForDependBusiness(Map<Object, Object> map) {
@@ -64,4 +64,10 @@ public class AlertSummaryDataGenerator extends SummaryDataGenerator {
 	public String getID() {
 		return ID;
 	}
+
+	@Override
+	protected String getTemplateAddress() {
+		return "summary.ftl";
+	}
+
 }

@@ -19,9 +19,9 @@ import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
-public class FailureDataGenerator extends SummaryDataGenerator {
+public class FailureSummaryContentGenerator extends SummaryContentGenerator {
 
-	public static final String ID = "FailureDataGenerator";
+	public static final String ID = "FailureDecorator";
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -89,4 +89,10 @@ public class FailureDataGenerator extends SummaryDataGenerator {
 	public String getID() {
 		return ID;
 	}
+
+	@Override
+	protected String getTemplateAddress() {
+		return "errorInfo.ftl";
+	}
+
 }
