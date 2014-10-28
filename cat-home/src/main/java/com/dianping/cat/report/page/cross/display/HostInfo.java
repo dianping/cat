@@ -134,7 +134,7 @@ public class HostInfo extends BaseVisitor {
 			}
 		}
 
-		if (CrossAppSwitch.switchOn() && StringUtils.isNotEmpty(app)) {
+		if (StringUtils.isNotEmpty(app)) {
 			if (app.equalsIgnoreCase(projectName)) {
 				return true;
 			}

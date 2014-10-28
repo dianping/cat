@@ -37,6 +37,8 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		m_analyzer = (CrossAnalyzer) lookup(MessageAnalyzer.class, CrossAnalyzer.ID);
+		m_analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
 

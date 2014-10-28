@@ -59,7 +59,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallerProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+		if (StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
 
@@ -80,7 +80,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+		if (StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
@@ -100,7 +100,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addServiceProject(String ip, String app, Type type) {
 		String projectName = app;
 
-		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(projectName)) {
+		if (StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
 

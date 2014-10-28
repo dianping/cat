@@ -36,7 +36,7 @@ public class CrossTest {
 			((DefaultMessageTree) tree2).setDomain("cat");
 			((DefaultMessageTree) tree2).setIpAddress("10.1.2.15");
 			Cat.logEvent("PigeonService.client", "10.1.2.16:3000");
-			Cat.logEvent("PigeonService.app", "catClient1");
+			Cat.logEvent("PigeonService.app", "catClient");
 			tServer.setStatus(Transaction.SUCCESS);
 			tServer.complete();
 
@@ -82,7 +82,7 @@ public class CrossTest {
 			((DefaultMessageTree) tree8).setDomain("catServer");
 			((DefaultMessageTree) tree8).setIpAddress("10.1.2.17");
 			Cat.logEvent("PigeonService.client", "10.1.4.99");
-			Cat.logEvent("PigeonService.app", "cat");
+			Cat.logEvent("PigeonService.app", "Unipay");
 			tServer4.setStatus(Transaction.SUCCESS);
 			tServer4.complete();
 	

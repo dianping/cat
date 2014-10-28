@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.cross;
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.report.page.cross.display.CrossAppSwitch;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.service.HostinfoService;
 import com.site.lookup.util.StringUtils;
@@ -44,7 +43,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 		if (ip.indexOf(":") > -1) {
 			ip = ip.substring(0, ip.indexOf(":"));
 		}
-		if (!CrossAppSwitch.switchOn() || StringUtils.isEmpty(domain)) {
+		if (StringUtils.isEmpty(domain)) {
 			domain = m_hostinfoService.queryDomainByIp(ip);
 		}
 
