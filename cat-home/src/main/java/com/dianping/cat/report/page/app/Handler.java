@@ -104,11 +104,14 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case LINECHART_JSON:
 			Pair<LineChart, List<AppDataSpreadInfo>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
-			Map<String, Object> lineChartObjs = new HashMap<String, Object>();
 
-			lineChartObjs.put("lineCharts", lineChartJsonPair.getKey());
-			lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
-			model.setJson(new JsonBuilder().toJson(lineChartObjs));
+			if (lineChartJsonPair != null) {
+				Map<String, Object> lineChartObjs = new HashMap<String, Object>();
+
+				lineChartObjs.put("lineCharts", lineChartJsonPair.getKey());
+				lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
+				model.setJson(new JsonBuilder().toJson(lineChartObjs));
+			}
 			break;
 		case PIECHART:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(model, payload, field);
@@ -120,11 +123,14 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case PIECHART_JSON:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(model, payload, field);
-			Map<String, Object> pieChartObjs = new HashMap<String, Object>();
 
-			pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
-			pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
-			model.setJson(new JsonBuilder().toJson(pieChartObjs));
+			if (pieChartJsonPair != null) {
+				Map<String, Object> pieChartObjs = new HashMap<String, Object>();
+
+				pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
+				pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
+				model.setJson(new JsonBuilder().toJson(pieChartObjs));
+			}
 			break;
 		case APP_ADD:
 			String domain = payload.getDomain();
