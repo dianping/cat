@@ -9,6 +9,7 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
@@ -30,9 +31,9 @@ public class AlertSummaryExecutor {
 	@Inject
 	private SenderManager m_sendManager;
 
-	public static final long SUMMARY_DURATION = 5 * 60 * 1000L;
+	public static final long SUMMARY_DURATION = 5 * TimeHelper.ONE_MINUTE;
 
-	public static final long ALTERATION_DURATION = 30 * 60 * 1000L;
+	public static final long ALTERATION_DURATION = 30 * TimeHelper.ONE_MINUTE;
 
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();
