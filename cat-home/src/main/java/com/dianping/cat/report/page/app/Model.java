@@ -17,6 +17,7 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -45,6 +46,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
 
 	private String m_content;
+
+	private String m_json;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -119,6 +122,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(map);
 	}
 
+	public String getJson() {
+		return m_json;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
@@ -165,6 +172,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setJson(String json) {
+		m_json = json;
 	}
 
 	public void setLineChart(LineChart lineChart) {

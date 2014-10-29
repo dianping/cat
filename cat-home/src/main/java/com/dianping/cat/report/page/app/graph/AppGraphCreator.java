@@ -23,7 +23,6 @@ import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
-import com.dianping.cat.report.page.app.PieChartDetailInfo;
 
 public class AppGraphCreator extends AbstractGraphCreator {
 

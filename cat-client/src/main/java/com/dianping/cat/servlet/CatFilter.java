@@ -272,6 +272,7 @@ public class CatFilter implements Filter {
 
 			private void customizeStatus(Transaction t, HttpServletRequest req) {
 				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
+				
 				if (catStatus != null) {
 					t.setStatus(catStatus.toString());
 				} else {
@@ -281,6 +282,7 @@ public class CatFilter implements Filter {
 
 			private void customizeUri(Transaction t, HttpServletRequest req) {
 				Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+				
 				if (t instanceof DefaultTransaction && catPageUri instanceof String) {
 					((DefaultTransaction) t).setName(catPageUri.toString());
 				}

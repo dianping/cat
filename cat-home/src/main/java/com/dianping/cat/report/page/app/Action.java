@@ -2,7 +2,9 @@ package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
+	LINECHART_JSON("linechartJson"),
 	PIECHART("piechart"),
+	PIECHART_JSON("piechartJson"),
 	APP_ADD("appAdd"),
 	APP_DELETE("appDelete");
 

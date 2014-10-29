@@ -20,6 +20,8 @@
 
 			if (value == true) {
 				$('#history').slideDown();
+				$("#domains2").val($("#domains").val());
+				$("#domains2").change();
 				$("#command2").val($("#command").val());
 				command2Change();
 				$("#code2").val($("#code").val());

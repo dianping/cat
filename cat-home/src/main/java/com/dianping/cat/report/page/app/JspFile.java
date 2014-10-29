@@ -4,6 +4,7 @@ public enum JspFile {
 	VIEW("/jsp/report/app/appLinechart.jsp"),
 	PIECHART("/jsp/report/app/appPiechart.jsp"),
 	APP_MODIFY_RESULT("/jsp/report/app/result.jsp"),
+	JSON("/jsp/report/app/json.jsp")
 	;
 
 	private String m_path;
