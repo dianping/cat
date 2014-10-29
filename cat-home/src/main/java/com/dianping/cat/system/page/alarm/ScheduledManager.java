@@ -217,7 +217,7 @@ public class ScheduledManager implements Initializable {
 		}
 	}
 
-	private void updateData(String domain) throws Exception {
+	private void updateData(String domain) {
 		try {
 			m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
 		} catch (DalNotFoundException e) {
@@ -248,14 +248,10 @@ public class ScheduledManager implements Initializable {
 			String domain = entry.getKey();
 			String cmdbDomain = entry.getValue().getCmdbDomain();
 
-			try {
-				if (StringUtils.isNotEmpty(cmdbDomain)) {
-					updateData(cmdbDomain);
-				} else if (StringUtils.isEmpty(cmdbDomain)) {
-					updateData(domain);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
+			if (StringUtils.isNotEmpty(cmdbDomain)) {
+				updateData(cmdbDomain);
+			} else if (StringUtils.isEmpty(cmdbDomain)) {
+				updateData(domain);
 			}
 		}
 	}
