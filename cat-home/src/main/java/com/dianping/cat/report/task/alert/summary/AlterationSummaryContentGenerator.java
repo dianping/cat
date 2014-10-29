@@ -13,12 +13,12 @@ import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 
-public class AlterationDataGenerator extends SummaryDataGenerator {
-
-	public static final String ID = "AlterationDataGenerator";
+public class AlterationSummaryContentGenerator extends SummaryContentGenerator {
 
 	@Inject
 	private AlterationDao m_alterationDao;
+
+	public static final String ID = "AlterationSummaryContentGenerator";
 
 	@Override
 	public Map<Object, Object> generateModel(String domain, Date date) {
@@ -36,13 +36,18 @@ public class AlterationDataGenerator extends SummaryDataGenerator {
 		return dataMap;
 	}
 
+	@Override
+	public String getID() {
+		return ID;
+	}
+
 	private Date getStartDate(Date date) {
 		return new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 	}
 
 	@Override
-	public String getID() {
-		return ID;
+	protected String getTemplateAddress() {
+		return "alterationInfo.ftl";
 	}
 
 }
