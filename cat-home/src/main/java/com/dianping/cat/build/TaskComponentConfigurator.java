@@ -191,7 +191,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(SenderManager.class, MailRecordDao.class, AppDataComparisonRender.class));
 
 		all.add(C(ScheduledManager.class).req(ScheduledReportDao.class, ScheduledSubscriptionDao.class,
-		      ProjectService.class));
+		      ProjectService.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class)//

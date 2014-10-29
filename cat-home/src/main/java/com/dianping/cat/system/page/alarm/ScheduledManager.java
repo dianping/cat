@@ -17,6 +17,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
@@ -39,6 +40,9 @@ public class ScheduledManager implements Initializable {
 
 	@Inject
 	private ProjectService m_projectService;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private Map<String, ScheduledReport> m_reports = new HashMap<String, ScheduledReport>();
 
@@ -155,7 +159,9 @@ public class ScheduledManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
+		if (m_serverConfigManager.isAlertMachine() && !m_serverConfigManager.isLocalMode()) {
+			Threads.forGroup("cat").start(new ScheduledReportUpdateTask());
+		}
 	}
 
 	private void loadData() {
@@ -188,13 +194,17 @@ public class ScheduledManager implements Initializable {
 						entity.setDomain(cmdbDomain);
 
 						int succ = 0;
-						succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
+						try {
+							succ = m_scheduledReportDao.updateByPK(entity, ScheduledReportEntity.UPDATESET_FULL);
+						} catch (DalException e) {
+						}
 						if (succ > 0) {
 							report.setDomain(cmdbDomain);
 							m_reports.put(cmdbDomain, report);
 						} else {
 							m_reports.put(domain, report);
 						}
+
 					} else {
 						m_reports.put(domain, report);
 					}
@@ -208,19 +218,27 @@ public class ScheduledManager implements Initializable {
 	}
 
 	private void updateData(String domain) throws Exception {
-		ScheduledReport report = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
-
-		if (report == null) {
+		try {
+			m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
 			ScheduledReport entity = m_scheduledReportDao.createLocal();
 			entity.setNames("transaction;event;problem;health");
 			entity.setDomain(domain);
 
-			int n = m_scheduledReportDao.insert(entity);
-			if (n > 0) {
+			try {
+				m_scheduledReportDao.insert(entity);
+				
 				ScheduledReport r = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
 				m_reports.put(domain, r);
+			} catch (DalNotFoundException e1) {
+			} catch (Exception e2) {
+				Cat.logError(e2);
 			}
+
+		} catch (Exception e1) {
+			Cat.logError(e1);
 		}
+
 	}
 
 	public void refreshScheduledReport() {
