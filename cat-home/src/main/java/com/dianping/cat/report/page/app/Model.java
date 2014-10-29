@@ -47,7 +47,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_content;
 
-	private String m_json;
+	private String m_fetchData;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -122,8 +122,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(map);
 	}
 
-	public String getJson() {
-		return m_json;
+	public String getFetchData() {
+		return m_fetchData;
 	}
 
 	public LineChart getLineChart() {
@@ -174,8 +174,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_content = content;
 	}
 
-	public void setJson(String json) {
-		m_json = json;
+	public void setFetchData(String fetchData) {
+		m_fetchData = fetchData;
 	}
 
 	public void setLineChart(LineChart lineChart) {

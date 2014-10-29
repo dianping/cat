@@ -1,10 +1,11 @@
 package com.dianping.cat.report.page.app;
 
 public enum JspFile {
-	VIEW("/jsp/report/app/appLinechart.jsp"),
-	PIECHART("/jsp/report/app/appPiechart.jsp"),
+	VIEW("/jsp/report/app/linechart.jsp"),
+	PIECHART("/jsp/report/app/piechart.jsp"),
 	APP_MODIFY_RESULT("/jsp/report/app/result.jsp"),
-	JSON("/jsp/report/app/json.jsp")
+	APP_FETCH_DATA("/jsp/report/app/fetchData.jsp"),
+	CRASH_LINECHART("/jsp/report/app/crashLinechart.jsp"),
 	;
 
 	private String m_path;
