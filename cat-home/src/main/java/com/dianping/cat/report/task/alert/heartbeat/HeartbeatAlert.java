@@ -144,10 +144,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			long currentMill = System.currentTimeMillis();
 			long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
 			HeartbeatReport currentReport = generateReport(domain, currentHourMill);
-			Set<String> ips = currentReport.getIps();
 
-			for (String ip : ips) {
-				Machine machine = currentReport.getMachines().get(ip);
+			for (Machine machine : currentReport.getMachines().values()) {
+				String ip = machine.getIp();
 				Map<String, double[]> arguments = generateArgumentMap(machine);
 
 				for (String metric : m_metrics) {
@@ -160,10 +159,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			long currentMill = System.currentTimeMillis();
 			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 			HeartbeatReport lastReport = generateReport(domain, lastHourMill);
-			Set<String> ips = lastReport.getIps();
 
-			for (String ip : ips) {
-				Machine machine = lastReport.getMachines().get(ip);
+			for (Machine machine : lastReport.getMachines().values()) {
+				String ip = machine.getIp();
 				Map<String, double[]> arguments = generateArgumentMap(machine);
 
 				for (String metric : m_metrics) {
@@ -178,13 +176,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			long lastHourMill = currentHourMill - TimeHelper.ONE_HOUR;
 			HeartbeatReport currentReport = generateReport(domain, currentHourMill);
 			HeartbeatReport lastReport = generateReport(domain, lastHourMill);
-			Set<String> ips = lastReport.getIps();
 
-			for (String ip : ips) {
-				Machine lastMachine = lastReport.getMachines().get(ip);
+			for (Machine lastMachine : lastReport.getMachines().values()) {
+				String ip = lastMachine.getIp();
 				Machine currentMachine = currentReport.getMachines().get(ip);
 
-				if (lastMachine != null && currentMachine != null) {
+				if (currentMachine != null) {
 					Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
 					Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
 

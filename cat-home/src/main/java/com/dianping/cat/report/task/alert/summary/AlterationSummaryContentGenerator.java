@@ -42,7 +42,7 @@ public class AlterationSummaryContentGenerator extends SummaryContentGenerator {
 	}
 
 	private Date getStartDate(Date date) {
-		return new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
+		return new Date(date.getTime() - AlertSummaryExecutor.ALTERATION_DURATION);
 	}
 
 	@Override
