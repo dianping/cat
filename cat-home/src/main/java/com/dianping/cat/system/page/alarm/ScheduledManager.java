@@ -227,7 +227,7 @@ public class ScheduledManager implements Initializable {
 
 			try {
 				m_scheduledReportDao.insert(entity);
-				
+
 				ScheduledReport r = m_scheduledReportDao.findByDomain(domain, ScheduledReportEntity.READSET_FULL);
 				m_reports.put(domain, r);
 			} catch (DalNotFoundException e1) {
@@ -279,7 +279,7 @@ public class ScheduledManager implements Initializable {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(TimeHelper.ONE_HOUR);
+					Thread.sleep(TimeHelper.ONE_DAY);
 				} catch (InterruptedException e) {
 					active = false;
 				}
