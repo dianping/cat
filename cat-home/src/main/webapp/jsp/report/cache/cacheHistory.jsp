@@ -70,9 +70,8 @@
 			<div class="row-fluid">
 			<div class="span7">
 			<table class="data" style="min-width:900px">
-			<c:set var="methods" value="${model.report.allMethods}"/>
 			<tr>
-								<th class="left" colspan='${fn:length(methods) + 6}'><input type="text"
+								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40"
 									value="${model.queryName}">
 		    <input id="queryname" style="WIDTH: 60px"
@@ -98,9 +97,10 @@
 			<a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
 								</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
-			<c:forEach var="method" items="${methods}">
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=method:${method}&queryname=${model.queryName}">${method}</a></th>
-			</c:forEach>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=get&queryname=${model.queryName}">Get</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=mget&queryname=${model.queryName}">mGet</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=add&queryname=${model.queryName}">Add</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=remove&queryname=${model.queryName}">Remove</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
 			<th class="right"><a  href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
@@ -115,16 +115,10 @@
 										style="text-align: left; word-wrap: break-word; word-break: break-all;">
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
-					<c:forEach var="method" items="${methods}">
-						<c:choose>
-							<c:when test="${empty item.methodCounts[method]}">
-								<td>0</td>
-							</c:when>
-							<c:otherwise>
-								<td>${w:format(item.methodCounts[method],'#,###,###,###,##0')}</td>
-							</c:otherwise>
-						</c:choose>
-					</c:forEach>
+					<td>${w:format(item.get,'#,###,###,###,##0')}</td>
+					<td>${w:format(item.mget,'#,###,###,###,##0')}</td>
+					<td>${w:format(item.add,'#,###,###,###,##0')}</td>
+					<td>${w:format(item.remove,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>

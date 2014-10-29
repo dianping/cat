@@ -103,16 +103,6 @@ public class CacheReport {
 		return result;
 	}
 
-	public List<String> getAllMethods() {
-		CacheNameItem allItem = m_nameItems.get(ALL);
-
-		if (allItem != null) {
-			return new ArrayList<String>(allItem.getMethodCounts().keySet());
-		} else {
-			return new ArrayList<String>();
-		}
-	}
-
 	public java.util.Date getStartTime() {
 		return m_startTime;
 	}
@@ -160,14 +150,18 @@ public class CacheReport {
 
 		private long m_missed;
 
-		private long m_getCount;
-		
+		private long m_add;
+
+		private long m_get;
+
+		private long m_mget;
+
+		private long m_remove;
+
 		private TransactionName m_name;
 
 		private String m_category;
 
-		private Map<String, Long> m_methodCounts = new HashMap<String, Long>();
-		
 		public void add(TransactionName transactionName, EventName eventName, String method) {
 			long transactionTotalCount = transactionName.getTotalCount();
 
@@ -177,16 +171,16 @@ public class CacheReport {
 			m_name.setTps(m_name.getTps() + transactionName.getTps());
 
 			if (!StringUtil.isEmpty(method)) {
-				Long value = m_methodCounts.get(method);
-
-				if (value == null) {
-					value = 0L;
-				}
-				m_methodCounts.put(method, value + transactionTotalCount);
 				if ("get".equals(method)) {
+					m_get += transactionTotalCount;
 					m_missed = m_missed + eventName.getTotalCount();
-					m_getCount = m_getCount + transactionTotalCount;
-					m_hited = 1 - (double) m_missed / m_getCount;
+					m_hited = 1 - (double) m_missed / m_get;
+				} else if ("mget".equals(method)) {
+					m_mget += transactionTotalCount;
+				} else if ("add".equals(method)) {
+					m_add += transactionTotalCount;
+				} else if ("remove".equals(method)) {
+					m_remove += transactionTotalCount;
 				}
 			}
 		}
@@ -199,26 +193,28 @@ public class CacheReport {
 			return m_missed;
 		}
 
+		public long getAdd() {
+			return m_add;
+		}
+
+		public long getGet() {
+			return m_get;
+		}
+
+		public long getMget() {
+			return m_mget;
+		}
+
+		public long getRemove() {
+			return m_remove;
+		}
+
 		public TransactionName getName() {
 			return m_name;
 		}
 
 		public String getCategory() {
 			return m_category;
-		}
-
-		public Map<String, Long> getMethodCounts() {
-			return m_methodCounts;
-		}
-
-		public long getMethodCount(String method) {
-			Long count = m_methodCounts.get(method);
-
-			if (count == null) {
-				return 0L;
-			} else {
-				return count;
-			}
 		}
 
 		public void setHited(double hited) {
@@ -260,9 +256,14 @@ public class CacheReport {
 				return (int) (o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000);
 			} else if (m_sort.equals("name")) {
 				return o1.getName().getId().compareTo(o2.getName().getId());
-			} else if (m_sort.startsWith("method:")) {
-				String method = m_sort.substring(7);
-				return (int) (o2.getMethodCount(method) - o1.getMethodCount(method));
+			} else if (m_sort.equals("add")) {
+				return (int) (o2.getAdd() - o1.getAdd());
+			} else if (m_sort.equals("get")) {
+				return (int) (o2.getGet() - o1.getGet());
+			} else if (m_sort.equals("mget")) {
+				return (int) (o2.getMget() - o1.getMget());
+			} else if (m_sort.equals("remove")) {
+				return (int) (o2.getRemove() - o1.getRemove());
 			}
 			return 0;
 		}
