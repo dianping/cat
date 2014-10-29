@@ -32,6 +32,8 @@ public class AlertSummaryExecutor {
 
 	public static final long SUMMARY_DURATION = 5 * 60 * 1000L;
 
+	public static final long ALTERATION_DURATION = 30 * 60 * 1000L;
+
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();
 
