@@ -40,8 +40,8 @@
 </table>
 <p> url示例（get方式）</p>
 <pre>
-	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=json
-	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=xml
+	http://cat.dianpingoa.com/cat/s/config?op=appConfigFetch&type=json
+	http://cat.dianpingoa.com/cat/s/config?op=appConfigFetch&type=xml
 </pre>
 <p>返回说明</p>
 <pre>
