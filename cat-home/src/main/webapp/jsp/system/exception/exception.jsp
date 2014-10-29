@@ -119,8 +119,10 @@
 										<td>${item.warning}</td>
 										<td>${item.error}</td>
 										<td>
+										<c:if test="${item.domain ne 'Default'}">
 											<a class='update btn  btn-small btn-primary' href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
 											<a class='delete btn  btn-small btn-danger' href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}&type=异常阈值">删除</a>
+										</c:if>
 										</td>
 									</tr>
 								</c:forEach>
@@ -149,8 +151,10 @@
 										<td>${item.domain}</td>
 										<td>${item.id}</td>
 										<td>
+										<c:if test="${item.domain ne 'Default'}">
 											<a class='update btn  btn-small btn-primary' href="?op=exceptionExcludeUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
 											<a class='delete btn  btn-small btn-danger' href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.id}&type=异常过滤">删除</a>
+										</c:if>
 										</td>
 									</tr>
 								</c:forEach>
