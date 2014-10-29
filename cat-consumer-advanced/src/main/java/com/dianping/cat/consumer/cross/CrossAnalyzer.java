@@ -35,7 +35,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Inject
 	private IpConvertManager m_ipConvertManager;
 
-	private static final String UNKNOWN = "UnknownIp";
+	private static final String UNKNOWN = "Unknown";
 
 	private CrossAppSwitch m_crossAppSwitch = new CrossAppSwitch();
 
@@ -91,7 +91,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				if (message.getType().equals("PigeonCall.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app") && m_crossAppSwitch.switchOn()) {
+				if (message.getType().equals("PigeonCall.app") && m_crossAppSwitch.isTurnOn()) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -150,7 +150,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						crossInfo.setRemoteAddress(formatIp);
 					}
 				}
-				if (message.getType().equals("PigeonService.app") && m_crossAppSwitch.switchOn()) {
+				if (message.getType().equals("PigeonService.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}

@@ -28,7 +28,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
+		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -43,14 +43,14 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
+		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Call", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
-		Assert.assertEquals(info.getRemoteAddress(), "UnknownIp");
+		Assert.assertEquals(info.getRemoteAddress(), "Unknown");
 
 		Message message = new DefaultEvent("PigeonCall.server", "10.1.1.1", null);
 		Message messageApp = new DefaultEvent("PigeonCall.app", "myDomain", null);
@@ -72,7 +72,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
+		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -101,7 +101,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch(true));
+		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
