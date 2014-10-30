@@ -285,6 +285,45 @@
       </query>
     </query-defs>
   </entity>
+  <entity name="highload-sql" table="highload_sql" alias="hs">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
+    <member name="weight" field="weight" value-type="double" length="5" decimal="3" nullable="false" />
+    <member name="transaction-name-content" field="transaction_name_content" value-type="String" length="65535" nullable="false" />
+    <member name="date" field="date" value-type="Date" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
   <entity name="monthly-report-content" table="monthly_report_content" alias="mrc">
     <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" key="true" />
     <member name="content" field="content" value-type="byte[]" length="2147483647" nullable="false" />

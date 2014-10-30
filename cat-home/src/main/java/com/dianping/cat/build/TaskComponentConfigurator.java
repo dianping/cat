@@ -26,6 +26,7 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.HighloadSqlDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -187,7 +188,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportTaskBuilder.class, HighLoadSqlUpdater.ID, HighLoadSqlUpdater.class)//
 		      .req(ModelService.class, TransactionAnalyzer.ID)//
-		      .req(ReportServiceManager.class));
+		      .req(ReportServiceManager.class).req(HighloadSqlDao.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 

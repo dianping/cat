@@ -1451,6 +1451,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.HighloadSqlDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2112,6 +2115,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>highload-sql</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>highload-sql</logical-table-name>
+				<physical-table-name>highload_sql</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>monthly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2217,6 +2230,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.EventDao</role>
 			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.HighloadSqlDao</role>
+			<implementation>com.dianping.cat.home.dal.report.HighloadSqlDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
