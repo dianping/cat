@@ -109,6 +109,7 @@
 
 		$(document).ready(
 				function() {
+					$('#accessPiechart').addClass('active');
 					$('#datetimepicker1').datetimepicker();
 					$('#datetimepicker2').datetimepicker({
 						pickDate: false
@@ -151,17 +152,9 @@
 	</script>
 	
 	<div class="row-fluid">
-	<div class="span2">
-        <div class="well sidebar-nav">
-          <ul class="nav nav-list">
-			<li class='nav-header'><a href="?op=view&showActivity=false"><strong>API访问趋势</strong></a></li>
-			<li class='nav-header'><a href="?op=view&showActivity=true"><strong>运营活动趋势</strong></a></li>
-          	<li class='nav-header active'><a href="?op=piechart"><strong>访问量分布</strong></a></li>
-          </ul>
-        </div>
-	</div>
+		<%@include file="menu.jsp"%>
 	<div class="span10">
-		<%@include file="appPiechartDetail.jsp"%>
+		<%@include file="piechartDetail.jsp"%>
 	</div>
 		<table class="footer">
 			<tr>

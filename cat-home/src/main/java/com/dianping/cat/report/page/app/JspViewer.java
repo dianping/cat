@@ -19,7 +19,10 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.APP_MODIFY_RESULT.getPath();
 		case LINECHART_JSON:
 		case PIECHART_JSON:
-			return JspFile.JSON.getPath();
+		case APP_CONFIG_FETCH:
+			return JspFile.APP_FETCH_DATA.getPath();
+		case CRASH_LINECHART:
+			return JspFile.CRASH_LINECHART.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

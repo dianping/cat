@@ -5,11 +5,9 @@ import java.util.List;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -93,19 +91,6 @@ public class AppConfigProcessor extends BaseProcesser {
 				model.setOpState(m_appConfigManager.insert(appConfig));
 			}
 			model.setContent(m_appConfigManager.getConfig().toString());
-			break;
-		case APP_CONFIG_FETCH:
-			String type = payload.getType();
-
-			try {
-				if ("xml".equalsIgnoreCase(type)) {
-					model.setAppConfig(m_appConfigManager.getConfig().toString());
-				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
-					model.setAppConfig(new JsonBuilder().toJson(m_appConfigManager.getConfig()));
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
 			break;
 		case APP_RULE:
 			buildAppConfigInfo(m_appConfigManager, model);
