@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
@@ -19,6 +20,7 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 
+@ModelMeta("statistics")
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_browserChart;
