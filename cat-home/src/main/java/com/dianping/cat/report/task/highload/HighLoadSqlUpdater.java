@@ -1,11 +1,12 @@
 package com.dianping.cat.report.task.highload;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -14,6 +15,8 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.dal.report.HighloadSql;
+import com.dianping.cat.home.dal.report.HighloadSqlDao;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.DisplayNames;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
@@ -29,12 +32,19 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 	@Inject
 	private ReportServiceManager m_reportService;
 
+	@Inject
+	private HighloadSqlDao m_dao;
+
 	public static final String ID = Constants.HIGH_LOAD_SQL;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			List<HighLoadSQL> sqls = generateHighLoadSqls();
+			List<HighLoadSQLEntity> sqls = generateHighLoadSqls();
+
+			for (HighLoadSQLEntity sql : sqls) {
+				insertSql(sql);
+			}
 			return true;
 		} catch (Exception ex) {
 			Cat.logError(ex);
@@ -42,27 +52,51 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 		}
 	}
 
-	private List<HighLoadSQL> generateHighLoadSqls() {
+	private HighloadSql convertSql(HighLoadSQLEntity sql) {
+		HighloadSql dbSql = m_dao.createLocal();
+
+		dbSql.setDate(sql.getDate());
+		dbSql.setDomain(sql.getDomain());
+		dbSql.setTransactionNameContent(sql.getName().toString());
+		dbSql.setWeight(sql.getWeight());
+		return dbSql;
+	}
+
+	private List<HighLoadSQLEntity> generateHighLoadSqls() {
 		Set<String> domains = queryDomains();
 		Heap heap = new Heap();
+		Date yesterday = TimeHelper.getYesterday();
+		Date currentDay = TimeHelper.getCurrentDay();
 
 		for (String domain : domains) {
 			try {
-				TransactionReport report = m_reportService.queryTransactionReport(domain, TimeHelper.getYesterday(),
-				      TimeHelper.getCurrentDay());
-				DisplayNames displayNames = new DisplayNames();
-
-				displayNames.display("", getType(), "All", report, "");
-				for (TransactionNameModel nameModel : displayNames.getResults()) {
-					HighLoadSQL sql = new HighLoadSQL(domain, nameModel.getDetail());
-					heap.add(sql);
-				}
+				generateHighLoadSqlsByDomain(heap, yesterday, currentDay, domain);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
 
 		return heap.getSqls();
+	}
+
+	private void generateHighLoadSqlsByDomain(Heap heap, Date yesterday, Date currentDay, String domain) {
+		TransactionReport report = m_reportService.queryTransactionReport(domain, yesterday, currentDay);
+		DisplayNames displayNames = new DisplayNames();
+
+		displayNames.display("", getType(), "All", report, "");
+		for (TransactionNameModel nameModel : displayNames.getResults()) {
+			try {
+				TransactionName name = nameModel.getDetail();
+				String id = name.getId();
+				if (!"TOTAL".equals(id)) {
+					double weight = name.getTotalCount() * name.getAvg();
+					HighLoadSQLEntity sql = new HighLoadSQLEntity(domain, name, yesterday, weight);
+					heap.add(sql);
+				}
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
+		}
 	}
 
 	@Override
@@ -73,6 +107,14 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 	@Override
 	public String getType() {
 		return "SQL";
+	}
+
+	private void insertSql(HighLoadSQLEntity sql) {
+		try {
+			m_dao.insert(convertSql(sql));
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	private Set<String> queryDomains() {
@@ -90,15 +132,15 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 
 		private final int m_size = 100;
 
-		private HighLoadSQL[] m_sqls = new HighLoadSQL[m_size];
+		private HighLoadSQLEntity[] m_sqls = new HighLoadSQLEntity[m_size];
 
-		public void add(HighLoadSQL sql) {
+		public void add(HighLoadSQLEntity sql) {
 			int nextIndex = findNextValidIndex();
 
 			if (nextIndex == m_size) {
-				if (isBigger(sql, m_sqls[0])) {
+				if (isBigger(m_sqls[0], sql)) {
 					m_sqls[0] = sql;
-					heapAdjust(0, m_size - 1);
+					addAdjust();
 				}
 			} else {
 				m_sqls[nextIndex] = sql;
@@ -108,24 +150,13 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 			}
 		}
 
-		private int findNextValidIndex() {
-			int i;
-
-			for (i = 0; i < m_size && m_sqls[i] != null; i++) {
-			}
-			return i;
-		}
-
-		public List<HighLoadSQL> getSqls() {
-			return Arrays.asList(m_sqls);
-		}
-
-		private void heapAdjust(int startIndex, int endIndex) {
-			int currentIndex = startIndex;
+		private void addAdjust() {
+			int currentIndex = 0;
 			int tmpIndex = 2 * currentIndex + 1;
 
-			while (tmpIndex <= endIndex) {
-				if (m_sqls[tmpIndex + 1] != null && isBigger(m_sqls[tmpIndex + 1], m_sqls[tmpIndex])) {
+			while (tmpIndex <= m_size - 1) {
+				if (tmpIndex + 1 <= m_size - 1 && m_sqls[tmpIndex + 1] != null
+				      && isBigger(m_sqls[tmpIndex], m_sqls[tmpIndex + 1])) {
 					tmpIndex = tmpIndex + 1;
 				}
 				if (isBigger(m_sqls[currentIndex], m_sqls[tmpIndex])) {
@@ -138,7 +169,49 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 			}
 		}
 
-		private boolean isBigger(HighLoadSQL sql1, HighLoadSQL sql2) {
+		private int findNextValidIndex() {
+			int i;
+
+			for (i = 0; i < m_size && m_sqls[i] != null; i++) {
+			}
+			return i;
+		}
+
+		public List<HighLoadSQLEntity> getSqls() {
+			List<HighLoadSQLEntity> sqls = new ArrayList<HighLoadSQLEntity>();
+
+			for (int i = 0; i < m_size; i++) {
+				HighLoadSQLEntity currentNode = m_sqls[i];
+
+				if (currentNode != null) {
+					sqls.add(currentNode);
+				} else {
+					break;
+				}
+			}
+			return sqls;
+		}
+
+		private void heapAdjust(int startIndex, int endIndex) {
+			int currentIndex = startIndex;
+			int tmpIndex = 2 * currentIndex + 1;
+
+			while (tmpIndex <= endIndex) {
+				if (tmpIndex + 1 <= endIndex && m_sqls[tmpIndex + 1] != null
+				      && isBigger(m_sqls[tmpIndex + 1], m_sqls[tmpIndex])) {
+					tmpIndex = tmpIndex + 1;
+				}
+				if (isBigger(m_sqls[tmpIndex], m_sqls[currentIndex])) {
+					swap(currentIndex, tmpIndex);
+					currentIndex = tmpIndex;
+					tmpIndex = 2 * currentIndex + 1;
+				} else {
+					break;
+				}
+			}
+		}
+
+		private boolean isBigger(HighLoadSQLEntity sql1, HighLoadSQLEntity sql2) {
 			TransactionName name1 = sql1.getName();
 			TransactionName name2 = sql2.getName();
 
@@ -146,10 +219,10 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 		}
 
 		private void sort() {
-			int currentIndex = (m_size - 1) / 2;
+			int currentIndex = (m_size - 2) / 2;
 
 			for (; currentIndex >= 0; currentIndex--) {
-				heapAdjust(currentIndex, m_size);
+				heapAdjust(currentIndex, m_size - 1);
 			}
 
 			for (int i = m_size - 1; i > 0; i--) {
@@ -160,20 +233,30 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 		}
 
 		private void swap(int index1, int index2) {
-			HighLoadSQL tmpNode = m_sqls[index1];
+			HighLoadSQLEntity tmpNode = m_sqls[index1];
 			m_sqls[index1] = m_sqls[index2];
 			m_sqls[index2] = tmpNode;
 		}
 	}
 
-	public class HighLoadSQL {
+	public class HighLoadSQLEntity {
 		private String m_domain;
 
 		private TransactionName m_name;
 
-		public HighLoadSQL(String domain, TransactionName name) {
+		private Date m_date;
+
+		private double m_weight;
+
+		public HighLoadSQLEntity(String domain, TransactionName name, Date date, double weight) {
 			m_domain = domain;
 			m_name = name;
+			m_date = date;
+			m_weight = weight;
+		}
+
+		public Date getDate() {
+			return m_date;
 		}
 
 		public String getDomain() {
@@ -184,14 +267,9 @@ public class HighLoadSqlUpdater extends TransactionHighLoadUpdater {
 			return m_name;
 		}
 
-		public void setDomain(String domain) {
-			m_domain = domain;
+		public double getWeight() {
+			return m_weight;
 		}
-
-		public void setName(TransactionName name) {
-			m_name = name;
-		}
-
 	}
 
 }
