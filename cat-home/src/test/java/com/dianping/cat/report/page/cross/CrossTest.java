@@ -18,26 +18,21 @@ public class CrossTest {
 			sendClientMsg("Cat-Call-2", "cat", "10.1.2.15", "catServer", "10.1.2.20:3000");
 			sendClientMsg("Cat-Call-2", "cat", "10.1.2.15", "catServer", "10.1.2.20:3000");
 
-
 			sendServiceMsg("Cat-Call-1", "catServer", "10.1.2.17", "cat", "10.1.2.15");
 			sendServiceMsg("Cat-Call-2", "catServer", "10.1.2.20", "cat", "10.1.2.15");
 			sendServiceMsg("Cat-Call-2", "catServer", "10.1.2.20", "cat", "10.1.2.15");
-
 
 			sendClientMsg("CatServer-Call-1", "catServer", "10.1.2.17", "server", "10.1.2.18:3000");
 			sendClientMsg("CatServer-Call-2", "catServer", "10.1.2.20", "server", "10.1.2.18:3000");
 			sendClientMsg("CatServer-Call-2", "catServer", "10.1.2.20", "server", "10.1.2.18:3000");
 
-
 			sendServiceMsg("Unipay-Call-1", "catServer", "10.1.2.17", "Unipay", "10.1.4.99");
 			sendServiceMsg("Unipay-Call-2", "catServer", "10.1.2.20", "Unipay", "10.1.4.99");
 			sendServiceMsg("Unipay-Call-2", "catServer", "10.1.2.20", "Unipay", "10.1.4.99");
 
-
-			sendClientMsg("Unipay-Call-2", "Unipay", "10.1.4.99", "catServer", "10.1.2.17:3000");
+			sendClientMsg("Unipay-Call-1", "Unipay", "10.1.4.99", "catServer", "10.1.2.17:3000");
 			sendClientMsg("Unipay-Call-2", "Unipay", "10.1.4.99", "catServer", "10.1.2.20:3000");
 			sendClientMsg("Unipay-Call-2", "Unipay", "10.1.4.99", "catServer", "10.1.2.20:3000");
-
 
 			try {
 				Thread.sleep(500);
@@ -54,11 +49,6 @@ public class CrossTest {
 		((DefaultMessageTree) tree).setIpAddress(serverIp);
 		Cat.logEvent("PigeonService.client", clientIp);
 		Cat.logEvent("PigeonService.app", client);
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
 	}
@@ -70,6 +60,10 @@ public class CrossTest {
 		((DefaultMessageTree) tree).setIpAddress(clientIp);
 		Cat.logEvent("PigeonCall.server", serverIp);
 		Cat.logEvent("PigeonCall.app", server);
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+		}
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
 	}

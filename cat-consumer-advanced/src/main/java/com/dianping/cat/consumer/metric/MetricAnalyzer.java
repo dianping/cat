@@ -170,7 +170,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		String status = metric.getStatus();
 		ConfigItem config = parseValue(status, data);
 
-		if (!StringUtils.isEmpty(group)) {
+		if (StringUtils.isNotEmpty(group)) {
 			boolean result = m_productLineConfigManager.insertIfNotExsit(group, domain);
 
 			if (!result) {

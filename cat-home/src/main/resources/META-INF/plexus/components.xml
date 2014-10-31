@@ -1501,6 +1501,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4783,6 +4786,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
