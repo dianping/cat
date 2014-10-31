@@ -246,7 +246,7 @@ public abstract class TransactionHighLoadUpdater extends HighLoadUpdater {
 		public HighLoadReport() {
 		}
 
-		public HighLoadReport(String type, String domain, TransactionName name, Date date, double weight) {
+		public HighLoadReport(String domain, String type, TransactionName name, Date date, double weight) {
 			m_type = type;
 			m_domain = domain;
 			m_name = name;

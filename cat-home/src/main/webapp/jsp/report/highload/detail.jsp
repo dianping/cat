@@ -1,29 +1,34 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <br/>
+<style>
+	.tableHeader:hover {
+		cursor:hand;
+	}
+</style>
 <div class="tabbable "  > <!-- Only required for left/right tabs -->
 	<ul class="nav nav-tabs">
 		<c:forEach var="reportEntry" items="${model.reports}" varStatus="status">
-			<li class="text-right navTabs"><a href="#${reportEntry.key}" data-toggle="tab"><strong>${reportEntry.key}</strong></a></li>
+			<li class="text-right navTabs" id="${reportEntry.key}"><a href="#${reportEntry.key}Content" data-toggle="tab"><strong>${reportEntry.key}</strong></a></li>
 		</c:forEach>
 	</ul>
 	<div class="tab-content">
 		<c:forEach var="reportEntry" items="${model.reports}" varStatus="status">
-			<div class="tab-pane" id="${reportEntry.key}">
+			<div class="tab-pane" id="${reportEntry.key}Content">
 				<table	class="problem table table-striped table-bordered table-condensed table-hover">
 					<thead>
 					<tr class="text-success">
-						<th width="8%">domain</th>
-						<th width="20%">Name</th>
-						<th width="5%">总数</th>
-						<th width="5%">错误数</th>
-						<th width="7%">失败率</th>
-						<th width="4%">Min</th>
-						<th width="5%">Max</th>
-						<th width="5%">Avg</th>
-						<th width="5%">95Line</th>
-						<th width="6%">99.9Line</th>
-						<th width="5%">Std</th>
-						<th width="5%">QPS</th>
+						<th width="8%" class="tableHeader" data-sortBy="domain">项目</th>
+						<th width="20%" class="tableHeader" data-sortBy="name">名称</th>
+						<th width="5%" class="tableHeader" data-sortBy="total">总数</th>
+						<th width="5%" class="tableHeader" data-sortBy="error">错误数</th>
+						<th width="7%" class="tableHeader" data-sortBy="failure">失败率</th>
+						<th width="4%" class="tableHeader" data-sortBy="min">Min</th>
+						<th width="5%" class="tableHeader" data-sortBy="max">Max</th>
+						<th width="5%" class="tableHeader" data-sortBy="avg">Avg</th>
+						<th width="5%" class="tableHeader" data-sortBy="95line">95Line</th>
+						<th width="6%" class="tableHeader" data-sortBy="999line">99.9Line</th>
+						<th width="5%" class="tableHeader" data-sortBy="std">Std</th>
+						<th width="5%" class="tableHeader" data-sortBy="qps">QPS</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -53,10 +58,24 @@
 
 <script>
 	$(document).ready(function(){
-		var fistNavTav = $(".navTabs").first();
-		var id = fistNavTav.text();
+		var payloadType = "${payload.type}";
+		if(payloadType==""){
+			var fistNavTav = $(".navTabs").first();
+			var id = fistNavTav.prop("id");
+			
+			fistNavTav.addClass("active");
+			$("#"+id+"Content").addClass("active");
+		}else{
+			$("#"+payloadType).addClass('active');
+			$("#"+payloadType+"Content").addClass('active');
+		}
 		
-		fistNavTav.addClass("active");
-		$("#"+id).addClass("active");
+		$(".tableHeader").click(function(){
+			var date = $("#time").val();
+			var type = $(".navTabs").filter(".active").prop("id");
+			var sortBy = $(this).attr("data-sortBy");
+			
+			window.location.href="?date="+date+"&type="+type+"&sortBy="+sortBy;
+		});
 	})
 </script>
