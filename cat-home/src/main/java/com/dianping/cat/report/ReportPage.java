@@ -55,7 +55,9 @@ public enum ReportPage implements Page {
 
    ALERT("alert", "alert", "Alert", "Alert", true),
 
-   OVERLOAD("overload", "overload", "Overload", "Overload", true);
+   OVERLOAD("overload", "overload", "Overload", "Overload", true),
+
+   HIGHLOAD("highload", "highload", "Highload", "Highload", true);
 
    private String m_name;
 

@@ -307,7 +307,7 @@
     	<member name="creation-date" insert-expr="NOW()" />
         <query-defs>
 			<query name="find-by-date" type="SELECT" multiple="true">
-				<param name="date" />
+				<param name="select-date" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
