@@ -39,7 +39,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			try {
-				model.setSqlReports(m_service.queryHighLoadSqls(payload.getDate()));
+				model.setReports(m_service.queryHighLoadReports(payload.getDate()));
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
