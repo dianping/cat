@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.highload;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -14,6 +16,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.highload.HighLoadService;
+import com.dianping.cat.report.task.highload.TransactionHighLoadUpdater.HighLoadReport;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -39,7 +42,8 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			try {
-				model.setReports(m_service.queryHighLoadReports(payload.getDate()));
+				Map<String, List<HighLoadReport>> reports = m_service.queryHighLoadReports(payload.getDate());
+				model.setReports(new DisplayTypes().display(payload.getSortBy(), reports));
 			} catch (DalException e) {
 				Cat.logError(e);
 			}

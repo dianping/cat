@@ -25,6 +25,12 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("reportType")
 	private String m_reportType = "";
 
+	@FieldMeta("sortBy")
+	private String m_sortBy;
+
+	@FieldMeta("type")
+	private String m_type;
+
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -51,6 +57,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_reportType;
 	}
 
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
+	public String getType() {
+		return m_type;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -66,6 +80,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setReportType(String reportType) {
 		m_reportType = reportType;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
