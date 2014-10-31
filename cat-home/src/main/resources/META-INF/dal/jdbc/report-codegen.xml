@@ -285,8 +285,9 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="highload-sql" table="highload_sql" alias="hs">
+  <entity name="highload" table="highload" alias="ht">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="type" field="type" value-type="String" length="50" nullable="false" />
     <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
     <member name="weight" field="weight" value-type="double" length="5" decimal="3" nullable="false" />
     <member name="transaction-name-content" field="transaction_name_content" value-type="String" length="65535" nullable="false" />

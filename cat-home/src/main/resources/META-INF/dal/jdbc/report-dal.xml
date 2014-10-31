@@ -302,7 +302,7 @@
     <entity name="config-modification" table="config_modification" alias="cm">
     	<member name="creation-date" insert-expr="NOW()" />
     </entity>
-    <entity name="highload-sql" table="highload_sql" alias="hs">
+    <entity name="highload" table="highload" alias="ht">
    		<var name="select-date" value-type="Date" />
     	<member name="creation-date" insert-expr="NOW()" />
         <query-defs>
