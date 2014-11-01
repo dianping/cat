@@ -22,39 +22,63 @@ import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandler implements Task {
 
-	private AppDataQueue m_appDataQueue;
+	private AppDataQueue<AppData> m_appDataQueue = new AppDataQueue<AppData>();
+
+	private AppDataQueue<AppCrashData> m_appCrashDataQueue = new AppDataQueue<AppCrashData>();
 
 	private AppDataService m_appDataService;
 
-	private boolean m_isActive = true;
+	private boolean m_active = true;
 
-	private HashMap<Integer, HashMap<String, AppData>> m_datas;
+	private boolean m_completed = false;
+
+	private boolean m_saving = false;
+
+	private HashMap<Integer, HashMap<String, AppData>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppData>>();
+
+	private HashMap<Integer, HashMap<String, AppCrashData>> m_crashDatas;
 
 	private long m_startTime;
 
 	public BucketHandler(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
-		m_appDataQueue = new AppDataQueue();
-		m_datas = new LinkedHashMap<Integer, HashMap<String, AppData>>();
 		m_appDataService = appDataService;
 	}
 
-	protected void batchInsert(List<AppDataCommand> appDataCommands) {
-		try {
-			int length = appDataCommands.size();
-			AppDataCommand[] array = new AppDataCommand[length];
+	protected void batchInsert(List<AppDataCommand> appDataCommands, List<AppData> datas) {
+		if (!m_saving) {
+			int[] ret = null;
+			try {
+				int length = appDataCommands.size();
+				AppDataCommand[] array = new AppDataCommand[length];
 
-			for (int i = 0; i < length; i++) {
-				array[i] = appDataCommands.get(i);
+				for (int i = 0; i < length; i++) {
+					array[i] = appDataCommands.get(i);
+				}
+				ret = m_appDataService.insert(array);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 
-			m_appDataService.insert(array);
-		} catch (Exception e) {
-			Cat.logError(e);
+			if (ret != null) {
+				int length = datas.size();
+
+				for (int i = 0; i < length; i++) {
+					datas.get(i).setFlushed(true);
+				}
+			}
 		}
 	}
 
-	public void end() {
+	public boolean enqueue(AppCrashData appCrashData) {
+		return m_appCrashDataQueue.offer(appCrashData);
+	}
+
+	public boolean enqueue(AppData appData) {
+		return m_appDataQueue.offer(appData);
+	}
+
+	public void flush() {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(m_startTime);
 
@@ -70,6 +94,7 @@ public class BucketHandler implements Task {
 
 		for (Entry<Integer, HashMap<String, AppData>> outerEntry : m_datas.entrySet()) {
 			List<AppDataCommand> commands = new ArrayList<AppDataCommand>();
+			List<AppData> datas = new ArrayList<AppData>();
 			HashMap<String, AppData> value = outerEntry.getValue();
 
 			for (Entry<String, AppData> entry : value.entrySet()) {
@@ -93,23 +118,30 @@ public class BucketHandler implements Task {
 				proto.setCreationDate(new Date());
 
 				commands.add(proto);
+				datas.add(appData);
 
 				if (commands.size() >= 100) {
-					batchInsert(commands);
+					batchInsert(commands, datas);
 
 					commands = new ArrayList<AppDataCommand>();
 				}
 			}
-			batchInsert(commands);
+			batchInsert(commands, datas);
 		}
+		m_completed = true;
+		m_datas.clear();
 	}
 
-	public boolean enqueue(AppData appData) {
-		return m_appDataQueue.offer(appData);
+	public AppDataQueue<AppCrashData> getAppCrashDataQueue() {
+		return m_appCrashDataQueue;
 	}
 
-	public AppDataQueue getAppDataQueue() {
+	public AppDataQueue<AppData> getAppDataQueue() {
 		return m_appDataQueue;
+	}
+
+	public HashMap<Integer, HashMap<String, AppCrashData>> getCrashDatas() {
+		return m_crashDatas;
 	}
 
 	public HashMap<Integer, HashMap<String, AppData>> getDatas() {
@@ -123,8 +155,8 @@ public class BucketHandler implements Task {
 		return "BucketHandler-" + sdf.format(new Date(m_startTime));
 	}
 
-	public boolean isActive() {
-		return m_isActive;
+	public boolean isCompleted() {
+		return m_completed;
 	}
 
 	public void load(File file) {
@@ -196,34 +228,23 @@ public class BucketHandler implements Task {
 
 	@Override
 	public void run() {
-		while (isActive()) {
-			AppData appData = m_appDataQueue.poll();
-
-			if (appData != null) {
-				try {
-					processEntity(appData);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
-		}
-
 		while (true) {
 			AppData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
 				processEntity(appData);
-			} else {
+			} else if (!m_active) {
 				break;
 			}
 		}
 
-		end();
+		flush();
 	}
 
 	public void save(File file) {
 		if (m_datas.size() > 0) {
 			try {
+				m_saving = true;
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 				char tab = '\t';
 				char enter = '\n';
@@ -234,22 +255,24 @@ public class BucketHandler implements Task {
 					for (Entry<String, AppData> entry : value.entrySet()) {
 						AppData appData = entry.getValue();
 
-						StringBuilder sb = new StringBuilder();
-						sb.append(appData.getTimestamp()).append(tab);
-						sb.append(appData.getCity()).append(tab);
-						sb.append(appData.getOperator()).append(tab);
-						sb.append(appData.getNetwork()).append(tab);
-						sb.append(appData.getVersion()).append(tab);
-						sb.append(appData.getConnectType()).append(tab);
-						sb.append(appData.getCommand()).append(tab);
-						sb.append(appData.getCode()).append(tab);
-						sb.append(appData.getPlatform()).append(tab);
-						sb.append(appData.getCount()).append(tab);
-						sb.append(appData.getResponseTime()).append(tab);
-						sb.append(appData.getRequestByte()).append(tab);
-						sb.append(appData.getResponseByte()).append(enter);
+						if (!appData.isFlushed()) {
+							StringBuilder sb = new StringBuilder();
+							sb.append(appData.getTimestamp()).append(tab);
+							sb.append(appData.getCity()).append(tab);
+							sb.append(appData.getOperator()).append(tab);
+							sb.append(appData.getNetwork()).append(tab);
+							sb.append(appData.getVersion()).append(tab);
+							sb.append(appData.getConnectType()).append(tab);
+							sb.append(appData.getCommand()).append(tab);
+							sb.append(appData.getCode()).append(tab);
+							sb.append(appData.getPlatform()).append(tab);
+							sb.append(appData.getCount()).append(tab);
+							sb.append(appData.getResponseTime()).append(tab);
+							sb.append(appData.getRequestByte()).append(tab);
+							sb.append(appData.getResponseByte()).append(enter);
 
-						writer.append(sb.toString());
+							writer.append(sb.toString());
+						}
 					}
 				}
 				writer.close();
@@ -259,8 +282,15 @@ public class BucketHandler implements Task {
 		}
 	}
 
+	public void setCrashDatas(HashMap<Integer, HashMap<String, AppCrashData>> crashDatas) {
+		m_crashDatas = crashDatas;
+	}
+
+	public void flushReady() {
+		m_active = false;
+	}
+
 	@Override
 	public void shutdown() {
-		m_isActive = false;
 	}
 }
