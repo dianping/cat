@@ -80,6 +80,9 @@
          <page name="overload" title="Overload" path="overload" template="default">
             <description>Overload</description>
          </page>
+         <page name="highload" title="Highload" path="highload" template="default">
+            <description>Highload</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp" standalone="false">
