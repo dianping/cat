@@ -52,7 +52,7 @@ public class BucketHandlerTest {
 		datas.clear();
 
 		handler.load(file);
-		AppDataQueue queue = handler.getAppDataQueue();
+		AppDataQueue<AppData> queue = handler.getAppDataQueue();
 
 		while (true) {
 			AppData appdata = queue.poll();

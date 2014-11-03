@@ -27,6 +27,8 @@ public class AppData {
 
 	private int m_responseTime;
 
+	private boolean m_flushed;
+
 	public AppData() {
 	}
 
@@ -102,6 +104,10 @@ public class AppData {
 		return m_version;
 	}
 
+	public boolean isFlushed() {
+		return m_flushed;
+	}
+
 	public AppData setCity(int city) {
 		m_city = city;
 		return this;
@@ -124,6 +130,10 @@ public class AppData {
 
 	public void setCount(int count) {
 		m_count = count;
+	}
+
+	public void setFlushed(boolean flushed) {
+		m_flushed = flushed;
 	}
 
 	public AppData setNetwork(int network) {
@@ -162,5 +172,4 @@ public class AppData {
 		m_version = version;
 		return this;
 	}
-
 }

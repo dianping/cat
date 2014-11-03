@@ -302,4 +302,19 @@
     <entity name="config-modification" table="config_modification" alias="cm">
     	<member name="creation-date" insert-expr="NOW()" />
     </entity>
+    <entity name="highload" table="highload" alias="ht">
+   		<var name="select-date" value-type="Date" />
+    	<member name="creation-date" insert-expr="NOW()" />
+        <query-defs>
+			<query name="find-by-date" type="SELECT" multiple="true">
+				<param name="select-date" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='date'/> = ${select-date}
+					ORDER BY <FIELD name='weight'/> DESC
+					]]></statement>
+			</query>
+	     </query-defs>
+    </entity>
 </entities>

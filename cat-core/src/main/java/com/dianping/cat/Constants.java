@@ -41,4 +41,6 @@ public class Constants {
 
 	public static final String REPORT_NOTIFY = "dailyNotify";
 
+	public static final String HIGH_LOAD_SQL = "highLoadSql";
+
 }

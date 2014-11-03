@@ -16,7 +16,7 @@ public class AppTest {
 	public void test() throws Exception {
 		while (true) {
 			SendData();
-			Thread.sleep(10000);
+			Thread.sleep(5000);
 		}
 	}
 
@@ -31,8 +31,8 @@ public class AppTest {
 		}
 
 		for (String url : urls) {
-			System.out.println(url);
-			sendGet(url);
+			String ret = sendGet(url);
+			System.out.println(ret);
 		}
 	}
 

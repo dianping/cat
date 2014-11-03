@@ -13,8 +13,6 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
 public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 
-	
-
 	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;
 
 	@Inject(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
@@ -81,19 +79,19 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	}
 
 	public void setHourlyUpdater(CapacityUpdater hourlyUpdater) {
-   	m_hourlyUpdater = hourlyUpdater;
-   }
+		m_hourlyUpdater = hourlyUpdater;
+	}
 
 	public void setDailyUpdater(CapacityUpdater dailyUpdater) {
-   	m_dailyUpdater = dailyUpdater;
-   }
+		m_dailyUpdater = dailyUpdater;
+	}
 
 	public void setWeeklyUpdater(CapacityUpdater weeklyUpdater) {
-   	m_weeklyUpdater = weeklyUpdater;
-   }
+		m_weeklyUpdater = weeklyUpdater;
+	}
 
 	public void setMonthlyUpdater(CapacityUpdater monthlyUpdater) {
-   	m_monthlyUpdater = monthlyUpdater;
-   }
-	
+		m_monthlyUpdater = monthlyUpdater;
+	}
+
 }
