@@ -30,7 +30,7 @@
        <dependency>
              <groupId>com.dianping.zebra</groupId>
              <artifactId>zebra-ds-monitor-client</artifactId>
-             <version>0.0.7</version>
+             <version>2.5.9</version>
        </dependency>
        <dependency>
              <groupId>com.dianping.cat</groupId>
