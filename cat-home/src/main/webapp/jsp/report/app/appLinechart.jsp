@@ -40,6 +40,7 @@
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
+			$(code).empty();
 			for ( var prop in value) {
 				var opt = $('<option />');
 
@@ -52,6 +53,7 @@
 			var key = $("#command2").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code2");
+			$(code).empty();
 			for ( var prop in value) {
 				var opt = $('<option />');
 

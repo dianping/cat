@@ -282,5 +282,7 @@
 	$(document).ready(function(){
 		initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
 		initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
+		command1Change();
+		command2Change();
 	})
 </script>

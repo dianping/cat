@@ -36,8 +36,12 @@ public class QueryEntity {
 
 	public static final int DEFAULT_VALUE = -1;
 
-	public QueryEntity() {
-		m_command = 1;
+	public QueryEntity(boolean showActivity) {
+		if (showActivity) {
+			m_command = 1000;
+		} else {
+			m_command = 1;
+		}
 		Calendar cal = Calendar.getInstance();
 
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -71,7 +75,7 @@ public class QueryEntity {
 
 	private int convert2MinuteOrder(String time) {
 		int current = DEFAULT_VALUE;
-		
+
 		if (StringUtils.isNotEmpty(time)) {
 			try {
 				current = Integer.parseInt(time);
