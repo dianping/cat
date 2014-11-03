@@ -1,7 +1,9 @@
 package com.dianping.cat.broker.api.app;
 
 public enum AppDataType {
-	COMMAND("command"), CRASH("crash");
+	COMMAND("command"),
+
+	CRASH("crash");
 
 	private String m_name;
 

@@ -14,7 +14,7 @@ import java.util.Map.Entry;
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.config.app.AppDataService;
 
@@ -121,7 +121,7 @@ public class CommandDataExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public AppData loadRecord(String[] items, AppDataType type) {
+	public BaseData loadRecord(String[] items, AppDataType type) {
 		AppCommandData appData = new AppCommandData();
 
 		appData.setType(type);
@@ -158,7 +158,7 @@ public class CommandDataExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public void processEntity(AppData appData) {
+	public void processEntity(BaseData appData) {
 		try {
 			AppCommandData appCommandData = (AppCommandData) appData;
 			int command = appCommandData.getCommand();

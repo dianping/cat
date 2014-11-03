@@ -7,14 +7,14 @@ import java.util.concurrent.TimeUnit;
 public class AppDataQueue {
 	private int MAX_SIZE = 100000;
 
-	private BlockingQueue<AppData> m_datas = new LinkedBlockingQueue<AppData>(MAX_SIZE);
+	private BlockingQueue<BaseData> m_datas = new LinkedBlockingQueue<BaseData>(MAX_SIZE);
 
-	public boolean offer(AppData appData) {
+	public boolean offer(BaseData appData) {
 		return m_datas.offer(appData);
 	}
 
-	public AppData poll() {
-		AppData appData;
+	public BaseData poll() {
+		BaseData appData;
 
 		try {
 			appData = m_datas.poll(5, TimeUnit.MICROSECONDS);

@@ -2,16 +2,16 @@ package com.dianping.cat.broker.api.app.bucket;
 
 import java.io.File;
 
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataType;
 
 public interface BucketExecutor {
 
-	void processEntity(AppData appData);
+	public void processEntity(BaseData appData);
 
-	void flush();
+	public void flush();
 
-	void save(File file);
+	public void save(File file);
 
-	AppData loadRecord(String[] items, AppDataType type);
+	public BaseData loadRecord(String[] items, AppDataType type);
 }
