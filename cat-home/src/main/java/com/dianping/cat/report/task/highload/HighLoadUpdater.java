@@ -7,11 +7,6 @@ import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 public abstract class HighLoadUpdater implements ReportTaskBuilder {
 
 	@Override
-	public boolean buildDailyTask(String name, String domain, Date period) {
-		throw new RuntimeException(getID() + " don't support daily update");
-	}
-
-	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		throw new RuntimeException(getID() + " don't support hourly update");
 	}

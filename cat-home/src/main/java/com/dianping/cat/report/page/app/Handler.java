@@ -185,7 +185,6 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case CRASH_LINECHART:
-
 			break;
 		}
 

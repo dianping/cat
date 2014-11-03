@@ -43,13 +43,7 @@ public class DisplayTypes {
 			if (m_sortBy.equals("total")) {
 				long value = n2.getTotalCount() - n1.getTotalCount();
 
-				if (value > 0) {
-					return 1;
-				} else if (value < 0) {
-					return -1;
-				} else {
-					return 0;
-				}
+				return (int) value;
 			}
 			if (m_sortBy.equals("error")) {
 				return (int) (n2.getFailCount() - n1.getFailCount());

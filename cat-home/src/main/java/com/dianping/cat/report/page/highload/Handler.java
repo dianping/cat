@@ -43,6 +43,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			try {
 				Map<String, List<HighLoadReport>> reports = m_service.queryHighLoadReports(payload.getDate());
+				
 				model.setReports(new DisplayTypes().display(payload.getSortBy(), reports));
 			} catch (DalException e) {
 				Cat.logError(e);

@@ -75,7 +75,6 @@ public abstract class TransactionHighLoadUpdater extends HighLoadUpdater {
 				Cat.logError(e);
 			}
 		}
-
 		return heap.getReports();
 	}
 
