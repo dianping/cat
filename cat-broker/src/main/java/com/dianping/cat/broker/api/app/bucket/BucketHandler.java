@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
 import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.config.app.AppDataService;
@@ -33,7 +33,7 @@ public class BucketHandler implements Task {
 		m_bucketExecutors.put(AppDataType.CRASH, new CrashDataExecutor());
 	}
 
-	public boolean enqueue(AppData appData) {
+	public boolean enqueue(BaseData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
@@ -55,7 +55,7 @@ public class BucketHandler implements Task {
 	public HashMap<AppDataType, BucketExecutor> getBucketExecutors() {
 		return m_bucketExecutors;
 	}
-
+	
 	@Override
 	public String getName() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -84,18 +84,19 @@ public class BucketHandler implements Task {
 				String[] items = line.split("\t");
 
 				AppDataType type = AppDataType.getByName(items[0], AppDataType.COMMAND);
-				AppData appData = m_bucketExecutors.get(type).loadRecord(items, type);
+				BaseData appData = m_bucketExecutors.get(type).loadRecord(items, type);
 
 				enqueue(appData);
 			}
 			bufferedReader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			Cat.logError(e);
 		}
+		
+		
 	}
 
-	public void processEntity(AppData appData) {
+	public void processEntity(BaseData appData) {
 		AppDataType type = appData.getType();
 
 		m_bucketExecutors.get(type).processEntity(appData);
@@ -104,7 +105,7 @@ public class BucketHandler implements Task {
 	@Override
 	public void run() {
 		while (true) {
-			AppData appData = m_appDataQueue.poll();
+			BaseData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
 				processEntity(appData);

@@ -1,6 +1,6 @@
 package com.dianping.cat.broker.api.app;
 
-public class AppCommandData extends AppData {
+public class AppCommandData extends BaseData {
 
 	private int m_city;
 
@@ -28,7 +28,7 @@ public class AppCommandData extends AppData {
 
 	public AppCommandData() {
 	}
-
+	
 	public AppCommandData addCount(int count) {
 		m_count = m_count + count;
 		return this;

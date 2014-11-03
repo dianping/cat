@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
 import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
@@ -59,7 +59,7 @@ public class BucketHandlerTest {
 		AppDataQueue queue = handler.getAppDataQueue();
 
 		while (true) {
-			AppData appdata = queue.poll();
+			BaseData appdata = queue.poll();
 			if (appdata != null) {
 
 				handler.processEntity(appdata);
