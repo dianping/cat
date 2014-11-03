@@ -17,6 +17,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.broker.api.app.bucket.BucketHandler;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.message.Event;
 
@@ -29,7 +30,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 	@Inject
 	private AppDataService m_appDataService;
 
-	private AppDataQueue<AppData> m_appDataQueue;
+	private AppDataQueue m_appDataQueue;
 
 	private volatile long m_dataLoss;
 
@@ -46,13 +47,13 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public boolean enqueue(AppData appData) {
+	public boolean enqueue(AppCommandData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_appDataQueue = new AppDataQueue<AppData>();
+		m_appDataQueue = new AppDataQueue();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
@@ -175,14 +176,15 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-		private void flushLastTask(long currentDuration) {
+		private void closeLastTask(long currentDuration) {
 			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 
 			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
 				Long time = entry.getKey();
+				BucketHandler handler = entry.getValue();
 
-				if (time <= last) {
-					entry.getValue().flushReady();
+				if (time <= last && handler.isActive()) {
+					handler.flushReady();
 					m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(time)));
 				}
 			}
@@ -193,7 +195,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			return "BucketThreadController";
 		}
 
-		private void cleanupTasks() {
+		private void removeTasks() {
 			Set<Long> closed = new HashSet<Long>();
 
 			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
@@ -222,8 +224,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
-					flushLastTask(currentMinute);
-					cleanupTasks();
+					closeLastTask(currentMinute);
+					removeTasks();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
