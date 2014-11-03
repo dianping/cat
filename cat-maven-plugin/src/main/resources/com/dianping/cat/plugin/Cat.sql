@@ -384,7 +384,7 @@ CREATE TABLE `overload` (
   `period` datetime NOT NULL COMMENT '报表时间',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
-  KEY `period` (`rperiod`)
+  KEY `period` (`period`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='过大容量表';
 
 CREATE TABLE `config_modification` (
