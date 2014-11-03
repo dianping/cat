@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
@@ -110,7 +111,7 @@ public class Handler implements PageHandler<Context> {
 
 				lineChartObjs.put("lineCharts", lineChartJsonPair.getKey());
 				lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
-				model.setJson(new JsonBuilder().toJson(lineChartObjs));
+				model.setFetchData(new JsonBuilder().toJson(lineChartObjs));
 			}
 			break;
 		case PIECHART:
@@ -129,7 +130,7 @@ public class Handler implements PageHandler<Context> {
 
 				pieChartObjs.put("pieCharts", pieChartJsonPair.getKey());
 				pieChartObjs.put("pieChartDetails", pieChartJsonPair.getValue());
-				model.setJson(new JsonBuilder().toJson(pieChartObjs));
+				model.setFetchData(new JsonBuilder().toJson(pieChartObjs));
 			}
 			break;
 		case APP_ADD:
@@ -169,6 +170,22 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 2);
 				}
 			}
+			break;
+		case APP_CONFIG_FETCH:
+			String type = payload.getType();
+
+			try {
+				if ("xml".equalsIgnoreCase(type)) {
+					model.setFetchData(m_manager.getConfig().toString());
+				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
+					model.setFetchData(new JsonBuilder().toJson(m_manager.getConfig()));
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			break;
+		case CRASH_LINECHART:
+
 			break;
 		}
 

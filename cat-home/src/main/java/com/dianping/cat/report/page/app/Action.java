@@ -6,8 +6,10 @@ public enum Action implements org.unidal.web.mvc.Action {
 	PIECHART("piechart"),
 	PIECHART_JSON("piechartJson"),
 	APP_ADD("appAdd"),
-	APP_DELETE("appDelete");
-
+	APP_DELETE("appDelete"),
+	APP_CONFIG_FETCH("appConfigFetch"),
+	CRASH_LINECHART("crashLinechart");
+	
 	private String m_name;
 
 	public static Action getByName(String name, Action defaultAction) {
