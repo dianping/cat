@@ -28,7 +28,7 @@
 		<th class="left" width="20%" rowspan="2"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=Name">Name</a></th>
 		<th rowspan="2" title="所有请求中总次数"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=Count">Total<br/>Hits</a></th>
 		<th rowspan="2" title="所有请求中平均响应时间"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=Time">Avg<br/>Duration(ms)</a></th>
-		<th rowspan="2">Sample Log</th>
+		<th rowspan="2">Log</th>
 		<th colspan="3" title="一次请求中远程调用次数统计">Call Ratio</th>
 		<th colspan="3" title="一次请求中远程调用时间统计">Call Cost</th>
 		<th colspan="3" title="一次请求中数据库调用次数统计">SQL Ratio</th>
