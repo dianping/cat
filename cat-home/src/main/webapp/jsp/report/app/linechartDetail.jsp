@@ -238,7 +238,7 @@
 		commandSelect.empty();
 		for(var cou in commands){
 			var command = commands[cou];
-			if(command['title'] != undefined){
+			if(command['title'] != undefined && command['title'].length > 0){
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
 			}else{
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));

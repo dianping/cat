@@ -17,8 +17,9 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
+import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
@@ -88,7 +89,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void offerQueue(AppData appData) {
+	private void offerQueue(AppCommandData appData) {
 		boolean success = m_appDataConsumer.enqueue(appData);
 
 		if (!success) {
@@ -105,7 +106,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String items[] = record.split("\t");
 
 		if (items.length == 10) {
-			AppData appData = new AppData();
+			AppCommandData appData = new AppCommandData();
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
@@ -126,6 +127,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
+					appData.setType(AppDataType.COMMAND);
 
 					int responseTime = appData.getResponseTime();
 

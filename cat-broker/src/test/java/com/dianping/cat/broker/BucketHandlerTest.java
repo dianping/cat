@@ -11,9 +11,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.AppData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.broker.api.app.BucketHandler;
+import com.dianping.cat.broker.api.app.AppDataType;
+import com.dianping.cat.broker.api.app.bucket.BucketHandler;
+import com.dianping.cat.broker.api.app.bucket.CommandDataExecutor;
 import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandlerTest {
@@ -37,13 +40,14 @@ public class BucketHandlerTest {
 		long startTime = sdf.parse("2014-08-19 11:20").getTime();
 		BucketHandler handler = new BucketHandler(startTime, appDataService);
 
-		HashMap<Integer, HashMap<String, AppData>> datas = handler.getDatas();
-		HashMap<String, AppData> data = new HashMap<String, AppData>();
+		HashMap<Integer, HashMap<String, AppCommandData>> datas = ((CommandDataExecutor) handler.getBucketExecutors()
+		      .get(AppDataType.COMMAND)).getDatas();
+		HashMap<String, AppCommandData> data = new HashMap<String, AppCommandData>();
 
 		datas.put(1, data);
 
 		for (int i = 0; i < 10; i++) {
-			AppData createAppData = createAppData(i);
+			AppCommandData createAppData = createAppData(i);
 			data.put(createAppData.toString(), createAppData);
 		}
 
@@ -52,7 +56,7 @@ public class BucketHandlerTest {
 		datas.clear();
 
 		handler.load(file);
-		AppDataQueue<AppData> queue = handler.getAppDataQueue();
+		AppDataQueue queue = handler.getAppDataQueue();
 
 		while (true) {
 			AppData appdata = queue.poll();
@@ -64,13 +68,15 @@ public class BucketHandlerTest {
 			}
 		}
 
-		HashMap<String, AppData> temp = handler.getDatas().get(1);
+		HashMap<String, AppCommandData> temp = ((CommandDataExecutor) handler.getBucketExecutors().get(
+		      AppDataType.COMMAND)).getDatas().get(1);
 		Assert.assertEquals(10, temp.size());
 	}
 
-	public AppData createAppData(int i) {
-		AppData appdata = new AppData();
+	public AppCommandData createAppData(int i) {
+		AppCommandData appdata = new AppCommandData();
 
+		appdata.setType(AppDataType.COMMAND);
 		appdata.setCommand(1);
 		appdata.setVersion(i);
 		appdata.setCity(i);
