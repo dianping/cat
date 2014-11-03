@@ -30,7 +30,7 @@
 <p>Cat支持通过curl等方式获取APP监控配置（XML或JSON）</p>
 <pre>
 	http请求方式: GET或POST
-	http://主机域名:端口/cat/s/config?
+	http://主机域名:端口/cat/r/app?
 </pre>
 <p>参数说明</p>
 <table style="width:70%" class="table table-striped table-bordered table-condensed">
@@ -40,17 +40,17 @@
 </table>
 <p> url示例（get方式）</p>
 <pre>
-	http://cat.dianpingoa.com/cat/s/config?op=appConfigFetch&type=json
-	http://cat.dianpingoa.com/cat/s/config?op=appConfigFetch&type=xml
+	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=json
+	http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch&type=xml
 </pre>
 <p>返回说明</p>
 <pre>
 	<span class="text-success">配置文件数据 ——> 成功</span>
 	<span class="text-error">空或其他错误 ——> 失败</span>
 </pre>
-<p class="text-error">注意，在浏览器中查看XML格式数据会显示为空，应该在代码中进行数据的读取（需要设置cookie）。例如：</p>
+<p class="text-error">注意，在浏览器中查看XML格式数据会显示为空，应该在代码中进行数据的读取。例如：</p>
 <pre>
-	curl -b "ct=%E5%AD%99%E4%BD%B3%E6%9E%97|jialin.sun|1414490474065|10.1.1.109|***" -d "type=xml" http://cat.dp/cat/s/config?op=appConfigFetch
+	curl -d "type=xml" http://cat.dianpingoa.com/cat/r/app?op=appConfigFetch
 </pre>
 	
 <br/>

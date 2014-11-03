@@ -29,7 +29,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 	@Inject
 	private AppDataService m_appDataService;
 
-	private AppDataQueue m_appDataQueue;
+	private AppDataQueue<AppData> m_appDataQueue;
 
 	private volatile long m_dataLoss;
 
@@ -52,7 +52,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_appDataQueue = new AppDataQueue();
+		m_appDataQueue = new AppDataQueue<AppData>();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
@@ -76,7 +76,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 					handler.load(file);
 					Threads.forGroup("cat").start(handler);
-					handler.shutdown();
+
 					m_tasks.put(timestamp, handler);
 				} catch (Exception e) {
 					Cat.logError(e);
@@ -108,7 +108,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
 			BucketHandler handler = entry.getValue();
 
-			if (handler.isActive()) {
+			if (!handler.isCompleted()) {
 				try {
 					File file = new File(SAVE_PATH + m_fileFormat.format(new Date(entry.getKey())));
 
@@ -175,14 +175,14 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-		private void closeLastTask(long currentDuration) {
+		private void flushLastTask(long currentDuration) {
 			Long last = new Long(currentDuration - 2 * MINUTE - DURATION);
 
 			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
 				Long time = entry.getKey();
 
 				if (time <= last) {
-					entry.getValue().shutdown();
+					entry.getValue().flushReady();
 					m_logger.info("closed bucket handler ,time " + m_sdf.format(new Date(time)));
 				}
 			}
@@ -193,14 +193,14 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			return "BucketThreadController";
 		}
 
-		private void removeLastLastTask(long currentDuration) {
-			Long lastLast = new Long(currentDuration - 2 * DURATION);
+		private void cleanupTasks() {
 			Set<Long> closed = new HashSet<Long>();
 
 			for (Entry<Long, BucketHandler> entry : m_tasks.entrySet()) {
 				Long time = entry.getKey();
+				BucketHandler handler = entry.getValue();
 
-				if (time <= lastLast) {
+				if (handler.isCompleted()) {
 					closed.add(time);
 				}
 			}
@@ -220,11 +220,10 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 					long currentDuration = curTime - curTime % DURATION;
 					long currentMinute = curTime - curTime % MINUTE;
 
-					closeLastTask(currentDuration);
 					startCurrentTask(currentDuration);
 					startNextTask(currentDuration);
-					removeLastLastTask(currentDuration);
-					closeLastTask(currentMinute);
+					flushLastTask(currentMinute);
+					cleanupTasks();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
