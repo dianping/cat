@@ -10,7 +10,7 @@ public class Token implements IToken {
 
 	public static final String TOKEN = "ct";
 
-	public Token( String realName, String userName) {
+	public Token(String realName, String userName) {
 		m_realName = realName;
 		m_userName = userName;
 	}

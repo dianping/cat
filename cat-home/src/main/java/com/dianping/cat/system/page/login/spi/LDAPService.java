@@ -1,4 +1,19 @@
-package com.dianping.cat.system.page.login.service;
+/**
+ * Project: lion-service
+ * 
+ * File Created at 2012-8-20
+ * $Id$
+ * 
+ * Copyright 2010 dianping.com.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of
+ * Dianping Company. ("Confidential Information").  You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered into
+ * with dianping.com.
+ */
+package com.dianping.cat.system.page.login.spi;
 
 import java.util.Hashtable;
 
@@ -16,15 +31,15 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.LDAPConfigManager;
-import com.dianping.cat.system.page.login.spi.ILDAPAuthenticationService;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.system.page.login.service.Token;
 
-public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService {
+public class LDAPService {
 
 	@Inject
 	private LDAPConfigManager m_LDAPConfigManager;
 
 	@SuppressWarnings("rawtypes")
-	@Override
 	public Token authenticate(String userName, String password) throws Exception {
 		Token token = null;
 		LdapContext ctx = null;
@@ -35,11 +50,11 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 		try {
 			NamingEnumeration en = getInfo(userName);
 			if (en == null) {
-				Cat.logEvent("LoginError", "Have no NamingEnumeration.");
+				Cat.logEvent("LoginError", "HaveNoNamingEnumeration", Event.SUCCESS, null);
 				return null;
 			}
 			if (!en.hasMoreElements()) {
-				Cat.logEvent("LoginError", "Have no element.");
+				Cat.logEvent("LoginError", "HaveNoElement", Event.SUCCESS, null);
 				return null;
 			}
 			while (en != null && en.hasMoreElements()) {
@@ -57,7 +72,8 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 				}
 			}
 		} catch (NamingException ne) {
-			Cat.logEvent("LoginError", userName + " doesn't exist.");
+			Cat.logError(ne);
+			Cat.logEvent("LoginError", userName + "NoExist", Event.SUCCESS, null);
 			return null;
 		}
 
@@ -73,10 +89,10 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 			try {
 				ctx = new InitialLdapContext(env, null);
 			} catch (AuthenticationException e) {
-				Cat.logEvent("LoginError", "Authentication faild: " + e.toString());
+				Cat.logError(e);
 				throw e;
 			} catch (Exception e) {
-				Cat.logEvent("LoginError", "Something wrong while authenticating: " + e.toString());
+				Cat.logError(e);
 				throw e;
 			}
 			if (ctx != null) {
@@ -102,10 +118,10 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 		      constraints);
 
 		if (en == null) {
-			Cat.logEvent("LoginError", "Have no NamingEnumeration.");
+			Cat.logEvent("LoginError", "HaveNoNamingEnumeration", Event.SUCCESS, null);
 		}
 		if (!en.hasMoreElements()) {
-			Cat.logEvent("LoginError", "Have no element.");
+			Cat.logEvent("LoginError", "HaveNoElement", Event.SUCCESS, null);
 		}
 
 		return en;
@@ -121,7 +137,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 			NamingEnumeration en = ctx.search("", "cn=" + cn, constraints);
 
 			if (en == null || !en.hasMoreElements()) {
-				Cat.logEvent("LoginError", "Have no NamingEnumeration.");
+				Cat.logEvent("LoginError", "HaveNoNamingEnumeration", Event.SUCCESS, null);
 			}
 
 			while (en != null && en.hasMoreElements()) {
@@ -141,7 +157,7 @@ public class LDAPAuthenticationServiceImpl implements ILDAPAuthenticationService
 				}
 			}
 		} catch (Exception e) {
-			Cat.logEvent("LoginError", "Exception in search():" + e);
+			Cat.logError(e);
 		}
 		return null;
 	}

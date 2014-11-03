@@ -170,8 +170,8 @@ public class AppDataService {
 		return new AppDataCommandMap(length, dataMap);
 	}
 
-	public void insert(AppDataCommand[] proto) throws DalException {
-		m_dao.insert(proto);
+	public int[] insert(AppDataCommand[] proto) throws DalException {
+		return m_dao.insert(proto);
 	}
 
 	public void insertSignal(AppDataCommand proto) throws DalException {

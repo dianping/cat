@@ -77,8 +77,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_content;
 
-	private String m_appConfig;
-
 	private String m_metricItemConfigRule;
 
 	private Map<String, Domain> m_productLineToDomains;
@@ -270,10 +268,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getExceptionList() {
 		return m_exceptionList;
-	}
-
-	public String getAppConfig() {
-		return m_appConfig;
 	}
 
 	public String getGroup2PatternItemJson() {
@@ -472,10 +466,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setExceptionList(List<String> exceptionList) {
 		m_exceptionList = exceptionList;
-	}
-
-	public void setAppConfig(String fetchedAppConfig) {
-		m_appConfig = fetchedAppConfig;
 	}
 
 	public void setGraphConfig(TopologyGraphConfig config) {
