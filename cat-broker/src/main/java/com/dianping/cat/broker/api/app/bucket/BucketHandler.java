@@ -11,9 +11,9 @@ import java.util.LinkedHashMap;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppData;
+import com.dianping.cat.broker.api.app.AppCommandData;
+import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.config.app.AppDataService;
 
 public class BucketHandler implements Task {
@@ -24,16 +24,15 @@ public class BucketHandler implements Task {
 
 	private AppDataQueue m_appDataQueue = new AppDataQueue();
 
-	private HashMap<AppDataType, BucketExecutor> m_bucketExecutors = new LinkedHashMap<AppDataType, BucketExecutor>();
+	private HashMap<String, BucketExecutor> m_bucketExecutors = new LinkedHashMap<String, BucketExecutor>();
 
 	private long m_startTime;
 
 	public BucketHandler(long startTime, AppDataService appDataService) {
-		m_bucketExecutors.put(AppDataType.COMMAND, new CommandDataExecutor(startTime, appDataService));
-		m_bucketExecutors.put(AppDataType.CRASH, new CrashDataExecutor());
+		m_bucketExecutors.put(AppCommandData.class.getName(), new CommandBucketExecutor(startTime, appDataService));
 	}
 
-	public boolean enqueue(AppData appData) {
+	public boolean enqueue(BaseData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
@@ -52,7 +51,7 @@ public class BucketHandler implements Task {
 		return m_appDataQueue;
 	}
 
-	public HashMap<AppDataType, BucketExecutor> getBucketExecutors() {
+	public HashMap<String, BucketExecutor> getBucketExecutors() {
 		return m_bucketExecutors;
 	}
 
@@ -82,29 +81,27 @@ public class BucketHandler implements Task {
 
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] items = line.split("\t");
-
-				AppDataType type = AppDataType.getByName(items[0], AppDataType.COMMAND);
-				AppData appData = m_bucketExecutors.get(type).loadRecord(items, type);
+				BaseData appData = m_bucketExecutors.get(items[0]).loadRecord(items);
 
 				enqueue(appData);
 			}
 			bufferedReader.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			Cat.logError(e);
 		}
+
 	}
 
-	public void processEntity(AppData appData) {
-		AppDataType type = appData.getType();
+	public void processEntity(BaseData appData) {
+		Class<? extends BaseData> clas = appData.getClass();
 
-		m_bucketExecutors.get(type).processEntity(appData);
+		m_bucketExecutors.get(clas.getName()).processEntity(appData);
 	}
 
 	@Override
 	public void run() {
 		while (true) {
-			AppData appData = m_appDataQueue.poll();
+			BaseData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
 				processEntity(appData);

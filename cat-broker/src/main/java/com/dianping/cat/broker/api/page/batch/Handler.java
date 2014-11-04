@@ -19,7 +19,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.AppDataConsumer;
-import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
@@ -127,7 +126,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
-					appData.setType(AppDataType.COMMAND);
 
 					int responseTime = appData.getResponseTime();
 

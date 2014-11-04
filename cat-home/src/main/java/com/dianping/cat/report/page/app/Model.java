@@ -49,6 +49,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_fetchData;
 
+	private Code m_code;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -59,6 +61,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
+	}
+
+	public Code getCode() {
+		return m_code;
 	}
 
 	public String getCommand() {
@@ -160,6 +166,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
+	}
+
+	public void setCode(Code code) {
+		m_code = code;
 	}
 
 	public void setCommands(List<Command> commands) {

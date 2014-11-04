@@ -24,6 +24,7 @@ import com.dianping.cat.config.app.AppDataGroupByField;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.config.app.QueryEntity;
+import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -53,7 +54,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
-
+	
 	private void filterCommands(Model model, boolean isShowActivity) {
 		List<Command> commands = model.getCommands();
 		List<Command> remainCommands = new ArrayList<Command>();
@@ -185,13 +186,34 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case CRASH_LINECHART:
-
+			break;
+		case APP_CODE_UPDATE:
+			int commandId = Integer.parseInt(payload.getCommandId());
+			
+			model.setCode(m_manager.queryCode(commandId, payload.getCodeId()));
+			break;
+		case APP_CODE_UPDATE_SUBMIT:
+			commandCodeUpdate(payload);
 			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void commandCodeUpdate(Payload payload) {
+		int commandId = Integer.parseInt(payload.getCommandId());
+		String name = payload.getName();
+		int status = payload.getStatus();
+
+		Code code = new Code();
+
+		code.setId(payload.getCodeId());
+		code.setName(name);
+		code.setStatus(status);
+		
+		m_manager.updateCode(commandId, code);
 	}
 
 	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Model model, Payload payload,

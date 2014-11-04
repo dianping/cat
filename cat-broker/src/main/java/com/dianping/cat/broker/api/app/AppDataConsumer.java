@@ -144,7 +144,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		public void run() {
 			while (true) {
 				try {
-					AppData appData = m_appDataQueue.poll();
+					BaseData appData = m_appDataQueue.poll();
 
 					if (appData != null) {
 						long timestamp = appData.getTimestamp();
