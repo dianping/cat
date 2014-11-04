@@ -6,7 +6,7 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.report.task.overload.CapacityUpdater;
 import com.dianping.cat.report.task.overload.HourlyCapacityUpdater;
 
-public class DatabaseCapacity extends ComponentTestCase {
+public class DatabaseCapacityTest extends ComponentTestCase {
 
 	// @Test
 	public void testTaskDuration() throws DalException {
