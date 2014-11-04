@@ -60,7 +60,8 @@
 
 	$(document).ready(function(){
 		if("${payload.action.name}" != undefined && "${payload.domain}".length >0 || 
-				"${payload.action.name}" == "appCodeSubmit" || "${payload.action.name}" == "appCodeDelete") {
+				"${payload.action.name}" == "appCodeSubmit" || "${payload.action.name}" == "appCodeDelete" ||
+				"${payload.action.name}" == "appCodeAdd" || "${payload.action.name}" == "") {
 			$('#myTab a[href="#tabContent-code"]').tab('show');
 		}
 		initDomain('domain', 'command', '${payload.domain}', '${payload.id}');
@@ -104,6 +105,7 @@
 			</tr>
 	</c:forEach>
 	
+	<tr><td colspan="4"></td></tr>
 	<thead>
 	<tr class="odd">
 		<th>返回码</th>
