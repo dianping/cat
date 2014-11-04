@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.highload;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -24,8 +23,6 @@ import com.dianping.cat.report.page.transaction.DisplayNames;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 
@@ -94,9 +91,9 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 	}
 
 	private HighloadReport generateHighloadReport(Date startTime) {
-		Set<String> domains = queryDomains();
-		HighloadReport report = new HighloadReport();
 		Date endTime = TimeHelper.addDays(startTime, 1);
+		Set<String> domains = queryDomains(startTime, endTime);
+		HighloadReport report = new HighloadReport();
 
 		report.setStartTime(startTime);
 		report.setEndTime(endTime);
@@ -147,15 +144,8 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 		return ID;
 	}
 
-	protected Set<String> queryDomains() {
-		Set<String> domains = new HashSet<String>();
-		ModelRequest request = new ModelRequest("cat", System.currentTimeMillis());
-
-		if (m_transactionService.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			domains.addAll(response.getModel().getDomainNames());
-		}
-		return domains;
+	protected Set<String> queryDomains(Date startTime, Date endTime) {
+		return m_reportService.queryAllDomainNames(startTime, endTime, "transaction");
 	}
 
 	public class Heap {
