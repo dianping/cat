@@ -10,50 +10,50 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.CountDownLatch;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.broker.api.app.AppDataType;
 import com.dianping.cat.config.app.AppDataService;
 
-public class CommandDataExecutor implements BucketExecutor {
+public class CommandBucketExecutor implements BucketExecutor {
 
 	private AppDataService m_appDataService;
 
 	private HashMap<Integer, HashMap<String, AppCommandData>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppCommandData>>();
 
-	private boolean m_saving = false;
-
 	private long m_startTime;
 
-	public CommandDataExecutor(long startTime, AppDataService appDataService) {
+	private CountDownLatch m_flushCountDownLatch = new CountDownLatch(0);
+
+	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
+
+	public CommandBucketExecutor(long startTime, AppDataService appDataService) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
 	}
 
 	protected void batchInsert(List<AppDataCommand> appDataCommands, List<AppCommandData> datas) {
-		if (!m_saving) {
-			int[] ret = null;
-			try {
-				int length = appDataCommands.size();
-				AppDataCommand[] array = new AppDataCommand[length];
+		int[] ret = null;
+		try {
+			int length = appDataCommands.size();
+			AppDataCommand[] array = new AppDataCommand[length];
 
-				for (int i = 0; i < length; i++) {
-					array[i] = appDataCommands.get(i);
-				}
-				ret = m_appDataService.insert(array);
-			} catch (Exception e) {
-				Cat.logError(e);
+			for (int i = 0; i < length; i++) {
+				array[i] = appDataCommands.get(i);
 			}
+			ret = m_appDataService.insert(array);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 
-			if (ret != null) {
-				int length = datas.size();
+		if (ret != null) {
+			int length = datas.size();
 
-				for (int i = 0; i < length; i++) {
-					datas.get(i).setFlushed(true);
-				}
+			for (int i = 0; i < length; i++) {
+				datas.get(i).setFlushed();
 			}
 		}
 	}
@@ -80,39 +80,46 @@ public class CommandDataExecutor implements BucketExecutor {
 				HashMap<String, AppCommandData> value = outerEntry.getValue();
 
 				for (Entry<String, AppCommandData> entry : value.entrySet()) {
+					m_saveCountDownLatch.await();
+
+					m_flushCountDownLatch = new CountDownLatch(1);
 					try {
 						AppCommandData appData = entry.getValue();
-						AppDataCommand proto = new AppDataCommand();
 
-						proto.setPeriod(period);
-						proto.setMinuteOrder(minute);
-						proto.setCommandId(appData.getCommand());
-						proto.setCity(appData.getCity());
-						proto.setOperator(appData.getOperator());
-						proto.setNetwork(appData.getNetwork());
-						proto.setAppVersion(appData.getVersion());
-						proto.setConnnectType(appData.getConnectType());
-						proto.setCode(appData.getCode());
-						proto.setPlatform(appData.getPlatform());
-						proto.setAccessNumber(appData.getCount());
-						proto.setResponseSumTime(appData.getResponseTime());
-						proto.setRequestPackage(appData.getRequestByte());
-						proto.setResponsePackage(appData.getResponseByte());
-						proto.setCreationDate(new Date());
+						if (appData.notFlushed()) {
+							AppDataCommand proto = new AppDataCommand();
 
-						commands.add(proto);
-						datas.add(appData);
+							proto.setPeriod(period);
+							proto.setMinuteOrder(minute);
+							proto.setCommandId(appData.getCommand());
+							proto.setCity(appData.getCity());
+							proto.setOperator(appData.getOperator());
+							proto.setNetwork(appData.getNetwork());
+							proto.setAppVersion(appData.getVersion());
+							proto.setConnnectType(appData.getConnectType());
+							proto.setCode(appData.getCode());
+							proto.setPlatform(appData.getPlatform());
+							proto.setAccessNumber(appData.getCount());
+							proto.setResponseSumTime(appData.getResponseTime());
+							proto.setRequestPackage(appData.getRequestByte());
+							proto.setResponsePackage(appData.getResponseByte());
+							proto.setCreationDate(new Date());
 
-						if (commands.size() >= 100) {
-							batchInsert(commands, datas);
+							commands.add(proto);
+							datas.add(appData);
 
-							commands = new ArrayList<AppDataCommand>();
+							if (commands.size() >= 100) {
+								batchInsert(commands, datas);
+
+								commands = new ArrayList<AppDataCommand>();
+							}
 						}
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}
 				batchInsert(commands, datas);
+				m_flushCountDownLatch.countDown();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -121,10 +128,9 @@ public class CommandDataExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public BaseData loadRecord(String[] items, AppDataType type) {
+	public BaseData loadRecord(String[] items) {
 		AppCommandData appData = new AppCommandData();
 
-		appData.setType(type);
 		appData.setCode(Integer.parseInt(items[1]));
 		appData.setTimestamp(Long.parseLong(items[2]));
 		appData.setCity(Integer.parseInt(items[3]));
@@ -147,10 +153,6 @@ public class CommandDataExecutor implements BucketExecutor {
 
 	public HashMap<Integer, HashMap<String, AppCommandData>> getDatas() {
 		return m_datas;
-	}
-
-	public boolean isSaving() {
-		return m_saving;
 	}
 
 	public long getStartTime() {
@@ -202,7 +204,6 @@ public class CommandDataExecutor implements BucketExecutor {
 	public void save(File file) {
 		if (m_datas.size() > 0) {
 			try {
-				m_saving = true;
 				BufferedWriter writer = new BufferedWriter(new FileWriter(file, true));
 				char tab = '\t';
 				char enter = '\n';
@@ -211,11 +212,14 @@ public class CommandDataExecutor implements BucketExecutor {
 					HashMap<String, AppCommandData> value = outerEntry.getValue();
 
 					for (Entry<String, AppCommandData> entry : value.entrySet()) {
+						m_flushCountDownLatch.await();
+
+						m_saveCountDownLatch = new CountDownLatch(1);
 						AppCommandData appData = entry.getValue();
 
-						if (!appData.isFlushed()) {
+						if (appData.notFlushed()) {
 							StringBuilder sb = new StringBuilder();
-							sb.append(appData.getType().getName()).append(tab);
+							sb.append(appData.getClass().getName()).append(tab);
 							sb.append(appData.getCode()).append(tab);
 							sb.append(appData.getTimestamp()).append(tab);
 							sb.append(appData.getCity()).append(tab);
@@ -231,7 +235,9 @@ public class CommandDataExecutor implements BucketExecutor {
 							sb.append(appData.getResponseByte()).append(enter);
 
 							writer.append(sb.toString());
+							appData.setSaved();
 						}
+						m_saveCountDownLatch.countDown();
 					}
 				}
 				writer.close();

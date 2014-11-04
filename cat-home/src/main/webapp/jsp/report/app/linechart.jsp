@@ -36,13 +36,19 @@
 				$('#history').slideUp();
 			}
 		}
-		var command1Change = function command1Change() {
+ 		var command1Change = function command1Change() {
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
+			$("#code").empty();
+			
+			var opt = $('<option />');
+			opt.html("All");
+			opt.val("");
+			opt.appendTo(code);
+			
 			for ( var prop in value) {
 				var opt = $('<option />');
-
 				opt.html(value[prop].name);
 				opt.val(value[prop].id);
 				opt.appendTo(code);
@@ -52,6 +58,12 @@
 			var key = $("#command2").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code2");
+			$("#code2").empty();
+			var opt = $('<option />');
+			opt.html("All");
+			opt.val("");
+			opt.appendTo(code);
+			
 			for ( var prop in value) {
 				var opt = $('<option />');
 

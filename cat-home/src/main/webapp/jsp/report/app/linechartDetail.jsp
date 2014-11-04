@@ -249,7 +249,7 @@
 		}
 	}
 	
-	function changeDomainByChange(){
+	function changeCommandByDomain(){
 		if($(this).attr("id")=="domains"){
 			var domain = $("#domains").val();
 			var commandSelect = $("#command");
@@ -276,7 +276,8 @@
 			domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 		}
 		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
-		domainsSelect.on('change', changeDomainByChange);
+		command1Change();
+		domainsSelect.on('change', changeCommandByDomain);
 	}
 
 	$(document).ready(function(){
