@@ -60,7 +60,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		if (hour >= 4) {
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_NOTIFY, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.HIGH_LOAD_SQL, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.HIGH_LOAD_REPORT, TaskProlicy.DAILY);
 		}
 		return true;
 	}

@@ -13,6 +13,7 @@ import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
@@ -26,7 +27,6 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
-import com.dianping.cat.home.dal.report.HighloadDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -53,7 +53,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
-import com.dianping.cat.report.task.highload.HighLoadSqlUpdater;
+import com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.metric.MetricPointParser;
@@ -63,6 +63,7 @@ import com.dianping.cat.report.task.notify.NotifyTaskBuilder;
 import com.dianping.cat.report.task.notify.ReportRender;
 import com.dianping.cat.report.task.notify.ReportRenderImpl;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
+import com.dianping.cat.report.task.overload.CapacityUpdateStatusManager;
 import com.dianping.cat.report.task.overload.CapacityUpdateTask;
 import com.dianping.cat.report.task.overload.CapacityUpdater;
 import com.dianping.cat.report.task.overload.DailyCapacityUpdater;
@@ -165,17 +166,19 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportTaskBuilder.class, NetTopologyReportBuilder.ID, NetTopologyReportBuilder.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, NetGraphConfigManager.class));
 
+		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
+
 		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(OverloadDao.class,
-		      HourlyReportContentDao.class, HourlyReportDao.class));
+		      HourlyReportContentDao.class, HourlyReportDao.class, CapacityUpdateStatusManager.class));
 
 		all.add(C(CapacityUpdater.class, DailyCapacityUpdater.ID, DailyCapacityUpdater.class).req(OverloadDao.class,
-		      DailyReportContentDao.class, DailyReportDao.class));
+		      DailyReportContentDao.class, DailyReportDao.class, CapacityUpdateStatusManager.class));
 
 		all.add(C(CapacityUpdater.class, WeeklyCapacityUpdater.ID, WeeklyCapacityUpdater.class).req(OverloadDao.class,
-		      WeeklyReportContentDao.class, WeeklyReportDao.class));
+		      WeeklyReportContentDao.class, WeeklyReportDao.class, CapacityUpdateStatusManager.class));
 
 		all.add(C(CapacityUpdater.class, MonthlyCapacityUpdater.ID, MonthlyCapacityUpdater.class).req(OverloadDao.class,
-		      MonthlyReportContentDao.class, MonthlyReportDao.class));
+		      MonthlyReportContentDao.class, MonthlyReportDao.class, CapacityUpdateStatusManager.class));
 
 		all.add(C(TableCapacityService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, OverloadDao.class));
@@ -186,9 +189,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
-		all.add(C(ReportTaskBuilder.class, HighLoadSqlUpdater.ID, HighLoadSqlUpdater.class)//
+		all.add(C(ReportTaskBuilder.class, TransactionHighLoadReportBuilder.ID, TransactionHighLoadReportBuilder.class)//
 		      .req(ModelService.class, TransactionAnalyzer.ID)//
-		      .req(ReportServiceManager.class).req(HighloadDao.class));
+		      .req(ReportServiceManager.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 

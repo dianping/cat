@@ -20,6 +20,7 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
+import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
@@ -48,7 +49,7 @@ public interface ReportServiceManager {
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
 
 	public HeavyReport queryHeavyReport(String domain, Date start, Date end);
-	
+
 	public AlertReport queryAlertReport(String domain, Date start, Date end);
 
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
@@ -56,6 +57,8 @@ public interface ReportServiceManager {
 	public MetricReport queryMetricReport(String domain, Date start, Date end);
 
 	public ProblemReport queryProblemReport(String domain, Date start, Date end);
+
+	public HighloadReport queryHighloadReport(String domain, Date start, Date end);
 
 	public ServiceReport queryServiceReport(String domain, Date start, Date end);
 
@@ -66,9 +69,9 @@ public interface ReportServiceManager {
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end);
-	
+
 	public NetGraphSet queryNetTopologyReport(String domain, Date start, Date end);
-	
+
 	public RouterConfig queryRouterConfigReport(String domain, Date start, Date end);
 
 }

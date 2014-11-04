@@ -12,7 +12,6 @@ import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
-import com.dianping.cat.home.dal.report.OverloadEntity;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
@@ -28,6 +27,9 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private OverloadDao m_overloadDao;
 
+	@Inject
+	private CapacityUpdateStatusManager m_manager;
+
 	public static final String ID = "weekly_capacity_updater";
 
 	@Override
@@ -36,12 +38,12 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public void updateDBCapacity(double capacity) throws DalException {
-		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.WEEKLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
+	public void updateDBCapacity() throws DalException {
+		int maxId = m_manager.getWeeklyStatus();
 
 		while (true) {
 			List<WeeklyReportContent> reports = m_weeklyReportContentDao.findOverloadReport(maxId,
-					WeeklyReportContentEntity.READSET_LENGTH);
+			      WeeklyReportContentEntity.READSET_LENGTH);
 
 			for (WeeklyReportContent content : reports) {
 				try {
@@ -75,7 +77,8 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 			} else {
 				maxId = reports.get(size - 1).getReportId();
 			}
-		}		
+		}
+		m_manager.updateWeeklyStatus(maxId);
 	}
 
 }

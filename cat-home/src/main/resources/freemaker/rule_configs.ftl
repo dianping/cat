@@ -292,6 +292,10 @@ function generateConfigsJsonString() {
                     condition["sub-conditions"] = subconditions;
                     if (minute != "") {
                         condition["minute"] = minute;
+                        if (minute > 10){
+                    		alert("规则时间请限制在10分钟之内！");
+                    		throw("minute exceeds"); 
+                    	}
                     }
                     if (alertType != "") {
                         condition["alertType"] = alertType;

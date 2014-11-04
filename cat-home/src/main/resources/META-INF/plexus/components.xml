@@ -936,6 +936,37 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.ReportService</role>
+			<role-hint>highLoad</role-hint>
+			<implementation>com.dianping.cat.report.service.impl.HighloadReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.ReportService</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.report.service.impl.TopReportService</implementation>
 			<requirements>
@@ -1328,6 +1359,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
+			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.OverloadDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 			<role-hint>hourly_capacity_updater</role-hint>
 			<implementation>com.dianping.cat.report.task.overload.HourlyCapacityUpdater</implementation>
@@ -1340,6 +1383,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1357,6 +1403,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.DailyReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1373,6 +1422,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1388,6 +1440,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1441,8 +1496,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
-			<role-hint>highLoadSql</role-hint>
-			<implementation>com.dianping.cat.report.task.highload.HighLoadSqlUpdater</implementation>
+			<role-hint>highLoad</role-hint>
+			<implementation>com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1450,9 +1505,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.HighloadDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2118,16 +2170,6 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>highload</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>highload</logical-table-name>
-				<physical-table-name>highload</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>monthly-report-content</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2233,15 +2275,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.EventDao</role>
 			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.HighloadDao</role>
-			<implementation>com.dianping.cat.home.dal.report.HighloadDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4685,7 +4718,7 @@
 					<role>com.dianping.cat.report.page.highload.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.highload.HighLoadService</role>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4695,24 +4728,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.highload.HighLoadService</role>
-			<implementation>com.dianping.cat.report.task.highload.HighLoadService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.HighloadDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.HighloadDao</role>
-			<implementation>com.dianping.cat.home.dal.report.HighloadDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
