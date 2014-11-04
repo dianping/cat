@@ -125,6 +125,32 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean updateCode(int id, Code code) {
+		Command command = m_config.findCommand(id);
+
+		if (command != null) {
+			command.getCodes().put(code.getId(), code);
+
+			return storeConfig();
+		}
+		return false;
+	}
+
+	public Code queryCode(int commandId, int codeId) {
+		Command command = m_config.findCommand(commandId);
+
+		if (command != null) {
+			Code code = command.findCode(codeId);
+
+			if (code == null) {
+				code = m_config.findCode(codeId);
+			}
+			return code;
+		} else {
+			return null;
+		}
+	}
+
 	private int findAvailableId(int startIndex, int endIndex) throws Exception {
 		Set<Integer> keys = m_config.getCommands().keySet();
 		int maxKey = 0;

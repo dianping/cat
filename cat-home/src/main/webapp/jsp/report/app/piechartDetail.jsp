@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <table>
 			<tr>
 				<th align=left>开始
@@ -84,19 +85,21 @@
 		<h5 class="text-center">请求量分布</h5>
 		<div id="piechart"></div>
 		<br/>
-<table id="web_content" class="table table-striped table-bordered table-condensed">
-	<thead><tr class="text-success">
-		<th>类别</th>
-		<th>请求总数</th>
-		<th>百分比</th>
-	</tr></thead>
-	<tbody>
-	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
-		<tr>
-		<td>${item.title}</td>
-		<td></a>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.successRatio,'#0.000%')}</td>
-		</tr>
-	</c:forEach>
-	</tbody>
-</table>
+		<table id="web_content" class="table table-striped table-bordered table-condensed">
+			<thead><tr class="text-success">
+				<th>序号</th>
+				<th>类别</th>
+				<th>请求总数</th>
+				<th>百分比</th>
+			</tr></thead>
+			<tbody>
+			<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
+				<tr>
+				<td>${item.id}</td>
+				<td>${item.title}</td>
+				<td></a>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
+				<td>${w:format(item.successRatio,'#0.000%')}</td>
+				</tr>
+			</c:forEach>
+			</tbody>
+		</table>
