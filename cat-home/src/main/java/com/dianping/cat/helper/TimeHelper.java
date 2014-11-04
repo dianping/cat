@@ -13,6 +13,15 @@ public class TimeHelper {
 
 	public static final long ONE_WEEK = 7 * ONE_DAY;
 
+	public static Date addDays(Date date, int day) {
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTime(date);
+		cal.add(Calendar.DAY_OF_MONTH, day);
+
+		return cal.getTime();
+	}
+
 	public static Date getCurrentDay() {
 		Calendar cal = Calendar.getInstance();
 

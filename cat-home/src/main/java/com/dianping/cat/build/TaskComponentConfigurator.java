@@ -27,7 +27,6 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
-import com.dianping.cat.home.dal.report.HighloadDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -54,7 +53,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
-import com.dianping.cat.report.task.highload.HighLoadSqlUpdater;
+import com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.metric.MetricPointParser;
@@ -190,9 +189,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
-		all.add(C(ReportTaskBuilder.class, HighLoadSqlUpdater.ID, HighLoadSqlUpdater.class)//
+		all.add(C(ReportTaskBuilder.class, TransactionHighLoadReportBuilder.ID, TransactionHighLoadReportBuilder.class)//
 		      .req(ModelService.class, TransactionAnalyzer.ID)//
-		      .req(ReportServiceManager.class).req(HighloadDao.class));
+		      .req(ReportServiceManager.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 
