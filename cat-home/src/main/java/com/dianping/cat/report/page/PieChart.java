@@ -58,9 +58,19 @@ public class PieChart {
 	}
 
 	public static class Item {
+		private int m_id;
+		
 		private String m_title;
 
 		private double m_number;
+		
+		public int getId() {
+      	return m_id;
+      }
+
+		public void setId(int id) {
+      	m_id = id;
+      }
 
 		public double getNumber() {
 			return m_number;

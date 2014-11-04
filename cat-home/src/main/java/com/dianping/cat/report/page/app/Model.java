@@ -49,6 +49,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_fetchData;
 
+	private int m_commandId;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -74,6 +76,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 			items.addAll(item.getCodes().values());
 		}
 		return new JsonBuilder().toJson(maps);
+	}
+
+	public int getCommandId() {
+		return m_commandId;
 	}
 
 	public List<Command> getCommands() {
@@ -160,6 +166,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
+	}
+
+	public void setCommandId(int commandId) {
+		m_commandId = commandId;
 	}
 
 	public void setCommands(List<Command> commands) {

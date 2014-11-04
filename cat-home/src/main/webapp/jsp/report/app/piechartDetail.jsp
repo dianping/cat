@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <table>
 			<tr>
 				<th align=left>开始
@@ -98,7 +99,7 @@
 		<td>${item.id}
 		<c:if test="${payload.groupByField.name eq 'code'}">
 			&nbsp;&nbsp;
-			<a  class="btn btn-small" href="?op=update&projectId=${item.id}">编辑</a>
+			<a  class="btn btn-small" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a>
 		</c:if>
 		</td>
 		<td>${item.title}</td>

@@ -123,6 +123,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("title")
 	private String m_title;
 
+	@FieldMeta("code")
+	private int m_code;
+	
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -141,6 +144,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getBug() {
 		return m_bug;
+	}
+
+	public int getCode() {
+		return m_code;
 	}
 
 	public String getConfigs() {
@@ -323,6 +330,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setBug(String bug) {
 		m_bug = bug;
+	}
+
+	public void setCode(int code) {
+		m_code = code;
 	}
 
 	public void setConfigs(String configs) {

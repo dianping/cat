@@ -115,15 +115,16 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(model, payload, field);
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload, field);
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());
 				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
+			model.setCommandId(payload.getQueryEntity1().getCommand());
 			break;
 		case PIECHART_JSON:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(model, payload, field);
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload, field);
 
 			if (pieChartJsonPair != null) {
 				Map<String, Object> pieChartObjs = new HashMap<String, Object>();
@@ -193,8 +194,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Model model, Payload payload,
-	      AppDataGroupByField field) {
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataGroupByField field) {
 		try {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 			      field);

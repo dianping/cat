@@ -7,11 +7,13 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import com.site.helper.Splitters;
 
 public class AppConfigProcessor extends BaseProcesser {
 
@@ -39,7 +41,17 @@ public class AppConfigProcessor extends BaseProcesser {
 
 		switch (action) {
 		case APP_LIST:
-			generateCommandsForModel(model);
+			buildAllCommandInfos(model);
+
+			if (StringUtils.isNotEmpty(payload.getDomain())) {
+				id = payload.getId();
+				model.setCodes(m_appConfigManager.getCodes());
+				Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+				if (cmd != null) {
+					model.setUpdateCommand(cmd);
+				}
+			}
 			break;
 		case APP_UPDATE:
 			id = payload.getId();
@@ -73,7 +85,7 @@ public class AppConfigProcessor extends BaseProcesser {
 					model.setOpState(false);
 				}
 			}
-			generateCommandsForModel(model);
+			buildAllCommandInfos(model);
 			break;
 		case APP_PAGE_DELETE:
 			id = payload.getId();
@@ -83,7 +95,44 @@ public class AppConfigProcessor extends BaseProcesser {
 			} else {
 				model.setOpState(false);
 			}
-			generateCommandsForModel(model);
+			buildAllCommandInfos(model);
+			break;
+		case APP_CODE_UPDATE:
+			id = payload.getId();
+			int codeId = payload.getCode();
+			Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+			if (cmd != null) {
+				Code code = cmd.getCodes().get(codeId);
+
+				model.setCode(code);
+				model.setUpdateCommand(cmd);
+			}
+			break;
+		case APP_CODE_SUBMIT:
+			id = payload.getId();
+			String codeStr = payload.getContent();
+			List<String> strs = Splitters.by(":").split(codeStr);
+			codeId = Integer.parseInt(strs.get(0));
+			name = strs.get(1);
+			int status = Integer.parseInt(strs.get(2));
+			Code code = new Code(codeId);
+			code.setName(name).setStatus(status);
+			m_appConfigManager.updateCode(id, code);
+			buildAllCommandInfos(model);
+			break;
+
+		case APP_CODE_ADD:
+			id = payload.getId();
+
+			model.setId(String.valueOf(id));
+			buildAllCommandInfos(model);
+			break;
+		case APP_CODE_DELETE:
+			id = payload.getId();
+			codeId = payload.getCode();
+			m_appConfigManager.getRawCommands().get(id).getCodes().remove(codeId);
+			buildAllCommandInfos(model);
 			break;
 		case APP_CONFIG_UPDATE:
 			String appConfig = payload.getContent();
@@ -122,7 +171,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 	}
 
-	private void generateCommandsForModel(Model model) {
+	private void buildAllCommandInfos(Model model) {
 		List<Command> commands = m_appConfigManager.queryCommands();
 		model.setCommands(commands);
 	}

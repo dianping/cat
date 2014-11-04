@@ -91,9 +91,10 @@
 			</div>
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-				<ul class="nav nav-tabs span2">
+				<ul class="nav nav-tabs span2" id="myTab">
 				    <li id="tab-api" class="text-right active"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-error">API命令字</h5></a></li>
 				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-error">活动命令字</h5></a></li>
+				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <h5 class="text-error">返回码</h5></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane active" id="tabContent-api">
@@ -145,6 +146,9 @@
 							</c:forEach>
 							</tbody>
 						</table>
+					</div>
+					<div class="tab-pane" id="tabContent-code">
+						<%@include file="code.jsp"%>
 					</div>
 				</div>
 			</div>

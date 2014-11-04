@@ -125,6 +125,32 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean updateCode(int id, Code code) {
+		Command command = m_config.findCommand(id);
+
+		if (command != null) {
+			command.getCodes().put(code.getId(), code);
+
+			return storeConfig();
+		}
+		return false;
+	}
+
+	public Code queryCode(int commandId, int codeId) {
+		Command command = m_config.findCommand(commandId);
+
+		if (command != null) {
+			Code code = command.findCode(codeId);
+
+			if (code == null) {
+				code = m_config.findCode(codeId);
+			}
+			return code;
+		} else {
+			return null;
+		}
+	}
+
 	private int findAvailableId(int startIndex, int endIndex) throws Exception {
 		Set<Integer> keys = m_config.getCommands().keySet();
 		int maxKey = 0;
@@ -167,6 +193,10 @@ public class AppConfigManager implements Initializable {
 
 	public Map<Integer, Command> getRawCommands() {
 		return m_config.getCommands();
+	}
+
+	public Map<Integer, Code> getCodes() {
+		return m_config.getCodes();
 	}
 
 	@Override
@@ -217,10 +247,11 @@ public class AppConfigManager implements Initializable {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
+			Map<Integer, Code> result = new HashMap<Integer, Code>();
 			Map<Integer, Code> values = c.getCodes();
-			Map<Integer, Code> result = new HashMap<Integer, Code>(values);
 
 			result.putAll(m_config.getCodes());
+			result.putAll(values);
 			return result;
 		} else {
 			return Collections.emptyMap();
@@ -231,11 +262,16 @@ public class AppConfigManager implements Initializable {
 		try {
 			String xml = m_config.toString();
 			AppConfig config = DefaultSaxParser.parse(xml);
-
 			Map<Integer, Command> commands = config.getCommands();
 
 			for (Entry<Integer, Command> entry : commands.entrySet()) {
-				entry.getValue().getCodes().putAll(m_config.getCodes());
+				Map<Integer, Code> codes = entry.getValue().getCodes();
+
+				for (Entry<Integer, Code> e : m_config.getCodes().entrySet()) {
+					if (!codes.containsKey(e.getKey())) {
+						codes.put(e.getKey(), e.getValue());
+					}
+				}
 			}
 			return new ArrayList<Command>(commands.values());
 		} catch (Exception e) {
