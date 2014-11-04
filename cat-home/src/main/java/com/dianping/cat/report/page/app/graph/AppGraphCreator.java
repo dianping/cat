@@ -192,10 +192,11 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 	private Pair<Integer, Item> buildPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
 		Item item = new Item();
-
-		item.setNumber(data.getAccessNumberSum());
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
+
 		item.setTitle(pair.getValue());
+		item.setId(pair.getKey());
+		item.setNumber(data.getAccessNumberSum());
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 

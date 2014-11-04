@@ -62,7 +62,6 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 
 		if (!storeConfig()) {
 			Cat.logError("delete app command rule error: " + name, new RuntimeException());
-			;
 		}
 	}
 
