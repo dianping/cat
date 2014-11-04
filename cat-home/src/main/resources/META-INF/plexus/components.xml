@@ -1466,7 +1466,7 @@
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
 			<role-hint>highLoad</role-hint>
-			<implementation>com.dianping.cat.report.task.highload.HighLoadSqlUpdater</implementation>
+			<implementation>com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1474,9 +1474,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.HighloadDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4725,20 +4722,6 @@
 		<component>
 			<role>com.dianping.cat.report.task.highload.HighLoadService</role>
 			<implementation>com.dianping.cat.report.task.highload.HighLoadService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.HighloadDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.HighloadDao</role>
-			<implementation>com.dianping.cat.home.dal.report.HighloadDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
