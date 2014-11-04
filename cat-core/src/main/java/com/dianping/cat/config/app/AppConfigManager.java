@@ -217,10 +217,11 @@ public class AppConfigManager implements Initializable {
 		Command c = m_config.findCommand(command);
 
 		if (c != null) {
+			Map<Integer, Code> result = new HashMap<Integer, Code>();
 			Map<Integer, Code> values = c.getCodes();
-			Map<Integer, Code> result = new HashMap<Integer, Code>(values);
 
 			result.putAll(m_config.getCodes());
+			result.putAll(values);
 			return result;
 		} else {
 			return Collections.emptyMap();
