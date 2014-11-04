@@ -53,6 +53,7 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
+import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.nettopo.entity.NetGraphSet;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
@@ -248,6 +249,13 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 		return reportService.queryReport(domain, start, end);
 	}
 
+	@Override
+	public HighloadReport queryHighloadReport(String domain, Date start, Date end) {
+		ReportService<HighloadReport> reportService = m_reportServices.get(Constants.HIGH_LOAD_REPORT);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
 	public MatrixReport queryMatrixReport(String domain, Date start, Date end) {
 		ReportService<MatrixReport> reportService = m_reportServices.get(MatrixAnalyzer.ID);
 
@@ -274,11 +282,11 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 	}
 
 	@Override
-   public RouterConfig queryRouterConfigReport(String domain, Date start, Date end) {
+	public RouterConfig queryRouterConfigReport(String domain, Date start, Date end) {
 		ReportService<RouterConfig> reportService = m_reportServices.get(Constants.REPORT_ROUTER);
 
 		return reportService.queryReport(domain, start, end);
-   }
+	}
 
 	public ServiceReport queryServiceReport(String domain, Date start, Date end) {
 		ReportService<ServiceReport> reportService = m_reportServices.get(Constants.REPORT_SERVICE);
