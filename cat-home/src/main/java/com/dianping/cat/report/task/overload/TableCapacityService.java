@@ -110,7 +110,6 @@ public class TableCapacityService extends ContainerHolder {
 						report = m_monthlyReportDao.findByPK(reportId, MonthlyReportEntity.READSET_FULL);
 						break;
 					}
-
 					reports.add(generateOverloadReport(report, reportSize, reportType));
 				} catch (DalNotFoundException e) {
 				} catch (Exception ex) {
