@@ -131,6 +131,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_PAGE_DELETE("appPageDelete"),
 
+	APP_CODE_UPDATE("appCodeUpdate"),
+
+	APP_CODE_SUBMIT("appCodeSubmit"),
+	
+	APP_CODE_ADD("appCodeAdd"),
+
+	APP_CODE_DELETE("appCodeDelete"),
+
 	APP_RULE("appRule"),
 
 	APP_RULE_ADD_OR_UPDATE("appRuleUpdate"),

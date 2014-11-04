@@ -195,6 +195,10 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCommands();
 	}
 
+	public Map<Integer, Code> getCodes() {
+		return m_config.getCodes();
+	}
+
 	@Override
 	public void initialize() {
 		try {
@@ -258,11 +262,16 @@ public class AppConfigManager implements Initializable {
 		try {
 			String xml = m_config.toString();
 			AppConfig config = DefaultSaxParser.parse(xml);
-
 			Map<Integer, Command> commands = config.getCommands();
 
 			for (Entry<Integer, Command> entry : commands.entrySet()) {
-				entry.getValue().getCodes().putAll(m_config.getCodes());
+				Map<Integer, Code> codes = entry.getValue().getCodes();
+
+				for (Entry<Integer, Code> e : m_config.getCodes().entrySet()) {
+					if (!codes.containsKey(e.getKey())) {
+						codes.put(e.getKey(), e.getValue());
+					}
+				}
 			}
 			return new ArrayList<Command>(commands.values());
 		} catch (Exception e) {

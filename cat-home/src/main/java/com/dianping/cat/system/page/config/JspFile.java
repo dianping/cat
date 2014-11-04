@@ -89,6 +89,8 @@ public enum JspFile {
 
 	APP_LIST("/jsp/system/appConfig/appList.jsp"),
 
+	APP_CODE_UPDATE("/jsp/system/appConfig/codeUpdate.jsp"),
+
 	APP_UPDATE("/jsp/system/appConfig/appUpdate.jsp"),
 
 	APP_RULE("/jsp/system/appRule/appRule.jsp"),
