@@ -278,7 +278,6 @@
 		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
 		command1Change();
 		domainsSelect.on('change', changeCommandByDomain);
-		domainsSelect.change();
 	}
 
 	$(document).ready(function(){
