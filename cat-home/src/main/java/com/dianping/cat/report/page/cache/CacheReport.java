@@ -175,7 +175,7 @@ public class CacheReport {
 					m_get += transactionTotalCount;
 					m_missed = m_missed + eventName.getTotalCount();
 					m_hited = 1 - (double) m_missed / m_get;
-				} else if ("mget".equals(method)) {
+				} else if ("mGet".equals(method)) {
 					m_mget += transactionTotalCount;
 				} else if ("add".equals(method)) {
 					m_add += transactionTotalCount;
