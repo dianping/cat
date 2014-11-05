@@ -15,7 +15,6 @@ import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.DailyReportContentEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
-import com.dianping.cat.home.dal.report.OverloadEntity;
 
 public class DailyCapacityUpdater implements CapacityUpdater {
 
@@ -28,6 +27,9 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private OverloadDao m_overloadDao;
 
+	@Inject
+	private CapacityUpdateStatusManager m_manager;
+
 	public static final String ID = "daily_capacity_updater";
 
 	@Override
@@ -36,12 +38,12 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public void updateDBCapacity(double capacity) throws DalException {
-		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.DAILY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
+	public void updateDBCapacity() throws DalException {
+		int maxId = m_manager.getDailyStatus();
 
 		while (true) {
 			List<DailyReportContent> reports = m_dailyReportContentDao.findOverloadReport(maxId,
-					DailyReportContentEntity.READSET_LENGTH);
+			      DailyReportContentEntity.READSET_LENGTH);
 
 			for (DailyReportContent content : reports) {
 				try {
@@ -76,6 +78,7 @@ public class DailyCapacityUpdater implements CapacityUpdater {
 				maxId = reports.get(size - 1).getReportId();
 			}
 		}
+		m_manager.updateDailyStatus(maxId);
 	}
 
 }

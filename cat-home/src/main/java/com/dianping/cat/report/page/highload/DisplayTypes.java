@@ -3,39 +3,37 @@ package com.dianping.cat.report.page.highload;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 
 import org.hsqldb.lib.StringUtil;
 
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.report.task.highload.TransactionHighLoadUpdater.HighLoadReport;
+import com.dianping.cat.home.highload.entity.HighloadReport;
+import com.dianping.cat.home.highload.entity.Name;
+import com.dianping.cat.home.highload.entity.Type;
 
 public class DisplayTypes {
 
-	public Map<String, List<HighLoadReport>> display(String sortBy, Map<String, List<HighLoadReport>> report) {
+	public HighloadReport display(String sortBy, HighloadReport report) {
 		if (!StringUtil.isEmpty(sortBy)) {
-			for (List<HighLoadReport> reportsByType : report.values()) {
-				Collections.sort(reportsByType, new HighloadReportComparator(sortBy));
+			for (Type type : report.getTypes()) {
+				List<Name> names = type.getNames();
+				Collections.sort(names, new NameComparator(sortBy));
 			}
 		}
 		return report;
 	}
 
-	public class HighloadReportComparator implements Comparator<HighLoadReport> {
+	public class NameComparator implements Comparator<Name> {
 
 		private String m_sortBy;
 
-		public HighloadReportComparator(String sortBy) {
+		public NameComparator(String sortBy) {
 			m_sortBy = sortBy;
 		}
 
 		@Override
-		public int compare(HighLoadReport o1, HighLoadReport o2) {
-			TransactionName n1 = o1.getName();
-			TransactionName n2 = o2.getName();
-
+		public int compare(Name n1, Name n2) {
 			if (m_sortBy.equals("domain")) {
-				return o2.getDomain().compareTo(o1.getDomain());
+				return n2.getDomain().compareTo(n1.getDomain());
 			}
 			if (m_sortBy.equals("name")) {
 				return n2.getId().compareTo(n1.getId());

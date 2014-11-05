@@ -32,7 +32,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			m_dailyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
+			m_dailyUpdater.updateDBCapacity();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -43,7 +43,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
 		try {
-			m_hourlyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
+			m_hourlyUpdater.updateDBCapacity();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -54,7 +54,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
 		try {
-			m_monthlyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
+			m_monthlyUpdater.updateDBCapacity();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);
@@ -65,7 +65,7 @@ public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
 		try {
-			m_weeklyUpdater.updateDBCapacity(CapacityUpdater.CAPACITY);
+			m_weeklyUpdater.updateDBCapacity();
 			return true;
 		} catch (DalException e) {
 			Cat.logError(e);

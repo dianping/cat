@@ -15,7 +15,6 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
-import com.dianping.cat.home.dal.report.OverloadEntity;
 
 public class MonthlyCapacityUpdater implements CapacityUpdater {
 
@@ -28,6 +27,9 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private OverloadDao m_overloadDao;
 
+	@Inject
+	private CapacityUpdateStatusManager m_manager;
+
 	public static final String ID = "monthly_capacity_updater";
 
 	@Override
@@ -36,12 +38,12 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 	}
 
 	@Override
-	public void updateDBCapacity(double capacity) throws DalException {
-		int maxId = m_overloadDao.findMaxIdByType(CapacityUpdater.MONTHLY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
+	public void updateDBCapacity() throws DalException {
+		int maxId = m_manager.getMonthlyStatus();
 
 		while (true) {
 			List<MonthlyReportContent> reports = m_monthlyReportContentDao.findOverloadReport(maxId,
-					MonthlyReportContentEntity.READSET_LENGTH);
+			      MonthlyReportContentEntity.READSET_LENGTH);
 
 			for (MonthlyReportContent content : reports) {
 				try {
@@ -76,6 +78,7 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 				maxId = reports.get(size - 1).getReportId();
 			}
 		}
+		m_manager.updateMonthlyStatus(maxId);
 	}
 
 }

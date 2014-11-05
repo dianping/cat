@@ -1,29 +1,27 @@
 package com.dianping.cat.report.page.highload;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.highload.HighLoadService;
-import com.dianping.cat.report.task.highload.TransactionHighLoadUpdater.HighLoadReport;
+import com.dianping.cat.report.service.ReportServiceManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private HighLoadService m_service;
+	private ReportServiceManager m_manager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -41,13 +39,11 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			try {
-				Map<String, List<HighLoadReport>> reports = m_service.queryHighLoadReports(payload.getDate());
-				
-				model.setReports(new DisplayTypes().display(payload.getSortBy(), reports));
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
+			Date startDate = payload.getDate();
+			Date endDate = TimeHelper.addDays(startDate, 1);
+			HighloadReport report = m_manager.queryHighloadReport("", startDate, endDate);
+
+			model.setReport(new DisplayTypes().display(payload.getSortBy(), report));
 			break;
 		}
 

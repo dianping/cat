@@ -7,13 +7,13 @@
 </style>
 <div class="tabbable "  > <!-- Only required for left/right tabs -->
 	<ul class="nav nav-tabs">
-		<c:forEach var="reportEntry" items="${model.reports}" varStatus="status">
-			<li class="text-right navTabs" id="${reportEntry.key}"><a href="#${reportEntry.key}Content" data-toggle="tab"><strong>${reportEntry.key}</strong></a></li>
+		<c:forEach var="type" items="${model.report.types}" varStatus="status">
+			<li class="text-right navTabs" id="${type.id}"><a href="#${type.id}Content" data-toggle="tab"><strong>${type.id}</strong></a></li>
 		</c:forEach>
 	</ul>
 	<div class="tab-content">
-		<c:forEach var="reportEntry" items="${model.reports}" varStatus="status">
-			<div class="tab-pane" id="${reportEntry.key}Content">
+		<c:forEach var="type" items="${model.report.types}" varStatus="status">
+			<div class="tab-pane" id="${type.id}Content">
 				<table	class="problem table table-striped table-bordered table-condensed table-hover">
 					<thead>
 					<tr class="text-success">
@@ -28,14 +28,12 @@
 						<th width="5%" class="tableHeader" data-sortBy="95line">95Line</th>
 						<th width="6%" class="tableHeader" data-sortBy="999line">99.9Line</th>
 						<th width="5%" class="tableHeader" data-sortBy="std">Std</th>
-						<th width="5%" class="tableHeader" data-sortBy="qps">QPS</th>
 					</tr>
 					</thead>
 					<tbody>
-					<c:forEach var="report" items="${reportEntry.value}" varStatus="status">
-						<c:set var="e" value="${report.name}"/>
+					<c:forEach var="e" items="${type.names}" varStatus="status">
 						<tr>
-							<td>${report.domain}</td>
+							<td>${e.domain}</td>
 							<td>${e.id}</td>
 							<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 							<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
@@ -46,7 +44,6 @@
 							<td>${w:format(e.line95Value,'###,##0.0')}</td>
 							<td>${w:format(e.line99Value,'###,##0.0')}</td>
 							<td>${w:format(e.std,'###,##0.0')}</td>
-							<td>${w:format(e.tps,'###,##0.0')}</td>
 						</tr>
 					</c:forEach>
 					</tbody>

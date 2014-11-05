@@ -402,14 +402,3 @@ CREATE TABLE `user_define_rule` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
-
-CREATE TABLE `highload` (
-  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
-  `type` varchar(50) NOT NULL COMMENT '类型 e.g. SQL',
-  `domain` varchar(50) NOT NULL COMMENT '项目名称',
-  `weight` double NOT NULL COMMENT '权重',
-  `transaction_name_content` text NOT NULL COMMENT 'TransactionName内容',
-  `date` datetime NOT NULL COMMENT '统计时间',
-  `creation_date` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='高消耗记录表';
