@@ -5,7 +5,7 @@ public class PieChartDetailInfo {
 	private int m_id;
 
 	private String m_title;
-
+	
 	private double m_requestSum;
 
 	private double m_successRatio;
