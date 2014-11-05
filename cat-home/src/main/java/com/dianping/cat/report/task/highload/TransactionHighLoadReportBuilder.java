@@ -9,7 +9,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -18,7 +17,6 @@ import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.highload.entity.Name;
 import com.dianping.cat.home.highload.entity.Type;
 import com.dianping.cat.home.highload.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.DisplayNames;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -28,9 +26,6 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	protected ReportServiceManager m_reportService;
-
-	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
-	private ModelService<TransactionReport> m_transactionService;
 
 	public static final String ID = Constants.HIGH_LOAD_REPORT;
 
