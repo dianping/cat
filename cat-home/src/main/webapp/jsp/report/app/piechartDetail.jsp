@@ -87,7 +87,9 @@
 		<br/>
 <table id="web_content" class="table table-striped table-bordered table-condensed">
 	<thead><tr class="text-success">
-		<th width="20%">返回码</th>
+		<c:if test="${payload.groupByField.name eq 'code'}">
+		<th>返回码</th>
+		</c:if>
 		<th>类别</th>
 		<th>请求总数</th>
 		<th>百分比</th>
@@ -96,12 +98,10 @@
 	<tbody>
 	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
 		<tr>
-		<td>${item.id}
+		
 		<c:if test="${payload.groupByField.name eq 'code'}">
-			&nbsp;&nbsp;
-			<a  class="btn btn-small" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a>
+			<td>${item.id}&nbsp;&nbsp;<a  class="btn btn-small" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
 		</c:if>
-		</td>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
 		<td>${w:format(item.successRatio,'#0.000%')}</td>

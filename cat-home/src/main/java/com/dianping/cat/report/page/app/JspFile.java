@@ -9,7 +9,7 @@ public enum JspFile {
 	
 	APP_FETCH_DATA("/jsp/report/app/fetchData.jsp"),
 	
-	CRASH_LINECHART("/jsp/report/app/crashLinechart.jsp");
+	CRASH_LOG("/jsp/report/app/crashLog.jsp");
 
 	private String m_path;
 

@@ -185,7 +185,7 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
-		case CRASH_LINECHART:
+		case CRASH_LOG:
 			break;
 		}
 
