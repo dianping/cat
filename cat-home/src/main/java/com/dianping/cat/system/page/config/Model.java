@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
@@ -32,6 +33,25 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.process.BaseProcesser.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
+
+	public static class Edge {
+		private List<EdgeConfig> m_edgeConfigs;
+
+		private NodeConfig m_nodeConfig;
+
+		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
+			m_edgeConfigs = edgeConfigs;
+			m_nodeConfig = nodeConfig;
+		}
+
+		public List<EdgeConfig> getEdgeConfigs() {
+			return m_edgeConfigs;
+		}
+
+		public NodeConfig getNodeConfig() {
+			return m_nodeConfig;
+		}
+	}
 
 	private Project m_project;
 
@@ -119,6 +139,12 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Command m_updateCommand;
 
+	private Map<Integer, Code> m_codes;
+
+	private Code m_code;
+
+	private String m_domain;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -161,6 +187,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<String, List<City>> getCityInfos() {
 		return m_citiyInfos;
+	}
+
+	public Code getCode() {
+		return m_code;
+	}
+
+	public Map<Integer, Code> getCodes() {
+		return m_codes;
 	}
 
 	public Map<Integer, List<Code>> getCommand() {
@@ -223,7 +257,26 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getDomain() {
-		return "";
+		return m_domain;
+	}
+
+	public String getDomain2CommandsJson() {
+		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+
+		for (Command command : m_commands) {
+			String domain = command.getDomain();
+			if (StringUtil.isEmpty(domain)) {
+				domain = "default";
+			}
+			List<Command> commands = map.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+				map.put(domain, commands);
+			}
+			commands.add(command);
+		}
+		return new JsonBuilder().toJson(map);
 	}
 
 	public DomainConfig getDomainConfig() {
@@ -412,6 +465,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_citiyInfos = cityInfos;
 	}
 
+	public void setCode(Code code) {
+		m_code = code;
+	}
+
+	public void setCodes(Map<Integer, Code> codes) {
+		m_codes = codes;
+	}
+
 	public void setCommands(List<Command> commands) {
 		m_commands = commands;
 	}
@@ -430,6 +491,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	public void setDomainConfig(DomainConfig domainConfig) {
@@ -558,24 +623,5 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public static class Edge {
-		private List<EdgeConfig> m_edgeConfigs;
-
-		private NodeConfig m_nodeConfig;
-
-		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
-			m_edgeConfigs = edgeConfigs;
-			m_nodeConfig = nodeConfig;
-		}
-
-		public List<EdgeConfig> getEdgeConfigs() {
-			return m_edgeConfigs;
-		}
-
-		public NodeConfig getNodeConfig() {
-			return m_nodeConfig;
-		}
 	}
 }

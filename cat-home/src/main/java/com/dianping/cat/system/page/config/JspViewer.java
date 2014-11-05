@@ -135,7 +135,12 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_LIST:
 		case APP_SUBMIT:
 		case APP_PAGE_DELETE:
+		case APP_CODE_SUBMIT:
+		case APP_CODE_DELETE:
 			return JspFile.APP_LIST.getPath();
+		case APP_CODE_ADD:
+		case APP_CODE_UPDATE:
+			return JspFile.APP_CODE_UPDATE.getPath();
 		case APP_UPDATE:
 			return JspFile.APP_UPDATE.getPath();
 		case APP_RULE:
@@ -152,8 +157,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
 		case ROUTER_CONFIG_UPDATE:
 			return JspFile.ROUTER_CONFIG_UPDATE.getPath();
-		default:
-			break;
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

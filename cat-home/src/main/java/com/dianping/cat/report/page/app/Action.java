@@ -8,9 +8,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_ADD("appAdd"),
 	APP_DELETE("appDelete"),
 	APP_CONFIG_FETCH("appConfigFetch"),
-	APP_CODE_UPDATE("appCodeUpdate"),
-	APP_CODE_UPDATE_SUBMIT("appCodeUpdateSubmit"),
-	CRASH_LINECHART("crashLinechart");
+	CRASH_LOG("crashLinechart");
 	
 	private String m_name;
 
