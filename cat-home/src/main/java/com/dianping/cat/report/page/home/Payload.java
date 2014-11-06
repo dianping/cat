@@ -33,10 +33,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_subDocName;
 	}
 
-	public void setAction(Action action) {
-		m_action = action;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -48,7 +44,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setSubDocName(String subDocName) {
 		m_subDocName = subDocName;
 	}
-
+	
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {

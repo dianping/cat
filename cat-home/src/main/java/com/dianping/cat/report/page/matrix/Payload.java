@@ -18,7 +18,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public Payload() {
 		super(ReportPage.MATRIX);
 	}
-
+	
 	@Override
 	public Action getAction() {
 		return m_action;
