@@ -62,11 +62,31 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("alertType")
 	private String m_alertType = "";
 
+	@FieldMeta("alertTime")
+	private String m_alertTime;
+
+	@FieldMeta("category")
+	private String m_category;
+
+	@FieldMeta("level")
+	private String m_level;
+
+	@FieldMeta("metric")
+	private String m_metric;
+
 	private DateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public Date getAlertTime() {
+		try {
+			return m_format.parse(m_alertTime);
+		} catch (Exception e) {
+			return new Date();
+		}
 	}
 
 	public String getAlertType() {
@@ -78,6 +98,13 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		String[] typeArray = new String[typeList.size()];
 
 		return typeList.toArray(typeArray);
+	}
+
+	public String getCategory() {
+		if (StringUtils.isEmpty(m_category)) {
+			return "zabbix";
+		}
+		return m_category;
 	}
 
 	public String getChannel() {
@@ -121,6 +148,21 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			return "default";
 		} else {
 			return m_group;
+		}
+	}
+
+	public String getLevel() {
+		if (StringUtils.isEmpty(m_level)) {
+			return "warning";
+		}
+		return m_level;
+	}
+
+	public String getMetric() {
+		if (StringUtils.isEmpty(m_metric)) {
+			return "";
+		} else {
+			return m_metric;
 		}
 	}
 
@@ -177,8 +219,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
+	public void setAlertTime(String alertTime) {
+		m_alertTime = alertTime;
+	}
+
 	public void setAlertType(String alertType) {
 		m_alertType = alertType;
+	}
+
+	public void setCategory(String category) {
+		m_category = category;
 	}
 
 	public void setChannel(String channel) {
@@ -207,6 +257,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setGroup(String group) {
 		m_group = group;
+	}
+
+	public void setLevel(String level) {
+		m_level = level;
+	}
+
+	public void setMetric(String metric) {
+		m_metric = metric;
 	}
 
 	@Override

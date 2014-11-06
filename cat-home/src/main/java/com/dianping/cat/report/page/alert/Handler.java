@@ -39,6 +39,18 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlertDao m_alertDao;
 
+	private Alert buildAlertEntity(Payload payload) {
+		Alert alertEntity = new Alert();
+
+		alertEntity.setAlertTime(payload.getAlertTime());
+		alertEntity.setCategory(payload.getCategory());
+		alertEntity.setContent(payload.getContent());
+		alertEntity.setDomain(payload.getDomain());
+		alertEntity.setMetric(payload.getMetric());
+		alertEntity.setType(payload.getLevel());
+		return alertEntity;
+	}
+
 	private Map<String, List<Alert>> generateAlertMap(List<Alert> alerts) {
 		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Map<String, List<Alert>> map = new LinkedHashMap<String, List<Alert>>();
@@ -92,6 +104,28 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 			break;
+		case INSERT:
+			if (StringUtils.isEmpty(payload.getDomain())) {
+				setAlertResult(model, 4);
+			} else {
+				Alert alertEntity = buildAlertEntity(payload);
+
+				try {
+					System.out.println(alertEntity);
+					int count = m_alertDao.insert(alertEntity);
+
+					if (count == 0) {
+						setAlertResult(model, 5);
+					} else {
+						setAlertResult(model, 1);
+					}
+				} catch (DalException e) {
+					setAlertResult(model, 5);
+					e.printStackTrace();
+					Cat.logError(e);
+				}
+			}
+			break;
 		case VIEW:
 			Date startTime = payload.getStartTime();
 			Date endTime = payload.getEndTime();
@@ -134,6 +168,12 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case 3:
 			model.setAlertResult("{\"status\":500, \"errorMessage\":\"send failed, please check your channel argument\"}");
+			break;
+		case 4:
+			model.setAlertResult("{\"status\":500, \"errorMessage\":\"lack domain\"}");
+			break;
+		case 5:
+			model.setAlertResult("{\"status\":500}");
 			break;
 		}
 	}
