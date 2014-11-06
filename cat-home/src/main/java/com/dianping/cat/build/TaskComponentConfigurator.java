@@ -12,7 +12,6 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReportDao;
@@ -37,7 +36,6 @@ import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineCreator;
 import com.dianping.cat.report.baseline.impl.DefaultBaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
-import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -190,7 +188,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
 		all.add(C(ReportTaskBuilder.class, TransactionHighLoadReportBuilder.ID, TransactionHighLoadReportBuilder.class)//
-		      .req(ModelService.class, TransactionAnalyzer.ID)//
 		      .req(ReportServiceManager.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));

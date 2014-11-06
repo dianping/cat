@@ -1500,10 +1500,6 @@
 			<implementation>com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 			</requirements>
