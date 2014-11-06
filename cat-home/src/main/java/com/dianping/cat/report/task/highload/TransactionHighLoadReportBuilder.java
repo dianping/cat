@@ -158,7 +158,7 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 			int nextIndex = findNextValidIndex();
 
 			if (nextIndex == m_size) {
-				if (isBigger(m_names[0], name)) {
+				if (isBigger(name, m_names[0])) {
 					m_names[0] = name;
 					addAdjust();
 				}
@@ -200,6 +200,9 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 		public List<Name> getNames() {
 			List<Name> reports = new ArrayList<Name>();
 
+			if (findNextValidIndex() == m_size) {
+				sort();
+			}
 			for (int i = 0; i < m_size; i++) {
 				Name currentNode = m_names[i];
 
