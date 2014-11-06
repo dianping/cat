@@ -50,19 +50,33 @@
 
 <h4 class="text-success">Mobile批量接口</h4>
 	<pre>	http://${ip}/broker-service/api/batch</pre>
-	<p>批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
+	<p>批量接口POST内容，前面加上v=2&c=，（v=1已经废弃）不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
+	
+	<table class="table table-striped table-bordered table-condensed">
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
+		<tr><td>network</td><td>2G,3G,4G,WIFI(iOS只有3G和WIFI)</td><td>int</td></tr>
+		<tr><td>version</td><td>versionCode, eg. 6.8 = 680</td><td>int</td></tr>
+		<tr><td>tunnel</td><td>0 or 1，1表示是长连</td><td>int</td></tr>
+		<tr><td>command</td><td>接口，一般为url path的最后一个单位(shop.bin)</td><td>String</td></tr>
+		<tr><td>code</td><td>status code,>1000为业务错误码,<1000为网络错误码,<0为自定义错误码</td><td>int</td></tr>
+		<tr><td>platform</td><td>android=1 or ios=2</td><td>int</td></tr>
+		<tr><td>requestbyte</td><td>发送字节数</td><td>int</td></tr>
+		<tr><td>responsetime</td><td>用时 (毫秒）</td><td>int</td></tr>
+	</table>
+	
 	<pre>
 	单个请求格式如下:
-	timstamp<span class="text-error">TAB</span>targetUrl<span class="text-error">TAB</span>duration<span class="text-error">TAB</span>httpCode<span class="text-error">TAB</span>errorCode<span class="text-error">ENTER</span>
+	timstamp<span class="text-error">TAB</span>network<span class="text-error">TAB</span>version<span class="text-error">TAB</span>tunnel<span class="text-error">TAB</span>command<span class="text-error">TAB</span>code<span class="text-error">TAB</span>platform<span class="text-error">TAB</span>requestbyte<span class="text-error">TAB</span>responsebyte<span class="text-error">TAB</span>responsetime<span class="text-error">ENTER</span>
+	
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
 	<pre>
-	v=1&c=
-	1400037748182<span class="text-error">TAB</span>http://dianping.com/shop<span class="text-error">TAB</span>300<span class="text-error">TAB</span>200<span class="text-error">TAB</span>300<span class="text-error">ENTER</span>
-	1400037748182<span class="text-error">TAB</span>http://dianping.com/shop<span class="text-error">TAB</span>300<span class="text-error">TAB</span>200<span class="text-error">TAB</span>300<span class="text-error">ENTER</span>
-	1400037748182<span class="text-error">TAB</span>http://dianping.com/shop<span class="text-error">TAB</span>300<span class="text-error">TAB</span>200<span class="text-error">TAB</span>300<span class="text-error">ENTER</span>
-	1400037748182<span class="text-error">TAB</span>http://dianping.com/shop<span class="text-error">TAB</span>300<span class="text-error">TAB</span>200<span class="text-error">TAB</span>300<span class="text-error">ENTER</span>
-	1400037748182<span class="text-error">TAB</span>http://dianping.com/shop<span class="text-error">TAB</span>300<span class="text-error">TAB</span>200<span class="text-error">TAB</span>300<span class="text-error">ENTER</span>
+	v=2&c=
+	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
+	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
+	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
+	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
+	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span>
 	</pre>	
 </br>
 
