@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -95,12 +96,15 @@ public class Handler implements PageHandler<Context> {
 			Date startTime = payload.getStartTime();
 			Date endTime = payload.getEndTime();
 			String domain = payload.getDomain();
-			String metric = payload.getMetric();
-			String level = payload.getLevel();
+			String alertTypeStr = payload.getAlertType();
 			List<Alert> alerts;
 			try {
-				alerts = m_alertDao.queryAlertsByTimeDomainMetricType(startTime, endTime, domain, metric, level,
-				      AlertEntity.READSET_FULL);
+				if (StringUtils.isEmpty(alertTypeStr)) {
+					alerts = m_alertDao.queryAlertsByTimeDomain(startTime, endTime, domain, AlertEntity.READSET_FULL);
+				} else {
+					alerts = m_alertDao.queryAlertsByTimeDomainCategories(startTime, endTime, domain,
+					      payload.getAlertTypeArray(), AlertEntity.READSET_FULL);
+				}
 			} catch (DalException e) {
 				alerts = new ArrayList<Alert>();
 				Cat.logError(e);
