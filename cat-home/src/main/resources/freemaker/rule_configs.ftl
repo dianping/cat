@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="/cat/css/introjs.css">
+<script src="/cat/js/intro.js"></script>
+
 <style>
     .metric,
     .subCondition {
@@ -174,7 +177,28 @@ $(document).ready(function () {
     })
     
     drawConfigs();
+    initIntro();
 })
+
+function initIntro(){
+	var context = $("#configSample").first();
+	var startButton = $('<button class="btn btn-info btn-small help" type="button">如何使用?</button>');
+	
+	context.find("button").first().after(startButton);
+	context.find(".configDuration").first().attr("data-step","1").attr("data-intro","定义一个时间段。一个时间段下可以有多个监控条件，只要有一个条件被触发，cat就会发出告警");
+	context.find(".condition").first().attr("data-step","2").attr("data-intro","这是一个监控条件。可以由多个子条件构成。只有当该条件下的所有子条件同时触发，该条件才被触发");
+	context.find(".configMinute").first().attr("data-step","3").attr("data-intro","设置监控条件的持续时间");
+	context.find("[name='level']").first().attr("data-step","4").attr("data-intro","设置监控条件的告警级别<br/>(可与告警策略配合使用。告警策略可以配置某个级别的发送途径、暂停时间、恢复时间)");
+	context.find(".subconditions").first().attr("data-step","5").attr("data-intro","这是子条件");
+	context.find(".add-subCondition-button").first().attr("data-step","6").attr("data-intro","点击这里，可以新增子条件");
+	context.find(".add-condition-button").first().attr("data-step","7").attr("data-intro","点击这里，可以新增一个条件");
+	context.find("#add-config-button").first().attr("data-step","8").attr("data-intro","想增加一个时间段的监控规则？点击这里");
+	context.attr("data-step","9").attr("data-intro","依然有疑问？请点击 <a href='/cat/r/home?op=view&docName=alert'>这里</a>");
+	
+	$(".help").click(function(){
+		introJs().start();
+	});
+}
 
 function drawConfigs() {
     var configsText = '${configs}';
