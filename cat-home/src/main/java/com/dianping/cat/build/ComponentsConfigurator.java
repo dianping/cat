@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.home.dal.report.EventDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.report.baseline.BaselineService;
@@ -44,7 +43,6 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
@@ -98,8 +96,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportServiceManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectService.class));
-
-		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
 
