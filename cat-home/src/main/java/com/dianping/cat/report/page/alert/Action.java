@@ -1,8 +1,9 @@
 package com.dianping.cat.report.page.alert;
 
-
 public enum Action implements org.unidal.web.mvc.Action {
 	ALERT("alert"),
+
+	INSERT("insert"),
 
 	VIEW("view");
 
@@ -13,9 +14,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 			if (action.getName().equals(name)) {
 				return action;
 			}
-			
 		}
-		
+
 		return defaultAction;
 	}
 

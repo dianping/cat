@@ -113,13 +113,18 @@ public class Handler implements PageHandler<Context> {
 
 	private void calculateTps(Payload payload, EventReport report) {
 		try {
-			if (payload != null && report != null) {
+			if (report != null) {
 				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds;
+				double seconds = 0;
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
-					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					Date endTime = report.getEndTime();
+					Date startTime = report.getStartTime();
+
+					if (startTime != null && endTime != null) {
+						seconds = (endTime.getTime() - startTime.getTime()) / (double) 1000;
+					}
 				}
 				new TpsStatistics(seconds).visitEventReport(report);
 			}

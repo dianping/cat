@@ -64,7 +64,7 @@
 		</th>
 	</tr>
 </table>
-<table class='data' style="min-width:1100px;">
+<table class='data' style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>

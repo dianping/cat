@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
@@ -33,10 +32,7 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.dal.report.Event;
-import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
-import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -126,13 +122,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
-		Map<String, List<TopologyNode>> dashboardNodes = dashboardGraph.getNodes();
 
-		for (Entry<String, List<TopologyNode>> entry : dashboardNodes.entrySet()) {
-			for (TopologyNode node : entry.getValue()) {
-				m_externalInfoBuilder.buildNodeZabbixInfo(node, model, payload);
-			}
-		}
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
@@ -143,11 +133,6 @@ public class Handler implements PageHandler<Context> {
 		DependencyReport dependencyReport = queryDependencyReport(payload);
 		buildHourlyReport(dependencyReport, model, payload);
 		buildHourlyLineGraph(dependencyReport, model);
-
-		Segment segment = dependencyReport.findSegment(model.getMinute());
-		Map<String, List<String>> dependency = parseDependencies(segment);
-
-		model.setEvents(m_externalInfoBuilder.queryDependencyEvent(dependency, model.getDomain(), reportTime));
 	}
 
 	private void buildExceptionDashboard(Model model, Payload payload, long date) {
@@ -199,15 +184,9 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildProjectTopology(Model model, Payload payload, Date reportTime) {
 		TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
-		Map<String, List<String>> graphDependency = parseDependencies(topologyGraph);
-		Map<String, List<Event>> externalErrors = m_externalInfoBuilder.queryDependencyEvent(graphDependency,
-		      model.getDomain(), reportTime);
-
 		DependencyReport report = queryDependencyReport(payload);
+		
 		buildHourlyReport(report, model, payload);
-		model.setEvents(externalErrors);
-		m_externalInfoBuilder.buildZabbixErrorOnGraph(topologyGraph,
-		      m_externalInfoBuilder.buildZabbixHeader(payload, model), externalErrors);
 		m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
@@ -274,44 +253,6 @@ public class Handler implements PageHandler<Context> {
 		model.setMinute(minute);
 		model.setMaxMinute(maxMinute);
 		model.setMinutes(minutes);
-	}
-
-	private Map<String, List<String>> parseDependencies(Segment segment) {
-		Map<String, List<String>> results = new TreeMap<String, List<String>>();
-		if (segment != null) {
-			Map<String, Dependency> dependencies = segment.getDependencies();
-
-			for (Dependency temp : dependencies.values()) {
-				String type = temp.getType();
-				String target = temp.getTarget();
-				List<String> targets = results.get(type);
-
-				if (targets == null) {
-					targets = new ArrayList<String>();
-					results.put(type, targets);
-				}
-				targets.add(target);
-			}
-		}
-		return results;
-	}
-
-	private Map<String, List<String>> parseDependencies(TopologyGraph graph) {
-		Map<String, List<String>> dependencies = new HashMap<String, List<String>>();
-		Map<String, TopologyEdge> edges = graph.getEdges();
-
-		for (TopologyEdge temp : edges.values()) {
-			String type = temp.getType();
-			String target = temp.getTarget();
-
-			List<String> targets = dependencies.get(type);
-			if (targets == null) {
-				targets = new ArrayList<String>();
-				dependencies.put(type, targets);
-			}
-			targets.add(target);
-		}
-		return dependencies;
 	}
 
 	private int parseQueryMinute(Payload payload) {

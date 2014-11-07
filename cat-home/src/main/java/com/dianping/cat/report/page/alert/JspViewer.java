@@ -11,6 +11,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 
 		switch (action) {
 		case ALERT:
+		case INSERT:
 			return JspFile.ALERT.getPath();
 		case VIEW:
 			return JspFile.VIEW.getPath();

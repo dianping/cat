@@ -187,8 +187,7 @@
 	      function queryNew(){
 	        var startTime=$("#startTime").val();
 	        var endTime=$("#endTime").val();
-	        var isFullScreen=$('#fullScreenStr').val();
-	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
+	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime;
 	      }
 		</script>
 </a:body>

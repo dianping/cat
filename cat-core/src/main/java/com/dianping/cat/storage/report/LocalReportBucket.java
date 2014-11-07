@@ -129,7 +129,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
-		m_baseDir = m_configManager.getHdfsLocalBaseDir("logview");
+		m_baseDir = m_configManager.getHdfsLocalBaseDir("report");
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

@@ -29,33 +29,43 @@
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
-			告警级别
-			<input type="text" name="level" id="level" value="${payload.level}" style="height:auto" class="input-small">
 			项目
 			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			指标
-			<input type="text" name="metric" id="metric" value="${payload.metric}" style="height:auto" class="input-small"> 
 			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
-			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>
+			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen()">全屏</a>
 			<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
 			<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
 			<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
 			<br>
 			告警类型（可多选）&nbsp;&nbsp;
-			<div class="btn-group" data-toggle="buttons-checkbox">
-			  <button id="networkButton" type="button" class="btn btn-info">网络告警</button>
-			  <button id="businessButton" type="button" class="btn btn-info">业务告警</button>
-			  <button id="systemButton" type="button" class="btn btn-info">系统告警</button>
-			  <button id="exceptionButton" type="button" class="btn btn-info">异常告警</button>
-			  <button id="frontEndExceptionButton" type="button" class="btn btn-info">前端告警</button>
-			  <button id="thirdPartyButton" type="button" class="btn btn-info">第三方告警</button>
-			  <input type='hidden' id='networkStatus' value='${payload.showNetwork}'/>
-			  <input type='hidden' id='businessStatus' value='${payload.showBusiness}'/>
-			  <input type='hidden' id='systemStatus' value='${payload.showSystem}'/>
-			  <input type='hidden' id='exceptionStatus' value='${payload.showException}'/>
-			  <input type='hidden' id='frontEndExceptionStatus' value='${payload.showFrontEndException}'/>
-			  <input type='hidden' id='thirdPartyStatus' value='${payload.showThirdParty}'/>
+			<div class="types">
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="business"> 业务告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="network"> 网络告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="system"> 系统告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="exception"> 异常告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="heartbeat"> 心跳告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="thirdParty"> 第三方告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="frontEnd"> 前端告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="app"> App告警
+				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="web"> Web告警
+				</label>
 			</div>
 			<br><br>
 		</div>
@@ -95,48 +105,10 @@
 					$('.footer').hide();
 				</c:if>
 				
-				<c:if test="${payload.showNetwork == false}">
-					toggleButton("network", true);
-				</c:if>
-				<c:if test="${payload.showException == false}">
-					toggleButton("exception", true);
-				</c:if>
-				<c:if test="${payload.showSystem == false}">
-					toggleButton("system", true);
-				</c:if>
-				<c:if test="${payload.showBusiness == false}">
-					toggleButton("business", true);
-				</c:if>
-				<c:if test="${payload.showThirdParty == false}">
-					toggleButton("thirdParty", true);
-				</c:if>
-				<c:if test="${payload.showFrontEndException == false}">
-					toggleButton("frontEndException", true);
-				</c:if>
+				initType("${payload.alertType}");
 				
 				$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 				$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-				
-				$("#fullScreen").click(clickFullScreen);
-				
-				$("#networkButton").click(function(){
-					toggleButton("network", false);
-				});
-				$("#businessButton").click(function(){
-					toggleButton("business", false);
-				});
-				$("#systemButton").click(function(){
-					toggleButton("system", false);
-				});
-				$("#exceptionButton").click(function(){
-					toggleButton("exception", false);
-				});
-				$("#frontEndExceptionButton").click(function(){
-					toggleButton("frontEndException", false);
-				});
-				$("#thirdPartyButton").click(function(){
-					toggleButton("thirdParty", false);
-				});
 				
 				var refresh = ${payload.refresh};
 				var frequency = ${payload.frequency};
@@ -145,78 +117,50 @@
 					setTimeout(refreshPage,frequency*1000);
 				};
 			});
-			
-			function clickFullScreen(){
-				var isFullScreen = $('#fullScreenStr').val() === 'true';
-				if(isFullScreen){
-					$('#fullScreen').removeClass('btn-danger');
-					$('.navbar').show();
-					$('.footer').show();
-				}else{
-					$('#fullScreen').addClass('btn-danger');
-					$('.navbar').hide();
-					$('.footer').hide();
-				}
-				$('#fullScreenStr').val(!isFullScreen);
-			}
-			function toggleButton(button, isInitialized){
-				var targetStatus = $("#"+button+"Status").val() === 'false';
-				if(isInitialized){
-					$("#"+button+"Button").button('toggle');
-					targetStatus = !targetStatus;
-				}
-				
-				if(targetStatus){
-					$("."+button).each(function(){
-						var counter = $(this).prevAll().filter(".noter").first().children().first();
-						
-						$(this).css("display","table-row");
-						var count = Number(counter.attr('rowspan'))+1;
-						counter.attr('rowspan', count);
+			function initType(rawStr){
+				if(rawStr == null || rawStr == ""){
+					$(".type").each(function(){
+						$(this).prop("checked", true);
 					});
 				}else{
-					$("."+button).each(function(){
-						var counter = $(this).prevAll().filter(".noter").first().children().first();
-						
-						$(this).css("display","none");
-						var count = Number(counter.attr('rowspan'))-1;
-						counter.attr('rowspan', count);
-					});
+					var strs = rawStr.split(",");
+					
+					for(var count in strs){
+						str = strs[count];
+						if(str !=null && str !=""){
+							$("input[value='"+str+"']").prop("checked", true);
+						}
+					}
 				}
-				$("#"+button+"Status").val(String(targetStatus));
 			}
 			function getType(){
-				var networkStr=$('#networkStatus').val();
-				var businessStr=$('#businessStatus').val();
-				var systemStr=$('#systemStatus').val();
-				var exceptionStr=$('#exceptionStatus').val();
-				var frontEndExceptionStr=$('#frontEndExceptionStatus').val();
-				var thirdPartyStr=$('#thirdPartyStatus').val();
-				return "showNetwork="+networkStr+"&showBusiness="+businessStr+"&showSystem="+systemStr+"&showException="+exceptionStr+
-				"&showFrontEndException="+frontEndExceptionStr+"&showThirdParty="+thirdPartyStr;
+				var typeStr = "";
+				
+				$(".type").filter(function(){
+					return $(this).prop("checked");
+				}).each(function(){
+					typeStr += $(this).val() + ",";
+				});
+				return typeStr;
 			}
 			function queryNew(){
 				var startTime=$("#startTime").val();
 				var endTime=$("#endTime").val();
 				var domain=$("#domain").val();
-				var level=$("#level").val();
-				var metric=$("#metric").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen="+isFullScreen+"&"+getType();
+				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen=${payload.fullScreen}&alertType="+getType();
+			}
+			function queryFullScreen(){
+				var domain=$("#domain").val();
+				var isFullScreen = ${payload.fullScreen};
+				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&refresh="+${payload.refresh}+"&frequency="+${payload.frequency}+"&fullScreen="+!isFullScreen+"&alertType="+getType();
 			}
 			function queryFrequency(frequency){
 				var domain=$("#domain").val();
-				var level=$("#level").val();
-				var metric=$("#metric").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+frequency+"&"+getType();
+				window.location.href="?op=view&domain="+domain+"&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency+"&alertType="+getType();
 			}
 			function refreshPage(){
 				var domain=$("#domain").val();
-				var level=$("#level").val();
-				var metric=$("#metric").val();
-				var isFullScreen=$('#fullScreenStr').val();
-				window.location.href="?op=view&domain="+domain+"&level="+level+"&metric="+metric+"&fullScreen="+isFullScreen+"&refresh=true&frequency="+${payload.frequency}+"&"+getType();
+				window.location.href="?op=view&domain="+domain+"&fullScreen=${payload.fullScreen}&refresh=true&frequency="+${payload.frequency}+"&alertType="+getType();
 			}
 		</script>
 	</jsp:body>

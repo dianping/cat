@@ -110,7 +110,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
-		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("logview");
+		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("report");
 	}
 
 	private boolean isActive() {

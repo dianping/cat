@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.alert;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
@@ -10,6 +11,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
+import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
@@ -30,12 +32,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("domain")
 	private String m_domain;
 
-	@FieldMeta("level")
-	private String m_level;
-
-	@FieldMeta("metric")
-	private String m_metric;
-
 	@FieldMeta("startTime")
 	private String m_startTime;
 
@@ -51,24 +47,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
-	@FieldMeta("showNetwork")
-	private boolean m_showNetwork = true;
-
-	@FieldMeta("showBusiness")
-	private boolean m_showBusiness = true;
-
-	@FieldMeta("showSystem")
-	private boolean m_showSystem = true;
-
-	@FieldMeta("showException")
-	private boolean m_showException = true;
-
-	@FieldMeta("showThirdParty")
-	private boolean m_thirdParty = true;
-
-	@FieldMeta("showFrontEndException")
-	private boolean m_frontEndException = true;
-
 	@FieldMeta("type")
 	private String m_type;
 
@@ -81,11 +59,52 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("reportType")
 	private String m_reportType = "";
 
+	@FieldMeta("alertType")
+	private String m_alertType = "";
+
+	@FieldMeta("alertTime")
+	private String m_alertTime;
+
+	@FieldMeta("category")
+	private String m_category;
+
+	@FieldMeta("level")
+	private String m_level;
+
+	@FieldMeta("metric")
+	private String m_metric;
+
 	private DateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public Date getAlertTime() {
+		try {
+			return m_format.parse(m_alertTime);
+		} catch (Exception e) {
+			return new Date();
+		}
+	}
+
+	public String getAlertType() {
+		return m_alertType;
+	}
+
+	public String[] getAlertTypeArray() {
+		List<String> typeList = Splitters.by(",").noEmptyItem().split(m_alertType);
+		String[] typeArray = new String[typeList.size()];
+
+		return typeList.toArray(typeArray);
+	}
+
+	public String getCategory() {
+		if (StringUtils.isEmpty(m_category)) {
+			return "zabbix";
+		}
+		return m_category;
 	}
 
 	public String getChannel() {
@@ -134,15 +153,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public String getLevel() {
 		if (StringUtils.isEmpty(m_level)) {
-			return null;
-		} else {
-			return m_level;
+			return "warning";
 		}
+		return m_level;
 	}
 
 	public String getMetric() {
 		if (StringUtils.isEmpty(m_metric)) {
-			return null;
+			return "";
 		} else {
 			return m_metric;
 		}
@@ -197,32 +215,20 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_refresh;
 	}
 
-	public boolean isShowBusiness() {
-		return m_showBusiness;
-	}
-
-	public boolean isShowException() {
-		return m_showException;
-	}
-
-	public boolean isShowFrontEndException() {
-		return m_frontEndException;
-	}
-
-	public boolean isShowNetwork() {
-		return m_showNetwork;
-	}
-
-	public boolean isShowSystem() {
-		return m_showSystem;
-	}
-
-	public boolean isShowThirdParty() {
-		return m_thirdParty;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setAlertTime(String alertTime) {
+		m_alertTime = alertTime;
+	}
+
+	public void setAlertType(String alertType) {
+		m_alertType = alertType;
+	}
+
+	public void setCategory(String category) {
+		m_category = category;
 	}
 
 	public void setChannel(String channel) {
@@ -243,10 +249,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setFrequency(int frequency) {
 		m_frequency = frequency;
-	}
-
-	public void setFrontEndException(boolean frontEndException) {
-		m_frontEndException = frontEndException;
 	}
 
 	public void setFullScreen(boolean fullScreen) {
@@ -282,28 +284,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_reportType = "";
 	}
 
-	public void setShowBusiness(boolean showBusiness) {
-		m_showBusiness = showBusiness;
-	}
-
-	public void setShowException(boolean showException) {
-		m_showException = showException;
-	}
-
-	public void setShowNetwork(boolean showNetwork) {
-		m_showNetwork = showNetwork;
-	}
-
-	public void setShowSystem(boolean showSystem) {
-		m_showSystem = showSystem;
-	}
-
 	public void setStartTime(String startTime) {
 		m_startTime = startTime;
-	}
-
-	public void setThirdParty(boolean thirdParty) {
-		m_thirdParty = thirdParty;
 	}
 
 	public void setTitle(String title) {
