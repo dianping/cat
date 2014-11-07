@@ -135,6 +135,20 @@ public class AlertPolicyManager implements Initializable {
 		}
 	}
 
+	public int queryRecoverMinute(String typeName, String groupName, String levelName) {
+		try {
+			Level level = queryLevel(typeName, groupName, levelName);
+
+			if (level == null) {
+				return 1;
+			} else {
+				return level.getRecoverMinute();
+			}
+		} catch (Exception ex) {
+			return 1;
+		}
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {

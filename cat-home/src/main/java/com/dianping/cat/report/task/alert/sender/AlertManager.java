@@ -66,6 +66,32 @@ public class AlertManager implements Initializable {
 		return m_alerts.offer(alert);
 	}
 
+	private String generateTypeStr(String type) {
+		AlertType typeByName = AlertType.getTypeByName(type);
+
+		switch (typeByName) {
+		case Business:
+			return "业务告警";
+		case Network:
+			return "网络告警";
+		case System:
+			return "系统告警";
+		case Exception:
+			return "异常告警";
+		case ThirdParty:
+			return "第三方告警";
+		case FrontEndException:
+			return "前端告警";
+		case App:
+			return "手机端告警";
+		case Web:
+			return "web告警";
+		case HeartBeat:
+			return "心跳告警";
+		}
+		return type;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		Threads.forGroup("cat").start(new SendExecutor());
@@ -154,32 +180,6 @@ public class AlertManager implements Initializable {
 		return false;
 	}
 
-	private String generateTypeStr(String type) {
-		AlertType typeByName = AlertType.getTypeByName(type);
-
-		switch (typeByName) {
-		case Business:
-			return "业务告警";
-		case Network:
-			return "网络告警";
-		case System:
-			return "系统告警";
-		case Exception:
-			return "异常告警";
-		case ThirdParty:
-			return "第三方告警";
-		case FrontEndException:
-			return "前端告警";
-		case App:
-			return "手机端告警";
-		case Web:
-			return "web告警";
-		case HeartBeat:
-			return "心跳告警";
-		}
-		return type;
-	}
-
 	private class RecoveryAnnouncer implements Task {
 
 		private DateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -187,6 +187,14 @@ public class AlertManager implements Initializable {
 		@Override
 		public String getName() {
 			return "recovery-announcer";
+		}
+
+		private int queryRecoverMinute(AlertEntity alert) {
+			String type = alert.getType();
+			String group = alert.getGroup();
+			String level = alert.getLevel();
+
+			return m_policyManager.queryRecoverMinute(type, group, level);
 		}
 
 		@Override
@@ -200,10 +208,11 @@ public class AlertManager implements Initializable {
 					try {
 						String key = entry.getKey();
 						AlertEntity alert = entry.getValue();
+						int recoverMinute = queryRecoverMinute(alert);
 						long alertTime = alert.getDate().getTime();
 						int alreadyMinutes = (int) ((current - alertTime) / MILLIS1MINUTE);
 
-						if (alreadyMinutes >= 1) {
+						if (alreadyMinutes >= recoverMinute) {
 							recoveredItems.add(key);
 							sendRecoveryMessage(alert, currentStr);
 						}
