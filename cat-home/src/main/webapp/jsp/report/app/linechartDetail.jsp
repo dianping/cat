@@ -10,7 +10,7 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 
-						项目<select id="domains" style="width: 100px;"></select>
+						项目<select id="domains" style="width: 200px;"></select>
 						命令字 <select id="command" style="width: 240px;">
 						</select> 
 				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
@@ -70,7 +70,7 @@
 							data-date-icon="icon-calendar"> </i>
 						</span>
 					</div> 
-						项目<select id="domains2" style="width: 100px;"></select>
+						项目<select id="domains2" style="width: 200px;"></select>
 						命令字 <select id="command2" style="width: 240px;">
 						</select> 
 						 返回码 <select id="code2" style="width: 120px;">
