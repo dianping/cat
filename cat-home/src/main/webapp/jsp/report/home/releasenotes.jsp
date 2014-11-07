@@ -23,7 +23,7 @@
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="90%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
 	<tr><td><strong class='text-error'>增加了运维容量规划报表，去掉ABtest心跳信息以及错误信息。</strong></td><td>2014-01-01</td></tr>
-	<tr><td><strong class='text-error'>在CAT的URL后面加上参数forceDownload=xml或者forceDownload=json，可以看到当前页面的数据模型</strong></td><td>2013-12-16</td></tr>
+	<tr><td><strong class='text-error'>在CAT的URL后面加上参数forceDownload=xml，可以看到当前页面的数据模型</strong></td><td>2013-12-16</td></tr>
 	<tr><td><strong>优化了主页面的UI，新增了常用domain的切换功能，常用是最近使用的10个项目</strong></td><td>2013-09-06</td></tr>
 	<tr><td><strong>增加了业务监控以及业务监控大盘</strong></td><td>2013-08-14</td></tr>
 	<tr><td><strong>Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</strong></td><td>2013-06-14</td></tr>
