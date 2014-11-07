@@ -37,7 +37,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_codeId;
 
 	@FieldMeta("status")
-	private int m_status;
+	private String m_status;
 
 	@FieldMeta("name")
 	private String m_name;
@@ -89,22 +89,22 @@ public class Payload extends AbstractReportPayload<Action> {
 	public String getName() {
 		return m_name;
 	}
-	
+
 	public int getCodeId() {
-   	return m_codeId;
-   }
+		return m_codeId;
+	}
 
 	public void setCodeId(int codeId) {
-   	m_codeId = codeId;
-   }
+		m_codeId = codeId;
+	}
 
-	public int getStatus() {
-   	return m_status;
-   }
+	public String getStatus() {
+		return m_status;
+	}
 
-	public void setStatus(int status) {
-   	m_status = status;
-   }
+	public void setStatus(String status) {
+		m_status = status;
+	}
 
 	@Override
 	public ReportPage getPage() {
@@ -208,8 +208,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_type = type;
 	}
 
-	
-	
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {

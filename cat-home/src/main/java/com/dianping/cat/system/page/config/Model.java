@@ -30,7 +30,7 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.page.config.process.BaseProcesser.RuleItem;
+import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 
@@ -144,7 +144,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Code m_code;
 
 	private String m_domain;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}

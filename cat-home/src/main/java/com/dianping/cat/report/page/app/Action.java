@@ -2,14 +2,23 @@ package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
+
 	LINECHART_JSON("linechartJson"),
+
 	PIECHART("piechart"),
+
 	PIECHART_JSON("piechartJson"),
+
 	APP_ADD("appAdd"),
+
 	APP_DELETE("appDelete"),
+
 	APP_CONFIG_FETCH("appConfigFetch"),
-	CRASH_LOG("crashLinechart");
-	
+
+	HOURLY_CRASH_LOG("crashLog"),
+
+	HISTORY_CRASH_LOG("historyCrashLog");
+
 	private String m_name;
 
 	public static Action getByName(String name, Action defaultAction) {
