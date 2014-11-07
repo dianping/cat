@@ -102,7 +102,7 @@
 	
 	$("#platformType")
 	  .change(function () {
-		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&step=${payload.step}";
+		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&date=${model.date}";
 	  })
 $(document).ready(
 		function() {
