@@ -56,6 +56,9 @@ public class Handler implements PageHandler<Context> {
 	private TopologyGraphManager m_graphManager;
 
 	@Inject
+	private ExternalInfoBuilder m_externalInfoBuilder;
+
+	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
@@ -116,6 +119,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
 
@@ -129,9 +133,13 @@ public class Handler implements PageHandler<Context> {
 		DependencyReport dependencyReport = queryDependencyReport(payload);
 		buildHourlyReport(dependencyReport, model, payload);
 		buildHourlyLineGraph(dependencyReport, model);
-
 	}
 
+	private void buildExceptionDashboard(Model model, Payload payload, long date) {
+		model.setReportStart(new Date(payload.getDate()));
+		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
+		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
+	}
 
 	private void buildHourlyLineGraph(DependencyReport report, Model model) {
 		LineGraphBuilder builder = new LineGraphBuilder();
@@ -179,6 +187,7 @@ public class Handler implements PageHandler<Context> {
 		DependencyReport report = queryDependencyReport(payload);
 		
 		buildHourlyReport(report, model, payload);
+		m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		String build = new DefaultJsonBuilder().build(topologyGraph);
@@ -215,6 +224,8 @@ public class Handler implements PageHandler<Context> {
 			buildDependencyDashboard(model, payload, reportTime);
 			break;
 		case EXCEPTION_DASHBOARD:
+			buildExceptionDashboard(model, payload, date);
+			
 			StateReport report = queryHourlyReport(payload);
 			model.setMessage(buildCatInfoMessage(report));
 			break;

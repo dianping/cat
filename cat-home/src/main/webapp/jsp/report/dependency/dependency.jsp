@@ -21,29 +21,7 @@
 	<div class='report'>
 		<%@ include file="dependencyOpNav.jsp" %>
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
-  			<ul class="nav nav-tabs">
-   			 	<li style="margin-left:20px;" class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
-   			 	<li class="text-right"><a href="#tab3" id="tab3Href" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
-  			</ul>
-  			<div class="tab-content">
-	    		<div class="tab-pane active" id="tab1">
 	    			<%@ include file="dependencyLineGraph.jsp"%>
-	    		</div>
-	    		<div class="tab-pane" id="tab3">
-	    			 <div class="row-fluid">
-				  	    <div class="span2">
-				  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
-				  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
-				  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
-				  	    </div>
-				  	    <div class="span10">
-				  	    	<%@ include file="dependencyTimeNavTab3.jsp" %>
-				  	    </div>
-				  </div>
-				  <%@ include file="dependencyDetailData.jsp"%>
-	    		</div>
-	    	</div></div>
-	 
 	  </div>
 </jsp:body>
 </a:report>

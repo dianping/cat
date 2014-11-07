@@ -28,7 +28,6 @@
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>&nbsp;&nbsp;
 			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<br><br>
 		</div>
 		<div class="report">
 			<%@ include file="detail.jsp"%>
