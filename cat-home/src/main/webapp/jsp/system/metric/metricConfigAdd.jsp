@@ -24,7 +24,7 @@
 		<div class="span10">
 			</br>
 		<h4 class="text-success text-center">修改业务监控规则</h4>
-		<form name="metricConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSumbit">
+		<form name="metricConfigAddSubmit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSubmit">
 			<span class="text-center text-error" id="state">&nbsp;</span>
 			<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 			<table class="table table-striped table-bordered table-condensed">

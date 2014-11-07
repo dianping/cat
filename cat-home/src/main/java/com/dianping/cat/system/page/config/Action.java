@@ -53,7 +53,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	METRIC_CONFIG_ADD_OR_UPDATE("metricConfigAdd"),
 
-	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSumbit"),
+	METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT("metricConfigAddSubmit"),
 
 	METRIC_RULE_ADD_OR_UPDATE("metricRuleAdd"),
 

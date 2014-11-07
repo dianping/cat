@@ -215,30 +215,26 @@ public class Handler implements PageHandler<Context> {
 
 	private void storeModifyInfo(Context ctx, Payload payload) {
 		Cookie cookie = ctx.getCookie("ct");
-		Action action = payload.getAction();
-		String lowName = action.getName().toLowerCase();
 
-		if (lowName.indexOf("update") >= 0 || lowName.indexOf("submit") >= 0 || lowName.indexOf("delete") >= 0) {
-			if (cookie != null) {
-				String cookieValue = cookie.getValue();
+		if (cookie != null) {
+			String cookieValue = cookie.getValue();
 
-				try {
-					String[] values = cookieValue.split("\\|");
-					String userName = values[0];
-					String account = values[1];
+			try {
+				String[] values = cookieValue.split("\\|");
+				String userName = values[0];
+				String account = values[1];
 
-					if (userName.startsWith("\"")) {
-						userName = userName.substring(1, userName.length() - 1);
-					}
-					userName = URLDecoder.decode(userName, "UTF-8");
-
-					store(userName, account, payload);
-				} catch (Exception ex) {
-					Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
+				if (userName.startsWith("\"")) {
+					userName = userName.substring(1, userName.length() - 1);
 				}
-			} else {
-				Cat.logError("cannot get cookie info", new RuntimeException());
+				userName = URLDecoder.decode(userName, "UTF-8");
+
+				store(userName, account, payload);
+			} catch (Exception ex) {
+				Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
 			}
+		} else {
+			Cat.logError("cannot get cookie info", new RuntimeException());
 		}
 	}
 

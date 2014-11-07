@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.metric;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +60,7 @@ public class MetricConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	private void deleteUnusedConfig() {
+	protected void deleteUnusedConfig() {
 		try {
 			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
 			List<String> unused = new ArrayList<String>();
@@ -120,7 +121,11 @@ public class MetricConfigManager implements Initializable {
 			m_metricConfig = new MetricConfig();
 		}
 
-		deleteUnusedConfig();
+		try {
+			Files.forIO().writeTo(new File("tmp/metric"), m_metricConfig.toString());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
