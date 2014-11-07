@@ -8,7 +8,6 @@ import java.util.Set;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeHelper;
@@ -93,31 +92,23 @@ public class CrashLogProcessor {
 
 	public void process(Action action, Payload payload, Model model) {
 		m_normalizer.normalize(model, payload);
+		ProblemReport report = null;
 
 		switch (action) {
 		case HOURLY_CRASH_LOG:
-			try {
-				ProblemReport report = getHourlyReport(payload, "view", queryDomain(payload));
-				ProblemStatistics problemStatistics = buildProblemStatistics(payload.getQuery1(), report);
-
-				model.setFieldsInfo(buildFeildsInfo(report));
-				model.setProblemStatistics(problemStatistics);
-				model.setProblemReport(report);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+			report = getHourlyReport(payload, "view", queryDomain(payload));
 			break;
 		case HISTORY_CRASH_LOG:
-			ProblemReport report = showSummarizeReport(model, payload, queryDomain(payload));
-			ProblemStatistics problemStatistics = buildProblemStatistics(payload.getQuery1(), report);
-
-			model.setFieldsInfo(buildFeildsInfo(report));
-			model.setProblemStatistics(problemStatistics);
-			model.setProblemReport(report);
+			report = showSummarizeReport(model, payload, queryDomain(payload));
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
+		ProblemStatistics problemStatistics = buildProblemStatistics(payload.getQuery1(), report);
+
+		model.setFieldsInfo(buildFeildsInfo(report));
+		model.setProblemStatistics(problemStatistics);
+		model.setProblemReport(report);
 	}
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload, String domain) {

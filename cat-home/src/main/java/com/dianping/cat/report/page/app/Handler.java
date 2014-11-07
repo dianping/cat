@@ -187,7 +187,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HOURLY_CRASH_LOG:
 		case HISTORY_CRASH_LOG:
-			m_crashLogProcessor.process(action, payload, model);
+			try {
+				m_crashLogProcessor.process(action, payload, model);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		}
 
