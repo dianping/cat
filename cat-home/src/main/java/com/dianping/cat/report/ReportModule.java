@@ -37,8 +37,6 @@ com.dianping.cat.report.page.metric.Handler.class,
 
 com.dianping.cat.report.page.dependency.Handler.class,
 
-com.dianping.cat.report.page.externalError.Handler.class,
-
 com.dianping.cat.report.page.statistics.Handler.class,
 
 com.dianping.cat.report.page.alteration.Handler.class,

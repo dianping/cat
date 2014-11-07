@@ -135,8 +135,11 @@ public class Handler implements PageHandler<Context> {
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 				} else {
-					if (report.getEndTime() != null && report.getStartTime() != null) {
-						seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					Date endTime = report.getEndTime();
+					Date startTime = report.getStartTime();
+					
+					if (endTime != null && startTime != null) {
+						seconds = (endTime.getTime() - startTime.getTime()) / (double) 1000;
 					} else {
 						seconds = 60;
 					}

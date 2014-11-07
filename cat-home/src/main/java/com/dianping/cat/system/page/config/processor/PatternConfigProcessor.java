@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.config.process;
+package com.dianping.cat.system.page.config.processor;
 
 import java.util.Collection;
 

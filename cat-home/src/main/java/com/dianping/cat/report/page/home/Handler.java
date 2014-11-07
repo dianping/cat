@@ -29,11 +29,6 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "home")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
-		Payload payload = ctx.getPayload();
-
-		if (payload.getAction() == Action.CHECKPOINT) {
-			m_realtimeConsumer.doCheckpoint();
-		}
 	}
 
 	@Override
@@ -42,11 +37,6 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.HOME);
-		model.setDomain(payload.getDomain());
-		model.setLongDate(payload.getDate());
-
 		switch (payload.getAction()) {
 		case THREAD_DUMP:
 			showThreadDump(model, payload);
@@ -54,11 +44,16 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			break;
 		case CHECKPOINT:
+			m_realtimeConsumer.doCheckpoint();
 			break;
 		default:
 			break;
 		}
 
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.HOME);
+		model.setDomain(payload.getDomain());
+		model.setLongDate(payload.getDate());
 		m_jspViewer.view(ctx, model);
 	}
 

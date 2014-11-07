@@ -16,7 +16,6 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
@@ -40,8 +39,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<Integer> m_minutes;
 
 	private int m_maxMinute;
-
-	private Map<String, List<Event>> m_events;
 
 	private String m_topologyGraph;
 
@@ -103,10 +100,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 			return SortHelper.sortDomain(domainNames);
 		}
-	}
-
-	public Map<String, List<Event>> getEvents() {
-		return m_events;
 	}
 
 	public List<String> getIndexGraph() {
@@ -179,10 +172,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setDependencyGraph(Map<String, List<String>> dependencyGraph) {
 		m_dependencyGraph = dependencyGraph;
-	}
-
-	public void setEvents(Map<String, List<Event>> events) {
-		m_events = events;
 	}
 
 	public void setIndexGraph(List<String> indexGraph) {

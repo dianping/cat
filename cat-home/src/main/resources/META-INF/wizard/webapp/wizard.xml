@@ -47,9 +47,6 @@
          <page name="dependency" title="Dependency" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
             <description>Dependency</description>
          </page>
-         <page name="externalError" title="externalError" path="externalError" template="default">
-            <description>ExternalError</description>
-         </page>
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">
             <description>Statistics</description>
          </page>

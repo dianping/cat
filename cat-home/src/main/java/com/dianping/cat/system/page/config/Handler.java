@@ -19,16 +19,16 @@ import com.dianping.cat.home.dal.report.ConfigModification;
 import com.dianping.cat.home.dal.report.ConfigModificationDao;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.page.config.process.AlertConfigProcessor;
-import com.dianping.cat.system.page.config.process.AppConfigProcessor;
-import com.dianping.cat.system.page.config.process.ExceptionConfigProcessor;
-import com.dianping.cat.system.page.config.process.GlobalConfigProcessor;
-import com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor;
-import com.dianping.cat.system.page.config.process.MetricConfigProcessor;
-import com.dianping.cat.system.page.config.process.NetworkConfigProcessor;
-import com.dianping.cat.system.page.config.process.PatternConfigProcessor;
-import com.dianping.cat.system.page.config.process.SystemConfigProcessor;
-import com.dianping.cat.system.page.config.process.TopologyConfigProcessor;
+import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
+import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
+import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
+import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
+import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
+import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
+import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
+import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
+import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
+import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

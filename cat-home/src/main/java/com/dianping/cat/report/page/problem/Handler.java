@@ -106,9 +106,6 @@ public class Handler implements PageHandler<Context> {
 		if (!Constants.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
-		if (!StringUtils.isEmpty(payload.getThreadId())) {
-			request.setProperty("thread", payload.getThreadId());
-		}
 		if (!StringUtils.isEmpty(payload.getType())) {
 			request.setProperty("type", payload.getType());
 		}

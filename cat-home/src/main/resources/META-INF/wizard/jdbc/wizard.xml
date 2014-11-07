@@ -9,7 +9,6 @@
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="report" package="com.dianping.cat.home.dal.report">
-         <table name="event"/>
          <table name="topologyGraph"/>
          <table name="baseline"/>
          <table name="alteration"/>
