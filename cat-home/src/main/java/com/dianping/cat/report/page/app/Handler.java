@@ -28,11 +28,11 @@ import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.graph.Sorter;
+import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -49,10 +49,10 @@ public class Handler implements PageHandler<Context> {
 	private AppDataService m_appDataService;
 
 	@Inject
-	private PayloadNormalizer m_normalizePayload;
+	private AppRuleConfigManager m_appRuleConfigManager;
 
 	@Inject
-	private AppRuleConfigManager m_appRuleConfigManager;
+	private CrashLogProcessor m_crashLogProcessor;
 
 	private void filterCommands(Model model, boolean isShowActivity) {
 		List<Command> commands = model.getCommands();
@@ -185,7 +185,9 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
-		case CRASH_LOG:
+		case HOURLY_CRASH_LOG:
+		case HISTORY_CRASH_LOG:
+			m_crashLogProcessor.process(action, payload, model);
 			break;
 		}
 
@@ -240,7 +242,6 @@ public class Handler implements PageHandler<Context> {
 		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
-		m_normalizePayload.normalize(model, payload);
 	}
 
 	private void setUpdateResult(Model model, int i) {

@@ -13,11 +13,13 @@ import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -50,6 +52,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_fetchData;
 
 	private int m_commandId;
+
+	private ProblemStatistics m_problemStatistics;
+
+	private FieldsInfo m_fieldsInfo;
+
+	private ProblemReport m_problemReport;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -132,6 +140,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_fetchData;
 	}
 
+	public FieldsInfo getFieldsInfo() {
+		return m_fieldsInfo;
+	}
+
 	public LineChart getLineChart() {
 		return m_lineChart;
 	}
@@ -154,6 +166,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
+	}
+
+	public ProblemReport getProblemReport() {
+		return m_problemReport;
+	}
+
+	public ProblemStatistics getProblemStatistics() {
+		return m_problemStatistics;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -188,6 +208,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_fetchData = fetchData;
 	}
 
+	public void setFieldsInfo(FieldsInfo fieldsInfo) {
+		m_fieldsInfo = fieldsInfo;
+	}
+
 	public void setLineChart(LineChart lineChart) {
 		m_lineChart = lineChart;
 	}
@@ -210,6 +234,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
+	}
+
+	public void setProblemReport(ProblemReport problemReport) {
+		m_problemReport = problemReport;
+	}
+
+	public void setProblemStatistics(ProblemStatistics problemStatistics) {
+		m_problemStatistics = problemStatistics;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

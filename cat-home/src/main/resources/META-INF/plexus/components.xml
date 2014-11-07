@@ -4481,10 +4481,10 @@
 					<role>com.dianping.cat.config.app.AppDataService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
+					<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4587,6 +4587,23 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
+			<implementation>com.dianping.cat.report.page.app.processor.CrashLogProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4899,34 +4916,34 @@
 					<role>com.dianping.cat.system.page.config.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.PatternConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.MetricConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.MetricConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.NetworkConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.SystemConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.AppConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.AppConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.AlertConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
@@ -4943,8 +4960,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -4985,8 +5002,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.PatternConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.PatternConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
@@ -5034,14 +5051,14 @@
 			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.TopologyConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
@@ -5058,11 +5075,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.MetricConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.MetricConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.MetricConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.MetricConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
@@ -5094,11 +5111,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.ExceptionConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.process.GlobalConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
@@ -5109,8 +5126,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.NetworkConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.NetworkConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.NetworkConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
@@ -5136,8 +5153,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.SystemConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.SystemConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
@@ -5160,8 +5177,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.HeartbeatConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
@@ -5184,8 +5201,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.AppConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.AppConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.AppConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.AppConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
@@ -5211,8 +5228,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.process.AlertConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.process.AlertConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
