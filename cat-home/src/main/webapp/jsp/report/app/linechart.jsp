@@ -204,10 +204,10 @@
 
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
-
+					
 					$("#command").val(words[1]);
-
-					if (words[0] == null || words.length == 1) {
+					
+					if (typeof(words[0]) != undefined && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
 						$("#time").val(words[0]);

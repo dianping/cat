@@ -54,10 +54,9 @@ public class QueryEntity {
 
 	public QueryEntity(String query) {
 		List<String> strs = Splitters.by(";").split(query);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
-			m_date = sdf.parse(strs.get(0));
+			m_date = parseDate(strs.get(0));
 			m_command = parseValue(strs.get(1));
 			m_code = parseValue(strs.get(2));
 			m_network = parseValue(strs.get(3));
@@ -71,6 +70,17 @@ public class QueryEntity {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+	}
+
+	private Date parseDate(String dateStr) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		if (StringUtils.isNotEmpty(dateStr)) {
+			return sdf.parse(dateStr);
+		} else {
+			return new Date();
+		}
+
 	}
 
 	private int convert2MinuteOrder(String time) {

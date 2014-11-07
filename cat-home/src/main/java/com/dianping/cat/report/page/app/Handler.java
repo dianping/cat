@@ -237,7 +237,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
 		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
