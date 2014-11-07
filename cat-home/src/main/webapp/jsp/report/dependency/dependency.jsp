@@ -23,18 +23,11 @@
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs">
    			 	<li style="margin-left:20px;" class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>项目指标以及依赖项目数据趋势</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" id="tab2Href" data-toggle="tab"><strong>运维Zabbix告警信息</strong></a></li>
    			 	<li class="text-right"><a href="#tab3" id="tab3Href" data-toggle="tab"><strong>详细数据以及配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
 	    			<%@ include file="dependencyLineGraph.jsp"%>
-	    		</div>
-	    		<div class="tab-pane" id="tab2">
-	    			<div class="text-center">
-		    			<%@ include file="dependencyTimeNavTab2.jsp" %>
-	    			</div>
-	  				<%@ include file="dependencyEvent.jsp"%>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
 	    			 <div class="row-fluid">
