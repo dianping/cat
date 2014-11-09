@@ -75,8 +75,9 @@ public class MetricGraphCreator extends AbstractGraphCreator {
 				String phones = project.getPhone();
 				StringBuilder builder = new StringBuilder();
 
+				builder.append("[项目: ").append(domainName);
 				if (!StringUtils.isEmpty(owners)) {
-					builder.append("[负责人: ").append(owners);
+					builder.append(" 负责人: ").append(owners);
 				}
 				if (!StringUtils.isEmpty(phones)) {
 					builder.append(" 手机: ").append(phones).append(" ]");
