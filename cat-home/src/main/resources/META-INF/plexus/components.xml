@@ -201,6 +201,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TransactionRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.HeartbeatRuleConfigManager</implementation>
 			<requirements>
@@ -2527,6 +2539,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.TransactionContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
 		</component>
@@ -2595,6 +2620,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>web</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.WebDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.TransactionDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
@@ -2845,6 +2875,40 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.transaction.TransactionAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.transaction.TransactionAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4863,6 +4927,9 @@
 					<role>com.dianping.cat.system.page.config.processor.AlertConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 				</requirement>
 			</requirements>
@@ -5171,6 +5238,30 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TransactionRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
 			</requirements>
 		</component>

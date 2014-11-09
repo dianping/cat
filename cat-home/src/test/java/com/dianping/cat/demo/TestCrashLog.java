@@ -11,35 +11,56 @@ public class TestCrashLog {
 
 	@Test
 	public void test() throws InterruptedException {
-		for (int i = 0; i < 100; i++) {
-			Transaction t = Cat.newTransaction("url", "crash");
+		while (true) {
+			for (int i = 0; i < 10; i++) {
+				Transaction t = Cat.newTransaction("AndroidCrashLog", "crashLog");
 
-			String message = parse(i);
+				Cat.logEvent("Error", "AndroidCrashLogTest1", "ERROR", "Crash log detail stack info A !");
+				Cat.logEvent("Error", "AndroidCrashLogTest2", "ERROR", "Crash log detail stack info B !");
 
-			Cat.logEvent("Exception", message, "ERROR", "sdf");
+				String plateform = getPlateform("Android", i);
+				String version = getVersion("Android", i);
+				String moudle = getModule("Android", i);
+				String level = getLevel("Android", i);
 
-			String plateform = getPlateform(i);
-			String version = getVersion(i);
+				MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+				((DefaultMessageTree) tree).setIpAddress(version + ":" + plateform + ":" + moudle + ":" + level);
+				((DefaultMessageTree) tree).setDomain("AndroidCrashLog");
+				t.complete();
 
-			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-			((DefaultMessageTree) tree).setIpAddress(plateform + ":" + version);
-			((DefaultMessageTree) tree).setDomain("CrashLogWeb");
-			t.complete();
+				Transaction t2 = Cat.newTransaction("iOSCrashLog", "crashLog");
+
+				Cat.logEvent("Exception", "iOSCrashLogTest1", "ERROR", "Crash log detail stack info A !");
+				Cat.logEvent("Exception", "iOSCrashLogTest2", "ERROR", "Crash log detail stack info B !");
+
+				String plateform2 = getPlateform("iOS", i);
+				String version2 = getVersion("iOS", i);
+				String moudle2 = getModule("iOS", i);
+				String level2 = getLevel("iOS", i);
+
+				MessageTree tree2 = Cat.getManager().getThreadLocalMessageTree();
+				((DefaultMessageTree) tree2).setIpAddress(version2 + ":" + plateform2 + ":" + moudle2 + ":" + level2);
+				((DefaultMessageTree) tree2).setDomain("iOSCrashLog");
+				t2.complete();
+			}
+			Thread.sleep(10000);
+			// code nullpoint
 		}
-		Thread.sleep(10000);
-		// code nullpoint
 	}
 
-	private String parse(int index) {
-		return "message" + index % 3;
+	private String getLevel(String platform, int index) {
+		return platform + "level" + index % 3;
 	}
 
-	private String getPlateform(int index) {
-		return "andriod" + index % 4;
+	private String getModule(String platform, int index) {
+		return platform + "module" + index % 3;
 	}
 
-	private String getVersion(int index) {
-		return "version" + index % 3;
+	private String getPlateform(String platform, int index) {
+		return platform + index % 3;
 	}
 
+	private String getVersion(String platform, int index) {
+		return platform + "version" + index % 3;
+	}
 }

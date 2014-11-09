@@ -119,7 +119,7 @@ public class AppAlert implements Task {
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
-			List<AlertResultEntity> alertResults = m_dataChecker.checkData(datas, checkedConditions);
+			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
 
 			for (AlertResultEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();

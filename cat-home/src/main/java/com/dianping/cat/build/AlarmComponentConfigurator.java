@@ -24,6 +24,7 @@ import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.DefaultDataChecker;
@@ -45,6 +46,7 @@ import com.dianping.cat.report.task.alert.sender.decorator.HeartbeatDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator;
+import com.dianping.cat.report.task.alert.sender.decorator.TransactionDecorator;
 import com.dianping.cat.report.task.alert.sender.decorator.WebDecorator;
 import com.dianping.cat.report.task.alert.sender.receiver.AppContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor;
@@ -56,6 +58,7 @@ import com.dianping.cat.report.task.alert.sender.receiver.HeartbeatContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor;
+import com.dianping.cat.report.task.alert.sender.receiver.TransactionContactor;
 import com.dianping.cat.report.task.alert.sender.receiver.WebContactor;
 import com.dianping.cat.report.task.alert.sender.sender.MailSender;
 import com.dianping.cat.report.task.alert.sender.sender.Sender;
@@ -79,6 +82,7 @@ import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.HttpConnector;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
+import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.alert.web.WebAlert;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
@@ -90,6 +94,7 @@ import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.TransactionRuleConfigManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
 class AlarmComponentConfigurator extends AbstractResourceConfigurator {
@@ -128,6 +133,9 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class,
 		      ProjectService.class, UrlPatternConfigManager.class));
 
+		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
+		      AlertConfigManager.class));
+
 		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
@@ -149,6 +157,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
 
 		all.add(C(Decorator.class, WebDecorator.ID, WebDecorator.class));
+
+		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 
 		all.add(C(DecoratorManager.class));
 
@@ -196,6 +206,10 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
 		      .req(UrlPatternConfigManager.class));
 
+		all.add(C(TransactionAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
+		      .req(RemoteMetricReportService.class, TransactionMergeManager.class, DataChecker.class, AlertManager.class)
+		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
+
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
 		all.add(C(ExceptionAlert.class)
@@ -215,20 +229,21 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryManager.class).req(AlertSummaryDao.class));
 
-		all.add(C(SummaryContentGenerator.class, AlertSummaryContentGenerator.ID, AlertSummaryContentGenerator.class).req(
-		      AlertSummaryGenerator.class, AlertSummaryManager.class));
+		all.add(C(SummaryContentGenerator.class, AlertSummaryContentGenerator.ID, AlertSummaryContentGenerator.class)
+		      .req(AlertSummaryGenerator.class, AlertSummaryManager.class));
 
-		all.add(C(SummaryContentGenerator.class, FailureSummaryContentGenerator.ID, FailureSummaryContentGenerator.class).req(
-		      ModelService.class, ProblemAnalyzer.ID));
+		all.add(C(SummaryContentGenerator.class, FailureSummaryContentGenerator.ID, FailureSummaryContentGenerator.class)
+		      .req(ModelService.class, ProblemAnalyzer.ID));
 
-		all.add(C(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID, AlterationSummaryContentGenerator.class).req(
-		      AlterationDao.class));
+		all.add(C(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID,
+		      AlterationSummaryContentGenerator.class).req(AlterationDao.class));
 
 		all.add(C(AlertSummaryExecutor.class)
 		      .req(SenderManager.class)
 		      .req(SummaryContentGenerator.class, AlertSummaryContentGenerator.ID, "m_alertSummaryContentGenerator")
 		      .req(SummaryContentGenerator.class, FailureSummaryContentGenerator.ID, "m_failureSummaryContentGenerator")
-		      .req(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID, "m_alterationSummaryContentGenerator"));
+		      .req(SummaryContentGenerator.class, AlterationSummaryContentGenerator.ID,
+		            "m_alterationSummaryContentGenerator"));
 
 		return all;
 	}

@@ -45,22 +45,25 @@ public class DefaultDataChecker implements DataChecker {
 		return alertResults;
 	}
 
-	public List<AlertResultEntity> checkData(double[] value, Condition condition) {
+	public List<AlertResultEntity> checkData(double[] value, List<Condition> conditions) {
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-		int conditionMinute = condition.getMinute();
-		double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
-		Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
 
-		if (condResult.getKey() == true) {
-			String alertType = condition.getAlertType();
+		for (Condition condition : conditions) {
+			int conditionMinute = condition.getMinute();
+			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
 
-			alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+			if (condResult.getKey() == true) {
+				String alertType = condition.getAlertType();
+
+				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+			}
 		}
 
 		return alertResults;
 	}
 
-	public List<AlertResultEntity> checkData(double[] value, List<Condition> conditions) {
+	public List<AlertResultEntity> checkDataForApp(double[] value, List<Condition> conditions) {
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 
 		for (Condition condition : conditions) {
