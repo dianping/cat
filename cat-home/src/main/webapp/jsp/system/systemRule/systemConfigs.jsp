@@ -53,7 +53,7 @@
 			<table class="table table-striped table-bordered table-condensed table-hover">
 	     		<tr class="text-success">
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
-	     			<th width="26%"><h5 class='text-center'>产品线配置</h5></th>
+	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
 	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
 	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
 	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
