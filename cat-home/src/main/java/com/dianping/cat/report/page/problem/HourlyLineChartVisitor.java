@@ -24,6 +24,8 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private LineChart m_graphItem = new LineChart();
 
+	private Date m_start;
+
 	private Map<Integer, Integer> m_value = new LinkedHashMap<Integer, Integer>();
 
 	private static final int SIZE = 60;
@@ -32,29 +34,44 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		m_ip = ip;
 		m_type = type;
 		m_state = state;
+		m_start = start;
 
 		m_graphItem.setSize(SIZE);
 		m_graphItem.setStep(TimeHelper.ONE_MINUTE);
 		m_graphItem.setStart(start);
+	}
 
-		String subTitle = type;
-		if (!StringUtils.isEmpty(state)) {
-			subTitle = type + ":" + state;
+	private String buildSubTitle() {
+		String subTitle = m_type;
+		if (!StringUtils.isEmpty(m_state)) {
+			subTitle += ":" + m_state;
 		}
-		m_graphItem.addSubTitle(subTitle);
+		return subTitle;
 	}
 
 	public LineChart getGraphItem() {
-		double[] value = new double[SIZE];
+		Double[] value = new Double[SIZE];
+		long minute = (System.currentTimeMillis()) / 1000 / 60 % 60;
+		long current = System.currentTimeMillis();
+		current -= current % Constants.HOUR;
+		long size = (int) minute + 1;
+
+		if (m_start.getTime() < current) {
+			size = SIZE;
+		}
+
+		for (int i = 0; i < size; i++) {
+			value[i] = 0.0;
+		}
 
 		for (int i = 0; i < SIZE; i++) {
 			Integer temp = m_value.get(i);
 
 			if (temp != null) {
-				value[i] = temp;
+				value[i] = temp.doubleValue();
 			}
 		}
-		m_graphItem.addValue(value);
+		m_graphItem.add(buildSubTitle(), value);
 		return m_graphItem;
 	}
 

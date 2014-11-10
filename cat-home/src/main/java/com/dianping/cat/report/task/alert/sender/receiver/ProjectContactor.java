@@ -9,6 +9,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
+import com.site.lookup.util.StringUtils;
 
 public abstract class ProjectContactor extends DefaultContactor implements Contactor {
 
@@ -28,10 +29,12 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(id);
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
 
-			if (project != null) {
-				mailReceivers.addAll(split(project.getEmail()));
+				if (project != null) {
+					mailReceivers.addAll(split(project.getEmail()));
+				}
 			}
 			return mailReceivers;
 		}
@@ -47,10 +50,12 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		} else {
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(id);
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
 
-			if (project != null) {
-				smsReceivers.addAll(split(project.getPhone()));
+				if (project != null) {
+					smsReceivers.addAll(split(project.getPhone()));
+				}
 			}
 			return smsReceivers;
 		}
@@ -66,10 +71,12 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		} else {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
 
-			Project project = m_projectService.findByDomain(id);
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
 
-			if (project != null) {
-				weixinReceivers.addAll(split(project.getEmail()));
+				if (project != null) {
+					weixinReceivers.addAll(split(project.getEmail()));
+				}
 			}
 			return weixinReceivers;
 		}
