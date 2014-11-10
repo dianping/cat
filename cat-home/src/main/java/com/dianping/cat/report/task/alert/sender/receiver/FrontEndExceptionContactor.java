@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.sender.receiver;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 	protected AlertConfigManager m_alertConfigManager;
 
 	public static final String ID = AlertType.FrontEndException.getName();
+
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String getId() {

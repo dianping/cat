@@ -23,7 +23,7 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 
 	public Configuration m_configuration;
 
-	protected DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String buildContactInfo(String domainName) {
@@ -53,6 +53,7 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
+		map.put("linkDate", m_linkFormat.format(alert.getDate()));
 		map.put("contactInfo", contactInfo);
 
 		return map;
