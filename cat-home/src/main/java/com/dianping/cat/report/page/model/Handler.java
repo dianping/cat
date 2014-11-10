@@ -177,7 +177,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		// display only, no action here
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	@OutboundActionMeta(name = "model")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -228,45 +227,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if (TopAnalyzer.ID.equals(report)) {
 				response = m_topService.invoke(request);
 			} else if (MetricAnalyzer.ID.equals(report)) {
-				response = m_metricService.invoke(request);
-
-				String metricType = payload.getMetricType();
-				String type = payload.getType();
-
-				if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
-					String city = payload.getCity();
-					String channel = payload.getChannel();
-					WebReportConvertor convert = new WebReportConvertor(type, city, channel);
-					MetricReport metricReport = (MetricReport) response.getModel();
-
-					convert.visitMetricReport(metricReport);
-					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-				} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
-					String ipAddrsStr = payload.getIpAddress();
-					Set<String> ipAddrs = null;
-
-					if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
-						String[] ipAddrsArray = ipAddrsStr.split("_");
-						ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
-					}
-
-					SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
-					MetricReport metricReport = (MetricReport) response.getModel();
-
-					convert.visitMetricReport(metricReport);
-					((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-				} else if (Constants.METRIC_CDN.equals(metricType)) {
-					String cdn = payload.getCdn();
-					String province = payload.getProvince();
-					String city = payload.getCity();
-					MetricReport metricReport = (MetricReport) response.getModel();
-					CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
-
-					cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
-					cdnReportConvertor.visitMetricReport(metricReport);
-					((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
-				}
-
+				response = processMetricRequest(payload, request);
 			} else if (DependencyAnalyzer.ID.equals(report)) {
 				response = m_dependencyService.invoke(request);
 			} else {
@@ -291,6 +252,50 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	private ModelResponse<?> processMetricRequest(Payload payload, ModelRequest request) {
+	   ModelResponse<?> response;
+	   response = m_metricService.invoke(request);
+
+	   String metricType = payload.getMetricType();
+	   String type = payload.getType();
+
+	   if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
+	   	String city = payload.getCity();
+	   	String channel = payload.getChannel();
+	   	WebReportConvertor convert = new WebReportConvertor(type, city, channel);
+	   	MetricReport metricReport = (MetricReport) response.getModel();
+
+	   	convert.visitMetricReport(metricReport);
+	   	((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+	   } else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
+	   	String ipAddrsStr = payload.getIpAddress();
+	   	Set<String> ipAddrs = null;
+
+	   	if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
+	   		String[] ipAddrsArray = ipAddrsStr.split("_");
+	   		ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+	   	}
+
+	   	SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
+	   	MetricReport metricReport = (MetricReport) response.getModel();
+
+	   	convert.visitMetricReport(metricReport);
+	   	((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+	   } else if (Constants.METRIC_CDN.equals(metricType)) {
+	   	String cdn = payload.getCdn();
+	   	String province = payload.getProvince();
+	   	String city = payload.getCity();
+	   	MetricReport metricReport = (MetricReport) response.getModel();
+	   	CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
+
+	   	cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
+	   	cdnReportConvertor.visitMetricReport(metricReport);
+	   	((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
+	   }
+	   return response;
+   }
 
 	public static class CrossReportFilter extends com.dianping.cat.consumer.cross.model.transform.DefaultXmlBuilder {
 		public CrossReportFilter() {
