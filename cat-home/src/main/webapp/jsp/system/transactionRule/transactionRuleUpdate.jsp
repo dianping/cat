@@ -28,7 +28,7 @@
 				<tr>
 					<td>&nbsp;&nbsp;项目&nbsp;&nbsp;<input name="domain" id="domain" value="${domain}"/>
 					&nbsp;&nbsp;Type&nbsp;&nbsp;<input name="type" id="type" value="${type}"/>
-					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/></td>
+					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）</td>
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
@@ -58,6 +58,7 @@ function update() {
     var name = $("#name").val();
     if(name == "undefined" || name == ""){
 		name = "All";
+		$("#domain").val("All");
 	}
     var split = ";";
     var id = domain + split + type + split + name;
@@ -70,6 +71,10 @@ function update() {
 			document.getElementById("domain").disabled = true;
 			document.getElementById("type").disabled = true;
 			document.getElementById("name").disabled = true;
+		}
+		var name = $("#name").val();
+		if(name == "" || name.length == 0){
+			$("#name").val("All");
 		}
 		
 		$('#transactionRule').addClass('active');
