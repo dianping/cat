@@ -97,7 +97,7 @@ public class WebAlert extends BaseAlert implements Task {
 			String idPrefix = id.substring(0, index1);
 			String type = id.substring(index1 + 1, index2);
 			String name = id.substring(index2 + 1);
-			
+
 			alertResults = computeAlertForRule(idPrefix, type, rule.getConfigs(), url, minute);
 
 			for (AlertResultEntity alertResult : alertResults) {
@@ -190,13 +190,13 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
-	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, Condition condition,
+	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {
 		List<AlertResultEntity> results = new LinkedList<AlertResultEntity>();
 		double[] data = datas.get(type);
 
 		if (data != null) {
-			results.addAll(m_dataChecker.checkData(data, condition));
+			results.addAll(m_dataChecker.checkData(data, conditions));
 		}
 		return results;
 	}
@@ -216,9 +216,7 @@ public class WebAlert extends BaseAlert implements Task {
 				int end = minute;
 				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
-				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition, type));
-				}
+				results.addAll(computeAlertForCondition(datas, conditions, type));
 			}
 		} else if (minute < 0) {
 			MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST);
@@ -228,9 +226,7 @@ public class WebAlert extends BaseAlert implements Task {
 				int end = 60 + minute;
 				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
-				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition, type));
-				}
+				results.addAll(computeAlertForCondition(datas, conditions, type));
 			}
 		} else {
 			MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
@@ -254,9 +250,7 @@ public class WebAlert extends BaseAlert implements Task {
 						datas.put(key, mergerArray(last, current));
 					}
 				}
-				for (Condition condition : conditions) {
-					results.addAll(computeAlertForCondition(datas, condition, type));
-				}
+				results.addAll(computeAlertForCondition(datas, conditions, type));
 			}
 		}
 		return results;

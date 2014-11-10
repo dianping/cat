@@ -87,6 +87,10 @@ public enum JspFile {
 
 	WEB_RULE_UPDATE("/jsp/system/webRule/webRuleUpdate.jsp"),
 
+	TRANSACTION_RULE("/jsp/system/transactionRule/transactionRule.jsp"),
+
+	TRANSACTION_RULE_UPDATE("/jsp/system/transactionRule/transactionRuleUpdate.jsp"),
+
 	APP_LIST("/jsp/system/appConfig/appList.jsp"),
 
 	APP_CODE_UPDATE("/jsp/system/appConfig/codeUpdate.jsp"),

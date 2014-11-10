@@ -22,6 +22,7 @@ import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
+import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.alert.web.WebAlert;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
@@ -64,6 +65,7 @@ public class CatHomeModule extends AbstractModule {
 			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
 			AppAlert appAlert = ctx.lookup(AppAlert.class);
 			WebAlert webAlert = ctx.lookup(WebAlert.class);
+			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(systemAlert);
@@ -75,6 +77,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(alertBuildingTask);
 			Threads.forGroup("cat").start(appAlert);
 			Threads.forGroup("cat").start(webAlert);
+			Threads.forGroup("cat").start(transactionAlert);
 		}
 	}
 

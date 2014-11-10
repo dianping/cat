@@ -88,6 +88,8 @@ public class AlertManager implements Initializable {
 			return "web告警";
 		case HeartBeat:
 			return "心跳告警";
+		case Transaction:
+			return "transaction告警";
 		}
 		return type;
 	}

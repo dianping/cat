@@ -18,7 +18,9 @@ public enum AlertType {
 
 	App("app"),
 
-	Web("web");
+	Web("web"),
+
+	Transaction("transaction");
 
 	private String m_name;
 
