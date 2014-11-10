@@ -1,8 +1,12 @@
 package com.dianping.cat.report.page.app.processor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.util.StringUtils;
@@ -33,17 +37,50 @@ public class CrashLogProcessor {
 	@Inject
 	private PayloadNormalizer m_normalizer;
 
+	private String APP_VERSIONS = "appVersions";
+
+	private String LEVELS = "levels";
+
+	private String MODULES = "modules";
+
+	private String PLATFORM_VERSIONS = "platformVersions";
+
+	private Set<String> findOrCreate(String key, Map<String, Set<String>> map) {
+		Set<String> value = map.get(key);
+
+		if (value == null) {
+			value = new HashSet<String>();
+			map.put(key, value);
+		}
+		return value;
+	}
+
+	private void sortFields(Map<String, Set<String>> fieldsMap, FieldsInfo fieldsInfo) {
+		List<String> v = new ArrayList<String>(fieldsMap.get(APP_VERSIONS));
+		List<String> l = new ArrayList<String>(fieldsMap.get(LEVELS));
+		List<String> m = new ArrayList<String>(fieldsMap.get(MODULES));
+		List<String> p = new ArrayList<String>(fieldsMap.get(PLATFORM_VERSIONS));
+
+		Collections.sort(v);
+		Collections.sort(l);
+		Collections.sort(m);
+		Collections.sort(p);
+		fieldsInfo.setAppVersions(v).setLevels(l).setModules(m).setPlatVersions(p);
+	}
+
 	private FieldsInfo buildFeildsInfo(ProblemReport report) {
 		FieldsInfo fieldsInfo = new FieldsInfo();
 		Set<String> fields = report.getIps();
+		Map<String, Set<String>> fieldsMap = new HashMap<String, Set<String>>();
 
 		for (String field : fields) {
 			String[] fs = field.split(":");
-			fieldsInfo.addAppVersion(fs[0]);
-			fieldsInfo.addPlatVersion(fs[1]);
-			fieldsInfo.addModule(fs[2]);
-			fieldsInfo.addLevel(fs[3]);
+			findOrCreate(APP_VERSIONS, fieldsMap).add(fs[0]);
+			findOrCreate(LEVELS, fieldsMap).add(fs[1]);
+			findOrCreate(MODULES, fieldsMap).add(fs[2]);
+			findOrCreate(PLATFORM_VERSIONS, fieldsMap).add(fs[3]);
 		}
+		sortFields(fieldsMap, fieldsInfo);
 		return fieldsInfo;
 	}
 
@@ -135,43 +172,48 @@ public class CrashLogProcessor {
 	}
 
 	public class FieldsInfo {
-		private Set<String> m_platVersions = new HashSet<String>();
 
-		private Set<String> m_appVersions = new HashSet<String>();
+		private List<String> m_platVersions;
 
-		private Set<String> m_modules = new HashSet<String>();
+		private List<String> m_appVersions;
 
-		private Set<String> m_levels = new HashSet<String>();
+		private List<String> m_modules;
 
-		public void addPlatVersion(String version) {
-			m_platVersions.add(version);
+		private List<String> m_levels;
+
+		public FieldsInfo setPlatVersions(List<String> platVersions) {
+			m_platVersions = platVersions;
+			return this;
 		}
 
-		public void addAppVersion(String version) {
-			m_appVersions.add(version);
+		public FieldsInfo setAppVersions(List<String> appVersions) {
+			m_appVersions = appVersions;
+			return this;
 		}
 
-		public void addModule(String module) {
-			m_modules.add(module);
+		public FieldsInfo setModules(List<String> modules) {
+			m_modules = modules;
+			return this;
 		}
 
-		public void addLevel(String level) {
-			m_levels.add(level);
+		public FieldsInfo setLevels(List<String> levels) {
+			m_levels = levels;
+			return this;
 		}
 
-		public Set<String> getAppVersions() {
+		public List<String> getAppVersions() {
 			return m_appVersions;
 		}
 
-		public Set<String> getLevels() {
+		public List<String> getLevels() {
 			return m_levels;
 		}
 
-		public Set<String> getModules() {
+		public List<String> getModules() {
 			return m_modules;
 		}
 
-		public Set<String> getPlatVersions() {
+		public List<String> getPlatVersions() {
 			return m_platVersions;
 		}
 	}
