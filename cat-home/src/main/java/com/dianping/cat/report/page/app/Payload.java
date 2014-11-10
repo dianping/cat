@@ -119,7 +119,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new QueryEntity(m_query2);
 		} else {
-			return null;
+			return new QueryEntity(m_showActivity);
 		}
 	}
 

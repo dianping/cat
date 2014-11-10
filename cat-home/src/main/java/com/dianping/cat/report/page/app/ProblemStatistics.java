@@ -20,8 +20,6 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private Map<String, TypeStatistics> m_types = new TreeMap<String, TypeStatistics>();
 
-	private boolean m_allIp = false;
-
 	private String m_type = "error";
 
 	private String m_status;
@@ -72,15 +70,6 @@ public class ProblemStatistics extends BaseVisitor {
 
 	public Map<String, TypeStatistics> getTypes() {
 		return m_types;
-	}
-
-	public boolean isAllIp() {
-		return m_allIp;
-	}
-
-	public ProblemStatistics setAllIp(boolean allIp) {
-		m_allIp = allIp;
-		return this;
 	}
 
 	public void setAppVersions(List<String> appVersions) {

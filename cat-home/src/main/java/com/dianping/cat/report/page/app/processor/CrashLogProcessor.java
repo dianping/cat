@@ -131,6 +131,7 @@ public class CrashLogProcessor {
 			problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
 		}
 		problemStatistics.visitProblemReport(report);
+
 		return problemStatistics;
 	}
 

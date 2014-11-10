@@ -14,7 +14,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.site.lookup.util.StringUtils;
 
-public class WebContactor extends DefaultContactor implements Contactor {
+public class WebContactor extends ProjectContactor implements Contactor {
 
 	@Inject
 	protected ProjectService m_projectService;
@@ -54,6 +54,7 @@ public class WebContactor extends DefaultContactor implements Contactor {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
 			String domain = queryDomainByUrl(id);
+			
 			if (StringUtils.isNotEmpty(domain)) {
 				Project project = m_projectService.findByDomain(domain);
 				if (project != null) {

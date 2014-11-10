@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.metric;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -119,12 +118,6 @@ public class MetricConfigManager implements Initializable {
 		}
 		if (m_metricConfig == null) {
 			m_metricConfig = new MetricConfig();
-		}
-
-		try {
-			Files.forIO().writeTo(new File("tmp/metric"), m_metricConfig.toString());
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
 	}
 
