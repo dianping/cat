@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
@@ -119,7 +120,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private HeartbeatReport generateReport(String domain, long date) {
-		ModelRequest request = new ModelRequest(domain, date);
+		ModelRequest request = new ModelRequest(domain, date)//
+		      .setProperty("ip", Constants.ALL);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
