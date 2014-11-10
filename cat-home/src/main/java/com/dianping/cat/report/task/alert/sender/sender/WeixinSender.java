@@ -22,6 +22,11 @@ public class WeixinSender implements Sender {
 	public static final String ID = AlertChannel.WEIXIN.getName();
 
 	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
 	public boolean send(AlertMessageEntity message) {
 		if (!sendWeixin(message)) {
 			return false;
@@ -109,11 +114,6 @@ public class WeixinSender implements Sender {
 			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, ex);
 			return false;
 		}
-	}
-
-	@Override
-	public String getId() {
-		return ID;
 	}
 
 }

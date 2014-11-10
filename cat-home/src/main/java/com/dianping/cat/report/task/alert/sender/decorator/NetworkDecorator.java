@@ -8,9 +8,9 @@ public class NetworkDecorator extends Decorator {
 	public static final String ID = AlertType.Network.getName();
 
 	@Override
-	public String getId() {
-		return ID;
-	}
+   public String generateContent(AlertEntity alert) {
+	   return alert.getContent();
+   }
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
@@ -21,8 +21,8 @@ public class NetworkDecorator extends Decorator {
 	}
 
 	@Override
-   public String generateContent(AlertEntity alert) {
-	   return alert.getContent();
-   }
+	public String getId() {
+		return ID;
+	}
 
 }

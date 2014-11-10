@@ -11,29 +11,6 @@ public class Operation {
 		this.src = src;
 	}
 
-	public double getResult() {
-		String postfix = getPostfix();
-		Stack<String> stk = new Stack<String>();
-		String parts[] = postfix.split(" +");
-		double result = 0;
-		for (int i = 0; i < parts.length; i++) {
-			char tmp = parts[i].charAt(0);
-			if (!isOperator(tmp)) {
-				stk.push(parts[i]);
-			} else {
-				double a = Double.parseDouble(stk.pop());
-				double b = Double.parseDouble(stk.pop());
-				result = calculate(b, a, tmp);
-				stk.push(String.valueOf(result));
-			}
-		}
-		return result;
-	}
-
-	private boolean isOperator(char op) {
-		return (op == '+' || op == '-' || op == '*' || op == '/');
-	}
-
 	public double calculate(double a, double b, char op) {
 		switch (op) {
 		case '+':
@@ -96,5 +73,28 @@ public class Operation {
 		while (it.hasPrevious())
 			postfix += it.previous() + " ";
 		return postfix.trim().replaceAll(" +\\.", ".");
+	}
+
+	public double getResult() {
+		String postfix = getPostfix();
+		Stack<String> stk = new Stack<String>();
+		String parts[] = postfix.split(" +");
+		double result = 0;
+		for (int i = 0; i < parts.length; i++) {
+			char tmp = parts[i].charAt(0);
+			if (!isOperator(tmp)) {
+				stk.push(parts[i]);
+			} else {
+				double a = Double.parseDouble(stk.pop());
+				double b = Double.parseDouble(stk.pop());
+				result = calculate(b, a, tmp);
+				stk.push(String.valueOf(result));
+			}
+		}
+		return result;
+	}
+
+	private boolean isOperator(char op) {
+		return (op == '+' || op == '-' || op == '*' || op == '/');
 	}
 }

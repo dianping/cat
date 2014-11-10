@@ -14,6 +14,11 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 
 	private Map<String, Contactor> m_contactors = new HashMap<String, Contactor>();
 
+	@Override
+	public void initialize() throws InitializationException {
+		m_contactors = lookupMap(Contactor.class);
+	}
+
 	public List<String> queryReceivers(String group, AlertChannel channel, String type) {
 		Contactor contactor = m_contactors.get(type);
 
@@ -26,11 +31,6 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 		} else {
 			throw new RuntimeException("unsupported channnel");
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_contactors = lookupMap(Contactor.class);
 	}
 
 }

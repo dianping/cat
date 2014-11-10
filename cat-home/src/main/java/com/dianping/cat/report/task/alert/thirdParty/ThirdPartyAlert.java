@@ -30,6 +30,28 @@ public class ThirdPartyAlert implements Task {
 
 	private BlockingQueue<ThirdPartyAlertEntity> m_entities = new ArrayBlockingQueue<ThirdPartyAlertEntity>(5000);
 
+	private Map<String, List<ThirdPartyAlertEntity>> buildDomain2AlertMap(List<ThirdPartyAlertEntity> alertEntities) {
+		Map<String, List<ThirdPartyAlertEntity>> domain2AlertMap = new HashMap<String, List<ThirdPartyAlertEntity>>();
+
+		for (ThirdPartyAlertEntity entity : alertEntities) {
+			String domain = entity.getDomain();
+			List<ThirdPartyAlertEntity> alertList = domain2AlertMap.get(domain);
+
+			if (alertList == null) {
+				alertList = new ArrayList<ThirdPartyAlertEntity>();
+
+				domain2AlertMap.put(domain, alertList);
+			}
+			alertList.add(entity);
+		}
+		return domain2AlertMap;
+	}
+
+	@Override
+	public String getName() {
+		return AlertType.ThirdParty.getName();
+	}
+
 	public boolean put(ThirdPartyAlertEntity entity) {
 		boolean result = true;
 
@@ -95,28 +117,6 @@ public class ThirdPartyAlert implements Task {
 				active = false;
 			}
 		}
-	}
-
-	private Map<String, List<ThirdPartyAlertEntity>> buildDomain2AlertMap(List<ThirdPartyAlertEntity> alertEntities) {
-		Map<String, List<ThirdPartyAlertEntity>> domain2AlertMap = new HashMap<String, List<ThirdPartyAlertEntity>>();
-
-		for (ThirdPartyAlertEntity entity : alertEntities) {
-			String domain = entity.getDomain();
-			List<ThirdPartyAlertEntity> alertList = domain2AlertMap.get(domain);
-
-			if (alertList == null) {
-				alertList = new ArrayList<ThirdPartyAlertEntity>();
-
-				domain2AlertMap.put(domain, alertList);
-			}
-			alertList.add(entity);
-		}
-		return domain2AlertMap;
-	}
-
-	@Override
-	public String getName() {
-		return AlertType.ThirdParty.getName();
 	}
 
 	@Override

@@ -121,20 +121,6 @@ public class AlertPolicyManager implements Initializable {
 		return group.findLevel(levelName);
 	}
 
-	public int querySuspendMinute(String typeName, String groupName, String levelName) {
-		try {
-			Level level = queryLevel(typeName, groupName, levelName);
-
-			if (level == null) {
-				return 0;
-			} else {
-				return level.getSuspendMinute();
-			}
-		} catch (Exception ex) {
-			return 0;
-		}
-	}
-
 	public int queryRecoverMinute(String typeName, String groupName, String levelName) {
 		try {
 			Level level = queryLevel(typeName, groupName, levelName);
@@ -146,6 +132,20 @@ public class AlertPolicyManager implements Initializable {
 			}
 		} catch (Exception ex) {
 			return 1;
+		}
+	}
+
+	public int querySuspendMinute(String typeName, String groupName, String levelName) {
+		try {
+			Level level = queryLevel(typeName, groupName, levelName);
+
+			if (level == null) {
+				return 0;
+			} else {
+				return level.getSuspendMinute();
+			}
+		} catch (Exception ex) {
+			return 0;
 		}
 	}
 

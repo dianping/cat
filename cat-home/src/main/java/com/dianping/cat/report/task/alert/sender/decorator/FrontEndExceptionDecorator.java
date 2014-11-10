@@ -26,15 +26,8 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 	protected DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[前端异常告警] [界面: ").append(alert.getGroup()).append("]");
-		return sb.toString();
+	public String buildContactInfo(String domainName) {
+		return "";
 	}
 
 	@Override
@@ -66,6 +59,18 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 	}
 
 	@Override
+	public String generateTitle(AlertEntity alert) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[前端异常告警] [界面: ").append(alert.getGroup()).append("]");
+		return sb.toString();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
 		m_configuration.setDefaultEncoding("UTF-8");
@@ -74,11 +79,6 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-	}
-
-	@Override
-	public String buildContactInfo(String domainName) {
-		return "";
 	}
 
 }
