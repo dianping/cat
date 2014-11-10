@@ -5,6 +5,7 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.heartbeat.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.heartbeat.Payload" scope="request" />
@@ -101,13 +102,15 @@
 		</svg>
 	</td>
 </tr>
-<c:forEach items="${model.dalGraph}" var="entry">
+<c:forEach items="${model.extensionGraph}" var="entry">
 	<tr>
-		<th>Dal ${entry.key} Info</th>
+		<th>${entry.key} Info</th>
 	</tr>
 	<tr>
 		<td>
-			<svg version="1.1" width="1400" height="${model.dalTableHeight}" xmlns="http://www.w3.org/2000/svg">
+		<c:set var="size" value="${fn:length(entry.value) }"/>
+		<c:set var="extensionHeight" value="${(size % 3) == 0 ? (size/3)*190 : ((size/3)+1)*190 }"/>
+			<svg version="1.1" width="1400" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
 				<c:forEach items="${entry.value}" var="kv">
 					${kv.value }
 				</c:forEach>

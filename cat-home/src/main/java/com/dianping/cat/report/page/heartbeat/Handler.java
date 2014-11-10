@@ -70,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 		model.setDisksGraph(displayHeartbeat.getDisksGraph());
 		model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
 		model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
-		model.setExtensionGraph(displayHeartbeat.getDalGraph());
+		model.setExtensionGraph(displayHeartbeat.getExtensionGraph());
 	}
 
 	private void buildHistoryGraph(Model model, Payload payload) {
