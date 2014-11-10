@@ -134,7 +134,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_CODE_UPDATE("appCodeUpdate"),
 
 	APP_CODE_SUBMIT("appCodeSubmit"),
-	
+
 	APP_CODE_ADD("appCodeAdd"),
 
 	APP_CODE_DELETE("appCodeDelete"),
@@ -146,6 +146,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
 
 	APP_RULE_DELETE("appRuleDelete"),
+
+	TRANSACTION_RULE("transactionRule"),
+
+	TRANSACTION_RULE_ADD_OR_UPDATE("transactionRuleUpdate"),
+
+	TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT("transactionRuleSubmit"),
+
+	TRANSACTION_RULE_DELETE("transactionRuleDelete"),
 
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 

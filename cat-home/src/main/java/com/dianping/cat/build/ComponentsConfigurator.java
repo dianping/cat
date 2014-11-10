@@ -74,6 +74,7 @@ import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.system.config.TransactionRuleConfigManager;
 import com.dianping.cat.system.config.UserDefinedRuleManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
@@ -164,6 +165,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      UserDefinedRuleManager.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
 		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
+		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
 		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class));

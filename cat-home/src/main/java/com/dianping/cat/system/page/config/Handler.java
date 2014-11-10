@@ -29,6 +29,7 @@ import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
+import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -63,6 +64,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AlertConfigProcessor m_alertConfigProcessor;
+
+	@Inject
+	private TransactionConfigProcessor m_transactionConfigProcessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
@@ -187,6 +191,13 @@ public class Handler implements PageHandler<Context> {
 		case APP_RULE_DELETE:
 		case APP_COMPARISON_CONFIG_UPDATE:
 			m_appConfigProcessor.process(action, payload, model);
+			break;
+
+		case TRANSACTION_RULE:
+		case TRANSACTION_RULE_ADD_OR_UPDATE:
+		case TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT:
+		case TRANSACTION_RULE_DELETE:
+			m_transactionConfigProcessor.process(action, payload, model);
 			break;
 
 		case ALERT_DEFAULT_RECEIVERS:
