@@ -24,7 +24,7 @@
 	  	</xmp>
 	  </h5>
 	
-  <dt><h5 class="text-success">2.Pom.xml中更新jar包(或者更新platform包)</h5></dt>
+  <dt><h5 class="text-success">2.Pom.xml中更新jar包(点评内部公共组件，外部公司可以忽略)</h5></dt>
   <dd>
   <xmp class="well">
        <dependency>
