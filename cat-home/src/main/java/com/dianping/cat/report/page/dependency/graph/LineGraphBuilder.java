@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -29,9 +30,26 @@ public class LineGraphBuilder extends BaseVisitor {
 
 	private Set<String> m_types = new TreeSet<String>();
 
+	private static int SIZE = 60;
+
+	private long m_period;
+
 	private int m_currentMinute;
 
+	private long m_sysMinute;
+
 	private Date m_start;
+
+	public LineGraphBuilder() {
+		long current = System.currentTimeMillis();
+		current -= current % Constants.HOUR;
+		m_period = current;
+		m_sysMinute = (System.currentTimeMillis()) / 1000 / 60 % 60;
+	}
+
+	private boolean isCurrentPeriod() {
+		return m_period == m_start.getTime();
+	}
 
 	private String appendStr(String... arg) {
 		int length = arg.length;
@@ -46,18 +64,32 @@ public class LineGraphBuilder extends BaseVisitor {
 	private LineChart buildLineChart(String title, Map<String, Item> items) {
 		LineChart result = new LineChart();
 
-		result.setSize(60);
+		result.setSize(SIZE);
 		result.setStep(TimeHelper.ONE_MINUTE);
 		result.setTitle(title);
 		result.setStart(m_start);
+
 		if (items != null) {
 			for (Entry<String, Item> entry : items.entrySet()) {
 				String subTitle = entry.getKey();
 				Item item = entry.getValue();
 
-				result.addSubTitle(subTitle);
-				result.addValue(item.getValue());
+				result.add(subTitle, item.getValue());
 			}
+		}
+		return result;
+	}
+
+	private Item generateItem() {
+		Item result = new Item();
+		long size = (int) m_sysMinute + 1;
+
+		if (!isCurrentPeriod()) {
+			size = SIZE;
+		}
+
+		for (int i = 0; i < size; i++) {
+			result.setValue(i, 0.0);
 		}
 		return result;
 	}
@@ -73,7 +105,7 @@ public class LineGraphBuilder extends BaseVisitor {
 		Item result = items.get(id);
 
 		if (result == null) {
-			result = new Item();
+			result = generateItem();
 			items.put(id, result);
 		}
 
@@ -146,9 +178,9 @@ public class LineGraphBuilder extends BaseVisitor {
 	}
 
 	public class Item {
-		private double[] m_values = new double[60];
+		private Double[] m_values = new Double[60];
 
-		public double[] getValue() {
+		public Double[] getValue() {
 			return m_values;
 		}
 

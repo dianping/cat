@@ -118,10 +118,17 @@ $(document).ready(
 </script>
 
 <style type="text/css">
-	.row-fluid .span2{
+	.row-fluid .span2 {
 		width:10%;
 	}
-	.row-fluid .span10{
+	.row-fluid .span10 {
 		width:87%;
+	}
+	.report .btn-group {
+		position: relative;
+		display: inline-block;
+		font-size: 0;
+		white-space: normal;
+		vertical-align: middle;
 	}
 </style>

@@ -1,5 +1,7 @@
 package com.dianping.cat.demo;
 
+import java.util.Random;
+
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
@@ -49,18 +51,18 @@ public class TestCrashLog {
 	}
 
 	private String getLevel(String platform, int index) {
-		return platform + "level" + index % 3;
+		return platform + "level" + new Random().nextInt(20);
 	}
 
 	private String getModule(String platform, int index) {
-		return platform + "module" + index % 3;
+		return platform + "module" + new Random().nextInt(20);
 	}
 
 	private String getPlateform(String platform, int index) {
-		return platform + index % 3;
+		return platform + new Random().nextInt(20);
 	}
 
 	private String getVersion(String platform, int index) {
-		return platform + "version" + index % 3;
+		return platform + "version" + new Random().nextInt(20);
 	}
 }

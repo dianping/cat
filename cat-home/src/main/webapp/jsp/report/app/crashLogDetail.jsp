@@ -42,15 +42,15 @@
 		</tr>
 		</table>
 		<br>
-		<table>
-		<tr><td>
+		<table class="table table-bordered">
+		<tr><td width="60px;">
 				平台类型</td><td><select id="platformType" style="width: 200px;">
 					<option value='android'>Android</option>
 					<option value='iOS'>iOS</option>
 					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /></td></tr>
-					<tr><td>APP版本</td><td>
+					<tr><td width="60px;">APP版本</td><td>
 						<div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
 		    				<input type="checkbox" id="appVersionAll" onclick="clickAll('${model.fieldsInfo.appVersions}', 'appVersion')" unchecked>All
@@ -63,7 +63,7 @@
 						</c:forEach>
 						</div>
 						</td></tr>
-					<tr><td>平台版本</td><td><div class="btn-group" data-toggle="buttons">
+					<tr><td width="60px;">平台版本</td><td><div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
 		    				<input type="checkbox" id="platformVersionAll" onclick="clickAll('${model.fieldsInfo.platVersions}', 'platformVersion')" unchecked>All
 		  				</label>
@@ -75,7 +75,7 @@
 						</c:forEach>
 						</div>
 						</td></tr>
-					<tr><td> 模块</td><td><div class="btn-group" data-toggle="buttons">
+					<tr><td width="60px;"> 模块</td><td><div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
 		    				<input type="checkbox" id="moduleAll" onclick="clickAll('${model.fieldsInfo.modules}', 'module')" unchecked>All
 		  				</label>
@@ -87,7 +87,7 @@
 						</c:forEach>
 						</div>
 						</td></tr>
-					<tr><td> 级别</td><td><div class="btn-group" data-toggle="buttons">
+					<tr><td width="60px;"> 级别</td><td><div class="btn-group" data-toggle="buttons">
 						<label class="btn btn-info">
 		    				<input type="checkbox" id="levelAll" onclick="clickAll('${model.fieldsInfo.levels}', 'level')"  unchecked>All
 		  				</label>

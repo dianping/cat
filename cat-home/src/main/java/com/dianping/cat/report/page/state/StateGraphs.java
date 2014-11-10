@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -48,8 +49,20 @@ public class StateGraphs {
 		return item;
 	}
 
-	private double[] getDataFromHourlyDetail(StateReport report, long start, int size, String key, String ip) {
-		double[] result = new double[size];
+	private Double[] getDataFromHourlyDetail(StateReport report, long start, int maxSize, String key, String ip) {
+		Double[] result = new Double[maxSize];
+		long minute = (System.currentTimeMillis()) / 1000 / 60 % 60;
+		long current = System.currentTimeMillis();
+		current -= current % Constants.HOUR;
+		long size = (int) minute + 1;
+
+		if (report.getStartTime().getTime() < current) {
+			size = maxSize;
+		}
+
+		for (int i = 0; i < size; i++) {
+			result[i] = 0.0;
+		}
 		StateShow show = new StateShow(ip);
 		show.visitStateReport(report);
 		Map<Long, Detail> datas = null;
@@ -75,11 +88,11 @@ public class StateGraphs {
 					continue;
 				}
 				if (key.equalsIgnoreCase("total")) {
-					result[i] = detail.getTotal();
+					result[i] = (double) detail.getTotal();
 				} else if (key.equalsIgnoreCase("totalLoss")) {
-					result[i] = detail.getTotalLoss();
+					result[i] = (double) detail.getTotalLoss();
 				} else if (key.equalsIgnoreCase("size")) {
-					result[i] = detail.getSize() / 1024 / 1024;
+					result[i] = (double) detail.getSize() / 1024 / 1024;
 				}
 				continue;
 			}
@@ -87,29 +100,29 @@ public class StateGraphs {
 
 			if (message != null) {
 				if (key.equalsIgnoreCase("total")) {
-					result[i] = message.getTotal();
+					result[i] = (double) message.getTotal();
 				} else if (key.equalsIgnoreCase("totalLoss")) {
-					result[i] = message.getTotalLoss();
+					result[i] = (double) message.getTotalLoss();
 				} else if (key.equalsIgnoreCase("avgTps")) {
-					result[i] = message.getTotal();
+					result[i] = (double) message.getTotal();
 				} else if (key.equalsIgnoreCase("maxTps")) {
-					result[i] = message.getTotal();
+					result[i] = (double) message.getTotal();
 				} else if (key.equalsIgnoreCase("dump")) {
-					result[i] = message.getDump();
+					result[i] = (double) message.getDump();
 				} else if (key.equalsIgnoreCase("dumpLoss")) {
-					result[i] = message.getDumpLoss();
+					result[i] = (double) message.getDumpLoss();
 				} else if (key.equalsIgnoreCase("pigeonTimeError")) {
-					result[i] = message.getPigeonTimeError();
+					result[i] = (double) message.getPigeonTimeError();
 				} else if (key.equalsIgnoreCase("networkTimeError")) {
-					result[i] = message.getNetworkTimeError();
+					result[i] = (double) message.getNetworkTimeError();
 				} else if (key.equalsIgnoreCase("blockTotal")) {
-					result[i] = message.getBlockTotal();
+					result[i] = (double) message.getBlockTotal();
 				} else if (key.equalsIgnoreCase("blockLoss")) {
-					result[i] = message.getBlockLoss();
+					result[i] = (double) message.getBlockLoss();
 				} else if (key.equalsIgnoreCase("blockTime")) {
-					result[i] = message.getBlockTime() * 1.0 / 60 / 1000;
+					result[i] = (double) message.getBlockTime() * 1.0 / 60 / 1000;
 				} else if (key.equalsIgnoreCase("size")) {
-					result[i] = message.getSize() / 1024 / 1024;
+					result[i] = (double) message.getSize() / 1024 / 1024;
 				} else if (key.equalsIgnoreCase("delayAvg")) {
 					if (message.getDelayCount() > 0) {
 						result[i] = message.getDelaySum() / message.getDelayCount();
@@ -167,8 +180,7 @@ public class StateGraphs {
 		LineChart item = new LineChart();
 
 		item.setStart(start).setSize(60).setTitle(key).setStep(TimeHelper.ONE_MINUTE);
-		item.addSubTitle(key);
-		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
+		item.add(key, getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
 		return item;
 	}
 
