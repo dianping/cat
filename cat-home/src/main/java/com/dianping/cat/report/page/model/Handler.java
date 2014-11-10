@@ -255,47 +255,47 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@SuppressWarnings("unchecked")
 	private ModelResponse<?> processMetricRequest(Payload payload, ModelRequest request) {
-	   ModelResponse<?> response;
-	   response = m_metricService.invoke(request);
+		ModelResponse<?> response;
+		response = m_metricService.invoke(request);
 
-	   String metricType = payload.getMetricType();
-	   String type = payload.getType();
+		String metricType = payload.getMetricType();
+		String type = payload.getType();
 
-	   if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
-	   	String city = payload.getCity();
-	   	String channel = payload.getChannel();
-	   	WebReportConvertor convert = new WebReportConvertor(type, city, channel);
-	   	MetricReport metricReport = (MetricReport) response.getModel();
+		if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
+			String city = payload.getCity();
+			String channel = payload.getChannel();
+			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
+			MetricReport metricReport = (MetricReport) response.getModel();
 
-	   	convert.visitMetricReport(metricReport);
-	   	((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-	   } else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
-	   	String ipAddrsStr = payload.getIpAddress();
-	   	Set<String> ipAddrs = null;
+			convert.visitMetricReport(metricReport);
+			((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+		} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
+			String ipAddrsStr = payload.getIpAddress();
+			Set<String> ipAddrs = null;
 
-	   	if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
-	   		String[] ipAddrsArray = ipAddrsStr.split("_");
-	   		ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
-	   	}
+			if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
+				String[] ipAddrsArray = ipAddrsStr.split("_");
+				ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+			}
 
-	   	SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
-	   	MetricReport metricReport = (MetricReport) response.getModel();
+			SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
+			MetricReport metricReport = (MetricReport) response.getModel();
 
-	   	convert.visitMetricReport(metricReport);
-	   	((ModelResponse<MetricReport>) response).setModel(convert.getReport());
-	   } else if (Constants.METRIC_CDN.equals(metricType)) {
-	   	String cdn = payload.getCdn();
-	   	String province = payload.getProvince();
-	   	String city = payload.getCity();
-	   	MetricReport metricReport = (MetricReport) response.getModel();
-	   	CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
+			convert.visitMetricReport(metricReport);
+			((ModelResponse<MetricReport>) response).setModel(convert.getReport());
+		} else if (Constants.METRIC_CDN.equals(metricType)) {
+			String cdn = payload.getCdn();
+			String province = payload.getProvince();
+			String city = payload.getCity();
+			MetricReport metricReport = (MetricReport) response.getModel();
+			CdnReportConvertor cdnReportConvertor = new CdnReportConvertor(m_ipService);
 
-	   	cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
-	   	cdnReportConvertor.visitMetricReport(metricReport);
-	   	((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
-	   }
-	   return response;
-   }
+			cdnReportConvertor.setProvince(province).setCity(city).setCdn(cdn);
+			cdnReportConvertor.visitMetricReport(metricReport);
+			((ModelResponse<MetricReport>) response).setModel(cdnReportConvertor.getReport());
+		}
+		return response;
+	}
 
 	public static class CrossReportFilter extends com.dianping.cat.consumer.cross.model.transform.DefaultXmlBuilder {
 		public CrossReportFilter() {
@@ -407,22 +407,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
-		public void visitMachine(Machine machine) {
-			if (m_ipAddress == null) {
-				super.visitMachine(machine);
-			} else if (machine.getIp().equals(m_ipAddress)) {
-				super.visitMachine(machine);
-			}
-		}
-
-		@Override
 		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
 			super.visitDuration(duration);
-		}
-
-		@Override
-		public void visitSegment(Segment segment) {
-			super.visitSegment(segment);
 		}
 
 		@Override
@@ -440,6 +426,20 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 					}
 				}
 			}
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			if (m_ipAddress == null) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			}
+		}
+
+		@Override
+		public void visitSegment(Segment segment) {
+			super.visitSegment(segment);
 		}
 
 		@Override
