@@ -21,31 +21,6 @@ public class AppDecorator extends Decorator implements Initializable {
 	public Configuration m_configuration;
 
 	@Override
-	public void initialize() throws InitializationException {
-		m_configuration = new Configuration();
-		m_configuration.setDefaultEncoding("UTF-8");
-		try {
-			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		String type = alert.getMetric();
-
-		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(type).append("]");
-		return sb.toString();
-	}
-
-	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
 		StringWriter sw = new StringWriter(5000);
@@ -67,6 +42,31 @@ public class AppDecorator extends Decorator implements Initializable {
 		map.put("date", m_format.format(alert.getDate()));
 
 		return map;
+	}
+
+	@Override
+	public String generateTitle(AlertEntity alert) {
+		StringBuilder sb = new StringBuilder();
+		String type = alert.getMetric();
+
+		sb.append("[CAT APP告警] [命令字: ").append(alert.getGroup()).append("] [监控项: ").append(type).append("]");
+		return sb.toString();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 }

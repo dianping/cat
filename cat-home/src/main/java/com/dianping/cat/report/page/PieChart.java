@@ -13,15 +13,6 @@ public class PieChart {
 
 	private transient int m_size = 30;
 
-	public PieChart setTitle(String title) {
-		m_title = title;
-		return this;
-	}
-
-	public String getTitle() {
-		return m_title;
-	}
-
 	public void addItems(List<Item> items) {
 		Collections.sort(items, new ItemCompartor());
 		int size = items.size();
@@ -52,8 +43,17 @@ public class PieChart {
 		return new JsonBuilder().toJson(this);
 	}
 
+	public String getTitle() {
+		return m_title;
+	}
+
 	public PieChart setMaxSize(int size) {
 		m_size = size;
+		return this;
+	}
+
+	public PieChart setTitle(String title) {
+		m_title = title;
 		return this;
 	}
 
@@ -68,10 +68,6 @@ public class PieChart {
       	return m_id;
       }
 
-		public void setId(int id) {
-      	m_id = id;
-      }
-
 		public double getNumber() {
 			return m_number;
 		}
@@ -79,6 +75,10 @@ public class PieChart {
 		public String getTitle() {
 			return m_title;
 		}
+
+		public void setId(int id) {
+      	m_id = id;
+      }
 
 		public Item setNumber(double number) {
 			m_number = number;

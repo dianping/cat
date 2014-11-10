@@ -74,6 +74,46 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 		return alertReport;
 	}
 
+	private AlertReport queryFromDailyBinary(int id, String domain) throws DalException {
+		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new AlertReport(domain);
+		}
+	}
+
+	private AlertReport queryFromHourlyBinary(int id, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new AlertReport(domain);
+		}
+	}
+
+	private AlertReport queryFromMonthlyBinary(int id, String domain) throws DalException {
+		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new AlertReport(domain);
+		}
+	}
+
+	private AlertReport queryFromWeeklyBinary(int id, String domain) throws DalException {
+		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
+
+		if (content != null) {
+			return DefaultNativeParser.parse(content.getContent());
+		} else {
+			return new AlertReport(domain);
+		}
+	}
+
 	@Override
 	public AlertReport queryHourlyReport(String domain, Date start, Date end) {
 		AlertReportMerger merger = new AlertReportMerger(new AlertReport(domain));
@@ -155,46 +195,6 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 			Cat.logError(e);
 		}
 		return new AlertReport(domain);
-	}
-
-	private AlertReport queryFromDailyBinary(int id, String domain) throws DalException {
-		DailyReportContent content = m_dailyReportContentDao.findByPK(id, DailyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new AlertReport(domain);
-		}
-	}
-
-	private AlertReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new AlertReport(domain);
-		}
-	}
-
-	private AlertReport queryFromMonthlyBinary(int id, String domain) throws DalException {
-		MonthlyReportContent content = m_monthlyReportContentDao.findByPK(id, MonthlyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new AlertReport(domain);
-		}
-	}
-
-	private AlertReport queryFromWeeklyBinary(int id, String domain) throws DalException {
-		WeeklyReportContent content = m_weeklyReportContentDao.findByPK(id, WeeklyReportContentEntity.READSET_FULL);
-
-		if (content != null) {
-			return DefaultNativeParser.parse(content.getContent());
-		} else {
-			return new AlertReport(domain);
-		}
 	}
 
 }

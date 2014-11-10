@@ -71,28 +71,6 @@ public class AppContactor extends DefaultContactor implements Contactor {
 	}
 
 	@Override
-	public List<String> queryWeiXinContactors(String id) {
-		List<String> weixinReceivers = new ArrayList<String>();
-		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return weixinReceivers;
-		} else {
-			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
-
-			String domain = queryDomainByCommand(id);
-			if (StringUtils.isNotEmpty(domain)) {
-				Project project = m_projectService.findByDomain(domain);
-
-				if (project != null) {
-					weixinReceivers.addAll(split(project.getEmail()));
-				}
-			}
-			return weixinReceivers;
-		}
-	}
-
-	@Override
 	public List<String> querySmsContactors(String id) {
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
@@ -111,6 +89,28 @@ public class AppContactor extends DefaultContactor implements Contactor {
 				}
 			}
 			return smsReceivers;
+		}
+	}
+
+	@Override
+	public List<String> queryWeiXinContactors(String id) {
+		List<String> weixinReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return weixinReceivers;
+		} else {
+			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			String domain = queryDomainByCommand(id);
+			if (StringUtils.isNotEmpty(domain)) {
+				Project project = m_projectService.findByDomain(domain);
+
+				if (project != null) {
+					weixinReceivers.addAll(split(project.getEmail()));
+				}
+			}
+			return weixinReceivers;
 		}
 	}
 

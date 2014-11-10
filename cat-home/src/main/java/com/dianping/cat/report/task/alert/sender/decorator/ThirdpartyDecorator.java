@@ -25,18 +25,6 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[CAT第三方告警] [项目: ").append(alert.getGroup()).append("]");
-		return sb.toString();
-	}
-
-	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
 		StringWriter sw = new StringWriter(5000);
@@ -61,6 +49,18 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 		map.put("contactInfo", contactInfo);
 
 		return map;
+	}
+
+	@Override
+	public String generateTitle(AlertEntity alert) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[CAT第三方告警] [项目: ").append(alert.getGroup()).append("]");
+		return sb.toString();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 
 	@Override

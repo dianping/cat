@@ -20,8 +20,6 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private Map<String, TypeStatistics> m_types = new TreeMap<String, TypeStatistics>();
 
-	private boolean m_allIp = false;
-
 	private String m_type = "error";
 
 	private String m_status;
@@ -34,16 +32,16 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private List<String> m_levels;
 
-	private boolean checkFlag(String myField, String field) {
-		if (StringUtils.isEmpty(myField) || StringUtils.isNotEmpty(myField) && myField.equals(field)) {
+	private boolean checkFlag(List<String> myFields, String field) {
+		if (myFields == null || myFields.isEmpty() || !myFields.isEmpty() && myFields.contains(field)) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private boolean checkFlag(List<String> myFields, String field) {
-		if (myFields == null || myFields.isEmpty() || !myFields.isEmpty() && myFields.contains(field)) {
+	private boolean checkFlag(String myField, String field) {
+		if (StringUtils.isEmpty(myField) || StringUtils.isNotEmpty(myField) && myField.equals(field)) {
 			return true;
 		} else {
 			return false;
@@ -66,21 +64,12 @@ public class ProblemStatistics extends BaseVisitor {
 		return m_platformVersions;
 	}
 
-	public Map<String, TypeStatistics> getTypes() {
-		return m_types;
-	}
-
 	public String getType() {
 		return m_type;
 	}
 
-	public boolean isAllIp() {
-		return m_allIp;
-	}
-
-	public ProblemStatistics setAllIp(boolean allIp) {
-		m_allIp = allIp;
-		return this;
+	public Map<String, TypeStatistics> getTypes() {
+		return m_types;
 	}
 
 	public void setAppVersions(List<String> appVersions) {
@@ -99,16 +88,16 @@ public class ProblemStatistics extends BaseVisitor {
 		m_platformVersions = platformVersions;
 	}
 
-	public void setTypes(Map<String, TypeStatistics> types) {
-		m_types = types;
-	}
-
 	public void setStatus(String status) {
 		m_status = status;
 	}
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public void setTypes(Map<String, TypeStatistics> types) {
+		m_types = types;
 	}
 
 	private void statisticsDuration(Entry entry) {

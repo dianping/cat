@@ -58,23 +58,15 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("cdn")
 	private String m_cdn = "ALL";
 	
-	public String getQueryType() {
-   	return m_queryType;
-   }
-
-	public void setQueryType(String queryType) {
-   	m_queryType = queryType;
-   }
-
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
-	
+
 	public String getCdn() {
 		return m_cdn;
 	}
-	
+
 	public String getChannel() {
    	return m_channel;
    }
@@ -82,11 +74,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public String getCity() {
    	return m_city;
    }
-
+	
 	public String getDatabase() {
 		return m_database;
 	}
-
+	
 	public String getDomain() {
 		if (m_path.length > 1) {
 			return m_path[1];
@@ -128,6 +120,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_province;
 	}
 
+	public String getQueryType() {
+   	return m_queryType;
+   }
+
 	public String getReport() {
 		if (m_path.length > 0) {
 			return m_path[0];
@@ -139,11 +135,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public String getThreadId() {
 		return m_threadId;
 	}
-	
+
 	public String getType() {
 		return m_type;
 	}
-
+	
 	public boolean isWaterfall() {
 		return m_waterfall;
 	}
@@ -183,7 +179,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setName(String name) {
 		m_name = name;
 	}
-	
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.MODEL);
@@ -196,10 +192,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			m_path = Arrays.copyOf(path, path.length);
 		}
 	}
-
+	
 	public void setProvince(String province) {
 		m_province = province;
 	}
+
+	public void setQueryType(String queryType) {
+   	m_queryType = queryType;
+   }
 
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;

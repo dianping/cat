@@ -59,7 +59,7 @@ public class MetricConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	private void deleteUnusedConfig() {
+	protected void deleteUnusedConfig() {
 		try {
 			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
 			List<String> unused = new ArrayList<String>();
@@ -119,8 +119,6 @@ public class MetricConfigManager implements Initializable {
 		if (m_metricConfig == null) {
 			m_metricConfig = new MetricConfig();
 		}
-
-		deleteUnusedConfig();
 	}
 
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {

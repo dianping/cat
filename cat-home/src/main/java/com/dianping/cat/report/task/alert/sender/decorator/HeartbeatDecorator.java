@@ -8,8 +8,8 @@ public class HeartbeatDecorator extends Decorator {
 	public static final String ID = AlertType.HeartBeat.getName();
 
 	@Override
-	public String getId() {
-		return ID;
+	public String generateContent(AlertEntity alert) {
+		return alert.getContent();
 	}
 
 	@Override
@@ -21,8 +21,8 @@ public class HeartbeatDecorator extends Decorator {
 	}
 
 	@Override
-	public String generateContent(AlertEntity alert) {
-		return alert.getContent();
+	public String getId() {
+		return ID;
 	}
 
 }

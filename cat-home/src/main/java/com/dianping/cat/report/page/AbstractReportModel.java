@@ -115,19 +115,15 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		}
 	}
 
-	public String getIpToHostnameStr() {
-		return new JsonBuilder().toJson(getIpToHostname());
-	}
-
 	public abstract String getDomain();
 
 	public Map<String, Department> getDomainGroups() {
 		return m_manager.getDepartment(getDomains());
 	}
 
-	// required by report tag
 	public abstract Collection<String> getDomains();
 
+	// required by report tag
 	public Throwable getException() {
 		return m_exception;
 	}
@@ -144,7 +140,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public List<String> getIps() {
 		return new ArrayList<String>();
-	};
+	}
 
 	public Map<String, String> getIpToHostname() {
 		List<String> ips = getIps();
@@ -159,6 +155,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		}
 
 		return ipToHostname;
+	};
+
+	public String getIpToHostnameStr() {
+		return new JsonBuilder().toJson(getIpToHostname());
 	}
 
 	public String getLogViewBaseUri() {

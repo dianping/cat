@@ -42,65 +42,20 @@ public class TransactionAlert extends BaseAlert implements Task {
 	@Inject
 	private TransactionMergeManager m_mergeManager;
 
-	@Override
-	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
+	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
+		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
+		TransactionName transactionName = t.findOrCreateName(name);
+		Map<Integer, Range> range = transactionName.getRanges();
+		int length = end - start + 1;
+		double[] datas = new double[60];
+		double[] result = new double[length];
+
+		for (Entry<Integer, Range> entry : range.entrySet()) {
+			datas[entry.getKey()] = entry.getValue().getAvg();
 		}
-		while (active) {
-			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
-			long current = System.currentTimeMillis();
+		System.arraycopy(datas, start, result, 0, length);
 
-			try {
-				MonitorRules monitorRules = m_ruleConfigManager.getMonitorRules();
-				Map<String, Rule> rules = monitorRules.getRules();
-
-				for (Entry<String, Rule> entry : rules.entrySet()) {
-					try {
-						processRule(entry.getValue());
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-				Cat.logError(e);
-			} finally {
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
-	}
-
-	private void processRule(Rule rule) {
-		List<String> fields = Splitters.by(";").split(rule.getId());
-		String domain = fields.get(0);
-		String type = fields.get(1);
-		String name = fields.get(2);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-
-		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, rule.getConfigs(), minute);
-		for (AlertResultEntity alertResult : alertResults) {
-			AlertEntity entity = new AlertEntity();
-
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(type + "-" + name).setType(getName()).setGroup(domain);
-			m_sendManager.addAlert(entity);
-		}
+		return result;
 	}
 
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
@@ -153,22 +108,6 @@ public class TransactionAlert extends BaseAlert implements Task {
 		return results;
 	}
 
-	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
-		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
-		TransactionName transactionName = t.findOrCreateName(name);
-		Map<Integer, Range> range = transactionName.getRanges();
-		int length = end - start + 1;
-		double[] datas = new double[60];
-		double[] result = new double[length];
-
-		for (Entry<Integer, Range> entry : range.entrySet()) {
-			datas[entry.getKey()] = entry.getValue().getAvg();
-		}
-		System.arraycopy(datas, start, result, 0, length);
-
-		return result;
-	}
-
 	private TransactionReport fetchTransactionReport(String domain, String type, String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()) //
 		      .setProperty("type", type) //
@@ -181,12 +120,73 @@ public class TransactionAlert extends BaseAlert implements Task {
 	}
 
 	@Override
-	public void shutdown() {
+	public String getName() {
+		return AlertType.Transaction.getName();
+	}
+
+	private void processRule(Rule rule) {
+		List<String> fields = Splitters.by(";").split(rule.getId());
+		String domain = fields.get(0);
+		String type = fields.get(1);
+		String name = fields.get(2);
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, rule.getConfigs(), minute);
+		for (AlertResultEntity alertResult : alertResults) {
+			AlertEntity entity = new AlertEntity();
+
+			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+			      .setLevel(alertResult.getAlertLevel());
+			entity.setMetric(type + "-" + name).setType(getName()).setGroup(domain);
+			m_sendManager.addAlert(entity);
+		}
 	}
 
 	@Override
-	public String getName() {
-		return AlertType.Transaction.getName();
+	public void run() {
+		boolean active = true;
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			active = false;
+		}
+		while (active) {
+			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
+			long current = System.currentTimeMillis();
+
+			try {
+				MonitorRules monitorRules = m_ruleConfigManager.getMonitorRules();
+				Map<String, Rule> rules = monitorRules.getRules();
+
+				for (Entry<String, Rule> entry : rules.entrySet()) {
+					try {
+						processRule(entry.getValue());
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
+			}
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(DURATION - duration);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
+	}
+
+	@Override
+	public void shutdown() {
 	}
 
 }

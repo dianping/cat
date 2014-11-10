@@ -21,6 +21,16 @@ public class SmsSender implements Sender, LogEnabled {
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
 	public boolean send(AlertMessageEntity message) {
 		if (!sendSms(message)) {
 			return false;
@@ -62,16 +72,6 @@ public class SmsSender implements Sender, LogEnabled {
 		} else {
 			return false;
 		}
-	}
-
-	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

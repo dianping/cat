@@ -76,10 +76,6 @@ public class LineChart {
 		}
 	}
 
-	public String getUnit() {
-		return m_unit;
-	}
-
 	public String getId() {
 		return m_id;
 	}
@@ -87,6 +83,14 @@ public class LineChart {
 	public String getJsonString() {
 		String json = new JsonBuilder().toJson(this);
 		return json;
+	}
+
+	public Double getMaxYlabel() {
+		return m_maxYlabel;
+	}
+
+	public Double getMinYlable() {
+		return m_minYlabel;
 	}
 
 	public int getSize() {
@@ -109,12 +113,16 @@ public class LineChart {
 		return m_title;
 	}
 
-	public List<double[]> getValues() {
-		return m_values;
+	public String getUnit() {
+		return m_unit;
 	}
 
 	public List<Double[]> getValueObjects() {
 		return m_valueObjects;
+	}
+
+	public List<double[]> getValues() {
+		return m_values;
 	}
 
 	public double[] getValues(int index) {
@@ -141,6 +149,14 @@ public class LineChart {
 
 	public void setId(String id) {
 		m_id = id;
+	}
+
+	public void setMaxYlabel(Double maxYlabel) {
+		m_maxYlabel = maxYlabel;
+	}
+
+	public void setMinYlable(Double minYlable) {
+		m_minYlabel = minYlable;
 	}
 
 	public LineChart setSize(int size) {
@@ -175,22 +191,6 @@ public class LineChart {
 	public LineChart setValues(List<double[]> values) {
 		m_values = values;
 		return this;
-	}
-
-	public Double getMinYlable() {
-		return m_minYlabel;
-	}
-
-	public void setMinYlable(Double minYlable) {
-		m_minYlabel = minYlable;
-	}
-
-	public Double getMaxYlabel() {
-		return m_maxYlabel;
-	}
-
-	public void setMaxYlabel(Double maxYlabel) {
-		m_maxYlabel = maxYlabel;
 	}
 
 	public LineChart setYlable(double[] ylable) {
