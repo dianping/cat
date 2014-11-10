@@ -22,20 +22,20 @@ public class AlertEntity {
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
 
-	public String getDomain() {
-		if (AlertType.Business.getName().equals(m_type)) {
-			return String.valueOf(m_paras.get("domain"));
-		} else {
-			return m_group;
-		}
-	}
-
 	public String getContent() {
 		return m_content;
 	}
 
 	public Date getDate() {
 		return m_date;
+	}
+
+	public String getDomain() {
+		if (AlertType.Business.getName().equals(m_type)) {
+			return String.valueOf(m_paras.get("domain"));
+		} else {
+			return m_group;
+		}
 	}
 
 	public String getGroup() {

@@ -185,36 +185,36 @@ public class CacheReport {
 			}
 		}
 
-		public double getHited() {
-			return m_hited;
-		}
-
-		public long getMissed() {
-			return m_missed;
-		}
-
 		public long getAdd() {
 			return m_add;
+		}
+
+		public String getCategory() {
+			return m_category;
 		}
 
 		public long getGet() {
 			return m_get;
 		}
 
+		public double getHited() {
+			return m_hited;
+		}
+
 		public long getMget() {
 			return m_mget;
 		}
 
-		public long getRemove() {
-			return m_remove;
+		public long getMissed() {
+			return m_missed;
 		}
 
 		public TransactionName getName() {
 			return m_name;
 		}
 
-		public String getCategory() {
-			return m_category;
+		public long getRemove() {
+			return m_remove;
 		}
 
 		public void setHited(double hited) {

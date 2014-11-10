@@ -9,14 +9,14 @@ public class SmsSpliter implements Spliter {
 	public static final String ID = AlertChannel.SMS.getName();
 
 	@Override
-	public String process(String content) {
-		String smsContent = content.replaceAll("<br/>", " ");
-		return Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(smsContent).replaceAll("");
+	public String getID() {
+		return ID;
 	}
 
 	@Override
-	public String getID() {
-		return ID;
+	public String process(String content) {
+		String smsContent = content.replaceAll("<br/>", " ");
+		return Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(smsContent).replaceAll("");
 	}
 
 }

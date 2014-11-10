@@ -114,22 +114,6 @@ public class AlertSummaryGenerator {
 		return alertSummary;
 	}
 
-	private Category generateCategoryByTimeCategory(Date date, String cate) {
-		Category category = new Category(cate);
-		String dbCategoryName = cate;
-		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
-
-		try {
-			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
-			      AlertEntity.READSET_FULL);
-			setDBAlertsToCategory(category, dbAlerts);
-		} catch (DalException e) {
-			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
-		}
-
-		return category;
-	}
-
 	private Category generateCategoryByTimeCateDomain(Date date, String cate, String domain) {
 		Category category = new Category(cate);
 		String dbCategoryName = cate;
@@ -141,6 +125,22 @@ public class AlertSummaryGenerator {
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
+		}
+
+		return category;
+	}
+
+	private Category generateCategoryByTimeCategory(Date date, String cate) {
+		Category category = new Category(cate);
+		String dbCategoryName = cate;
+		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
+
+		try {
+			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
+			      AlertEntity.READSET_FULL);
+			setDBAlertsToCategory(category, dbAlerts);
+		} catch (DalException e) {
+			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
 		}
 
 		return category;

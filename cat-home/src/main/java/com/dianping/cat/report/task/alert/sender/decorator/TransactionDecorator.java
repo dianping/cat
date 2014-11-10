@@ -25,31 +25,6 @@ public class TransactionDecorator extends Decorator implements Initializable {
 	public Configuration m_configuration;
 
 	@Override
-	public void initialize() throws InitializationException {
-		m_configuration = new Configuration();
-		m_configuration.setDefaultEncoding("UTF-8");
-		try {
-			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[CAT Transaction告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-		      .append("]");
-		return sb.toString();
-	}
-
-	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> datas = new HashMap<Object, Object>();
 		String[] fields = alert.getMetric().split("-");
@@ -71,5 +46,30 @@ public class TransactionDecorator extends Decorator implements Initializable {
 		}
 
 		return sw.toString();
+	}
+
+	@Override
+	public String generateTitle(AlertEntity alert) {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("[CAT Transaction告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		      .append("]");
+		return sb.toString();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 }

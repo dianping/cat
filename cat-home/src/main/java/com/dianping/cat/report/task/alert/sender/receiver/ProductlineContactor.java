@@ -35,6 +35,16 @@ public abstract class ProductlineContactor extends DefaultContactor implements C
 		}
 	}
 
+	private ProductLine queryProductline(String productlineName) {
+		try {
+			ProductLine productline = m_productLineConfigManager.queryProductLine(productlineName);
+			return productline;
+		} catch (Exception e) {
+			Cat.logError("query productline error:" + productlineName, e);
+			return new ProductLine();
+		}
+	}
+
 	@Override
 	public List<String> querySmsContactors(String id) {
 		ProductLine productline = queryProductline(id);
@@ -64,16 +74,6 @@ public abstract class ProductlineContactor extends DefaultContactor implements C
 			weixinReceivers.addAll(split(productline.getEmail()));
 
 			return weixinReceivers;
-		}
-	}
-
-	private ProductLine queryProductline(String productlineName) {
-		try {
-			ProductLine productline = m_productLineConfigManager.queryProductLine(productlineName);
-			return productline;
-		} catch (Exception e) {
-			Cat.logError("query productline error:" + productlineName, e);
-			return new ProductLine();
 		}
 	}
 }

@@ -51,7 +51,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
-import com.dianping.cat.report.task.highload.TransactionHighLoadReportBuilder;
+import com.dianping.cat.report.task.highload.HighLoadReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.metric.MetricPointParser;
@@ -187,7 +187,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
-		all.add(C(ReportTaskBuilder.class, TransactionHighLoadReportBuilder.ID, TransactionHighLoadReportBuilder.class)//
+		all.add(C(ReportTaskBuilder.class, HighLoadReportBuilder.ID, HighLoadReportBuilder.class)//
 		      .req(ReportServiceManager.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));

@@ -49,6 +49,7 @@ public class AppContactor extends ProjectContactor {
 	@Override
 	public List<String> querySmsContactors(String id) {
 		return super.querySmsContactors(queryDomainByCommand(id));
+
 	}
 
 }

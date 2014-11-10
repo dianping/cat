@@ -30,18 +30,6 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
-	public String getId() {
-		return ID;
-	}
-
-	@Override
-	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[CAT异常告警] [项目: ").append(alert.getGroup()).append("]");
-		return sb.toString();
-	}
-
-	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
 		StringWriter sw = new StringWriter(5000);
@@ -81,6 +69,18 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		map.put("contactInfo", contactInfo);
 
 		return map;
+	}
+
+	@Override
+	public String generateTitle(AlertEntity alert) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("[CAT异常告警] [项目: ").append(alert.getGroup()).append("]");
+		return sb.toString();
+	}
+
+	@Override
+	public String getId() {
+		return ID;
 	}
 
 	@Override

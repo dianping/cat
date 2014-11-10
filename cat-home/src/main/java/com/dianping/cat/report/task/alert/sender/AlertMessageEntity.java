@@ -21,20 +21,12 @@ public class AlertMessageEntity {
 		m_receivers = receivers;
 	}
 	
-	public void setContent(String content) {
-   	m_content = content;
-   }
-
 	public String getContent() {
 		return m_content;
 	}
 
 	public String getGroup() {
 		return m_group;
-	}
-
-	public String getType() {
-		return m_type;
 	}
 
 	public List<String> getReceivers() {
@@ -59,6 +51,14 @@ public class AlertMessageEntity {
 	public String getTitle() {
 		return m_title;
 	}
+
+	public String getType() {
+		return m_type;
+	}
+
+	public void setContent(String content) {
+   	m_content = content;
+   }
 
 	@Override
 	public String toString() {

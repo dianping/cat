@@ -2,15 +2,21 @@ package com.dianping.cat.report.task.highload;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.highload.entity.HighloadReport;
@@ -22,7 +28,7 @@ import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameMode
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 
-public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
+public class HighLoadReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	protected ReportServiceManager m_reportService;
@@ -92,6 +98,19 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 
 		report.setStartTime(startTime);
 		report.setEndTime(endTime);
+
+		Map<String, Heap> heaps = new HashMap<String, Heap>();
+		Set<String> types = new HashSet<String>();
+
+		types.add("SQL");
+		
+		TransactionReportVisitor visitor = new TransactionReportVisitor(types,heaps);
+		for (String domain : domains) {
+			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, startTime, endTime);
+		
+			visitor.visitTransactionReport(transactionReport);
+		}
+
 		report.addType(generateType(domains, "SQL", startTime, endTime));
 
 		return report;
@@ -114,6 +133,63 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 				Cat.logError(ex);
 			}
 		}
+	}
+
+	public class TransactionReportVisitor extends BaseVisitor {
+
+		private Set<String> m_types;
+
+		private String m_currentType;
+
+		private String m_domain;
+
+		private Map<String, Heap> m_heaps;
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_domain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
+		}
+
+		public TransactionReportVisitor(Set<String> types, Map<String, Heap> heaps) {
+			m_types = types;
+			m_heaps = heaps;
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			if (Constants.ALL.equals(machine.getIp())) {
+				super.visitMachine(machine);
+			}
+		}
+
+		@Override
+		public void visitType(TransactionType type) {
+			String typeId = type.getId();
+
+			if (m_types.contains(typeId)) {
+				m_currentType = typeId;
+				super.visitType(type);
+			}
+		}
+
+		@Override
+		public void visitName(TransactionName name) {
+			Name toName = convertToHighloadName(m_domain, name);
+
+			getHeap(m_currentType).add(toName);
+		}
+
+		private Heap getHeap(String type) {
+			Heap heap = m_heaps.get(type);
+
+			if (heap == null) {
+				heap = new Heap();
+				m_heaps.put(type, heap);
+			}
+			return heap;
+		}
+
 	}
 
 	private Type generateType(Set<String> domains, String typeId, Date startTime, Date endTime) {
@@ -230,7 +306,7 @@ public class TransactionHighLoadReportBuilder implements ReportTaskBuilder {
 		}
 
 		private boolean isBigger(Name name1, Name name2) {
-			return calWeight(name1) - calWeight(name2) > 0 ? true : false;
+			return calWeight(name1) - calWeight(name2) > 0 ;
 		}
 
 		private void sort() {

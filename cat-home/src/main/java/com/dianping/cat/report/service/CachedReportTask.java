@@ -73,6 +73,11 @@ public class CachedReportTask implements Task, LogEnabled {
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public String getName() {
 		return "Cached-Report-Task";
 	}
@@ -199,11 +204,6 @@ public class CachedReportTask implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

@@ -8,10 +8,6 @@ public class ThirdPartyAlertEntity {
 
 	private String m_details;
 
-	public String getType() {
-		return m_type;
-	}
-
 	public String getDetails() {
 		return m_details;
 	}
@@ -20,9 +16,8 @@ public class ThirdPartyAlertEntity {
 		return m_domain;
 	}
 
-	public ThirdPartyAlertEntity setType(String type) {
-		m_type = type;
-		return this;
+	public String getType() {
+		return m_type;
 	}
 
 	public ThirdPartyAlertEntity setDetails(String details) {
@@ -32,6 +27,11 @@ public class ThirdPartyAlertEntity {
 
 	public ThirdPartyAlertEntity setDomain(String domain) {
 		m_domain = domain;
+		return this;
+	}
+
+	public ThirdPartyAlertEntity setType(String type) {
+		m_type = type;
 		return this;
 	}
 

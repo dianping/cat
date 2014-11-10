@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -23,11 +26,12 @@ import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.transform.DefaultNativeBuilder;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
 import com.dianping.cat.system.config.RouterConfigManager;
 
-public class RouterConfigBuilder implements ReportTaskBuilder {
+public class RouterConfigBuilder implements ReportTaskBuilder, LogEnabled {
 
 	public static final String ID = Constants.REPORT_ROUTER;
 
@@ -36,6 +40,8 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private RouterConfigManager m_configManager;
+
+	private Logger m_logger;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -51,14 +57,29 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 
 			@Override
 			public int compare(Entry<String, Long> o1, Entry<String, Long> o2) {
-				return (int) (o2.getValue() - o1.getValue());
+				long value = o2.getValue() - o1.getValue();
+
+				if (value > 0) {
+					return 1;
+				} else if (value < 0) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 		};
 		numbers = SortHelper.sortMap(numbers, compator);
 		Map<Server, Long> servers = findAvaliableServers();
 
 		processMainServer(servers, routerConfig, numbers);
+
+		for (Entry<Server, Long> entry : servers.entrySet()) {
+			Cat.logEvent("RouterConfig", entry.getKey().getId() + ":" + entry.getValue(), Event.SUCCESS, null);
+		}
+
 		processBackServer(servers, routerConfig, numbers);
+
+		m_logger.info(servers.toString());
 
 		routerConfig.setStartTime(end);
 		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
@@ -187,6 +208,8 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 
 				if (oldValue != null) {
 					servers.put(server, oldValue + value);
+				} else {
+					servers.put(server, value);
 				}
 			}
 		}
@@ -212,6 +235,11 @@ public class RouterConfigBuilder implements ReportTaskBuilder {
 				m_numbers.put(domain, total + count);
 			}
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }

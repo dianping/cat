@@ -44,5 +44,4 @@ public class WebContactor extends ProjectContactor {
 	public List<String> querySmsContactors(String id) {
 		return super.querySmsContactors(queryDomainByUrl(id));
 	}
-
 }

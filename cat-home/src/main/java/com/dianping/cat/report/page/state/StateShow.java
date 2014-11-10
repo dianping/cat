@@ -261,6 +261,14 @@ public class StateShow extends BaseVisitor {
 		}
 	}
 
+	public static class MachineCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return (int) (o2.getIps().size() - o1.getIps().size());
+		}
+	}
+
 	public static class SizeCompartor implements Comparator<ProcessDomain> {
 
 		@Override
@@ -274,14 +282,6 @@ public class StateShow extends BaseVisitor {
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return (int) (o2.getTotal() - o1.getTotal());
-		}
-	}
-
-	public static class MachineCompartor implements Comparator<ProcessDomain> {
-
-		@Override
-		public int compare(ProcessDomain o1, ProcessDomain o2) {
-			return (int) (o2.getIps().size() - o1.getIps().size());
 		}
 	}
 }

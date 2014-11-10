@@ -66,6 +66,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public int getCodeId() {
+		return m_codeId;
+	}
+
 	public String getCommandId() {
 		return m_commandId;
 	}
@@ -88,22 +92,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getName() {
 		return m_name;
-	}
-
-	public int getCodeId() {
-		return m_codeId;
-	}
-
-	public void setCodeId(int codeId) {
-		m_codeId = codeId;
-	}
-
-	public String getStatus() {
-		return m_status;
-	}
-
-	public void setStatus(String status) {
-		m_status = status;
 	}
 
 	@Override
@@ -131,12 +119,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		if (m_query2 != null && m_query2.length() > 0) {
 			return new QueryEntity(m_query2);
 		} else {
-			return null;
+			return new QueryEntity(m_showActivity);
 		}
 	}
 
 	public String getSort() {
 		return m_sort;
+	}
+
+	public String getStatus() {
+		return m_status;
 	}
 
 	public String getTitle() {
@@ -153,6 +145,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setCodeId(int codeId) {
+		m_codeId = codeId;
 	}
 
 	public void setCommandId(String commandId) {
@@ -198,6 +194,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setSort(String sort) {
 		m_sort = sort;
+	}
+
+	public void setStatus(String status) {
+		m_status = status;
 	}
 
 	public void setTitle(String title) {

@@ -46,20 +46,6 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 	}
 
 	@Override
-	public List<String> queryWeiXinContactors(String id) {
-		List<String> weixinReceivers = new ArrayList<String>();
-		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return weixinReceivers;
-		} else {
-			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
-
-			return weixinReceivers;
-		}
-	}
-
-	@Override
 	public List<String> querySmsContactors(String id) {
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
@@ -70,6 +56,20 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
 
 			return smsReceivers;
+		}
+	}
+
+	@Override
+	public List<String> queryWeiXinContactors(String id) {
+		List<String> weixinReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return weixinReceivers;
+		} else {
+			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			return weixinReceivers;
 		}
 	}
 }

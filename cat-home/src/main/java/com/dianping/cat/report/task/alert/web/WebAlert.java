@@ -41,155 +41,6 @@ public class WebAlert extends BaseAlert implements Task {
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
-	@Override
-	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
-		while (active) {
-			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
-			long current = System.currentTimeMillis();
-
-			try {
-				for (PatternItem item : m_urlPatternConfigManager.queryUrlPatternRules()) {
-					try {
-						processUrl(item);
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-				Cat.logError(e);
-			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
-	}
-
-	private void processUrl(PatternItem item) {
-		String url = item.getName();
-		String group = item.getGroup();
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-		List<Rule> rules = queryRuelsForUrl(url);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-
-		for (Rule rule : rules) {
-			String id = rule.getId();
-			int index1 = id.indexOf(":");
-			int index2 = id.indexOf(":", index1 + 1);
-			String idPrefix = id.substring(0, index1);
-			String type = id.substring(index1 + 1, index2);
-			String name = id.substring(index2 + 1);
-
-			alertResults = computeAlertForRule(idPrefix, type, rule.getConfigs(), url, minute);
-
-			for (AlertResultEntity alertResult : alertResults) {
-				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("type", queryType(type));
-				par.put("name", name);
-				AlertEntity entity = new AlertEntity();
-
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(group).setType(getName()).setGroup(url).setParas(par);
-				m_sendManager.addAlert(entity);
-			}
-		}
-	}
-
-	private String queryType(String type) {
-		String title = "";
-
-		if (AppDataService.SUCCESS.equals(type)) {
-			title = "成功率（%/分钟）";
-		} else if (AppDataService.REQUEST.equals(type)) {
-			title = "请求数（个/分钟）";
-		} else if (AppDataService.DELAY.equals(type)) {
-			title = "延时平均值（毫秒/分钟）";
-		}
-		return title;
-	}
-
-	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
-		MetricReport report = null;
-
-		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(idPrefix);
-		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(idPrefix);
-		} else {
-			throw new RuntimeException("Unknown ModelPeriod: " + period);
-		}
-
-		if (report == null) {
-			List<String> fields = Splitters.by(";").split(idPrefix);
-			String url = fields.get(0);
-			String city = fields.get(1);
-			String channel = fields.get(2);
-
-			ModelRequest request = new ModelRequest(url, period.getStartTime());
-			Map<String, String> pars = new HashMap<String, String>();
-
-			pars.put("metricType", Constants.METRIC_USER_MONITOR);
-			pars.put("type", Monitor.TYPE_INFO);
-			pars.put("city", city);
-			pars.put("channel", channel);
-			request.getProperties().putAll(pars);
-
-			report = m_service.invoke(request);
-
-			if (period == ModelPeriod.CURRENT) {
-				m_currentReports.put(idPrefix, report);
-			} else if (period == ModelPeriod.LAST) {
-				m_lastReports.put(idPrefix, report);
-			}
-		}
-
-		return report;
-	}
-
-	private List<Rule> queryRuelsForUrl(String url) {
-		List<Rule> rules = new ArrayList<Rule>();
-
-		for (Entry<String, Rule> rule : m_ruleConfigManager.getMonitorRules().getRules().entrySet()) {
-			String id = rule.getKey();
-			String regexText = id.split(";")[0];
-
-			if (validateRegex(url, regexText)) {
-				rules.add(rule.getValue());
-			}
-		}
-		return rules;
-	}
-
-	public boolean validateRegex(String regexText, String text) {
-		Pattern p = Pattern.compile(regexText);
-		Matcher m = p.matcher(text);
-
-		if (m.find()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {
 		List<AlertResultEntity> results = new LinkedList<AlertResultEntity>();
@@ -309,13 +160,162 @@ public class WebAlert extends BaseAlert implements Task {
 		return results;
 	}
 
+	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
+		MetricReport report = null;
+
+		if (period == ModelPeriod.CURRENT) {
+			report = m_currentReports.get(idPrefix);
+		} else if (period == ModelPeriod.LAST) {
+			report = m_lastReports.get(idPrefix);
+		} else {
+			throw new RuntimeException("Unknown ModelPeriod: " + period);
+		}
+
+		if (report == null) {
+			List<String> fields = Splitters.by(";").split(idPrefix);
+			String url = fields.get(0);
+			String city = fields.get(1);
+			String channel = fields.get(2);
+
+			ModelRequest request = new ModelRequest(url, period.getStartTime());
+			Map<String, String> pars = new HashMap<String, String>();
+
+			pars.put("metricType", Constants.METRIC_USER_MONITOR);
+			pars.put("type", Monitor.TYPE_INFO);
+			pars.put("city", city);
+			pars.put("channel", channel);
+			request.getProperties().putAll(pars);
+
+			report = m_service.invoke(request);
+
+			if (period == ModelPeriod.CURRENT) {
+				m_currentReports.put(idPrefix, report);
+			} else if (period == ModelPeriod.LAST) {
+				m_lastReports.put(idPrefix, report);
+			}
+		}
+
+		return report;
+	}
+
 	@Override
 	public String getName() {
 		return AlertType.Web.getName();
 	}
 
+	private void processUrl(PatternItem item) {
+		String url = item.getName();
+		String group = item.getGroup();
+		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+		List<Rule> rules = queryRuelsForUrl(url);
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		for (Rule rule : rules) {
+			String id = rule.getId();
+			int index1 = id.indexOf(":");
+			int index2 = id.indexOf(":", index1 + 1);
+			String idPrefix = id.substring(0, index1);
+			String type = id.substring(index1 + 1, index2);
+			String name = id.substring(index2 + 1);
+
+			alertResults = computeAlertForRule(idPrefix, type, rule.getConfigs(), url, minute);
+
+			for (AlertResultEntity alertResult : alertResults) {
+				Map<String, Object> par = new HashMap<String, Object>();
+				par.put("type", queryType(type));
+				par.put("name", name);
+				AlertEntity entity = new AlertEntity();
+
+				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+				      .setLevel(alertResult.getAlertLevel());
+				entity.setMetric(group).setType(getName()).setGroup(url).setParas(par);
+				m_sendManager.addAlert(entity);
+			}
+		}
+	}
+
+	private List<Rule> queryRuelsForUrl(String url) {
+		List<Rule> rules = new ArrayList<Rule>();
+
+		for (Entry<String, Rule> rule : m_ruleConfigManager.getMonitorRules().getRules().entrySet()) {
+			String id = rule.getKey();
+			String regexText = id.split(";")[0];
+
+			if (validateRegex(url, regexText)) {
+				rules.add(rule.getValue());
+			}
+		}
+		return rules;
+	}
+
+	private String queryType(String type) {
+		String title = "";
+
+		if (AppDataService.SUCCESS.equals(type)) {
+			title = "成功率（%/分钟）";
+		} else if (AppDataService.REQUEST.equals(type)) {
+			title = "请求数（个/分钟）";
+		} else if (AppDataService.DELAY.equals(type)) {
+			title = "延时平均值（毫秒/分钟）";
+		}
+		return title;
+	}
+
+	@Override
+	public void run() {
+		boolean active = true;
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			active = false;
+		}
+		while (active) {
+			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
+			long current = System.currentTimeMillis();
+
+			try {
+				for (PatternItem item : m_urlPatternConfigManager.queryUrlPatternRules()) {
+					try {
+						processUrl(item);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				m_currentReports.clear();
+				m_lastReports.clear();
+				t.complete();
+			}
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(DURATION - duration);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
+	}
+
 	@Override
 	public void shutdown() {
+	}
+
+	public boolean validateRegex(String regexText, String text) {
+		Pattern p = Pattern.compile(regexText);
+		Matcher m = p.matcher(text);
+
+		if (m.find()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }

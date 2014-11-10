@@ -16,13 +16,13 @@ import com.dianping.cat.report.task.spi.ReportFacade;
 
 public class RouterBuilderTest extends ComponentTestCase {
 
-	public String day1 = "2014-07-25";
+	public String day1 = "2014-11-10";
 
-	public String day2 = "2014-07-26";
+	public String day2 = "2014-11-09";
 
-	public String day3 = "2014-07-27";
+	public String day3 = "2014-11-08";
 
-	public String day4 = "2014-07-28";
+	public String day4 = "2014-11-07";
 
 	@Test
 	public void test() throws Exception {

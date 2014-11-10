@@ -33,38 +33,25 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	@Override
-	public void run() {
-		boolean active = true;
+	private void buildAlertEntities(long current) {
+		List<Http> https = m_configManager.queryHttps();
 
-		while (active) {
-			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("AlertThirdPartyBuilder", TimeHelper.getMinuteStr());
-
-			try {
-				buildAlertEntities(current);
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-				m_logger.error(e.getMessage(), e);
-			} finally {
-				t.complete();
-			}
-
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
+		for (Http http : https) {
+			if (!connectHttpUrl(http)) {
+				Threads.forGroup("cat").start(new HttpReconnector(this, http, current + DURATION));
 			}
 		}
 	}
 
-	public void putAlertEnity(ThirdPartyAlertEntity entity) {
-		m_thirdPartyAlert.put(entity);
+	public ThirdPartyAlertEntity buildAlertEntity(Http http) {
+		ThirdPartyAlertEntity entity = new ThirdPartyAlertEntity();
+		String url = http.getUrl();
+		String type = http.getType();
+		Map<String, Par> pars = http.getPars();
+		String details = "HTTP URL[" + url + "?" + buildPars(pars) + "] " + type.toUpperCase() + "访问出现异常";
+
+		entity.setDomain(http.getDomain()).setType(type).setDetails(details);
+		return entity;
 	}
 
 	private String buildPars(Map<String, Par> paras) {
@@ -100,14 +87,9 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 		return result;
 	}
 
-	private void buildAlertEntities(long current) {
-		List<Http> https = m_configManager.queryHttps();
-
-		for (Http http : https) {
-			if (!connectHttpUrl(http)) {
-				Threads.forGroup("cat").start(new HttpReconnector(this, http, current + DURATION));
-			}
-		}
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
@@ -115,24 +97,42 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 		return "thirdParty-alert-task";
 	}
 
+	public void putAlertEnity(ThirdPartyAlertEntity entity) {
+		m_thirdPartyAlert.put(entity);
+	}
+
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+	public void run() {
+		boolean active = true;
+
+		while (active) {
+			long current = System.currentTimeMillis();
+			Transaction t = Cat.newTransaction("AlertThirdPartyBuilder", TimeHelper.getMinuteStr());
+
+			try {
+				buildAlertEntities(current);
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+				m_logger.error(e.getMessage(), e);
+			} finally {
+				t.complete();
+			}
+
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(DURATION - duration);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
 	}
 
 	@Override
 	public void shutdown() {
-	}
-
-	public ThirdPartyAlertEntity buildAlertEntity(Http http) {
-		ThirdPartyAlertEntity entity = new ThirdPartyAlertEntity();
-		String url = http.getUrl();
-		String type = http.getType();
-		Map<String, Par> pars = http.getPars();
-		String details = "HTTP URL[" + url + "?" + buildPars(pars) + "] " + type.toUpperCase() + "访问出现异常";
-
-		entity.setDomain(http.getDomain()).setType(type).setDetails(details);
-		return entity;
 	}
 
 	public class HttpReconnector implements Task {
@@ -149,6 +149,11 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 			m_http = http;
 			m_alertTask = alertTask;
 			m_deadLine = deadLine;
+		}
+
+		@Override
+		public String getName() {
+			return "http-reconnector";
 		}
 
 		@Override
@@ -169,11 +174,6 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 					break;
 				}
 			}
-		}
-
-		@Override
-		public String getName() {
-			return "http-reconnector";
 		}
 
 		@Override

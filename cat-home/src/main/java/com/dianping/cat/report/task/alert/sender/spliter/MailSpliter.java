@@ -7,13 +7,13 @@ public class MailSpliter implements Spliter {
 	public static final String ID = AlertChannel.MAIL.getName();
 
 	@Override
-	public String process(String content) {
-		return content;
+	public String getID() {
+		return ID;
 	}
 
 	@Override
-	public String getID() {
-		return ID;
+	public String process(String content) {
+		return content;
 	}
 
 }

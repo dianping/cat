@@ -1,7 +1,509 @@
+<?xml version="1.0" encoding="utf-8"?>
 <metric-config>
-	<metric-item-config id="TuanGouWeb:URL:/index" domain="TuanGouWeb" type="URL" view-order="1" metric-key="/index" title="团购首页"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
-	<metric-item-config id="TuanGouWeb:URL:/detail" domain="TuanGouWeb" type="URL" view-order="1" metric-key="/detail" title="团购详情"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
-	<metric-item-config id="PayOrder:URL:/order/submitOrder" domain="PayOrder" type="URL" view-order="1" metric-key="/order/submitOrder" title="团购支付"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
-	<metric-item-config id="Cat:URL:t" domain="Cat" type="URL" view-order="1" metric-key="t" title="transaction"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
-	<metric-item-config id="Cat:URL:home" domain="Cat" type="URL" view-order="1" metric-key="home" title="home"  show-count="true" show-avg="false" show-sum="false"></metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:arts-tuangourec-sc" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="arts-tuangourec-sc" title="团购搜索" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-搜索" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:arts-tuangourec-rt" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="arts-tuangourec-rt" title="arts-tuangourec-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-web:Metric:detail" domain="tuangou-web" type="Metric" view-order="0.0" metric-key="detail" title="详情页" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="tuangou-web:Metric:list" domain="tuangou-web" type="Metric" view-order="0.0" metric-key="list" title="列表页" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:StorageStored-storage-tuangou2010" domain="PumaServer" type="Metric" view-order="0.0" metric-key="StorageStored-storage-tuangou2010" title="StorageStored-storage-tuangou2010" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:EventParsed-dianping" domain="PumaServer" type="Metric" view-order="0.0" metric-key="EventParsed-dianping" title="EventParsed-dianping" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-web:Metric:search" domain="tuangou-web" type="Metric" view-order="0.0" metric-key="search" title="搜索页" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="hotel-search-web:Metric:trip_hotel_search_pv" domain="hotel-search-web" type="Metric" view-order="0.0" metric-key="trip_hotel_search_pv" title="酒店搜索" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-酒店" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-SyncTask-da3ab3f9-198a-45d9-80dc-a1afac114a70" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-SyncTask-da3ab3f9-198a-45d9-80dc-a1afac114a70" title="ClientConsumed-SyncTask-da3ab3f9-198a-45d9-80dc-a1afac114a70" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:StorageStored-storage-dianping" domain="PumaServer" type="Metric" view-order="0.0" metric-key="StorageStored-storage-dianping" title="StorageStored-storage-dianping" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-SyncTask-b3136926-8b2d-4f3d-a2fd-1ce7af7ee7c1" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-SyncTask-b3136926-8b2d-4f3d-a2fd-1ce7af7ee7c1" title="ClientConsumed-SyncTask-b3136926-8b2d-4f3d-a2fd-1ce7af7ee7c1" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-SyncTask-c33938b4-c6a9-47f5-a2ef-3281e65597e2" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-SyncTask-c33938b4-c6a9-47f5-a2ef-3281e65597e2" title="ClientConsumed-SyncTask-c33938b4-c6a9-47f5-a2ef-3281e65597e2" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:StorageStored-storage-tuangou2010-new" domain="PumaServer" type="Metric" view-order="0.0" metric-key="StorageStored-storage-tuangou2010-new" title="StorageStored-storage-tuangou2010-new" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:EventParsed-tuangou2010" domain="PumaServer" type="Metric" view-order="0.0" metric-key="EventParsed-tuangou2010" title="EventParsed-tuangou2010" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:EventParsed-pctorder" domain="PumaServer" type="Metric" view-order="0.0" metric-key="EventParsed-pctorder" title="EventParsed-pctorder" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-web:Metric:cityHome" domain="tuangou-web" type="Metric" view-order="0.0" metric-key="cityHome" title="城市首页" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:EventParsed-biz" domain="PumaServer" type="Metric" view-order="0.0" metric-key="EventParsed-biz" title="EventParsed-biz" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:StorageStored-storage-pctorder" domain="PumaServer" type="Metric" view-order="0.0" metric-key="StorageStored-storage-pctorder" title="StorageStored-storage-pctorder" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:StorageStored-storage-biz" domain="PumaServer" type="Metric" view-order="0.0" metric-key="StorageStored-storage-biz" title="StorageStored-storage-biz" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="DPQzoneFeedCount:Metric:RedDotShowCount" domain="DPQzoneFeedCount" type="Metric" view-order="0.0" metric-key="RedDotShowCount" title="RedDotShowCount" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-recsysorder" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-recsysorder" title="ClientConsumed-recsysorder" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:IncIndex.CsvDocCount" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:arts-shop-sc" domain="SearchShop" type="Metric" view-order="0.0" metric-key="arts-shop-sc" title="商户搜索" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:arts-shop-rt" domain="SearchShop" type="Metric" view-order="0.0" metric-key="arts-shop-rt" title="arts-shop-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="open-premium-api:Metric:/premium/wechat/find_businesses_nearby_for_checkin" domain="open-premium-api" type="Metric" view-order="0.0" metric-key="/premium/wechat/find_businesses_nearby_for_checkin" title="微信附近签到" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-微信" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:arts-shop-noresult" domain="SearchShop" type="Metric" view-order="0.0" metric-key="arts-shop-noresult" title="arts-shop-noresult" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="open-premium-api:Metric:/premium/wechat/notify_checkin" domain="open-premium-api" type="Metric" view-order="0.0" metric-key="/premium/wechat/notify_checkin" title="微信签到" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-微信" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="open-premium-api:Metric:/premium/wechat/get_single_business_for_nearby" domain="open-premium-api" type="Metric" view-order="0.0" metric-key="/premium/wechat/get_single_business_for_nearby" title="单个签到" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-微信" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="payment.success" title="支付成功" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-支付" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY_APP.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY_APP.payment.success" title="ALIPAY_APP.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="payment.pedding" title="payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:CCB.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="CCB.payment.pedding" title="CCB.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:TENPAY_MOBILEQQ.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="TENPAY_MOBILEQQ.payment.pedding" title="TENPAY_MOBILEQQ.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY.payment.success" title="ALIPAY.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY_APP.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY_APP.payment.pedding" title="ALIPAY_APP.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:WEIXIN_PUB.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="WEIXIN_PUB.payment.pedding" title="WEIXIN_PUB.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY_WAP.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY_WAP.payment.success" title="ALIPAY_WAP.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY.payment.pedding" title="ALIPAY.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:ALIPAY_WAP.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="ALIPAY_WAP.payment.pedding" title="ALIPAY_WAP.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mpos-web:Metric:MenuService.getDishCountOfMenu" domain="mpos-web" type="Metric" view-order="0.0" metric-key="MenuService.getDishCountOfMenu" title="MenuService.getDishCountOfMenu" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:arts-takeaway-sc" domain="SearchVango" type="Metric" view-order="0.0" metric-key="arts-takeaway-sc" title="arts-takeaway-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:arts-takeaway-rt" domain="SearchVango" type="Metric" view-order="0.0" metric-key="arts-takeaway-rt" title="arts-takeaway-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-web:Metric:applySuccessMobile" domain="activity-web" type="Metric" view-order="0.0" metric-key="applySuccessMobile" title="applySuccessMobile" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:arts-takeaway-noresult" domain="SearchVango" type="Metric" view-order="0.0" metric-key="arts-takeaway-noresult" title="arts-takeaway-noresult" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-tracking-web:Metric:对外合作成功引流" domain="tuangou-tracking-web" type="Metric" view-order="0.0" metric-key="对外合作成功引流" title="对外合作成功引流" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="tuangou-tracking-web:Metric:Open对外合作成功引流" domain="tuangou-tracking-web" type="Metric" view-order="0.0" metric-key="Open对外合作成功引流" title="Open对外合作成功引流" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopwx:Metric:arts-shopwx-rt" domain="SearchShopwx" type="Metric" view-order="0.0" metric-key="arts-shopwx-rt" title="arts-shopwx-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopwx:Metric:arts-shopwx-sc" domain="SearchShopwx" type="Metric" view-order="0.0" metric-key="arts-shopwx-sc" title="商户搜索" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-搜索" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="GeoInfo:Metric:GetCity" domain="GeoInfo" type="Metric" view-order="0.0" metric-key="GetCity" title="GetCity" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-mm-web:Metric:weixin_index" domain="tuangou-mm-web" type="Metric" view-order="0.0" metric-key="weixin_index" title="weixin_index" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPromo:Metric:arts-promo-sc" domain="SearchPromo" type="Metric" view-order="0.0" metric-key="arts-promo-sc" title="arts-promo-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPromo:Metric:arts-promo-rt" domain="SearchPromo" type="Metric" view-order="0.0" metric-key="arts-promo-rt" title="arts-promo-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-membercard-main-server:Metric:MainServerJoinedCardSuccess" domain="mobile-membercard-main-server" type="Metric" view-order="0.0" metric-key="MainServerJoinedCardSuccess" title="MainServerJoinedCardSuccess" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-service:Metric:loadServiceCount" domain="activity-service" type="Metric" view-order="0.0" metric-key="loadServiceCount" title="loadServiceCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-service:Metric:applySuccess" domain="activity-service" type="Metric" view-order="0.0" metric-key="applySuccess" title="applySuccess" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="tuangou-mm-web:Metric:weixin_detail" domain="tuangou-mm-web" type="Metric" view-order="0.0" metric-key="weixin_detail" title="weixin_detail" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchWedding:Metric:arts-wedding-sc" domain="SearchWedding" type="Metric" view-order="0.0" metric-key="arts-wedding-sc" title="arts-wedding-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchWedding:Metric:arts-wedding-rt" domain="SearchWedding" type="Metric" view-order="0.0" metric-key="arts-wedding-rt" title="arts-wedding-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopRec:Metric:arts-shoprec-rt" domain="SearchShopRec" type="Metric" view-order="0.0" metric-key="arts-shoprec-rt" title="arts-shoprec-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopRec:Metric:arts-shoprec-sc" domain="SearchShopRec" type="Metric" view-order="0.0" metric-key="arts-shoprec-sc" title="arts-shoprec-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGou:Metric:arts-tuangou-sc" domain="SearchTuanGou" type="Metric" view-order="0.0" metric-key="arts-tuangou-sc" title="arts-tuangou-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGou:Metric:arts-tuangou-rt" domain="SearchTuanGou" type="Metric" view-order="0.0" metric-key="arts-tuangou-rt" title="arts-tuangou-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchAd:Metric:arts-ad-sc" domain="SearchAd" type="Metric" view-order="0.0" metric-key="arts-ad-sc" title="arts-ad-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchAd:Metric:arts-ad-rt" domain="SearchAd" type="Metric" view-order="0.0" metric-key="arts-ad-rt" title="arts-ad-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGou:Metric:arts-tuangou-noresult" domain="SearchTuanGou" type="Metric" view-order="0.0" metric-key="arts-tuangou-noresult" title="arts-tuangou-noresult" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SessionService:Metric:RequestId" domain="SessionService" type="Metric" view-order="0.0" metric-key="RequestId" title="RequestId" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-mylist-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-mylist-sc" title="arts-mylist-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-mylist-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-mylist-rt" title="arts-mylist-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-shoppic-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-shoppic-rt" title="arts-shoppic-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-shoppic-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-shoppic-sc" title="arts-shoppic-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.120.156" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.120.156" title="[qps]10.1.120.156" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.120.111" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.120.111" title="[qps]10.1.120.111" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.120.138" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.120.138" title="[qps]10.1.120.138" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.120.33" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.120.33" title="[qps]10.1.120.33" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.130.112" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.130.112" title="[qps]10.1.130.112" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.8.131" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.8.131" title="[qps]10.1.8.131" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.117.137" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.117.137" title="[qps]10.1.117.137" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.131" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.131" title="[qps]10.1.7.131" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.113" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.113" title="[qps]10.1.7.113" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.38" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.38" title="[qps]10.1.7.38" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.54" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.54" title="[qps]10.1.7.54" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.4.176" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.4.176" title="[qps]10.1.4.176" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.14.165" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.14.165" title="[qps]10.1.14.165" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.117.26" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.117.26" title="[qps]10.1.117.26" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.117.101" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.117.101" title="[qps]10.1.117.101" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.103.46" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.103.46" title="[qps]10.1.103.46" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.23" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.23" title="[qps]10.1.7.23" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.128.19.161" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.128.19.161" title="[qps]10.128.19.161" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.4.177" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.4.177" title="[qps]10.1.4.177" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.128.19.153" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.128.19.153" title="[qps]10.128.19.153" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.116.157" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.116.157" title="[qps]10.1.116.157" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.14.192" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.14.192" title="[qps]10.1.14.192" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.2.84" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.2.84" title="[qps]10.1.2.84" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.4.17" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.4.17" title="[qps]10.1.4.17" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.2.44" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.2.44" title="[qps]10.1.2.44" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchNewGroup:Metric:arts-newgroup-sc" domain="SearchNewGroup" type="Metric" view-order="0.0" metric-key="arts-newgroup-sc" title="arts-newgroup-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchNewGroup:Metric:arts-newgroup-rt" domain="SearchNewGroup" type="Metric" view-order="0.0" metric-key="arts-newgroup-rt" title="arts-newgroup-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.8.147" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.8.147" title="[qps]10.1.8.147" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.114.146" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.114.146" title="[qps]10.1.114.146" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.114.206" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.114.206" title="[qps]10.1.114.206" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.4.83" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.4.83" title="[qps]10.1.4.83" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.103.121" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.103.121" title="[qps]10.1.103.121" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.116.177" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.116.177" title="[qps]10.1.116.177" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.102" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.102" title="[qps]10.1.7.102" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.4.126" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.4.126" title="[qps]10.1.4.126" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.7.43" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.7.43" title="[qps]10.1.7.43" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.8.14" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.8.14" title="[qps]10.1.8.14" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="phoenix-slb-admin:Metric:[qps]10.1.8.71" domain="phoenix-slb-admin" type="Metric" view-order="0.0" metric-key="[qps]10.1.8.71" title="[qps]10.1.8.71" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-order-process-service:Metric:order" domain="pay-order-process-service" type="Metric" view-order="0.0" metric-key="order" title="创建订单" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-支付" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="account-server:Metric:AcquireQzoneLock" domain="account-server" type="Metric" view-order="0.0" metric-key="AcquireQzoneLock" title="AcquireQzoneLock" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="account-server:Metric:ReleaseQzoneLock" domain="account-server" type="Metric" view-order="0.0" metric-key="ReleaseQzoneLock" title="ReleaseQzoneLock" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-shopalbum-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-shopalbum-sc" title="arts-shopalbum-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-shopalbum-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-shopalbum-rt" title="arts-shopalbum-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="shop-hotel-server:Metric:booking_api_call_frequency" domain="shop-hotel-server" type="Metric" view-order="0.0" metric-key="booking_api_call_frequency" title="booking_api_call_frequency" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="receipt-verify-service:Metric:Receipt Verify Success" domain="receipt-verify-service" type="Metric" view-order="1.0" metric-key="Receipt Verify Success" title="团购验券" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-团购" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:WEIXIN.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="WEIXIN.payment.pedding" title="WEIXIN.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:WEIXIN.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="WEIXIN.payment.success" title="WEIXIN.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:KUAIQIAN.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="KUAIQIAN.payment.pedding" title="KUAIQIAN.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:KUAIQIAN.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="KUAIQIAN.payment.success" title="KUAIQIAN.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:DIANPING.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="DIANPING.payment.pedding" title="DIANPING.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:DIANPING.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="DIANPING.payment.success" title="DIANPING.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:WEIXIN_PUB.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="WEIXIN_PUB.payment.success" title="WEIXIN_PUB.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-dppush-service:Metric:dpPushCount" domain="mobile-oss-dppush-service" type="Metric" view-order="0.0" metric-key="dpPushCount" title="dpPushCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-dppush-service:Metric:dpPushReceivedCount" domain="mobile-oss-dppush-service" type="Metric" view-order="0.0" metric-key="dpPushReceivedCount" title="dpPushReceivedCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="account-mq:Metric:QQLogin" domain="account-mq" type="Metric" view-order="0.0" metric-key="QQLogin" title="QQ登陆" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-账号" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="account-mq:Metric:WeiXinLogin" domain="account-mq" type="Metric" view-order="0.0" metric-key="WeiXinLogin" title="微信登陆" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+      <tag name="业务大盘" type="COUNT"/>
+      <tag name="监控大盘-账号" type="COUNT"/>
+   </metric-item-config>
+   <metric-item-config id="shoppic-service:Metric:MobileUploadPicCount" domain="shoppic-service" type="Metric" view-order="0.0" metric-key="MobileUploadPicCount" title="MobileUploadPicCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="shoppic-service:Metric:PCUploadPicCount" domain="shoppic-service" type="Metric" view-order="0.0" metric-key="PCUploadPicCount" title="PCUploadPicCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="shop-otahotel-web:Metric:trip_common_order_call" domain="shop-otahotel-web" type="Metric" view-order="0.0" metric-key="trip_common_order_call" title="trip_common_order_call" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-dppush-service:Metric:dpPushOnlineCount" domain="mobile-oss-dppush-service" type="Metric" view-order="0.0" metric-key="dpPushOnlineCount" title="dpPushOnlineCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="GeoInfo:Metric:GetBaiduGeocoding" domain="GeoInfo" type="Metric" view-order="0.0" metric-key="GetBaiduGeocoding" title="GetBaiduGeocoding" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TuanUV:Metric:dpods_log_tuangou-mlogserver[TuanUV]" domain="TuanUV" type="Metric" view-order="0.0" metric-key="dpods_log_tuangou-mlogserver[TuanUV]" title="dpods_log_tuangou-mlogserver[TuanUV]" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="MobileUV_50:Metric:dpods_log_mobile-log-web_MAIN[MobileUV_50]" domain="MobileUV_50" type="Metric" view-order="0.0" metric-key="dpods_log_mobile-log-web_MAIN[MobileUV_50]" title="dpods_log_mobile-log-web_MAIN[MobileUV_50]" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TuanUV:Metric:Tuan" domain="TuanUV" type="Metric" view-order="0.0" metric-key="Tuan" title="Tuan" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="HippoUV_25:Metric:WAP" domain="HippoUV_25" type="Metric" view-order="0.0" metric-key="WAP" title="WAP" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="HippoUV_25:Metric:Other" domain="HippoUV_25" type="Metric" view-order="0.0" metric-key="Other" title="Other" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="HippoUV_25:Metric:M-Site" domain="HippoUV_25" type="Metric" view-order="0.0" metric-key="M-Site" title="M-Site" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="HippoUV_25:Metric:PC" domain="HippoUV_25" type="Metric" view-order="0.0" metric-key="PC" title="PC" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:arts-tuangourec-noresult" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="arts-tuangourec-noresult" title="arts-tuangourec-noresult" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:CCB.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="CCB.payment.success" title="CCB.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:UMPAY_PC.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="UMPAY_PC.payment.pedding" title="UMPAY_PC.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-com.dianping.columbus.booking.bookingconfig.dao.ShopServiceModificationListener" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-com.dianping.columbus.booking.bookingconfig.dao.ShopServiceModificationListener" title="ClientConsumed-com.dianping.columbus.booking.bookingconfig.dao.ShopServiceModificationListener" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-UserBuyDataSpout" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-UserBuyDataSpout" title="ClientConsumed-UserBuyDataSpout" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:EventParsed-tuangou2010-new" domain="PumaServer" type="Metric" view-order="0.0" metric-key="EventParsed-tuangou2010-new" title="EventParsed-tuangou2010-new" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="geoinfo-server:Metric:GetCity" domain="geoinfo-server" type="Metric" view-order="0.0" metric-key="GetCity" title="GetCity" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-iospush-service:Metric:iosPushRequestCount" domain="mobile-oss-iospush-service" type="Metric" view-order="0.0" metric-key="iosPushRequestCount" title="iosPushRequestCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-iospush-service:Metric:iosPushInvalidCount" domain="mobile-oss-iospush-service" type="Metric" view-order="0.0" metric-key="iosPushInvalidCount" title="iosPushInvalidCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-iospush-service:Metric:iosPushSendCount" domain="mobile-oss-iospush-service" type="Metric" view-order="0.0" metric-key="iosPushSendCount" title="iosPushSendCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-oss-iospush-service:Metric:iosPushInQueueCount" domain="mobile-oss-iospush-service" type="Metric" view-order="0.0" metric-key="iosPushInQueueCount" title="iosPushInQueueCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-web:Metric:VisitMobile" domain="activity-web" type="Metric" view-order="0.0" metric-key="VisitMobile" title="VisitMobile" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="review-server:Metric:Mobile-AddReview" domain="review-server" type="Metric" view-order="0.0" metric-key="Mobile-AddReview" title="Mobile-AddReview" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-web:Metric:VisitPc" domain="activity-web" type="Metric" view-order="0.0" metric-key="VisitPc" title="VisitPc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPicasso:Metric:IncIndex.CsvDocCount" domain="SearchPicasso" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="review-server:Metric:MWap-AddReview" domain="review-server" type="Metric" view-order="0.0" metric-key="MWap-AddReview" title="MWap-AddReview" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mpos-web:Metric:MenuService.getMenu" domain="mpos-web" type="Metric" view-order="0.0" metric-key="MenuService.getMenu" title="MenuService.getMenu" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mpos-web:Metric:MenuService.getMenuNoCache" domain="mpos-web" type="Metric" view-order="0.0" metric-key="MenuService.getMenuNoCache" title="MenuService.getMenuNoCache" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="MobileUV_50:Metric:APP" domain="MobileUV_50" type="Metric" view-order="0.0" metric-key="APP" title="APP" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="AroundUV:Metric:dpods_log_mobile-log-web_YP[AroundUV]" domain="AroundUV" type="Metric" view-order="0.0" metric-key="dpods_log_mobile-log-web_YP[AroundUV]" title="dpods_log_mobile-log-web_YP[AroundUV]" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:PINGAN.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="PINGAN.payment.success" title="PINGAN.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:UMPAY.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="UMPAY.payment.pedding" title="UMPAY.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="hotel-search-web:Metric:hotel_old_search_url_call" domain="hotel-search-web" type="Metric" view-order="0.0" metric-key="hotel_old_search_url_call" title="hotel_old_search_url_call" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-UserTGWishDataSpout" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-UserTGWishDataSpout" title="ClientConsumed-UserTGWishDataSpout" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:IncIndex.CsvDocCount" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="activity-web:Metric:applySuccessPc" domain="activity-web" type="Metric" view-order="0.0" metric-key="applySuccessPc" title="applySuccessPc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:IncIndex.CsvDocCount" domain="SearchVango" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-cc-web:Metric:combine_correct_count" domain="rs-cc-web" type="Metric" view-order="0.0" metric-key="combine_correct_count" title="combine_correct_count" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-checkin-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-checkin-sc" title="arts-checkin-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-checkin-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-checkin-rt" title="arts-checkin-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="shop-hotel-server:Metric:booking_api_call_fail_frequency" domain="shop-hotel-server" type="Metric" view-order="0.0" metric-key="booking_api_call_fail_frequency" title="booking_api_call_fail_frequency" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-m-web:Metric:M from wechat:RecordList" domain="rs-m-web" type="Metric" view-order="0.0" metric-key="M from wechat:RecordList" title="M from wechat:RecordList" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TakeawayShopWeb:Metric:AcceptOrderCount" domain="TakeawayShopWeb" type="Metric" view-order="0.0" metric-key="AcceptOrderCount" title="AcceptOrderCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="ClusterMonitor:Metric:freeSlots" domain="ClusterMonitor" type="Metric" view-order="0.0" metric-key="freeSlots" title="freeSlots" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="ClusterMonitor:Metric:totalSlots" domain="ClusterMonitor" type="Metric" view-order="0.0" metric-key="totalSlots" title="totalSlots" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="credit-collectdata:Metric:credit-collectdata-TPS" domain="credit-collectdata" type="Metric" view-order="0.0" metric-key="credit-collectdata-TPS" title="credit-collectdata-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="UserWishShopData:Metric:UserWishShopData-TPS" domain="UserWishShopData" type="Metric" view-order="0.0" metric-key="UserWishShopData-TPS" title="UserWishShopData-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="HippoUV_25:Metric:HippoUV_25-TPS" domain="HippoUV_25" type="Metric" view-order="0.0" metric-key="HippoUV_25-TPS" title="HippoUV_25-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="recsys_tgorder_c:Metric:recsys_tgorder_c-TPS" domain="recsys_tgorder_c" type="Metric" view-order="0.0" metric-key="recsys_tgorder_c-TPS" title="recsys_tgorder_c-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="UserTGWishData:Metric:UserTGWishData-TPS" domain="UserTGWishData" type="Metric" view-order="0.0" metric-key="UserTGWishData-TPS" title="UserTGWishData-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TuanUV:Metric:TuanUV-TPS" domain="TuanUV" type="Metric" view-order="0.0" metric-key="TuanUV-TPS" title="TuanUV-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="recsys_shopapi_c:Metric:recsys_shopapi_c-TPS" domain="recsys_shopapi_c" type="Metric" view-order="0.0" metric-key="recsys_shopapi_c-TPS" title="recsys_shopapi_c-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="UserTGOrderData:Metric:UserTGOrderData-TPS" domain="UserTGOrderData" type="Metric" view-order="0.0" metric-key="UserTGOrderData-TPS" title="UserTGOrderData-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="recsys_hippo_c:Metric:recsys_hippo_c-TPS" domain="recsys_hippo_c" type="Metric" view-order="0.0" metric-key="recsys_hippo_c-TPS" title="recsys_hippo_c-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="MobileUV_50:Metric:MobileUV_50-TPS" domain="MobileUV_50" type="Metric" view-order="0.0" metric-key="MobileUV_50-TPS" title="MobileUV_50-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="recsys_mapi_c:Metric:recsys_mapi_c-TPS" domain="recsys_mapi_c" type="Metric" view-order="0.0" metric-key="recsys_mapi_c-TPS" title="recsys_mapi_c-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="recsys_searchapi_c:Metric:recsys_searchapi_c-TPS" domain="recsys_searchapi_c" type="Metric" view-order="0.0" metric-key="recsys_searchapi_c-TPS" title="recsys_searchapi_c-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="AroundUV:Metric:AroundUV-TPS" domain="AroundUV" type="Metric" view-order="0.0" metric-key="AroundUV-TPS" title="AroundUV-TPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="ClusterMonitor:Metric:ClusterEmitTPS" domain="ClusterMonitor" type="Metric" view-order="0.0" metric-key="ClusterEmitTPS" title="ClusterEmitTPS" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPromo:Metric:arts-promo-noresult" domain="SearchPromo" type="Metric" view-order="0.0" metric-key="arts-promo-noresult" title="arts-promo-noresult" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:IncIndex.CsvDocCount" domain="SearchShop" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="GeoInfo:Metric:GetTencentGeocoding" domain="GeoInfo" type="Metric" view-order="0.0" metric-key="GetTencentGeocoding" title="GetTencentGeocoding" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-membercard-main-api-web:Metric:MainWebJoinedCardSuccess" domain="mobile-membercard-main-api-web" type="Metric" view-order="0.0" metric-key="MainWebJoinedCardSuccess" title="MainWebJoinedCardSuccess" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="shop-otahotel-web:Metric:trip_ctrip_order_call" domain="shop-otahotel-web" type="Metric" view-order="0.0" metric-key="trip_ctrip_order_call" title="trip_ctrip_order_call" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:UMPAY_PC.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="UMPAY_PC.payment.success" title="UMPAY_PC.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:TENPAY_MOBILEQQ.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="TENPAY_MOBILEQQ.payment.success" title="TENPAY_MOBILEQQ.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="AroundUV:Metric:Around" domain="AroundUV" type="Metric" view-order="0.0" metric-key="Around" title="Around" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="geoinfo-server:Metric:TencentPOISuggestion" domain="geoinfo-server" type="Metric" view-order="0.0" metric-key="TencentPOISuggestion" title="TencentPOISuggestion" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="GeoInfo:Metric:TencentPOISuggestion" domain="GeoInfo" type="Metric" view-order="0.0" metric-key="TencentPOISuggestion" title="TencentPOISuggestion" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-usercenter-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-usercenter-rt" title="arts-usercenter-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-usercenter-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-usercenter-sc" title="arts-usercenter-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-WishShopDataSpout" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-WishShopDataSpout" title="ClientConsumed-WishShopDataSpout" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-service:Metric:RecordCount" domain="rs-service" type="Metric" view-order="0.0" metric-key="RecordCount" title="RecordCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="geoinfo-server:Metric:GetTencentGeocoding" domain="geoinfo-server" type="Metric" view-order="0.0" metric-key="GetTencentGeocoding" title="GetTencentGeocoding" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-m-web:Metric:M from qLife:Book" domain="rs-m-web" type="Metric" view-order="0.0" metric-key="M from qLife:Book" title="M from qLife:Book" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TakeawayShopWeb:Metric:ActiveRejectOrderCount" domain="TakeawayShopWeb" type="Metric" view-order="0.0" metric-key="ActiveRejectOrderCount" title="ActiveRejectOrderCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="geoinfo-server:Metric:GetBaiduGeocoding" domain="geoinfo-server" type="Metric" view-order="0.0" metric-key="GetBaiduGeocoding" title="GetBaiduGeocoding" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopwx:Metric:FullIndex.CsvDocCount" domain="SearchShopwx" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShopwx:Metric:shopwx.FullIndex.IndexDocCount" domain="SearchShopwx" type="Metric" view-order="0.0" metric-key="shopwx.FullIndex.IndexDocCount" title="shopwx.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouX:Metric:IncIndex.CsvDocCount" domain="SearchTuanGouX" type="Metric" view-order="0.0" metric-key="IncIndex.CsvDocCount" title="IncIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-midas-resource" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-midas-resource" title="ClientConsumed-midas-resource" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-midas-binlog" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-midas-binlog" title="ClientConsumed-midas-binlog" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-DianPingMidas" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-DianPingMidas" title="ClientConsumed-DianPingMidas" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="geoinfo-server:Metric:GetTencentRevGeocoding" domain="geoinfo-server" type="Metric" view-order="0.0" metric-key="GetTencentRevGeocoding" title="GetTencentRevGeocoding" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:FullIndex.CsvDocCount" domain="SearchVango" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchVango:Metric:takeaway.FullIndex.IndexDocCount" domain="SearchVango" type="Metric" view-order="0.0" metric-key="takeaway.FullIndex.IndexDocCount" title="takeaway.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mobile-membercard-main-api-web:Metric:MainWebJoinedCardFailed" domain="mobile-membercard-main-api-web" type="Metric" view-order="0.0" metric-key="MainWebJoinedCardFailed" title="MainWebJoinedCardFailed" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPicasso:Metric:FullIndex.CsvDocCount" domain="SearchPicasso" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPicasso:Metric:promo.FullIndex.IndexDocCount" domain="SearchPicasso" type="Metric" view-order="0.0" metric-key="promo.FullIndex.IndexDocCount" title="promo.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:FullIndex.CsvDocCount" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchTuanGouRec:Metric:tuangourec.FullIndex.IndexDocCount" domain="SearchTuanGouRec" type="Metric" view-order="0.0" metric-key="tuangourec.FullIndex.IndexDocCount" title="tuangourec.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-mq:Metric:RecordPushCount" domain="rs-mq" type="Metric" view-order="0.0" metric-key="RecordPushCount" title="RecordPushCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:UMPAY.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="UMPAY.payment.success" title="UMPAY.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="PumaServer:Metric:ClientConsumed-tuangou-receipt-job" domain="PumaServer" type="Metric" view-order="0.0" metric-key="ClientConsumed-tuangou-receipt-job" title="ClientConsumed-tuangou-receipt-job" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="TakeawayMapiWeb:Metric:AcceptOrderCount" domain="TakeawayMapiWeb" type="Metric" view-order="0.0" metric-key="AcceptOrderCount" title="AcceptOrderCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="mpos-web:Metric:SnVerifyCount" domain="mpos-web" type="Metric" view-order="0.0" metric-key="SnVerifyCount" title="SnVerifyCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchPicasso:Metric:wishmylist.FullIndex.IndexDocCount" domain="SearchPicasso" type="Metric" view-order="0.0" metric-key="wishmylist.FullIndex.IndexDocCount" title="wishmylist.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-mcrd-rt" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-mcrd-rt" title="arts-mcrd-rt" show-count="false" show-avg="true" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:arts-mcrd-sc" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="arts-mcrd-sc" title="arts-mcrd-sc" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:FullIndex.CsvDocCount" domain="SearchShop" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchShop:Metric:shop.FullIndex.IndexDocCount" domain="SearchShop" type="Metric" view-order="0.0" metric-key="shop.FullIndex.IndexDocCount" title="shop.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:FullIndex.CsvDocCount" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="FullIndex.CsvDocCount" title="FullIndex.CsvDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="SearchDavinci:Metric:newgroup.FullIndex.IndexDocCount" domain="SearchDavinci" type="Metric" view-order="0.0" metric-key="newgroup.FullIndex.IndexDocCount" title="newgroup.FullIndex.IndexDocCount" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="rs-m-web:Metric:M from qLife:RecordDetails" domain="rs-m-web" type="Metric" view-order="0.0" metric-key="M from qLife:RecordDetails" title="M from qLife:RecordDetails" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="wedding-marketing-web:Metric:getPhoneByTel_count" domain="wedding-marketing-web" type="Metric" view-order="0.0" metric-key="getPhoneByTel_count" title="getPhoneByTel_count" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="wedding-marketing-web:Metric:updatePhoneRecord_count" domain="wedding-marketing-web" type="Metric" view-order="0.0" metric-key="updatePhoneRecord_count" title="updatePhoneRecord_count" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:PINGAN.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="PINGAN.payment.pedding" title="PINGAN.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:THIRDPARTY_PREPAID.payment.pedding" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="THIRDPARTY_PREPAID.payment.pedding" title="THIRDPARTY_PREPAID.payment.pedding" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
+   <metric-item-config id="pay-unipay:Metric:THIRDPARTY_PREPAID.payment.success" domain="pay-unipay" type="Metric" view-order="0.0" metric-key="THIRDPARTY_PREPAID.payment.success" title="THIRDPARTY_PREPAID.payment.success" show-count="false" show-avg="false" show-sum="true" show-dashboard-order="0.0" alarm="false">
+   </metric-item-config>
 </metric-config>
