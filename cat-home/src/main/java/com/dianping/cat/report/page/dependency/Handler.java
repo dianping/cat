@@ -68,7 +68,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfigManager m_configManager;
 
 	public static final String TUAN_TOU = "TuanGou";
-	
+
 	private Segment buildAllSegmentsInfo(DependencyReport report) {
 		Segment result = new Segment();
 		Map<Integer, Segment> segments = report.getSegments();
@@ -118,7 +118,6 @@ public class Handler implements PageHandler<Context> {
 			return null;
 		}
 	}
-
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
@@ -185,7 +184,7 @@ public class Handler implements PageHandler<Context> {
 	private void buildProjectTopology(Model model, Payload payload, Date reportTime) {
 		TopologyGraph topologyGraph = m_graphManager.buildTopologyGraph(model.getDomain(), reportTime.getTime());
 		DependencyReport report = queryDependencyReport(payload);
-		
+
 		buildHourlyReport(report, model, payload);
 		m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 		model.setReportStart(new Date(payload.getDate()));
@@ -225,7 +224,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case EXCEPTION_DASHBOARD:
 			buildExceptionDashboard(model, payload, date);
-			
+
 			StateReport report = queryHourlyReport(payload);
 			model.setMessage(buildCatInfoMessage(report));
 			break;

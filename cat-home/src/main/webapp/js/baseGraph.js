@@ -51,13 +51,20 @@ function graphPieChart(container, data) {
 
 function parseLineData(data) {
 	var res = [];
+	var values = [];
+	if(data.values.length > 0) {
+		values = data.values;
+	}else if(data.valueObjects.length > 0) {
+		values = data.valueObjects;
+	}
 	data.subTitles.forEach(function(title, i) {
 		var series = {}
 		series.name = title;
 		series.data = [];
 		var start = new Date(Date.parse(data.start));
 		var startLong = start.getTime();
-		data.values[i].forEach(function(value, j) {
+		
+		values[i].forEach(function(value, j) {
 			var time = start.getTime() + j * data.step;
 			var item = [];
 			item[0] = time;

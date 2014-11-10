@@ -37,8 +37,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private static final String UNKNOWN = "Unknown";
 
-	private CrossAppSwitch m_crossAppSwitch = new CrossAppSwitch();
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
