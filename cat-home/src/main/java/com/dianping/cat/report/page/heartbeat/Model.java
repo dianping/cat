@@ -66,7 +66,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_totalThreadGraph;
 
-	private Map<String, Map<String, String>> m_dalGraph = new HashMap<String, Map<String, String>>();
+	private Map<String, Map<String, String>> m_extensionGraph = new HashMap<String, Map<String, String>>();
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -96,13 +96,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_daemonThreadGraph;
 	}
 
-	public Map<String, Map<String, String>> getDalGraph() {
-		return m_dalGraph;
+	public Map<String, Map<String, String>> getExtensionGraph() {
+		return m_extensionGraph;
 	}
 
-	public int getDalTableHeight() {
+	public int getExtensionTableHeight() {
 		int size = 0;
-		for (Entry<String, Map<String, String>> entry : m_dalGraph.entrySet()) {
+		for (Entry<String, Map<String, String>> entry : m_extensionGraph.entrySet()) {
 			size = entry.getValue().size();
 			break;
 		}
@@ -263,8 +263,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_disksGraph = disksGraph;
 	}
 
-	public void setExtensionGraph(Map<String, Map<String, String>> dalGraph) {
-		m_dalGraph = dalGraph;
+	public void setExtensionGraph(Map<String, Map<String, String>> extensionGraph) {
+		m_extensionGraph = extensionGraph;
 	}
 
 	public void setHeapUsageGraph(String heapUsageGraph) {
