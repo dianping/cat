@@ -2447,7 +2447,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.SystemContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>

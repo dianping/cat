@@ -66,6 +66,9 @@
 				<label class="checkbox inline">
 				  <input class="type" type="checkbox" value="web"> Web告警
 				</label>
+				<label class="checkbox inline">
+				  <input class="type" type="checkbox" value="zabbix"> Zabbix告警
+				</label>
 			</div>
 			<br><br>
 		</div>
