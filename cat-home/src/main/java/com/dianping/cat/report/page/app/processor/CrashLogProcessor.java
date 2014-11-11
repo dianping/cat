@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.app.processor;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -56,16 +57,22 @@ public class CrashLogProcessor {
 	}
 
 	private void sortFields(Map<String, Set<String>> fieldsMap, FieldsInfo fieldsInfo) {
+
+		Comparator<String> comparator = new Comparator<String>() {
+			public int compare(String s1, String s2) {
+				return s2.compareTo(s1);
+			}
+		};
 		List<String> v = new ArrayList<String>(fieldsMap.get(APP_VERSIONS));
 		List<String> l = new ArrayList<String>(fieldsMap.get(LEVELS));
 		List<String> m = new ArrayList<String>(fieldsMap.get(MODULES));
 		List<String> p = new ArrayList<String>(fieldsMap.get(PLATFORM_VERSIONS));
 
-		Collections.sort(v);
-		Collections.sort(l);
+		Collections.sort(v, comparator);
+		Collections.sort(p, comparator);
 		Collections.sort(m);
-		Collections.sort(p);
-		fieldsInfo.setAppVersions(v).setLevels(l).setModules(m).setPlatVersions(p);
+		Collections.sort(l);
+		fieldsInfo.setAppVersions(v).setPlatVersions(p).setModules(m).setLevels(l);
 	}
 
 	private FieldsInfo buildFeildsInfo(ProblemReport report) {
@@ -76,11 +83,14 @@ public class CrashLogProcessor {
 		for (String field : fields) {
 			String[] fs = field.split(":");
 			findOrCreate(APP_VERSIONS, fieldsMap).add(fs[0]);
-			findOrCreate(LEVELS, fieldsMap).add(fs[1]);
+			findOrCreate(PLATFORM_VERSIONS, fieldsMap).add(fs[1]);
 			findOrCreate(MODULES, fieldsMap).add(fs[2]);
-			findOrCreate(PLATFORM_VERSIONS, fieldsMap).add(fs[3]);
+			findOrCreate(LEVELS, fieldsMap).add(fs[3]);
+
 		}
-		sortFields(fieldsMap, fieldsInfo);
+		if (!fieldsMap.isEmpty()) {
+			sortFields(fieldsMap, fieldsInfo);
+		}
 		return fieldsInfo;
 	}
 

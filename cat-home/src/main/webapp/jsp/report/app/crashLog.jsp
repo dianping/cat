@@ -55,18 +55,20 @@
 	
 	function clickAll(fields, prefix) {
 		var fs = [];
-		if(fields != "[]"){
+		if(fields.length > 0){
 			fs = fields.replace(/[\[\]]/g,'').split(', ');
-		}
-		
-		for( var i=0; i<fs.length; i++){
-		 	var f = prefix + "_" + fs[i];
-			document.getElementById(f).checked = document.getElementById(prefix + "All").checked;
+			for( var i=0; i<fs.length; i++){
+			 	var f = prefix + "_" + fs[i];
+			 	if(document.getElementById(f) != undefined) {
+					document.getElementById(f).checked = document.getElementById(prefix + "All").checked;
+			 	}
+			}
 		}
 	}
 	
 	function queryField(fields, prefix){
-		if(fields != "[]") {
+		var fs = [];
+		if(fields.length > 0) {
 			fs = fields.replace(/[\[\]]/g,'').split(', ');
 		}
 		
@@ -75,7 +77,8 @@
 		if(document.getElementById(prefix + "All").checked == false && fs.length > 0) {
 			for( var i=0; i<fs.length; i++){
 			 	var f = prefix + "_" + fs[i];
-				if(document.getElementById(f).checked){
+				if(document.getElementById(f) != undefined 
+						&& document.getElementById(f).checked){
 					url += fs[i] + ":";
 				} 
 			}
@@ -94,9 +97,11 @@
 			clickAll(fields, prefix);
 		}else{
 			urls = field.split(":");
-		}
-		for(var i=0; i<urls.length; i++) {
-			document.getElementById(prefix + "_" + urls[i]).checked = true;
+			for(var i=0; i<urls.length; i++) {
+				if(document.getElementById(prefix + "_" + urls[i]) != null) {
+					document.getElementById(prefix + "_" + urls[i]).checked = true;
+				}
+			}
 		}
 	}
 	
@@ -104,16 +109,17 @@
 	  .change(function () {
 		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&date=${model.date}&reportType=${model.reportType}";
 	  })
-$(document).ready(
+	  
+	$(document).ready(
 		function() {
 			$('#crashLog').addClass('active');
 			
 			var fields = "${payload.query1}".split(";");
-			docReady(fields[4], '${model.fieldsInfo.levels}','level');
 			$("#platformType").val(fields[0]);
 			docReady(fields[1], '${model.fieldsInfo.appVersions}','appVersion');
 			docReady(fields[2], '${model.fieldsInfo.platVersions}','platformVersion');
 			docReady(fields[3], '${model.fieldsInfo.modules}','module');
+			docReady(fields[4], '${model.fieldsInfo.levels}','level');
 		});
 </script>
 
