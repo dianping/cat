@@ -1,8 +1,6 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
 import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,15 +20,13 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	public static final String ID = AlertType.ThirdParty.getName();
 
-	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
-
 	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("exceptionAlert.ftl");
+			Template t = m_configuration.getTemplate("thirdpartyAlert.ftl");
 			t.process(dataMap, sw);
 		} catch (Exception e) {
 			Cat.logError("build third party content error:" + alert.toString(), e);
