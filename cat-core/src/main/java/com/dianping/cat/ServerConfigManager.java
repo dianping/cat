@@ -39,6 +39,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_unusedNames = new HashSet<String>();
 
+	private Set<String> m_invalidateDomains = new HashSet<String>();
+
 	public boolean discardTransaction(Transaction t) {
 		// pigeon default heartbeat is no use
 		String type = t.getType();
@@ -249,6 +251,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_unusedNames.add("/inspect/healthcheck");
 		m_unusedNames.add("/MonitorServlet");
 		m_unusedNames.add("/monitorServlet?client=f5");
+
+		m_invalidateDomains.add("PhoenixAgent");
+		m_invalidateDomains.add("cat-agent");
+		m_invalidateDomains.add("AndroidCrashLog");
+		m_invalidateDomains.add("iOSCrashLog");
+		m_invalidateDomains.add(Constants.ALL);
+		m_invalidateDomains.add(Constants.FRONT_END);
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -349,12 +358,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean filterDomain(String domain) {
-		return !domain.equals("PhoenixAgent") && !domain.equals("cat-agent") && !domain.equals(Constants.ALL);
-	}
-
 	public boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END) && filterDomain(domain);
+		return !m_invalidateDomains.contains(domain);
 	}
 
 	public boolean isOffline() {
