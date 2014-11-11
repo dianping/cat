@@ -22,7 +22,7 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	public static final String ID = AlertType.ThirdParty.getName();
 
-	private DateFormat m_format = new SimpleDateFormat("yyyyMMddHH");
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -30,7 +30,7 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 		StringWriter sw = new StringWriter(5000);
 
 		try {
-			Template t = m_configuration.getTemplate("exceptionAlert.ftl");
+			Template t = m_configuration.getTemplate("thirdpartyAlert.ftl");
 			t.process(dataMap, sw);
 		} catch (Exception e) {
 			Cat.logError("build third party content error:" + alert.toString(), e);
@@ -40,13 +40,12 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		String domain = alert.getGroup();
-		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
-		map.put("contactInfo", contactInfo);
+		map.put("linkDate", m_linkFormat.format(alert.getDate()));
 
 		return map;
 	}

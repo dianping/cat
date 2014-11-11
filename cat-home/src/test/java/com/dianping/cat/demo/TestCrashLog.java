@@ -51,11 +51,11 @@ public class TestCrashLog {
 	}
 
 	private String getLevel(String platform, int index) {
-		return platform + "level" + new Random().nextInt(20);
+		return platform + "Level" + new Random().nextInt(20);
 	}
 
 	private String getModule(String platform, int index) {
-		return platform + "module" + new Random().nextInt(20);
+		return platform + "Module" + new Random().nextInt(20);
 	}
 
 	private String getPlateform(String platform, int index) {
@@ -63,6 +63,6 @@ public class TestCrashLog {
 	}
 
 	private String getVersion(String platform, int index) {
-		return platform + "version" + new Random().nextInt(20);
+		return platform + "Version" + new Random().nextInt(20);
 	}
 }
