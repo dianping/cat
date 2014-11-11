@@ -1,6 +1,8 @@
 package com.dianping.cat.report.task.alert.sender.decorator;
 
 import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +22,8 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	public static final String ID = AlertType.ThirdParty.getName();
 
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
+
 	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> dataMap = generateExceptionMap(alert);
@@ -36,13 +40,12 @@ public class ThirdpartyDecorator extends ProjectDecorator implements Initializab
 
 	private Map<Object, Object> generateExceptionMap(AlertEntity alert) {
 		String domain = alert.getGroup();
-		String contactInfo = buildContactInfo(domain);
 		Map<Object, Object> map = new HashMap<Object, Object>();
 
 		map.put("domain", domain);
 		map.put("content", alert.getContent());
 		map.put("date", m_format.format(alert.getDate()));
-		map.put("contactInfo", contactInfo);
+		map.put("linkDate", m_linkFormat.format(alert.getDate()));
 
 		return map;
 	}
