@@ -66,7 +66,7 @@ function update() {
 }
 
 	$(document).ready(function() {
-		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer","FluAscPer", "FluDescPer", "MinVal", "SumMaxVal", "SumMinVal"]);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
 			document.getElementById("domain").disabled = true;
