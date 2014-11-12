@@ -10,10 +10,10 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -25,6 +25,9 @@ public class BugConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ConfigDao m_configDao;
+
+	@Inject
+	private ContentGetter m_getter;
 
 	private int m_configId;
 
@@ -55,8 +58,7 @@ public class BugConfigManager implements Initializable, LogEnabled {
 			m_bugConfig = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-bug-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

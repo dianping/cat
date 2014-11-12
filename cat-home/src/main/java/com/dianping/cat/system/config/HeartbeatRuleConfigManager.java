@@ -3,15 +3,19 @@ package com.dianping.cat.system.config;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+
+	@Inject
+	private ContentGetter m_getter;
 
 	private static final String CONFIG_NAME = "heartbeatRuleConfig";
 
@@ -30,8 +34,7 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-heartbeat-rule-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

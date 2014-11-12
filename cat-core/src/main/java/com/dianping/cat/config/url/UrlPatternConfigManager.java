@@ -7,13 +7,13 @@ import java.util.Collection;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.configuration.url.pattern.entity.UrlPattern;
 import com.dianping.cat.configuration.url.pattern.transform.DefaultSaxParser;
@@ -27,6 +27,9 @@ public class UrlPatternConfigManager implements Initializable {
 
 	@Inject
 	private UrlPatternHandler m_handler;
+
+	@Inject
+	private ContentGetter m_getter;
 
 	private int m_configId;
 
@@ -56,8 +59,7 @@ public class UrlPatternConfigManager implements Initializable {
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-url-pattern-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -81,7 +83,7 @@ public class UrlPatternConfigManager implements Initializable {
 	public boolean insertPatternItem(PatternItem rule) {
 		m_UrlPattern.addPatternItem(rule);
 		m_handler.register(queryUrlPatternRules());
-		
+
 		return storeConfig();
 	}
 

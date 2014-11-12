@@ -6,11 +6,11 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -25,10 +25,13 @@ import com.dianping.cat.report.task.alert.MetricType;
 
 public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
-	private static final String CONFIG_NAME = "businessRuleConfig";
-
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
+
+	@Inject
+	private ContentGetter m_getter;
+
+	private static final String CONFIG_NAME = "businessRuleConfig";
 
 	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
 		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
@@ -87,8 +90,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-business-metric-rule-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

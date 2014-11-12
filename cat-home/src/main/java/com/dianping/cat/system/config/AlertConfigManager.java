@@ -3,11 +3,11 @@ package com.dianping.cat.system.config;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -20,6 +20,9 @@ public class AlertConfigManager implements Initializable {
 	@Inject
 	private ConfigDao m_configDao;
 
+	@Inject
+	private ContentGetter m_getter;
+
 	private int m_configId;
 
 	private AlertConfig m_config;
@@ -31,7 +34,7 @@ public class AlertConfigManager implements Initializable {
 			if (StringUtils.isEmpty(allOnOrOff)) {
 				return originXml;
 			}
-			
+
 			AlertConfig tmpConfig = DefaultSaxParser.parse(originXml);
 
 			if (allOnOrOff.equals("on")) {
@@ -39,13 +42,13 @@ public class AlertConfigManager implements Initializable {
 			} else if (allOnOrOff.equals("off")) {
 				turnOnOrOffConfig(tmpConfig, false);
 			}
-			
+
 			return tmpConfig.toString();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return null;
 		}
-   }
+	}
 
 	public AlertConfig getAlertConfig() {
 		return m_config;
@@ -61,8 +64,7 @@ public class AlertConfigManager implements Initializable {
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-alert-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -85,7 +87,7 @@ public class AlertConfigManager implements Initializable {
 	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
-			
+
 			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);

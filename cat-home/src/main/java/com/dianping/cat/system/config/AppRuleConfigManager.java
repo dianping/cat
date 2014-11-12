@@ -5,9 +5,10 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -18,6 +19,8 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.alert.AlertLevel;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+	@Inject
+	private ContentGetter m_getter;
 
 	private static final String CONFIG_NAME = "appRule";
 
@@ -80,8 +83,7 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-app-rule-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

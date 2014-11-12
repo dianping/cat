@@ -20,13 +20,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -39,6 +39,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	protected ConfigDao m_configDao;
+
+	@Inject
+	private ContentGetter m_getter;
 
 	private int m_configId;
 
@@ -146,8 +149,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-product-line-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

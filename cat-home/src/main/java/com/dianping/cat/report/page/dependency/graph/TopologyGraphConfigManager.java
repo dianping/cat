@@ -10,11 +10,12 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
-import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentGetter;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.core.config.Config;
@@ -30,6 +31,9 @@ import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 public class TopologyGraphConfigManager implements Initializable {
 	@Inject
 	private ConfigDao m_configDao;
+
+	@Inject
+	private ContentGetter m_getter;
 
 	private TopologyGraphConfig m_config;
 
@@ -227,8 +231,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				m_config = DefaultSaxParser.parse(content);
 			} catch (DalNotFoundException e) {
 				try {
-					String content = Files.forIO().readFrom(
-					      this.getClass().getResourceAsStream("/config/default-topology-config.xml"), "utf-8");
+					String content = m_getter.getConfigContent(CONFIG_NAME);
 					Config config = m_configDao.createLocal();
 
 					config.setName(CONFIG_NAME);
