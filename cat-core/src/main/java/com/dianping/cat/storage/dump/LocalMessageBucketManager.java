@@ -427,18 +427,24 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-				String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-				LocalMessageBucket bucket = m_buckets.get(dataFile);
+				String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				LocalMessageBucket bucket = m_buckets.get(path);
 
 				if (bucket == null) {
 					synchronized (m_buckets) {
-						bucket = m_buckets.get(dataFile);
+						bucket = m_buckets.get(path);
 						if (bucket == null) {
 							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 							bucket.setBaseDir(m_baseDir);
-							bucket.initialize(dataFile);
-							m_buckets.putIfAbsent(dataFile, bucket);
-							bucket = m_buckets.get(dataFile);
+							bucket.initialize(path);
+
+							LocalMessageBucket last = m_buckets.putIfAbsent(path, bucket);
+
+							if (last != null) {
+								bucket.close();
+							}
+							
+							bucket = m_buckets.get(path);
 						}
 					}
 				}

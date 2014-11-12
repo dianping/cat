@@ -173,10 +173,11 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 		}
 
 		for (int i = 0; i < 60; i++) {
-			double sum = count[i] + error[i];
+			double sum = count[i];
+			double success = count[i] - error[i];
 
 			if (sum > 0) {
-				successPercent[i] = count[i] / sum * 100.0;
+				successPercent[i] = success / sum * 100.0;
 			} else {
 				successPercent[i] = 100;
 			}
@@ -195,7 +196,7 @@ public class DefaultWebGraphCreator extends AbstractGraphCreator implements WebG
 
 		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
-			
+
 			if (Monitor.TYPE_INFO.equals(type)) {
 				Map<String, double[]> currentValues = fetchMetricInfoData(report);
 
