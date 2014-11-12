@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alert-policy>
+   <type id="network">
+      <group id="default">
+         <level id="error" send="mail,weixin,sms" suspendMinute="3"/>
+         <level id="warning" send="mail,weixin"/>
+      </group>
+   </type>
+   <type id="exception">
+      <group id="default">
+         <level id="error" send="mail,weixin,sms"/>
+         <level id="warning" send="mail,weixin"/>
+      </group>
+   </type>
+   <type id="business">
+      <group id="default">
+         <level id="error" send="mail,weixin,sms" suspendMinute="5"/>
+         <level id="warning" send="mail,weixin" suspendMinute="5"/>
+      </group>
+   </type>
+   <type id="system">
+      <group id="default">
+         <level id="error" send="mail"/>
+         <level id="warning" send="mail"/>
+      </group>
+   </type>
+   <type id="thirdParty">
+      <group id="default">
+         <level id="warning" send="mail"/>
+      </group>
+   </type>
+   <type id="frontEnd">
+      <group id="default">
+         <level id="warning" send="mail"/>
+      </group>
+   </type>
+   <type id="app">
+      <group id="default">
+         <level id="warning" send="mail,weixin"/>
+         <level id="error" send="mail,weixin,sms"/>
+      </group>
+   </type>
+   <type id="web">
+      <group id="default">
+         <level id="warning" send="mail"/>
+         <level id="error" send="mail,weixin,sms"/>
+      </group>
+   </type>
+   <type id="heartbeat">
+      <group id="default">
+         <level id="warning" send="mail"/>
+         <level id="error" send="mail,weixin,sms"/>
+      </group>
+   </type>
+   <type id="default">
+      <group id="default">
+         <level id="warning" send="mail"/>
+         <level id="error" send="mail,weixin,sms"/>
+      </group>
+   </type>
+</alert-policy>
