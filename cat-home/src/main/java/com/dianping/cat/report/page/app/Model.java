@@ -9,7 +9,6 @@ import java.util.Map;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
@@ -20,6 +19,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
+import com.dianping.cat.service.app.command.AppDataSpreadInfo;
 
 public class Model extends AbstractReportModel<Action, Context> {
 

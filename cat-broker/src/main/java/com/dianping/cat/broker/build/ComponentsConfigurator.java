@@ -12,10 +12,10 @@ import com.dianping.cat.broker.api.app.AppDataConsumer;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.build.AppDatabaseConfigurator;
-import com.dianping.cat.config.app.AppDataCommandTableProvider;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.app.command.AppDataCommandTableProvider;
+import com.dianping.cat.service.app.command.AppDataService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

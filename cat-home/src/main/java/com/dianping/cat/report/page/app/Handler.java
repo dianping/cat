@@ -20,10 +20,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataGroupByField;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.AppDataSpreadInfo;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -33,6 +29,10 @@ import com.dianping.cat.report.page.app.graph.AppGraphCreator;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.graph.Sorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
+import com.dianping.cat.service.app.command.AppDataGroupByField;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.AppDataSpreadInfo;
+import com.dianping.cat.service.app.command.QueryEntity;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {

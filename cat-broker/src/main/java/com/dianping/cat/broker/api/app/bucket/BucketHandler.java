@@ -14,7 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.service.app.command.AppDataService;
 
 public class BucketHandler implements Task {
 

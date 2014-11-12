@@ -9,4 +9,7 @@
    <model package="com.dianping.cat.appComparisonConfig" name="app-comparison-config">
       <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/appComparisonConfig.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.appSpeedConfig" name="app-speed-config">
+      <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/app-speed-config.xml</sample-model>
+   </model>
 </wizard>

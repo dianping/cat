@@ -17,8 +17,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.app.comparison.entity.Item;
@@ -29,6 +27,8 @@ import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.QueryEntity;
 import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 

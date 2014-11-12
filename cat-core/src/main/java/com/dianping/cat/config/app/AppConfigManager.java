@@ -289,16 +289,6 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
-	public Collection<Item> queryConfigItems(String key) {
-		ConfigItem configs = m_config.findConfigItem(key);
-
-		if (configs != null) {
-			return configs.getItems().values();
-		} else {
-			return new ArrayList<Item>();
-		}
-	}
-
 	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();

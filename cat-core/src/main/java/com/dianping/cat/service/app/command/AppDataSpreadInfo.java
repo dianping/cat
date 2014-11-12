@@ -1,4 +1,4 @@
-package com.dianping.cat.config.app;
+package com.dianping.cat.service.app.command;
 
 public class AppDataSpreadInfo {
 

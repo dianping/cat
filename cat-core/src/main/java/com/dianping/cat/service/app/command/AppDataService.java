@@ -1,4 +1,4 @@
-package com.dianping.cat.config.app;
+package com.dianping.cat.service.app.command;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.app.AppDataCommandEntity;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 
 public class AppDataService {

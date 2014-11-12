@@ -18,8 +18,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.service.app.command.AppDataService;
 
 public class AppDataConsumer implements Initializable, LogEnabled {
 

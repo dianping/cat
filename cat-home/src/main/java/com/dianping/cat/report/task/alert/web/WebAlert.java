@@ -18,7 +18,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -35,6 +34,7 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.app.command.AppDataService;
 
 public class WebAlert extends BaseAlert implements Task {
 

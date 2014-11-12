@@ -16,8 +16,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -30,6 +28,8 @@ import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.QueryEntity;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class AppAlert implements Task {

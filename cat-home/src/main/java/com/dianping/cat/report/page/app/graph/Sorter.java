@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.app.graph;
 
 import java.util.Comparator;
 
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.AppDataSpreadInfo;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.AppDataSpreadInfo;
 
 public class Sorter {
 
