@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<utilization-config url-weight="1.0" service-weight="1.0" sql-weight="3.0" pigeoncall-weight="10.0" cache-weight="1.0" swallow-weight="3.0">
-</utilization-config>
