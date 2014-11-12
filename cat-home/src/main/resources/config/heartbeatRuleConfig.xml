@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="全局FullGC">
+      <metric-item metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="dealservice 监控">
+      <metric-item productText="deal-service" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="MaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="GC-monitor">
+      <metric-item productText="customerinfo-service" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="load">
+      <metric-item productText="customerinfo-service" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="warning">
+            <sub-condition type="MaxVal" text="3"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-oss-web-OLDGC">
+      <metric-item productText="rs-oss-web" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="warning">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-web-systemload">
+      <metric-item productText="rs-shop-web" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="error">
+            <sub-condition type="SumMaxVal" text="50"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-web-NewGc">
+      <metric-item productText="rs-shop-web" metricItemText="NewGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="10"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-web-OldGc">
+      <metric-item productText="rs-shop-web" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-oss-web-NewGc">
+      <metric-item productText="rs-oss-web" metricItemText="NewGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="10"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-oss-web-SystemLoad">
+      <metric-item productText="rs-oss-web" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="50"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-service-system_load">
+      <metric-item productText="rs-shop-service" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-service_oldgc">
+      <metric-item productText="rs-shop-service" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-shop-service_test">
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="warning">
+            <sub-condition type="MaxVal" text="1"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-service_oldgc">
+      <metric-item productText="rs-service" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-service-system_load">
+      <metric-item productText="rs-service" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="10"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-user-service_oldgc">
+      <metric-item productText="rs-user-service" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-user-service-system_load">
+      <metric-item productText="rs-user-service" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-mapi-web-system_load">
+      <metric-item productText="rs-mapi-web" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-mapi-web_oldgc">
+      <metric-item productText="rs-mapi-web" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-m-web_oldgc">
+      <metric-item productText="rs-m-web" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-m-web_system_load">
+      <metric-item productText="rs-m-web" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-web_oldgc">
+      <metric-item productText="rs-web" metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="10" alertType="error">
+            <sub-condition type="SumMaxVal" text="2"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="rs-web_system_load">
+      <metric-item productText="rs-web" metricItemText="SystemLoadAverage"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="5" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

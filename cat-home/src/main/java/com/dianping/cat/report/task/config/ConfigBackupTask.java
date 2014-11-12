@@ -16,7 +16,7 @@ public class ConfigBackupTask {
 	@Inject
 	private ConfigDao m_dao;
 
-	private static final String BASE_DIR_PATH = "src/main/resources/config/backup/";
+	private static final String BASE_DIR_PATH = "src/main/resources/config/";
 
 	private boolean backupConfig(String name, String context) {
 		String filePath = BASE_DIR_PATH + name + ".xml";
