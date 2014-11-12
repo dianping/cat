@@ -127,7 +127,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 				}
 			}
 		}
-
 		return null;
 	}
 

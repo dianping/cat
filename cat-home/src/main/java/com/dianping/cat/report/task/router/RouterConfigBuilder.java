@@ -208,8 +208,6 @@ public class RouterConfigBuilder implements ReportTaskBuilder, LogEnabled {
 
 				if (oldValue != null) {
 					servers.put(server, oldValue + value);
-				} else {
-					servers.put(server, value);
 				}
 			}
 		}
