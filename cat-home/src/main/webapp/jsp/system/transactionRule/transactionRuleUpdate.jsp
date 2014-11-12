@@ -66,6 +66,7 @@ function update() {
 }
 
 	$(document).ready(function() {
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
 			document.getElementById("domain").disabled = true;

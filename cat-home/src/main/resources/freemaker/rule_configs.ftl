@@ -112,40 +112,23 @@
 </div>
 
 <script>
-var newSubCondition = $('.subCondition').eq(0).clone();
-var newCondition = $('.condition').eq(0).clone();
-var newConfig = $('#configSample').clone();
-var newUserDefineCondition = $(".subCondition").last().clone();
-newUserDefineCondition.css('display','block');
+function initRuleConfigs(filterList) {
+	if(filterList != null){
+		var ruleType = $('.ruleType').eq(0);
+		for(c in filterList){
+			var item = filterList[c];
+			var domItem = ruleType.find('option[value="'+item+'"]');
+			
+			domItem.remove();
+		}
+	}
+	
+	var newSubCondition = $('.subCondition').eq(0).clone();
+	var newCondition = $('.condition').eq(0).clone();
+	var newConfig = $('#configSample').clone();
+	var newUserDefineCondition = $(".subCondition").last().clone();
+	newUserDefineCondition.css('display','block');
 
-function addSubCondition(currentElement, newSubCondition){
-    currentElement.prev().append(newSubCondition.clone());
-}
-
-function addCondition(currentElement, newCondition){
-    currentElement.before(newCondition.clone());
-}
-
-function addConfig(newConfig){
-    $('#configs').append(newConfig.clone());
-}
-
-function changeToUserDefine(currentElement){
-    var parentNode = currentElement.parent();
-    var subChilds = parentNode.children('.subconditions');
-    subChilds.empty();
-    subChilds.append(newUserDefineCondition.clone());
-    
-    var addSubConditionButton = parentNode.children('.add-subCondition-button');
-    var userDefineButton = parentNode.children('.define-button');
-    
-    addSubConditionButton.addClass('disabled');
-    userDefineButton.addClass('disabled');
-    addSubConditionButton.off('click');
-    userDefineButton.off('click');
-}
-
-$(document).ready(function () {
     $("#configTip").tooltip({
         "placement":"top",
         "title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
@@ -178,7 +161,34 @@ $(document).ready(function () {
     
     drawConfigs();
     initIntro();
-})
+}
+
+function addSubCondition(currentElement, newSubCondition){
+    currentElement.prev().append(newSubCondition.clone());
+}
+
+function addCondition(currentElement, newCondition){
+    currentElement.before(newCondition.clone());
+}
+
+function addConfig(newConfig){
+    $('#configs').append(newConfig.clone());
+}
+
+function changeToUserDefine(currentElement){
+    var parentNode = currentElement.parent();
+    var subChilds = parentNode.children('.subconditions');
+    subChilds.empty();
+    subChilds.append(newUserDefineCondition.clone());
+    
+    var addSubConditionButton = parentNode.children('.add-subCondition-button');
+    var userDefineButton = parentNode.children('.define-button');
+    
+    addSubConditionButton.addClass('disabled');
+    userDefineButton.addClass('disabled');
+    addSubConditionButton.off('click');
+    userDefineButton.off('click');
+}
 
 function initIntro(){
 	var context = $("#configSample").first();
