@@ -69,15 +69,18 @@
 		</td>
 		</c:when>
 		<c:otherwise>
-			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><br/>
+			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-error">（仅支持数字）</span><br/>
 		</c:otherwise>
 		</c:choose>
 		<tr>
-			<td>返回码设置</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><br/>
+			<td>返回码设置</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-error">（支持数字、字符）</span><br/>
 </td>
 </tr>
 <tr>
-			<td>返回码状态</td><td><input name="codeStatus" value="${model.code.status}" id="codeStatus"/><br/>
+			<td>返回码状态</td><td><select id="codeStatus" />
+									<option value='0'>成功</option>
+									<option value='1'>失败</option>
+									</select><br/>
 </td>
 		</tr>
 		<tr>
