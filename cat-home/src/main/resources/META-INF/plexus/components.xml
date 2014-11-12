@@ -1295,6 +1295,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

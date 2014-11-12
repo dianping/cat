@@ -149,7 +149,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ReportServiceManager.class, RouterConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(
-		      ReportServiceManager.class, ExceptionConfigManager.class));
+		      ReportServiceManager.class, ExceptionConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(
 		      ReportServiceManager.class));
