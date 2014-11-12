@@ -1,6 +1,15 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.config.content.ContentGetter</role>
+			<implementation>com.dianping.cat.config.content.ContentGetter</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.DefaultContentGetter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.JsonBuilder</role>
 			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
 		</component>
@@ -120,6 +129,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -128,6 +140,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -138,6 +153,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -146,6 +164,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -158,6 +179,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -174,6 +198,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -185,6 +212,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -198,6 +228,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -209,6 +242,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -222,6 +258,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -234,6 +273,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -242,6 +284,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -252,6 +297,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -261,6 +309,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -269,6 +320,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2646,6 +2700,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3200,6 +3257,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3862,6 +3922,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3900,6 +3963,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3963,6 +4029,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4127,6 +4196,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4298,6 +4370,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4339,6 +4414,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4494,6 +4572,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4554,6 +4635,9 @@
 			<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AppRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
@@ -4983,6 +5067,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4991,6 +5078,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5025,12 +5115,18 @@
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.WebRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
@@ -5065,6 +5161,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5094,6 +5193,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5138,6 +5240,9 @@
 			<implementation>com.dianping.cat.system.config.NetworkRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -5162,6 +5267,9 @@
 			<implementation>com.dianping.cat.system.config.SystemRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -5185,6 +5293,9 @@
 			<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.HeartbeatRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
@@ -5218,6 +5329,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5239,6 +5353,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5247,6 +5364,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5266,6 +5386,9 @@
 			<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.TransactionRuleConfigManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentGetter</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>

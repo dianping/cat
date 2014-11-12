@@ -7,7 +7,7 @@ import org.unidal.helper.Files;
 import com.dianping.cat.Cat;
 
 public class DefaultContentGetter implements ContentGetter {
-	private final String PATH = "/config/backup/";
+	private final String PATH = "/config/";
 
 	@Override
 	public String getConfigContent(String configName) {
