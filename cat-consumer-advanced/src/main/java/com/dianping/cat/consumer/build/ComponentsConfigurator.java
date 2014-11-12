@@ -56,7 +56,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineMetricComponents() {
 		final List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ContentGetter.class).req(DefaultContentGetter.class));
+		all.add(C(ContentGetter.class, DefaultContentGetter.class));
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentGetter.class));
 		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ProductLineConfigManager.class, ContentGetter.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //

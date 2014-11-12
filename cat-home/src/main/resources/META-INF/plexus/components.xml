@@ -2,12 +2,7 @@
 	<components>
 		<component>
 			<role>com.dianping.cat.config.content.ContentGetter</role>
-			<implementation>com.dianping.cat.config.content.ContentGetter</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.content.DefaultContentGetter</role>
-				</requirement>
-			</requirements>
+			<implementation>com.dianping.cat.config.content.DefaultContentGetter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.JsonBuilder</role>

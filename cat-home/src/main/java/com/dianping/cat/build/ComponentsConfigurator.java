@@ -120,7 +120,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ContentGetter.class).req(DefaultContentGetter.class));
+		all.add(C(ContentGetter.class, DefaultContentGetter.class));
 
 		all.addAll(defineCommonComponents());
 
@@ -170,8 +170,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      UserDefinedRuleManager.class, ContentGetter.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentGetter.class));
 		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentGetter.class));
-		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentGetter.class));
-		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentGetter.class));
+		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      ContentGetter.class));
+		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      ContentGetter.class));
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentGetter.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentGetter.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentGetter.class));

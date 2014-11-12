@@ -57,7 +57,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
-		all.add(C(ContentGetter.class).req(DefaultContentGetter.class));
+		all.add(C(ContentGetter.class, DefaultContentGetter.class));
 
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class));
 
