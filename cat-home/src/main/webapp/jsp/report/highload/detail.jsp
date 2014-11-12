@@ -19,15 +19,13 @@
 					<tr class="text-success">
 						<th width="8%" class="tableHeader" data-sortBy="domain">项目</th>
 						<th width="20%" class="tableHeader" data-sortBy="name">名称</th>
+						<th width="10%" class="tableHeader" data-sortBy="bu">BU</th>
+						<th width="8%" class="tableHeader" data-sortBy="productline">产品线</th>
 						<th width="5%" class="tableHeader" data-sortBy="total">总数</th>
 						<th width="5%" class="tableHeader" data-sortBy="error">错误数</th>
 						<th width="7%" class="tableHeader" data-sortBy="failure">失败率</th>
-						<th width="4%" class="tableHeader" data-sortBy="min">Min</th>
-						<th width="5%" class="tableHeader" data-sortBy="max">Max</th>
 						<th width="5%" class="tableHeader" data-sortBy="avg">Avg</th>
 						<th width="5%" class="tableHeader" data-sortBy="95line">95Line</th>
-						<th width="6%" class="tableHeader" data-sortBy="999line">99.9Line</th>
-						<th width="5%" class="tableHeader" data-sortBy="std">Std</th>
 					</tr>
 					</thead>
 					<tbody>
@@ -35,15 +33,13 @@
 						<tr>
 							<td>${e.domain}</td>
 							<td>${e.id}</td>
+							<td>${e.bu}</td>
+							<td>${e.productLine}</td>
 							<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 							<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
 							<td>&nbsp;${w:format(e.failPercent/100,'0.0000%')}</td>
-							<td>${w:format(e.min,'###,##0.#')}</td>
-							<td>${w:format(e.max,'###,##0.#')}</td>
 							<td>${w:format(e.avg,'###,##0.0')}</td>
 							<td>${w:format(e.line95Value,'###,##0.0')}</td>
-							<td>${w:format(e.line99Value,'###,##0.0')}</td>
-							<td>${w:format(e.std,'###,##0.0')}</td>
 						</tr>
 					</c:forEach>
 					</tbody>

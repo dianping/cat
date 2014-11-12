@@ -11,17 +11,15 @@
   </entity>
   <entity name="name">
     <attribute name="domain" value-type="String" />
+    <attribute name="productLine" value-type="String" default-value="Default" />
+    <attribute name="bu" value-type="String" default-value="Default" />
     <attribute name="id" value-type="String" />
     <attribute name="totalCount" value-type="long" />
     <attribute name="failCount" value-type="long" />
     <attribute name="failPercent" value-type="double" />
-    <attribute name="min" value-type="double" />
-    <attribute name="max" value-type="double" />
     <attribute name="avg" value-type="double" />
-    <attribute name="std" value-type="double" />
     <attribute name="tps" value-type="double" />
     <attribute name="line95Value" value-type="double" />
-    <attribute name="line99Value" value-type="double" />
     <attribute name="weight" value-type="double" />
   </entity>
 </model>
