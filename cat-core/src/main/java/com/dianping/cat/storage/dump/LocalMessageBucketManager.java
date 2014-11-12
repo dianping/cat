@@ -28,6 +28,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -442,8 +443,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 							if (last != null) {
 								bucket.close();
+
+								Cat.logEvent("BucketConcurrentModify",path, Event.SUCCESS, null);
 							}
-							
+
 							bucket = m_buckets.get(path);
 						}
 					}
