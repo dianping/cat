@@ -6,6 +6,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.eunit.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
@@ -16,7 +17,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 
 public class ConfigsBackupTest extends ComponentTestCase {
 
-	// @Test
+	@Test
 	public void backupConfigsTest() {
 		ConfigDao dao = lookup(ConfigDao.class);
 		ConfigBackupTask task = new ConfigBackupTask(dao);
