@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -29,7 +29,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	protected MetricConfigManager m_metricConfigManager;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private static final String CONFIG_NAME = "businessRuleConfig";
 

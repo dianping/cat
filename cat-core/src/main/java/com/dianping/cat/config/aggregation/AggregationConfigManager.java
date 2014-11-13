@@ -13,7 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
@@ -29,7 +29,7 @@ public class AggregationConfigManager implements Initializable {
 	protected AggregationHandler m_handler;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private int m_configId;
 

@@ -10,7 +10,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.app.comparison.transform.DefaultSaxParser;
@@ -25,7 +25,7 @@ public class AppComparisonConfigManager implements Initializable {
 	private ConfigDao m_configDao;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private AppComparisonConfig m_config;
 

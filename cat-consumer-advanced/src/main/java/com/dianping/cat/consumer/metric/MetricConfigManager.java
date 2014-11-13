@@ -25,7 +25,7 @@ import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
 import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.core.config.Config;
@@ -41,7 +41,7 @@ public class MetricConfigManager implements Initializable {
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private int m_configId;
 

@@ -6,7 +6,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
 
-public class DefaultContentGetter implements ContentGetter {
+public class DefaultContentFetcher implements ContentFetcher {
 	private final String PATH = "/config/";
 
 	@Override

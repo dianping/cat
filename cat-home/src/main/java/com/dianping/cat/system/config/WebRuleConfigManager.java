@@ -6,7 +6,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.MonitorRules;
@@ -15,7 +15,7 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 public class WebRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private static final String CONFIG_NAME = "webRule";
 

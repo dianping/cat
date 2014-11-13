@@ -10,8 +10,8 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.config.content.ContentGetter;
-import com.dianping.cat.config.content.DefaultContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -56,9 +56,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineMetricComponents() {
 		final List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ContentGetter.class, DefaultContentGetter.class));
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentGetter.class));
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ProductLineConfigManager.class, ContentGetter.class));
+		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ProductLineConfigManager.class, ContentFetcher.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, TaskManager.class));

@@ -13,7 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.configuration.url.pattern.entity.UrlPattern;
 import com.dianping.cat.configuration.url.pattern.transform.DefaultSaxParser;
@@ -29,7 +29,7 @@ public class UrlPatternConfigManager implements Initializable {
 	private UrlPatternHandler m_handler;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private int m_configId;
 

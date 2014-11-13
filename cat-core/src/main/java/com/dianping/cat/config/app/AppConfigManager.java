@@ -21,7 +21,7 @@ import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentGetter;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.app.entity.AppConfig;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -37,7 +37,7 @@ public class AppConfigManager implements Initializable {
 	protected ConfigDao m_configDao;
 
 	@Inject
-	private ContentGetter m_getter;
+	private ContentFetcher m_getter;
 
 	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
 

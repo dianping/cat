@@ -165,8 +165,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.content.ContentGetter</role>
-			<implementation>com.dianping.cat.config.content.DefaultContentGetter</implementation>
+			<role>com.dianping.cat.config.content.ContentFetcher</role>
+			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
@@ -176,7 +176,7 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.content.ContentGetter</role>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -191,7 +191,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.content.ContentGetter</role>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
