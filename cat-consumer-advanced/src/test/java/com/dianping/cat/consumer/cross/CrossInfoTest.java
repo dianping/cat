@@ -74,8 +74,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
-		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
-		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.70");
+		Assert.assertEquals(info,null);
 
 		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71", null);
 		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain", null);
