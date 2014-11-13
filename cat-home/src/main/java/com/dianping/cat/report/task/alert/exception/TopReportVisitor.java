@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.exception;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
@@ -23,6 +25,7 @@ public class TopReportVisitor extends BaseVisitor {
 
 	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
 
+	@Inject
 	private ServerConfigManager m_configManager;
 
 	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
