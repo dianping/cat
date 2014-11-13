@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.dependency;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +34,7 @@ import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -121,7 +123,18 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
-
+		Map<String, List<TopologyNode>> nodes = dashboardGraph.getNodes();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		String minute = String.valueOf(parseQueryMinute(payload));
+		
+		for (List<TopologyNode> n : nodes.values()) {
+			for (TopologyNode node : n) {
+				String domain = payload.getDomain();
+				String link = String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", minute, domain,
+				      sdf.format(new Date(payload.getDate())));
+				node.setLink(link);
+			}
+		}
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
