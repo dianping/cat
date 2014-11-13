@@ -35,13 +35,13 @@ public class MetricIdAndRuleMappingTest {
 		}
 	}
 
-	private boolean findTextByPatterns(String text, List<String> patterns) {
-		boolean tmpResult = false;
+	private int findTextByPatterns(String text, List<String> patterns) {
+		int tmpResult = 0;
 
 		for (String pattern : patterns) {
 			tmpResult = m_manager.validate(null, pattern, null, text);
 
-			if (tmpResult) {
+			if (tmpResult > 0) {
 				return tmpResult;
 			}
 		}
@@ -54,7 +54,7 @@ public class MetricIdAndRuleMappingTest {
 		List<String> patterns = buildPatternList(filePath);
 
 		for (String text : texts) {
-			Assert.assertEquals(findTextByPatterns(text, patterns), true);
+			Assert.assertTrue(findTextByPatterns(text, patterns) > 0);
 		}
 	}
 }

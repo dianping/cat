@@ -138,7 +138,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private void processDomain(String domain) {
-		List<Config> configs = m_ruleConfigManager.queryConfigsByGroup(domain);
+		List<Config> configs = m_ruleConfigManager.queryAllConfigsByGroup(domain);
 		int minute = getAlreadyMinute();
 		int maxMinute = queryCheckMinuteAndConditions(configs).getKey();
 
