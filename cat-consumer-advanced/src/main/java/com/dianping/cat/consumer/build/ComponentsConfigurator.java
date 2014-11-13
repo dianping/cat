@@ -29,8 +29,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.service.DefaultReportManager;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.storage.BucketManager;
@@ -87,7 +85,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DatabaseParser.class));
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, DatabaseParser.class));
+		      .req(ServerConfigManager.class, DatabaseParser.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //

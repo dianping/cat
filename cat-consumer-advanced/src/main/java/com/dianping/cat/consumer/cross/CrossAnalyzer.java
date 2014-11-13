@@ -16,10 +16,8 @@ import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ReportManager;
 import com.site.lookup.util.StringUtils;
 
@@ -37,12 +35,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private static final String UNKNOWN = "Unknown";
 
-	private CrossAppSwitch m_crossAppSwitch = new CrossAppSwitch();
+	private int m_discardLogs = 0;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+
+			m_logger.info("discard server logview count " + m_discardLogs);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
@@ -91,7 +91,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				if (message.getType().equals("PigeonCall.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app") && m_crossAppSwitch.isTurnOn()) {
+				if (message.getType().equals("PigeonCall.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -122,12 +122,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
-		if (!HostinfoService.UNKNOWN_PROJECT.equals(domain)) {
-			CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 
-			report.addIp(info.getLocalAddress());
-			updateCrossReport(report, t, info);
-		}
+		report.addIp(info.getLocalAddress());
+		updateCrossReport(report, t, info);
 	}
 
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
@@ -157,10 +155,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
-			MessageId id = MessageId.parse(tree.getMessageId());
-			String remoteIp = id.getIpAddress();
-
-			crossInfo.setRemoteAddress(remoteIp);
+			m_discardLogs++;
+			return null;
 		}
 
 		crossInfo.setLocalAddress(localIp);
@@ -214,10 +210,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
 		m_serverConfigManager = serverConfigManager;
-	}
-
-	public void setCrossAppSwitch(CrossAppSwitch crossAppSwitch) {
-		m_crossAppSwitch = crossAppSwitch;
 	}
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {

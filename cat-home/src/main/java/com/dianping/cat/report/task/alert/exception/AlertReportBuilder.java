@@ -6,6 +6,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -30,6 +31,9 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	@Inject
 	private ExceptionConfigManager m_exceptionConfigManager;
 
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		AlertReport alertReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
@@ -50,7 +54,7 @@ public class AlertReportBuilder implements ReportTaskBuilder {
 	public boolean buildHourlyTask(String name, String domain, Date start) {
 		AlertReport alertReport = new AlertReport(Constants.CAT);
 		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
-		      m_exceptionConfigManager);
+		      m_exceptionConfigManager).setConfigManager(m_configManager);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 
 		alertReport.setStartTime(start);

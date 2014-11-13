@@ -9,6 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
@@ -29,7 +30,7 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);
 		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
-				exceptionConfigManager);
+				exceptionConfigManager).setConfigManager(new ServerConfigManager());
 
 		alertReport.setStartTime(topReport.getStartTime());
 		alertReport.setEndTime(topReport.getEndTime());

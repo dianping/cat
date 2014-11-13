@@ -67,17 +67,19 @@ public class ScheduledManager implements Initializable {
 			Collection<ScheduledReport> lists = m_reports.values();
 
 			for (ScheduledReport report : lists) {
-				int scheduledReportId = report.getId();
-				UserReportSubState userSubState = new UserReportSubState(report);
+				if (m_serverConfigManager.validateDomain(report.getDomain())) {
+					int scheduledReportId = report.getId();
+					UserReportSubState userSubState = new UserReportSubState(report);
 
-				userRules.add(userSubState);
-				try {
-					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
-					      ScheduledSubscriptionEntity.READSET_FULL);
-					userSubState.setSubscriberState(1);
-				} catch (DalNotFoundException nfe) {
-				} catch (DalException e) {
-					Cat.logError(e);
+					userRules.add(userSubState);
+					try {
+						m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userName,
+						      ScheduledSubscriptionEntity.READSET_FULL);
+						userSubState.setSubscriberState(1);
+					} catch (DalNotFoundException nfe) {
+					} catch (DalException e) {
+						Cat.logError(e);
+					}
 				}
 			}
 		} catch (Exception e) {

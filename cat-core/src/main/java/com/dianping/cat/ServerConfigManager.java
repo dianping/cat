@@ -39,6 +39,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_unusedNames = new HashSet<String>();
 
+	private Set<String> m_crashLogs = new HashSet<String>();
+
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
 	public boolean discardTransaction(Transaction t) {
@@ -127,7 +129,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -258,6 +259,9 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_invalidateDomains.add("iOSCrashLog");
 		m_invalidateDomains.add(Constants.ALL);
 		m_invalidateDomains.add(Constants.FRONT_END);
+
+		m_crashLogs.add("AndroidCrashLog");
+		m_crashLogs.add("iOSCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -360,6 +364,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain);
+	}
+
+	public boolean isCrashLog(String domain) {
+		return m_crashLogs.contains(domain);
 	}
 
 	public boolean isOffline() {

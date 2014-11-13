@@ -67,22 +67,29 @@ public class DependencyAnalyzerTest extends ComponentTestCase {
 
 		DefaultTransaction t;
 		DefaultEvent event;
+		DefaultEvent event2;
 
 		if (i % 3 == 0) {
 			t = new DefaultTransaction("Call", "Cat-Test-Call", null);
 			event = new DefaultEvent("Exception", "192.168.1.0:3000:class:method1", null);
+			event2 = new DefaultEvent("PigeonCall.app", "CatServer", null);
 		} else if (i % 3 == 1) {
 			t = new DefaultTransaction("PigeonCall", "Cat-Test-Call", null);
-			event = new DefaultEvent("PigeonCall.server", "192.168.1.2:3000:class:method2", null);
+			event = new DefaultEvent("PigeonCall.ip", "CatServer", null);
+			event2 = new DefaultEvent("PigeonCall.app", "CatServer", null);
 		} else {
 			t = new DefaultTransaction("SQL", "Cat-Test-SQL", null);
 			event = new DefaultEvent("SQL.Database", "jdbc:mysql://127.0.0.1:3306?cat", null);
+			event2 = new DefaultEvent("SQL.name", "select * from test", null);
 		}
 
 		event.setTimestamp(m_timestamp + 5 * 60 * 1000);
+		event2.setTimestamp(m_timestamp + 5 * 60 * 1000);
 		event.setStatus(Message.SUCCESS);
+		event2.setStatus(Message.SUCCESS);
 		t.setDurationInMillis(i);
 		t.addChild(event);
+		t.addChild(event2);
 
 		t.complete();
 		t.setDurationInMillis(i * 2);
