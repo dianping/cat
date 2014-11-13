@@ -232,7 +232,6 @@ public class ProjectService implements Initializable {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }

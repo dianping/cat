@@ -32,13 +32,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
-	private Map<String, String> m_unknownIps = new ConcurrentHashMap<String, String>();
-
-	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
-
 	private Map<String, Hostinfo> m_hostinfos = new ConcurrentHashMap<String, Hostinfo>();
-
-	public static final String UNKNOWN_IP = "UnknownIp";
 
 	public static final String UNKNOWN_PROJECT = "UnknownProject";
 
@@ -83,7 +77,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 		}
 	}
 
@@ -117,13 +110,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 		String project = m_ipDomains.get(ip);
 
 		if (project == null) {
-			project = m_cmdbs.get(ip);
-
-			if (project == null) {
-				m_unknownIps.put(ip, ip);
-
-				return UNKNOWN_PROJECT;
-			}
+			return UNKNOWN_PROJECT;
 		}
 		return project;
 	}
