@@ -13,6 +13,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -77,6 +79,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
+			Threads.forGroup("cat").start(new ReloadDomainTask());
 		}
 	}
 
@@ -164,6 +167,23 @@ public class HostinfoService implements Initializable, LogEnabled {
 		return ips;
 	}
 
+	private void refresh() {
+		try {
+			List<Hostinfo> hostinfos = m_hostinfoDao.findAllIp(HostinfoEntity.READSET_FULL);
+			Map<String, Hostinfo> tmpHostInfos = new ConcurrentHashMap<String, Hostinfo>();
+			Map<String, String> tmpIpDomains = new ConcurrentHashMap<String, String>();
+
+			for (Hostinfo hostinfo : hostinfos) {
+				tmpHostInfos.put(hostinfo.getIp(), hostinfo);
+				tmpIpDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+			}
+			m_hostinfos = tmpHostInfos;
+			m_ipDomains = tmpIpDomains;
+		} catch (DalException e) {
+			Cat.logError("initialize HostService error", e);
+		}
+	}
+
 	public boolean update(int id, String domain, String ip) {
 		Hostinfo info = createLocal();
 
@@ -192,6 +212,36 @@ public class HostinfoService implements Initializable, LogEnabled {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
+	}
+
+	public class ReloadDomainTask implements Task {
+
+		@Override
+		public String getName() {
+			return "Reload-Ip-Domain-Info";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+					refresh();
+				} catch (Throwable e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(2 * 60 * 1000);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 
 }
