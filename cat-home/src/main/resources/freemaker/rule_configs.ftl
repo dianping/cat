@@ -123,10 +123,10 @@ function initRuleConfigs(filterList) {
 		}
 	}
 	
-	var newSubCondition = $('.subCondition').eq(0).clone();
-	var newCondition = $('.condition').eq(0).clone();
-	var newConfig = $('#configSample').clone();
-	var newUserDefineCondition = $(".subCondition").last().clone();
+	newSubCondition = $('.subCondition').eq(0).clone();
+	newCondition = $('.condition').eq(0).clone();
+	newConfig = $('#configSample').clone();
+	newUserDefineCondition = $(".subCondition").last().clone();
 	newUserDefineCondition.css('display','block');
 
     $("#configTip").tooltip({
