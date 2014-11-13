@@ -136,7 +136,7 @@ public abstract class BaseRuleConfigManager {
 		return m_config;
 	}
 
-	private List<com.dianping.cat.home.rule.entity.Config> getMaxPriorityConfigs(
+	protected List<com.dianping.cat.home.rule.entity.Config> getMaxPriorityConfigs(
 	      Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs) {
 		Set<Integer> keys = configs.keySet();
 		int maxKey = 0;
@@ -166,16 +166,7 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String groupText, String metricText) {
-		return queryConfigs(groupText, metricText, null, FindRulePolicy.NORMAL);
-	}
-
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
-		return queryConfigs(product, metricKey, type, FindRulePolicy.BY_METRIC_TYPE);
-	}
-
-	private List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey,
-	      MetricType type, FindRulePolicy policy) {
 		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
 
 		for (Rule rule : m_config.getRules().values()) {
@@ -186,18 +177,12 @@ public abstract class BaseRuleConfigManager {
 				String metricItemText = item.getMetricItemText();
 				int matchLevel = 0;
 
-				if (policy == FindRulePolicy.NORMAL) {
+				if (type == MetricType.COUNT && item.isMonitorCount()) {
 					matchLevel = validate(productText, metricItemText, product, metricKey);
-				} else if (policy == FindRulePolicy.BY_METRIC_TYPE) {
-					if (type == MetricType.COUNT && item.isMonitorCount()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					} else if (type == MetricType.SUM && item.isMonitorSum()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					}
-				} else if (policy == FindRulePolicy.ALL_BY_GROUP) {
-					matchLevel = validateRegex(productText, product) > 0 ? 1 : 0;
+				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+					matchLevel = validate(productText, metricItemText, product, metricKey);
+				} else if (type == MetricType.SUM && item.isMonitorSum()) {
+					matchLevel = validate(productText, metricItemText, product, metricKey);
 				}
 
 				if (matchLevel > 0) {
@@ -221,7 +206,34 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
-		return queryConfigs(groupText, null, null, FindRulePolicy.ALL_BY_GROUP);
+		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> items = rule.getMetricItems();
+
+			for (MetricItem item : items) {
+				String productText = item.getProductText();
+				int matchLevel = 0;
+				matchLevel = validateRegex(productText, groupText) > 0 ? 1 : 0;
+
+				if (matchLevel > 0) {
+					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
+
+					if (configList == null) {
+						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+						configs.put(matchLevel, configList);
+					}
+					configList.addAll(rule.getConfigs());
+					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, productText);
+					break;
+				}
+			}
+		}
+
+		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityConfigs(configs);
+
+		return decorateConfigOnRead(finalConfigs);
 	}
 
 	public Rule queryRule(String key) {
@@ -309,10 +321,6 @@ public abstract class BaseRuleConfigManager {
 				return 0;
 			}
 		}
-	}
-
-	public static enum FindRulePolicy {
-		ALL_BY_GROUP, BY_METRIC_TYPE, NORMAL;
 	}
 
 }
