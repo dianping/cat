@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="CPUIdle">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_cpuUsage_10)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="warning">
+            <sub-condition type="MaxVal" text="2"/>
+         </condition>
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="4"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="DataUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/data-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="UsrUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/usr-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="VarUsage">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_/var-usage)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="0.9"/>
+         </condition>
+      </config>
+   </rule>
+   <rule id="CPUIdle_alpha">
+      <metric-item monitorAvg="true" metricItemText=".*(?=system_cpuUsage_192)"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="error">
+            <sub-condition type="MaxVal" text="4"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

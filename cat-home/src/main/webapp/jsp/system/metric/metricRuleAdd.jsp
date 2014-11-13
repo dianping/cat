@@ -143,6 +143,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
+			initRuleConfigs();
 			$('#metricConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			
