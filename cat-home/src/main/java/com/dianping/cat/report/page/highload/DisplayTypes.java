@@ -35,6 +35,12 @@ public class DisplayTypes {
 			if (m_sortBy.equals("domain")) {
 				return n2.getDomain().compareTo(n1.getDomain());
 			}
+			if (m_sortBy.equals("bu")) {
+				return n2.getBu().compareTo(n1.getBu());
+			}
+			if (m_sortBy.equals("productline")) {
+				return n2.getProductLine().compareTo(n1.getProductLine());
+			}
 			if (m_sortBy.equals("name")) {
 				return n2.getId().compareTo(n1.getId());
 			}
@@ -49,23 +55,11 @@ public class DisplayTypes {
 			if (m_sortBy.equals("failure")) {
 				return (int) (n2.getFailPercent() * 100 - n1.getFailPercent() * 100);
 			}
-			if (m_sortBy.equals("min")) {
-				return (int) (n2.getMin() * 100 - n1.getMin() * 100);
-			}
-			if (m_sortBy.equals("max")) {
-				return (int) (n2.getMax() * 100 - n1.getMax() * 100);
-			}
 			if (m_sortBy.equals("avg")) {
 				return (int) (n2.getAvg() * 100 - n1.getAvg() * 100);
 			}
 			if (m_sortBy.equals("95line")) {
 				return (int) (n2.getLine95Value() * 100 - n1.getLine95Value() * 100);
-			}
-			if (m_sortBy.equals("999line")) {
-				return (int) (n2.getLine99Value() * 100 - n1.getLine99Value() * 100);
-			}
-			if (m_sortBy.equals("std")) {
-				return (int) (n2.getStd() * 100 - n1.getStd() * 100);
 			}
 			if (m_sortBy.equals("qps")) {
 				return (int) (n2.getTps() * 100 - n1.getTps() * 100);

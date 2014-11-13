@@ -149,6 +149,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
+			initRuleConfigs();
 			$('#networkRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			

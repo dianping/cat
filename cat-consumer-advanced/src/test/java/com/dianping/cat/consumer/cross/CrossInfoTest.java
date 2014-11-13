@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -28,7 +27,6 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -43,7 +41,6 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Call", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -72,7 +69,6 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();
@@ -101,7 +97,6 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
-		analyzer.setCrossAppSwitch(new CrossAppSwitch().setTurnOn(true));
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
 		MessageTree tree = buildMockMessageTree();

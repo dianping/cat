@@ -7,13 +7,13 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
@@ -27,6 +27,9 @@ public class AggregationConfigManager implements Initializable {
 
 	@Inject
 	protected AggregationHandler m_handler;
+
+	@Inject
+	private ContentFetcher m_getter;
 
 	private int m_configId;
 
@@ -59,8 +62,7 @@ public class AggregationConfigManager implements Initializable {
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-aggregation-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -156,7 +158,7 @@ public class AggregationConfigManager implements Initializable {
 		}
 		return true;
 	}
-	
+
 	public class ConfigReloadTask implements Task {
 
 		@Override

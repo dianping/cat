@@ -12,4 +12,15 @@
       </query>
     </query-defs>
   </entity>
+  
+   <entity name="config" table="config" alias="c">
+		<query-defs>
+			<query name="find-all-config" type="SELECT" multiple="true">
+					<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 </entities>

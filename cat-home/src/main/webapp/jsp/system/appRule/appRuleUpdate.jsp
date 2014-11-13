@@ -156,6 +156,7 @@ function update() {
 		$("#metric").val(metric);
 		
 		$('#appRule').addClass('active');
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();
 		})
