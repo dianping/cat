@@ -362,5 +362,6 @@ function generateConfigsJsonString() {
             return "";
         }
     }
+    return "";
 }
 </script>
