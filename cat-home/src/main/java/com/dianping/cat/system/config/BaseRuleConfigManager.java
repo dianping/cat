@@ -196,8 +196,8 @@ public abstract class BaseRuleConfigManager {
 					} else if (type == MetricType.SUM && item.isMonitorSum()) {
 						matchLevel = validate(productText, metricItemText, product, metricKey);
 					}
-				} else if (policy == FindRulePolicy.BY_GROUP) {
-					matchLevel = validateRegex(productText, product);
+				} else if (policy == FindRulePolicy.ALL_BY_GROUP) {
+					matchLevel = validateRegex(productText, product) > 0 ? 1 : 0;
 				}
 
 				if (matchLevel > 0) {
@@ -220,8 +220,8 @@ public abstract class BaseRuleConfigManager {
 		return decorateConfigOnRead(finalConfigs);
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigsByGroup(String groupText) {
-		return queryConfigs(groupText, null, null, FindRulePolicy.BY_GROUP);
+	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
+		return queryConfigs(groupText, null, null, FindRulePolicy.ALL_BY_GROUP);
 	}
 
 	public Rule queryRule(String key) {
@@ -312,7 +312,7 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	public static enum FindRulePolicy {
-		BY_GROUP, BY_METRIC_TYPE, NORMAL;
+		ALL_BY_GROUP, BY_METRIC_TYPE, NORMAL;
 	}
 
 }
