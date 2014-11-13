@@ -20,8 +20,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportManager;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
@@ -29,12 +27,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject(ID)
 	private ReportManager<DependencyReport> m_reportManager;
-
-	@Inject
-	private HostinfoService m_hostinfoService;
-
-	@Inject
-	private ProjectService m_projectService;
 
 	@Inject
 	private DatabaseParser m_parser;
@@ -46,8 +38,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	      "PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
-
-	private static final String UNKNOWN = "UnknownIp";
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -99,23 +89,17 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return null;
 	}
 
-	private String parseIpFromPigeonClientTransaction(Transaction t, MessageTree tree) {
+	private String parseServerName(Transaction t) {
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonCall.server")) {
-					String name = message.getName();
-					int index = name.indexOf(":");
-
-					if (index > 0) {
-						name = name.substring(0, index);
-					}
-					return name;
+				if (message.getType().equals("PigeonCall.app")) {
+					return message.getName();
 				}
 			}
 		}
-		return UNKNOWN;
+		return null;
 	}
 
 	@Override
@@ -149,16 +133,16 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		String type = t.getType();
 
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
-			String ip = parseIpFromPigeonClientTransaction(t, tree);
-			String target = m_hostinfoService.queryDomainByIp(ip);
+			String target = parseServerName(t);
 			String callType = "PigeonCall";
 
-			updateDependencyInfo(report, t, target, callType);
-
-			if (m_projectService.containsDomainInCat(target)) {
+			if (target != null) {
+				updateDependencyInfo(report, t, target, callType);
 				DependencyReport serverReport = findOrCreateReport(target);
 
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
+			}else{
+				System.err.println(t);
 			}
 		}
 	}

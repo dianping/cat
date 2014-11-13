@@ -1,7 +1,9 @@
 package com.dianping.cat.consumer.dependency;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
@@ -42,18 +44,23 @@ public class Configurator extends AbstractResourceConfigurator {
 	}
 
 	public static class MockDependencyReportManager extends MockReportManager<DependencyReport> {
-		private DependencyReport m_report;
+		
+		private Map<String,DependencyReport> m_reports = new HashMap<String, DependencyReport>();
 
 		@Inject
 		private ReportDelegate<DependencyReport> m_delegate;
 
 		@Override
 		public DependencyReport getHourlyReport(long startTime, String domain, boolean createIfNotExist) {
-			if (m_report == null) {
-				m_report = (DependencyReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
+			DependencyReport report = m_reports.get(domain);
+			
+			if (report == null) {
+				report = (DependencyReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
+				
+				m_reports.put(domain, report);
 			}
 
-			return m_report;
+			return report;
 		}
 	}
 

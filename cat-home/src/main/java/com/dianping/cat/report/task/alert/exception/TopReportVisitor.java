@@ -1,5 +1,8 @@
 package com.dianping.cat.report.task.alert.exception;
 
+import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
@@ -22,10 +25,18 @@ public class TopReportVisitor extends BaseVisitor {
 
 	private static final String TOTAL_EXCEPTION_ALERT = "TotalExceptionAlert";
 
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
 		m_exceptionConfigManager = exceptionConfigManager;
 		return this;
 	}
+	
+	public TopReportVisitor setConfigManager(ServerConfigManager configManager) {
+		m_configManager = configManager;
+		return this;
+   }
 
 	public TopReportVisitor setReport(AlertReport report) {
 		m_report = report;
@@ -34,13 +45,14 @@ public class TopReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitDomain(Domain domain) {
-		m_currentDomain = domain.getName();
-		super.visitDomain(domain);
+		if (m_configManager.validateDomain(domain.getName())) {
+			m_currentDomain = domain.getName();
+			super.visitDomain(domain);
+		}
 	}
 
 	@Override
 	public void visitError(Error error) {
-
 		ExceptionExclude exceptionExclude = m_exceptionConfigManager.queryDomainExceptionExclude(m_currentDomain,
 		      error.getId());
 

@@ -58,7 +58,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		}
 	}
 
-
 	@Override
 	public byte[] buildBinary(ProblemReport report) {
 		return DefaultNativeBuilder.build(report);
@@ -96,6 +95,8 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		if (m_manager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
+		} else if (m_manager.isCrashLog(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
 		} else {
 			return true;
