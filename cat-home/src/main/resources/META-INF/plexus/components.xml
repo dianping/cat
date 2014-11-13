@@ -337,15 +337,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.config.ConfigBackupTask</role>
-			<implementation>com.dianping.cat.report.task.config.ConfigBackupTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
 			<implementation>com.dianping.cat.report.chart.impl.CachedMetricReportServiceImpl</implementation>
 			<requirements>

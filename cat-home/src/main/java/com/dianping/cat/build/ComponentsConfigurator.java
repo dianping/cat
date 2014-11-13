@@ -58,7 +58,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
-import com.dianping.cat.report.task.config.ConfigBackupTask;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
@@ -181,7 +180,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentGetter.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class));
-		all.add(C(ConfigBackupTask.class).req(ConfigDao.class));
 
 		return all;
 	}

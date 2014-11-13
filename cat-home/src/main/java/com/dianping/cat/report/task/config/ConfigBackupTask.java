@@ -6,17 +6,20 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.eunit.helper.Files;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
 public class ConfigBackupTask {
-	@Inject
+
 	private ConfigDao m_dao;
 
 	private static final String BASE_DIR_PATH = "src/main/resources/config/";
+
+	public ConfigBackupTask(ConfigDao dao) {
+		m_dao = dao;
+	}
 
 	private boolean backupConfig(String name, String context) {
 		String filePath = BASE_DIR_PATH + name + ".xml";
