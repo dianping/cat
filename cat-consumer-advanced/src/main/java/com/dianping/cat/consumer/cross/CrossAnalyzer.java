@@ -224,6 +224,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		Local local = report.findOrCreateLocal(localIp);
 		Remote remote = local.findOrCreateRemote(remoteIp);
 
+		report.addIp(localIp);
 		remote.setRole(role);
 		remote.setApp(info.getApp());
 
