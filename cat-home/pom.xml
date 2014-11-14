@@ -167,6 +167,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/highload-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

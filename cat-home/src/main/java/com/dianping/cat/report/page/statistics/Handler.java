@@ -38,6 +38,7 @@ import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.entity.HeavySql;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
+import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
@@ -46,6 +47,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
+import com.dianping.cat.report.task.jar.JarReportBuilder;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 
@@ -103,6 +105,13 @@ public class Handler implements PageHandler<Context> {
 
 		model.setHeavyReport(heavyReport);
 		buildSortedHeavyInfo(model, heavyReport);
+	}
+
+	private void buildJarInfo(Model model, Payload payload) {
+		JarReport jarReport = queryJarReport(payload);
+
+		model.setJars(JarReportBuilder.s_jars);
+		model.setJarReport(jarReport);
 	}
 
 	private void buildServiceInfo(Model model, Payload payload) {
@@ -255,6 +264,9 @@ public class Handler implements PageHandler<Context> {
 			      payload.getSummaryemails());
 			model.setSummaryContent(summaryContent);
 			break;
+		case JAR_REPORT:
+			buildJarInfo(model, payload);
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
@@ -282,6 +294,12 @@ public class Handler implements PageHandler<Context> {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
 		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
+	}
+
+	private JarReport queryJarReport(Payload payload) {
+		Pair<Date, Date> pair = queryStartEndTime(payload);
+
+		return m_reportService.queryJarReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {

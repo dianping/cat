@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.jar"  
+	enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-xml-parser="false"  enable-xml-builder="false"  enable-native-parser="true"  enable-native-builder="true">
+	<entity name="jar-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain"  type="map" names="domains" method-find-or-create="true"/>
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="machine"  type="map" names="machines" method-find-or-create="true"/>
+  </entity>
+  <entity name="machine">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="jar" type="list" names="jars" />
+  </entity>
+  <entity name="jar">
+    <attribute name="id" value-type="String" />
+    <attribute name="version" value-type="String" />
+  </entity>
+</model>
+
