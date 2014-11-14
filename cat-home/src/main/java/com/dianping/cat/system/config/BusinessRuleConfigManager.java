@@ -147,7 +147,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		Rule rule = m_config.getRules().get(metricKey);
 
 		if (rule != null) {
-			return copyRuleWithDeepCopyConditions(rule);
+			return copyRule(rule);
 		} else {
 			return buildDefaultRule(product, metricKey);
 		}

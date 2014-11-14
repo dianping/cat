@@ -1,5 +1,6 @@
 package com.dianping.cat.system.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.ConfigDao;
@@ -41,17 +43,14 @@ public abstract class BaseRuleConfigManager {
 
 	protected MonitorRules m_config;
 
-	protected Rule copyRuleWithDeepCopyConditions(Rule rule) {
-		Rule result = new Rule(rule.getId());
+	protected Rule copyRule(Rule rule) {
+		try {
+			Rule result = new Rule(rule.getId());
 
-		for (MetricItem item : rule.getMetricItems()) {
-			result.addMetricItem(item);
+			return DefaultSaxParser.parseEntity(Rule.class, result.toString());
+		} catch (Exception e) {
+			return null;
 		}
-		for (Config config : decorateConfigOnRead(rule.getConfigs())) {
-			transformConfig(config);
-			result.addConfig(config);
-		}
-		return result;
 	}
 
 	protected void decorateConfigOnDelete(List<Config> configs) {
@@ -155,6 +154,24 @@ public abstract class BaseRuleConfigManager {
 		return finalConfigs;
 	}
 
+	private List<Rule> getMaxPriorityRules(Map<Integer, List<Rule>> rules) {
+		Set<Integer> keys = rules.keySet();
+		int maxKey = 0;
+
+		for (int key : keys) {
+			if (key > maxKey) {
+				maxKey = key;
+			}
+		}
+
+		List<Rule> rules = rules.get(maxKey);
+
+		if (rules == null) {
+			rules = new ArrayList<Rule>();
+		}
+		return rules;
+	}
+
 	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
@@ -172,6 +189,47 @@ public abstract class BaseRuleConfigManager {
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		return queryConfigs(product, metricKey, type, FindRulePolicy.BY_METRIC_TYPE);
+	}
+
+	public List<com.dianping.cat.home.rule.entity.Config> queryMaxPriorityConfigs(String product, String metricKey, MetricType type) {
+		Map<Integer,List<Config>> result = new HashMap<Integer,List<Config>>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> items = rule.getMetricItems();
+
+			for (MetricItem item : items) {
+				String configProduct = item.getProductText();
+				String configMetricKey = item.getMetricItemText();
+				int matchLevel = 0;
+
+				if (type == null) {
+					matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+				} else {
+					if (type == MetricType.COUNT && item.isMonitorCount()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					} else if (type == MetricType.SUM && item.isMonitorSum()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					}
+				}
+
+				if (matchLevel > 0) {
+					List<Config> rules = result.get(matchLevel);
+					
+					if(rules==null){
+						rules= new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+						result.put(matchLevel, rules);
+					}
+					
+					rules.addAll(rule.getConfigs());
+				}
+			}
+		}
+		List<Config> configs = getMaxPriorityConfigs(result);
+		
+		
+		return decorateConfigOnRead(configs);
 	}
 
 	private List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey,
@@ -228,7 +286,7 @@ public abstract class BaseRuleConfigManager {
 		Rule rule = m_config.getRules().get(key);
 
 		if (rule != null) {
-			return copyRuleWithDeepCopyConditions(rule);
+			return copyRule(rule);
 		} else {
 			return null;
 		}
