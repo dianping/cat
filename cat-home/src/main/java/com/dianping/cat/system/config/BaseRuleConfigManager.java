@@ -25,8 +25,6 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.RuleType;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.site.lookup.util.StringUtils;
 
 public abstract class BaseRuleConfigManager {
@@ -47,6 +45,7 @@ public abstract class BaseRuleConfigManager {
 
 			return DefaultSaxParser.parseEntity(Rule.class, result.toString());
 		} catch (Exception e) {
+			Cat.logError(e);
 			return null;
 		}
 	}
@@ -68,7 +67,7 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 	}
-	
+
 	protected List<Config> decorateConfigOnRead(List<Config> originConfigs) {
 		List<Config> configs = deepCopy(originConfigs);
 
@@ -109,11 +108,17 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	private List<Config> deepCopy(List<Config> originConfigs) {
-		Gson gson = new Gson();
-		String source = gson.toJson(originConfigs);
-		List<Config> result = gson.fromJson(source, new TypeToken<List<Config>>() {
-		}.getType());
+		List<Config> result = new ArrayList<Config>();
 
+		for (Config config : originConfigs) {
+			try {
+				Config copiedConfig = DefaultSaxParser.parseEntity(Config.class, config.toString());
+
+				result.add(copiedConfig);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
 		return result;
 	}
 
@@ -129,7 +134,7 @@ public abstract class BaseRuleConfigManager {
 
 	protected abstract String getConfigName();
 
-	protected <T> List<T> getMaxPriorityRules(Map<Integer, List<T>> rules) {
+	protected List<Rule> getMaxPriorityRules(Map<Integer, List<Rule>> rules) {
 		Set<Integer> keys = rules.keySet();
 		int maxKey = 0;
 
@@ -139,10 +144,10 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 
-		List<T> finalRules = rules.get(maxKey);
+		List<Rule> finalRules = rules.get(maxKey);
 
 		if (finalRules == null) {
-			finalRules = new ArrayList<T>();
+			finalRules = new ArrayList<Rule>();
 		}
 		return finalRules;
 	}
@@ -160,34 +165,6 @@ public abstract class BaseRuleConfigManager {
 			Cat.logError(e);
 			return false;
 		}
-	}
-
-	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
-		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> items = rule.getMetricItems();
-
-			for (MetricItem item : items) {
-				String productText = item.getProductText();
-				int matchLevel = 0;
-				matchLevel = validateRegex(productText, groupText) > 0 ? 1 : 0;
-
-				if (matchLevel > 0) {
-					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
-
-					if (configList == null) {
-						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-						configs.put(matchLevel, configList);
-					}
-					configList.addAll(rule.getConfigs());
-				}
-			}
-		}
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityRules(configs);
-
-		return decorateConfigOnRead(finalConfigs);
 	}
 
 	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {
@@ -220,7 +197,6 @@ public abstract class BaseRuleConfigManager {
 						rules = new ArrayList<Rule>();
 						result.put(matchLevel, rules);
 					}
-
 					rules.add(rule);
 				}
 			}
@@ -230,9 +206,13 @@ public abstract class BaseRuleConfigManager {
 
 		for (Rule rule : rules) {
 			configs.addAll(rule.getConfigs());
-			
-			Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + ":" + metricKey + ":"
-			      + type);
+
+			String nameValuePairs = "product=" + product + "&metricKey=" + metricKey;
+			if (type != null) {
+				nameValuePairs += "&type=" + type.getName();
+			}
+
+			Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, nameValuePairs);
 		}
 
 		List<Config> finalConfigs = decorateConfigOnRead(configs);
