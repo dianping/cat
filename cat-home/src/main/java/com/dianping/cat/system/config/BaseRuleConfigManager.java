@@ -41,9 +41,7 @@ public abstract class BaseRuleConfigManager {
 
 	protected Rule copyRule(Rule rule) {
 		try {
-			Rule result = new Rule(rule.getId());
-
-			return DefaultSaxParser.parseEntity(Rule.class, result.toString());
+			return DefaultSaxParser.parseEntity(Rule.class, rule.toString());
 		} catch (Exception e) {
 			Cat.logError(e);
 			return null;
