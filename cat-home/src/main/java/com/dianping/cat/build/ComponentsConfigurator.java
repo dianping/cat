@@ -164,7 +164,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		all.add(C(NetworkRuleConfigManager.class)
+		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
 		      UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
