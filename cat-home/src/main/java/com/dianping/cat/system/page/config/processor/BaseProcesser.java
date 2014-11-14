@@ -46,12 +46,14 @@ public class BaseProcesser {
 
 		if (!StringUtil.isEmpty(key)) {
 			Rule rule = manager.queryRule(key);
-			ruleId = rule.getId();
-			configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
 
-			String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+			if (rule != null) {
+				ruleId = rule.getId();
+				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
+				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
 
-			model.setConfigHeader(configHeader);
+				model.setConfigHeader(configHeader);
+			}
 		}
 		String content = m_ruleDecorator.generateConfigsHtml(configsStr);
 
