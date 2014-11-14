@@ -10,7 +10,6 @@
     <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
     <member name="request-package-sum" value-type="long" all="false" select-expr="sum(request_package)" length="19" nullable="false" />
     <member name="response-package-sum" value-type="long" all="false" select-expr="sum(response_package)" length="19" nullable="false" />
-    <var name="key-id" value-type="int" key-member="id" />
     <var name="command-id" value-type="int" />
     <var name="start-minute-order" value-type="int" />
 	<var name="end-minute-order" value-type="int" />
@@ -713,4 +712,63 @@
       </query>
     </query-defs>
   </entity>
+  
+  <entity name="app-speed-data" table="app_speed_data" alias="asd">
+		<member name="access-number-sum" value-type="long" all="false" select-expr="sum(access_number)" length="19" nullable="false" />
+		<member name="slow-access-number-sum" value-type="long" all="false" select-expr="sum(slow_access_number)" length="19" nullable="false" />
+	    <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
+	    <member name="slow-response-sum-time-sum" value-type="long" all="false" select-expr="sum(slow_response-sum-time-sum)" length="19" nullable="false" />
+	    <var name="key-id" value-type="int" key-member="id" />
+    	<var name="speed-id" value-type="int" />
+	  <readsets>
+      <readset name="COUNT-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      	<member name="slow-access-number-sum"/>
+      </readset>
+      <readset name="AVG-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      	<member name="slow-access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      	<member name="slow-response-sum-time-sum"/>
+      </readset>
+      </readsets>
+      
+      <query-defs>
+	  <query name="insert" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>  
+      <query name="find-data-by-minute" type="SELECT" multiple="true">
+        <param name="speed-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="network" />
+        <param name="app-version" />
+        <param name="platform" />
+       
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+        <IF type='NE' field='network' value='-1'>
+			AND  <FIELD name='network'/> = ${network}
+		</IF>
+        <IF type='NE' field='app-version' value='-1'>
+			AND  <FIELD name='app-version'/> = ${app-version}
+		</IF>
+		<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+		</IF>
+        group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
+      </query-defs>
+	</entity>
 </entities>

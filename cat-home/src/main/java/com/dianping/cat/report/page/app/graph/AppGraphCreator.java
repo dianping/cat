@@ -22,7 +22,7 @@ import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.service.app.command.AppDataGroupByField;
 import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.command.QueryEntity;
+import com.dianping.cat.service.app.command.CommandQueryEntity;
 
 public class AppGraphCreator extends AbstractGraphCreator {
 
@@ -69,7 +69,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
+	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, String type) {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
@@ -85,14 +85,14 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
+	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataGroupByField field) {
 		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppDataCommand> datas = m_appDataService.queryAppDataCommandsByField(entity, field);
 
 		for (AppDataCommand data : datas) {
-			Pair<Integer, Item> pair = buildPieChartItem(entity.getCommand(), data, field);
+			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
 			PieChartDetailInfo info = new PieChartDetailInfo();
 
@@ -220,7 +220,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return map;
 	}
 
-	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
+	private Double[] prepareQueryData(CommandQueryEntity queryEntity, String type) {
 		Double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;

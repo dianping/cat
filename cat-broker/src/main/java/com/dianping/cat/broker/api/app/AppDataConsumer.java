@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,21 +15,19 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.BaseAppDataService;
 
-public class AppDataConsumer implements Initializable, LogEnabled {
+@SuppressWarnings("rawtypes")
+public class AppDataConsumer extends ContainerHolder implements Initializable, LogEnabled {
 
 	public static final long MINUTE = 60 * 1000L;
 
 	public static final long DURATION = 5 * MINUTE;
-
-	@Inject
-	private AppDataService m_appDataService;
 
 	private AppDataQueue m_appDataQueue;
 
@@ -37,6 +36,8 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	private ConcurrentHashMap<Long, BucketHandler> m_tasks;
+
+	private Map<String, BaseAppDataService> m_appDataServices;
 
 	private SimpleDateFormat m_fileFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
@@ -47,17 +48,17 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public boolean enqueue(AppCommandData appData) {
+	public boolean enqueue(BaseData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
+		m_appDataServices = lookupMap(BaseAppDataService.class);
 		m_appDataQueue = new AppDataQueue();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
-
 		loadOldData();
 
 		Threads.forGroup("cat").start(bucketThreadController);
@@ -73,7 +74,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			for (File file : files) {
 				try {
 					long timestamp = m_fileFormat.parse(file.getName()).getTime();
-					BucketHandler handler = new BucketHandler(timestamp, m_appDataService);
+					BucketHandler handler = new BucketHandler(timestamp, m_appDataServices);
 
 					handler.load(file);
 					Threads.forGroup("cat").start(handler);
@@ -244,7 +245,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 
 		private void startCurrentTask(long currentDuration) {
 			if (m_tasks.get(currentDuration) == null) {
-				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataService);
+				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataServices);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 				Threads.forGroup("cat").start(curBucketHandler);
 
@@ -257,7 +258,7 @@ public class AppDataConsumer implements Initializable, LogEnabled {
 			Long next = new Long(currentDuration + DURATION);
 
 			if (m_tasks.get(next) == null) {
-				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataService);
+				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataServices);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(next)));
 				Threads.forGroup("cat").start(nextBucketHandler);
 

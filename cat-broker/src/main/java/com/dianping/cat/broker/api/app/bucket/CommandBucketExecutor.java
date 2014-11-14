@@ -16,11 +16,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.broker.api.app.AppCommandData;
 import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.BaseAppDataService;
 
 public class CommandBucketExecutor implements BucketExecutor {
 
-	private AppDataService m_appDataService;
+	private BaseAppDataService<AppDataCommand> m_appDataService;
 
 	private HashMap<Integer, HashMap<String, AppCommandData>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppCommandData>>();
 
@@ -30,7 +30,7 @@ public class CommandBucketExecutor implements BucketExecutor {
 
 	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
 
-	public CommandBucketExecutor(long startTime, AppDataService appDataService) {
+	public CommandBucketExecutor(long startTime, BaseAppDataService<AppDataCommand> appDataService) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
 	}
@@ -131,14 +131,14 @@ public class CommandBucketExecutor implements BucketExecutor {
 	public BaseData loadRecord(String[] items) {
 		AppCommandData appData = new AppCommandData();
 
-		appData.setCode(Integer.parseInt(items[1]));
+		appData.setCommand(Integer.parseInt(items[1]));
 		appData.setTimestamp(Long.parseLong(items[2]));
 		appData.setCity(Integer.parseInt(items[3]));
 		appData.setOperator(Integer.parseInt(items[4]));
 		appData.setNetwork(Integer.parseInt(items[5]));
 		appData.setVersion(Integer.parseInt(items[6]));
 		appData.setConnectType(Integer.parseInt(items[7]));
-		appData.setCommand(Integer.parseInt(items[8]));
+		appData.setCode(Integer.parseInt(items[8]));
 		appData.setPlatform(Integer.parseInt(items[9]));
 		appData.setCount(Integer.parseInt(items[10]));
 		appData.setResponseTime(Integer.parseInt(items[11]));
@@ -147,7 +147,7 @@ public class CommandBucketExecutor implements BucketExecutor {
 		return appData;
 	}
 
-	public AppDataService getAppDataService() {
+	public BaseAppDataService<?> getAppDataService() {
 		return m_appDataService;
 	}
 
@@ -220,14 +220,14 @@ public class CommandBucketExecutor implements BucketExecutor {
 						if (appData.notFlushed()) {
 							StringBuilder sb = new StringBuilder();
 							sb.append(appData.getClass().getName()).append(tab);
-							sb.append(appData.getCode()).append(tab);
+							sb.append(appData.getCommand()).append(tab);
 							sb.append(appData.getTimestamp()).append(tab);
 							sb.append(appData.getCity()).append(tab);
 							sb.append(appData.getOperator()).append(tab);
 							sb.append(appData.getNetwork()).append(tab);
 							sb.append(appData.getVersion()).append(tab);
 							sb.append(appData.getConnectType()).append(tab);
-							sb.append(appData.getCommand()).append(tab);
+							sb.append(appData.getCode()).append(tab);
 							sb.append(appData.getPlatform()).append(tab);
 							sb.append(appData.getCount()).append(tab);
 							sb.append(appData.getResponseTime()).append(tab);

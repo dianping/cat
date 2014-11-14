@@ -12,11 +12,13 @@ import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.app.AppDataCommandDao;
+import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.aggregation.AggregationHandler;
 import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.config.url.UrlPatternHandler;
@@ -32,7 +34,9 @@ import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.app.BaseAppDataService;
 import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.speed.AppSpeedDataService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -71,9 +75,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class));
 
+		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class));
+
 		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(AppDataService.class).req(AppConfigManager.class, AppDataCommandDao.class));
+		all.add(C(BaseAppDataService.class, AppDataService.ID, AppDataService.class).req(AppConfigManager.class,
+		      AppDataCommandDao.class));
+
+		all.add(C(BaseAppDataService.class, AppSpeedDataService.ID, AppSpeedDataService.class).req(
+		      AppSpeedConfigManager.class, AppSpeedDataDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

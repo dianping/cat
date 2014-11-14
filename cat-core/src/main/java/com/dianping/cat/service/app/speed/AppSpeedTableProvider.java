@@ -5,14 +5,14 @@ import java.util.Map;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 
-import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppSpeedData;
 
 public class AppSpeedTableProvider implements TableProvider {
-	private String m_logicalTableName = "app-speed_data";
+	private String m_logicalTableName = "app-speed-data";
 
 	private String m_physicalTableName = "app_speed_data";
 
-	private String m_dataSourceName = "app_speed";
+	private String m_dataSourceName = "app";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints) {
@@ -23,12 +23,12 @@ public class AppSpeedTableProvider implements TableProvider {
 	public String getLogicalTableName() {
 		return m_logicalTableName;
 	}
-	
+
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
-		AppDataCommand command = (AppDataCommand) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		AppSpeedData data = (AppSpeedData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
-		return m_physicalTableName + "_" + command.getCommandId();
+		return m_physicalTableName + "_" + data.getSpeedId();
 	}
 
 	public void setDataSourceName(String dataSourceName) {

@@ -2,9 +2,11 @@ package com.dianping.cat.report.page.app;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -12,6 +14,7 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -20,6 +23,7 @@ import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 import com.dianping.cat.service.app.command.AppDataSpreadInfo;
+import com.site.lookup.util.StringUtils;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -46,6 +50,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<Command> m_commands;
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
+
+	private Map<Integer, Speed> m_speeds;
 
 	private String m_content;
 
@@ -156,6 +162,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_operators;
 	}
 
+	public String getPage2StepsJson() {
+		Map<String, List<Speed>> page2Steps = new LinkedHashMap<String, List<Speed>>();
+
+		for (Speed speed : m_speeds.values()) {
+			String page = speed.getPage();
+			if (StringUtils.isEmpty(page)) {
+				page = "default";
+			}
+			List<Speed> steps = page2Steps.get(page);
+			if (steps == null) {
+				steps = new ArrayList<Speed>();
+				page2Steps.put(page, steps);
+			}
+			steps.add(speed);
+		}
+		return new JsonBuilder().toJson(page2Steps);
+	}
+
 	public PieChart getPieChart() {
 		return m_pieChart;
 	}
@@ -174,6 +198,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
+	}
+
+	public Map<Integer, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
+	public Set<String> getPages() {
+		Set<String> pages = new HashSet<String>();
+
+		for (Speed speed : m_speeds.values()) {
+			pages.add(speed.getPage());
+		}
+		return pages;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -242,6 +279,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
+	}
+
+	public void setSpeeds(Map<Integer, Speed> speeds) {
+		m_speeds = speeds;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

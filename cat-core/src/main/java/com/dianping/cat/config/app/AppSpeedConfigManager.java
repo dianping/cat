@@ -37,10 +37,6 @@ public class AppSpeedConfigManager implements Initializable {
 
 	private long m_modifyTime;
 
-	private final String THRESHOLD = "threshold";
-
-	private final String TABLE_ID = "table_id";
-
 	@Override
 	public void initialize() {
 		try {
@@ -105,7 +101,7 @@ public class AppSpeedConfigManager implements Initializable {
 		}
 	}
 
-	private int queryField(String page, String step, String field) {
+	public int querSpeedThreshold(String page, String step) {
 		int threshold = -1;
 		Speed speed = m_speeds.get(page + "-" + step);
 
@@ -115,12 +111,14 @@ public class AppSpeedConfigManager implements Initializable {
 		return threshold;
 	}
 
-	public int querSpeedThreshold(String page, String step) {
-		return queryField(page, step, THRESHOLD);
-	}
-
 	public int querySpeedId(String page, String step) {
-		return queryField(page, step, TABLE_ID);
+		int threshold = -1;
+		Speed speed = m_speeds.get(page + "-" + step);
+
+		if (speed != null) {
+			threshold = speed.getId();
+		}
+		return threshold;
 	}
 
 	private void updateData() {
@@ -144,7 +142,7 @@ public class AppSpeedConfigManager implements Initializable {
 			config.setName(CONFIG_NAME);
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			
+
 			updateData();
 		} catch (Exception e) {
 			Cat.logError(e);

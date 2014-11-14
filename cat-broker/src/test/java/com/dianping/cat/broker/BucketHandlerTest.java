@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -16,7 +17,7 @@ import com.dianping.cat.broker.api.app.AppDataQueue;
 import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
 import com.dianping.cat.broker.api.app.bucket.CommandBucketExecutor;
-import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.BaseAppDataService;
 
 public class BucketHandlerTest {
 
@@ -33,11 +34,12 @@ public class BucketHandlerTest {
 	}
 
 	@Test
+	@SuppressWarnings("rawtypes")
 	public void test() throws Exception {
-		AppDataService appDataService = null;
+		Map<String, BaseAppDataService> services = new HashMap<String, BaseAppDataService>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		long startTime = sdf.parse("2014-08-19 11:20").getTime();
-		BucketHandler handler = new BucketHandler(startTime, appDataService);
+		BucketHandler handler = new BucketHandler(startTime, services);
 
 		HashMap<Integer, HashMap<String, AppCommandData>> datas = ((CommandBucketExecutor) handler.getBucketExecutors()
 		      .get(AppCommandData.class.getName())).getDatas();
@@ -53,7 +55,6 @@ public class BucketHandlerTest {
 		handler.save(file);
 
 		datas.clear();
-		System.out.println("comign-");
 		handler.load(file);
 		AppDataQueue queue = handler.getAppDataQueue();
 

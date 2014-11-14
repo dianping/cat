@@ -19,8 +19,9 @@ import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.app.AppDataCommandEntity;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.service.app.BaseAppDataService;
 
-public class AppDataService {
+public class AppDataService implements BaseAppDataService<AppDataCommand> {
 
 	@Inject
 	private AppDataCommandDao m_dao;
@@ -38,7 +39,9 @@ public class AppDataService {
 
 	public static final String RESPONSE_PACKAGE = "responsePackage";
 
-	public List<AppDataSpreadInfo> buildAppDataSpreadInfo(QueryEntity entity, AppDataGroupByField groupByField) {
+	public static final String ID = AppDataCommand.class.getName();
+
+	public List<AppDataSpreadInfo> buildAppDataSpreadInfo(CommandQueryEntity entity, AppDataGroupByField groupByField) {
 		List<AppDataSpreadInfo> infos = new LinkedList<AppDataSpreadInfo>();
 		List<AppDataCommand> datas = queryAppDataCommandsByFieldCode(entity, groupByField);
 		Map<Integer, List<AppDataCommand>> field2Datas = buildFields2Datas(datas, groupByField);
@@ -46,7 +49,7 @@ public class AppDataService {
 		for (Entry<Integer, List<AppDataCommand>> entry : field2Datas.entrySet()) {
 			List<AppDataCommand> datalst = entry.getValue();
 			AppDataSpreadInfo info = new AppDataSpreadInfo();
-			double ratio = computeSuccessRatio(entity.getCommand(), datalst);
+			double ratio = computeSuccessRatio(entity.getId(), datalst);
 
 			info.setSuccessRatio(ratio);
 			updateAppDataSpreadInfo(info, entry, groupByField, entity);
@@ -171,11 +174,13 @@ public class AppDataService {
 		return new AppDataCommandMap(length, dataMap);
 	}
 
+	@Override
 	public int[] insert(AppDataCommand[] proto) throws DalException {
 		return m_dao.insert(proto);
 	}
 
-	public void insertSignal(AppDataCommand proto) throws DalException {
+	@Override
+	public void insertSingle(AppDataCommand proto) throws DalException {
 		m_dao.insert(proto);
 	}
 
@@ -190,15 +195,15 @@ public class AppDataService {
 		return false;
 	}
 
-	public List<AppDataCommand> queryAppDataCommandsByField(QueryEntity entity, AppDataGroupByField groupByField) {
+	public List<AppDataCommand> queryAppDataCommandsByField(CommandQueryEntity entity, AppDataGroupByField groupByField) {
 		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
-		int commandId = entity.getCommand();
+		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
 		int operator = entity.getOperator();
 		int network = entity.getNetwork();
 		int appVersion = entity.getVersion();
-		int connnectType = entity.getChannel();
+		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
 		int startMinuteOrder = entity.getStartMinuteOrder();
@@ -241,15 +246,16 @@ public class AppDataService {
 		return datas;
 	}
 
-	private List<AppDataCommand> queryAppDataCommandsByFieldCode(QueryEntity entity, AppDataGroupByField groupByField) {
+	private List<AppDataCommand> queryAppDataCommandsByFieldCode(CommandQueryEntity entity,
+	      AppDataGroupByField groupByField) {
 		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
-		int commandId = entity.getCommand();
+		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
 		int operator = entity.getOperator();
 		int network = entity.getNetwork();
 		int appVersion = entity.getVersion();
-		int connnectType = entity.getChannel();
+		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
 		int startMinuteOrder = entity.getStartMinuteOrder();
@@ -325,11 +331,11 @@ public class AppDataService {
 			return data.getPlatform();
 		case CODE:
 		default:
-			return QueryEntity.DEFAULT_VALUE;
+			return CommandQueryEntity.DEFAULT_VALUE;
 		}
 	}
 
-	public double queryOneDayDelayAvg(QueryEntity entity) {
+	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
 		Double[] values = queryValue(entity, DELAY);
 		double delaySum = 0;
 		int size = 0;
@@ -343,14 +349,14 @@ public class AppDataService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(QueryEntity entity, String type) {
-		int commandId = entity.getCommand();
+	public Double[] queryValue(CommandQueryEntity entity, String type) {
+		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
 		int operator = entity.getOperator();
 		int network = entity.getNetwork();
 		int appVersion = entity.getVersion();
-		int connnectType = entity.getChannel();
+		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
 		List<AppDataCommand> datas;
@@ -409,7 +415,7 @@ public class AppDataService {
 	}
 
 	private void updateAppDataSpreadInfo(AppDataSpreadInfo info, Entry<Integer, List<AppDataCommand>> entry,
-	      AppDataGroupByField field, QueryEntity entity) {
+	      AppDataGroupByField field, CommandQueryEntity entity) {
 		int key = entry.getKey();
 		List<AppDataCommand> datas = entry.getValue();
 		long accessNumberSum = 0;
@@ -430,7 +436,8 @@ public class AppDataService {
 		info.setAccessNumberSum(accessNumberSum).setResponseTimeAvg(responseTimeAvg)
 		      .setRequestPackageAvg(requestPackageAvg).setResponsePackageAvg(responsePackageAvg)
 		      .setOperator(entity.getOperator()).setCity(entity.getCity()).setNetwork(entity.getNetwork())
-		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom()).setConnectType(entity.getChannel());
+		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom())
+		      .setConnectType(entity.getConnectType());
 
 		setFieldValue(info, field, key);
 	}
@@ -453,5 +460,4 @@ public class AppDataService {
 			return m_duration;
 		}
 	}
-
 }

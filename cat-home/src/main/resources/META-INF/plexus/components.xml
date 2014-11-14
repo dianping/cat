@@ -463,7 +463,7 @@
 			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -1517,7 +1517,7 @@
 			<implementation>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
@@ -2085,7 +2085,12 @@
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-data-command</role-hint>
-			<implementation>com.dianping.cat.config.app.AppDataCommandTableProvider</implementation>
+			<implementation>com.dianping.cat.service.app.command.AppDataCommandTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -2390,8 +2395,27 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-speed-data</logical-table-name>
+				<physical-table-name>app_speed_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.app.AppDataCommandDao</role>
 			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppSpeedDataDao</role>
+			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2832,7 +2856,7 @@
 			<implementation>com.dianping.cat.report.task.alert.app.AppAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
@@ -4456,10 +4480,13 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
@@ -4488,11 +4515,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -4521,8 +4557,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppDataService</role>
-			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<role>com.dianping.cat.service.app.command.AppDataService</role>
+			<implementation>com.dianping.cat.service.app.command.AppDataService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.app.AppDataCommandDao</role>

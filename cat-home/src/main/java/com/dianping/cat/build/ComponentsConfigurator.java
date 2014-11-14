@@ -61,6 +61,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.app.command.AppDataCommandTableProvider;
 import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.speed.AppSpeedTableProvider;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -137,6 +138,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
+
+		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

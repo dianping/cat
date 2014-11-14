@@ -7,6 +7,7 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.junit.Test;
 
@@ -26,14 +27,13 @@ public class AppSpeedTest {
 		long timestamp = System.currentTimeMillis();
 		String urlStr = "";
 		/*
-		 * network	version	platform	page	step:responseTime ..... 
-		 * 1400037748182 1 6.9 1 shop.bin 1:30 2:40 3:50
+		 * network version platform page step:responseTime ..... 1400037748182 1 6.9 1 shop.bin 1:30 2:40 3:50
 		 */
-		for (int i = 0; i < 10; i++) {
-			urlStr += timestamp + "\t1\t2\t1\tshop.bin-" + i + "\t30\n";
+		for (int i = 0; i < 4; i++) {
+			int value = new Random().nextInt(300);
+			urlStr += timestamp + "\t1\t2\t1\tindex.bin\t1-" + value + "\n";
+			urls.add(url_pre + "?v=1&c=" + timestamp + URLEncoder.encode(urlStr, "utf-8"));
 		}
-
-		urls.add(url_pre + "?v=1&c=" + timestamp + URLEncoder.encode(urlStr, "utf-8"));
 
 		for (String url : urls) {
 			String ret = sendGet(url);

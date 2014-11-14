@@ -2,17 +2,17 @@ package com.dianping.cat.service.app.command;
 
 public class AppDataSpreadInfo {
 
-	private int m_operator = QueryEntity.DEFAULT_VALUE;
+	private int m_operator = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_network = QueryEntity.DEFAULT_VALUE;
+	private int m_network = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_appVersion = QueryEntity.DEFAULT_VALUE;
+	private int m_appVersion = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_connectType = QueryEntity.DEFAULT_VALUE;
+	private int m_connectType = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_platform = QueryEntity.DEFAULT_VALUE;
+	private int m_platform = CommandQueryEntity.DEFAULT_VALUE;
 
-	private int m_city = QueryEntity.DEFAULT_VALUE;
+	private int m_city = CommandQueryEntity.DEFAULT_VALUE;
 
 	private double m_successRatio;
 

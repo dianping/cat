@@ -5,17 +5,21 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.BaseData;
 import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.broker.api.app.BaseData;
+import com.dianping.cat.broker.api.app.RawAppSpeedData;
+import com.dianping.cat.service.app.BaseAppDataService;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BucketHandler implements Task {
 
 	private boolean m_active = true;
@@ -24,12 +28,16 @@ public class BucketHandler implements Task {
 
 	private AppDataQueue m_appDataQueue = new AppDataQueue();
 
-	private HashMap<String, BucketExecutor> m_bucketExecutors = new LinkedHashMap<String, BucketExecutor>();
+	private Map<String, BucketExecutor> m_bucketExecutors = new LinkedHashMap<String, BucketExecutor>();
 
 	private long m_startTime;
 
-	public BucketHandler(long startTime, AppDataService appDataService) {
-		m_bucketExecutors.put(AppCommandData.class.getName(), new CommandBucketExecutor(startTime, appDataService));
+	public BucketHandler(long startTime, Map<String, BaseAppDataService> appDataServices) {
+		BaseAppDataService appDataCommandService = appDataServices.get(AppDataCommand.class.getName());
+		m_bucketExecutors
+		      .put(AppCommandData.class.getName(), new CommandBucketExecutor(startTime, appDataCommandService));
+		BaseAppDataService appSpeedDataService = appDataServices.get(AppSpeedData.class.getName());
+		m_bucketExecutors.put(RawAppSpeedData.class.getName(), new SpeedBucketExecutor(startTime, appSpeedDataService));
 	}
 
 	public boolean enqueue(BaseData appData) {
@@ -51,7 +59,7 @@ public class BucketHandler implements Task {
 		return m_appDataQueue;
 	}
 
-	public HashMap<String, BucketExecutor> getBucketExecutors() {
+	public Map<String, BucketExecutor> getBucketExecutors() {
 		return m_bucketExecutors;
 	}
 

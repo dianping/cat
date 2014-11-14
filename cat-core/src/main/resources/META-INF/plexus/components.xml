@@ -90,6 +90,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
 			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
 			<requirements>
@@ -99,14 +108,28 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppDataService</role>
-			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<role>com.dianping.cat.service.app.BaseAppDataService</role>
+			<role-hint>com.dianping.cat.app.AppDataCommand</role-hint>
+			<implementation>com.dianping.cat.service.app.command.AppDataService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppDataCommandDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.app.BaseAppDataService</role>
+			<role-hint>com.dianping.cat.app.AppSpeedData</role-hint>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedDataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.app.AppSpeedDataDao</role>
 				</requirement>
 			</requirements>
 		</component>

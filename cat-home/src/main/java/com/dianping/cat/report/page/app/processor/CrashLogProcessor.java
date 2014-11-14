@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.app.processor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -13,6 +14,7 @@ import java.util.Set;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeHelper;
@@ -45,6 +47,9 @@ public class CrashLogProcessor {
 	private String MODULES = "modules";
 
 	private String PLATFORM_VERSIONS = "platformVersions";
+
+	private List<String> CRASH_LOG_DOMAINS = Arrays.asList("AndroidCrashLog", "iOSCrashLog", "MerchantAndroidCrashLog",
+	      "MerchantIOSCrashLog");
 
 	private Set<String> findOrCreate(String key, Map<String, Set<String>> map) {
 		Set<String> value = map.get(key);
@@ -101,10 +106,10 @@ public class CrashLogProcessor {
 			domain = Splitters.by(";").split(payload.getQuery1()).get(0);
 		}
 
-		if ("Android".equalsIgnoreCase(domain) || StringUtils.isEmpty(domain)) {
-			return "AndroidCrashLog";
-		} else if ("iOS".equalsIgnoreCase(domain)) {
-			return "iOSCrashLog";
+		if (StringUtils.isEmpty(domain)) {
+			return CRASH_LOG_DOMAINS.get(0);
+		} else if (CRASH_LOG_DOMAINS.contains(domain)) {
+			return domain;
 		} else {
 			throw new RuntimeException("Unknown crash log domain: " + domain);
 		}
@@ -172,10 +177,14 @@ public class CrashLogProcessor {
 		if (StringUtils.isNotEmpty(query)) {
 			List<String> querys = Splitters.by(";").split(query);
 
-			problemStatistics.setAppVersions(Splitters.by(":").noEmptyItem().split(querys.get(1)));
-			problemStatistics.setPlatformVersions(Splitters.by(":").noEmptyItem().split(querys.get(2)));
-			problemStatistics.setModules(Splitters.by(":").noEmptyItem().split(querys.get(3)));
-			problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
+			if (querys.size() == 5) {
+				problemStatistics.setAppVersions(Splitters.by(":").noEmptyItem().split(querys.get(1)));
+				problemStatistics.setPlatformVersions(Splitters.by(":").noEmptyItem().split(querys.get(2)));
+				problemStatistics.setModules(Splitters.by(":").noEmptyItem().split(querys.get(3)));
+				problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
+			} else {
+				Cat.logError(new RuntimeException("error query format: " + query));
+			}
 		}
 		problemStatistics.visitProblemReport(report);
 
