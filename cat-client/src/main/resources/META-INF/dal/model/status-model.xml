@@ -38,9 +38,14 @@
 		<attribute name="max" value-type="long" primitive="true" />
 		<attribute name="total" value-type="long" primitive="true" />
 		<attribute name="free" value-type="long" primitive="true" />
-		<attribute name="heap-usage" value-type="long" primitive="true" />
 		<attribute name="non-heap-usage" value-type="long" primitive="true" />
+		<entity-ref name="heap" />
 		<entity-ref name="gc" names ="gcs" type="list"/>
+	</entity>
+	<entity name="heap" class-name="HeapInfo">
+		<attribute name="heap-usage" value-type="long" primitive="true" />
+		<attribute name="eden-usage" value-type="long" primitive="true" />
+		<attribute name="survivor-usage" value-type="long" primitive="true" />
 	</entity>
 	<entity name="gc" class-name="GcInfo">
 		<attribute name="name" value-type="String" />

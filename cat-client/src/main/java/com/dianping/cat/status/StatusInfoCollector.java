@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
@@ -16,6 +17,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.GcInfo;
+import com.dianping.cat.status.model.entity.HeapInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.OsInfo;
@@ -142,8 +144,20 @@ public class StatusInfoCollector extends BaseVisitor {
 		memory.setMax(runtime.maxMemory());
 		memory.setTotal(runtime.totalMemory());
 		memory.setFree(runtime.freeMemory());
-		memory.setHeapUsage(bean.getHeapMemoryUsage().getUsed());
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
+
+		HeapInfo heap = new HeapInfo();
+
+		memory.setHeap(heap);
+
+		heap.setHeapUsage(bean.getHeapMemoryUsage().getUsed());
+		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
+			if (mpBean.getName().contains("Eden")) {
+				heap.setEdenUsage(mpBean.getUsage().getUsed());
+			} else if (mpBean.getName().contains("Survivor")) {
+				heap.setSurvivorUsage(mpBean.getUsage().getUsed());
+			}
+		}
 
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
 
