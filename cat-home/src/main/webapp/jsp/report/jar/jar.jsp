@@ -44,7 +44,7 @@
 			<th>domain</th>
 			<th>ip</th>
 			<c:forEach var="item" items="${model.jars}" varStatus="status">
-				<th>${item}</th>
+				<th width="7%">${item}</th>
 			</c:forEach>
 		</tr></thead>
 	<tbody>
