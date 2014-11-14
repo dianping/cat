@@ -1,6 +1,5 @@
 package com.dianping.cat.system.config;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.regex.Pattern;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.ConfigDao;
@@ -70,7 +68,7 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 	}
-
+	
 	protected List<Config> decorateConfigOnRead(List<Config> originConfigs) {
 		List<Config> configs = deepCopy(originConfigs);
 
@@ -131,30 +129,7 @@ public abstract class BaseRuleConfigManager {
 
 	protected abstract String getConfigName();
 
-	public MonitorRules getMonitorRules() {
-		return m_config;
-	}
-
-	private List<com.dianping.cat.home.rule.entity.Config> getMaxPriorityConfigs(
-	      Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs) {
-		Set<Integer> keys = configs.keySet();
-		int maxKey = 0;
-
-		for (int key : keys) {
-			if (key > maxKey) {
-				maxKey = key;
-			}
-		}
-
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = configs.get(maxKey);
-
-		if (finalConfigs == null) {
-			finalConfigs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-		}
-		return finalConfigs;
-	}
-
-	private List<Rule> getMaxPriorityRules(Map<Integer, List<Rule>> rules) {
+	protected <T> List<T> getMaxPriorityRules(Map<Integer, List<T>> rules) {
 		Set<Integer> keys = rules.keySet();
 		int maxKey = 0;
 
@@ -164,12 +139,16 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 
-		List<Rule> rules = rules.get(maxKey);
+		List<T> finalRules = rules.get(maxKey);
 
-		if (rules == null) {
-			rules = new ArrayList<Rule>();
+		if (finalRules == null) {
+			finalRules = new ArrayList<T>();
 		}
-		return rules;
+		return finalRules;
+	}
+
+	public MonitorRules getMonitorRules() {
+		return m_config;
 	}
 
 	public boolean insert(String xml) {
@@ -183,16 +162,36 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String groupText, String metricText) {
-		return queryConfigs(groupText, metricText, null, FindRulePolicy.NORMAL);
+	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
+		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> items = rule.getMetricItems();
+
+			for (MetricItem item : items) {
+				String productText = item.getProductText();
+				int matchLevel = 0;
+				matchLevel = validateRegex(productText, groupText) > 0 ? 1 : 0;
+
+				if (matchLevel > 0) {
+					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
+
+					if (configList == null) {
+						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+						configs.put(matchLevel, configList);
+					}
+					configList.addAll(rule.getConfigs());
+				}
+			}
+		}
+		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityRules(configs);
+
+		return decorateConfigOnRead(finalConfigs);
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
-		return queryConfigs(product, metricKey, type, FindRulePolicy.BY_METRIC_TYPE);
-	}
-
-	public List<com.dianping.cat.home.rule.entity.Config> queryMaxPriorityConfigs(String product, String metricKey, MetricType type) {
-		Map<Integer,List<Config>> result = new HashMap<Integer,List<Config>>();
+	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {
+		Map<Integer, List<Rule>> result = new HashMap<Integer, List<Rule>>();
 
 		for (Rule rule : m_config.getRules().values()) {
 			List<MetricItem> items = rule.getMetricItems();
@@ -215,71 +214,29 @@ public abstract class BaseRuleConfigManager {
 				}
 
 				if (matchLevel > 0) {
-					List<Config> rules = result.get(matchLevel);
-					
-					if(rules==null){
-						rules= new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+					List<Rule> rules = result.get(matchLevel);
+
+					if (rules == null) {
+						rules = new ArrayList<Rule>();
 						result.put(matchLevel, rules);
 					}
-					
-					rules.addAll(rule.getConfigs());
+
+					rules.add(rule);
 				}
 			}
 		}
-		List<Config> configs = getMaxPriorityConfigs(result);
-		
-		
-		return decorateConfigOnRead(configs);
-	}
+		List<Rule> rules = getMaxPriorityRules(result);
+		List<Config> configs = new ArrayList<Config>();
 
-	private List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey,
-	      MetricType type, FindRulePolicy policy) {
-		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> items = rule.getMetricItems();
-
-			for (MetricItem item : items) {
-				String productText = item.getProductText();
-				String metricItemText = item.getMetricItemText();
-				int matchLevel = 0;
-
-				if (policy == FindRulePolicy.NORMAL) {
-					matchLevel = validate(productText, metricItemText, product, metricKey);
-				} else if (policy == FindRulePolicy.BY_METRIC_TYPE) {
-					if (type == MetricType.COUNT && item.isMonitorCount()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					} else if (type == MetricType.SUM && item.isMonitorSum()) {
-						matchLevel = validate(productText, metricItemText, product, metricKey);
-					}
-				} else if (policy == FindRulePolicy.ALL_BY_GROUP) {
-					matchLevel = validateRegex(productText, product) > 0 ? 1 : 0;
-				}
-
-				if (matchLevel > 0) {
-					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
-
-					if (configList == null) {
-						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-						configs.put(matchLevel, configList);
-					}
-					configList.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, productText);
-					break;
-				}
-			}
+		for (Rule rule : rules) {
+			configs.addAll(rule.getConfigs());
+			
+			Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + ":" + metricKey + ":"
+			      + type);
 		}
 
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityConfigs(configs);
-
-		return decorateConfigOnRead(finalConfigs);
-	}
-
-	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
-		return queryConfigs(groupText, null, null, FindRulePolicy.ALL_BY_GROUP);
+		List<Config> finalConfigs = decorateConfigOnRead(configs);
+		return finalConfigs;
 	}
 
 	public Rule queryRule(String key) {
@@ -308,17 +265,6 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 		return true;
-	}
-
-	private void transformConfig(Config config) {
-		for (Condition condition : config.getConditions()) {
-			for (SubCondition subCondition : condition.getSubConditions()) {
-				if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
-					String userDefineText = subCondition.getText();
-					subCondition.setText(userDefineText.replaceAll("\"", "\\\\\""));
-				}
-			}
-		}
 	}
 
 	public String updateRule(String id, String metricsStr, String configsStr) throws Exception {
@@ -367,10 +313,6 @@ public abstract class BaseRuleConfigManager {
 				return 0;
 			}
 		}
-	}
-
-	public static enum FindRulePolicy {
-		ALL_BY_GROUP, BY_METRIC_TYPE, NORMAL;
 	}
 
 }

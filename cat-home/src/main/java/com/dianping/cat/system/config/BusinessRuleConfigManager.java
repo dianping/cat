@@ -32,7 +32,7 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 	private ContentFetcher m_getter;
 
 	private static final String CONFIG_NAME = "businessRuleConfig";
-
+	
 	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
 		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
 		config.setStarttime("00:00");
@@ -110,7 +110,6 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		}
 	}
 
-	@Override
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
 		Rule rule = m_config.getRules().get(metricKey);
 		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();

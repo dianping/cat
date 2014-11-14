@@ -53,4 +53,6 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 			m_config = new MonitorRules();
 		}
 	}
+	
+	
 }
