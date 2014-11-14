@@ -132,7 +132,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportServiceManager.class) //
 		      .req(HeartbeatGraphCreator.class));
 
-		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class));
+		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class,
+		      ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(
 		      ReportServiceManager.class, HostinfoService.class));
@@ -153,7 +154,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ReportServiceManager.class, ExceptionConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(
-		      ReportServiceManager.class));
+		      ReportServiceManager.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class)
 		      .req(ReportServiceManager.class, TransactionMergeManager.class, ServerConfigManager.class,

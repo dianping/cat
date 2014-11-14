@@ -16,7 +16,7 @@ public class JarReportBuilderTest  extends ComponentTestCase{
 	public void test() throws ParseException{
 		JarReportBuilder builder = (JarReportBuilder)lookup(ReportTaskBuilder.class,JarReportBuilder.ID);
 		
-		Date period = new SimpleDateFormat("yyyy-MM-dd HH").parse("2014-11-14 13");
+		Date period = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2014-11-14 13:00:00");
 		builder.buildHourlyTask(Constants.REPORT_JAR, "cat", period);
 	}
 }

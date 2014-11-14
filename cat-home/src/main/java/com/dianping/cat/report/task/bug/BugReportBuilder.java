@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -29,6 +30,9 @@ public class BugReportBuilder implements ReportTaskBuilder {
 
 	@Inject
 	protected ReportServiceManager m_reportService;
+	
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private SimpleDateFormat m_hourly_formate = new SimpleDateFormat("yyyyMMddHH");
 
@@ -64,7 +68,7 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 
 		for (String domainName : domains) {
-			if (validateDomain(domainName)) {
+			if (m_configManager.validateDomain(domainName)) {
 				ProblemReport problemReport = m_reportService.queryProblemReport(domainName, start, end);
 				visitor.visitProblemReport(problemReport);
 			}
@@ -172,7 +176,4 @@ public class BugReportBuilder implements ReportTaskBuilder {
 		return bugReport;
 	}
 
-	private boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
-	}
 }

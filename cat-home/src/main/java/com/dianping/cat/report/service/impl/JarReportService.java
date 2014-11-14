@@ -47,8 +47,7 @@ public class JarReportService extends AbstractReportService<JarReport> {
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(start, domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao.findAllByDomainNamePeriod(start, domain, name, HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -63,7 +62,6 @@ public class JarReportService extends AbstractReportService<JarReport> {
 			}
 		}
 		return new JarReport();
-
 	}
 
 	@Override

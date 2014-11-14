@@ -7,6 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -28,6 +29,9 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 	@Inject
 	protected ReportServiceManager m_reportService;
 
+	@Inject
+	private ServerConfigManager m_configManager;
+	
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		HeavyReport heavyReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
@@ -54,7 +58,7 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 		heavyReport.setStartTime(start);
 		heavyReport.setEndTime(end);
 		for (String domainName : domains) {
-			if (validateDomain(domainName)) {
+			if (m_configManager.validateDomain(domainName)) {
 				MatrixReport matrixReport = m_reportService.queryMatrixReport(domainName, start, end);
 
 				visitor.visitMatrixReport(matrixReport);
@@ -142,10 +146,6 @@ public class HeavyReportBuilder implements ReportTaskBuilder {
 		com.dianping.cat.home.heavy.entity.HeavyReport heavyReport = merger.getHeavyReport();
 
 		return heavyReport;
-	}
-
-	private boolean validateDomain(String domain) {
-		return !domain.equals(Constants.FRONT_END) && !domain.equals(Constants.ALL);
 	}
 
 }
