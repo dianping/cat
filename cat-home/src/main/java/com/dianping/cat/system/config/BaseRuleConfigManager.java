@@ -41,17 +41,14 @@ public abstract class BaseRuleConfigManager {
 
 	protected MonitorRules m_config;
 
-	protected Rule copyRuleWithDeepCopyConditions(Rule rule) {
-		Rule result = new Rule(rule.getId());
+	protected Rule copyRule(Rule rule) {
+		try {
+			Rule result = new Rule(rule.getId());
 
-		for (MetricItem item : rule.getMetricItems()) {
-			result.addMetricItem(item);
+			return DefaultSaxParser.parseEntity(Rule.class, result.toString());
+		} catch (Exception e) {
+			return null;
 		}
-		for (Config config : decorateConfigOnRead(rule.getConfigs())) {
-			transformConfig(config);
-			result.addConfig(config);
-		}
-		return result;
 	}
 
 	protected void decorateConfigOnDelete(List<Config> configs) {
@@ -71,7 +68,7 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 	}
-
+	
 	protected List<Config> decorateConfigOnRead(List<Config> originConfigs) {
 		List<Config> configs = deepCopy(originConfigs);
 
@@ -132,13 +129,8 @@ public abstract class BaseRuleConfigManager {
 
 	protected abstract String getConfigName();
 
-	public MonitorRules getMonitorRules() {
-		return m_config;
-	}
-
-	protected List<com.dianping.cat.home.rule.entity.Config> getMaxPriorityConfigs(
-	      Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs) {
-		Set<Integer> keys = configs.keySet();
+	protected <T> List<T> getMaxPriorityRules(Map<Integer, List<T>> rules) {
+		Set<Integer> keys = rules.keySet();
 		int maxKey = 0;
 
 		for (int key : keys) {
@@ -147,12 +139,16 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = configs.get(maxKey);
+		List<T> finalRules = rules.get(maxKey);
 
-		if (finalConfigs == null) {
-			finalConfigs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+		if (finalRules == null) {
+			finalRules = new ArrayList<T>();
 		}
-		return finalConfigs;
+		return finalRules;
+	}
+
+	public MonitorRules getMonitorRules() {
+		return m_config;
 	}
 
 	public boolean insert(String xml) {
@@ -164,45 +160,6 @@ public abstract class BaseRuleConfigManager {
 			Cat.logError(e);
 			return false;
 		}
-	}
-
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
-		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> items = rule.getMetricItems();
-
-			for (MetricItem item : items) {
-				String productText = item.getProductText();
-				String metricItemText = item.getMetricItemText();
-				int matchLevel = 0;
-
-				if (type == MetricType.COUNT && item.isMonitorCount()) {
-					matchLevel = validate(productText, metricItemText, product, metricKey);
-				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-					matchLevel = validate(productText, metricItemText, product, metricKey);
-				} else if (type == MetricType.SUM && item.isMonitorSum()) {
-					matchLevel = validate(productText, metricItemText, product, metricKey);
-				}
-
-				if (matchLevel > 0) {
-					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
-
-					if (configList == null) {
-						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-						configs.put(matchLevel, configList);
-					}
-					configList.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, productText);
-					break;
-				}
-			}
-		}
-
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityConfigs(configs);
-
-		return decorateConfigOnRead(finalConfigs);
 	}
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
@@ -225,22 +182,68 @@ public abstract class BaseRuleConfigManager {
 						configs.put(matchLevel, configList);
 					}
 					configList.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, productText);
-					break;
 				}
 			}
 		}
-
-		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityConfigs(configs);
+		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityRules(configs);
 
 		return decorateConfigOnRead(finalConfigs);
+	}
+
+	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {
+		Map<Integer, List<Rule>> result = new HashMap<Integer, List<Rule>>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			List<MetricItem> items = rule.getMetricItems();
+
+			for (MetricItem item : items) {
+				String configProduct = item.getProductText();
+				String configMetricKey = item.getMetricItemText();
+				int matchLevel = 0;
+
+				if (type == null) {
+					matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+				} else {
+					if (type == MetricType.COUNT && item.isMonitorCount()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					} else if (type == MetricType.SUM && item.isMonitorSum()) {
+						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
+					}
+				}
+
+				if (matchLevel > 0) {
+					List<Rule> rules = result.get(matchLevel);
+
+					if (rules == null) {
+						rules = new ArrayList<Rule>();
+						result.put(matchLevel, rules);
+					}
+
+					rules.add(rule);
+				}
+			}
+		}
+		List<Rule> rules = getMaxPriorityRules(result);
+		List<Config> configs = new ArrayList<Config>();
+
+		for (Rule rule : rules) {
+			configs.addAll(rule.getConfigs());
+			
+			Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + ":" + metricKey + ":"
+			      + type);
+		}
+
+		List<Config> finalConfigs = decorateConfigOnRead(configs);
+		return finalConfigs;
 	}
 
 	public Rule queryRule(String key) {
 		Rule rule = m_config.getRules().get(key);
 
 		if (rule != null) {
-			return copyRuleWithDeepCopyConditions(rule);
+			return copyRule(rule);
 		} else {
 			return null;
 		}
@@ -262,17 +265,6 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 		return true;
-	}
-
-	private void transformConfig(Config config) {
-		for (Condition condition : config.getConditions()) {
-			for (SubCondition subCondition : condition.getSubConditions()) {
-				if (RuleType.UserDefine.getId().equals(subCondition.getType())) {
-					String userDefineText = subCondition.getText();
-					subCondition.setText(userDefineText.replaceAll("\"", "\\\\\""));
-				}
-			}
-		}
 	}
 
 	public String updateRule(String id, String metricsStr, String configsStr) throws Exception {
