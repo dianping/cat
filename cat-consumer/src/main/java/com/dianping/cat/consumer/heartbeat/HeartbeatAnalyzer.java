@@ -13,6 +13,7 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -35,25 +36,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Inject(ID)
 	private ReportManager<HeartbeatReport> m_reportManager;
 
-	@Override
-	public void doCheckpoint(boolean atEnd) {
-		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
-		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
-		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	private HeartbeatReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
-	}
-
-	private Period getHeartBeatInfo(Heartbeat heartbeat, long timestamp) {
+	private Period buildHeartBeatInfo(Machine machine, Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
 
@@ -72,6 +55,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		try {
 			ThreadsInfo thread = info.getThread();
+			machine.setClasspath(info.getRuntime().getJavaClasspath());
 
 			period.setThreadCount(thread.getCount());
 			period.setDaemonCount(thread.getDaemonCount());
@@ -135,6 +119,24 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
+	public void doCheckpoint(boolean atEnd) {
+		if (atEnd && !isLocalMode()) {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+		} else {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	private HeartbeatReport findOrCreateReport(String domain) {
+		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
+	}
+
+	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
@@ -161,10 +163,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
-		Period period = getHeartBeatInfo(heartbeat, tree.getMessage().getTimestamp());
+		Machine machine = report.findOrCreateMachine(ip);
+		Period period = buildHeartBeatInfo(machine, heartbeat, tree.getMessage().getTimestamp());
 
 		if (period != null) {
-			report.findOrCreateMachine(ip).getPeriods().add(period);
+			machine.getPeriods().add(period);
 		}
 	}
 

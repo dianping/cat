@@ -52,6 +52,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_DATABASE_CAPACITY, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_JAR, TaskProlicy.HOULY);
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
