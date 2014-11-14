@@ -9,6 +9,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -162,7 +163,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DecoratorManager.class));
 
-		all.add(C(AlertPolicyManager.class).req(ConfigDao.class));
+		all.add(C(AlertPolicyManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(Spliter.class, MailSpliter.ID, MailSpliter.class));
 

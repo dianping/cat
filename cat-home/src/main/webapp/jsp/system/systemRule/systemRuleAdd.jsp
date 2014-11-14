@@ -149,6 +149,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
+			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			$('#systemRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			

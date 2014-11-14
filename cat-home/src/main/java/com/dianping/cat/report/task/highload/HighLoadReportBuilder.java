@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.highload.entity.Name;
@@ -24,13 +25,25 @@ import com.dianping.cat.home.highload.entity.Type;
 import com.dianping.cat.home.highload.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.service.ProjectService;
 
 public class HighLoadReportBuilder implements ReportTaskBuilder {
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	private ReportServiceManager m_reportService;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	public static final String ID = Constants.HIGH_LOAD_REPORT;
+
+	private void addProductlineInfo(Name name) {
+		String domain = name.getDomain();
+		Project project = m_projectService.findByCmdbDomain(domain);
+
+		name.setBu(project.getBu());
+		name.setProductLine(project.getProjectLine());
+	}
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -76,13 +89,9 @@ public class HighLoadReportBuilder implements ReportTaskBuilder {
 		name.setTotalCount(transactionName.getTotalCount());
 		name.setFailCount(transactionName.getFailCount());
 		name.setFailPercent(transactionName.getFailPercent());
-		name.setMin(transactionName.getMin());
-		name.setMax(transactionName.getMax());
 		name.setAvg(transactionName.getAvg());
-		name.setStd(transactionName.getStd());
 		name.setTps(transactionName.getTps());
 		name.setLine95Value(transactionName.getLine95Value());
-		name.setLine99Value(transactionName.getLine99Value());
 		name.setWeight(calWeight(name));
 
 		return name;
@@ -122,6 +131,7 @@ public class HighLoadReportBuilder implements ReportTaskBuilder {
 
 		type.setId(typeName);
 		for (Name name : names) {
+			addProductlineInfo(name);
 			type.addName(name);
 		}
 

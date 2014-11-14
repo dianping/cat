@@ -66,6 +66,7 @@ function update() {
 }
 
 	$(document).ready(function() {
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();
 		})

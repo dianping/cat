@@ -160,6 +160,9 @@ public class Handler implements PageHandler<Context> {
 		if (url == null || url.length() == 0 || url.equals(loginUrl)) {
 			url = ctx.getRequestContext().getActionUri("");
 		}
+		if (url.indexOf("/cat/s/login") > -1) {
+			url = "/cat/r/home";
+		}
 
 		ctx.redirect(url);
 		ctx.stopProcess();

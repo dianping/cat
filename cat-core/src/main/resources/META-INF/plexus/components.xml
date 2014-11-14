@@ -34,6 +34,10 @@
 			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.content.ContentFetcher</role>
+			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
 			<implementation>com.dianping.cat.message.spi.core.DefaultMessagePathBuilder</implementation>
 		</component>
@@ -78,6 +82,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -86,6 +93,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -104,6 +114,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -146,6 +159,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

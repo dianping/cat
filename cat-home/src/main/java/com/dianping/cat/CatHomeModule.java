@@ -36,7 +36,7 @@ public class CatHomeModule extends AbstractModule {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class);
-		if (!serverConfigManager.isLocalMode() && !serverConfigManager.isLocalMode()) {
+		if (!serverConfigManager.isLocalMode()) {
 			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
 			UploaderAndCleaner uploader = ctx.lookup(UploaderAndCleaner.class);
 

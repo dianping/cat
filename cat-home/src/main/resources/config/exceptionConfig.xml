@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exception-config>
+   <domain-config id="Default">
+      <exception-limit domain="Default" id="Total" warning="200" error="400" smsSending="false"/>
+      <exception-exclude domain="Default" id="com.mongodb.MongoException$Network"/>
+      <exception-exclude domain="Default" id="net.spy.memcached.internal.CheckedOperationTimeoutException"/>
+   </domain-config>
+   <domain-config id="ShoppicService">
+      <exception-limit domain="shoppic-service" id="Total" warning="100" error="500" smsSending="false"/>
+   </domain-config>
+   <domain-config id="BAESEmployeeportWeb">
+      <exception-limit domain="ba-es-employeeport-web" id="Total" warning="10" error="10" smsSending="false"/>
+   </domain-config>
+   <domain-config id="PiccenterService">
+      <exception-limit domain="piccenter-service" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="PiccenterUpload">
+      <exception-limit domain="piccenter-upload" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ShoppicWeb">
+      <exception-limit domain="shoppic-web" id="Total" warning="200" error="1000" smsSending="false"/>
+   </domain-config>
+   <domain-config id="PiccenterWeb">
+      <exception-limit domain="piccenter-web" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="SearchTuanGou">
+      <exception-limit domain="search-arts-tuangou" id="com.dianping.dpsf.exception.NetTimeoutException" warning="1000" error="10000" smsSending="false"/>
+      <exception-limit domain="SearchTuanGou" id="Total" warning="2000" error="2500" smsSending="true"/>
+   </domain-config>
+   <domain-config id="BaTgpMq">
+      <exception-limit domain="ba-tgplatform-mq" id="Total" warning="1" error="1" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ReviewServer">
+      <exception-limit domain="review-server" id="Total" warning="60" error="120" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ReviewWeb">
+      <exception-limit domain="review-web" id="Total" warning="60" error="120" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ToLabWeb">
+      <exception-limit domain="to-lab-web" id="Total" warning="10000" error="500" smsSending="false"/>
+   </domain-config>
+   <domain-config id="rs-mapi-web">
+      <exception-limit domain="rs-mapi-web" id="Total" warning="150" error="150" smsSending="false"/>
+   </domain-config>
+   <domain-config id="receipt-service-mq">
+      <exception-limit domain="receipt-service-mq" id="com.dianping.tuangou.receipt.mq.notify.exception.ReceiptBuySuccessException" warning="300" error="300" smsSending="false"/>
+   </domain-config>
+   <domain-config id="PromoWeb">
+      <exception-limit domain="promo-web" id="Total" warning="10" error="20" smsSending="false"/>
+   </domain-config>
+   <domain-config id="PromoServer">
+      <exception-limit domain="promo-server" id="Total" warning="10" error="20" smsSending="false"/>
+   </domain-config>
+   <domain-config id="BA-WorkFlow-K2">
+      <exception-limit domain="ba-workflow-k2-service" id="Total" warning="1" error="2" smsSending="false"/>
+   </domain-config>
+   <domain-config id="BABASEOrganizationalStructureServer">
+      <exception-limit domain="ba-base-organizationalstructure-server" id="Total" warning="1" error="3" smsSending="false"/>
+   </domain-config>
+   <domain-config id="BA_NewFinanceSite">
+      <exception-limit domain="ba-esb" id="Total" warning="5" error="5" smsSending="false"/>
+   </domain-config>
+   <domain-config id="TuanGouWeb">
+      <exception-limit domain="tuangou-web" id="com.dianping.tuangou.web.biz.index.ListPageException" warning="100" error="300" smsSending="false"/>
+   </domain-config>
+   <domain-config id="rs-service">
+      <exception-limit domain="rs-service" id="Total" warning="100" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="rs-open-service">
+      <exception-limit domain="rs-open-service" id="Total" warning="100" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="BA_NewFinanceJob">
+      <exception-limit domain="netjob" id="Total" warning="10" error="5" smsSending="true"/>
+   </domain-config>
+   <domain-config id="argus-web">
+      <exception-limit domain="argus-web" id="Total" warning="10" error="1" smsSending="false"/>
+   </domain-config>
+   <domain-config id="MidasMicroPower">
+      <exception-limit domain="midas-micro-power-web" id="Total" warning="1" error="1" smsSending="true"/>
+   </domain-config>
+   <domain-config id="PiccenterStorage">
+      <exception-limit domain="piccenter-storage" id="Total" warning="50" error="100" smsSending="true"/>
+   </domain-config>
+   <domain-config id="PiccenterDisplay">
+      <exception-limit domain="piccenter-display" id="Total" warning="100" error="200" smsSending="true"/>
+   </domain-config>
+   <domain-config id="shoppic-service">
+      <exception-limit domain="shoppic-service" id="Total" warning="100" error="500" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ba-es-employeeport-web">
+      <exception-limit domain="ba-es-employeeport-web" id="Total" warning="10" error="10" smsSending="false"/>
+   </domain-config>
+   <domain-config id="piccenter-service">
+      <exception-limit domain="piccenter-service" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="piccenter-upload">
+      <exception-limit domain="piccenter-upload" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="shoppic-web">
+      <exception-limit domain="shoppic-web" id="Total" warning="200" error="1000" smsSending="false"/>
+   </domain-config>
+   <domain-config id="piccenter-web">
+      <exception-limit domain="piccenter-web" id="Total" warning="50" error="100" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ba-tgplatform-mq">
+      <exception-limit domain="ba-tgplatform-mq" id="Total" warning="1" error="1" smsSending="false"/>
+   </domain-config>
+   <domain-config id="review-server">
+      <exception-limit domain="review-server" id="Total" warning="60" error="120" smsSending="false"/>
+   </domain-config>
+   <domain-config id="review-web">
+      <exception-limit domain="review-web" id="Total" warning="60" error="120" smsSending="false"/>
+   </domain-config>
+   <domain-config id="to-lab-web">
+      <exception-limit domain="to-lab-web" id="Total" warning="10000" error="500" smsSending="false"/>
+   </domain-config>
+   <domain-config id="promo-web">
+      <exception-limit domain="promo-web" id="Total" warning="10" error="20" smsSending="false"/>
+   </domain-config>
+   <domain-config id="promo-server">
+      <exception-limit domain="promo-server" id="Total" warning="10" error="20" smsSending="false"/>
+   </domain-config>
+   <domain-config id="cat">
+      <exception-exclude domain="cat" id="java.lang.IndexOutOfBoundsException"/>
+   </domain-config>
+   <domain-config id="ba-workflow-k2-service">
+      <exception-limit domain="ba-workflow-k2-service" id="Total" warning="1" error="2" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ba-base-organizationalstructure-server">
+      <exception-limit domain="ba-base-organizationalstructure-server" id="Total" warning="1" error="3" smsSending="false"/>
+   </domain-config>
+   <domain-config id="ba-esb">
+      <exception-limit domain="ba-esb" id="Total" warning="5" error="5" smsSending="false"/>
+   </domain-config>
+   <domain-config id="tuangou-web">
+      <exception-limit domain="tuangou-web" id="com.dianping.tuangou.web.biz.index.CityHomeException" warning="200" error="400" smsSending="true"/>
+      <exception-limit domain="tuangou-web" id="com.dianping.tuangou.web.biz.detail.DetailPageException" warning="200" error="400" smsSending="true"/>
+      <exception-limit domain="tuangou-web" id="com.dianping.tuangou.web.biz.index.ListPageException " warning="200" error="400" smsSending="true"/>
+   </domain-config>
+   <domain-config id="netjob">
+      <exception-limit domain="netjob" id="Total" warning="10" error="5" smsSending="true"/>
+   </domain-config>
+   <domain-config id="midas-micro-power-web">
+      <exception-limit domain="midas-micro-power-web" id="Total" warning="1" error="1" smsSending="true"/>
+   </domain-config>
+   <domain-config id="piccenter-storage">
+      <exception-limit domain="piccenter-storage" id="Total" warning="50" error="100" smsSending="true"/>
+   </domain-config>
+   <domain-config id="piccenter-display">
+      <exception-limit domain="piccenter-display" id="Total" warning="100" error="200" smsSending="true"/>
+   </domain-config>
+   <domain-config id="MobileLogWeb">
+      <exception-limit domain="MobileLogWeb" id="Total" warning="500" error="300" smsSending="true"/>
+   </domain-config>
+   <domain-config id="mobile-reviewapi-web">
+      <exception-limit domain="mobile-reviewapi-web" id="java.lang.SecurityException at com.dianping.app.PushService$CheckUpdateTask.onPostExecute(PushService.java:909)" warning="60" error="120" smsSending="true"/>
+   </domain-config>
+   <domain-config id="rs-shop-web">
+      <exception-limit domain="rs-shop-web" id="Total" warning="1000" error="500" smsSending="false"/>
+   </domain-config>
+   <domain-config id="to-flashsale-web">
+      <exception-exclude domain="to-flashsale-web" id="com.dianping.mobile.core.exception.ApplicationRuntimeException"/>
+   </domain-config>
+</exception-config>

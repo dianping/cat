@@ -14,7 +14,6 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -22,6 +21,7 @@ import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.app.entity.AppConfig;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -35,6 +35,9 @@ import com.dianping.cat.core.config.ConfigEntity;
 public class AppConfigManager implements Initializable {
 	@Inject
 	protected ConfigDao m_configDao;
+
+	@Inject
+	private ContentFetcher m_getter;
 
 	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
 
@@ -211,8 +214,7 @@ public class AppConfigManager implements Initializable {
 			refreshData();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-app-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

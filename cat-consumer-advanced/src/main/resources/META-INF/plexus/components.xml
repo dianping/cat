@@ -121,12 +121,6 @@
 					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 				</requirement>
 			</requirements>
@@ -165,11 +159,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.content.ContentFetcher</role>
+			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -182,6 +183,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

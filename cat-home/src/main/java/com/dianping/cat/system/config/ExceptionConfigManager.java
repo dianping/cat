@@ -6,10 +6,10 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -23,6 +23,9 @@ public class ExceptionConfigManager implements Initializable {
 
 	@Inject
 	private ConfigDao m_configDao;
+
+	@Inject
+	private ContentFetcher m_getter;
 
 	private int m_configId;
 
@@ -57,8 +60,7 @@ public class ExceptionConfigManager implements Initializable {
 			m_exceptionConfig = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-exception-config.xml"), "utf-8");
+				String content = m_getter.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);
@@ -88,7 +90,7 @@ public class ExceptionConfigManager implements Initializable {
 	public boolean insertExceptionLimit(ExceptionLimit limit) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(limit.getDomain());
 		domainConfig.getExceptionLimits().put(limit.getId(), limit);
-		
+
 		return storeConfig();
 	}
 
@@ -103,7 +105,7 @@ public class ExceptionConfigManager implements Initializable {
 
 	public List<ExceptionLimit> queryAllExceptionLimits() {
 		List<ExceptionLimit> result = new ArrayList<ExceptionLimit>();
-		
+
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionLimits().values());
 		}
@@ -142,7 +144,7 @@ public class ExceptionConfigManager implements Initializable {
 	public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
 		DomainConfig domainConfig = m_exceptionConfig.getDomainConfigs().get(domain);
 		ExceptionLimit result = null;
-		
+
 		if (domainConfig == null) {
 			domainConfig = m_exceptionConfig.getDomainConfigs().get(DEFAULT_STRING);
 		}

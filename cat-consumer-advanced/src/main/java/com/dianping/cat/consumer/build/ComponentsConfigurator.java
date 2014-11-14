@@ -10,6 +10,8 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -27,8 +29,6 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.service.DefaultReportManager;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.storage.BucketManager;
@@ -54,8 +54,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineMetricComponents() {
 		final List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class));
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ProductLineConfigManager.class));
+		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ProductLineConfigManager.class, ContentFetcher.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, TaskManager.class));
@@ -84,7 +85,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DatabaseParser.class));
 		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, DatabaseParser.class));
+		      .req(ServerConfigManager.class, DatabaseParser.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(BucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //

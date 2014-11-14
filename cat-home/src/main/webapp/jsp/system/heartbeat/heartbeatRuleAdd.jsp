@@ -143,6 +143,7 @@
 		}
 		
 		 $(document).ready(function() {
+			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			var newMetric = $('#metricItem').clone();
 			$('#heartbeatRuleConfigList').addClass('active');
 			

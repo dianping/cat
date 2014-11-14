@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-aggregation-config>
+   <metric-aggregation-group id="F5-2400-1" type="Metric" display="network">
+      <metric-aggregation id="1/1-1-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-1-in"/>
+         <metric-aggregation-item key="1/1-1-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-2-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-2-in"/>
+         <metric-aggregation-item key="1/1-2-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-3-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-3-in"/>
+         <metric-aggregation-item key="1/1-3-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-4-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-4-in"/>
+         <metric-aggregation-item key="1/1-4-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-6-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-6-in"/>
+         <metric-aggregation-item key="1/1-6-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-7-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-7-in"/>
+         <metric-aggregation-item key="1/1-7-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-8-flow" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-8-in"/>
+         <metric-aggregation-item key="1/1-8-out"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-1-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-1-indiscards"/>
+         <metric-aggregation-item key="1/1-1-outdiscards"/>
+         <metric-aggregation-item key="1/1-1-inerrors"/>
+         <metric-aggregation-item key="1/1-1-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-2-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-2-indiscards"/>
+         <metric-aggregation-item key="1/1-2-outdiscards"/>
+         <metric-aggregation-item key="1/1-2-inerrors"/>
+         <metric-aggregation-item key="1/1-2-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-3-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-3-indiscards"/>
+         <metric-aggregation-item key="1/1-3-outdiscards"/>
+         <metric-aggregation-item key="1/1-3-inerrors"/>
+         <metric-aggregation-item key="1/1-3-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-4-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-4-indiscards"/>
+         <metric-aggregation-item key="1/1-4-outdiscards"/>
+         <metric-aggregation-item key="1/1-4-inerrors"/>
+         <metric-aggregation-item key="1/1-4-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-6-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-6-indiscards"/>
+         <metric-aggregation-item key="1/1-6-outdiscards"/>
+         <metric-aggregation-item key="1/1-6-inerrors"/>
+         <metric-aggregation-item key="1/1-6-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-7-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-7-indiscards"/>
+         <metric-aggregation-item key="1/1-7-outdiscards"/>
+         <metric-aggregation-item key="1/1-7-inerrors"/>
+         <metric-aggregation-item key="1/1-7-outerrors"/>
+      </metric-aggregation>
+      <metric-aggregation id="1/1-8-discards-errors" display-type="sum" base-line="true" domain="2400-1-dianping-com">
+         <metric-aggregation-item key="1/1-8-indiscards"/>
+         <metric-aggregation-item key="1/1-8-outdiscards"/>
+         <metric-aggregation-item key="1/1-8-inerrors"/>
+         <metric-aggregation-item key="1/1-8-outerrors"/>
+      </metric-aggregation>
+   </metric-aggregation-group>
+</metric-aggregation-config>

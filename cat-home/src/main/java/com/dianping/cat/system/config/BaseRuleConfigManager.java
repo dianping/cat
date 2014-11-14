@@ -1,7 +1,10 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -133,6 +136,25 @@ public abstract class BaseRuleConfigManager {
 		return m_config;
 	}
 
+	private List<com.dianping.cat.home.rule.entity.Config> getMaxPriorityConfigs(
+	      Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs) {
+		Set<Integer> keys = configs.keySet();
+		int maxKey = 0;
+
+		for (int key : keys) {
+			if (key > maxKey) {
+				maxKey = key;
+			}
+		}
+
+		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = configs.get(maxKey);
+
+		if (finalConfigs == null) {
+			finalConfigs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+		}
+		return finalConfigs;
+	}
+
 	public boolean insert(String xml) {
 		try {
 			m_config = DefaultSaxParser.parse(xml);
@@ -145,27 +167,16 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String groupText, String metricText) {
-		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> metricItems = rule.getMetricItems();
-
-			for (MetricItem metricItem : metricItems) {
-				String productPattern = metricItem.getProductText();
-				String metrciPattern = metricItem.getMetricItemText();
-
-				if (validate(productPattern, metrciPattern, groupText, metricText)) {
-					configs.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, groupText);
-					break;
-				}
-			}
-		}
-		return decorateConfigOnRead(configs);
+		return queryConfigs(groupText, metricText, null, FindRulePolicy.NORMAL);
 	}
 
 	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
-		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+		return queryConfigs(product, metricKey, type, FindRulePolicy.BY_METRIC_TYPE);
+	}
+
+	private List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey,
+	      MetricType type, FindRulePolicy policy) {
+		Map<Integer, List<com.dianping.cat.home.rule.entity.Config>> configs = new HashMap<Integer, List<com.dianping.cat.home.rule.entity.Config>>();
 
 		for (Rule rule : m_config.getRules().values()) {
 			List<MetricItem> items = rule.getMetricItems();
@@ -173,42 +184,44 @@ public abstract class BaseRuleConfigManager {
 			for (MetricItem item : items) {
 				String productText = item.getProductText();
 				String metricItemText = item.getMetricItemText();
-				boolean validate = false;
+				int matchLevel = 0;
 
-				if (type == MetricType.COUNT && item.isMonitorCount()) {
-					validate = validate(productText, metricItemText, product, metricKey);
-				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-					validate = validate(productText, metricItemText, product, metricKey);
-				} else if (type == MetricType.SUM && item.isMonitorSum()) {
-					validate = validate(productText, metricItemText, product, metricKey);
+				if (policy == FindRulePolicy.NORMAL) {
+					matchLevel = validate(productText, metricItemText, product, metricKey);
+				} else if (policy == FindRulePolicy.BY_METRIC_TYPE) {
+					if (type == MetricType.COUNT && item.isMonitorCount()) {
+						matchLevel = validate(productText, metricItemText, product, metricKey);
+					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
+						matchLevel = validate(productText, metricItemText, product, metricKey);
+					} else if (type == MetricType.SUM && item.isMonitorSum()) {
+						matchLevel = validate(productText, metricItemText, product, metricKey);
+					}
+				} else if (policy == FindRulePolicy.ALL_BY_GROUP) {
+					matchLevel = validateRegex(productText, product) > 0 ? 1 : 0;
 				}
 
-				if (validate) {
-					configs.addAll(rule.getConfigs());
-					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
+				if (matchLevel > 0) {
+					List<com.dianping.cat.home.rule.entity.Config> configList = configs.get(matchLevel);
+
+					if (configList == null) {
+						configList = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+						configs.put(matchLevel, configList);
+					}
+					configList.addAll(rule.getConfigs());
+					Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, productText);
 					break;
 				}
 			}
 		}
-		return decorateConfigOnRead(configs);
+
+		List<com.dianping.cat.home.rule.entity.Config> finalConfigs = getMaxPriorityConfigs(configs);
+
+		return decorateConfigOnRead(finalConfigs);
 	}
 
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigsByGroup(String groupText) {
-		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> metricItems = rule.getMetricItems();
-
-			for (MetricItem metricItem : metricItems) {
-				String productPattern = metricItem.getProductText();
-
-				if (validateRegex(productPattern, groupText)) {
-					configs.addAll(rule.getConfigs());
-					break;
-				}
-			}
-		}
-		return decorateConfigOnRead(configs);
+	public List<com.dianping.cat.home.rule.entity.Config> queryAllConfigsByGroup(String groupText) {
+		return queryConfigs(groupText, null, null, FindRulePolicy.ALL_BY_GROUP);
 	}
 
 	public Rule queryRule(String key) {
@@ -265,27 +278,41 @@ public abstract class BaseRuleConfigManager {
 		return m_config.toString();
 	}
 
-	public boolean validate(String productText, String metricKeyText, String product, String metricKey) {
-		if (validateRegex(productText, product)) {
-			return validateRegex(metricKeyText, metricKey);
+	public int validate(String productText, String metricKeyText, String product, String metricKey) {
+		int groupMatchResult = validateRegex(productText, product);
+
+		if (groupMatchResult > 0) {
+			int metricMatchResult = validateRegex(metricKeyText, metricKey);
+
+			if (metricMatchResult > 0) {
+				return groupMatchResult;
+			}
+		}
+		return 0;
+	}
+
+	/**
+	 * @return 0: not match; 1: global match; 2: regex match; 3: full match
+	 */
+	public int validateRegex(String regexText, String text) {
+		if (StringUtils.isEmpty(regexText)) {
+			return 1;
+		} else if (regexText.equalsIgnoreCase(text)) {
+			return 3;
 		} else {
-			return false;
+			Pattern p = Pattern.compile(regexText);
+			Matcher m = p.matcher(text);
+
+			if (m.find()) {
+				return 2;
+			} else {
+				return 0;
+			}
 		}
 	}
 
-	public boolean validateRegex(String regexText, String text) {
-		if (StringUtils.isEmpty(regexText)) {
-			return true;
-		}
-
-		Pattern p = Pattern.compile(regexText);
-		Matcher m = p.matcher(text);
-
-		if (m.find()) {
-			return true;
-		} else {
-			return false;
-		}
+	public static enum FindRulePolicy {
+		ALL_BY_GROUP, BY_METRIC_TYPE, NORMAL;
 	}
 
 }
