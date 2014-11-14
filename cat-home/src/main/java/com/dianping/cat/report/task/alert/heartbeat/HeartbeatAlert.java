@@ -200,7 +200,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private void processMeitrc(String domain, String ip, String metric, double[] values) {
 		try {
-			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric);
+			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();
 			List<Condition> conditions = resultPair.getValue();
