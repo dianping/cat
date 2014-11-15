@@ -1,5 +1,4 @@
 function initTable(table){
-	console.log(table);
 	table.dataTable({
 		"sPaginationType": "full_numbers",
 		'iDisplayLength': 100,

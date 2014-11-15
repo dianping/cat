@@ -15,6 +15,7 @@ import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
+import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
@@ -42,7 +43,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private AlertReport m_alertReport;
 
 	@EntityMeta
+	private JarReport m_jarReport;
+
+	@EntityMeta
 	private UtilizationReport m_utilizationReport;
+	
+	private List<String> m_jars;
 	
 	private List<Domain> m_serviceList;
 
@@ -251,4 +257,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_utilizationWebList = utilizationWebList;
 	}
 
+	public JarReport getJarReport() {
+   	return m_jarReport;
+   }
+
+	public void setJarReport(JarReport jarReport) {
+   	m_jarReport = jarReport;
+   }
+
+	public List<String> getJars() {
+   	return m_jars;
+   }
+
+	public void setJars(List<String> jars) {
+   	m_jars = jars;
+   }
+	
 }

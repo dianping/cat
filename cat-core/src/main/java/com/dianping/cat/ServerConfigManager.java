@@ -259,9 +259,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_invalidateDomains.add("iOSCrashLog");
 		m_invalidateDomains.add(Constants.ALL);
 		m_invalidateDomains.add(Constants.FRONT_END);
+		m_invalidateDomains.add("MerchantAndroidCrashLog");
+		m_invalidateDomains.add("MerchantIOSCrashLog");
+		m_invalidateDomains.add("paas");
 
 		m_crashLogs.add("AndroidCrashLog");
 		m_crashLogs.add("iOSCrashLog");
+		m_crashLogs.add("MerchantAndroidCrashLog");
+		m_crashLogs.add("MerchantIOSCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {

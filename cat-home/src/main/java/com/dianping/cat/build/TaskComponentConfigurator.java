@@ -51,6 +51,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.highload.HighLoadReportBuilder;
+import com.dianping.cat.report.task.jar.JarReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.MetricBaselineReportBuilder;
 import com.dianping.cat.report.task.metric.MetricPointParser;
@@ -131,7 +132,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportServiceManager.class) //
 		      .req(HeartbeatGraphCreator.class));
 
-		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class));
+		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class,
+		      ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(
 		      ReportServiceManager.class, HostinfoService.class));
@@ -152,7 +154,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ReportServiceManager.class, ExceptionConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(
-		      ReportServiceManager.class));
+		      ReportServiceManager.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class)
 		      .req(ReportServiceManager.class, TransactionMergeManager.class, ServerConfigManager.class,
@@ -163,6 +165,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportTaskBuilder.class, NetTopologyReportBuilder.ID, NetTopologyReportBuilder.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, NetGraphConfigManager.class));
+
+		all.add(C(ReportTaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(ReportServiceManager.class,
+		      ServerConfigManager.class));
 
 		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
 

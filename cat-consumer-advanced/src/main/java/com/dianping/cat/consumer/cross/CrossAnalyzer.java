@@ -37,12 +37,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private int m_discardLogs = 0;
 
+	private int m_errorAppName;
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 
-			m_logger.info("discard server logview count " + m_discardLogs);
+			m_logger.info("discard server logview count " + m_discardLogs+", errorAppName " + m_errorAppName);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
@@ -107,6 +109,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String localIp = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
 		int index = remoteAddress.indexOf(":");
+		
 		if (index > 0) {
 			remoteAddress = remoteAddress.substring(0, index);
 		}
@@ -124,7 +127,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 
-		report.addIp(info.getLocalAddress());
 		updateCrossReport(report, t, info);
 	}
 
@@ -189,6 +191,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				updateServerCrossReport(t, domain, info);
+			}else{
+				m_errorAppName++;
 			}
 		}
 		List<Message> children = t.getChildren();
@@ -220,6 +224,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		Local local = report.findOrCreateLocal(localIp);
 		Remote remote = local.findOrCreateRemote(remoteIp);
 
+		report.addIp(localIp);
 		remote.setRole(role);
 		remote.setApp(info.getApp());
 
@@ -242,8 +247,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		double duration = t.getDurationInMicros() / 1000d;
-		name.setSum(name.getSum() + duration);
 		type.setSum(type.getSum() + duration);
+		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {

@@ -61,6 +61,7 @@
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
+				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上JAR版本</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 					<li class="nav-header">订阅报表</li>
@@ -93,9 +94,9 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">应用阀值配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">应用依赖配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigUpdate">网络告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigList">网络告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigUpdate">系统告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigList">系统告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
