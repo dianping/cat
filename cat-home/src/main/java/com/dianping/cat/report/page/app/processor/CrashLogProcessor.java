@@ -14,7 +14,6 @@ import java.util.Set;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeHelper;
@@ -182,8 +181,6 @@ public class CrashLogProcessor {
 				problemStatistics.setPlatformVersions(Splitters.by(":").noEmptyItem().split(querys.get(2)));
 				problemStatistics.setModules(Splitters.by(":").noEmptyItem().split(querys.get(3)));
 				problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
-			} else {
-				Cat.logError(new RuntimeException("error query format: " + query));
 			}
 		}
 		problemStatistics.visitProblemReport(report);

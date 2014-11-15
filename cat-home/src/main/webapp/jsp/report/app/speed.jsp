@@ -3,6 +3,7 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context"
 	scope="request" />
 <jsp:useBean id="payload"
@@ -126,7 +127,6 @@
 							var words = query1.split(";");
 
 							$("#page").on('change', changeStepByPage);
-							
 							$("#page2").on('change', changeStepByPage);
 
 							if (typeof (words[0]) != undefined
@@ -143,6 +143,9 @@
 							$("#platform").val(words[5]);
 							$("#city").val(words[6]);
 							$("#operator").val(words[7]);
+							
+							var datePair = {};
+							datePair["当前值"]=$("#time").val();
 
 							if (query2 != null && query2 != '') {
 								$('#history').slideDown();
@@ -154,7 +157,8 @@
 								} else {
 									$("#time2").val(words[0]);
 								}
-
+								
+								datePair["对比值"]=$("#time2").val();
 								$("#page2").val(words[1]);
 								$("#page2").change();
 								$("#step2").val(words[2]);
@@ -167,10 +171,10 @@
 								$("#time2").val(getDate());
 							}
 
-							/* var data = ${model.lineChart.jsonString};
+							var data = ${model.appSpeedDisplayInfo.lineChart.jsonString};
 							
-							graphMetricChartForApp(document.getElementById('${model.lineChart.id}'),
-									data, datePair); */
+							graphMetricChartForApp(document.getElementById('${model.appSpeedDisplayInfo.lineChart.id}'),
+									data, datePair); 
 						});
 	</script>
 

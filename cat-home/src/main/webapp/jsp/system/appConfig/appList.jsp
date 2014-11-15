@@ -24,6 +24,16 @@
 				$('#state').html('&nbsp;');
 			},3000);
 			
+			var type = "${payload.type}";
+			
+			if(typeof type != "undefined" && type.length > 0) {
+				$('#tab-'+ type).addClass('active');
+				$('#tabContent-'+ type).addClass('active');
+			}else {
+				$('#tab-api').addClass('active');
+				$('#tabContent-api').addClass('active');
+			}
+			
 			$(document).delegate('.update', 'click', function(e){
 				var anchor = this,
 					el = $(anchor);
@@ -92,19 +102,19 @@
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs span2" id="myTab">
-				    <li id="tab-api" class="text-right active"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-error">API命令字</h5></a></li>
+				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-error">API命令字</h5></a></li>
 				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-error">活动命令字</h5></a></li>
 				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <h5 class="text-error">返回码</h5></a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane active" id="tabContent-api">
+					<div class="tab-pane" id="tabContent-api">
 						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 							<thead>
 							<tr class="odd">
 								<th width="40%">名称</th>
 								<th width="20%">项目</th>
 								<th width="20%">标题</th>
-								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
+								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate&type=api">新增</a></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -114,8 +124,8 @@
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
 										<td>${item.title }</td>
-										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}">编辑</a>
-										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}">删除</a></td>
+										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}&type=api">编辑</a>
+										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}&type=api">删除</a></td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -129,7 +139,7 @@
 								<th width="20%">名称</th>
 								<th width="35%">项目</th>
 								<th width="30%">标题</th>
-								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate">新增</a></th>
+								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate&type=activity">新增</a></th>
 							</tr></thead>
 							
 							<tbody>
@@ -139,8 +149,8 @@
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
 										<td>${item.title }</td>
-										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}">编辑</a>
-										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}">删除</a></td>
+										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}&type=activity">编辑</a>
+										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}&type=activity">删除</a></td>
 									</tr>
 								</c:if>
 							</c:forEach>

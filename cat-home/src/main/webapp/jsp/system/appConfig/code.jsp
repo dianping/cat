@@ -4,7 +4,7 @@
 	function query(){
 		var domain = $("#domain").val();
 		var command = $("#command").val();
-		var href = "?op=appList&domain=" + domain + "&id=" + command;
+		var href = "?op=appList&type=code&domain=" + domain + "&id=" + command;
 		
 		window.location.href = href;
 	}
@@ -59,11 +59,6 @@
 	}
 
 	$(document).ready(function(){
-		if("${payload.action.name}" != undefined && "${payload.domain}".length >0 || 
-				"${payload.action.name}" == "appCodeSubmit" || "${payload.action.name}" == "appCodeDelete" ||
-				"${payload.action.name}" == "appCodeAdd" || "${payload.action.name}" == "") {
-			$('#myTab a[href="#tabContent-code"]').tab('show');
-		}
 		initDomain('domain', 'command', '${payload.domain}', '${payload.id}');
 	})
 </script>
@@ -82,7 +77,7 @@
 		<th width="10%">返回码</th>
 		<th width="20%">局部设置</th>
 		<th width="20%">局部状态</th>
-		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appCodeAdd&id=${payload.id}">新增</a></th>
+		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appCodeAdd&id=${payload.id}&type=code">新增</a></th>
 	</tr></thead>
 	
 	<tbody>
@@ -100,8 +95,8 @@
 				</c:otherwise>
 				</c:choose>
 				</td>
-				<td><a class='btn  btn-small btn-primary' href="?op=appCodeUpdate&id=${payload.id}&code=${code.value.id}">编辑</a>
-				<a class='delete btn  btn-small btn-danger' href="?op=appCodeDelete&id=${payload.id}&code=${code.value.id}">删除</a></td>
+				<td><a class='btn  btn-small btn-primary' href="?op=appCodeUpdate&id=${payload.id}&code=${code.value.id}&type=code">编辑</a>
+				<a class='delete btn  btn-small btn-danger' href="?op=appCodeDelete&id=${payload.id}&code=${code.value.id}&type=code">删除</a></td>
 			</tr>
 	</c:forEach>
 	

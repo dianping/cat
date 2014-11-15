@@ -14,6 +14,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -38,6 +39,7 @@ import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -63,6 +65,7 @@ import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.app.command.AppDataCommandTableProvider;
 import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.speed.AppSpeedService;
 import com.dianping.cat.service.app.speed.AppSpeedTableProvider;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
@@ -167,7 +170,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		all.add(C(NetworkRuleConfigManager.class)
+		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
 		      UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
@@ -211,9 +215,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
 
-		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class, AppConfigManager.class));
+		all.add(C(AppGraphCreator.class).req(AppDataService.class, AppConfigManager.class));
+
+		all.add(C(AppSpeedInfoBuilder.class).req(AppSpeedService.class, AppSpeedConfigManager.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));

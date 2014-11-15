@@ -111,164 +111,118 @@
 		</table>
 
 		<div style="float: left; width: 100%;">
-			<div id="${model.lineChart.id}"></div>
+			<div id="${model.appSpeedDisplayInfo.lineChart.id}"></div>
 		</div>
 		<br/>
-		<!--
 <table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
-	<thead><tr class="text-success">
-		<th>网络类型</th>
-		<th>版本</th>
-		<th>连接类型</th>
-		<th>平台</th>
-		<th>地区</th>
-		<th>运营商</th>
-		<th><a href="javascript:queryGroupBy('success');">成功率</a>(%)</th>
-		<th><a href="javascript:queryGroupBy('request');">总请求数</a></th>
-		<th><a href="javascript:queryGroupBy('delay');">成功平均延迟</a>(ms)</th>
-		<th><a href="javascript:queryGroupBy('requestPackage');">平均发包</a>(B)</th>
-		<th><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
-	</tr></thead>
+	<thead>
+	<tr>
+	<c:choose>
+		<c:when test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
+		<td colspan="4">
+		</c:when>
+		<c:otherwise>
+		<td colspan="9">
+		</c:otherwise>
+	</c:choose>
+	<span class="text-success">计算规则：</span>下面数据是从一天中288个5分钟点数据求和再平均的结果
+	</td>
+	</tr>
+	<tr class="text-success">
+		<th style="text-align: center">时间</th>
+		<th style="text-align: center">访问次数</th>
+		<th style="text-align: center">慢用户比例</th>
+		<th style="text-align: center">延时(ms)</th>
+		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
+			<th style="text-align: center">对比时间</th>
+			<th style="text-align: center">对比访问次数</th>
+			<th style="text-align: center">对比慢用户比例</th>
+			<th style="text-align: center">对比延时(ms)</th>
+			<th style="text-align: center">变化比例</th>
+		</c:if>
+	</tr>
+	</thead>
 	<tbody>
-	<c:forEach var="item" items="${model.appDataSpreadInfos}" varStatus="status">
+	<c:set var="summarys" value="${model.appSpeedSummarys}" />
+		<c:forEach var="entry" items="${summarys['当前值']}" >
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
-		<c:set var="networkCode" value="${item.network}"/>
-		<c:set var="appVersionCode" value="${item.appVersion}"/>
-		<c:set var="channelCode" value="${item.connectType}"/>
-		<c:set var="platformCode" value="${item.platform}"/>
-		<c:set var="cityCode" value="${item.city}"/>
-		<c:set var="operatorCode" value="${item.operator}"/>
-		<c:set var="network" value="${model.networks[networkCode].name}"/>
-		<c:set var="appVersion" value="${model.versions[appVersionCode].name}"/>
-		<c:set var="channel" value="${model.connectionTypes[channelCode].name}"/>
-		<c:set var="platform" value="${model.platforms[platformCode].name}"/>
-		<c:set var="city" value="${model.cities[cityCode].name}"/>
-		<c:set var="operator" value="${model.operators[operatorCode].name}"/>
-		
-		<c:choose>
-			<c:when test="${empty network}">
-			<td><button class="btn btn-small btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${network}</td>
-			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty appVersion}">
-			<td><button class="btn btn-small btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${appVersion}</td>
-			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty channel}">
-			<td><button class="btn btn-small btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${channel}</td>
-			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty platform}">
-			<td>
-			<button class="btn btn-small btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${platform}</td>
-			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty city}">
-			<td><button class="btn btn-small btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${city}</td>
-			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty operator}">
-			<td><button class="btn btn-small btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${operator}</td>
-			</c:otherwise>
-		</c:choose>
- 		<td>${w:format(item.successRatio,'#0.000')}%</td>
-		<td>${w:format(item.accessNumberSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.responseTimeAvg,'###,##0.000')}</td>
-		<td>${w:format(item.requestPackageAvg,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.responsePackageAvg,'#,###,###,###,##0')}</td>
+	 		<td style="text-align: center">${entry.value.dayTime}</td>
+			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
+			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
+			<td>${w:format(entry.value.responseTimeAvg,'#,###,###,###,##0')}</td>
+			<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
+				<c:set var="response" value="${summarys['对比值'][entry.value.minuteOrder].responseTimeAvg}" />
+				<c:set var="ratio" value="${(entry.value.responseTimeAvg - response) / response * 100}" />
+				<td style="text-align: center">${summarys['对比值'][entry.value.minuteOrder].dayTime}</td>
+				<td>${w:format(summarys['对比值'][entry.value.minuteOrder].accessNumberSum,'#,###,###,###,##0')}</td>
+				<td>${w:format(summarys['对比值'][entry.value.minuteOrder].slowRatio,'#0.000')}%</td>
+				<td>${w:format(summarys['对比值'][entry.value.minuteOrder].responseTimeAvg,'#,###,###,###,##0')}</td>
+				<c:choose>
+				<c:when test="${ratio < 0 }">
+				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
+				</c:when>
+				<c:otherwise>
+				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				</c:otherwise>
+				</c:choose>
+			</c:if>
 		</tr>
-	</c:forEach>
+		</c:forEach>
 	</tbody>
 </table>
--->
-<script>
-/* 	var domainToCommandsJson = ${model.domainToCommandsJson};
 
-	function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
-		if(domainInitVal == ""){
-			domainInitVal = $("#"+domainId).val()
-		}
-		var commandSelect = $("#"+commandId);
-		var commands = domainToCommandsJson[domainInitVal];
-		
-		$("#"+domainId).val(domainInitVal);
-		commandSelect.empty();
-		for(var cou in commands){
-			var command = commands[cou];
-			if(command['title'] != undefined && command['title'].length > 0){
-				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-			}else{
-				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-			}
-		}
-		if(commandInitVal != ''){
-			commandSelect.val(commandInitVal);
-		}
-	}
-	
-	function changeCommandByDomain(){
-		if($(this).attr("id")=="domains"){
-			var domain = $("#domains").val();
-			var commandSelect = $("#command");
-		}else{
-			var domain = $("#domains2").val();
-			var commandSelect = $("#command2");
-		}
-		var commands = domainToCommandsJson[domain];
-		commandSelect.empty();
-		
-		for(var cou in commands){
-			var command = commands[cou];
-			if(command['title'] != undefined){
-				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-			}else{
-				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-			}
-		}
-	}
-	
-	function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
-		var domainsSelect = $("#"+domainSelectId);
-		for(var domain in domainToCommandsJson){
-			domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
-		}
-		changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
-		command1Change();
-		domainsSelect.on('change', changeCommandByDomain);
-	}
-
-	$(document).ready(function(){
-		initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
-		initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
-		command1Change();
-		command2Change();
-	}) */
-</script>
+<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
+	<thead>
+	<tr>
+	<c:choose>
+		<c:when test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
+		<td colspan="4">
+		</c:when>
+		<c:otherwise>
+		<td colspan="9">
+		</c:otherwise>
+	</c:choose>
+	<span class="text-success">计算规则：</span>下面数据是这个测速点5分钟内所有数据求和再平均的结果
+	</td>
+	</tr>
+	<tr class="text-success">
+		<th style="text-align: center">时间</th>
+		<th style="text-align: center">访问次数</th>
+		<th style="text-align: center">慢用户比例</th>
+		<th style="text-align: center">延时(ms)</th>
+		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedDetails) gt 1}">
+			<th style="text-align: center">对比时间</th>
+			<th style="text-align: center">对比访问次数</th>
+			<th style="text-align: center">对比慢用户比例</th>
+			<th style="text-align: center">对比延时(ms)</th>
+			<th style="text-align: center">变化比例</th>
+		</c:if>
+	</tr></thead>
+	<tbody id="details">
+		<c:set var="details" value="${model.appSpeedDetails}" />
+		<c:forEach var="entry" items="${details['当前值']}" >
+		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right" >
+	 		<td style="text-align: center">${entry.value.dateTime}</td>
+			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
+			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
+			<td>${w:format(entry.value.responseTimeAvg,'#,###,###,###,##0')}</td>
+			<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedDetails) gt 1}">
+				<c:set var="response" value="${details['对比值'][entry.value.minuteOrder].responseTimeAvg}" />
+				<c:set var="ratio" value="${(entry.value.responseTimeAvg - response) / response * 100}" />
+				<td style="text-align: center">${details['对比值'][entry.value.minuteOrder].dateTime}</td>
+				<td>${w:format(details['对比值'][entry.value.minuteOrder].accessNumberSum,'#,###,###,###,##0')}</td>
+				<td>${w:format(details['对比值'][entry.value.minuteOrder].slowRatio,'#0.000')}%</td>
+				<td>${w:format(details['对比值'][entry.value.minuteOrder].responseTimeAvg,'#,###,###,###,##0')}</td>
+				<c:choose>
+				<c:when test="${ratio < 0 }">
+				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
+				</c:when>
+				<c:otherwise>
+				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				</c:otherwise>
+				</c:choose>
+			</c:if>
+		</tr>
+		</c:forEach>
+	</tbody>
+</table>

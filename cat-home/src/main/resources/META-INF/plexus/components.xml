@@ -515,28 +515,19 @@
 					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4565,6 +4556,12 @@
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
@@ -4615,27 +4612,6 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4653,6 +4629,36 @@
 		<component>
 			<role>com.dianping.cat.app.AppDataCommandDao</role>
 			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppSpeedDataDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppSpeedDataDao</role>
+			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

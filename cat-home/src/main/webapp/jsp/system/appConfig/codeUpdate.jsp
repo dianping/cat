@@ -43,7 +43,7 @@
 				return;
 			}
 			
-			window.location.href = "/cat/s/config?op=appCodeSubmit&id="+${payload.id}+"&content="+codeId+":"+codeName+":"+codeStatus;
+			window.location.href = "/cat/s/config?op=appCodeSubmit&type=code&id="+${payload.id}+"&content="+codeId+":"+codeName+":"+codeStatus;
 		}) 
 	</script>
 	

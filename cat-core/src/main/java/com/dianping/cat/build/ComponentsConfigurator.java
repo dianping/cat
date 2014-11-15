@@ -38,7 +38,7 @@ import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.app.BaseAppDataService;
 import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.speed.AppSpeedDataService;
+import com.dianping.cat.service.app.speed.AppSpeedService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -85,8 +85,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaseAppDataService.class, AppDataService.ID, AppDataService.class).req(AppConfigManager.class,
 		      AppDataCommandDao.class));
 
-		all.add(C(BaseAppDataService.class, AppSpeedDataService.ID, AppSpeedDataService.class).req(
-		      AppSpeedConfigManager.class, AppSpeedDataDao.class));
+		all.add(C(BaseAppDataService.class, AppSpeedService.ID, AppSpeedService.class).req(AppSpeedDataDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

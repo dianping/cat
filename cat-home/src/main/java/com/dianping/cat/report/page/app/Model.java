@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.hsqldb.lib.StringUtil;
@@ -20,6 +21,8 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.app.graph.AppSpeedDetail;
+import com.dianping.cat.report.page.app.graph.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 import com.dianping.cat.service.app.command.AppDataSpreadInfo;
@@ -51,6 +54,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
 
+	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
+
 	private Map<Integer, Speed> m_speeds;
 
 	private String m_content;
@@ -71,6 +76,43 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
 		return m_appDataSpreadInfos;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+				AppSpeedDetail d = entry.getValue();
+				
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, List<AppSpeedDetail>> details = m_appSpeedDisplayInfo.getAppSpeedDetails();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, List<AppSpeedDetail>> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+
+				for (AppSpeedDetail detail : entry.getValue()) {
+					m.put(detail.getMinuteOrder(), detail);
+				}
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
+		return m_appSpeedDisplayInfo;
 	}
 
 	public Map<Integer, Item> getCities() {
@@ -180,6 +222,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new JsonBuilder().toJson(page2Steps);
 	}
 
+	public Set<String> getPages() {
+		Set<String> pages = new HashSet<String>();
+
+		for (Speed speed : m_speeds.values()) {
+			pages.add(speed.getPage());
+		}
+		return pages;
+	}
+
 	public PieChart getPieChart() {
 		return m_pieChart;
 	}
@@ -204,21 +255,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_speeds;
 	}
 
-	public Set<String> getPages() {
-		Set<String> pages = new HashSet<String>();
-
-		for (Speed speed : m_speeds.values()) {
-			pages.add(speed.getPage());
-		}
-		return pages;
-	}
-
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
 
 	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
 		m_appDataSpreadInfos = appDatas;
+	}
+
+	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {
+		m_appSpeedDisplayInfo = appSpeedDisplayInfo;
 	}
 
 	public void setCities(Map<Integer, Item> cities) {

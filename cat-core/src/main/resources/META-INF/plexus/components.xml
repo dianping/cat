@@ -115,9 +115,6 @@
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -136,11 +133,8 @@
 		<component>
 			<role>com.dianping.cat.service.app.BaseAppDataService</role>
 			<role-hint>com.dianping.cat.app.AppSpeedData</role-hint>
-			<implementation>com.dianping.cat.service.app.speed.AppSpeedDataService</implementation>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
 				</requirement>

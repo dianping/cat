@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.app;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +27,8 @@ import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.report.page.app.graph.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.graph.Sorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -35,6 +36,7 @@ import com.dianping.cat.service.app.command.AppDataGroupByField;
 import com.dianping.cat.service.app.command.AppDataService;
 import com.dianping.cat.service.app.command.AppDataSpreadInfo;
 import com.dianping.cat.service.app.command.CommandQueryEntity;
+import com.dianping.cat.service.app.speed.AppSpeedService;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -51,6 +53,12 @@ public class Handler implements PageHandler<Context> {
 	private AppGraphCreator m_appGraphCreator;
 
 	@Inject
+	private AppSpeedInfoBuilder m_appSpeedGraphCreator;
+
+	@Inject
+	private AppSpeedService m_appSpeedDataService;
+
+	@Inject
 	private AppDataService m_appDataService;
 
 	@Inject
@@ -61,15 +69,15 @@ public class Handler implements PageHandler<Context> {
 
 	private Pair<LineChart, List<AppDataSpreadInfo>> buildLineChart(Model model, Payload payload,
 	      AppDataGroupByField field, String sortBy) {
-		CommandQueryEntity linechartEntity1 = payload.getQueryEntity1();
-		CommandQueryEntity linechartEntity2 = payload.getQueryEntity2();
+		CommandQueryEntity entity1 = payload.getQueryEntity1();
+		CommandQueryEntity entity2 = payload.getQueryEntity2();
 		String type = payload.getType();
 
 		try {
 			filterCommands(model, payload.isShowActivity());
 
-			LineChart lineChart = m_appGraphCreator.buildLineChart(linechartEntity1, linechartEntity2, type);
-			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(linechartEntity1, field);
+			LineChart lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
+			List<AppDataSpreadInfo> appDataSpreadInfos = m_appDataService.buildAppDataSpreadInfo(entity1, field);
 			Collections.sort(appDataSpreadInfos, new Sorter(sortBy).buildLineChartInfoComparator());
 
 			model.setLineChart(lineChart);
@@ -235,7 +243,16 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case SPEED:
-			model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+			try {
+				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+				AppSpeedDisplayInfo info = m_appSpeedGraphCreator.buildSpeedDisplayInfo(payload.getSpeedQueryEntity1(),
+				      payload.getSpeedQueryEntity2());
+
+				model.setAppSpeedDisplayInfo(info);
+			} catch (Exception e) {
+				Cat.logError(e);
+				e.printStackTrace();
+			}
 			break;
 		}
 
