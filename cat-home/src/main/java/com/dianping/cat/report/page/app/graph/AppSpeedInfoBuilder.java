@@ -14,7 +14,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.service.app.speed.AppSpeedService;
 import com.dianping.cat.service.app.speed.SpeedQueryEntity;

@@ -33,6 +33,7 @@ import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -216,6 +217,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionAlert.class)
 		      .req(ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertManager.class).req(ModelService.class,
 		            TopAnalyzer.ID));
+		all.add(C(FrontEndExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
+		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(ThirdPartyAlert.class).req(AlertManager.class));
 
