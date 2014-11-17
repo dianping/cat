@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.app;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import com.dianping.cat.report.page.app.graph.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 import com.dianping.cat.service.app.command.AppDataSpreadInfo;
-import com.site.lookup.util.StringUtils;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -56,8 +54,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
-	private Map<Integer, Speed> m_speeds;
-
 	private String m_content;
 
 	private String m_fetchData;
@@ -69,6 +65,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private FieldsInfo m_fieldsInfo;
 
 	private ProblemReport m_problemReport;
+
+	private Map<String, List<Speed>> m_speeds;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -86,7 +84,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
 				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
 				AppSpeedDetail d = entry.getValue();
-				
+
 				m.put(d.getMinuteOrder(), d);
 				map.put(entry.getKey(), m);
 			}
@@ -205,30 +203,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getPage2StepsJson() {
-		Map<String, List<Speed>> page2Steps = new LinkedHashMap<String, List<Speed>>();
-
-		for (Speed speed : m_speeds.values()) {
-			String page = speed.getPage();
-			if (StringUtils.isEmpty(page)) {
-				page = "default";
-			}
-			List<Speed> steps = page2Steps.get(page);
-			if (steps == null) {
-				steps = new ArrayList<Speed>();
-				page2Steps.put(page, steps);
-			}
-			steps.add(speed);
-		}
-		return new JsonBuilder().toJson(page2Steps);
+		return new JsonBuilder().toJson(m_speeds);
 	}
 
 	public Set<String> getPages() {
-		Set<String> pages = new HashSet<String>();
-
-		for (Speed speed : m_speeds.values()) {
-			pages.add(speed.getPage());
-		}
-		return pages;
+		return m_speeds.keySet();
 	}
 
 	public PieChart getPieChart() {
@@ -251,7 +230,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_problemStatistics;
 	}
 
-	public Map<Integer, Speed> getSpeeds() {
+	public Map<String, List<Speed>> getSpeeds() {
 		return m_speeds;
 	}
 
@@ -327,7 +306,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_problemStatistics = problemStatistics;
 	}
 
-	public void setSpeeds(Map<Integer, Speed> speeds) {
+	public void setSpeeds(Map<String, List<Speed>> speeds) {
 		m_speeds = speeds;
 	}
 

@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -22,6 +24,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
@@ -37,6 +40,7 @@ import com.dianping.cat.service.app.command.AppDataService;
 import com.dianping.cat.service.app.command.AppDataSpreadInfo;
 import com.dianping.cat.service.app.command.CommandQueryEntity;
 import com.dianping.cat.service.app.speed.AppSpeedService;
+import com.dianping.cat.service.app.speed.SpeedQueryEntity;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -244,8 +248,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case SPEED:
 			try {
-				model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
-				AppSpeedDisplayInfo info = m_appSpeedGraphCreator.buildSpeedDisplayInfo(payload.getSpeedQueryEntity1(),
+				Map<String, List<Speed>> speeds = buildPageStepInfo();
+				model.setSpeeds(speeds);
+
+				SpeedQueryEntity queryEntity1 = normalizeQueryEntity(payload, speeds);
+				AppSpeedDisplayInfo info = m_appSpeedGraphCreator.buildSpeedDisplayInfo(queryEntity1,
 				      payload.getSpeedQueryEntity2());
 
 				model.setAppSpeedDisplayInfo(info);
@@ -259,6 +266,49 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
+		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
+
+		if (StringUtil.isEmpty(payload.getQuery1())) {
+			if (!speeds.isEmpty()) {
+				List<Speed> first = speeds.get(speeds.keySet().toArray()[0]);
+
+				if (first != null && !first.isEmpty()) {
+					query1.setId(first.get(0).getId());
+				}
+			}
+		}
+		return query1;
+	}
+
+	private Map<String, List<Speed>> buildPageStepInfo() {
+		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
+
+		for (Speed speed : m_appSpeedConfigManager.getConfig().getSpeeds().values()) {
+			String page = speed.getPage();
+			if (StringUtils.isEmpty(page)) {
+				page = "default";
+			}
+			List<Speed> steps = page2Steps.get(page);
+			if (steps == null) {
+				steps = new ArrayList<Speed>();
+				page2Steps.put(page, steps);
+			}
+			steps.add(speed);
+		}
+		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
+			List<Speed> speeds = entry.getValue();
+			Collections.sort(speeds, new Comparator<Speed>() {
+
+				@Override
+				public int compare(Speed o1, Speed o2) {
+					return o1.getStep() - o2.getStep();
+				}
+			});
+		}
+		return page2Steps;
 	}
 
 	private void normalize(Model model, Payload payload) {

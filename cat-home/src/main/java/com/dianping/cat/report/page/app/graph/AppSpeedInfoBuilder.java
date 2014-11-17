@@ -11,8 +11,10 @@ import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.service.app.speed.AppSpeedService;
 import com.dianping.cat.service.app.speed.SpeedQueryEntity;
@@ -119,30 +121,34 @@ public class AppSpeedInfoBuilder {
 		Map<String, AppSpeedDetail> summarys = new LinkedHashMap<String, AppSpeedDetail>();
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			Map<Integer, List<AppSpeedData>> appSpeedData = entry.getValue().getAppSpeedDatas();
-			Date period = entry.getValue().getPeriod();
+			try {
+				Map<Integer, List<AppSpeedData>> appSpeedData = entry.getValue().getAppSpeedDatas();
+				Date period = entry.getValue().getPeriod();
 
-			if (!appSpeedData.isEmpty()) {
-				long accessSum = 0, slowAccessSum = 0, sum = 0;
-				double responseSum = 0, responseAvg = 0, ratio = 0;
+				if (!appSpeedData.isEmpty()) {
+					long accessSum = 0, slowAccessSum = 0, sum = 0;
+					double responseSum = 0, responseAvg = 0, ratio = 0;
 
-				for (Entry<Integer, List<AppSpeedData>> e : appSpeedData.entrySet()) {
-					for (AppSpeedData data : e.getValue()) {
-						accessSum += data.getAccessNumberSum();
-						slowAccessSum += data.getSlowAccessNumberSum();
-						responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
+					for (Entry<Integer, List<AppSpeedData>> e : appSpeedData.entrySet()) {
+						for (AppSpeedData data : e.getValue()) {
+							accessSum += data.getAccessNumberSum();
+							slowAccessSum += data.getSlowAccessNumberSum();
+							responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
+						}
 					}
-				}
-				sum = accessSum + slowAccessSum;
-				ratio = slowAccessSum * 100.0 / sum;
-				responseAvg = responseSum / sum;
-				AppSpeedDetail d = new AppSpeedDetail();
+					sum = accessSum + slowAccessSum;
+					ratio = slowAccessSum * 100.0 / sum;
+					responseAvg = responseSum / sum;
+					AppSpeedDetail d = new AppSpeedDetail();
 
-				d.setPeriod(period);
-				d.setAccessNumberSum(sum);
-				d.setResponseTimeAvg(responseAvg);
-				d.setSlowRatio(ratio);
-				summarys.put(entry.getKey(), d);
+					d.setPeriod(period);
+					d.setAccessNumberSum(sum);
+					d.setResponseTimeAvg(responseAvg);
+					d.setSlowRatio(ratio);
+					summarys.put(entry.getKey(), d);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return summarys;
@@ -186,7 +192,7 @@ public class AppSpeedInfoBuilder {
 
 	private AppSpeedSequence convert2AppDataCommandMap(List<AppSpeedData> fromDatas, Date period) {
 		Map<Integer, List<AppSpeedData>> dataMap = new LinkedHashMap<Integer, List<AppSpeedData>>();
-		int max = -1;
+		int max = -5;
 
 		for (AppSpeedData from : fromDatas) {
 			int minute = from.getMinuteOrder();
@@ -254,12 +260,17 @@ public class AppSpeedInfoBuilder {
 		if (queryEntity1 != null) {
 			AppSpeedSequence data1 = queryData(queryEntity1);
 
-			datas.put(CURRENT, data1);
+			if (data1.getDuration() > 0) {
+				datas.put(CURRENT, data1);
+			}
 		}
 
 		if (queryEntity2 != null) {
 			AppSpeedSequence data2 = queryData(queryEntity2);
-			datas.put(COMPARISION, data2);
+
+			if (data2.getDuration() > 0) {
+				datas.put(COMPARISION, data2);
+			}
 		}
 		return datas;
 	}

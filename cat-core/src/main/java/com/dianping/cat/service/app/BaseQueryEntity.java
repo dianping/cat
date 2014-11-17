@@ -104,4 +104,8 @@ public class BaseQueryEntity {
 	public int getVersion() {
 		return m_version;
 	}
+
+	public void setId(int id) {
+		m_id = id;
+	}
 }

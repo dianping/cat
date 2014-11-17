@@ -19,7 +19,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
 
 	@FieldMeta("project")
-	private String m_projectName;
+	private String m_projectName = "All";
 
 	@FieldMeta("remote")
 	private String m_remoteIp;
