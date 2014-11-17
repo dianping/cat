@@ -5399,6 +5399,9 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
 				</requirement>
 				<requirement>

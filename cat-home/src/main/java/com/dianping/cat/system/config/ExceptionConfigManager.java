@@ -1,7 +1,12 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -18,6 +23,7 @@ import com.dianping.cat.home.dependency.exception.entity.ExceptionConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.dependency.exception.transform.DefaultSaxParser;
+import com.site.lookup.util.StringUtils;
 
 public class ExceptionConfigManager implements Initializable {
 
@@ -58,6 +64,8 @@ public class ExceptionConfigManager implements Initializable {
 
 			m_configId = config.getId();
 			m_exceptionConfig = DefaultSaxParser.parse(content);
+
+			updateConfig();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_getter.getConfigContent(CONFIG_NAME);
@@ -80,6 +88,49 @@ public class ExceptionConfigManager implements Initializable {
 		}
 	}
 
+	private void updateConfig() {
+		Map<String, ExceptionLimit> exceptionLimits = new HashMap<String, ExceptionLimit>();
+		Map<String, ExceptionExclude> excetionExcludes = new HashMap<String, ExceptionExclude>();
+
+		for (Entry<String, DomainConfig> entry : m_exceptionConfig.getDomainConfigs().entrySet()) {
+			DomainConfig c = entry.getValue();
+
+			if (StringUtils.isNotEmpty(c.getId())) {
+				for (Entry<String, ExceptionLimit> e : c.getExceptionLimits().entrySet()) {
+					ExceptionLimit limit = e.getValue();
+
+					if (StringUtils.isNotEmpty(limit.getId()) && StringUtils.isNotEmpty(limit.getDomain())) {
+						exceptionLimits.put(limit.getDomain() + "-" + limit.getId(), limit);
+					}
+				}
+				for (Entry<String, ExceptionExclude> e : c.getExceptionExcludes().entrySet()) {
+					ExceptionExclude exclude = e.getValue();
+
+					if (StringUtils.isNotEmpty(exclude.getId()) && StringUtils.isNotEmpty(exclude.getDomain())) {
+						excetionExcludes.put(exclude.getDomain() + "-" + exclude.getId(), exclude);
+					}
+				}
+			}
+		}
+		ExceptionConfig exceptionConfig = new ExceptionConfig();
+
+		for (Entry<String, ExceptionLimit> entry : exceptionLimits.entrySet()) {
+			ExceptionLimit e = entry.getValue();
+			DomainConfig domainConfig = exceptionConfig.findOrCreateDomainConfig(e.getDomain());
+
+			domainConfig.getExceptionLimits().put(e.getId(), e);
+		}
+
+		for (Entry<String, ExceptionExclude> entry : excetionExcludes.entrySet()) {
+			ExceptionExclude e = entry.getValue();
+			DomainConfig domainConfig = exceptionConfig.findOrCreateDomainConfig(e.getDomain());
+
+			domainConfig.getExceptionExcludes().put(e.getId(), e);
+		}
+		m_exceptionConfig = exceptionConfig;
+		storeConfig();
+	}
+
 	public boolean insertExceptionExclude(ExceptionExclude exception) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
 
@@ -100,6 +151,18 @@ public class ExceptionConfigManager implements Initializable {
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionExcludes().values());
 		}
+		Collections.sort(result, new Comparator<ExceptionExclude>() {
+
+			@Override
+			public int compare(ExceptionExclude o1, ExceptionExclude o2) {
+				if ("Default".equals(o1.getDomain())) {
+					return 1;
+				} else {
+					return o1.getDomain().compareTo(o2.getDomain());
+				}
+			}
+
+		});
 		return result;
 	}
 
@@ -109,6 +172,18 @@ public class ExceptionConfigManager implements Initializable {
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionLimits().values());
 		}
+		Collections.sort(result, new Comparator<ExceptionLimit>() {
+
+			@Override
+			public int compare(ExceptionLimit o1, ExceptionLimit o2) {
+				if ("Default".equals(o1.getDomain())) {
+					return 1;
+				} else {
+					return o1.getDomain().compareTo(o2.getDomain());
+				}
+			}
+
+		});
 		return result;
 	}
 

@@ -137,10 +137,15 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_PAGE_DELETE:
 		case APP_CODE_SUBMIT:
 		case APP_CODE_DELETE:
+		case APP_SPEED_DELETE:
+		case APP_SPEED_SUBMIT:
 			return JspFile.APP_LIST.getPath();
 		case APP_CODE_ADD:
 		case APP_CODE_UPDATE:
 			return JspFile.APP_CODE_UPDATE.getPath();
+		case APP_SPEED_ADD:
+		case APP_SPEED_UPDATE:
+			return JspFile.APP_SPEED_UPDATE.getPath();
 		case APP_UPDATE:
 			return JspFile.APP_UPDATE.getPath();
 		case APP_RULE:

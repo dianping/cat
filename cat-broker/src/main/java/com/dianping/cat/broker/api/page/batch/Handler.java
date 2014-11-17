@@ -76,8 +76,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
-		// String userIp = m_util.getRemoteIp(request);
-		String userIp = "23.100.46.198";
+		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 		boolean success = true;
 

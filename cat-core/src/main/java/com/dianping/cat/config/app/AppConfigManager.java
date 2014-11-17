@@ -202,6 +202,15 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCodes();
 	}
 
+	public boolean deleteCode(int id, int codeId) {
+		Command command = m_config.getCommands().get(id);
+
+		if (command != null) {
+			command.getCodes().remove(codeId);
+		}
+		return storeConfig();
+	}
+
 	@Override
 	public void initialize() {
 		try {

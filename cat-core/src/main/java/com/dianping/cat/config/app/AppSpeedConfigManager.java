@@ -1,7 +1,10 @@
 package com.dianping.cat.config.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -70,8 +73,32 @@ public class AppSpeedConfigManager implements Initializable {
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
+	public int generateId() {
+		List<Integer> ids = new ArrayList<Integer>();
+
+		for (Speed s : m_config.getSpeeds().values()) {
+			ids.add(s.getId());
+		}
+		Collections.sort(ids);
+		int max = ids.get(ids.size() - 1);
+
+		if (ids.size() < max) {
+			for (int i = 1; i <= max; i++) {
+				if (!ids.contains(i)) {
+					return i;
+				}
+			}
+		}
+		return max + 1;
+	}
+
 	public AppSpeedConfig getConfig() {
 		return m_config;
+	}
+
+	public boolean deleteSpeed(int id) {
+		m_config.removeSpeed(id);
+		return storeConfig();
 	}
 
 	public boolean insert(String xml) {
@@ -83,6 +110,11 @@ public class AppSpeedConfigManager implements Initializable {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public boolean updateConfig(Speed speed) {
+		m_config.addSpeed(speed);
+		return storeConfig();
 	}
 
 	public void updateConfig() throws DalException, SAXException, IOException {

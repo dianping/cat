@@ -220,11 +220,11 @@ public class SpeedBucketExecutor implements BucketExecutor {
 		appData.setOperator(Integer.parseInt(items[4]));
 		appData.setNetwork(Integer.parseInt(items[5]));
 		appData.setVersion(Integer.parseInt(items[6]));
-		appData.setPlatform(Integer.parseInt(items[9]));
-		appData.setCount(Integer.parseInt(items[10]));
-		appData.setResponseTime(Integer.parseInt(items[11]));
-		appData.setSlowCount(Integer.parseInt(items[12]));
-		appData.setSlowResponseTime(Integer.parseInt(items[13]));
+		appData.setPlatform(Integer.parseInt(items[7]));
+		appData.setCount(Integer.parseInt(items[8]));
+		appData.setResponseTime(Integer.parseInt(items[9]));
+		appData.setSlowCount(Integer.parseInt(items[10]));
+		appData.setSlowResponseTime(Integer.parseInt(items[11]));
 		return appData;
 	}
 
