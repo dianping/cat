@@ -247,6 +247,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		double duration = t.getDurationInMicros() / 1000d;
+		
 		type.setSum(type.getSum() + duration);
 		name.setSum(name.getSum() + duration);
 	}
