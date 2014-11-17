@@ -55,7 +55,7 @@
 	<td colspan="3"><iframe id="system" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
 <tr>
-	<th colspan="3" style="text-align:left"><a  data-status="memory" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,None Heap Usage)</th>
+	<th colspan="3" style="text-align:left"><a  data-status="memory" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,Eden Usage,Survivor Usage,None Heap Usage)</th>
 </tr>
 <tr>
 	<td colspan="3"><iframe id="memory" style="display:none;" width="100%" height="400px"></iframe></td>

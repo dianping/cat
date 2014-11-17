@@ -43,7 +43,6 @@
     <attribute name="max" value-type="int" />
     <attribute name="total" value-type="int" />
     <attribute name="free" value-type="int" />
-    <attribute name="heap-usage" value-type="int" />
     <attribute name="non-heap-usage" value-type="int" />
   </entity>
   <entity name="thread">

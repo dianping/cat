@@ -24,6 +24,7 @@ import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.GcInfo;
+import com.dianping.cat.status.model.entity.HeapInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
@@ -99,7 +100,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				}
 			}
 
-			period.setHeapUsage(memeryInfo.getHeapUsage());
+			HeapInfo heapInfo = memeryInfo.getHeap();
+
+			period.setHeapUsage(heapInfo.getHeapUsage());
+			period.setEdenUsage(heapInfo.getEdenUsage());
+			period.setSurvivorUsage(heapInfo.getSurvivorUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
 			period.setMemoryFree(memeryInfo.getFree());
 			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
