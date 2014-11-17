@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 
-public class ProblemReportAllBuilder  extends BaseVisitor {
+public class ProblemReportAllBuilder extends BaseVisitor {
 
 	private ProblemReport m_report;
 
@@ -62,8 +62,13 @@ public class ProblemReportAllBuilder  extends BaseVisitor {
 	@Override
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_currentDomain = problemReport.getDomain();
-		m_report.setStartTime(problemReport.getStartTime());
-		m_report.setEndTime(problemReport.getEndTime());
+
+		if (m_report.getStartTime() != null) {
+			m_report.setStartTime(problemReport.getStartTime());
+		}
+		if (m_report.getEndTime() != null) {
+			m_report.setEndTime(problemReport.getEndTime());
+		}
 		super.visitProblemReport(problemReport);
 	}
 
