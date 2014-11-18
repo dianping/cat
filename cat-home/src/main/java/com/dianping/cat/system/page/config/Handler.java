@@ -184,6 +184,10 @@ public class Handler implements PageHandler<Context> {
 		case APP_CODE_SUBMIT:
 		case APP_CODE_ADD:
 		case APP_CODE_DELETE:
+		case APP_SPEED_UPDATE:
+		case APP_SPEED_ADD:
+		case APP_SPEED_DELETE:
+		case APP_SPEED_SUBMIT:
 		case APP_CONFIG_UPDATE:
 		case APP_RULE:
 		case APP_RULE_ADD_OR_UPDATE:

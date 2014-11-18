@@ -109,9 +109,7 @@ public class TopMetric extends BaseVisitor {
 	public void visitDomain(Domain domain) {
 		m_currentDomain = domain.getName();
 
-		if (m_excludedDomains == null) {
-			super.visitDomain(domain);
-		} else if (!m_excludedDomains.contains(m_currentDomain)) {
+		if (m_excludedDomains == null || !m_excludedDomains.contains(m_currentDomain)) {
 			super.visitDomain(domain);
 		}
 	}

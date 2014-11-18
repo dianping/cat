@@ -6,7 +6,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-final public class AppDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
+public final class AppDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
    @Override
    public List<Component> defineComponents() {
       List<Component> all = new ArrayList<Component>();

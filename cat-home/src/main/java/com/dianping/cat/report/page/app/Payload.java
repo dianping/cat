@@ -3,11 +3,12 @@ package com.dianping.cat.report.page.app;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.config.app.AppDataGroupByField;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
+import com.dianping.cat.service.app.command.AppDataGroupByField;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.CommandQueryEntity;
+import com.dianping.cat.service.app.speed.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -107,17 +108,33 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_query2;
 	}
 
-	public QueryEntity getQueryEntity1() {
+	public CommandQueryEntity getQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
-			return new QueryEntity(m_query1);
+			return new CommandQueryEntity(m_query1);
 		} else {
-			return new QueryEntity(m_showActivity);
+			return new CommandQueryEntity(m_showActivity);
 		}
 	}
 
-	public QueryEntity getQueryEntity2() {
+	public CommandQueryEntity getQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
-			return new QueryEntity(m_query2);
+			return new CommandQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new SpeedQueryEntity(m_query1);
+		} else {
+			return new SpeedQueryEntity();
+		}
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new SpeedQueryEntity(m_query2);
 		} else {
 			return null;
 		}

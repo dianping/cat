@@ -19,6 +19,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import com.site.lookup.util.StringUtils;
 
 public class ExceptionConfigProcessor {
 
@@ -44,8 +45,8 @@ public class ExceptionConfigProcessor {
 		model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
 	}
 
-	public void process(Action action,Payload payload,Model model){
-		switch(action){
+	public void process(Action action, Payload payload, Model model) {
+		switch (action) {
 		case EXCEPTION:
 			loadExceptionConfig(model);
 			break;
@@ -89,7 +90,9 @@ public class ExceptionConfigProcessor {
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
-	}	private List<String> queryExceptionList() {
+	}
+
+	private List<String> queryExceptionList() {
 		long current = System.currentTimeMillis();
 		Date start = new Date(current - current % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR - TimeHelper.ONE_DAY);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
@@ -102,23 +105,22 @@ public class ExceptionConfigProcessor {
 		}
 
 		for (String key : keys) {
-			exceptions.add(key.replaceAll("\n", " "));
+			exceptions.add(key.replaceAll("\n", " ").trim());
 		}
 		return exceptions;
 	}
+
 	private void updateExceptionExclude(Payload payload) {
 		ExceptionExclude exclude = payload.getExceptionExclude();
-		String domain = payload.getDomain();
-		String exception = payload.getException();
-
-		if (domain != null && exception != null) {
-			m_exceptionConfigManager.deleteExceptionExclude(domain, exception);
-		}
+		
 		m_exceptionConfigManager.insertExceptionExclude(exclude);
 	}
 
 	private void updateExceptionLimit(Payload payload) {
 		ExceptionLimit limit = payload.getExceptionLimit();
-		m_exceptionConfigManager.insertExceptionLimit(limit);
+
+		if (StringUtils.isNotEmpty(limit.getId().trim())) {
+			m_exceptionConfigManager.insertExceptionLimit(limit);
+		}
 	}
 }

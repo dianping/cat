@@ -512,31 +512,22 @@
 			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1622,7 +1613,7 @@
 			<implementation>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
@@ -2190,7 +2181,12 @@
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-data-command</role-hint>
-			<implementation>com.dianping.cat.config.app.AppDataCommandTableProvider</implementation>
+			<implementation>com.dianping.cat.service.app.command.AppDataCommandTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -2495,8 +2491,27 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-speed-data</logical-table-name>
+				<physical-table-name>app_speed_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.app.AppDataCommandDao</role>
 			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppSpeedDataDao</role>
+			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2940,7 +2955,7 @@
 			<implementation>com.dianping.cat.report.task.alert.app.AppAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
@@ -3035,6 +3050,25 @@
 		<component>
 			<role>com.dianping.cat.report.task.alert.exception.ExceptionAlert</role>
 			<implementation>com.dianping.cat.report.task.alert.exception.ExceptionAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
@@ -4585,10 +4619,19 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
+					<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
@@ -4620,41 +4663,29 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
+			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.DataExtractor</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.AppDataService</role>
-			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
+			<role>com.dianping.cat.report.page.app.graph.AppGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.app.command.AppDataService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.app.command.AppDataService</role>
+			<implementation>com.dianping.cat.service.app.command.AppDataService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.app.AppDataCommandDao</role>
@@ -4667,6 +4698,36 @@
 		<component>
 			<role>com.dianping.cat.app.AppDataCommandDao</role>
 			<implementation>com.dianping.cat.app.AppDataCommandDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.service.app.speed.AppSpeedService</role>
+			<implementation>com.dianping.cat.service.app.speed.AppSpeedService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppSpeedDataDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppSpeedDataDao</role>
+			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5355,6 +5416,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>

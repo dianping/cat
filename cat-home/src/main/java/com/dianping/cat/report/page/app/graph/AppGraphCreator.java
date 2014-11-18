@@ -3,8 +3,6 @@ package com.dianping.cat.report.page.app.graph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,23 +12,21 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.app.AppDataCommand;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataGroupByField;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.service.app.command.AppDataGroupByField;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.CommandQueryEntity;
 
-public class AppGraphCreator extends AbstractGraphCreator {
+public class AppGraphCreator {
 
 	@Inject
 	private AppDataService m_appDataService;
 
 	@Inject
-	private AppConfigManager m_manager;
+	private AppConfigManager m_appConfigManager;
 
 	private double queryMinYlable(final List<Double[]> datas) {
 		double min = Double.MAX_VALUE;
@@ -69,7 +65,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(QueryEntity queryEntity1, QueryEntity queryEntity2, String type) {
+	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, String type) {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
@@ -85,14 +81,14 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(QueryEntity entity, AppDataGroupByField field) {
+	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataGroupByField field) {
 		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppDataCommand> datas = m_appDataService.queryAppDataCommandsByField(entity, field);
 
 		for (AppDataCommand data : datas) {
-			Pair<Integer, Item> pair = buildPieChartItem(entity.getCommand(), data, field);
+			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
 			PieChartDetailInfo info = new PieChartDetailInfo();
 
@@ -113,7 +109,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 
 		switch (field) {
 		case OPERATOR:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.OPERATOR);
 			com.dianping.cat.configuration.app.entity.Item operator = null;
 			keyValue = data.getOperator();
@@ -123,7 +119,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case APP_VERSION:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.VERSION);
 			com.dianping.cat.configuration.app.entity.Item appVersion = null;
 			keyValue = data.getAppVersion();
@@ -133,7 +129,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case CITY:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.CITY);
 			com.dianping.cat.configuration.app.entity.Item city = null;
 			keyValue = data.getCity();
@@ -143,7 +139,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case CONNECT_TYPE:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
 			com.dianping.cat.configuration.app.entity.Item connectType = null;
 			keyValue = data.getConnnectType();
@@ -153,7 +149,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case NETWORK:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.NETWORK);
 			com.dianping.cat.configuration.app.entity.Item network = null;
 			keyValue = data.getNetwork();
@@ -163,7 +159,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case PLATFORM:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_manager
+			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.PLATFORM);
 			com.dianping.cat.configuration.app.entity.Item platform = null;
 			keyValue = data.getPlatform();
@@ -173,7 +169,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 			}
 			break;
 		case CODE:
-			Map<Integer, Code> codes = m_manager.queryCodeByCommand(command);
+			Map<Integer, Code> codes = m_appConfigManager.queryCodeByCommand(command);
 			Code code = null;
 			keyValue = data.getCode();
 
@@ -206,21 +202,7 @@ public class AppGraphCreator extends AbstractGraphCreator {
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 
-	@Override
-	protected Map<Long, Double> convertToMap(double[] data, Date start, int step) {
-		Map<Long, Double> map = new LinkedHashMap<Long, Double>();
-		int length = data.length;
-		long startTime = start.getTime();
-		long time = startTime;
-
-		for (int i = 0; i < length; i++) {
-			time += step * TimeHelper.ONE_MINUTE;
-			map.put(time, data[i]);
-		}
-		return map;
-	}
-
-	private Double[] prepareQueryData(QueryEntity queryEntity, String type) {
+	private Double[] prepareQueryData(CommandQueryEntity queryEntity, String type) {
 		Double[] value = m_appDataService.queryValue(queryEntity, type);
 
 		return value;

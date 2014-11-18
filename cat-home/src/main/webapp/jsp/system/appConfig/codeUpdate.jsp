@@ -12,9 +12,8 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			if("${payload.domain}" != ""){
-				$('#appList').addClass('active');
-			}
+			$('#appList').addClass('active');
+			$('#codeStatus').val(${model.code.status});
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
@@ -23,27 +22,27 @@
 			var codeName = $("#codeName").val();
 			var codeStatus = $("#codeStatus").val();
 			
-			if(codeId == "undefined" || codeId == ""){
+			if(codeId == "undefined" || codeId.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeId").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			
-			if(codeName == "undefined" || codeName == ""){
+			if(codeName == "undefined" || codeName.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeName").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			if(codeStatus == "undefined" || codeStatus == ""){
+			if(codeStatus == "undefined" || codeStatus.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeStatus").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			
-			window.location.href = "/cat/s/config?op=appCodeSubmit&id="+${payload.id}+"&content="+codeId+":"+codeName+":"+codeStatus;
+			window.location.href = "/cat/s/config?op=appCodeSubmit&type=code&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
 		}) 
 	</script>
 	
@@ -69,11 +68,11 @@
 		</td>
 		</c:when>
 		<c:otherwise>
-			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-error">（仅支持数字）</span><br/>
+			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-error">（* 仅支持数字）</span><br/>
 		</c:otherwise>
 		</c:choose>
 		<tr>
-			<td>返回码设置</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-error">（支持数字、字符）</span><br/>
+			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-error">（* 支持数字、字符）</span><br/>
 </td>
 </tr>
 <tr>

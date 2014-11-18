@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<speed-config>
+	<speed id="1" page="index.bin" step="1" title="首页加载第一步" group="default" threshold="200" />
+</speed-config>
