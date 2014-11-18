@@ -1,6 +1,6 @@
-package com.dianping.cat.broker.api.app;
+package com.dianping.cat.broker.api.app.proto;
 
-public class BaseData {
+public class ProtoData {
 
 	protected int m_status; // -1:saved; 0:not flushed; 1:flushed
 
@@ -30,7 +30,7 @@ public class BaseData {
 		m_status = 0;
 	}
 
-	public BaseData setTimestamp(long timestamp) {
+	public ProtoData setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 		return this;
 	}

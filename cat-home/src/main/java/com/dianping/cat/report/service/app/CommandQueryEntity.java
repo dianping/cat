@@ -1,9 +1,10 @@
-package com.dianping.cat.service.app.command;
+package com.dianping.cat.report.service.app;
 
 import java.util.List;
+
 import org.unidal.helper.Splitters;
+
 import com.dianping.cat.Cat;
-import com.dianping.cat.service.app.BaseQueryEntity;
 
 public class CommandQueryEntity extends BaseQueryEntity {
 

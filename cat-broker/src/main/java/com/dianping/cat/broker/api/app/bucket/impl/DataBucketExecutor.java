@@ -1,4 +1,4 @@
-package com.dianping.cat.broker.api.app.bucket;
+package com.dianping.cat.broker.api.app.bucket.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,15 +14,16 @@ import java.util.concurrent.CountDownLatch;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppDataCommand;
-import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.service.app.BaseAppDataService;
+import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
+import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.app.service.AppService;
 
-public class CommandBucketExecutor implements BucketExecutor {
+public class DataBucketExecutor implements BucketExecutor {
 
-	private BaseAppDataService<AppDataCommand> m_appDataService;
+	private AppService<AppDataCommand> m_appDataService;
 
-	private HashMap<Integer, HashMap<String, AppCommandData>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppCommandData>>();
+	private HashMap<Integer, HashMap<String, AppDataProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppDataProto>>();
 
 	private long m_startTime;
 
@@ -30,12 +31,12 @@ public class CommandBucketExecutor implements BucketExecutor {
 
 	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
 
-	public CommandBucketExecutor(long startTime, BaseAppDataService<AppDataCommand> appDataService) {
+	public DataBucketExecutor(long startTime, AppService<AppDataCommand> appDataService) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
 	}
 
-	protected void batchInsert(List<AppDataCommand> appDataCommands, List<AppCommandData> datas) {
+	protected void batchInsert(List<AppDataCommand> appDataCommands, List<AppDataProto> datas) {
 		int[] ret = null;
 		try {
 			int length = appDataCommands.size();
@@ -73,18 +74,18 @@ public class CommandBucketExecutor implements BucketExecutor {
 
 		Date period = new Date(cal.getTimeInMillis());
 
-		for (Entry<Integer, HashMap<String, AppCommandData>> outerEntry : m_datas.entrySet()) {
+		for (Entry<Integer, HashMap<String, AppDataProto>> outerEntry : m_datas.entrySet()) {
 			try {
 				List<AppDataCommand> commands = new ArrayList<AppDataCommand>();
-				List<AppCommandData> datas = new ArrayList<AppCommandData>();
-				HashMap<String, AppCommandData> value = outerEntry.getValue();
+				List<AppDataProto> datas = new ArrayList<AppDataProto>();
+				HashMap<String, AppDataProto> value = outerEntry.getValue();
 
-				for (Entry<String, AppCommandData> entry : value.entrySet()) {
+				for (Entry<String, AppDataProto> entry : value.entrySet()) {
 					m_saveCountDownLatch.await();
 
 					m_flushCountDownLatch = new CountDownLatch(1);
 					try {
-						AppCommandData appData = entry.getValue();
+						AppDataProto appData = entry.getValue();
 
 						if (appData.notFlushed()) {
 							AppDataCommand proto = new AppDataCommand();
@@ -128,8 +129,8 @@ public class CommandBucketExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public BaseData loadRecord(String[] items) {
-		AppCommandData appData = new AppCommandData();
+	public ProtoData loadRecord(String[] items) {
+		AppDataProto appData = new AppDataProto();
 
 		appData.setCommand(Integer.parseInt(items[1]));
 		appData.setTimestamp(Long.parseLong(items[2]));
@@ -147,11 +148,11 @@ public class CommandBucketExecutor implements BucketExecutor {
 		return appData;
 	}
 
-	public BaseAppDataService<?> getAppDataService() {
+	public AppService<?> getAppDataService() {
 		return m_appDataService;
 	}
 
-	public HashMap<Integer, HashMap<String, AppCommandData>> getDatas() {
+	public HashMap<Integer, HashMap<String, AppDataProto>> getDatas() {
 		return m_datas;
 	}
 
@@ -160,9 +161,9 @@ public class CommandBucketExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public void processEntity(BaseData appData) {
+	public void processEntity(ProtoData appData) {
 		try {
-			AppCommandData appCommandData = (AppCommandData) appData;
+			AppDataProto appCommandData = (AppDataProto) appData;
 			int command = appCommandData.getCommand();
 			StringBuilder sb = new StringBuilder();
 			char split = ':';
@@ -176,15 +177,15 @@ public class CommandBucketExecutor implements BucketExecutor {
 			sb.append(appCommandData.getPlatform());
 
 			String key = sb.toString();
-			HashMap<String, AppCommandData> secondMap = m_datas.get(command);
+			HashMap<String, AppDataProto> secondMap = m_datas.get(command);
 
 			if (secondMap == null) {
-				secondMap = new LinkedHashMap<String, AppCommandData>();
+				secondMap = new LinkedHashMap<String, AppDataProto>();
 
 				secondMap.put(key, appCommandData);
 				m_datas.put(command, secondMap);
 			} else {
-				AppCommandData mergedAppData = secondMap.get(key);
+				AppDataProto mergedAppData = secondMap.get(key);
 
 				if (mergedAppData == null) {
 					secondMap.put(key, appCommandData);
@@ -208,14 +209,14 @@ public class CommandBucketExecutor implements BucketExecutor {
 				char tab = '\t';
 				char enter = '\n';
 
-				for (Entry<Integer, HashMap<String, AppCommandData>> outerEntry : m_datas.entrySet()) {
-					HashMap<String, AppCommandData> value = outerEntry.getValue();
+				for (Entry<Integer, HashMap<String, AppDataProto>> outerEntry : m_datas.entrySet()) {
+					HashMap<String, AppDataProto> value = outerEntry.getValue();
 
-					for (Entry<String, AppCommandData> entry : value.entrySet()) {
+					for (Entry<String, AppDataProto> entry : value.entrySet()) {
 						m_flushCountDownLatch.await();
 
 						m_saveCountDownLatch = new CountDownLatch(1);
-						AppCommandData appData = entry.getValue();
+						AppDataProto appData = entry.getValue();
 
 						if (appData.notFlushed()) {
 							StringBuilder sb = new StringBuilder();

@@ -1,9 +1,8 @@
-package com.dianping.cat.report.page.app.graph;
+package com.dianping.cat.report.page.app.display;
 
 import java.util.Comparator;
 
-import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.command.AppDataSpreadInfo;
+import com.dianping.cat.report.service.app.AppDataService;
 
 public class Sorter {
 
@@ -17,7 +16,7 @@ public class Sorter {
 		m_sortBy = sortBy;
 	}
 
-	public Comparator<AppDataSpreadInfo> buildLineChartInfoComparator() {
+	public Comparator<AppDataDetail> buildLineChartInfoComparator() {
 
 		return new LineChartDetailInfoComparator();
 	}
@@ -27,10 +26,10 @@ public class Sorter {
 		return new PieChartDetailInfoComparator();
 	}
 
-	public class LineChartDetailInfoComparator implements Comparator<AppDataSpreadInfo> {
+	public class LineChartDetailInfoComparator implements Comparator<AppDataDetail> {
 
 		@Override
-		public int compare(AppDataSpreadInfo o1, AppDataSpreadInfo o2) {
+		public int compare(AppDataDetail o1, AppDataDetail o2) {
 			if (AppDataService.SUCCESS.equals(m_sortBy)) {
 				return (int) ((o2.getSuccessRatio() - o1.getSuccessRatio()) * 1000);
 			} else if (AppDataService.REQUEST.equals(m_sortBy)) {
