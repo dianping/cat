@@ -202,6 +202,15 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCodes();
 	}
 
+	public boolean deleteCode(int id, int codeId) {
+		Command command = m_config.getCommands().get(id);
+
+		if (command != null) {
+			command.getCodes().remove(codeId);
+		}
+		return storeConfig();
+	}
+
 	@Override
 	public void initialize() {
 		try {
@@ -288,16 +297,6 @@ public class AppConfigManager implements Initializable {
 			return config.getItems();
 		} else {
 			return new LinkedHashMap<Integer, Item>();
-		}
-	}
-
-	public Collection<Item> queryConfigItems(String key) {
-		ConfigItem configs = m_config.findConfigItem(key);
-
-		if (configs != null) {
-			return configs.getItems().values();
-		} else {
-			return new ArrayList<Item>();
 		}
 	}
 

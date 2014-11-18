@@ -16,8 +16,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -30,6 +28,8 @@ import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.DataChecker;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.command.CommandQueryEntity;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class AppAlert implements Task {
@@ -72,19 +72,19 @@ public class AppAlert implements Task {
 
 		if (startMinute < 0 && endMinute < 0) {
 			String period = m_sdf.format(queryDayPeriod(-1).getTime());
-			QueryEntity queryEntity = new QueryEntity(period + ";" + conditions + ";;");
+			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		} else if (startMinute < 0 && endMinute >= 0) {
 			String last = m_sdf.format(queryDayPeriod(-1).getTime());
 			String current = m_sdf.format(queryDayPeriod(0).getTime());
-			QueryEntity lastQueryEntity = new QueryEntity(last + ";" + conditions + ";;");
-			QueryEntity currentQueryEntity = new QueryEntity(current + ";" + conditions + ";;");
+			CommandQueryEntity lastQueryEntity = new CommandQueryEntity(last + ";" + conditions + ";;");
+			CommandQueryEntity currentQueryEntity = new CommandQueryEntity(current + ";" + conditions + ";;");
 			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
 			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
 			datas = mergerArray(lastDatas, currentDatas);
 		} else if (startMinute >= 0) {
 			String period = m_sdf.format(queryDayPeriod(0).getTime());
-			QueryEntity queryEntity = new QueryEntity(period + ";" + conditions + ";;");
+			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		}
 		return datas;

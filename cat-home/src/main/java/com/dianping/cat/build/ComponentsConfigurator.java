@@ -14,8 +14,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataCommandTableProvider;
-import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -40,6 +39,7 @@ import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.graph.AppGraphCreator;
+import com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -63,6 +63,10 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.service.app.command.AppDataCommandTableProvider;
+import com.dianping.cat.service.app.command.AppDataService;
+import com.dianping.cat.service.app.speed.AppSpeedService;
+import com.dianping.cat.service.app.speed.AppSpeedTableProvider;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -141,6 +145,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
+
+		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -209,9 +215,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
 
-		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class, AppConfigManager.class));
+		all.add(C(AppGraphCreator.class).req(AppDataService.class, AppConfigManager.class));
+
+		all.add(C(AppSpeedInfoBuilder.class).req(AppSpeedService.class, AppSpeedConfigManager.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));

@@ -9,7 +9,6 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -34,6 +33,7 @@ import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -86,6 +86,7 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.alert.web.WebAlert;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.service.app.command.AppDataService;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
@@ -216,6 +217,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionAlert.class)
 		      .req(ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertManager.class).req(ModelService.class,
 		            TopAnalyzer.ID));
+		all.add(C(FrontEndExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
+		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(ThirdPartyAlert.class).req(AlertManager.class));
 

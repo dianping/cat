@@ -17,7 +17,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HOURLY_CRASH_LOG("crashLog"),
 
-	HISTORY_CRASH_LOG("historyCrashLog");
+	HISTORY_CRASH_LOG("historyCrashLog"),
+
+	SPEED("speed");
 
 	private String m_name;
 
