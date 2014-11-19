@@ -17,7 +17,6 @@ import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
-import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
@@ -216,7 +215,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
 
-		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class, AppSpeedConfigManager.class));
+		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
 		all.add(C(AppDataService.class).req(AppDataCommandDao.class, AppConfigManager.class));
 		all.add(C(AppGraphCreator.class).req(AppConfigManager.class, AppDataService.class));
 
