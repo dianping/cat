@@ -62,7 +62,7 @@ public class FrontEndExceptionDecorator extends ProjectDecorator implements Init
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[前端异常告警] [界面: ").append(alert.getGroup()).append("]");
+		sb.append("[CAT 前端异常告警] [页面: ").append(alert.getGroup()).append("]");
 		return sb.toString();
 	}
 

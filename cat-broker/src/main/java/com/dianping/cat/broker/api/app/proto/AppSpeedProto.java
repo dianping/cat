@@ -1,6 +1,6 @@
-package com.dianping.cat.broker.api.app;
+package com.dianping.cat.broker.api.app.proto;
 
-public class RawAppSpeedData extends BaseData {
+public class AppSpeedProto extends ProtoData {
 
 	private int m_speedId;
 
@@ -22,25 +22,25 @@ public class RawAppSpeedData extends BaseData {
 
 	private long m_slowResponseTime;
 
-	public RawAppSpeedData() {
+	public AppSpeedProto() {
 	}
 
-	public RawAppSpeedData addCount(long count) {
+	public AppSpeedProto addCount(long count) {
 		m_count += count;
 		return this;
 	}
 
-	public RawAppSpeedData addResponseTime(long responseTime) {
+	public AppSpeedProto addResponseTime(long responseTime) {
 		m_responseTime += responseTime;
 		return this;
 	}
 
-	public RawAppSpeedData addSlowCount(long count) {
+	public AppSpeedProto addSlowCount(long count) {
 		m_slowCount += count;
 		return this;
 	}
 
-	public RawAppSpeedData addSlowResponseTime(long responseTime) {
+	public AppSpeedProto addSlowResponseTime(long responseTime) {
 		m_slowResponseTime += responseTime;
 		return this;
 	}
@@ -89,7 +89,7 @@ public class RawAppSpeedData extends BaseData {
 		return m_version;
 	}
 
-	public RawAppSpeedData setCity(int city) {
+	public AppSpeedProto setCity(int city) {
 		m_city = city;
 		return this;
 	}
@@ -98,17 +98,17 @@ public class RawAppSpeedData extends BaseData {
 		m_count = count;
 	}
 
-	public RawAppSpeedData setNetwork(int network) {
+	public AppSpeedProto setNetwork(int network) {
 		m_network = network;
 		return this;
 	}
 
-	public RawAppSpeedData setOperator(int operator) {
+	public AppSpeedProto setOperator(int operator) {
 		m_operator = operator;
 		return this;
 	}
 
-	public RawAppSpeedData setPlatform(int platform) {
+	public AppSpeedProto setPlatform(int platform) {
 		m_platform = platform;
 		return this;
 	}
@@ -129,7 +129,7 @@ public class RawAppSpeedData extends BaseData {
 		m_speedId = speedId;
 	}
 
-	public RawAppSpeedData setVersion(int version) {
+	public AppSpeedProto setVersion(int version) {
 		m_version = version;
 		return this;
 	}

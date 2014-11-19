@@ -20,11 +20,11 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.app.graph.AppSpeedDetail;
-import com.dianping.cat.report.page.app.graph.AppSpeedDisplayInfo;
-import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.display.AppDataDetail;
+import com.dianping.cat.report.page.app.display.AppSpeedDetail;
+import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
-import com.dianping.cat.service.app.command.AppDataSpreadInfo;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
@@ -50,7 +50,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Command> m_commands;
 
-	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
+	private List<AppDataDetail> m_appDataDetailInfos;
 
 	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
@@ -72,8 +72,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
-	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
-		return m_appDataSpreadInfos;
+	public List<AppDataDetail> getAppDataDetailInfos() {
+		return m_appDataDetailInfos;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
@@ -238,8 +238,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_versions;
 	}
 
-	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
-		m_appDataSpreadInfos = appDatas;
+	public void setAppDataDetailInfos(List<AppDataDetail> appDataDetailInfos) {
+		m_appDataDetailInfos = appDataDetailInfos;
 	}
 
 	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {

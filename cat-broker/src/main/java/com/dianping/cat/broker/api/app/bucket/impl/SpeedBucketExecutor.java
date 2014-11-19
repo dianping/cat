@@ -1,4 +1,4 @@
-package com.dianping.cat.broker.api.app.bucket;
+package com.dianping.cat.broker.api.app.bucket.impl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,15 +14,16 @@ import java.util.concurrent.CountDownLatch;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
-import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.broker.api.app.RawAppSpeedData;
-import com.dianping.cat.service.app.BaseAppDataService;
+import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
+import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.app.service.AppService;
 
 public class SpeedBucketExecutor implements BucketExecutor {
 
-	private BaseAppDataService<AppSpeedData> m_appDataService;
+	private AppService<AppSpeedData> m_appDataService;
 
-	private HashMap<Integer, HashMap<String, RawAppSpeedData>> m_datas = new LinkedHashMap<Integer, HashMap<String, RawAppSpeedData>>();
+	private HashMap<Integer, HashMap<String, AppSpeedProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppSpeedProto>>();
 
 	private long m_startTime;
 
@@ -30,15 +31,15 @@ public class SpeedBucketExecutor implements BucketExecutor {
 
 	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
 
-	public SpeedBucketExecutor(long startTime, BaseAppDataService<AppSpeedData> appSpeedDataService) {
+	public SpeedBucketExecutor(long startTime, AppService<AppSpeedData> appSpeedDataService) {
 		m_startTime = startTime;
 		m_appDataService = appSpeedDataService;
 	}
 
 	@Override
-	public void processEntity(BaseData appData) {
+	public void processEntity(ProtoData appData) {
 		try {
-			RawAppSpeedData appCommandData = (RawAppSpeedData) appData;
+			AppSpeedProto appCommandData = (AppSpeedProto) appData;
 			int speedId = appCommandData.getSpeedId();
 			StringBuilder sb = new StringBuilder();
 			char split = ':';
@@ -50,15 +51,15 @@ public class SpeedBucketExecutor implements BucketExecutor {
 			sb.append(appCommandData.getPlatform());
 
 			String key = sb.toString();
-			HashMap<String, RawAppSpeedData> secondMap = m_datas.get(speedId);
+			HashMap<String, AppSpeedProto> secondMap = m_datas.get(speedId);
 
 			if (secondMap == null) {
-				secondMap = new LinkedHashMap<String, RawAppSpeedData>();
+				secondMap = new LinkedHashMap<String, AppSpeedProto>();
 
 				secondMap.put(key, appCommandData);
 				m_datas.put(speedId, secondMap);
 			} else {
-				RawAppSpeedData mergedAppData = secondMap.get(key);
+				AppSpeedProto mergedAppData = secondMap.get(key);
 
 				if (mergedAppData == null) {
 					secondMap.put(key, appCommandData);
@@ -75,7 +76,7 @@ public class SpeedBucketExecutor implements BucketExecutor {
 
 	}
 
-	protected void batchInsert(List<AppSpeedData> eneities, List<RawAppSpeedData> datas) {
+	protected void batchInsert(List<AppSpeedData> eneities, List<AppSpeedProto> datas) {
 		int[] ret = null;
 		try {
 			int length = eneities.size();
@@ -113,18 +114,18 @@ public class SpeedBucketExecutor implements BucketExecutor {
 
 		Date period = new Date(cal.getTimeInMillis());
 
-		for (Entry<Integer, HashMap<String, RawAppSpeedData>> outerEntry : m_datas.entrySet()) {
+		for (Entry<Integer, HashMap<String, AppSpeedProto>> outerEntry : m_datas.entrySet()) {
 			try {
 				List<AppSpeedData> commands = new ArrayList<AppSpeedData>();
-				List<RawAppSpeedData> datas = new ArrayList<RawAppSpeedData>();
-				HashMap<String, RawAppSpeedData> value = outerEntry.getValue();
+				List<AppSpeedProto> datas = new ArrayList<AppSpeedProto>();
+				HashMap<String, AppSpeedProto> value = outerEntry.getValue();
 
-				for (Entry<String, RawAppSpeedData> entry : value.entrySet()) {
+				for (Entry<String, AppSpeedProto> entry : value.entrySet()) {
 					m_saveCountDownLatch.await();
 
 					m_flushCountDownLatch = new CountDownLatch(1);
 					try {
-						RawAppSpeedData appData = entry.getValue();
+						AppSpeedProto appData = entry.getValue();
 
 						if (appData.notFlushed()) {
 							AppSpeedData proto = new AppSpeedData();
@@ -173,14 +174,14 @@ public class SpeedBucketExecutor implements BucketExecutor {
 				char tab = '\t';
 				char enter = '\n';
 
-				for (Entry<Integer, HashMap<String, RawAppSpeedData>> outerEntry : m_datas.entrySet()) {
-					HashMap<String, RawAppSpeedData> value = outerEntry.getValue();
+				for (Entry<Integer, HashMap<String, AppSpeedProto>> outerEntry : m_datas.entrySet()) {
+					HashMap<String, AppSpeedProto> value = outerEntry.getValue();
 
-					for (Entry<String, RawAppSpeedData> entry : value.entrySet()) {
+					for (Entry<String, AppSpeedProto> entry : value.entrySet()) {
 						m_flushCountDownLatch.await();
 
 						m_saveCountDownLatch = new CountDownLatch(1);
-						RawAppSpeedData appData = entry.getValue();
+						AppSpeedProto appData = entry.getValue();
 
 						if (appData.notFlushed()) {
 							StringBuilder sb = new StringBuilder();
@@ -211,8 +212,8 @@ public class SpeedBucketExecutor implements BucketExecutor {
 	}
 
 	@Override
-	public BaseData loadRecord(String[] items) {
-		RawAppSpeedData appData = new RawAppSpeedData();
+	public ProtoData loadRecord(String[] items) {
+		AppSpeedProto appData = new AppSpeedProto();
 
 		appData.setSpeedId(Integer.parseInt(items[1]));
 		appData.setTimestamp(Long.parseLong(items[2]));

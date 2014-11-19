@@ -13,8 +13,12 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.app.AppDataCommandDao;
+import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppDataCommandTableProvider;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -38,8 +42,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.app.graph.AppGraphCreator;
-import com.dianping.cat.report.page.app.graph.AppSpeedInfoBuilder;
+import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
@@ -56,6 +59,8 @@ import com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
@@ -63,10 +68,6 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.service.app.command.AppDataCommandTableProvider;
-import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.speed.AppSpeedService;
-import com.dianping.cat.service.app.speed.AppSpeedTableProvider;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -145,8 +146,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
-
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -215,9 +216,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
 
-		all.add(C(AppGraphCreator.class).req(AppDataService.class, AppConfigManager.class));
-
-		all.add(C(AppSpeedInfoBuilder.class).req(AppSpeedService.class, AppSpeedConfigManager.class));
+		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class, AppSpeedConfigManager.class));
+		all.add(C(AppDataService.class).req(AppDataCommandDao.class, AppConfigManager.class));
+		all.add(C(AppGraphCreator.class).req(AppConfigManager.class, AppDataService.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));

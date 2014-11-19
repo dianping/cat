@@ -19,10 +19,10 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.AppDataConsumer;
-import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.broker.api.app.RawAppSpeedData;
+import com.dianping.cat.broker.api.app.AppConsumer;
+import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
@@ -34,7 +34,7 @@ import com.site.helper.Splitters;
 public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
-	private AppDataConsumer m_appDataConsumer;
+	private AppConsumer m_appDataConsumer;
 
 	@Inject
 	private IpService m_ipService;
@@ -117,7 +117,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		return success;
 	}
 
-	private void offerQueue(BaseData appData) {
+	private void offerQueue(ProtoData appData) {
 		boolean success = m_appDataConsumer.enqueue(appData);
 
 		if (!success) {
@@ -146,7 +146,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					int platform = Integer.parseInt(items[3]);
 
 					for (int i = 5; i < length; i++) {
-						RawAppSpeedData appData = new RawAppSpeedData();
+						AppSpeedProto appData = new AppSpeedProto();
 
 						appData.setTimestamp(current);
 						appData.setNetwork(network);
@@ -167,7 +167,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void offerAppSpeedData(RawAppSpeedData appData, String speedId, String[] items, int i) {
+	private void offerAppSpeedData(AppSpeedProto appData, String speedId, String[] items, int i) {
 		List<String> fields = Splitters.by("-").split(items[i]);
 		String step = fields.get(0);
 		long responseTime = Long.parseLong(fields.get(1));
@@ -204,7 +204,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String items[] = record.split("\t");
 
 		if (items.length == 10) {
-			AppCommandData appData = new AppCommandData();
+			AppDataProto appData = new AppDataProto();
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();

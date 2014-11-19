@@ -49,11 +49,13 @@
 </br>
 
 <h4 class="text-success">Mobile批量接口</h4>
-	<pre>	http://${ip}/broker-service/api/batch</pre>
-	<p>批量接口POST内容，前面加上v=2&c=，（v=1已经废弃）不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
+<h5>（1）App访问数据发送</h5>
+	<pre>	http://{ip}/broker-service/api/batch</pre>
+	<p>批量接口POST内容，前面加上“<span class="text-error">v=2&c=</span>”，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
 	
 	<table class="table table-striped table-bordered table-condensed">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
+		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
 		<tr><td>network</td><td>2G,3G,4G,WIFI(iOS只有3G和WIFI)</td><td>int</td></tr>
 		<tr><td>version</td><td>versionCode, eg. 6.8 = 680</td><td>int</td></tr>
 		<tr><td>tunnel</td><td>0 or 1，1表示是长连</td><td>int</td></tr>
@@ -72,14 +74,46 @@
 	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
 	<pre>
 	v=2&c=
-	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
-	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
-	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
-	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span> 
-	1400037748182<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>shop.bin<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">TAB</span>1<span class="text-error">ENTER</span>
+	1400037748152<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>1<span class="text-error">\t</span>100<span class="text-error">\t</span>100<span class="text-error">\t</span>200<span class="text-error">\n</span> 
+	1400037748163<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>2<span class="text-error">\t</span>120<span class="text-error">\t</span>110<span class="text-error">\t</span>300<span class="text-error">\n</span> 
+	1400037748174<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>3<span class="text-error">\t</span>110<span class="text-error">\t</span>120<span class="text-error">\t</span>200<span class="text-error">\n</span> 
+	1400037748185<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>1<span class="text-error">\t</span>120<span class="text-error">\t</span>130<span class="text-error">\t</span>100<span class="text-error">\n</span> 
+	1400037748196<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>500<span class="text-error">\t</span>2<span class="text-error">\t</span>110<span class="text-error">\t</span>140<span class="text-error">\t</span>200<span class="text-error">\n</span>
 	</pre>	
 </br>
 
+<h5>（2）App测试数据发送</h5>
+	<pre>	http://{ip}/broker-service/api/batch</pre>
+	<p>批量接口POST内容，前面加上“<span class="text-error">v=1&c=</span>”，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
+	
+	<table class="table table-striped table-bordered table-condensed">
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
+		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
+		<tr><td>network</td><td>2G,3G,4G,WIFI (iOS只有3G和WIFI)</td><td>int</td></tr>
+		<tr><td>version</td><td>versionCode, eg. 6.8 = 680</td><td>int</td></tr>
+		<tr><td>platform</td><td>android=1 or ios=2</td><td>int</td></tr>
+		<tr><td>page</td><td>加载页面，eg. index.bin</td><td>String</td></tr>
+		<tr><td>step1-responseTime1</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
+		<tr><td>step2-responseTime2</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
+		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
+		<tr><td>stepN-responseTimeN</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
+	</table>
+	
+	<pre>
+	单个请求格式如下:
+	timstamp<span class="text-error">TAB</span>network<span class="text-error">TAB</span>version<span class="text-error">TAB</span>platform<span class="text-error">TAB</span>pageTABstep1:responseTime1<span class="text-error">TAB</span>step2:responseTime2<span class="text-error">TAB</span>step3:responseTime3<span class="text-error">ENTER</span>
+	
+	</pre>
+	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
+	<pre>
+	v=2&c=
+	1400037748152<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page1<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
+	1400037748163<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page2<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
+	1400037748174<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>pgae3<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
+	1400037748185<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page4<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
+	1400037748196<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page5<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span>
+	</pre>	
+</br>
 <h4 class="text-success">JS 错误接口</h4>
 	<pre>	http://{ip}/broker-service/api/js</pre>
 	

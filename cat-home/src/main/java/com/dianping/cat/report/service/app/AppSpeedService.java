@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app.graph;
+package com.dianping.cat.report.service.app;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,18 +13,21 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
+import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.app.AppSpeedDataEntity;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.service.app.speed.AppSpeedService;
-import com.dianping.cat.service.app.speed.SpeedQueryEntity;
+import com.dianping.cat.report.page.app.display.AppSpeedDetail;
+import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.AppDataSequence;
 
-public class AppSpeedInfoBuilder {
+public class AppSpeedService {
+
+	@Inject
+	private AppSpeedDataDao m_dao;
 
 	@Inject
 	private AppSpeedConfigManager m_appSpeedConfigManager;
-
-	@Inject
-	private AppSpeedService m_appSpeedDataService;
 
 	private final static String CURRENT = "当前值";
 
@@ -38,6 +41,25 @@ public class AppSpeedInfoBuilder {
 		info.setAppSpeedSummarys(buildOneDayData(datas));
 
 		return info;
+	}
+
+	public List<AppSpeedData> queryValue(BaseQueryEntity entity) {
+		int speedId = entity.getId();
+		Date period = entity.getDate();
+		int city = entity.getCity();
+		int operator = entity.getOperator();
+		int network = entity.getNetwork();
+		int appVersion = entity.getVersion();
+		int platform = entity.getPlatfrom();
+		List<AppSpeedData> datas = new ArrayList<AppSpeedData>();
+
+		try {
+			datas = m_dao.findDataByMinute(speedId, period, city, operator, network, appVersion, platform,
+			      AppSpeedDataEntity.READSET_AVG_DATA);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return datas;
 	}
 
 	public LineChart buildLineChart(final Map<String, AppSpeedSequence> datas) {
@@ -66,7 +88,7 @@ public class AppSpeedInfoBuilder {
 		Map<String, List<AppSpeedDetail>> details = new LinkedHashMap<String, List<AppSpeedDetail>>();
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			Map<Integer, List<AppSpeedData>> appSpeedDataMap = entry.getValue().getAppSpeedDatas();
+			Map<Integer, List<AppSpeedData>> appSpeedDataMap = entry.getValue().getRecords();
 			Date period = entry.getValue().getPeriod();
 			List<AppSpeedDetail> detail = new ArrayList<AppSpeedDetail>();
 
@@ -121,7 +143,7 @@ public class AppSpeedInfoBuilder {
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
 			try {
-				Map<Integer, List<AppSpeedData>> appSpeedData = entry.getValue().getAppSpeedDatas();
+				Map<Integer, List<AppSpeedData>> appSpeedData = entry.getValue().getRecords();
 				Date period = entry.getValue().getPeriod();
 
 				if (!appSpeedData.isEmpty()) {
@@ -157,7 +179,7 @@ public class AppSpeedInfoBuilder {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getAppSpeedDatas().entrySet()) {
+		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getRecords().entrySet()) {
 			for (AppSpeedData data : entry.getValue()) {
 				long count = data.getAccessNumberSum() + data.getSlowAccessNumberSum();
 				long sum = data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
@@ -176,7 +198,7 @@ public class AppSpeedInfoBuilder {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getAppSpeedDatas().entrySet()) {
+		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getRecords().entrySet()) {
 			for (AppSpeedData data : entry.getValue()) {
 				double count = data.getAccessNumberSum();
 				int index = data.getMinuteOrder() / 5;
@@ -189,7 +211,7 @@ public class AppSpeedInfoBuilder {
 		return value;
 	}
 
-	private AppSpeedSequence convert2AppDataCommandMap(List<AppSpeedData> fromDatas, Date period) {
+	private AppSpeedSequence buildAppSequence(List<AppSpeedData> fromDatas, Date period) {
 		Map<Integer, List<AppSpeedData>> dataMap = new LinkedHashMap<Integer, List<AppSpeedData>>();
 		int max = -5;
 
@@ -233,8 +255,8 @@ public class AppSpeedInfoBuilder {
 	}
 
 	private AppSpeedSequence queryData(SpeedQueryEntity queryEntity) {
-		List<AppSpeedData> datas = m_appSpeedDataService.queryValue(queryEntity);
-		AppSpeedSequence sequence = convert2AppDataCommandMap(datas, queryEntity.getDate());
+		List<AppSpeedData> datas = queryValue(queryEntity);
+		AppSpeedSequence sequence = buildAppSequence(datas, queryEntity.getDate());
 
 		return sequence;
 	}
@@ -274,36 +296,17 @@ public class AppSpeedInfoBuilder {
 		return datas;
 	}
 
-	public class AppSpeedSequence {
+	public class AppSpeedSequence extends AppDataSequence<AppSpeedData> {
 
 		private Date m_period;
 
-		private int m_duration;
-
-		private Map<Integer, List<AppSpeedData>> m_appSpeedDatas;
-
 		public AppSpeedSequence(int duration, Map<Integer, List<AppSpeedData>> appSpeedDatas, Date period) {
+			super(duration, appSpeedDatas);
 			m_period = period;
-			m_duration = duration;
-			m_appSpeedDatas = appSpeedDatas;
-		}
-
-		public Map<Integer, List<AppSpeedData>> getAppSpeedDatas() {
-			return m_appSpeedDatas;
 		}
 
 		public Date getPeriod() {
 			return m_period;
 		}
-
-		public int getDuration() {
-			return m_duration;
-		}
-
-		@Override
-		public String toString() {
-			return "AppSpeedSequence [m_duration=" + m_duration + ", m_appSpeedDatas=" + m_appSpeedDatas + "]";
-		}
 	}
-
 }

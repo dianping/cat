@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app.graph;
+package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,14 +16,13 @@ import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
-import com.dianping.cat.service.app.command.AppDataGroupByField;
-import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.command.CommandQueryEntity;
+import com.dianping.cat.report.service.app.AppDataField;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.CommandQueryEntity;
 
 public class AppGraphCreator {
 
-	@Inject
-	private AppDataService m_appDataService;
+	private AppDataService m_AppDataService;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -69,23 +68,23 @@ public class AppGraphCreator {
 		List<Double[]> datas = new LinkedList<Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data1 = prepareQueryData(queryEntity1, type);
+			Double[] data1 = m_AppDataService.queryValue(queryEntity1, type);
 
 			datas.add(data1);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] values2 = prepareQueryData(queryEntity2, type);
+			Double[] values2 = m_AppDataService.queryValue(queryEntity2, type);
 			datas.add(values2);
 		}
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataGroupByField field) {
+	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataField field) {
 		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
-		List<AppDataCommand> datas = m_appDataService.queryAppDataCommandsByField(entity, field);
+		List<AppDataCommand> datas = m_AppDataService.queryByField(entity, field);
 
 		for (AppDataCommand data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
@@ -103,7 +102,7 @@ public class AppGraphCreator {
 		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
 	}
 
-	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataGroupByField field) {
+	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataField field) {
 		String title = "Unknown";
 		int keyValue = -1;
 
@@ -192,7 +191,7 @@ public class AppGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Pair<Integer, Item> buildPieChartItem(int command, AppDataCommand data, AppDataGroupByField field) {
+	private Pair<Integer, Item> buildPieChartItem(int command, AppDataCommand data, AppDataField field) {
 		Item item = new Item();
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
 
@@ -200,12 +199,6 @@ public class AppGraphCreator {
 		item.setId(pair.getKey());
 		item.setNumber(data.getAccessNumberSum());
 		return new Pair<Integer, Item>(pair.getKey(), item);
-	}
-
-	private Double[] prepareQueryData(CommandQueryEntity queryEntity, String type) {
-		Double[] value = m_appDataService.queryValue(queryEntity, type);
-
-		return value;
 	}
 
 	private String queryType(String type) {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.app.graph;
+package com.dianping.cat.report.page.app.display;
 
 import java.util.List;
 import java.util.Map;

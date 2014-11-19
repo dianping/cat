@@ -19,17 +19,18 @@ import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.app.service.AppService;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.app.BaseAppDataService;
 
 @SuppressWarnings("rawtypes")
-public class AppDataConsumer extends ContainerHolder implements Initializable, LogEnabled {
+public class AppConsumer extends ContainerHolder implements Initializable, LogEnabled {
 
 	public static final long MINUTE = 60 * 1000L;
 
 	public static final long DURATION = 5 * MINUTE;
 
-	private AppDataQueue m_appDataQueue;
+	private AppQueue m_appDataQueue;
 
 	private volatile long m_dataLoss;
 
@@ -37,7 +38,7 @@ public class AppDataConsumer extends ContainerHolder implements Initializable, L
 
 	private ConcurrentHashMap<Long, BucketHandler> m_tasks;
 
-	private Map<String, BaseAppDataService> m_appDataServices;
+	private Map<String, AppService> m_appDataServices;
 
 	private SimpleDateFormat m_fileFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
@@ -48,14 +49,14 @@ public class AppDataConsumer extends ContainerHolder implements Initializable, L
 		m_logger = logger;
 	}
 
-	public boolean enqueue(BaseData appData) {
+	public boolean enqueue(ProtoData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_appDataServices = lookupMap(BaseAppDataService.class);
-		m_appDataQueue = new AppDataQueue();
+		m_appDataServices = lookupMap(AppService.class);
+		m_appDataQueue = new AppQueue();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
 		BucketThreadController bucketThreadController = new BucketThreadController();
@@ -145,7 +146,7 @@ public class AppDataConsumer extends ContainerHolder implements Initializable, L
 		public void run() {
 			while (true) {
 				try {
-					BaseData appData = m_appDataQueue.poll();
+					ProtoData appData = m_appDataQueue.poll();
 
 					if (appData != null) {
 						long timestamp = appData.getTimestamp();
