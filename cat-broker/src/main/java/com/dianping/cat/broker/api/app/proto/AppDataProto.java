@@ -1,6 +1,6 @@
-package com.dianping.cat.broker.api.app;
+package com.dianping.cat.broker.api.app.proto;
 
-public class AppCommandData extends BaseData {
+public class AppDataProto extends ProtoData {
 
 	private int m_city;
 
@@ -26,25 +26,25 @@ public class AppCommandData extends BaseData {
 
 	private int m_responseTime;
 
-	public AppCommandData() {
+	public AppDataProto() {
 	}
 	
-	public AppCommandData addCount(int count) {
+	public AppDataProto addCount(int count) {
 		m_count = m_count + count;
 		return this;
 	}
 
-	public AppCommandData addRequestByte(int requestByte) {
+	public AppDataProto addRequestByte(int requestByte) {
 		m_requestByte = m_requestByte + requestByte;
 		return this;
 	}
 
-	public AppCommandData addResponseByte(int responseByte) {
+	public AppDataProto addResponseByte(int responseByte) {
 		m_responseByte = m_responseByte + responseByte;
 		return this;
 	}
 
-	public AppCommandData addResponseTime(int responseTime) {
+	public AppDataProto addResponseTime(int responseTime) {
 		m_responseTime = m_responseTime + responseTime;
 		return this;
 	}
@@ -101,22 +101,22 @@ public class AppCommandData extends BaseData {
 		return m_version;
 	}
 
-	public AppCommandData setCity(int city) {
+	public AppDataProto setCity(int city) {
 		m_city = city;
 		return this;
 	}
 
-	public AppCommandData setCode(int code) {
+	public AppDataProto setCode(int code) {
 		m_code = code;
 		return this;
 	}
 
-	public AppCommandData setCommand(int command) {
+	public AppDataProto setCommand(int command) {
 		m_command = command;
 		return this;
 	}
 
-	public AppCommandData setConnectType(int connectType) {
+	public AppDataProto setConnectType(int connectType) {
 		m_connectType = connectType;
 		return this;
 	}
@@ -125,17 +125,17 @@ public class AppCommandData extends BaseData {
 		m_count = count;
 	}
 
-	public AppCommandData setNetwork(int network) {
+	public AppDataProto setNetwork(int network) {
 		m_network = network;
 		return this;
 	}
 
-	public AppCommandData setOperator(int operator) {
+	public AppDataProto setOperator(int operator) {
 		m_operator = operator;
 		return this;
 	}
 
-	public AppCommandData setPlatform(int platform) {
+	public AppDataProto setPlatform(int platform) {
 		m_platform = platform;
 		return this;
 	}
@@ -152,7 +152,7 @@ public class AppCommandData extends BaseData {
 		m_responseTime = responseTime;
 	}
 
-	public AppCommandData setVersion(int version) {
+	public AppDataProto setVersion(int version) {
 		m_version = version;
 		return this;
 	}

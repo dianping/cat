@@ -1,6 +1,8 @@
-package com.dianping.cat.service.app.command;
+package com.dianping.cat.report.page.app.display;
 
-public class AppDataSpreadInfo {
+import com.dianping.cat.report.service.app.CommandQueryEntity;
+
+public class AppDataDetail {
 
 	private int m_operator = CommandQueryEntity.DEFAULT_VALUE;
 
@@ -68,68 +70,58 @@ public class AppDataSpreadInfo {
 		return m_successRatio;
 	}
 
-	public AppDataSpreadInfo setAccessNumberSum(long accessNumberSum) {
+	public AppDataDetail setAccessNumberSum(long accessNumberSum) {
 		m_accessNumberSum = accessNumberSum;
 		return this;
 	}
 
-	public AppDataSpreadInfo setAppVersion(int appVersion) {
+	public AppDataDetail setAppVersion(int appVersion) {
 		m_appVersion = appVersion;
 		return this;
 	}
 
-	public AppDataSpreadInfo setCity(int city) {
+	public AppDataDetail setCity(int city) {
 		m_city = city;
 		return this;
 	}
 
-	public AppDataSpreadInfo setConnectType(int connectType) {
+	public AppDataDetail setConnectType(int connectType) {
 		m_connectType = connectType;
 		return this;
 	}
 
-	public AppDataSpreadInfo setNetwork(int network) {
+	public AppDataDetail setNetwork(int network) {
 		m_network = network;
 		return this;
 	}
 
-	public AppDataSpreadInfo setOperator(int operator) {
+	public AppDataDetail setOperator(int operator) {
 		m_operator = operator;
 		return this;
 	}
 
-	public AppDataSpreadInfo setPlatform(int platform) {
+	public AppDataDetail setPlatform(int platform) {
 		m_platform = platform;
 		return this;
 	}
 
-	public AppDataSpreadInfo setRequestPackageAvg(double requestPackageAvg) {
+	public AppDataDetail setRequestPackageAvg(double requestPackageAvg) {
 		m_requestPackageAvg = requestPackageAvg;
 		return this;
 	}
 
-	public AppDataSpreadInfo setResponsePackageAvg(double responsePackageAvg) {
+	public AppDataDetail setResponsePackageAvg(double responsePackageAvg) {
 		m_responsePackageAvg = responsePackageAvg;
 		return this;
 	}
 
-	public AppDataSpreadInfo setResponseTimeAvg(double responseTimeSum) {
+	public AppDataDetail setResponseTimeAvg(double responseTimeSum) {
 		m_responseTimeAvg = responseTimeSum;
 		return this;
 	}
 
-	public AppDataSpreadInfo setSuccessRatio(double successRatio) {
+	public AppDataDetail setSuccessRatio(double successRatio) {
 		m_successRatio = successRatio;
 		return this;
 	}
-
-	@Override
-	public String toString() {
-		return "AppDataSpreadInfo [m_operator=" + m_operator + ", m_network=" + m_network + ", m_appVersion="
-		      + m_appVersion + ", m_connectType=" + m_connectType + ", m_platform=" + m_platform + ", m_city=" + m_city
-		      + ", m_successRatio=" + m_successRatio + ", m_accessNumberSum=" + m_accessNumberSum
-		      + ", m_responseTimeAvg=" + m_responseTimeAvg + ", m_requestPackageAvg=" + m_requestPackageAvg
-		      + ", m_responsePackageAvg=" + m_responsePackageAvg + "]";
-	}
-
 }

@@ -23,12 +23,12 @@ import com.dianping.cat.configuration.app.comparison.entity.Item;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.CommandQueryEntity;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
-import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.command.CommandQueryEntity;
 import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 

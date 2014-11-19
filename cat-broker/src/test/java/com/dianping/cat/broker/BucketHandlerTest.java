@@ -12,12 +12,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.broker.api.app.BaseData;
+import com.dianping.cat.broker.api.app.AppQueue;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
-import com.dianping.cat.broker.api.app.bucket.CommandBucketExecutor;
-import com.dianping.cat.service.app.BaseAppDataService;
+import com.dianping.cat.broker.api.app.bucket.impl.DataBucketExecutor;
+import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.app.service.AppService;
 
 public class BucketHandlerTest {
 
@@ -36,19 +36,19 @@ public class BucketHandlerTest {
 	@Test
 	@SuppressWarnings("rawtypes")
 	public void test() throws Exception {
-		Map<String, BaseAppDataService> services = new HashMap<String, BaseAppDataService>();
+		Map<String, AppService> services = new HashMap<String, AppService>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		long startTime = sdf.parse("2014-08-19 11:20").getTime();
 		BucketHandler handler = new BucketHandler(startTime, services);
 
-		HashMap<Integer, HashMap<String, AppCommandData>> datas = ((CommandBucketExecutor) handler.getBucketExecutors()
-		      .get(AppCommandData.class.getName())).getDatas();
-		HashMap<String, AppCommandData> data = new HashMap<String, AppCommandData>();
+		HashMap<Integer, HashMap<String, AppDataProto>> datas = ((DataBucketExecutor) handler.getBucketExecutors()
+		      .get(AppDataProto.class.getName())).getDatas();
+		HashMap<String, AppDataProto> data = new HashMap<String, AppDataProto>();
 
 		datas.put(1, data);
 
 		for (int i = 0; i < 10; i++) {
-			AppCommandData createAppData = createAppData(i);
+			AppDataProto createAppData = createAppData(i);
 			data.put(createAppData.toString(), createAppData);
 		}
 
@@ -56,10 +56,10 @@ public class BucketHandlerTest {
 
 		datas.clear();
 		handler.load(file);
-		AppDataQueue queue = handler.getAppDataQueue();
+		AppQueue queue = handler.getAppDataQueue();
 
 		while (true) {
-			BaseData appdata = queue.poll();
+			ProtoData appdata = queue.poll();
 			if (appdata != null) {
 
 				handler.processEntity(appdata);
@@ -68,13 +68,13 @@ public class BucketHandlerTest {
 			}
 		}
 
-		HashMap<String, AppCommandData> temp = ((CommandBucketExecutor) handler.getBucketExecutors().get(
-		      AppCommandData.class.getName())).getDatas().get(1);
+		HashMap<String, AppDataProto> temp = ((DataBucketExecutor) handler.getBucketExecutors().get(
+		      AppDataProto.class.getName())).getDatas().get(1);
 		Assert.assertEquals(10, temp.size());
 	}
 
-	public AppCommandData createAppData(int i) {
-		AppCommandData appdata = new AppCommandData();
+	public AppDataProto createAppData(int i) {
+		AppDataProto appdata = new AppDataProto();
 
 		appdata.setCommand(1);
 		appdata.setVersion(i);

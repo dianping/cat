@@ -1,8 +1,8 @@
-package com.dianping.cat.service.app;
+package com.dianping.cat.broker.api.app.service;
 
 import org.unidal.dal.jdbc.DalException;
 
-public interface BaseAppDataService<T> {
+public interface AppService<T> {
 
 	public int[] insert(T[] proto) throws DalException;
 

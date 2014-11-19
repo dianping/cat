@@ -5,10 +5,10 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-import com.dianping.cat.service.app.command.AppDataGroupByField;
-import com.dianping.cat.service.app.command.AppDataService;
-import com.dianping.cat.service.app.command.CommandQueryEntity;
-import com.dianping.cat.service.app.speed.SpeedQueryEntity;
+import com.dianping.cat.report.service.app.AppDataField;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.CommandQueryEntity;
+import com.dianping.cat.report.service.app.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -26,7 +26,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_type = AppDataService.REQUEST;
 
 	@FieldMeta("groupByField")
-	private AppDataGroupByField m_groupByField = AppDataGroupByField.CODE;
+	private AppDataField m_groupByField = AppDataField.CODE;
 
 	@FieldMeta("sort")
 	private String m_sort = AppDataService.SUCCESS;
@@ -87,7 +87,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_domains2;
 	}
 
-	public AppDataGroupByField getGroupByField() {
+	public AppDataField getGroupByField() {
 		return m_groupByField;
 	}
 
@@ -185,7 +185,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroupByField(String groupByField) {
-		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
+		m_groupByField = AppDataField.getByName(groupByField, AppDataField.CODE);
 	}
 
 	public void setName(String name) {

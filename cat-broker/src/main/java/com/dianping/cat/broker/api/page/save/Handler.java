@@ -11,14 +11,14 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.broker.api.app.AppDataConsumer;
+import com.dianping.cat.broker.api.app.AppConsumer;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	protected JspViewer m_jspViewer;
 
 	@Inject
-	private AppDataConsumer m_appDataConsumer;
+	private AppConsumer m_appDataConsumer;
 
 	@Override
 	@PayloadMeta(Payload.class)

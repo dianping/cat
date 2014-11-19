@@ -1,4 +1,4 @@
-package com.dianping.cat.service.app.speed;
+package com.dianping.cat.config.app;
 
 import java.util.Map;
 
@@ -8,6 +8,7 @@ import org.unidal.dal.jdbc.mapping.TableProvider;
 import com.dianping.cat.app.AppSpeedData;
 
 public class AppSpeedTableProvider implements TableProvider {
+
 	private String m_logicalTableName = "app-speed-data";
 
 	private String m_physicalTableName = "app_speed_data";

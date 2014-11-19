@@ -1,23 +1,27 @@
-package com.dianping.cat.service.app.speed;
+package com.dianping.cat.report.service.app;
 
 import com.site.lookup.util.StringUtils;
 
-public enum AppSpeedDataField {
+public enum AppDataField {
 	OPERATOR("operator"),
 
 	NETWORK("network"),
 
 	APP_VERSION("app-version"),
 
+	CONNECT_TYPE("connnect-type"),
+
 	PLATFORM("platform"),
 
-	CITY("city");
+	CITY("city"),
+
+	CODE("code");
 
 	private String m_name;
 
-	public static AppSpeedDataField getByName(String name, AppSpeedDataField defaultField) {
+	public static AppDataField getByName(String name, AppDataField defaultField) {
 		if (StringUtils.isNotEmpty(name)) {
-			for (AppSpeedDataField field : AppSpeedDataField.values()) {
+			for (AppDataField field : AppDataField.values()) {
 				if (field.getName().equals(name)) {
 					return field;
 				}
@@ -26,7 +30,7 @@ public enum AppSpeedDataField {
 		return defaultField;
 	}
 
-	AppSpeedDataField(String name) {
+	AppDataField(String name) {
 		m_name = name;
 	}
 

@@ -96,6 +96,17 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean isSuccessCode(int commandId, int code) {
+		Map<Integer, Code> codes = queryCodeByCommand(commandId);
+
+		for (Code c : codes.values()) {
+			if (c.getId() == code) {
+				return (c.getStatus() == 0);
+			}
+		}
+		return false;
+	}
+
 	public boolean containCommand(int id) {
 		Set<Integer> keys = m_config.getCommands().keySet();
 
