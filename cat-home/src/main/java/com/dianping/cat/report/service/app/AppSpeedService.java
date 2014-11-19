@@ -15,19 +15,15 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.AppSpeedDataEntity;
-import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.app.display.AppDataSequence;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
-import com.dianping.cat.report.page.app.display.AppDataSequence;
 
 public class AppSpeedService {
 
 	@Inject
 	private AppSpeedDataDao m_dao;
-
-	@Inject
-	private AppSpeedConfigManager m_appSpeedConfigManager;
 
 	private final static String CURRENT = "当前值";
 
@@ -68,18 +64,10 @@ public class AppSpeedService {
 		lineChart.setUnit("");
 		lineChart.setHtmlTitle("延时平均值（毫秒/5分钟）");
 
-		int i = 0;
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			String key = entry.getKey();
-			AppSpeedSequence map = entry.getValue();
-			Double[] data = computeDelayAvg(map);
+			Double[] data = computeDelayAvg(entry.getValue());
 
-			if (i == 0) {
-				lineChart.add(key, data);
-			} else if (i == 1) {
-				lineChart.add(key, data);
-			}
-			i++;
+			lineChart.add(entry.getKey(), data);
 		}
 		return lineChart;
 	}
