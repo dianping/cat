@@ -145,7 +145,7 @@ public class AppDataService {
 		return sum == 0 ? 0 : (double) success / sum * 100;
 	}
 
-	private AppDataSequence<AppDataCommand> convert2AppDataCommandMap(List<AppDataCommand> fromDatas, Date period) {
+	private AppDataSequence<AppDataCommand> buildAppSequence(List<AppDataCommand> fromDatas, Date period) {
 		Map<Integer, List<AppDataCommand>> dataMap = new LinkedHashMap<Integer, List<AppDataCommand>>();
 		int max = -5;
 
@@ -392,19 +392,19 @@ public class AppDataService {
 			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppDataCommandEntity.READSET_SUCCESS_DATA);
-				AppDataSequence<AppDataCommand> s = convert2AppDataCommandMap(datas, entity.getDate());
+				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
 			} else if (REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
-				AppDataSequence<AppDataCommand> s = convert2AppDataCommandMap(datas, entity.getDate());
+				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
 			} else if (DELAY.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppDataCommandEntity.READSET_AVG_DATA);
-				AppDataSequence<AppDataCommand> s = convert2AppDataCommandMap(datas, entity.getDate());
+				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
 			} else {
