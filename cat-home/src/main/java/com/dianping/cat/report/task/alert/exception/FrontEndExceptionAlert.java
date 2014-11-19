@@ -5,69 +5,20 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.page.top.TopMetric.Item;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
-import com.dianping.cat.report.task.alert.sender.AlertManager;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionConfigManager;
 
-public class FrontEndExceptionAlert implements Task {
-
-	private ExceptionConfigManager m_exceptionConfigManager;
-
-	@Inject
-	private AlertExceptionBuilder m_alertBuilder;
-
-	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
-	private ModelService<TopReport> m_topService;
-
-	@Inject
-	protected AlertManager m_sendManager;
-
-	private static final long DURATION = TimeHelper.ONE_MINUTE;
-
-	private static final int ALERT_PERIOD = 1;
-
-	private TopMetric buildTopMetric(Date date) {
-		TopReport topReport = queryTopReport(date);
-		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
-
-		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE));
-		topMetric.visitTopReport(topReport);
-		return topMetric;
-	}
+public class FrontEndExceptionAlert extends ExceptionAlert {
 
 	public String getName() {
 		return AlertType.FrontEndException.getName();
-	}
-
-	private TopReport queryTopReport(Date start) {
-		String domain = Constants.CAT;
-		String date = String.valueOf(start.getTime());
-		ModelRequest request = new ModelRequest(domain, start.getTime()).setProperty("date", date);
-
-		if (m_topService.isEligable(request)) {
-			ModelResponse<TopReport> response = m_topService.invoke(request);
-			TopReport report = response.getModel();
-
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
-		}
 	}
 
 	@Override
