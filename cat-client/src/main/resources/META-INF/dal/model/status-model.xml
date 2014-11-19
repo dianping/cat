@@ -7,6 +7,8 @@
   </entity>
   <entity name="property">
     <attribute name="id" value-type="String" key="true"/>
-    <attribute name="value" value-type="Object" />
+    <attribute name="value" value-type="String" />
+    <entity-ref name="extension" type="list" names="extensions" method-find-or-create="true"/>
   </entity>
+  <entity name="extension" dynamic-attributes="true" />
 </model>
