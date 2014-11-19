@@ -66,7 +66,7 @@
 		</c:when>
 		<c:otherwise>
 		<tr>
-			<tr><td>页面URL</td><td><input name="page" value="${model.speed.page}" id="page" readonly required/>&nbsp;&nbsp;<span class="text-error">*</span></td><td>支持数字、字符，例如：index.bin<br/></td></tr>
+			<tr><td>页面URL</td><td><input name="page" value="${model.speed.page}" id="page" readonly required/></td><td>支持数字、字符，例如：index.bin<br/></td></tr>
 		</tr>
 		</c:otherwise>
 		</c:choose>

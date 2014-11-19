@@ -174,9 +174,6 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 				</requirement>
 			</requirements>
@@ -194,6 +191,27 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.speed.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.speed.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.app.AppConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 				</requirement>
 			</requirements>
 		</component>

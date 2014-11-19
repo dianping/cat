@@ -1,7 +1,8 @@
-package com.dianping.cat.broker.api.page.batch;
+package com.dianping.cat.broker.api.page.speed;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,13 +20,15 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppConsumer;
-import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
+import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -39,6 +42,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private AppConfigManager m_appConfigManager;
 
 	@Inject
+	private AppSpeedConfigManager m_appSpeedConfigManager;
+
+	@Inject
 	private RequestUtils m_util;
 
 	private Logger m_logger;
@@ -47,7 +53,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	public static final String TOO_LONG = "toolongurl.bin";
 
-	private static final String VERSION_TWO = "2";
+	private static final String VERSION_ONE = "1";
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -56,13 +62,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "batch")
+	@InboundActionMeta(name = "speed")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "batch")
+	@OutboundActionMeta(name = "speed")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Payload payload = ctx.getPayload();
 		HttpServletRequest request = ctx.getHttpServletRequest();
@@ -89,7 +95,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
 		boolean success = false;
 
-		if (VERSION_TWO.equals(version)) {
+		if (VERSION_ONE.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
 
 			if (infoPair != null) {
@@ -97,7 +103,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				int operatorId = infoPair.getValue();
 				String content = payload.getContent();
 
-				processVersion2Content(cityId, operatorId, content, version);
+				processVersion1Content(cityId, operatorId, content, version);
 				success = true;
 			} else {
 				Cat.logEvent("Invalid ip info", userIp, Event.SUCCESS, userIp);
@@ -121,57 +127,73 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void processVersion2Record(int cityId, int operatorId, String record) {
+	private void processVersion1Record(Integer cityId, Integer operatorId, String record) {
 		String items[] = record.split("\t");
+		int length = items.length;
 
-		if (items.length == 10) {
-			AppDataProto appData = new AppDataProto();
-
+		if (length >= 6) {
 			try {
-				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
-				Integer command = m_appConfigManager.getCommands().get(url);
+				String speedId = URLDecoder.decode(items[4], "utf-8").toLowerCase();
 
-				if (command != null) {
+				if (speedId != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setTimestamp(System.currentTimeMillis());
-					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
-					appData.setCity(cityId);
-					appData.setOperator(operatorId);
-					appData.setCount(1);
+					long current = System.currentTimeMillis();
+					int network = Integer.parseInt(items[1]);
+					int version = Integer.parseInt(items[2]);
+					int platform = Integer.parseInt(items[3]);
 
-					int responseTime = appData.getResponseTime();
+					for (int i = 5; i < length; i++) {
+						AppSpeedProto appData = new AppSpeedProto();
 
-					if (responseTime < 60 * 1000 && responseTime >= 0) {
-						offerQueue(appData);
-
-						Cat.logEvent("Command", url, Event.SUCCESS, null);
-					} else if (responseTime > 0) {
-						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
-
-						if (tooLong != null) {
-							appData.setCommand(tooLong);
-							offerQueue(appData);
-						}
-						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
-					} else {
-						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						appData.setTimestamp(current);
+						appData.setNetwork(network);
+						appData.setVersion(version);
+						appData.setPlatform(platform);
+						appData.setCity(cityId);
+						appData.setOperator(operatorId);
+						offerAppSpeedData(appData, speedId, items, i);
 					}
 				} else {
-					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
+			Cat.logEvent("InvalidPar", record, Event.SUCCESS, record);
+		}
+	}
+
+	private void offerAppSpeedData(AppSpeedProto appData, String speedId, String[] items, int i) {
+		List<String> fields = Splitters.by("-").split(items[i]);
+		String step = fields.get(0);
+		long responseTime = Long.parseLong(fields.get(1));
+		int id = m_appSpeedConfigManager.querySpeedId(speedId, step);
+		boolean slow = responseTime > m_appSpeedConfigManager.querSpeedThreshold(speedId, step);
+		appData.setSpeedId(id);
+
+		if (slow) {
+			appData.setSlowCount(1);
+			appData.setSlowResponseTime(responseTime);
+		} else {
+			appData.setCount(1);
+			appData.setResponseTime(responseTime);
+		}
+
+		if (responseTime < 60 * 1000 && responseTime >= 0) {
+			offerQueue(appData);
+
+			Cat.logEvent("page", speedId, Event.SUCCESS, null);
+		} else if (responseTime > 0) {
+			Integer tooLong = m_appSpeedConfigManager.querSpeedThreshold(TOO_LONG, "");
+
+			if (tooLong != null) {
+				appData.setSpeedId(tooLong);
+				offerQueue(appData);
+			}
+			Cat.logEvent("ResponseTooLong", speedId, Event.SUCCESS, String.valueOf(responseTime));
+		} else {
+			Cat.logEvent("ResponseTimeError", speedId, Event.SUCCESS, String.valueOf(responseTime));
 		}
 	}
 
@@ -193,13 +215,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		return null;
 	}
 
-	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {
+	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
 		String records[] = content.split("\n");
 
 		for (String record : records) {
 			try {
 				if (!StringUtils.isEmpty(record)) {
-					processVersion2Record(cityId, operatorId, record);
+					processVersion1Record(cityId, operatorId, record);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);

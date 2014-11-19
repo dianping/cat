@@ -96,7 +96,6 @@
 			document.getElementById(prefix + "All").checked = true;
 			clickAll(fields, prefix);
 		}else{
-			console.log(field);
 			urls = field.split(":");
 			for(var i=0; i<urls.length; i++) {
 				if(document.getElementById(prefix + "_" + urls[i]) != null) {
