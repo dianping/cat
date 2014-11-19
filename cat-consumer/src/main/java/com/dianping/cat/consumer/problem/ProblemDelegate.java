@@ -73,11 +73,13 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
 
 		try {
-			for (ProblemReport temp : reports.values()) {
-				if (m_manager.validateDomain(temp.getDomain())) {
-					report.getIps().add(temp.getDomain());
-					report.getDomainNames().add(temp.getDomain());
-					visitor.visitProblemReport(temp);
+			for (ProblemReport r : reports.values()) {
+				String domain = r.getDomain();
+				
+				if (m_manager.validateDomain(domain)) {
+					report.getIps().add(domain);
+					report.getDomainNames().add(domain);
+					visitor.visitProblemReport(r);
 				}
 			}
 		} catch (Exception e) {

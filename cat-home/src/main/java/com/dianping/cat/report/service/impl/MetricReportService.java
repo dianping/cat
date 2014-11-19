@@ -9,9 +9,9 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.advanced.dal.BusinessReport;
-import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dianping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dianping.cat.consumer.dal.BusinessReport;
+import com.dianping.cat.consumer.dal.BusinessReportDao;
+import com.dianping.cat.consumer.dal.BusinessReportEntity;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;

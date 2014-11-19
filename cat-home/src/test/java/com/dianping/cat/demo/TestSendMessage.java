@@ -37,6 +37,13 @@ public class TestSendMessage {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("URL", "Test");
 
+			Event e1 = Cat.newEvent("test2", "success");
+			e1.addData("_count", 100);
+			
+			Event e2 = Cat.newEvent("test2", "fail");
+			e2.addData("_count", 100);
+			
+			
 			t.addData("key and value");
 			t.setStatus(new NullPointerException());
 			t.complete();
