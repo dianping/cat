@@ -23,7 +23,7 @@ public class AppSpeedTest {
 
 	public void SendData() throws Exception {
 		List<String> urls = new ArrayList<String>();
-		String url_pre = "http://localhost:2765/broker-service/api/batch";
+		String url_pre = "http://localhost:2765/broker-service/api/speed";
 		long timestamp = System.currentTimeMillis();
 		String urlStr = "";
 		/*
