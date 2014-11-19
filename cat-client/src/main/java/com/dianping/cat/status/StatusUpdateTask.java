@@ -4,7 +4,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -20,6 +19,7 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.status.model.entity.Property;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
 public class StatusUpdateTask implements Task, Initializable {
@@ -65,14 +65,10 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private void buildExtensionData(StatusInfo status) {
 		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
-		List<StatusExtension> extensions = res.getStatusExtension();
+		List<Property> extensions = res.getExtentionProperties();
 
-		for (StatusExtension extension : extensions) {
-			String id = extension.getId();
-			String des = extension.getDescription();
-			Map<String, String> propertis = extension.getProperties();
-
-			status.findOrCreateExtension(id).setDescription(des).getDynamicAttributes().putAll(propertis);
+		for (Property extension : extensions) {
+			status.findOrCreateProperty(extension.getId()).setValue(extension.getValue());
 		}
 	}
 

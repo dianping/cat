@@ -13,13 +13,8 @@ public class StatusInfoCollectorTest {
 
 		status.accept(new StatusInfoCollector(null, null));
 
-		Assert.assertEquals(true, status.getDisk() != null);
-		Assert.assertEquals(true, status.getMemory() != null);
-		Assert.assertEquals(true, status.getMessage().getBytes() >= 0);
-		Assert.assertEquals(true, status.getMessage().getOverflowed() >= 0);
-		Assert.assertEquals(true, status.getMessage().getProduced() >= 0);
-		Assert.assertEquals(true, status.getOs() != null);
-		Assert.assertEquals(true, status.getRuntime() != null);
-		Assert.assertEquals(true, status.getThread() != null);
+		Assert.assertEquals(true, status.findProperty("DiskVolume") != null);
+		Assert.assertEquals(true, status.findProperty("Max") != null);
+		Assert.assertEquals(true, status.findProperty("Arch") != null);
 	}
 }
