@@ -142,7 +142,7 @@ public class StatusInfoCollector extends BaseVisitor {
 
 		status.findOrCreateProperty("Max").setValue(Long.toString(runtime.maxMemory()));
 		status.findOrCreateProperty("Total").setValue(Long.toString(runtime.totalMemory()));
-		status.findOrCreateProperty("Free").setValue(Long.toString(runtime.freeMemory()));
+		status.findOrCreateProperty("MemoryFree").setValue(Long.toString(runtime.freeMemory()));
 		status.findOrCreateProperty("HeapUsage").setValue(Long.toString(memoryBean.getHeapMemoryUsage().getUsed()));
 		status.findOrCreateProperty("NonHeapUsage").setValue(Long.toString(memoryBean.getNonHeapMemoryUsage().getUsed()));
 
@@ -172,9 +172,9 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	private void setMessageInfo(StatusInfo status) {
 		if (m_statistics != null) {
-			status.findOrCreateProperty("Produced").setValue(Long.toString(m_statistics.getProduced()));
-			status.findOrCreateProperty("Overflowed").setValue(Long.toString(m_statistics.getOverflowed()));
-			status.findOrCreateProperty("Bytes").setValue(Long.toString(m_statistics.getBytes()));
+			status.findOrCreateProperty("CatMessageProduced").setValue(Long.toString(m_statistics.getProduced()));
+			status.findOrCreateProperty("CatMessageOverflowed").setValue(Long.toString(m_statistics.getOverflowed()));
+			status.findOrCreateProperty("CatMessageSize").setValue(Long.toString(m_statistics.getBytes()));
 		}
 	}
 
@@ -224,7 +224,7 @@ public class StatusInfoCollector extends BaseVisitor {
 			threads = threadbean.dumpAllThreads(false, false);
 		}
 
-		status.findOrCreateProperty("Count").setValue(Integer.toString(threadbean.getThreadCount()));
+		status.findOrCreateProperty("ThreadCount").setValue(Integer.toString(threadbean.getThreadCount()));
 		status.findOrCreateProperty("DaemonCount").setValue(Integer.toString(threadbean.getDaemonThreadCount()));
 		status.findOrCreateProperty("PeekCount").setValue(Integer.toString(threadbean.getPeakThreadCount()));
 		status.findOrCreateProperty("TotalStartedCount").setValue(Long.toString(threadbean.getTotalStartedThreadCount()));

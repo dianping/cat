@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -10,8 +9,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
-import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.message.Heartbeat;
@@ -20,15 +17,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
-import com.dianping.cat.status.model.entity.DiskInfo;
-import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
-import com.dianping.cat.status.model.entity.GcInfo;
-import com.dianping.cat.status.model.entity.HeapInfo;
-import com.dianping.cat.status.model.entity.MemoryInfo;
-import com.dianping.cat.status.model.entity.MessageInfo;
+import com.dianping.cat.status.model.entity.Property;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.entity.ThreadsInfo;
 
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
 	public static final String ID = "heartbeat";
@@ -72,64 +63,47 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		Period period = new Period(minute);
 
 		try {
-			ThreadsInfo thread = info.getThread();
+			for (Property property : info.getProperties().values()) {
+				if ("GC".equals(property.getId())) {
+					List<Extension> gcs = property.getExtensions();
 
-			period.setThreadCount(thread.getCount());
-			period.setDaemonCount(thread.getDaemonCount());
-			period.setTotalStartedCount(thread.getTotalStartedCount());
-			period.setCatThreadCount(thread.getCatThreadCount());
-			period.setPigeonThreadCount(thread.getPigeonThreadCount());
-			period.setHttpThreadCount(thread.getHttpThreadCount());
+					for (Extension gc : gcs) {
+						String name = gc.getDynamicAttribute("Name");
 
-			MessageInfo catInfo = info.getMessage();
+						if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
+							com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
+							      "NewGcCount");
 
-			period.setCatMessageProduced(catInfo.getProduced());
-			period.setCatMessageOverflow(catInfo.getOverflowed());
-			period.setCatMessageSize(catInfo.getBytes());
+							hp.setValue(gc.getDynamicAttribute("Count"));
+							period.addProperty(hp);
+						} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
+							com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
+							      "NewGcCount");
 
-			MemoryInfo memeryInfo = info.getMemory();
-			List<GcInfo> gcs = info.getMemory().getGcs();
+							hp.setValue(gc.getDynamicAttribute("Count"));
+							period.addProperty(hp);
+						}
+					}
+				} else if ("DiskVolume".equals(property.getId())) {
+					List<Extension> diskVolumes = property.getExtensions();
 
-			for (GcInfo gc : gcs) {
-				String name = gc.getName();
+					if (diskVolumes != null) {
+						com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
+						      "Disk");
 
-				if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
-					period.setNewGcCount(gc.getCount());
-				} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
-					period.setOldGcCount(gc.getCount());
-				}
-			}
+						for (Extension volumeInfo : diskVolumes) {
+							com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
 
-			HeapInfo heapInfo = memeryInfo.getHeap();
-
-			period.setHeapUsage(heapInfo.getHeapUsage());
-			period.setEdenUsage(heapInfo.getEdenUsage());
-			period.setSurvivorUsage(heapInfo.getSurvivorUsage());
-			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
-			period.setMemoryFree(memeryInfo.getFree());
-			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
-
-			DiskInfo diskInfo = info.getDisk();
-
-			if (diskInfo != null) {
-				for (DiskVolumeInfo volumeInfo : diskInfo.getDiskVolumes()) {
-					Disk disk = new Disk(volumeInfo.getId());
-
-					disk.setTotal(volumeInfo.getTotal());
-					disk.setFree(volumeInfo.getFree());
-					disk.setUsable(volumeInfo.getUsable());
-					period.addDisk(disk);
-				}
-			}
-
-			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
-				String id = entry.getKey();
-				Extension ext = entry.getValue();
-
-				com.dianping.cat.consumer.heartbeat.model.entity.Extension extension = period.findOrCreateExtension(id);
-				for (Entry<String, String> kv : ext.getDynamicAttributes().entrySet()) {
-					double value = Double.valueOf(kv.getValue());
-					extension.getDetails().put(kv.getKey(), new Detail(kv.getKey()).setValue(value));
+							he.setDynamicAttribute("Name", volumeInfo.getDynamicAttribute("Name"));
+							he.setDynamicAttribute("Total", volumeInfo.getDynamicAttribute("Total"));
+							he.setDynamicAttribute("Free", volumeInfo.getDynamicAttribute("Free"));
+							he.setDynamicAttribute("Usable", volumeInfo.getDynamicAttribute("Usable"));
+							hp.addExtension(he);
+						}
+						period.addProperty(hp);
+					}
+				} else {
+					period.addProperty(convertProperty(property));
 				}
 			}
 		} catch (Exception e) {
@@ -137,6 +111,14 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 
 		return period;
+	}
+
+	private com.dianping.cat.consumer.heartbeat.model.entity.Property convertProperty(Property property) {
+		com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property();
+
+		hp.setId(property.getId());
+		hp.setValue(property.getValue());
+		return hp;
 	}
 
 	@Override
