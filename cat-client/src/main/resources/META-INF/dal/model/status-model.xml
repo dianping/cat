@@ -10,5 +10,6 @@
     <attribute name="value" value-type="String" />
     <entity-ref name="extension" type="list" names="extensions" method-find-or-create="true"/>
   </entity>
-  <entity name="extension" dynamic-attributes="true" />
+  <entity name="extension" dynamic-attributes="true">
+  </entity>
 </model>
