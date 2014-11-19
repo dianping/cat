@@ -21,10 +21,10 @@ import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricConfig;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.advanced.metric.config.entity.Tag;
-import com.dianping.cat.advanced.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
+import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;

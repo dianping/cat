@@ -13,7 +13,6 @@
 		<module>cat-core</module>
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
-		<module>cat-consumer-advanced</module>
 		<module>cat-home</module>
 		<module>cat-broker</module>
 		<module>cat-agent</module>

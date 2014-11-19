@@ -1093,7 +1093,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
+					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
 				</requirement>
 			</requirements>
 		</component>

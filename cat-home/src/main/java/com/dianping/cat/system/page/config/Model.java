@@ -11,7 +11,7 @@ import java.util.Map;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
