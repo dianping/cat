@@ -73,7 +73,7 @@
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
 	<pre>
-	v=1&c=
+	v=2&c=
 	1400037748152<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>1<span class="text-error">\t</span>100<span class="text-error">\t</span>100<span class="text-error">\t</span>200<span class="text-error">\n</span> 
 	1400037748163<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>2<span class="text-error">\t</span>120<span class="text-error">\t</span>110<span class="text-error">\t</span>300<span class="text-error">\n</span> 
 	1400037748174<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>shop.bin<span class="text-error">\t</span>200<span class="text-error">\t</span>3<span class="text-error">\t</span>110<span class="text-error">\t</span>120<span class="text-error">\t</span>200<span class="text-error">\n</span> 
@@ -101,12 +101,12 @@
 	
 	<pre>
 	单个请求格式如下:
-	timstamp<span class="text-error">TAB</span>network<span class="text-error">TAB</span>version<span class="text-error">TAB</span>platform<span class="text-error">TAB</span>page<span class="text-error">TAB</span>step1:responseTime1<span class="text-error">TAB</span>step2:responseTime2<span class="text-error">TAB</span>step3:responseTime3<span class="text-error">ENTER</span>
+	timstamp<span class="text-error">TAB</span>network<span class="text-error">TAB</span>version<span class="text-error">TAB</span>platform<span class="text-error">TAB</span>page<span class="text-error">TAB</span>step1-responseTime1<span class="text-error">TAB</span>step2-responseTime2<span class="text-error">TAB</span>step3-responseTime3<span class="text-error">ENTER</span>
 	
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
 	<pre>
-	v=2&c=
+	v=1&c=
 	1400037748152<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page1<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
 	1400037748163<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page2<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
 	1400037748174<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>pgae3<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span> 
