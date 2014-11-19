@@ -38,7 +38,7 @@ public class FrontEndExceptionAlert implements Task {
 	@Inject
 	protected AlertManager m_sendManager;
 
-	private static final long DURATION = 5000;// TimeHelper.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private static final int ALERT_PERIOD = 1;
 
