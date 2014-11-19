@@ -9,11 +9,21 @@ import com.dianping.cat.consumer.core.GsonTest;
 import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
+import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
+import com.dianping.cat.consumer.cross.CrossInfoTest;
+import com.dianping.cat.consumer.cross.CrossReportMergerTest;
+import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
+import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.dump.DumpAnalyzerTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
+import com.dianping.cat.consumer.matrix.MatrixModelTest;
+import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
+import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
+import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportAllBuilderTest;
@@ -91,7 +101,25 @@ DumpAnalyzerTest.class,
 
 TransactionReportTypeAggergatorTest.class,
 
-ProblemURLFilterTest.class })
+ProblemURLFilterTest.class,MetricAnalyzerTest.class,
+
+CrossInfoTest.class,
+
+CrossReportMergerTest.class,
+
+MatrixModelTest.class,
+
+MatrixReportMergerTest.class,
+
+CrossAnalyzerTest.class,
+
+MatrixAnalyzerTest.class,
+
+DependencyAnalyzerTest.class,
+
+DependencyReportMergerTest.class,
+
+ProductLineConfigManagerTest.class })
 public class AllTests {
 
 }

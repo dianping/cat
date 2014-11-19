@@ -11,7 +11,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;

@@ -12,9 +12,9 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.advanced.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;

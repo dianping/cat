@@ -9,8 +9,8 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.advanced.metric.config.entity.Tag;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;

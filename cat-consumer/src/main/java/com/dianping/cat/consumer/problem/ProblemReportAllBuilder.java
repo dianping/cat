@@ -63,10 +63,10 @@ public class ProblemReportAllBuilder extends BaseVisitor {
 	public void visitProblemReport(ProblemReport problemReport) {
 		m_currentDomain = problemReport.getDomain();
 
-		if (m_report.getStartTime() != null) {
+		if (m_report.getStartTime() == null) {
 			m_report.setStartTime(problemReport.getStartTime());
 		}
-		if (m_report.getEndTime() != null) {
+		if (m_report.getEndTime() == null) {
 			m_report.setEndTime(problemReport.getEndTime());
 		}
 		super.visitProblemReport(problemReport);

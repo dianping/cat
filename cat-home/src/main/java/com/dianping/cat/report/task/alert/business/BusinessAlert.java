@@ -11,8 +11,8 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.advanced.metric.config.entity.Tag;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeHelper;
