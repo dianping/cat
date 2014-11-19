@@ -53,6 +53,63 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
+	private int parseEventCount(Message event) {
+		int count = 1;
+		String data = (String) event.getData();
+
+		if (data != null) {
+			String str = parseValue("_count", data);
+
+			if (str != null) {
+				count = Integer.parseInt(str);
+			}
+		}
+		return count;
+	}
+
+	public String parseValue(final String key, final String data) {
+		int len = data == null ? 0 : data.length();
+		int keyLen = key.length();
+		StringBuilder name = new StringBuilder();
+		StringBuilder value = new StringBuilder();
+		boolean inName = true;
+
+		for (int i = 0; i < len; i++) {
+			char ch = data.charAt(i);
+
+			switch (ch) {
+			case '&':
+				if (name.length() == keyLen && name.toString().equals(key)) {
+					return value.toString();
+				}
+				inName = true;
+				name.setLength(0);
+				value.setLength(0);
+				break;
+			case '=':
+				if (inName) {
+					inName = false;
+				} else {
+					value.append(ch);
+				}
+				break;
+			default:
+				if (inName) {
+					name.append(ch);
+				} else {
+					value.append(ch);
+				}
+				break;
+			}
+		}
+
+		if (name.length() == keyLen && name.toString().equals(key)) {
+			return value.toString();
+		}
+
+		return null;
+	}
+
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -66,19 +123,21 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (message instanceof Transaction) {
 			processTransaction(report, tree, (Transaction) message);
 		} else if (message instanceof Event) {
-			processEvent(report, tree, (Event) message);
+			int count = parseEventCount(message);
+			
+			processEvent(report, tree, (Event) message, count);
 		}
 	}
 
-	private void processEvent(EventReport report, MessageTree tree, Event event) {
+	private void processEvent(EventReport report, MessageTree tree, Event event, int count) {
 		String ip = tree.getIpAddress();
 		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
 
 		report.addIp(tree.getIpAddress());
-		type.incTotalCount();
-		name.incTotalCount();
+		type.incTotalCount(count);
+		name.incTotalCount(count);
 
 		if (event.isSuccess()) {
 			if (type.getSuccessMessageUrl() == null) {
@@ -89,8 +148,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				name.setSuccessMessageUrl(messageId);
 			}
 		} else {
-			type.incFailCount();
-			name.incFailCount();
+			type.incFailCount(count);
+			name.incFailCount(count);
 
 			if (type.getFailMessageUrl() == null) {
 				type.setFailMessageUrl(messageId);
@@ -103,19 +162,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		type.setFailPercent(type.getFailCount() * 100.0 / type.getTotalCount());
 		name.setFailPercent(name.getFailCount() * 100.0 / name.getTotalCount());
 
-		processEventGrpah(name, event);
+		processEventGrpah(name, event, count);
 	}
 
-	private void processEventGrpah(EventName name, Event t) {
+	private void processEventGrpah(EventName name, Event t, int count) {
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
 
 		synchronized (name) {
 			Range range = name.findOrCreateRange(min);
 
-			range.incCount();
+			range.incCount(count);
 			if (!t.isSuccess()) {
-				range.incFails();
+				range.incFails(count);
 			}
 		}
 	}
@@ -127,7 +186,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			if (child instanceof Transaction) {
 				processTransaction(report, tree, (Transaction) child);
 			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child);
+				int count = parseEventCount(child);
+				processEvent(report, tree, (Event) child, count);
 			}
 		}
 	}
