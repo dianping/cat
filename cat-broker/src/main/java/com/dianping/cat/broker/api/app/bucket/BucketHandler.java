@@ -11,7 +11,7 @@ import java.util.Map;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.broker.api.app.AppQueue;
 import com.dianping.cat.broker.api.app.bucket.impl.DataBucketExecutor;
@@ -35,9 +35,8 @@ public class BucketHandler implements Task {
 	private long m_startTime;
 
 	public BucketHandler(long startTime, Map<String, AppService> appDataServices) {
-		AppService appDataCommandService = appDataServices.get(AppDataCommand.class.getName());
-		m_bucketExecutors
-		      .put(AppDataProto.class.getName(), new DataBucketExecutor(startTime, appDataCommandService));
+		AppService appDataCommandService = appDataServices.get(AppCommandData.class.getName());
+		m_bucketExecutors.put(AppDataProto.class.getName(), new DataBucketExecutor(startTime, appDataCommandService));
 		AppService appSpeedDataService = appDataServices.get(AppSpeedData.class.getName());
 		m_bucketExecutors.put(AppSpeedProto.class.getName(), new SpeedBucketExecutor(startTime, appSpeedDataService));
 	}

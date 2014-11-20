@@ -6,5 +6,6 @@ public interface AppService<T> {
 
 	public int[] insert(T[] proto) throws DalException;
 
-	public void insertSingle(T proto) throws DalException;
+	public int insert(T proto) throws DalException;
+
 }

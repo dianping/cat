@@ -1,4 +1,4 @@
-package com.dianping.cat.broker;
+package com.dianping.cat.broker.app;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -10,19 +10,19 @@ import java.util.List;
 
 import org.junit.Test;
 
-public class AppTest {
+public class AppDataTest {
 
 	@Test
 	public void test() throws Exception {
 		while (true) {
-			SendData();
+			SendData("localhost:2765");
 			Thread.sleep(5000);
 		}
 	}
 
-	public void SendData() throws Exception {
+	public void SendData(String host) throws Exception {
 		List<String> urls = new ArrayList<String>();
-		String url_pre = "http://localhost:2765/broker-service/api/batch";
+		String url_pre = "http://" + host + "/broker-service/api/batch";
 		long timestamp = System.currentTimeMillis();
 
 		for (int i = 0; i < 10; i++) {

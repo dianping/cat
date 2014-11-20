@@ -10,7 +10,7 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.page.LineChart;
@@ -84,9 +84,9 @@ public class AppGraphCreator {
 		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
-		List<AppDataCommand> datas = m_AppDataService.queryByField(entity, field);
+		List<AppCommandData> datas = m_AppDataService.queryByField(entity, field);
 
-		for (AppDataCommand data : datas) {
+		for (AppCommandData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
 			PieChartDetailInfo info = new PieChartDetailInfo();
@@ -102,7 +102,7 @@ public class AppGraphCreator {
 		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
 	}
 
-	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppDataCommand data, AppDataField field) {
+	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppCommandData data, AppDataField field) {
 		String title = "Unknown";
 		int keyValue = -1;
 
@@ -141,7 +141,7 @@ public class AppGraphCreator {
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
 			com.dianping.cat.configuration.app.entity.Item connectType = null;
-			keyValue = data.getConnnectType();
+			keyValue = data.getConnectType();
 
 			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
 				title = connectType.getName();
@@ -191,7 +191,7 @@ public class AppGraphCreator {
 		return new Pair<Integer, String>(keyValue, title);
 	}
 
-	private Pair<Integer, Item> buildPieChartItem(int command, AppDataCommand data, AppDataField field) {
+	private Pair<Integer, Item> buildPieChartItem(int command, AppCommandData data, AppDataField field) {
 		Item item = new Item();
 		Pair<Integer, String> pair = buildPieChartFieldTitlePair(command, data, field);
 

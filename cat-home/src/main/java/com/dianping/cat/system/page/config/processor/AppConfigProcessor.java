@@ -161,10 +161,10 @@ public class AppConfigProcessor extends BaseProcesser {
 				id = payload.getId();
 				String speedStr = payload.getContent();
 				List<String> strs = Splitters.by(":").split(speedStr);
-				String page = strs.get(0);
-				int step = Integer.parseInt(strs.get(1));
-				title = strs.get(2);
-				int threshold = Integer.parseInt(strs.get(3));
+				String page = strs.get(0).trim();
+				int step = Integer.parseInt(strs.get(1).trim());
+				title = strs.get(2).trim();
+				int threshold = Integer.parseInt(strs.get(3).trim());
 				int speedId = id > 0 ? id : m_appSpeedConfigManager.generateId();
 				speed = new Speed(speedId);
 

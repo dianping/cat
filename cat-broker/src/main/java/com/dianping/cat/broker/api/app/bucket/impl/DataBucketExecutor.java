@@ -13,7 +13,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CountDownLatch;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.app.AppDataCommand;
+import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
@@ -21,7 +21,7 @@ import com.dianping.cat.broker.api.app.service.AppService;
 
 public class DataBucketExecutor implements BucketExecutor {
 
-	private AppService<AppDataCommand> m_appDataService;
+	private AppService<AppCommandData> m_appDataService;
 
 	private HashMap<Integer, HashMap<String, AppDataProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppDataProto>>();
 
@@ -31,16 +31,16 @@ public class DataBucketExecutor implements BucketExecutor {
 
 	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
 
-	public DataBucketExecutor(long startTime, AppService<AppDataCommand> appDataService) {
+	public DataBucketExecutor(long startTime, AppService<AppCommandData> appDataService) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
 	}
 
-	protected void batchInsert(List<AppDataCommand> appDataCommands, List<AppDataProto> datas) {
+	protected void batchInsert(List<AppCommandData> appDataCommands, List<AppDataProto> datas) {
 		int[] ret = null;
 		try {
 			int length = appDataCommands.size();
-			AppDataCommand[] array = new AppDataCommand[length];
+			AppCommandData[] array = new AppCommandData[length];
 
 			for (int i = 0; i < length; i++) {
 				array[i] = appDataCommands.get(i);
@@ -76,7 +76,7 @@ public class DataBucketExecutor implements BucketExecutor {
 
 		for (Entry<Integer, HashMap<String, AppDataProto>> outerEntry : m_datas.entrySet()) {
 			try {
-				List<AppDataCommand> commands = new ArrayList<AppDataCommand>();
+				List<AppCommandData> commands = new ArrayList<AppCommandData>();
 				List<AppDataProto> datas = new ArrayList<AppDataProto>();
 				HashMap<String, AppDataProto> value = outerEntry.getValue();
 
@@ -88,7 +88,7 @@ public class DataBucketExecutor implements BucketExecutor {
 						AppDataProto appData = entry.getValue();
 
 						if (appData.notFlushed()) {
-							AppDataCommand proto = new AppDataCommand();
+							AppCommandData proto = new AppCommandData();
 
 							proto.setPeriod(period);
 							proto.setMinuteOrder(minute);
@@ -97,7 +97,7 @@ public class DataBucketExecutor implements BucketExecutor {
 							proto.setOperator(appData.getOperator());
 							proto.setNetwork(appData.getNetwork());
 							proto.setAppVersion(appData.getVersion());
-							proto.setConnnectType(appData.getConnectType());
+							proto.setConnectType(appData.getConnectType());
 							proto.setCode(appData.getCode());
 							proto.setPlatform(appData.getPlatform());
 							proto.setAccessNumber(appData.getCount());
@@ -112,7 +112,7 @@ public class DataBucketExecutor implements BucketExecutor {
 							if (commands.size() >= 100) {
 								batchInsert(commands, datas);
 
-								commands = new ArrayList<AppDataCommand>();
+								commands = new ArrayList<AppCommandData>();
 							}
 						}
 					} catch (Exception e) {
