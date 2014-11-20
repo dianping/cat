@@ -346,33 +346,26 @@ CREATE TABLE `operation` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户操作日志';
 
-CREATE TABLE `app_data_command_1` (
+CREATE TABLE `app_command_data_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `period` date NOT NULL COMMENT '时间',
-  `minute_order` smallint NOT NULL COMMENT '分钟',
-  `city` smallint NOT NULL COMMENT '城市',
-  `operator` tinyint NOT NULL COMMENT '运营商',
-  `network` tinyint NOT NULL COMMENT '网络类型',
-  `app_version` smallint NOT NULL COMMENT '版本',
-  `connnect_type` tinyint NOT NULL COMMENT '访问类型，是否长连接',
-  `code` smallint NOT NULL COMMENT '返回码',
-  `platform` tinyint NOT NULL COMMENT '平台',
-  `access_number` bigint NOT NULL COMMENT '访问量',
-  `response_sum_time` bigint NOT NULL COMMENT '响应时间大小',
-  `request_package` bigint NOT NULL COMMENT '请求包大小',
-  `response_package` bigint NOT NULL COMMENT '响应包大小',
-  `status` smallint NOT NULL COMMENT '数据状态',
+  `minute_order` smallint(6) NOT NULL COMMENT '分钟',
+  `city` smallint(6) NOT NULL COMMENT '城市',
+  `operator` tinyint(4) NOT NULL COMMENT '运营商',
+  `network` tinyint(4) NOT NULL COMMENT '网络类型',
+  `app_version` smallint(6) NOT NULL COMMENT '版本',
+  `connect_type` tinyint(4) NOT NULL COMMENT '访问类型，是否长连接',
+  `code` smallint(6) NOT NULL COMMENT '返回码',
+  `platform` tinyint(4) NOT NULL COMMENT '平台',
+  `access_number` bigint(20) NOT NULL COMMENT '访问量',
+  `response_sum_time` bigint(20) NOT NULL COMMENT '响应时间大小',
+  `request_package` bigint(20) NOT NULL COMMENT '请求包大小',
+  `response_package` bigint(20) NOT NULL COMMENT '响应包大小',
+  `status` smallint(6) NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
-  KEY IX_period_minute (period,minute_order),
-  KEY IX_period_city_minute (period,city,minute_order),
-  KEY IX_period_operator_minute (period,operator,minute_order),
-  KEY IX_period_network_minute (period,network,minute_order),
-  KEY IX_period_version_minute (period,app_version,minute_order),
-  KEY IX_period_connnect_minute (period,connnect_type,minute_order),
-  KEY IX_period_platform_minute (period,platform,minute_order),
-  KEY IX_period_code_minute (period,code,minute_order)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
+  UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`network`,`app_version`,`connect_type`,`code`,`platform`)
+) ENGINE=InnoDB AUTO_INCREMENT=238 DEFAULT CHARSET=utf8 COMMENT='app基本数据';
 
 CREATE TABLE `app_speed_data_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
