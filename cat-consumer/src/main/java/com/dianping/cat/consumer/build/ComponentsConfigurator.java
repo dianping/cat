@@ -138,8 +138,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID) //
-		      .req(ProblemHandler.class, //
+		      .req(ReportManager.class, ID).req(ProblemHandler.class, //
 		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
@@ -196,7 +195,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		return all;
 	}
-	
+
 	private Collection<Component> defineMetricComponents() {
 		final List<Component> all = new ArrayList<Component>();
 

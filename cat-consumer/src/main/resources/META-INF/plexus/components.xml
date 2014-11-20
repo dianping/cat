@@ -145,10 +145,6 @@
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
-					<role-hint>problem</role-hint>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
 					<role-hints>
 						<role-hint>default-problem</role-hint>

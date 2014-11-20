@@ -26,7 +26,6 @@ import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
 import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
-import com.dianping.cat.consumer.problem.ProblemReportAllBuilderTest;
 import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.problem.ProblemURLFilterTest;
@@ -90,8 +89,6 @@ ProblemReportTest.class,
 ProblemAnalyzerTest.class,
 
 ProblemReportMergerTest.class,
-
-ProblemReportAllBuilderTest.class,
 
 CompositeFormatTest.class,
 

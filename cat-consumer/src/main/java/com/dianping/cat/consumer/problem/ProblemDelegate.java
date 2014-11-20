@@ -39,12 +39,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			domainNames.addAll(reports.keySet());
 		}
 
-		if (reports.size() > 0) {
-			ProblemReport all = createAggregatedReport(reports);
-
-			reports.put(all.getDomain(), all);
-		}
-
 		try {
 			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
 
@@ -66,26 +60,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	@Override
 	public String buildXml(ProblemReport report) {
 		return report.toString();
-	}
-
-	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
-		ProblemReport report = new ProblemReport(Constants.ALL);
-		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
-
-		try {
-			for (ProblemReport r : reports.values()) {
-				String domain = r.getDomain();
-				
-				if (m_manager.validateDomain(domain)) {
-					report.getIps().add(domain);
-					report.getDomainNames().add(domain);
-					visitor.visitProblemReport(r);
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return report;
 	}
 
 	@Override

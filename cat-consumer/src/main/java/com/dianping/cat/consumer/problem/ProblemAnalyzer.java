@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.problem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -10,7 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -23,9 +21,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject(ID)
 	private ReportManager<ProblemReport> m_reportManager;
-
-	@Inject
-	private ProblemDelegate m_problemDelegate;
 
 	@Inject
 	private List<ProblemHandler> m_handlers;
@@ -46,17 +41,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Override
 	public ProblemReport getReport(String domain) {
-		if (!Constants.ALL.equals(domain)) {
-			ProblemReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		ProblemReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 
-			return report;
-		} else {
-			Map<String, ProblemReport> reports = m_reportManager.getHourlyReports(getStartTime());
-
-			return m_problemDelegate.createAggregatedReport(reports);
-		}
+		return report;
 	}
 
 	@Override
