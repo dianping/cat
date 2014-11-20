@@ -1,12 +1,10 @@
-package com.dianping.cat.broker;
+package com.dianping.cat.broker.app;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.junit.Test;
@@ -22,7 +20,6 @@ public class AppSpeedTest {
 	}
 
 	public void SendData() throws Exception {
-		List<String> urls = new ArrayList<String>();
 		String url_pre = "http://localhost:2765/broker-service/api/speed";
 		long timestamp = System.currentTimeMillis();
 		String urlStr = "";
@@ -30,15 +27,13 @@ public class AppSpeedTest {
 		 * network version platform page step:responseTime ..... 1400037748182 1 6.9 1 shop.bin 1:30 2:40 3:50
 		 */
 		for (int i = 0; i < 4; i++) {
-			int value = new Random().nextInt(300);
-			urlStr += timestamp + "\t1\t2\t1\tindex.bin\t1-" + value + "\n";
-			urls.add(url_pre + "?v=1&c=" + timestamp + URLEncoder.encode(urlStr, "utf-8"));
+			int value1 = new Random().nextInt(300);
+			int value2 = new Random().nextInt(300);
+			urlStr += timestamp + "\t1\t2\t1\tindex.bin\t1-" + value1 + "\t2-" + value2 + "\n";
 		}
-
-		for (String url : urls) {
-			String ret = sendGet(url);
-			System.out.println(ret);
-		}
+		urlStr = url_pre + "?v=1&c=" + URLEncoder.encode(urlStr, "utf-8");
+		String ret = sendGet(urlStr);
+		System.out.println(ret);
 	}
 
 	public String sendGet(String url) {

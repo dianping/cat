@@ -13,9 +13,9 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.app.AppDataCommand;
-import com.dianping.cat.app.AppDataCommandDao;
-import com.dianping.cat.app.AppDataCommandEntity;
+import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.AppCommandDataDao;
+import com.dianping.cat.app.AppCommandDataEntity;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppDataSequence;
@@ -23,7 +23,7 @@ import com.dianping.cat.report.page.app.display.AppDataSequence;
 public class AppDataService {
 
 	@Inject
-	private AppDataCommandDao m_dao;
+	private AppCommandDataDao m_dao;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -40,11 +40,11 @@ public class AppDataService {
 
 	public List<AppDataDetail> buildAppDataDetailInfos(CommandQueryEntity entity, AppDataField groupByField) {
 		List<AppDataDetail> infos = new LinkedList<AppDataDetail>();
-		List<AppDataCommand> datas = queryByFieldCode(entity, groupByField);
-		Map<Integer, List<AppDataCommand>> field2Datas = buildFields2Datas(datas, groupByField);
+		List<AppCommandData> datas = queryByFieldCode(entity, groupByField);
+		Map<Integer, List<AppCommandData>> field2Datas = buildFields2Datas(datas, groupByField);
 
-		for (Entry<Integer, List<AppDataCommand>> entry : field2Datas.entrySet()) {
-			List<AppDataCommand> datalst = entry.getValue();
+		for (Entry<Integer, List<AppCommandData>> entry : field2Datas.entrySet()) {
+			List<AppCommandData> datalst = entry.getValue();
 			AppDataDetail info = new AppDataDetail();
 			double ratio = computeSuccessRatio(entity.getId(), datalst);
 
@@ -55,15 +55,15 @@ public class AppDataService {
 		return infos;
 	}
 
-	private Map<Integer, List<AppDataCommand>> buildFields2Datas(List<AppDataCommand> datas, AppDataField field) {
-		Map<Integer, List<AppDataCommand>> field2Datas = new HashMap<Integer, List<AppDataCommand>>();
+	private Map<Integer, List<AppCommandData>> buildFields2Datas(List<AppCommandData> datas, AppDataField field) {
+		Map<Integer, List<AppCommandData>> field2Datas = new HashMap<Integer, List<AppCommandData>>();
 
-		for (AppDataCommand data : datas) {
+		for (AppCommandData data : datas) {
 			int fieldValue = queryFieldValue(data, field);
-			List<AppDataCommand> lst = field2Datas.get(fieldValue);
+			List<AppCommandData> lst = field2Datas.get(fieldValue);
 
 			if (lst == null) {
-				lst = new ArrayList<AppDataCommand>();
+				lst = new ArrayList<AppCommandData>();
 				field2Datas.put(fieldValue, lst);
 			}
 			lst.add(data);
@@ -71,12 +71,12 @@ public class AppDataService {
 		return field2Datas;
 	}
 
-	public Double[] computeDelayAvg(AppDataSequence<AppDataCommand> convertedData) {
+	public Double[] computeDelayAvg(AppDataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getRecords().entrySet()) {
-			for (AppDataCommand data : entry.getValue()) {
+		for (Entry<Integer, List<AppCommandData>> entry : convertedData.getRecords().entrySet()) {
+			for (AppCommandData data : entry.getValue()) {
 				long count = data.getAccessNumberSum();
 				long sum = data.getResponseSumTimeSum();
 				double avg = sum / count;
@@ -90,12 +90,12 @@ public class AppDataService {
 		return value;
 	}
 
-	public Double[] computeRequestCount(AppDataSequence<AppDataCommand> convertedData) {
+	public Double[] computeRequestCount(AppDataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getRecords().entrySet()) {
-			for (AppDataCommand data : entry.getValue()) {
+		for (Entry<Integer, List<AppCommandData>> entry : convertedData.getRecords().entrySet()) {
+			for (AppCommandData data : entry.getValue()) {
 				double count = data.getAccessNumberSum();
 				int index = data.getMinuteOrder() / 5;
 
@@ -107,7 +107,7 @@ public class AppDataService {
 		return value;
 	}
 
-	public Double[] computeSuccessRatio(int commandId, AppDataSequence<AppDataCommand> convertedData) {
+	public Double[] computeSuccessRatio(int commandId, AppDataSequence<AppCommandData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -116,7 +116,7 @@ public class AppDataService {
 		}
 
 		try {
-			for (Entry<Integer, List<AppDataCommand>> entry : convertedData.getRecords().entrySet()) {
+			for (Entry<Integer, List<AppCommandData>> entry : convertedData.getRecords().entrySet()) {
 				int key = entry.getKey();
 				int index = key / 5;
 
@@ -130,11 +130,11 @@ public class AppDataService {
 		return value;
 	}
 
-	private double computeSuccessRatio(int commandId, List<AppDataCommand> datas) {
+	private double computeSuccessRatio(int commandId, List<AppCommandData> datas) {
 		long success = 0;
 		long sum = 0;
 
-		for (AppDataCommand data : datas) {
+		for (AppCommandData data : datas) {
 			long number = data.getAccessNumberSum();
 
 			if (m_appConfigManager.isSuccessCode(commandId, data.getCode())) {
@@ -145,20 +145,20 @@ public class AppDataService {
 		return sum == 0 ? 0 : (double) success / sum * 100;
 	}
 
-	private AppDataSequence<AppDataCommand> buildAppSequence(List<AppDataCommand> fromDatas, Date period) {
-		Map<Integer, List<AppDataCommand>> dataMap = new LinkedHashMap<Integer, List<AppDataCommand>>();
+	private AppDataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
+		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
 		int max = -5;
 
-		for (AppDataCommand from : fromDatas) {
+		for (AppCommandData from : fromDatas) {
 			int minute = from.getMinuteOrder();
 
 			if (max < 0 || max < minute) {
 				max = minute;
 			}
-			List<AppDataCommand> data = dataMap.get(minute);
+			List<AppCommandData> data = dataMap.get(minute);
 
 			if (data == null) {
-				data = new LinkedList<AppDataCommand>();
+				data = new LinkedList<AppCommandData>();
 
 				dataMap.put(minute, data);
 			}
@@ -167,7 +167,7 @@ public class AppDataService {
 		int n = max / 5 + 1;
 		int length = queryAppDataDuration(period, n);
 
-		return new AppDataSequence<AppDataCommand>(length, dataMap);
+		return new AppDataSequence<AppCommandData>(length, dataMap);
 	}
 
 	private int queryAppDataDuration(Date period, int defaultValue) {
@@ -188,7 +188,7 @@ public class AppDataService {
 		return defaultValue;
 	}
 
-	private int queryFieldValue(AppDataCommand data, AppDataField field) {
+	private int queryFieldValue(AppCommandData data, AppDataField field) {
 		switch (field) {
 		case OPERATOR:
 			return data.getOperator();
@@ -197,7 +197,7 @@ public class AppDataService {
 		case CITY:
 			return data.getCity();
 		case CONNECT_TYPE:
-			return data.getConnnectType();
+			return data.getConnectType();
 		case NETWORK:
 			return data.getNetwork();
 		case PLATFORM:
@@ -247,16 +247,16 @@ public class AppDataService {
 		}
 	}
 
-	private void updateAppDataDetailInfo(AppDataDetail info, Entry<Integer, List<AppDataCommand>> entry,
+	private void updateAppDataDetailInfo(AppDataDetail info, Entry<Integer, List<AppCommandData>> entry,
 	      AppDataField field, CommandQueryEntity entity) {
 		int key = entry.getKey();
-		List<AppDataCommand> datas = entry.getValue();
+		List<AppCommandData> datas = entry.getValue();
 		long accessNumberSum = 0;
 		long responseTimeSum = 0;
 		long responsePackageSum = 0;
 		long requestPackageSum = 0;
 
-		for (AppDataCommand data : datas) {
+		for (AppCommandData data : datas) {
 			accessNumberSum += data.getAccessNumberSum();
 			responseTimeSum += data.getResponseSumTimeSum();
 			responsePackageSum += data.getResponsePackageSum();
@@ -275,8 +275,8 @@ public class AppDataService {
 		setFieldValue(info, field, key);
 	}
 
-	public List<AppDataCommand> queryByField(CommandQueryEntity entity, AppDataField groupByField) {
-		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
+	public List<AppCommandData> queryByField(CommandQueryEntity entity, AppDataField groupByField) {
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -293,31 +293,31 @@ public class AppDataService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperator(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_OPERATOR_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_OPERATOR_DATA);
 				break;
 			case NETWORK:
 				datas = m_dao.findDataByNetwork(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_NETWORK_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_NETWORK_DATA);
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersion(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_APP_VERSION_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_APP_VERSION_DATA);
 				break;
 			case CONNECT_TYPE:
-				datas = m_dao.findDataByConnnectType(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CONNNECT_TYPE_DATA);
+				datas = m_dao.findDataByConnectType(commandId, period, city, operator, network, appVersion, connnectType,
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CONNECT_TYPE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatform(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_PLATFORM_DATA);
+				      code, platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_PLATFORM_DATA);
 				break;
 			case CITY:
 				datas = m_dao.findDataByCity(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CITY_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CITY_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
 				break;
 			}
 		} catch (Exception e) {
@@ -326,8 +326,8 @@ public class AppDataService {
 		return datas;
 	}
 
-	public List<AppDataCommand> queryByFieldCode(CommandQueryEntity entity, AppDataField groupByField) {
-		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
+	public List<AppCommandData> queryByFieldCode(CommandQueryEntity entity, AppDataField groupByField) {
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -344,31 +344,31 @@ public class AppDataService {
 			switch (groupByField) {
 			case OPERATOR:
 				datas = m_dao.findDataByOperatorCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_OPERATOR_CODE_DATA);
+				      code, platform, AppCommandDataEntity.READSET_OPERATOR_CODE_DATA);
 				break;
 			case NETWORK:
 				datas = m_dao.findDataByNetworkCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_NETWORK_CODE_DATA);
+				      code, platform, AppCommandDataEntity.READSET_NETWORK_CODE_DATA);
 				break;
 			case APP_VERSION:
 				datas = m_dao.findDataByAppVersionCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, AppDataCommandEntity.READSET_APP_VERSION_CODE__DATA);
+				      connnectType, code, platform, AppCommandDataEntity.READSET_APP_VERSION_CODE__DATA);
 				break;
 			case CONNECT_TYPE:
-				datas = m_dao.findDataByConnnectTypeCode(commandId, period, city, operator, network, appVersion,
-				      connnectType, code, platform, AppDataCommandEntity.READSET_CONNECT_TYPE_CODE_DATA);
+				datas = m_dao.findDataByConnectTypeCode(commandId, period, city, operator, network, appVersion,
+				      connnectType, code, platform, AppCommandDataEntity.READSET_CONNECT_TYPE_CODE_DATA);
 				break;
 			case PLATFORM:
 				datas = m_dao.findDataByPlatformCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_PLATFORM_CODE_DATA);
+				      code, platform, AppCommandDataEntity.READSET_PLATFORM_CODE_DATA);
 				break;
 			case CITY:
 				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_CITY_CODE_DATA);
+				      code, platform, AppCommandDataEntity.READSET_CITY_CODE_DATA);
 				break;
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, startMinuteOrder, endMinuteOrder, AppDataCommandEntity.READSET_CODE_DATA);
+				      platform, startMinuteOrder, endMinuteOrder, AppCommandDataEntity.READSET_CODE_DATA);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -386,25 +386,25 @@ public class AppDataService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		List<AppDataCommand> datas = new ArrayList<AppDataCommand>();
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
 
 		try {
 			if (SUCCESS.equals(type)) {
 				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppDataCommandEntity.READSET_SUCCESS_DATA);
-				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
+				      code, platform, AppCommandDataEntity.READSET_SUCCESS_DATA);
+				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
 			} else if (REQUEST.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppDataCommandEntity.READSET_COUNT_DATA);
-				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
+				      platform, AppCommandDataEntity.READSET_COUNT_DATA);
+				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
 			} else if (DELAY.equals(type)) {
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
-				      platform, AppDataCommandEntity.READSET_AVG_DATA);
-				AppDataSequence<AppDataCommand> s = buildAppSequence(datas, entity.getDate());
+				      platform, AppCommandDataEntity.READSET_AVG_DATA);
+				AppDataSequence<AppCommandData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
 			} else {

@@ -16,11 +16,12 @@ public class AppSpeedService implements AppService<AppSpeedData> {
 
 	@Override
 	public int[] insert(AppSpeedData[] proto) throws DalException {
-		return m_dao.insert(proto);
+		return m_dao.insertOrUpdate(proto);
 	}
 
 	@Override
-	public void insertSingle(AppSpeedData proto) throws DalException {
-		m_dao.insert(proto);
+	public int insert(AppSpeedData proto) throws DalException {
+		return m_dao.insertOrUpdate(proto);
 	}
+
 }

@@ -13,7 +13,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
-import com.dianping.cat.app.AppDataCommandDao;
+import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppDataCommandTableProvider;
@@ -144,7 +144,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data", AppDataCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 
 		// database
@@ -216,7 +216,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ProductLineConfigManager.class, AlertInfo.class));
 
 		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
-		all.add(C(AppDataService.class).req(AppDataCommandDao.class, AppConfigManager.class));
+		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 		all.add(C(AppGraphCreator.class).req(AppConfigManager.class, AppDataService.class));
 
 		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(

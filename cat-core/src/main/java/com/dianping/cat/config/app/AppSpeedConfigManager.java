@@ -79,8 +79,12 @@ public class AppSpeedConfigManager implements Initializable {
 		for (Speed s : m_config.getSpeeds().values()) {
 			ids.add(s.getId());
 		}
-		Collections.sort(ids);
-		int max = ids.get(ids.size() - 1);
+		int max = 0;
+
+		if (!ids.isEmpty()) {
+			Collections.sort(ids);
+			max = ids.get(ids.size() - 1);
+		}
 
 		if (ids.size() < max) {
 			for (int i = 1; i <= max; i++) {
