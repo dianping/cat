@@ -10,7 +10,6 @@
     <attribute name="email" value-type="String" />
     <attribute name="title" value-type="String" />
     <attribute name="order" value-type="int" />
-    <attribute name="dashboard" value-type="boolean" />
     <entity-ref name="domain" type="list" names="domains" />
   </entity>
   <entity name="domain">
