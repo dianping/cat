@@ -50,7 +50,7 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="app-speed-data" table="app_speed_data_" alias="asd">
+  <entity name="app-speed-data" table="app_speed_data" alias="asd">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
