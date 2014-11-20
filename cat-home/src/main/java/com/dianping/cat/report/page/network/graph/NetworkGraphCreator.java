@@ -115,7 +115,6 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 	}
 
 	private String buildLineTitle(String lineKey) {
-
 		return lineKey.substring(lineKey.lastIndexOf("-") + 1, lineKey.lastIndexOf(":"));
 	}
 

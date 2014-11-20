@@ -71,6 +71,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public static final String NETWORK_F5_PREFIX = "f5-";
 
+	public static final String DATABASE_PREFIX = "db-";
+
 	public static final String SYSTEM_MONITOR_PREFIX = "system-";
 
 	public void buildDefaultDashboard(ProductLine productLine, String domain) {
@@ -84,13 +86,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
-		} else if (low.startsWith(NETWORK_SWITCH_PREFIX)
-		      || low.startsWith(NETWORK_F5_PREFIX)) {
+		} else if (low.startsWith(NETWORK_SWITCH_PREFIX) || low.startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
 		} else if (low.startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
-		} else if (low.startsWith(DATABASE_MONITOR)) {
-			databaseMonitor = false;
+		} else if (low.startsWith(DATABASE_PREFIX)) {
+			databaseMonitor = true;
 		} else {
 			metricMonitor = true;
 		}
