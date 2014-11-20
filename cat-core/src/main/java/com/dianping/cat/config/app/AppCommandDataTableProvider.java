@@ -10,7 +10,7 @@ import org.unidal.dal.jdbc.mapping.TableProvider;
 
 import com.dianping.cat.app.AppCommandData;
 
-public class AppDataCommandTableProvider implements TableProvider {
+public class AppCommandDataTableProvider implements TableProvider {
 
 	private String m_logicalTableName = "app-command-data";
 
