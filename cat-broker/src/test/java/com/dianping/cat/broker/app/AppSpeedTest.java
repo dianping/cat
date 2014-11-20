@@ -14,13 +14,13 @@ public class AppSpeedTest {
 	@Test
 	public void test() throws Exception {
 		while (true) {
-			SendData();
+			SendData("localhost:2765");
 			Thread.sleep(5000);
 		}
 	}
 
-	public void SendData() throws Exception {
-		String url_pre = "http://localhost:2765/broker-service/api/speed";
+	public void SendData(String host) throws Exception {
+		String url = "http://" + host + "/broker-service/api/speed";
 		long timestamp = System.currentTimeMillis();
 		String urlStr = "";
 		/*
@@ -31,7 +31,7 @@ public class AppSpeedTest {
 			int value2 = new Random().nextInt(300);
 			urlStr += timestamp + "\t1\t2\t1\tindex.bin\t1-" + value1 + "\t2-" + value2 + "\n";
 		}
-		urlStr = url_pre + "?v=1&c=" + URLEncoder.encode(urlStr, "utf-8");
+		urlStr = url + "?v=1&c=" + URLEncoder.encode(urlStr, "utf-8");
 		String ret = sendGet(urlStr);
 		System.out.println(ret);
 	}

@@ -2190,7 +2190,7 @@
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-command-data</role-hint>
-			<implementation>com.dianping.cat.config.app.AppDataCommandTableProvider</implementation>
+			<implementation>com.dianping.cat.config.app.AppCommandDataTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
