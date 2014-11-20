@@ -49,7 +49,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
+import com.dianping.cat.report.page.network.GraphCreator;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
@@ -211,7 +211,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(WebGraphCreator.class, DefaultWebGraphCreator.class).req(CachedMetricReportService.class,
 		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
-		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
+		all.add(C(GraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
 		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
 		      ProductLineConfigManager.class, AlertInfo.class));
 

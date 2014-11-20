@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.network.graph;
+package com.dianping.cat.report.page.network;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,7 +17,7 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
 
-public class NetworkGraphCreator extends AbstractGraphCreator {
+public class GraphCreator extends AbstractGraphCreator {
 
 	public Map<String, LineChart> buildChartData(String productLine, final Map<String, double[]> datas, Date startDate,
 	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
@@ -115,7 +115,6 @@ public class NetworkGraphCreator extends AbstractGraphCreator {
 	}
 
 	private String buildLineTitle(String lineKey) {
-
 		return lineKey.substring(lineKey.lastIndexOf("-") + 1, lineKey.lastIndexOf(":"));
 	}
 

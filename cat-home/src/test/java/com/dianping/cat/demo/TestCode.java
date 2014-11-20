@@ -1,14 +1,33 @@
 package com.dianping.cat.demo;
 
 
+import java.io.InputStream;
+
 import org.junit.Test;
+import org.unidal.helper.Urls;
+import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCode {
+	
+	@Test
+	public void testTime() throws Exception{
+		long time =System.currentTimeMillis()-TimeHelper.ONE_MINUTE*5;
+		String format ="http://localhost:2281/cat/r/monitor?timestamp=%s&group=db-%s&domain=test&key=myKey2&op=count";
+		
+		for(int i=0;i<1000;i++){
+			for(int j=0;j<5;j++){
+				String url = String.format(format, time,"database"+j);
+				InputStream in = Urls.forIO().readTimeout(1000).connectTimeout(1000).openStream(url);
+				Files.forIO().readFrom(in, "utf-8");
+			}
+		}
+	}
 	
 	public void logError(Throwable able){
 		  Transaction t = Cat.newTransaction("Neocortex", "Error");

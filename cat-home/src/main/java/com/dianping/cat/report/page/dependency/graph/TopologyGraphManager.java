@@ -78,7 +78,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String realName = entry.getValue().getTitle();
-				boolean isDashboard = entry.getValue().getDashboard();
+				boolean isDashboard = entry.getValue().getApplicationDashboard();
 
 				if (isDashboard) {
 					Map<String, Domain> domains = entry.getValue().getDomains();

@@ -19,7 +19,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.service.ModelPeriod;
 
@@ -34,7 +33,7 @@ public class Handler implements PageHandler<Context> {
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private NetworkGraphCreator m_networkGraphCreator;
+	private GraphCreator m_graphCreator;
 
 	@Inject
 	private NetGraphManager m_netGraphManager;
@@ -60,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_networkGraphCreator.buildChartsByProductLine(payload.getProduct(), start,
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start,
 			      end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));

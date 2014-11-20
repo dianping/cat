@@ -65,9 +65,13 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public static final String SYSTEM_MONITOR = "系统监控";
 
+	public static final String DATABASE_MONITOR = "数据库监控";
+
 	public static final String NETWORK_SWITCH_PREFIX = "switch-";
 
 	public static final String NETWORK_F5_PREFIX = "f5-";
+
+	public static final String DATABASE_PREFIX = "db-";
 
 	public static final String SYSTEM_MONITOR_PREFIX = "system-";
 
@@ -76,24 +80,27 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		boolean userMonitor = false;
 		boolean networkMonitor = false;
 		boolean systemMonitor = false;
-		boolean metricDashboard = false;
+		boolean databaseMonitor = false;
+		boolean metricMonitor = false;
+		String low = line.toLowerCase();
 
 		if (Constants.BROKER_SERVICE.equals(domain)) {
 			userMonitor = true;
-		} else if (line.toLowerCase().startsWith(NETWORK_SWITCH_PREFIX)
-		      || line.toLowerCase().startsWith(NETWORK_F5_PREFIX)) {
+		} else if (low.startsWith(NETWORK_SWITCH_PREFIX) || low.startsWith(NETWORK_F5_PREFIX)) {
 			networkMonitor = true;
-		} else if (line.toLowerCase().startsWith(SYSTEM_MONITOR_PREFIX)) {
+		} else if (low.startsWith(SYSTEM_MONITOR_PREFIX)) {
 			systemMonitor = true;
+		} else if (low.startsWith(DATABASE_PREFIX)) {
+			databaseMonitor = true;
 		} else {
-			metricDashboard = true;
+			metricMonitor = true;
 		}
 
 		productLine.setNetworkDashboard(networkMonitor);
 		productLine.setUserMonitorDashboard(userMonitor);
 		productLine.setSystemMonitorDashboard(systemMonitor);
-		productLine.setMetricDashboard(metricDashboard);
-		productLine.setDashboard(metricDashboard);
+		productLine.setMetricDashboard(metricMonitor);
+		productLine.setDatabaseMonitorDashboard(databaseMonitor);
 	}
 
 	private Set<String> buildDomainIdSetWithoutProductline(String productlineId) {
@@ -264,6 +271,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return productLines;
 	}
+	
+	public Map<String, ProductLine> queryDatabases() {
+		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
+
+		for (ProductLine line : getCompany().getProductLines().values()) {
+			String id = line.getId();
+			if (id != null && id.length() > 0 && line.getDatabaseMonitorDashboard()) {
+				productLines.put(id, line);
+			}
+		}
+		return productLines;
+	}
 
 	public ProductLine queryProductLine(String id) {
 		return getCompany().findProductLine(id);
@@ -287,6 +306,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		productLines.put(APPLICATION_MONITOR, new ArrayList<ProductLine>());
 		productLines.put(NETWORK_MONITOR, new ArrayList<ProductLine>());
 		productLines.put(SYSTEM_MONITOR, new ArrayList<ProductLine>());
+		productLines.put(DATABASE_MONITOR, new ArrayList<ProductLine>());
 
 		for (ProductLine line : getCompany().getProductLines().values()) {
 			String id = line.getId();
@@ -301,12 +321,14 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				if (line.getUserMonitorDashboard()) {
 					productLines.get(USER_MONITOR).add(line);
 				}
-				if (line.getDashboard() || line.getApplicationDashboard()) {
-					line.setApplicationDashboard(true);
+				if (line.getApplicationDashboard()) {
 					productLines.get(APPLICATION_MONITOR).add(line);
 				}
 				if (line.getSystemMonitorDashboard()) {
 					productLines.get(SYSTEM_MONITOR).add(line);
+				}
+				if (line.getDatabaseMonitorDashboard()) {
+					productLines.get(DATABASE_MONITOR).add(line);
 				}
 			}
 		}

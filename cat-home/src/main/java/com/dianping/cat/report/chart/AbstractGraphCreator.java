@@ -119,7 +119,6 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 	}
 
 	protected void convertFlowMetric(LineChart lineChart, Map<Long, Double> current, String key) {
-
 		if (isFlowMetric(lineChart.getId())) {
 			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 

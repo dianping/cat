@@ -481,8 +481,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.network.GraphCreator</role>
+			<implementation>com.dianping.cat.report.page.network.GraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
@@ -4368,7 +4368,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
+					<role>com.dianping.cat.report.page.network.GraphCreator</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphManager</role>
@@ -4385,8 +4385,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.network.graph.NetworkGraphCreator</implementation>
+			<role>com.dianping.cat.report.page.network.GraphCreator</role>
+			<implementation>com.dianping.cat.report.page.network.GraphCreator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.baseline.BaselineService</role>
@@ -4913,6 +4913,60 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.database.Handler</role>
+			<implementation>com.dianping.cat.report.page.database.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.database.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.database.GraphCreator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.database.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.database.GraphCreator</role>
+			<implementation>com.dianping.cat.report.page.database.GraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.DataExtractor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.MetricDataFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.chart.CachedMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
