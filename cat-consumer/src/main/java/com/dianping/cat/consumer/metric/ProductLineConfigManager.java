@@ -271,6 +271,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return productLines;
 	}
+	
+	public Map<String, ProductLine> queryDatabases() {
+		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
+
+		for (ProductLine line : getCompany().getProductLines().values()) {
+			String id = line.getId();
+			if (id != null && id.length() > 0 && line.getDatabaseMonitorDashboard()) {
+				productLines.put(id, line);
+			}
+		}
+		return productLines;
+	}
 
 	public ProductLine queryProductLine(String id) {
 		return getCompany().findProductLine(id);
