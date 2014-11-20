@@ -365,7 +365,7 @@ CREATE TABLE `app_command_data_1` (
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`network`,`app_version`,`connect_type`,`code`,`platform`)
-) ENGINE=InnoDB AUTO_INCREMENT=238 DEFAULT CHARSET=utf8 COMMENT='app基本数据';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app基本数据';
 
 CREATE TABLE `app_speed_data_1` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
