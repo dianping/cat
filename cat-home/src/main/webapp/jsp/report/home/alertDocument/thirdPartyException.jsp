@@ -6,7 +6,7 @@
 <h4 class="text-success">监控规则配置</h4>
 <p>为了满足第三方监控的需求，第三方监控规则没有采用通用的规则模型。其规则模型如下：</p>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/thirdPartyAlert.png" />
+	src="${model.webapp}/images/alert/thirdPartyAlert.png" />
 <p>具体配置如下</p>
 <p><span class="text-error">[url]</span>：监控的网址</p>
 <p><span class="text-error">[type]</span>：<span class="text-error">get</span> 或 <span class="text-error">post</span></p>

@@ -22,6 +22,7 @@ import com.dianping.cat.report.service.app.CommandQueryEntity;
 
 public class AppGraphCreator {
 
+	@Inject
 	private AppDataService m_AppDataService;
 
 	@Inject
