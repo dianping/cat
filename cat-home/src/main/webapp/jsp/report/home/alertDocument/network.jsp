@@ -8,14 +8,14 @@
 
 <br/>
 <h4 class="text-success">1. 核心拓扑界面</h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/networkTopo.jpeg"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/network01.jpeg"/>
 <p/>
 <p>CTC:电信 &nbsp; CNC:网通 &nbsp; HM:呼玛 &nbsp; NH1:南汇 &nbsp; NH2:南汇</p>
 <br/>
 <h4 class="text-success">2. 网络监控界面</h4>
 <br/>
 <h5>针对每个端口的进出流量进行汇总分析对比</h5>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/networkMetric.jpeg"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/network02.jpeg"/>
 <p/>
 <h5>(1) 关于网络监控的监控指标的确定以及产品线配置请参考业务监控文档</h5>
 <h5>(2) 对于网络监控中的指标选取及Key格式规定</h5>
@@ -32,7 +32,7 @@
 
 </xmp>
 <h5>(4) 对于需要在网络监控显示的指标，需对产品线做显示到<a href="/cat/s/config?op=topologyProductLines">网络大盘配置</a>，如下图</h5>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/networkProductLine.jpeg"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/network03.jpeg"/>
 <br/><br/>
 
 <h3 class="text-error">2. 网络告警</h3>
@@ -42,7 +42,7 @@
 <h4 class="text-success">监控规则配置</h4>
 <p>网络告警配置在通用规则模型的基础上增加了productText以及metricItemText。网络监控规则模型如下：</p>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/commonRule.png" />
+	src="${model.webapp}/images/alert/commonRule.png" />
 <p>1).点击config－－网络监控配置－－网络告警配置，进入网络规则配置页面。</p>
 <p>2).按照overall页面以及上图中的介绍对规则进行配置并提交，如果提示操作成功，则表示规则已经生效。</p>
 <br/>
