@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -49,6 +50,9 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 	@Inject
 	private AppDataComparisonNotifier m_appDataInformer;
+	
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -112,24 +116,26 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 		for (ScheduledReport report : reports) {
 			String domain = report.getDomain();
-			Transaction t = Cat.newTransaction("ScheduledReport", domain);
+			if (m_serverConfigManager.validateDomain(domain)) {
+				Transaction t = Cat.newTransaction("ScheduledReport", domain);
 
-			try {
-				String names = String.valueOf(report.getNames());
-				String content = renderContent(names, domain, period);
-				String title = renderTitle(names, domain);
-				List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
-				AlertMessageEntity message = new AlertMessageEntity(domain, title, "ScheduledJob", content, emails);
-				boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
+				try {
+					String names = String.valueOf(report.getNames());
+					String content = renderContent(names, domain, period);
+					String title = renderTitle(names, domain);
+					List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
+					AlertMessageEntity message = new AlertMessageEntity(domain, title, "ScheduledJob", content, emails);
+					boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
 
-				insertMailLog(report.getId(), content, title, result, emails);
-				t.addData(emails.toString());
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
+					insertMailLog(report.getId(), content, title, result, emails);
+					t.addData(emails.toString());
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				} finally {
+					t.complete();
+				}
 			}
 		}
 	}
