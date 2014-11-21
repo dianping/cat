@@ -57,13 +57,13 @@
 					<tr>
 						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
 						<td><c:choose>
-								<c:when test="${model.productLine.dashboard}">
-									<input type="radio" name="productLine.dashboard" value="true" checked />是	
-									<input type="radio" name="productLine.dashboard" value="false" />否
+								<c:when test="${model.productLine.applicationDashboard}">
+									<input type="radio" name="productLine.applicationDashboard" value="true" checked />是	
+									<input type="radio" name="productLine.applicationDashboard" value="false" />否
 							</c:when>
 								<c:otherwise>
-									<input type="radio" name="productLine.dashboard" value="true" />是
-									<input type="radio" name="productLine.dashboard" value="false" checked />否
+									<input type="radio" name="productLine.applicationDashboard" value="true" />是
+									<input type="radio" name="productLine.applicationDashboard" value="false" checked />否
 						</c:otherwise>
 							</c:choose></td>
 					</tr>

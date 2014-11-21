@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.metric.graph;
+package com.dianping.cat.report.page.metric;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -26,7 +26,7 @@ import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.service.ProjectService;
 import com.site.lookup.util.StringUtils;
 
-public class MetricGraphCreator extends AbstractGraphCreator {
+public class GraphCreator extends AbstractGraphCreator {
 
 	@Inject
 	private ProjectService m_projectService;

@@ -73,6 +73,14 @@
 <pre>
 	http://cat.dianpingoa.com/cat/r/monitor?timestamp=1404815988&group=myGroup&domain=myApp&key=myKey&op=sum&sum=500
 </pre>
+<p> 4).op = batch时，用于批量提交指标</p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/monitor?op=batch
+	
+	batch=
+	group<span class="text-error">TAB</span>domain<span class="text-error">TAB</span>key<span class="text-error">TAB</span>type<span class="text-error">TAB</span>time<span class="text-error">TAB</span>value<span class="text-error">ENTER</span>
+	group<span class="text-error">TAB</span>domain<span class="text-error">TAB</span>key<span class="text-error">TAB</span>type<span class="text-error">TAB</span>time<span class="text-error">TAB</span>value<span class="text-error">ENTER</span>
+</pre>
 <p>返回说明</p>
 <pre>
 	<span class="text-error">{"statusCode":"-1","errorMsg":"Unknown [ domain,group,key ] name!"} ——> 失败 [必需参数缺失]</span>

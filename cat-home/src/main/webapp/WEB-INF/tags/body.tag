@@ -76,7 +76,7 @@
           		<ul class="dropdown-menu">
 		           <li class='nav-header' style="margin-top:0px;">项目配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">监控分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>

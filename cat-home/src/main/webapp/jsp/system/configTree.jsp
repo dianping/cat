@@ -3,7 +3,7 @@
          <ul class="nav nav-list">
            <li class='nav-header'>项目配置</li>
 	       <li class="text-left" id="projectList"><a href="?op=projects">项目信息配置</a></li>
-	       <li class="text-left" id="topologyProductLines"><a href="?op=topologyProductLines">项目分组配置</a></li>
+	       <li class="text-left" id="topologyProductLines"><a href="?op=topologyProductLines">监控分组配置</a></li>
 	       <li class="text-left" id="domainGroupConfigUpdate"><a href="?op=domainGroupConfigUpdate">机器分组配置</a></li>
            <li class='nav-header'>端到端监控配置</li>
 	       <li class="text-left" id="aggregationList"><a href="?op=aggregations">JS报错配置</a></li>
