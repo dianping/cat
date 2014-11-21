@@ -3,7 +3,8 @@
 <h3 class="text-error">客户端版本说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="8%">版本</th><th width="82%">说明</th><th width="10%">发布时间</th></tr>
-	<tr><td>1.1.2</td><td>1、动态配置CAT的路由策略，支持统一项目名调整</td><td>2014-01-02</td></tr>
+	<tr><td>1.1.5</td><td>1、修复了CAT初始化路由出错导致监控信息丢失的bug</td><td>2014-11-21</td></tr>
+	<tr><td>1.1.2</td><td>1、动态配置CAT的路由策略，支持统一项目名调整</td><td>2014-08-02</td></tr>
 	<tr><td>1.0.1</td><td>1、将ABtest的功能从监控中分离</td><td>2014-01-02</td></tr>
 	<tr><td>1.0.0</td><td>1、修复了CAT监控初始化当服务端都出异常的状况，不会自动连接的Bug</td><td>2013-12-20</td></tr>
 	<tr><td>0.6.2</td><td>1、支持java job的监控，优化了cat的API</td><td>2013-08-06</td></tr>
@@ -19,21 +20,3 @@
 	<tr><td>0.2.5</td><td>1、心跳消息监控新增oldgc和newgc  2、更新了ThreadLocal的线程模型（修复了一些无头消息和部分错乱消息）</td><td>2012-05-01</td></tr>
 </table>
 
-<h3 class="text-error">服务端功能说明</h3>
-<table class='table table-striped table-bordered table-condensed'>
-	<tr class="text-success"><th width="90%">最新发布功能描述</th><th width="10%">发布时间</th></tr>	
-	<tr><td><strong class='text-error'>增加了运维容量规划报表，去掉ABtest心跳信息以及错误信息。</strong></td><td>2014-01-01</td></tr>
-	<tr><td><strong class='text-error'>在CAT的URL后面加上参数forceDownload=xml，可以看到当前页面的数据模型</strong></td><td>2013-12-16</td></tr>
-	<tr><td><strong>优化了主页面的UI，新增了常用domain的切换功能，常用是最近使用的10个项目</strong></td><td>2013-09-06</td></tr>
-	<tr><td><strong>增加了业务监控以及业务监控大盘</strong></td><td>2013-08-14</td></tr>
-	<tr><td><strong>Dependency报表，包含实时依赖曲线图、依赖拓扑、产品线监控、监控仪表盘</strong></td><td>2013-06-14</td></tr>
-	<tr><td>支持FrontEnd的错误js的合并</td><td>2013-06-14</td></tr>
-	<tr><td>Problem小时报表支持一个小时内的错误趋势图</td><td>2013-03-13</td></tr>
-	<tr><td>Query报表支持按照天或者小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
-	<tr><td>Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
-	<tr><td>Top报表,根据分钟级别实时展现线上异常最多、访问最慢(URL\Service\SQL\Call\Cache)的应用</td><td>2013-03-11</td></tr>
-	<tr><td>项目信息修改，请项目负责人到Config标签下，修改项目所在分组的基本信息（仅修改线上环境）</<td><td>2013-01-21</td></tr>
-	<tr><td>Transaction\Event月报表支持每天的趋势图，以天为单位</td><td>2013-01-21</td></tr>
-	<tr><td>Transaction\Event报表日报表、周报表支持趋势图对比,时间精度为5分钟</td><td>2013-01-01</td></tr>
-	<tr><td>默认告警，邮件订阅（修改线上环境即可)，请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td><td>2012-09-01</td></tr>
-</table>

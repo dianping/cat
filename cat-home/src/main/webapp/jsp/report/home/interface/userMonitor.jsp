@@ -13,7 +13,7 @@
 <p>4、【网通，暂时不使用】CNC:  140.207.217.23</p>
 
 </br>
-<h4 class="text-success">Web单次接口</h4>
+<h4 class="text-error">Web单次接口</h4>
 	<pre>	http://{ip}/broker-service/api/single</pre>
 	
 	<p>参数说明</p>
@@ -48,7 +48,7 @@
 
 </br>
 
-<h4 class="text-success">APP用户访问批量接口</h4>
+<h4 class="text-error">APP用户访问批量接口</h4>
 	<pre>	http://{ip}/broker-service/api/batch</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-error">v=2&c=</span>”(v=1已遗弃)，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
 	
@@ -82,7 +82,7 @@
 	</pre>	
 </br>
 
-<h4 class="text-success">APP加载速度批量接口</h4>
+<h4 class="text-error">APP加载速度批量接口</h4>
 	<pre>	http://{ip}/broker-service/api/speed</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-error">v=1&c=</span>”，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。</p>
 	
@@ -114,7 +114,7 @@
 	1400037748196<span class="text-error">\t</span>1<span class="text-error">\t</span>680<span class="text-error">\t</span>1<span class="text-error">\t</span>page5<span class="text-error">\t</span>1-20<span class="text-error">\t</span>2-30<span class="text-error">\t</span>3-40<span class="text-error">\t</span>4-50<span class="text-error">\n</span>
 	</pre>	
 </br>
-<h4 class="text-success">JS 错误接口</h4>
+<h4 class="text-error">JS 错误接口</h4>
 	<pre>	http://{ip}/broker-service/api/js</pre>
 	
 	<p>参数说明</p>
@@ -128,10 +128,8 @@
 		<tr><td>line</td><td>line</td><td>错误的行数</td><td>int</td></tr>
 		<tr><td>data</td><td>data</td><td>data类型</td><td>String，如果没有的话，传空串</td></tr>
 	</table>
-	
-	
 	</br>
-<h4 class="text-success">CDN监控接口</h4>
+<h4 class="text-error">CDN监控接口</h4>
 	<pre>	http://{ip}/broker-service/api/cdn</pre>
 	
 	批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-error">ENTER</span>分隔，字段之间用<span class="text-error">TAB</span>分隔。
@@ -157,7 +155,6 @@
 		<tr><td>rq</td><td>request</td><td>请求时间</td><td>int</td></tr>
 		<tr><td>rs</td><td>response</td><td>接受时间</td><td>int</td></tr>
 	</table>
-	
 <br/>
 <h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>
 
@@ -169,8 +166,43 @@
 部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</td></tr>	
 </table>
 <br/>
-<h4 class="text-success">用户端监控报表&nbsp;  <a  target="_blank" href="/cat/r/userMonitor?domain=&ip=&date=&reportType=&op=urlPatternUpdate">链接</a></h4>
-<br/>
+<h4 class="text-error">APP监控报表获取&nbsp;&nbsp;&nbsp;&nbsp; </h4>
+<p>Cat支持其它系统通过调用HTTP API来获取APP监控报表数据（JSON格式）</p>
+<pre>
+	http请求方式: GET或者POST
+	http://主机域名:端口/cat/r/app?
+</pre>
+<p>参数说明</p>
+<table style="width:70%" class="table table-striped table-bordered table-condensed">
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><td>op</td><td>linechartJson[查看API访问趋势、运营活动趋势]、piechartJson[查看访问量分布]<span class="text-error">  必需</span></td></tr>
+	<tr><td>其他参数</td><td>参考端到端APP监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-error">  必需</span></td></tr>
+</table>
+<p> url示例<span class="text-error">（红色部分为不同参数，没有op则需要添加，其他参数相同）</span></p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/app?<span class="text-error">op=view</span>&query1=2014-10-28;1;;;;;;;;;&query2=&type=request&groupByField=&sort=&domains=default&commandId=1&domains2=default&commandId2=1&showActivity=false 为APP监控查看的URL链接
+	则获取报表的URL为：
+	http://cat.dianpingoa.com/cat/r/app?<span class="text-error">op=linechartJson&</span>query1=2014-10-28;1;;;;;;;;;&query2=&type=request&groupByField=&sort=&domains=default&commandId=1&domains2=default&commandId2=1&showActivity=false</pre>
+<br>
+<h4 class="text-error">WEB监控报表获取&nbsp;&nbsp;&nbsp;&nbsp; </h4>
+<p>Cat支持其它系统通过调用HTTP API来获取WEB监控报表数据（JSON格式）</p>
+<pre>
+	http请求方式: GET或者POST
+	http://主机域名:端口/cat/r/web?
+</pre>
+<p>参数说明</p>
+<table style="width:70%" class="table table-striped table-bordered table-condensed">
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><td>op</td><td>json<span class="text-error">  必需</span></td></tr>
+	<tr><td>其他参数</td><td>参考端到端WEB监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-error">  必需</span></td></tr>
+</table>
+<p> url示例<span class="text-error">（红色部分为不同参数，没有op则需要添加，其他参数相同）</span></p>
+<pre>
+	http://cat.dianpingoa.com/cat/r/web?<span class="text-error">op=view&</span>url=s1-small-dnsLookup&group=cdn-s1&city=上海市-&type=info&channel=&startDate=2014-10-28%2016:00&endDate=2014-10-28%2019:00 为APP监控查看的URL链接
+	则获取报表的URL为：
+	http://cat.dianpingoa.com/cat/r/web?<span class="text-error">op=json&</span>url=s1-small-dnsLookup&group=cdn-s1&city=上海市-&type=info&channel=&startDate=2014-10-28%2016:00&endDate=2014-10-28%2019:00
+</pre>
+
 
 
 	
