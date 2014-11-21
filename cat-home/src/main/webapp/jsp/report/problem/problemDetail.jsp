@@ -25,11 +25,11 @@
 		</td>
 	</tr>
 	<tr>
-		<th>Type</th>
-		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
-		<th>SampleLinks</th>
+		<th width="10%">Type</th>
+		<th width="5%">Total</th>
+		<th width="35%">Status</th>
+		<th width="5%">Count</th>
+		<th width="45%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.detailStatistics.status}" varStatus="typeIndex">
 		<tr>
