@@ -86,18 +86,18 @@
 <p><span class='text-error'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
 <p><span class='text-error'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
 <h4 class="text-error">url : <a href="/cat/s/config?op=topologyProductLines" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business01.png"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business01.png"/>
 </br> 
 <h4 class="text-success">第四步:图形展示以及告警配置</h4>
 <p>当程序埋点好，后端的Metric指标的数据都是自动插入到CAT数据库中，不需要用户进行新建业务指标，用户直接修改即可。</p>
 <p>此时已经能展示基本的业务监控曲线，如果需要一些其他的配置，比如业务监控图形顺序，展示标题等。</p>
 <h4 class="text-error">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business02.png"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business02.png"/>
 </br> 
 <h4 class="text-success">第五步:配置公司级别业务大盘【运维配置】</h4>
 <p>业务大盘讲各个产品线重要的业务指标进行汇总，统一展示在一个监控大盘中。</p>
 <h4 class="text-error">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business03.png"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business03.png"/>
 <br/>
 <br/>
 

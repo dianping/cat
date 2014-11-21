@@ -6,7 +6,7 @@
 <h4 class="text-success">监控规则配置</h4>
 <p>系统告警配置在通用规则模型的基础上增加了productText以及metricItemText。系统监控规则模型如下：</p>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/commonRule.png" />
+	src="${model.webapp}/images/alert/commonRule.png" />
 <p>1).点击config－－监控告警配置－－系统告警配置，进入系统规则配置页面。</p>
 <p>2).按照overall页面以及上图中的介绍对规则进行配置并提交，如果提示操作成功，则表示规则已经生效。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;由于系统监控规则一般即为所有服务器的通用监控规则，一般不设置productText属性。</p>
