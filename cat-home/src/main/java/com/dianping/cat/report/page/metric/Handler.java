@@ -22,7 +22,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -35,7 +34,7 @@ public class Handler implements PageHandler<Context> {
 	private ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	private MetricGraphCreator m_graphCreator;
+	private GraphCreator m_graphCreator;
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
