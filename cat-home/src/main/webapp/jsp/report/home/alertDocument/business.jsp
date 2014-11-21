@@ -41,7 +41,7 @@
 <p> 5).集成代码可能是如下所示，下面描述了综合使用transction，event，metric这几个API，但这些指标都是独立的，可以单独使用，主要看业务场景。
 	如果仅仅是记录一个业务指标，只需要单独使用一个metric即可。
 </p>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/business04.png"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business04.png"/>
 <h5>2.HTTP API调用方式</h5>
 <p>接口调用请求说明</p>
 <pre>

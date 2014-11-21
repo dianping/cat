@@ -72,21 +72,20 @@ public class Handler implements PageHandler<Context> {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
 		String type = payload.getType();
+		LineChart lineChart = new LineChart();
+		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
 			filterCommands(model, payload.isShowActivity());
 
-			LineChart lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-			List<AppDataDetail> appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
+			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
+			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new Sorter(sortBy).buildLineChartInfoComparator());
-
-			model.setLineChart(lineChart);
-			model.setAppDataDetailInfos(appDetails);
-			return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return null;
+		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
+
 	}
 
 	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataField field) {
@@ -147,10 +146,8 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildLineChart(model, payload, field, sortBy);
 
-			if (lineChartPair != null) {
-				model.setLineChart(lineChartPair.getKey());
-				model.setAppDataDetailInfos(lineChartPair.getValue());
-			}
+			model.setLineChart(lineChartPair.getKey());
+			model.setAppDataDetailInfos(lineChartPair.getValue());
 			break;
 		case LINECHART_JSON:
 			Pair<LineChart, List<AppDataDetail>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
