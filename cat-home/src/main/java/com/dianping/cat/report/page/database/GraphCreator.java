@@ -58,8 +58,7 @@ public class GraphCreator extends AbstractGraphCreator {
 		for (Entry<String, double[]> entry : datas.entrySet()) {
 			String key = entry.getKey();
 
-			//TODO 定义规则
-			if (key.endsWith(MetricType.AVG.name())) {
+			if (key.endsWith(MetricType.SUM.name())) {
 				putKey(datas, values, key);
 			}
 		}

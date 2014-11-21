@@ -211,7 +211,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 			m_writeDataFileLength += num.length + 1 + length + 1;
 			m_writeIndexFile.write(data);
-			m_writeDataFile.flush();
+			m_writeIndexFile.flush();
 			m_idToOffsets.put(id, offset);
 			return true;
 		} finally {
