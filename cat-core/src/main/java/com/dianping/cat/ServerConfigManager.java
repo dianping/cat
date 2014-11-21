@@ -297,10 +297,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean isAlertMachine() {
 		if (m_config != null) {
+			boolean alert = m_config.isAlertMachine();
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-			// TODO
-			if ("10.1.6.128".equals(ip)) {
+			if ("10.1.6.128".equals(ip) || alert) {
 				return true;
 			} else {
 				return false;
