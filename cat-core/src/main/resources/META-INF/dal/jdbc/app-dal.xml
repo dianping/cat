@@ -61,7 +61,7 @@
       </readset>
       <readset name="CONNECT-TYPE-CODE-DATA">
       	<member name="code"/>
-      	<member name="connect-type"/>
+      	<member name="connnect-type"/>
       	<member name="access-number-sum"/>
       	<member name="response-sum-time-sum"/>
       	<member name="request-package-sum"/>
@@ -96,7 +96,7 @@
       	<member name="access-number-sum"/>
       </readset>
       <readset name="CONNECT-TYPE-DATA">
-      	<member name="connect-type"/>
+      	<member name="connnect-type"/>
       	<member name="access-number-sum"/>
       </readset>
       <readset name="PLATFORM-DATA">
@@ -121,7 +121,12 @@
         request_package = request_package + ${request-package},
         response_package = response_package + ${response-package}
          ]]></statement>
-      </query>  
+      </query>
+      <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
+      </query>
       <query name="find-data-by-minute" type="SELECT" multiple="true">
         <param name="command-id" />
         <param name="period" />
@@ -129,10 +134,9 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
-       
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -148,8 +152,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -166,7 +170,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -184,8 +188,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -202,7 +206,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
          <param name="start-minute-order" />
@@ -228,8 +232,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -246,7 +250,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -264,8 +268,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -282,7 +286,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -300,8 +304,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -318,7 +322,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -336,8 +340,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -354,7 +358,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -372,8 +376,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -381,7 +385,7 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
-        group by <FIELD name='connect-type'/>, <FIELD name='code'/>]]></statement>
+        group by <FIELD name='connnect-type'/>, <FIELD name='code'/>]]></statement>
       </query>
       <query name="find-data-by-platform-code" type="SELECT" multiple="true">
         <param name="command-id" />
@@ -390,7 +394,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -408,8 +412,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -426,7 +430,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <statement><![CDATA[SELECT <FIELDS/>
@@ -444,8 +448,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -462,7 +466,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -488,8 +492,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -506,7 +510,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -532,8 +536,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -550,7 +554,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -576,8 +580,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -594,7 +598,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -620,8 +624,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -629,7 +633,7 @@
 		<IF type='NE' field='platform' value='-1'>
 			AND  <FIELD name='platform'/> = ${platform}
 		</IF>
-        group by  <FIELD name='connect-type'/>  ]]></statement>
+        group by  <FIELD name='connnect-type'/>  ]]></statement>
       </query>
       <query name="find-data-by-platform" type="SELECT" multiple="true">
         <param name="command-id" />
@@ -638,7 +642,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -664,8 +668,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -682,7 +686,7 @@
         <param name="operator" />
         <param name="network" />
         <param name="app-version" />
-        <param name="connect-type" />
+        <param name="connnect-type" />
         <param name="code" />
         <param name="platform" />
         <param name="start-minute-order" />
@@ -708,8 +712,8 @@
         <IF type='NE' field='app-version' value='-1'>
 			AND  <FIELD name='app-version'/> = ${app-version}
 		</IF>
-        <IF type='NE' field='connect-type' value='-1'>
-			AND  <FIELD name='connect-type'/> = ${connect-type}
+        <IF type='NE' field='connnect-type' value='-1'>
+			AND  <FIELD name='connnect-type'/> = ${connnect-type}
 		</IF>
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
@@ -748,6 +752,11 @@
 	  <query name="insert" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
       </query>  
       <query name="insert-or-update" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)

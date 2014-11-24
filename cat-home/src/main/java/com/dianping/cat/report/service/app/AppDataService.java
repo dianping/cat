@@ -197,7 +197,7 @@ public class AppDataService {
 		case CITY:
 			return data.getCity();
 		case CONNECT_TYPE:
-			return data.getConnectType();
+			return data.getConnnectType();
 		case NETWORK:
 			return data.getNetwork();
 		case PLATFORM:
