@@ -142,7 +142,7 @@ public class AppGraphCreator {
 			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_appConfigManager
 			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
 			com.dianping.cat.configuration.app.entity.Item connectType = null;
-			keyValue = data.getConnectType();
+			keyValue = data.getConnnectType();
 
 			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
 				title = connectType.getName();

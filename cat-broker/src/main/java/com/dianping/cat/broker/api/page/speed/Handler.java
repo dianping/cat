@@ -51,8 +51,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private volatile int m_error;
 
-	public static final String TOO_LONG = "toolongurl.bin";
-
 	private static final String VERSION_ONE = "1";
 
 	@Override
@@ -131,7 +129,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String items[] = record.split("\t");
 		int length = items.length;
 
-		if (length >= 6) {
+		if (length == 6) {
 			try {
 				String speedId = URLDecoder.decode(items[4], "utf-8").toLowerCase();
 
@@ -180,18 +178,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			appData.setResponseTime(responseTime);
 		}
 
-		if (responseTime < 60 * 1000 && responseTime >= 0) {
+		if (responseTime >= 0) {
 			offerQueue(appData);
-
 			Cat.logEvent("page", speedId, Event.SUCCESS, null);
-		} else if (responseTime > 0) {
-			Integer tooLong = m_appSpeedConfigManager.querSpeedThreshold(TOO_LONG, "");
-
-			if (tooLong != null) {
-				appData.setSpeedId(tooLong);
-				offerQueue(appData);
-			}
-			Cat.logEvent("ResponseTooLong", speedId, Event.SUCCESS, String.valueOf(responseTime));
 		} else {
 			Cat.logEvent("ResponseTimeError", speedId, Event.SUCCESS, String.valueOf(responseTime));
 		}

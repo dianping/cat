@@ -97,7 +97,7 @@ public class DataBucketExecutor implements BucketExecutor {
 							proto.setOperator(appData.getOperator());
 							proto.setNetwork(appData.getNetwork());
 							proto.setAppVersion(appData.getVersion());
-							proto.setConnectType(appData.getConnectType());
+							proto.setConnnectType(appData.getConnectType());
 							proto.setCode(appData.getCode());
 							proto.setPlatform(appData.getPlatform());
 							proto.setAccessNumber(appData.getCount());

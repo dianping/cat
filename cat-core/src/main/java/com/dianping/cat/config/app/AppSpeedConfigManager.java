@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -155,6 +156,10 @@ public class AppSpeedConfigManager implements Initializable {
 			threshold = speed.getId();
 		}
 		return threshold;
+	}
+
+	public Set<Integer> querySpeedIds() {
+		return m_config.getSpeeds().keySet();
 	}
 
 	private void updateData() {
