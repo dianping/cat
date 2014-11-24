@@ -168,7 +168,7 @@
 								<th width="20%">页面</th>
 								<th width="20%">加载阶段</th>
 								<th width="20%">说明</th>
-								<th width="20%">延时阈值</th>
+								<th width="20%">延时阈值(毫秒)</th>
 								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appSpeedAdd&type=speed">新增</a></th>
 							</tr>
 							</thead>

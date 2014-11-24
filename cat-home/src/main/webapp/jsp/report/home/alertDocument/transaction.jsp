@@ -22,7 +22,7 @@
 	</tr>
 	<tr>
 		<td>告警阈值</td>
-		<td>目前只有waring级别告警，<span class="text-error">必需，</span>当平均响应时间数超过该阈值，做warning状态设置，做相应告警</td>
+		<td>目前只有waring级别告警，<span class="text-error">必需，</span>当平均响应时间数超过该阈值，做warning状态设置，做相应告警。（单位：毫秒）</td>
 	</tr>
 </table>
 <br/>
