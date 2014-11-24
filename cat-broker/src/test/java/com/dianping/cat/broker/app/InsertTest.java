@@ -25,7 +25,7 @@ public class InsertTest extends ComponentTestCase {
 			command.setAppVersion(i);
 			command.setCity(i);
 			command.setCode(i);
-			command.setConnnectType(i);
+			command.setConnectType(i);
 			command.setCreationDate(new Date());
 			command.setPeriod(new Date());
 			command.setPlatform(i);
@@ -53,7 +53,7 @@ public class InsertTest extends ComponentTestCase {
 			command.setAppVersion(i);
 			command.setCity(i);
 			command.setCode(i);
-			command.setConnnectType(i);
+			command.setConnectType(i);
 			command.setCreationDate(new Date());
 			command.setPeriod(new Date());
 			command.setPlatform(i);
