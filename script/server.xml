@@ -1,4 +1,4 @@
-<config local-mode="false" job-machine="false">
+<config local-mode="false" job-machine="false" alert-machine="false">
 	<storage  local-base-dir="/data/appdatas/cat/bucket/">
 		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
 		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>

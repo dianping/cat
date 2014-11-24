@@ -127,7 +127,10 @@
 	<tr class='even'>
 		<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=blockLoss" data-status="blockLoss" class="state_graph_link">[:: show ::]</a></td>
 		<td>存储消息块丢失数量</td>
-		<td class="right">${w:format(model.state.total.blockLoss,'###,###,###,##0')}</td>
+		<c:choose>
+			<c:when test="${model.state.total.blockLoss > 0}"><td  class="right" style="color:red;">${w:format(model.state.total.blockLoss,'#,###,###,###,##0.#')}</td></c:when>
+			<c:otherwise><td class="right">${w:format(model.state.total.blockLoss,'#,###,###,###,##0.#')}</td></c:otherwise>
+		</c:choose>
 		<td>将存储块写入磁盘的线程太忙，存储队列溢出的消息块数量</td>
 	</tr>
 	<tr class="graphs"><td colspan="4"><div id="blockLoss" style="display:none"></div></td></tr>

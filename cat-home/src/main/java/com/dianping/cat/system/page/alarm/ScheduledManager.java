@@ -64,9 +64,9 @@ public class ScheduledManager implements Initializable {
 	public void queryScheduledReports(Model model, String userName) {
 		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
 		try {
-			Collection<ScheduledReport> lists = m_reports.values();
+			Collection<ScheduledReport> reports = m_reports.values();
 
-			for (ScheduledReport report : lists) {
+			for (ScheduledReport report : reports) {
 				if (m_serverConfigManager.validateDomain(report.getDomain())) {
 					int scheduledReportId = report.getId();
 					UserReportSubState userSubState = new UserReportSubState(report);

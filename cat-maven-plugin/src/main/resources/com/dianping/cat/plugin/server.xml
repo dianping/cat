@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Configuration for development environment-->
-<config local-mode="true" job-machine="false">
+<config local-mode="true" job-machine="false" alert-machine="false">
 	<consumer>
 		<long-config default-url-threshold="1000" default-sql-threshold="100">
 			<domain name="Cat" url-threshold="500" sql-threshold="40"/>
@@ -17,9 +17,10 @@
 <!-- Note: -->
 <!-- 1. Set local-mode false to activate remote mode. -->
 <!-- 2. If machine is job-machine, set job-machine true. -->
-<!-- 3. Please set hadoop environment accordingly. -->
+<!-- 3. If machine is alert-machine, set alert-machine true, you just need config only one machine. -->
+<!-- 4. Please set hadoop environment accordingly. -->
 <!-- 
-<config local-mode="false" job-machine="false">
+<config local-mode="false" job-machine="false" alert-machine="false">
 	<storage  local-base-dir="/data/appdatas/cat/bucket/">
 		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
 		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>

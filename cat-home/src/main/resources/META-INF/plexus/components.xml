@@ -1504,6 +1504,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

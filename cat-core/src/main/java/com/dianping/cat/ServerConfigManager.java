@@ -197,18 +197,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return Collections.emptyMap();
 	}
 
-	public int getLongSqlDefaultThreshold() {
-		if (m_config != null) {
-			LongConfig longConfig = m_config.getConsumer().getLongConfig();
-
-			if (longConfig != null && longConfig.getDefaultUrlThreshold() != null) {
-				return longConfig.getDefaultUrlThreshold();
-			}
-		}
-
-		return 1000; // 1 second
-	}
-
 	public int getLongUrlDefaultThreshold() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -223,16 +211,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public ServerConfig getServerConfig() {
 		return m_config;
-	}
-
-	public String getStorageLocalBaseDir() {
-		if (m_config != null) {
-			StorageConfig storage = m_config.getStorage();
-
-			return storage.getLocalBaseDir();
-		} else {
-			return "target/bucket";
-		}
 	}
 
 	@Override
@@ -319,10 +297,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean isAlertMachine() {
 		if (m_config != null) {
+			boolean alert = m_config.isAlertMachine();
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-			// TODO
-			if ("10.1.6.128".equals(ip)) {
+			if ("10.1.6.128".equals(ip) || alert) {
 				return true;
 			} else {
 				return false;
