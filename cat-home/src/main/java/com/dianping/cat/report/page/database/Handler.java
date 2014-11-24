@@ -72,8 +72,12 @@ public class Handler implements PageHandler<Context> {
 		model.setProductLines(databases);
 		m_normalizePayload.normalize(model, payload);
 
-		if (StringUtils.isEmpty(payload.getProduct()) && databases.size() > 0) {
-			payload.setProduct(databases.get(0).getId());
+		if (StringUtils.isEmpty(payload.getProduct())) {
+			if (databases.size() > 0) {
+				payload.setProduct(databases.get(0).getId());
+			} else {
+				payload.setProduct("Default");
+			}
 		}
 
 		int timeRange = payload.getTimeRange();
@@ -82,7 +86,6 @@ public class Handler implements PageHandler<Context> {
 
 		model.setStartTime(startTime);
 		model.setEndTime(endTime);
-
 	}
 
 }
