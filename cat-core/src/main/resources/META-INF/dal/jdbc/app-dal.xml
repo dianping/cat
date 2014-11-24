@@ -121,7 +121,12 @@
         request_package = request_package + ${request-package},
         response_package = response_package + ${response-package}
          ]]></statement>
-      </query>  
+      </query>
+      <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
+      </query>
       <query name="find-data-by-minute" type="SELECT" multiple="true">
         <param name="command-id" />
         <param name="period" />
@@ -132,7 +137,6 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
-       
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
@@ -748,6 +752,11 @@
 	  <query name="insert" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
         VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
       </query>  
       <query name="insert-or-update" type="INSERT"  batch="true">
         <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
