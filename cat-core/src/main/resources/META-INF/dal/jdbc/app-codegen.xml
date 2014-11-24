@@ -8,7 +8,7 @@
     <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
     <member name="network" field="network" value-type="int" length="3" nullable="false" />
     <member name="app-version" field="app_version" value-type="int" length="5" nullable="false" />
-    <member name="connnect-type" field="connect_type" value-type="int" length="3" nullable="false" />
+    <member name="connect-type" field="connect_type" value-type="int" length="3" nullable="false" />
     <member name="code" field="code" value-type="int" length="5" nullable="false" />
     <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
     <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
