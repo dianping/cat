@@ -141,8 +141,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				DependencyReport serverReport = findOrCreateReport(target);
 
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
-			}else{
-				System.err.println(t);
 			}
 		}
 	}
