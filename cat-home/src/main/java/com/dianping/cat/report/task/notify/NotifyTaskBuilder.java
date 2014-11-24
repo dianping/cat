@@ -116,6 +116,7 @@ public class NotifyTaskBuilder implements ReportTaskBuilder {
 
 		for (ScheduledReport report : reports) {
 			String domain = report.getDomain();
+			
 			if (m_serverConfigManager.validateDomain(domain)) {
 				Transaction t = Cat.newTransaction("ScheduledReport", domain);
 
