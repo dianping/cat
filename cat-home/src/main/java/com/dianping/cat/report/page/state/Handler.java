@@ -138,7 +138,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		if (action == Action.HOURLY || action == Action.HISTORY) {
-			StateShow show = new StateShow(payload.getIpAddress());
+			StateShow show = new StateShow(payload.getIpAddress(),m_configManager);
 
 			show.setSortType(payload.getSort());
 			show.visitStateReport(report);
