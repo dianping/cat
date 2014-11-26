@@ -45,7 +45,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
 	public boolean discardTransaction(Transaction t) {
-		// pigeon default heartbeat is no use
 		String type = t.getType();
 		String name = t.getName();
 
@@ -306,7 +305,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isClientCall(String type) {
-		return "PigeonCall".equals(type) || "Call".equals(type);
+		return "PigeonCall".equals(type);
 	}
 
 	public boolean isCrashLog(String domain) {
@@ -348,7 +347,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isServerService(String type) {
-		return "PigeonService".equals(type) || "Service".equals(type);
+		return "PigeonService".equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {
