@@ -114,21 +114,25 @@ public class StatusInfoCollector extends BaseVisitor {
 
 		if (roots != null) {
 			for (File root : roots) {
-				Map<String, String> diskRootMap = new HashMap<String, String>();
-
-				diskRootMap.put("Name", root.getAbsolutePath());
-				appendExtension(diskVolume, diskRootMap);
+				appendExtension(diskVolume, generateDiskMap(root));
 			}
 		}
 
 		File data = new File(m_dataPath);
 
 		if (data.exists()) {
-			Map<String, String> diskDataMap = new HashMap<String, String>();
-
-			diskDataMap.put("Name", data.getAbsolutePath());
-			appendExtension(diskVolume, diskDataMap);
+			appendExtension(diskVolume, generateDiskMap(data));
 		}
+	}
+
+	private Map<String, String> generateDiskMap(File data) {
+		Map<String, String> diskDataMap = new HashMap<String, String>();
+
+		diskDataMap.put("Name", data.getAbsolutePath());
+		diskDataMap.put("Total", Long.toString(data.getTotalSpace()));
+		diskDataMap.put("Free", Long.toString(data.getFreeSpace()));
+		diskDataMap.put("Usable", Long.toString(data.getUsableSpace()));
+		return diskDataMap;
 	}
 
 	public StatusInfoCollector setDumpLocked(boolean dumpLocked) {
