@@ -30,7 +30,7 @@
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.domain" value="${model.exceptionExclude.domain}"/>
+				<input name="exceptionExclude.domain" value="${model.exceptionExclude.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
 				<select name="exceptionExclude.domain" id="domainId" style="width:200px;">

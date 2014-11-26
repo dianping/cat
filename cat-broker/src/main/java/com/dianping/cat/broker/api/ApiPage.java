@@ -5,79 +5,81 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum ApiPage implements Page {
 
-   SINGLE("single", "single", "single", "single api", true),
+	SINGLE("single", "single", "single", "single api", true),
 
-   BATCH("batch", "batch", "batch", "batch api", true),
+	BATCH("batch", "batch", "batch", "batch api", true),
 
-   JS("js", "js", "Js", "Js", true),
+	SPEED("speed", "speed", "speed", "speed api", true),
 
-   CDN("cdn", "cdn", "Cdn", "Cdn", true),
+	JS("js", "js", "Js", "Js", true),
 
-   SAVE("save", "save", "Save", "Save", true),
+	CDN("cdn", "cdn", "Cdn", "Cdn", true),
 
-   LOG("log", "log", "Log", "Log", true);
+	SAVE("save", "save", "Save", "Save", true),
 
-   private String m_name;
+	LOG("log", "log", "Log", "Log", true);
 
-   private String m_path;
+	private String m_name;
 
-   private String m_title;
+	private String m_path;
 
-   private String m_description;
+	private String m_title;
 
-   private boolean m_standalone;
+	private String m_description;
 
-   private ApiPage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
+	private boolean m_standalone;
 
-   public static ApiPage getByName(String name, ApiPage defaultPage) {
-      for (ApiPage action : ApiPage.values()) {
-         if (action.getName().equals(name)) {
-            return action;
-         }
-      }
+	private ApiPage(String name, String path, String title, String description, boolean standalone) {
+		m_name = name;
+		m_path = path;
+		m_title = title;
+		m_description = description;
+		m_standalone = standalone;
+	}
 
-      return defaultPage;
-   }
+	public static ApiPage getByName(String name, ApiPage defaultPage) {
+		for (ApiPage action : ApiPage.values()) {
+			if (action.getName().equals(name)) {
+				return action;
+			}
+		}
 
-   public String getDescription() {
-      return m_description;
-   }
+		return defaultPage;
+	}
 
-   public String getModuleName() {
-      ModuleMeta meta = ApiModule.class.getAnnotation(ModuleMeta.class);
+	public String getDescription() {
+		return m_description;
+	}
 
-      if (meta != null) {
-         return meta.name();
-      } else {
-         return null;
-      }
-   }
+	public String getModuleName() {
+		ModuleMeta meta = ApiModule.class.getAnnotation(ModuleMeta.class);
 
-   @Override
-   public String getName() {
-      return m_name;
-   }
+		if (meta != null) {
+			return meta.name();
+		} else {
+			return null;
+		}
+	}
 
-   @Override
-   public String getPath() {
-      return m_path;
-   }
+	@Override
+	public String getName() {
+		return m_name;
+	}
 
-   public String getTitle() {
-      return m_title;
-   }
+	@Override
+	public String getPath() {
+		return m_path;
+	}
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
+	public String getTitle() {
+		return m_title;
+	}
 
-   public ApiPage[] getValues() {
-      return ApiPage.values();
-   }
+	public boolean isStandalone() {
+		return m_standalone;
+	}
+
+	public ApiPage[] getValues() {
+		return ApiPage.values();
+	}
 }

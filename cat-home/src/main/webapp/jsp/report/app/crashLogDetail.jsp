@@ -45,8 +45,10 @@
 		<table class="table table-bordered">
 		<tr><td width="60px;">
 				平台类型</td><td><select id="platformType" style="width: 200px;">
-					<option value='android'>Android</option>
-					<option value='iOS'>iOS</option>
+					<option value='AndroidCrashLog'>Android (主App)</option>
+					<option value='iOSCrashLog'>iOS (主App)</option>
+					<option value='MerchantAndroidCrashLog'>Android (点评管家)</option>
+					<option value='MerchantIOSCrashLog'>iOS (点评管家)</option>
 					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /></td></tr>

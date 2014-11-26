@@ -100,26 +100,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
 			<implementation>com.dianping.cat.config.app.AppComparisonConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppDataService</role>
-			<implementation>com.dianping.cat.config.app.AppDataService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.app.AppDataCommandDao</role>
 				</requirement>
 			</requirements>
 		</component>

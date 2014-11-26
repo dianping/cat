@@ -7,8 +7,8 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -37,6 +37,7 @@ import com.dianping.cat.report.service.impl.EventReportService;
 import com.dianping.cat.report.service.impl.HeartbeatReportService;
 import com.dianping.cat.report.service.impl.HeavyReportService;
 import com.dianping.cat.report.service.impl.HighloadReportService;
+import com.dianping.cat.report.service.impl.JarReportService;
 import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.service.impl.MetricReportService;
 import com.dianping.cat.report.service.impl.NetTopologyReportService;
@@ -96,6 +97,10 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
 		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(ReportService.class, Constants.HIGH_LOAD_REPORT, HighloadReportService.class).req(
+		      HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class,
+		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
+		      MonthlyReportContentDao.class));
+		all.add(C(ReportService.class, Constants.REPORT_JAR, JarReportService.class).req(
 		      HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class,
 		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
 		      MonthlyReportContentDao.class));

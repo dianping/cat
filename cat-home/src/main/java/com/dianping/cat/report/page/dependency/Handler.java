@@ -126,10 +126,10 @@ public class Handler implements PageHandler<Context> {
 		Map<String, List<TopologyNode>> nodes = dashboardGraph.getNodes();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		String minute = String.valueOf(parseQueryMinute(payload));
-		
+
 		for (List<TopologyNode> n : nodes.values()) {
 			for (TopologyNode node : n) {
-				String domain = payload.getDomain();
+				String domain = node.getId();
 				String link = String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", minute, domain,
 				      sdf.format(new Date(payload.getDate())));
 				node.setLink(link);

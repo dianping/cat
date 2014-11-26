@@ -43,4 +43,8 @@ public class Constants {
 
 	public static final String HIGH_LOAD_REPORT = "highLoad";
 
+	public static final String REPORT_JAR = "jar";
+
+	public static final String APP_DATABASE_PRUNER = "appDatabasePruner";
+
 }

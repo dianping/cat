@@ -92,7 +92,7 @@
 	function docReady(field, fields, prefix){
 		var urls = [];
 		
-		if(field == ''){
+		if(typeof field == "undefined" || field.length == 0){
 			document.getElementById(prefix + "All").checked = true;
 			clickAll(fields, prefix);
 		}else{

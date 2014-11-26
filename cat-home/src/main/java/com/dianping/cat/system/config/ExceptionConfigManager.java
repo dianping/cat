@@ -1,6 +1,8 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -100,6 +102,18 @@ public class ExceptionConfigManager implements Initializable {
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionExcludes().values());
 		}
+		Collections.sort(result, new Comparator<ExceptionExclude>() {
+
+			@Override
+			public int compare(ExceptionExclude o1, ExceptionExclude o2) {
+				if ("Default".equals(o1.getDomain())) {
+					return 1;
+				} else {
+					return o1.getDomain().compareTo(o2.getDomain());
+				}
+			}
+
+		});
 		return result;
 	}
 
@@ -109,6 +123,18 @@ public class ExceptionConfigManager implements Initializable {
 		for (DomainConfig domainConfig : m_exceptionConfig.getDomainConfigs().values()) {
 			result.addAll(domainConfig.getExceptionLimits().values());
 		}
+		Collections.sort(result, new Comparator<ExceptionLimit>() {
+
+			@Override
+			public int compare(ExceptionLimit o1, ExceptionLimit o2) {
+				if ("Default".equals(o1.getDomain())) {
+					return 1;
+				} else {
+					return o1.getDomain().compareTo(o2.getDomain());
+				}
+			}
+
+		});
 		return result;
 	}
 

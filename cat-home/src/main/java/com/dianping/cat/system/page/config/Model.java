@@ -11,11 +11,12 @@ import java.util.Map;
 import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.advanced.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -33,25 +34,6 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
-
-	public static class Edge {
-		private List<EdgeConfig> m_edgeConfigs;
-
-		private NodeConfig m_nodeConfig;
-
-		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
-			m_edgeConfigs = edgeConfigs;
-			m_nodeConfig = nodeConfig;
-		}
-
-		public List<EdgeConfig> getEdgeConfigs() {
-			return m_edgeConfigs;
-		}
-
-		public NodeConfig getNodeConfig() {
-			return m_nodeConfig;
-		}
-	}
 
 	private Project m_project;
 
@@ -144,6 +126,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Code m_code;
 
 	private String m_domain;
+
+	private Map<Integer, Speed> m_speeds;
+
+	private Speed m_speed;
+
+	public Speed getSpeed() {
+		return m_speed;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
+	}
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -429,6 +423,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
+	public Map<Integer, Speed> getSpeeds() {
+		return m_speeds;
+	}
+
 	public List<String> getTags() {
 		return m_tags;
 	}
@@ -609,6 +607,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
+	public void setSpeeds(Map<Integer, Speed> speeds) {
+		m_speeds = speeds;
+	}
+
 	public void setTags(List<String> tags) {
 		m_tags = tags;
 	}
@@ -623,5 +625,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
+	}
+
+	public static class Edge {
+		private List<EdgeConfig> m_edgeConfigs;
+
+		private NodeConfig m_nodeConfig;
+
+		public Edge(List<EdgeConfig> edgeConfigs, NodeConfig nodeConfig) {
+			m_edgeConfigs = edgeConfigs;
+			m_nodeConfig = nodeConfig;
+		}
+
+		public List<EdgeConfig> getEdgeConfigs() {
+			return m_edgeConfigs;
+		}
+
+		public NodeConfig getNodeConfig() {
+			return m_nodeConfig;
+		}
 	}
 }

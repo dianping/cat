@@ -30,22 +30,22 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 public class ExceptionAlert implements Task {
 
 	@Inject
-	private ExceptionConfigManager m_exceptionConfigManager;
+	protected ExceptionConfigManager m_exceptionConfigManager;
 
 	@Inject
-	private AlertExceptionBuilder m_alertBuilder;
+	protected AlertExceptionBuilder m_alertBuilder;
 
 	@Inject(type = ModelService.class, value = TopAnalyzer.ID)
-	private ModelService<TopReport> m_topService;
+	protected ModelService<TopReport> m_topService;
 
 	@Inject
 	protected AlertManager m_sendManager;
 
-	private static final long DURATION = TimeHelper.ONE_MINUTE;
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	private static final int ALERT_PERIOD = 1;
+	protected static final int ALERT_PERIOD = 1;
 
-	private TopMetric buildTopMetric(Date date) {
+	protected TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
@@ -58,7 +58,7 @@ public class ExceptionAlert implements Task {
 		return AlertType.Exception.getName();
 	}
 
-	private TopReport queryTopReport(Date start) {
+	protected TopReport queryTopReport(Date start) {
 		String domain = Constants.CAT;
 		String date = String.valueOf(start.getTime());
 		ModelRequest request = new ModelRequest(domain, start.getTime()).setProperty("date", date);
@@ -93,20 +93,14 @@ public class ExceptionAlert implements Task {
 				if (!itemLists.isEmpty()) {
 					itemList = itemLists.iterator().next();
 				}
-				Item frontEndItem = null;
-				List<Item> otherItemList = new ArrayList<Item>();
+				List<Item> items = new ArrayList<Item>();
 
 				for (Item item : itemList) {
-					if (Constants.FRONT_END.equals(item.getDomain())) {
-						frontEndItem = item;
-					} else {
-						otherItemList.add(item);
+					if (!Constants.FRONT_END.equals(item.getDomain())) {
+						items.add(item);
 					}
 				}
-				if (frontEndItem != null) {
-					handleFrontEndException(frontEndItem);
-				}
-				handleGeneralExceptions(otherItemList);
+				handleExceptions(items);
 
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
@@ -126,7 +120,7 @@ public class ExceptionAlert implements Task {
 		}
 	}
 
-	private void handleGeneralExceptions(List<Item> itemList) {
+	private void handleExceptions(List<Item> itemList) {
 		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
 
 		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
@@ -142,23 +136,6 @@ public class ExceptionAlert implements Task {
 					entity.setMetric(metricName).setType(getName()).setGroup(domain);
 					m_sendManager.addAlert(entity);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
-	private void handleFrontEndException(Item frontEndItem) {
-		List<AlertException> alertExceptions = m_alertBuilder.buildFrontEndAlertExceptions(frontEndItem);
-
-		for (AlertException exception : alertExceptions) {
-			try {
-				String metricName = exception.getName();
-				AlertEntity entity = new AlertEntity();
-
-				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-				entity.setMetric(metricName).setType(AlertType.FrontEndException.getName()).setGroup(metricName);
-				m_sendManager.addAlert(entity);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

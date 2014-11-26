@@ -5,10 +5,13 @@ import java.util.List;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -22,6 +25,9 @@ public class AppConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
+
+	@Inject
+	private AppSpeedConfigManager m_appSpeedConfigManager;
 
 	@Inject
 	private AppComparisonConfigManager m_appComparisonConfigManager;
@@ -41,17 +47,7 @@ public class AppConfigProcessor extends BaseProcesser {
 
 		switch (action) {
 		case APP_LIST:
-			buildAllCommandInfos(model);
-
-			if (StringUtils.isNotEmpty(payload.getDomain())) {
-				id = payload.getId();
-				model.setCodes(m_appConfigManager.getCodes());
-				Command cmd = m_appConfigManager.getRawCommands().get(id);
-
-				if (cmd != null) {
-					model.setUpdateCommand(cmd);
-				}
-			}
+			buildListInfo(model, payload);
 			break;
 		case APP_UPDATE:
 			id = payload.getId();
@@ -85,7 +81,7 @@ public class AppConfigProcessor extends BaseProcesser {
 					model.setOpState(false);
 				}
 			}
-			buildAllCommandInfos(model);
+			buildListInfo(model, payload);
 			break;
 		case APP_PAGE_DELETE:
 			id = payload.getId();
@@ -95,7 +91,7 @@ public class AppConfigProcessor extends BaseProcesser {
 			} else {
 				model.setOpState(false);
 			}
-			buildAllCommandInfos(model);
+			buildListInfo(model, payload);
 			break;
 		case APP_CODE_UPDATE:
 			id = payload.getId();
@@ -110,29 +106,74 @@ public class AppConfigProcessor extends BaseProcesser {
 			}
 			break;
 		case APP_CODE_SUBMIT:
-			id = payload.getId();
-			String codeStr = payload.getContent();
-			List<String> strs = Splitters.by(":").split(codeStr);
-			codeId = Integer.parseInt(strs.get(0));
-			name = strs.get(1);
-			int status = Integer.parseInt(strs.get(2));
-			Code code = new Code(codeId);
-			code.setName(name).setStatus(status);
-			m_appConfigManager.updateCode(id, code);
-			buildAllCommandInfos(model);
+			try {
+				id = payload.getId();
+				String codeStr = payload.getContent();
+				List<String> strs = Splitters.by(":").split(codeStr);
+				codeId = Integer.parseInt(strs.get(0));
+				name = strs.get(1);
+				int status = Integer.parseInt(strs.get(2));
+				Code code = new Code(codeId);
+				code.setName(name).setStatus(status);
+				m_appConfigManager.updateCode(id, code);
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
-
 		case APP_CODE_ADD:
 			id = payload.getId();
 
 			model.setId(String.valueOf(id));
-			buildAllCommandInfos(model);
 			break;
 		case APP_CODE_DELETE:
+			try {
+				id = payload.getId();
+				codeId = payload.getCode();
+
+				m_appConfigManager.deleteCode(id, codeId);
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			break;
+		case APP_SPEED_UPDATE:
+		case APP_SPEED_ADD:
 			id = payload.getId();
-			codeId = payload.getCode();
-			m_appConfigManager.getRawCommands().get(id).getCodes().remove(codeId);
-			buildAllCommandInfos(model);
+			Speed speed = m_appSpeedConfigManager.getConfig().getSpeeds().get(id);
+
+			if (speed != null) {
+				model.setSpeed(speed);
+			}
+			break;
+		case APP_SPEED_DELETE:
+			try {
+				id = payload.getId();
+
+				m_appSpeedConfigManager.deleteSpeed(id);
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			break;
+		case APP_SPEED_SUBMIT:
+			try {
+				id = payload.getId();
+				String speedStr = payload.getContent();
+				List<String> strs = Splitters.by(":").split(speedStr);
+				String page = strs.get(0).trim();
+				int step = Integer.parseInt(strs.get(1).trim());
+				title = strs.get(2).trim();
+				int threshold = Integer.parseInt(strs.get(3).trim());
+				int speedId = id > 0 ? id : m_appSpeedConfigManager.generateId();
+				speed = new Speed(speedId);
+
+				speed.setPage(page).setStep(step).setTitle(title).setThreshold(threshold);
+				m_appSpeedConfigManager.updateConfig(speed);
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		case APP_CONFIG_UPDATE:
 			String appConfig = payload.getContent();
@@ -171,9 +212,21 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 	}
 
-	private void buildAllCommandInfos(Model model) {
+	private void buildListInfo(Model model, Payload payload) {
 		List<Command> commands = m_appConfigManager.queryCommands();
 		model.setCommands(commands);
-	}
+		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 
+		int id = 1;
+		if ("code".equals(payload.getType()) && payload.getId() > 0) {
+			id = payload.getId();
+		}
+		model.setCodes(m_appConfigManager.getCodes());
+		Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+		if (cmd != null) {
+			model.setUpdateCommand(cmd);
+			model.setId(String.valueOf(id));
+		}
+	}
 }

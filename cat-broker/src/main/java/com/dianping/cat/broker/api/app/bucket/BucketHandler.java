@@ -5,34 +5,43 @@ import java.io.File;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.BaseData;
-import com.dianping.cat.broker.api.app.AppDataQueue;
-import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.AppSpeedData;
+import com.dianping.cat.broker.api.app.AppQueue;
+import com.dianping.cat.broker.api.app.bucket.impl.DataBucketExecutor;
+import com.dianping.cat.broker.api.app.bucket.impl.SpeedBucketExecutor;
+import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.app.service.AppService;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class BucketHandler implements Task {
 
 	private boolean m_active = true;
 
 	private boolean m_completed = false;
 
-	private AppDataQueue m_appDataQueue = new AppDataQueue();
+	private AppQueue m_appDataQueue = new AppQueue();
 
-	private HashMap<String, BucketExecutor> m_bucketExecutors = new LinkedHashMap<String, BucketExecutor>();
+	private Map<String, BucketExecutor> m_bucketExecutors = new LinkedHashMap<String, BucketExecutor>();
 
 	private long m_startTime;
 
-	public BucketHandler(long startTime, AppDataService appDataService) {
-		m_bucketExecutors.put(AppCommandData.class.getName(), new CommandBucketExecutor(startTime, appDataService));
+	public BucketHandler(long startTime, Map<String, AppService> appDataServices) {
+		AppService appDataCommandService = appDataServices.get(AppCommandData.class.getName());
+		m_bucketExecutors.put(AppDataProto.class.getName(), new DataBucketExecutor(startTime, appDataCommandService));
+		AppService appSpeedDataService = appDataServices.get(AppSpeedData.class.getName());
+		m_bucketExecutors.put(AppSpeedProto.class.getName(), new SpeedBucketExecutor(startTime, appSpeedDataService));
 	}
 
-	public boolean enqueue(BaseData appData) {
+	public boolean enqueue(ProtoData appData) {
 		return m_appDataQueue.offer(appData);
 	}
 
@@ -47,11 +56,11 @@ public class BucketHandler implements Task {
 		m_active = false;
 	}
 
-	public AppDataQueue getAppDataQueue() {
+	public AppQueue getAppDataQueue() {
 		return m_appDataQueue;
 	}
 
-	public HashMap<String, BucketExecutor> getBucketExecutors() {
+	public Map<String, BucketExecutor> getBucketExecutors() {
 		return m_bucketExecutors;
 	}
 
@@ -81,7 +90,7 @@ public class BucketHandler implements Task {
 
 			while ((line = bufferedReader.readLine()) != null) {
 				String[] items = line.split("\t");
-				BaseData appData = m_bucketExecutors.get(items[0]).loadRecord(items);
+				ProtoData appData = m_bucketExecutors.get(items[0]).loadRecord(items);
 
 				enqueue(appData);
 			}
@@ -92,8 +101,8 @@ public class BucketHandler implements Task {
 
 	}
 
-	public void processEntity(BaseData appData) {
-		Class<? extends BaseData> clas = appData.getClass();
+	public void processEntity(ProtoData appData) {
+		Class<? extends ProtoData> clas = appData.getClass();
 
 		m_bucketExecutors.get(clas.getName()).processEntity(appData);
 	}
@@ -101,7 +110,7 @@ public class BucketHandler implements Task {
 	@Override
 	public void run() {
 		while (true) {
-			BaseData appData = m_appDataQueue.poll();
+			ProtoData appData = m_appDataQueue.poll();
 
 			if (appData != null) {
 				processEntity(appData);

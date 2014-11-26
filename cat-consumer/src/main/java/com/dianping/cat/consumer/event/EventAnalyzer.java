@@ -71,14 +71,15 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private void processEvent(EventReport report, MessageTree tree, Event event) {
+		int count = 1;
 		String ip = tree.getIpAddress();
 		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
 
 		report.addIp(tree.getIpAddress());
-		type.incTotalCount();
-		name.incTotalCount();
+		type.incTotalCount(count);
+		name.incTotalCount(count);
 
 		if (event.isSuccess()) {
 			if (type.getSuccessMessageUrl() == null) {
@@ -89,8 +90,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				name.setSuccessMessageUrl(messageId);
 			}
 		} else {
-			type.incFailCount();
-			name.incFailCount();
+			type.incFailCount(count);
+			name.incFailCount(count);
 
 			if (type.getFailMessageUrl() == null) {
 				type.setFailMessageUrl(messageId);
@@ -103,19 +104,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		type.setFailPercent(type.getFailCount() * 100.0 / type.getTotalCount());
 		name.setFailPercent(name.getFailCount() * 100.0 / name.getTotalCount());
 
-		processEventGrpah(name, event);
+		processEventGrpah(name, event, count);
 	}
 
-	private void processEventGrpah(EventName name, Event t) {
+	private void processEventGrpah(EventName name, Event t, int count) {
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
 
 		synchronized (name) {
 			Range range = name.findOrCreateRange(min);
 
-			range.incCount();
+			range.incCount(count);
 			if (!t.isSuccess()) {
-				range.incFails();
+				range.incFails(count);
 			}
 		}
 	}

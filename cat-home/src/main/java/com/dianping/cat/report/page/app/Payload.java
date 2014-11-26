@@ -3,11 +3,12 @@ package com.dianping.cat.report.page.app;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.config.app.AppDataGroupByField;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
+import com.dianping.cat.report.service.app.AppDataField;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.CommandQueryEntity;
+import com.dianping.cat.report.service.app.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -25,7 +26,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_type = AppDataService.REQUEST;
 
 	@FieldMeta("groupByField")
-	private AppDataGroupByField m_groupByField = AppDataGroupByField.CODE;
+	private AppDataField m_groupByField = AppDataField.CODE;
 
 	@FieldMeta("sort")
 	private String m_sort = AppDataService.SUCCESS;
@@ -86,7 +87,7 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_domains2;
 	}
 
-	public AppDataGroupByField getGroupByField() {
+	public AppDataField getGroupByField() {
 		return m_groupByField;
 	}
 
@@ -107,17 +108,33 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_query2;
 	}
 
-	public QueryEntity getQueryEntity1() {
+	public CommandQueryEntity getQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
-			return new QueryEntity(m_query1);
+			return new CommandQueryEntity(m_query1);
 		} else {
-			return new QueryEntity(m_showActivity);
+			return new CommandQueryEntity(m_showActivity);
 		}
 	}
 
-	public QueryEntity getQueryEntity2() {
+	public CommandQueryEntity getQueryEntity2() {
 		if (m_query2 != null && m_query2.length() > 0) {
-			return new QueryEntity(m_query2);
+			return new CommandQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new SpeedQueryEntity(m_query1);
+		} else {
+			return new SpeedQueryEntity();
+		}
+	}
+
+	public SpeedQueryEntity getSpeedQueryEntity2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new SpeedQueryEntity(m_query2);
 		} else {
 			return null;
 		}
@@ -168,7 +185,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroupByField(String groupByField) {
-		m_groupByField = AppDataGroupByField.getByName(groupByField, AppDataGroupByField.CODE);
+		m_groupByField = AppDataField.getByName(groupByField, AppDataField.CODE);
 	}
 
 	public void setName(String name) {

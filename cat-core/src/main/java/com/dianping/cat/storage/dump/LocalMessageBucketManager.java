@@ -92,7 +92,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageBlock block = bucket.flushBlock();
 
 					if (block != null) {
-						m_messageBlocks.add(block);
+						m_messageBlocks.put(block);
 					}
 				} catch (IOException e) {
 					Cat.logError(e);
@@ -160,9 +160,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageBlock block = bucket.flushBlock();
 
 					if (block != null) {
-						m_messageBlocks.offer(block);
+						boolean first = m_messageBlocks.offer(block);
 
-						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 50 ms
+						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
+
+						if (first == false) {
+							boolean retry = m_messageBlocks.offer(block);
+
+							if (retry == false) {
+								Cat.logError(new RuntimeException("error flush block when read logview"));
+							} else {
+								LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
+							}
+						}
 					}
 					MessageTree tree = bucket.findByIndex(id.getIndex());
 
@@ -444,7 +454,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							if (last != null) {
 								bucket.close();
 
-								Cat.logEvent("BucketConcurrentModify",path, Event.SUCCESS, null);
+								Cat.logEvent("BucketConcurrentModify", path, Event.SUCCESS, null);
 							}
 
 							bucket = m_buckets.get(path);

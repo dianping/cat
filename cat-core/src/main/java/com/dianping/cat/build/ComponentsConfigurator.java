@@ -11,13 +11,12 @@ import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.app.AppDataCommandDao;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.aggregation.AggregationHandler;
 import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
@@ -74,9 +73,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
-		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class));
 
-		all.add(C(AppDataService.class).req(AppConfigManager.class, AppDataCommandDao.class));
+		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 

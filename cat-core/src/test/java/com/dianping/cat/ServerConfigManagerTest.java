@@ -33,9 +33,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals("hdfs://10.1.77.86/user/cat", manager.getHdfsServerUri(id));
 		Assert.assertEquals(6, manager.getHdfsProperties().size());
 		Assert.assertEquals(0, manager.getLongConfigDomains().size());
-		Assert.assertEquals(1000, manager.getLongSqlDefaultThreshold());
 		Assert.assertEquals(100, manager.getLongUrlDefaultThreshold());
-		Assert.assertEquals("target/bucket", manager.getStorageLocalBaseDir());
 		Assert.assertEquals(true, manager.isClientCall("Call"));
 		Assert.assertEquals(true, manager.isHdfsOn());
 		Assert.assertEquals(true, manager.isInitialized());

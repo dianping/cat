@@ -11,14 +11,16 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.broker.api.app.AppCommandData;
-import com.dianping.cat.broker.api.app.AppDataConsumer;
+import com.dianping.cat.broker.api.app.AppConsumer;
+import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
@@ -28,7 +30,7 @@ import com.dianping.cat.service.IpService.IpInfo;
 public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
-	private AppDataConsumer m_appDataConsumer;
+	private AppConsumer m_appDataConsumer;
 
 	@Inject
 	private IpService m_ipService;
@@ -44,6 +46,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private volatile int m_error;
 
 	public static final String TOO_LONG = "toolongurl.bin";
+
+	private static final String VERSION_TWO = "2";
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -68,13 +72,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		boolean success = true;
 
 		if (userIp != null) {
-			if ("1".equals(version)) {
-			} else if ("2".equals(version)) {
-				processVersion2(payload, request, userIp);
-			} else {
-				success = false;
-				Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
-			}
+			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
 			Cat.logEvent("unknownIp", "batch", Event.SUCCESS, null);
@@ -88,7 +86,29 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void offerQueue(AppCommandData appData) {
+	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
+		boolean success = false;
+
+		if (VERSION_TWO.equals(version)) {
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+
+			if (infoPair != null) {
+				int cityId = infoPair.getKey();
+				int operatorId = infoPair.getValue();
+				String content = payload.getContent();
+
+				processVersion2Content(cityId, operatorId, content, version);
+				success = true;
+			} else {
+				Cat.logEvent("Invalid ip info", userIp, Event.SUCCESS, userIp);
+			}
+		} else {
+			Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
+		}
+		return success;
+	}
+
+	private void offerQueue(ProtoData appData) {
 		boolean success = m_appDataConsumer.enqueue(appData);
 
 		if (!success) {
@@ -100,15 +120,20 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 	}
-
-	private void processOneRecord(int cityId, int operatorId, String record) {
+	
+	private void processVersion2Record(int cityId, int operatorId, String record) {
 		String items[] = record.split("\t");
 
 		if (items.length == 10) {
-			AppCommandData appData = new AppCommandData();
+			AppDataProto appData = new AppDataProto();
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				int index = url.indexOf("?");
+
+				if (index > 0) {
+					url = url.substring(0, index);
+				}
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command != null) {
@@ -155,9 +180,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void processVersion2(Payload payload, HttpServletRequest request, String userIp) {
-		String content = payload.getContent();
-		String records[] = content.split("\n");
+	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
 		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
 
 		if (ipInfo != null) {
@@ -167,17 +190,24 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
 
 			if (cityId != null && operatorId != null) {
-				for (String record : records) {
-					try {
-						if (!StringUtils.isEmpty(record)) {
-							processOneRecord(cityId, operatorId, record);
-						}
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
+				return new Pair<Integer, Integer>(cityId, operatorId);
 			} else {
 				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
+			}
+		}
+		return null;
+	}
+
+	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {
+		String records[] = content.split("\n");
+
+		for (String record : records) {
+			try {
+				if (!StringUtils.isEmpty(record)) {
+					processVersion2Record(cityId, operatorId, record);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}

@@ -13,9 +13,11 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.app.AppCommandDataDao;
+import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.config.app.AppCommandDataTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataCommandTableProvider;
-import com.dianping.cat.config.app.AppDataService;
+import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -26,7 +28,6 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
-import com.dianping.cat.report.baseline.BaselineService;
 import com.dianping.cat.report.chart.CachedMetricReportService;
 import com.dianping.cat.report.chart.DataExtractor;
 import com.dianping.cat.report.chart.MetricDataFetcher;
@@ -39,25 +40,17 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.app.graph.AppGraphCreator;
-import com.dianping.cat.report.page.cdn.graph.CdnGraphCreator;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.metric.graph.MetricGraphCreator;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.network.graph.NetworkGraphCreator;
-import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
-import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.report.page.state.StateGraphs;
-import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.report.page.web.graph.DefaultWebGraphCreator;
-import com.dianping.cat.report.page.web.graph.WebGraphCreator;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.report.task.alert.RemoteMetricReportService;
 import com.dianping.cat.report.task.product.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
@@ -140,7 +133,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TableProvider.class, "app-data-command", AppDataCommandTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data", AppCommandDataTableProvider.class));
+		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
+
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
@@ -164,7 +159,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetworkRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		all.add(C(NetworkRuleConfigManager.class)
+		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
 		      UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
@@ -192,30 +188,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
-		all.add(C(CdnGraphCreator.class)
-		      .req(BaselineService.class, DataExtractor.class, MetricDataFetcher.class, CachedMetricReportService.class,
-		            MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class));
-		all.add(C(MetricGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class, ProjectService.class));
-		all.add(C(SystemGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class));
-		all.add(C(WebGraphCreator.class, DefaultWebGraphCreator.class).req(CachedMetricReportService.class,
-		      DataExtractor.class, MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class));
-		all.add(C(NetworkGraphCreator.class).req(CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class));
-
-		all.add(C(AppGraphCreator.class).req(AppDataService.class, CachedMetricReportService.class, DataExtractor.class,
-		      MetricDataFetcher.class).req(BaselineService.class, MetricConfigManager.class,
-		      ProductLineConfigManager.class, AlertInfo.class, AppConfigManager.class));
-
-		all.add(C(NetGraphManager.class).req(ServerConfigManager.class, RemoteMetricReportService.class).req(
-		      ReportServiceManager.class, NetGraphBuilder.class, AlertInfo.class, NetGraphConfigManager.class));
-
-		all.add(C(NetGraphBuilder.class));
+		
+		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
+		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 
 		return all;
 	}

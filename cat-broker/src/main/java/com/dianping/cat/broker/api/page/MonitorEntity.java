@@ -1,6 +1,5 @@
 package com.dianping.cat.broker.api.page;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
 public class MonitorEntity {
@@ -73,7 +72,7 @@ public class MonitorEntity {
 	public MonitorEntity setTargetUrl(String targetUrl) {
 		try {
 			m_targetUrl = URLDecoder.decode(targetUrl, "utf-8");
-		} catch (UnsupportedEncodingException e) {
+		} catch (Exception e) {
 			m_targetUrl = targetUrl;
 		}
 		return this;

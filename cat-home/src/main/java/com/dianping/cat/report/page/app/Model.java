@@ -5,20 +5,25 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.hsqldb.lib.StringUtil;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.config.app.AppDataSpreadInfo;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.app.graph.PieChartDetailInfo;
+import com.dianping.cat.report.page.app.display.AppDataDetail;
+import com.dianping.cat.report.page.app.display.AppSpeedDetail;
+import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -45,7 +50,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<Command> m_commands;
 
-	private List<AppDataSpreadInfo> m_appDataSpreadInfos;
+	private List<AppDataDetail> m_appDataDetailInfos;
+
+	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
 	private String m_content;
 
@@ -59,12 +66,51 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private ProblemReport m_problemReport;
 
+	private Map<String, List<Speed>> m_speeds;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
-	public List<AppDataSpreadInfo> getAppDataSpreadInfos() {
-		return m_appDataSpreadInfos;
+	public List<AppDataDetail> getAppDataDetailInfos() {
+		return m_appDataDetailInfos;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+				AppSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, List<AppSpeedDetail>> details = m_appSpeedDisplayInfo.getAppSpeedDetails();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, List<AppSpeedDetail>> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+
+				for (AppSpeedDetail detail : entry.getValue()) {
+					m.put(detail.getMinuteOrder(), detail);
+				}
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
+	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
+		return m_appSpeedDisplayInfo;
 	}
 
 	public Map<Integer, Item> getCities() {
@@ -156,6 +202,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_operators;
 	}
 
+	public String getPage2StepsJson() {
+		return new JsonBuilder().toJson(m_speeds);
+	}
+
+	public Set<String> getPages() {
+		return m_speeds.keySet();
+	}
+
 	public PieChart getPieChart() {
 		return m_pieChart;
 	}
@@ -176,12 +230,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_problemStatistics;
 	}
 
+	public Map<String, List<Speed>> getSpeeds() {
+		return m_speeds;
+	}
+
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
 	}
 
-	public void setAppDataSpreadInfos(List<AppDataSpreadInfo> appDatas) {
-		m_appDataSpreadInfos = appDatas;
+	public void setAppDataDetailInfos(List<AppDataDetail> appDataDetailInfos) {
+		m_appDataDetailInfos = appDataDetailInfos;
+	}
+
+	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {
+		m_appSpeedDisplayInfo = appSpeedDisplayInfo;
 	}
 
 	public void setCities(Map<Integer, Item> cities) {
@@ -242,6 +304,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
+	}
+
+	public void setSpeeds(Map<String, List<Speed>> speeds) {
+		m_speeds = speeds;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

@@ -8,7 +8,6 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
@@ -39,12 +38,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 			domainNames.addAll(reports.keySet());
 		}
 
-		if (reports.size() > 0) {
-			ProblemReport all = createAggregatedReport(reports);
-
-			reports.put(all.getDomain(), all);
-		}
-
 		try {
 			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
 
@@ -68,32 +61,10 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		return report.toString();
 	}
 
-	public ProblemReport createAggregatedReport(Map<String, ProblemReport> reports) {
-		ProblemReport report = new ProblemReport(Constants.ALL);
-		ProblemReportAllBuilder visitor = new ProblemReportAllBuilder(report);
-
-		try {
-			for (ProblemReport temp : reports.values()) {
-				if (m_manager.validateDomain(temp.getDomain())) {
-					report.getIps().add(temp.getDomain());
-					report.getDomainNames().add(temp.getDomain());
-					visitor.visitProblemReport(temp);
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return report;
-	}
-
 	@Override
 	public boolean createHourlyTask(ProblemReport report) {
 		String domain = report.getDomain();
 
-		if (domain.equals(Constants.ALL)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
-			      TaskProlicy.ALL_EXCLUED_HOURLY);
-		}
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
 		} else if (m_manager.isCrashLog(domain)) {

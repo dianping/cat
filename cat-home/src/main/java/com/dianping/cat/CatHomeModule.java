@@ -7,7 +7,6 @@ import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
-import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.message.spi.core.MessageConsumer;
@@ -17,6 +16,7 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.task.alert.network.NetworkAlert;
 import com.dianping.cat.report.task.alert.system.SystemAlert;
@@ -59,6 +59,7 @@ public class CatHomeModule extends AbstractModule {
 			NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
 			SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
+			FrontEndExceptionAlert frontEndExceptionAlert = ctx.lookup(FrontEndExceptionAlert.class);
 			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
 			ProjectUpdateTask productUpdateTask = ctx.lookup(ProjectUpdateTask.class);
 			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
@@ -71,6 +72,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(systemAlert);
 			Threads.forGroup("cat").start(metricAlert);
 			Threads.forGroup("cat").start(exceptionAlert);
+			Threads.forGroup("cat").start(frontEndExceptionAlert);
 			Threads.forGroup("cat").start(heartbeatAlert);
 			Threads.forGroup("cat").start(productUpdateTask);
 			Threads.forGroup("cat").start(thirdPartyAlert);
@@ -83,7 +85,7 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatConsumerModule.ID, CatConsumerAdvancedModule.ID);
+		return ctx.getModules(CatConsumerModule.ID);
 	}
 
 	@Override

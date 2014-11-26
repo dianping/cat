@@ -18,7 +18,7 @@
 <p>e).规则与被监控指标的匹配。监控规则可以按照名称、正则表达式与监控的对象（指标）进行匹配。</p>
 <h5>监控规则模型如下图所示：</h5>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/alertConfig.png" />
+	src="${model.webapp}/images/alert/alertConfig.png" />
 <h5>具体解释如下：</h5>
 <p>1).一个rule元素为规则的基本单位</p>
 <p>2).rule元素由两个部分组成：监控对象与监控规则</p>
@@ -84,7 +84,7 @@
 <p>e).恢复通知。设定恢复通知时间(recoverMinute)后，当一个指标在某一分钟告警并且在以后的指定时间段内没有再次告警时，Cat会发出恢复通知，表明该指标在这个时间段的状态是正常的。默认的恢复通知时间段为一分钟。</p>
 <h5>告警策略模型如下图所示：</h5>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/alertPolicy.png" />
+	src="${model.webapp}/images/alert/alertPolicy.png" />
 <h5>具体解释如下：</h5>
 <p>1).alert-policy元素对应着Cat上的全部告警策略信息。每个type元素对应着一种告警类型，由id可以得知type与告警类型的对应关系</p>
 <p>2).type元素下每一个group元素对应着一个项目或是一个产品线的告警策略。对于异常监控以及第三方监控，此处的group请填写项目名；其它类型请填写产品线名</p>
@@ -102,7 +102,7 @@
 <p>b).添加默认通知人。该通知人会收到某类型的所有告警</p>
 <h5>默认发送人模型如下图所示：</h5>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/defaultReceiver.png" />
+	src="${model.webapp}/images/alert/defaultReceiver.png" />
 <h5>配置方法</h5>
 <p>1).点击导航栏Config－－监控告警配置－－默认告警配置</p>
 <p>2).编辑文本框的内容，点击提交</p>

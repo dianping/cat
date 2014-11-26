@@ -6,7 +6,7 @@
 <h4 class="text-success">监控规则配置</h4>
 <p>为了满足监控的需求，前端JS监控规则没有采用通用的规则模型。其配置如下：</p>
 <img class="img-polaroid" width='60%'
-	src="${model.webapp}/images/frontendException.png" />
+	src="${model.webapp}/images/alert/frontendException.png" />
 <p>各个参数含义如下</p>
 <p><span class="text-error">[报表类型、域名]</span>：请勿更改</p>
 <p><span class="text-error">[模版]</span>：被监控的网址</p>

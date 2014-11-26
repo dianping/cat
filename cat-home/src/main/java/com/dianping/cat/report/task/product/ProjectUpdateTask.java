@@ -237,7 +237,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseDomain(content.trim());
 		} catch (Exception e) {
-			Cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();

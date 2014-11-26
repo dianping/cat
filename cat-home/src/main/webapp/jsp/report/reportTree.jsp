@@ -10,6 +10,7 @@
 		<li class="nav-header"><h5>监控报表</h5></li>
 		<li><a  href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
 		<li><a  href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
+		<li><a  href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">数据库监控</a></li>
 		<li><a  href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
 		<li><a  href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
 		<li><a  href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息查询</a></li>
@@ -21,6 +22,7 @@
 		<li id="alert"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行</a></li>
 		<li id="service"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
 		<li id="utilization"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
+		<li id="jar"><a href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上JAR版本</a></li>
 		<li id="heavy"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
 		<li id="summary"><a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 		<li class="nav-header"><h5>订阅报表</h5></li>

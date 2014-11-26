@@ -12,6 +12,7 @@
   <entity name="machine">
     <attribute name="ip" value-type="String" key="true"/>
     <entity-ref name="period" type="list" names="periods" />
+    <attribute name="classpath" value-type="String"/>
   </entity>
   <entity name="period" dynamic-attributes="true">
     <attribute name="minute" value-type="int" primitive="true" key="true" />

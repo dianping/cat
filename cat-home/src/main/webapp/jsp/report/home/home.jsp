@@ -20,7 +20,7 @@
    			 	<li class="text-right" id="indexButton"><a href="?op=view&docName=index"><strong>项目首页</strong></a></li>
    			 	<li class="text-right" id="releaseButton"><a href="?op=view&docName=release"><strong>版本说明</strong></a></li>
    			 	<li class="text-right" id="userButton"><a href="?op=view&docName=user"><strong>用户文档</strong></a></li>
-   			 	<li class="text-right" id="userMonitorButton"><a href="?op=view&docName=userMonitor"><strong>用户端监控</strong></a></li>
+   			 	<li class="text-right" id="userMonitorButton"><a href="?op=view&docName=userMonitor"><strong>用户侧监控</strong></a></li>
    			 	<li class="text-right" id="alertButton"><a href="?op=view&docName=alert"><strong>告警文档</strong></a></li>
    			 	<li class="text-right" id="integrationButton"><a href="?op=view&docName=integration"><strong>集成文档</strong></a></li>
    			 	<li class="text-right" id="interfaceButton"><a href="?op=view&docName=interface"><strong>接口文档</strong></a></li>

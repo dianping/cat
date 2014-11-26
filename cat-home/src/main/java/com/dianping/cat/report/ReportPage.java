@@ -35,8 +35,6 @@ public enum ReportPage implements Page {
 
    DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
 
-   EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true),
-
    STATISTICS("statistics", "statistics", "Statistics", "Statistics", false),
 
    ALTERATION("alteration", "alteration", "Change", "Alteration", false),
@@ -57,7 +55,9 @@ public enum ReportPage implements Page {
 
    OVERLOAD("overload", "overload", "Overload", "Overload", true),
 
-   HIGHLOAD("highload", "highload", "Highload", "Highload", true);
+   HIGHLOAD("highload", "highload", "Highload", "Highload", true),
+
+   DATABASE("database", "database", "Database", "Database", true);
 
    private String m_name;
 

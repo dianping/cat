@@ -146,7 +146,7 @@
 		<th><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.appDataSpreadInfos}" varStatus="status">
+	<c:forEach var="item" items="${model.appDataDetailInfos}" varStatus="status">
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
 		<c:set var="networkCode" value="${item.network}"/>
 		<c:set var="appVersionCode" value="${item.appVersion}"/>
@@ -262,7 +262,7 @@
 		
 		for(var cou in commands){
 			var command = commands[cou];
-			if(command['title'] != undefined){
+			if(command['title'] != undefined && command['title'].length > 0){
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
 			}else{
 				commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));

@@ -96,6 +96,17 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public boolean isSuccessCode(int commandId, int code) {
+		Map<Integer, Code> codes = queryCodeByCommand(commandId);
+
+		for (Code c : codes.values()) {
+			if (c.getId() == code) {
+				return (c.getStatus() == 0);
+			}
+		}
+		return false;
+	}
+
 	public boolean containCommand(int id) {
 		Set<Integer> keys = m_config.getCommands().keySet();
 
@@ -202,6 +213,15 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCodes();
 	}
 
+	public boolean deleteCode(int id, int codeId) {
+		Command command = m_config.getCommands().get(id);
+
+		if (command != null) {
+			command.getCodes().remove(codeId);
+		}
+		return storeConfig();
+	}
+
 	@Override
 	public void initialize() {
 		try {
@@ -288,16 +308,6 @@ public class AppConfigManager implements Initializable {
 			return config.getItems();
 		} else {
 			return new LinkedHashMap<Integer, Item>();
-		}
-	}
-
-	public Collection<Item> queryConfigItems(String key) {
-		ConfigItem configs = m_config.findConfigItem(key);
-
-		if (configs != null) {
-			return configs.getItems().values();
-		} else {
-			return new ArrayList<Item>();
 		}
 	}
 

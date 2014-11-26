@@ -72,7 +72,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		for (String name : domains) {
 			try {
-				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(domain)) {
+				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(name)) {
 					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
 
 					transactionReportVisitor.visitTransactionReport(report);
@@ -94,7 +94,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		for (String name : domains) {
 			try {
-				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(domain)) {
+				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(name)) {
 					ProblemReport report = m_problemAnalyzer.getReport(name);
 
 					problemReportVisitor.visitProblemReport(report);

@@ -50,6 +50,7 @@
 					<li class="nav-header">监控报表</li>
 					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
+					<li><a style="padding:1px 30px" href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">数据库监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
 					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息查询</a></li>
@@ -61,6 +62,7 @@
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
+				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上JAR版本</a></li>
 				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
 				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
 					<li class="nav-header">订阅报表</li>
@@ -74,7 +76,7 @@
           		<ul class="dropdown-menu">
 		           <li class='nav-header' style="margin-top:0px;">项目配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">项目分组配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">监控分组配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
 		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
@@ -85,7 +87,7 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
 		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=transactionRule">响应时间告警配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=transactionRule">响应时间告警</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 			       <!-- <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">框架异常配置</a></li> -->
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=heartbeatRuleConfigList">心跳告警配置</a></li>

@@ -17,14 +17,14 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppDataService;
-import com.dianping.cat.config.app.QueryEntity;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.app.comparison.entity.Item;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.app.CommandQueryEntity;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
@@ -224,7 +224,7 @@ public class AppDataComparisonNotifier {
 		Integer command = m_appConfigManager.getCommands().get(url);
 
 		if (command != null) {
-			QueryEntity entity = new QueryEntity(yesterdayStr + ";" + command + ";;;;;;;;;");
+			CommandQueryEntity entity = new CommandQueryEntity(yesterdayStr + ";" + command + ";;;;;;;;;");
 
 			return m_appDataService.queryOneDayDelayAvg(entity);
 		} else {
