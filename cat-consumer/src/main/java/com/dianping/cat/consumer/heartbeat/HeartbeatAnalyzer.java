@@ -27,37 +27,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Inject(ID)
 	private ReportManager<HeartbeatReport> m_reportManager;
 
-	private com.dianping.cat.consumer.heartbeat.model.entity.Extension convertExtension(Extension extension) {
-		com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
-
-		he.setId(extension.getId());
-		for (Detail detail : extension.getDetails().values()) {
-			com.dianping.cat.consumer.heartbeat.model.entity.Detail hd = new com.dianping.cat.consumer.heartbeat.model.entity.Detail(
-			      detail.getId()).setValue(detail.getValue());
-
-			he.addDetail(hd);
-		}
-		return he;
-	}
-
-	@Override
-	public void doCheckpoint(boolean atEnd) {
-		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
-		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
-		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	private HeartbeatReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
-	}
-
 	private Period buildHeartBeatInfo(Machine machine, Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
@@ -79,6 +48,19 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.addExtension(convertExtension(extension));
 		}
 		return period;
+	}
+
+	private com.dianping.cat.consumer.heartbeat.model.entity.Extension convertExtension(Extension extension) {
+		com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
+
+		he.setId(extension.getId());
+		for (Detail detail : extension.getDetails().values()) {
+			com.dianping.cat.consumer.heartbeat.model.entity.Detail hd = new com.dianping.cat.consumer.heartbeat.model.entity.Detail(
+			      detail.getId()).setValue(detail.getValue());
+
+			he.addDetail(hd);
+		}
+		return he;
 	}
 
 	@Override

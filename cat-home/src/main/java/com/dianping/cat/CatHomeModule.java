@@ -15,6 +15,7 @@ import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
+import com.dianping.cat.report.task.alert.database.DatabaseAlert;
 import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
@@ -57,6 +58,7 @@ public class CatHomeModule extends AbstractModule {
 		if (serverConfigManager.isAlertMachine() && !serverConfigManager.isLocalMode()) {
 			BusinessAlert metricAlert = ctx.lookup(BusinessAlert.class);
 			NetworkAlert networkAlert = ctx.lookup(NetworkAlert.class);
+			DatabaseAlert databaseAlert = ctx.lookup(DatabaseAlert.class);
 			SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 			FrontEndExceptionAlert frontEndExceptionAlert = ctx.lookup(FrontEndExceptionAlert.class);
@@ -69,6 +71,7 @@ public class CatHomeModule extends AbstractModule {
 			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
+			Threads.forGroup("cat").start(databaseAlert);
 			Threads.forGroup("cat").start(systemAlert);
 			Threads.forGroup("cat").start(metricAlert);
 			Threads.forGroup("cat").start(exceptionAlert);
