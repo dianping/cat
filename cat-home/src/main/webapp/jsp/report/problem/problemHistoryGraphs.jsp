@@ -43,5 +43,4 @@
 	if(distributionChart!=null&&distributionChart.length>0){
 		graphPieChart(document.getElementById('distributionChart'), distributionChart);
 	}
-
 </script>
