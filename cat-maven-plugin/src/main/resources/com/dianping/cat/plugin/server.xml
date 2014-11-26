@@ -11,6 +11,14 @@
 	<console default-domain="Cat" show-cat-domain="true">
 		<remote-servers>127.0.0.1:2281</remote-servers>		
 	</console>
+	
+	<ldap loginAttribute="sAMAccountName" ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com" 
+	ldapBaseDN="OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com" 
+	ldapFactory="com.sun.jndi.ldap.LdapCtxFactory" 
+	solidDN="cn=Users,DC=dianpingoa,DC=com" 
+	solidUsername="lionauth" 
+	solidPassword="bxHxXopGJOy78Jze3LWi"/>
+	
 </config>
 
 <!-- Configuration for production environment -->
@@ -19,6 +27,7 @@
 <!-- 2. If machine is job-machine, set job-machine true. -->
 <!-- 3. If machine is alert-machine, set alert-machine true, you just need config only one machine. -->
 <!-- 4. Please set hadoop environment accordingly. -->
+<!-- 5. Please set ldap info for login the system. -->
 <!-- 
 <config local-mode="false" job-machine="false" alert-machine="false">
 	<storage  local-base-dir="/data/appdatas/cat/bucket/">
@@ -36,6 +45,13 @@
 	<console default-domain="Cat" show-cat-domain="true">
 		<remote-servers>192.168.0.1:2281,192.168.0.2:2281</remote-servers>		
 	</console>
+	
+	<ldap loginAttribute="sAMAccountName" ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com" 
+	ldapBaseDN="OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com" 
+	ldapFactory="com.sun.jndi.ldap.LdapCtxFactory" 
+	solidDN="cn=Users,DC=dianpingoa,DC=com" 
+	solidUsername="lionauth" 
+	solidPassword="bxHxXopGJOy78Jze3LWi"/>
 </config>
 
 -->

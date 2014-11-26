@@ -188,7 +188,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public Ldap getLdap() {
 		if (m_config != null) {
-			return m_config.getLdap();
+			Ldap ldap = m_config.getLdap();
+
+			if (ldap == null) {
+				ldap = new Ldap();
+				m_config.setLdap(ldap);
+			}
+			return ldap;
 		} else {
 			return null;
 		}
