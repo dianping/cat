@@ -1532,6 +1532,12 @@
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

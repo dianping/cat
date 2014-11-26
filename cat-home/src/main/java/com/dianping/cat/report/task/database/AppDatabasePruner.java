@@ -105,7 +105,6 @@ public class AppDatabasePruner implements ReportTaskBuilder {
 		boolean speed = pruneAppSpeedData(period);
 
 		return command && speed;
-
 	}
 
 	public Date queryPeriod(int months) {

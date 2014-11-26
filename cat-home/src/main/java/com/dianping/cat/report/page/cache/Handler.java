@@ -97,7 +97,12 @@ public class Handler implements PageHandler<Context> {
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
 				} else {
-					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / 1000.0;
+					Date endTime = report.getEndTime();
+					Date startTime = report.getStartTime();
+
+					if (startTime != null && endTime != null) {
+						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
+					}
 				}
 				new TpsStatistics(seconds).visitEventReport(report);
 			}
@@ -115,7 +120,12 @@ public class Handler implements PageHandler<Context> {
 				if (isCurrent) {
 					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
 				} else {
-					seconds = (report.getEndTime().getTime() - report.getStartTime().getTime()) / 1000.0;
+					Date endTime = report.getEndTime();
+					Date startTime = report.getStartTime();
+
+					if (startTime != null && endTime != null) {
+						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
+					}
 				}
 				new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
 			}

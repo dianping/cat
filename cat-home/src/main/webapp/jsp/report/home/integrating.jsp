@@ -23,6 +23,13 @@
 	  	<xmp class="well"> <constant name="struts.handle.exception" value="false" /> 
 	  	</xmp>
 	  </h5>
+	  <h5 class="text-error">解决URL中很多重复的问题，比如restfull的url</h5>
+	    <xmp class="well">
+	    	CAT 提供了自定义的URL的name功能，只要在HttpServletRequest的设置一个Attribute，
+	    	在业务运行代码中加入如下code可以自定义URL下name，这样可以进行自动聚合。
+	    	HttpServletRequest req ;
+	    	req.setAttribute("cat-page-uri", "myPageName");
+	    </xmp>
 	
   <dt><h5 class="text-success">2.Pom.xml中更新jar包(点评内部公共组件，外部公司可以忽略)</h5></dt>
   <dd>

@@ -37,8 +37,7 @@ public class AppCommandDataTableProvider implements TableProvider {
 		Date old = new Date();
 
 		try {
-			//TODO
-			old = new SimpleDateFormat("yyyy-MM-dd").parse("2015-01-01");
+			old = new SimpleDateFormat("yyyy-MM-dd").parse("2014-11-25");
 		} catch (ParseException e) {
 			throw new RuntimeException(e);
 		}
