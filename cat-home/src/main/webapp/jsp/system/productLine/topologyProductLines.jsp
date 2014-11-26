@@ -78,7 +78,7 @@
 						<th width="5%">应用监控</th>
 						<th width="5%">网络监控</th>
 						<th width="5%">系统监控</th>
-						<th width="5%">数据监控</th>
+						<th width="5%">数据库监控</th>
 						<!-- <th width="40%">项目列表</th> -->
 						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-small'>新增</a></th>
 					</tr>

@@ -11,6 +11,7 @@ import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
@@ -217,8 +218,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MailRecordDao.class, AppDataComparisonNotifier.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
-		      AppSpeedDataDao.class));
-
+		      AppSpeedDataDao.class,AppSpeedConfigManager.class,AppSpeedConfigManager.class));
+		
 		all.add(C(ReportFacade.class));
 
 		return all;

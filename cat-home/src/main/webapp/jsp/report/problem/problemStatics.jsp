@@ -80,10 +80,10 @@
 </table>
 <table class="data"  style="width:100%">
 	<tr>
-		<th width="10%">Type</th>
-		<th width="5%">Total</th>
+		<th width="12%">Type</th>
+		<th width="4%">Total</th>
 		<th width="30%">Status</th>
-		<th width="5%">Count</th>
+		<th width="4%">Count</th>
 		<th width="50%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"

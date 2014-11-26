@@ -37,6 +37,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1531,6 +1534,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3816,6 +3825,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5002,13 +5014,9 @@
 			<implementation>com.dianping.cat.system.page.login.spi.LDAPService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.LDAPConfigManager</role>
+					<role>com.dianping.cat.ServerConfigManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.LDAPConfigManager</role>
-			<implementation>com.dianping.cat.LDAPConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.Handler</role>

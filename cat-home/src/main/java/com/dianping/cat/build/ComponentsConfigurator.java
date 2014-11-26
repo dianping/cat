@@ -90,7 +90,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
 		all.add(C(StateGraphs.class, StateGraphs.class).//
-		      req(ReportServiceManager.class));
+		      req(ReportServiceManager.class, ServerConfigManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
@@ -188,7 +188,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
-		
+
 		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
 

@@ -12,7 +12,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 
-import com.dianping.cat.ReportType;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
 
@@ -34,10 +33,10 @@ public class TaskManagerTest {
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 
-		Assert.assertEquals(2, result.get(ReportType.MONTH).size());
-		Assert.assertEquals(9, result.get(ReportType.WEEK).size());
-		Assert.assertEquals(61, result.get(ReportType.DAILY).size());
-		Assert.assertEquals(61 * 24, result.get(ReportType.HOUR).size());
+		Assert.assertEquals(2, result.get(TaskManager.REPORT_MONTH).size());
+		Assert.assertEquals(9, result.get(TaskManager.REPORT_WEEK).size());
+		Assert.assertEquals(61, result.get(TaskManager.REPORT_DAILY).size());
+		Assert.assertEquals(61 * 24, result.get(TaskManager.REPORT_HOUR).size());
 	}
 
 	@Test
@@ -54,10 +53,10 @@ public class TaskManagerTest {
 			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
-		Assert.assertEquals(2, result.get(ReportType.MONTH).size());
-		Assert.assertEquals(9, result.get(ReportType.WEEK).size());
-		Assert.assertEquals(61, result.get(ReportType.DAILY).size());
-		Assert.assertEquals(null, result.get(ReportType.HOUR));
+		Assert.assertEquals(2, result.get(TaskManager.REPORT_MONTH).size());
+		Assert.assertEquals(9, result.get(TaskManager.REPORT_WEEK).size());
+		Assert.assertEquals(61, result.get(TaskManager.REPORT_DAILY).size());
+		Assert.assertEquals(null, result.get(TaskManager.REPORT_HOUR));
 	}
 
 	
