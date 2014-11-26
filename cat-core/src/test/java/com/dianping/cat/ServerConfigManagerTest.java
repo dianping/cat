@@ -34,12 +34,12 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(6, manager.getHdfsProperties().size());
 		Assert.assertEquals(0, manager.getLongConfigDomains().size());
 		Assert.assertEquals(100, manager.getLongUrlDefaultThreshold());
-		Assert.assertEquals(true, manager.isClientCall("Call"));
+		Assert.assertEquals(true, manager.isClientCall("PigeonCall"));
 		Assert.assertEquals(true, manager.isHdfsOn());
 		Assert.assertEquals(true, manager.isInitialized());
 		Assert.assertEquals(false, manager.isJobMachine());
 		Assert.assertEquals(false, manager.isLocalMode());
-		Assert.assertEquals(true, manager.isServerService("Service"));
+		Assert.assertEquals(true, manager.isServerService("PigeonService"));
 		Assert.assertEquals(false, manager.validateDomain("All"));
 		
 		Transaction t = new DefaultTransaction("Service", "piegonService:heartTaskService:heartBeat", null);

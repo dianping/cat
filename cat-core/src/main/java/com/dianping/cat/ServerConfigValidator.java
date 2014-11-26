@@ -2,6 +2,7 @@ package com.dianping.cat;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.ConsumerConfig;
+import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
@@ -21,7 +22,11 @@ public class ServerConfigValidator extends DefaultValidator {
 		if (config.getConsole() == null) {
 			config.setConsole(new ConsoleConfig());
 		}
-
+		
+		if(config.getLdap()==null){
+			config.setLdap(new Ldap());
+		}
+		
 		super.visitConfig(config);
 	}
 
