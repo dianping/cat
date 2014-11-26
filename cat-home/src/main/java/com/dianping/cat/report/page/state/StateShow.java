@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
@@ -33,8 +34,11 @@ public class StateShow extends BaseVisitor {
 
 	private ProcessDomain m_processDomain;
 
-	public StateShow(String ip) {
+	private ServerConfigManager m_configManager;
+
+	public StateShow(String ip,ServerConfigManager configManager) {
 		m_ip = ip;
+		m_configManager= configManager;
 	}
 
 	public List<Message> getMessages() {
@@ -59,10 +63,14 @@ public class StateShow extends BaseVisitor {
 	}
 
 	public List<ProcessDomain> getProcessDomains() {
-		ProcessDomain domain = m_processDomains.get("PhoenixAgent");
+		Set<String> invalids = m_configManager.getUnusedDomains();
 
-		if (domain != null) {
-			domain.getIps().clear();
+		for (String s : invalids) {
+			ProcessDomain domain = m_processDomains.get(s);
+
+			if (domain != null) {
+				domain.getIps().clear();
+			}
 		}
 
 		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(m_processDomains.values());

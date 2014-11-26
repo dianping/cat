@@ -8,6 +8,7 @@ import java.util.Map;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -20,6 +21,9 @@ public class StateGraphs {
 
 	@Inject
 	private ReportServiceManager m_reportService;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	public LineChart buildGraph(StateReport report, String domain, Date start, Date end, String reportType, String key,
 	      String ip) {
@@ -63,7 +67,7 @@ public class StateGraphs {
 		for (int i = 0; i < size; i++) {
 			result[i] = 0.0;
 		}
-		StateShow show = new StateShow(ip);
+		StateShow show = new StateShow(ip, m_configManager);
 		show.visitStateReport(report);
 		Map<Long, Detail> datas = null;
 		String domain = "";
@@ -138,7 +142,7 @@ public class StateGraphs {
 
 		for (StateReport report : reports) {
 			Date startTime = report.getStartTime();
-			StateShow show = new StateShow(ip);
+			StateShow show = new StateShow(ip, m_configManager);
 
 			show.visitStateReport(report);
 			int i = (int) ((startTime.getTime() - start) / TimeHelper.ONE_HOUR);
