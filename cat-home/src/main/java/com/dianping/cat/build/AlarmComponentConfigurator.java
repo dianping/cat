@@ -107,10 +107,10 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AlertInfo.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
 		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
-		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProductLineConfigManager.class,
+		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProductLineConfigManager.class,
+		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
 		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProjectService.class,
