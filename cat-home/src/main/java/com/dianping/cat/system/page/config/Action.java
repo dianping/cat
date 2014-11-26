@@ -71,6 +71,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	NETWORK_RULE_DELETE("networkRulDelete"),
 
+	DATABASE_RULE_CONFIG_LIST("databaseRuleConfigList"),
+	
+	DATABASE_RULE_ADD_OR_UPDATE("databaseRuleUpdate"),
+	
+	DATABASE_RULE_ADD_OR_UPDATE_SUBMIT("databaseRuleSubmit"),
+	
+	DATABASE_RULE_DELETE("databaseRulDelete"),
+
 	SYSTEM_RULE_CONFIG_LIST("systemRuleConfigList"),
 
 	SYSTEM_RULE_ADD_OR_UPDATE("systemRuleUpdate"),

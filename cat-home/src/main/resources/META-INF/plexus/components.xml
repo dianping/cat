@@ -5087,6 +5087,9 @@
 					<role>com.dianping.cat.system.page.config.processor.NetworkConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -5317,6 +5320,33 @@
 		<component>
 			<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.NetworkRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DatabaseRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

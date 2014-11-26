@@ -97,6 +97,7 @@
 		           <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigList">网络告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=databaseRuleConfigList">数据库告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigList">系统告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
