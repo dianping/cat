@@ -21,6 +21,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
+import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
@@ -185,6 +186,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
+	public Ldap getLdap() {
+		if (m_config != null) {
+			return m_config.getLdap();
+		} else {
+			return null;
+		}
+	}
+
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -275,8 +284,27 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	}
 
+	public boolean isAlertMachine() {
+		if (m_config != null) {
+			boolean alert = m_config.isAlertMachine();
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+			if ("10.1.6.128".equals(ip) || alert) {
+				return true;
+			} else {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isClientCall(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
+	}
+
+	public boolean isCrashLog(String domain) {
+		return m_crashLogs.contains(domain);
 	}
 
 	public boolean isHdfsOn() {
@@ -295,26 +323,21 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isAlertMachine() {
-		if (m_config != null) {
-			boolean alert = m_config.isAlertMachine();
-			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-			if ("10.1.6.128".equals(ip) || alert) {
-				return true;
-			} else {
-				return false;
-			}
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isLocalMode() {
 		if (m_config != null) {
 			return m_config.isLocalMode();
 		} else {
 			return true;
+		}
+	}
+
+	public boolean isOffline() {
+		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if (address.startsWith("192.168")) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -347,20 +370,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain);
-	}
-
-	public boolean isCrashLog(String domain) {
-		return m_crashLogs.contains(domain);
-	}
-
-	public boolean isOffline() {
-		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if (address.startsWith("192.168")) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 }

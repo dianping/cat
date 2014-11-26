@@ -17,6 +17,7 @@ public class SystemDecorator extends Decorator {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[系统告警] [产品线 ").append(alert.getGroup()).append("]");
 		sb.append("[系统指标 ").append(alert.getMetric()).append("]");
+		
 		return sb.toString();
 	}
 
