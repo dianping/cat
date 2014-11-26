@@ -18,11 +18,11 @@ public class StatusExtensionRegister {
 	private StatusExtensionRegister() {
 	}
 
-	public List<Extension> geteExtensions() {
+	public List<Extension> getStatusExtension() {
 		return m_extensions;
 	}
 
-	public void register(Extension extension) {
-		m_extensions.add(extension);
+	public void register(Extension monitor) {
+		m_extensions.add(monitor);
 	}
 }

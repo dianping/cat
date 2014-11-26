@@ -11,10 +11,15 @@ public class StatusInfoCollectorTest {
 	public void test() {
 		StatusInfo status = new StatusInfo();
 
-		status.accept(new StatusInfoCollector(null));
+		status.accept(new StatusInfoCollector(null, null));
 
-		Assert.assertEquals(true, status.findExtension("DISK FREE") != null);
-		Assert.assertEquals(true, status.findExtension("MEMORY") != null);
-		Assert.assertEquals(true, status.findExtension("MEMORY").findDetail("Max") != null);
+		Assert.assertEquals(true, status.getDisk() != null);
+		Assert.assertEquals(true, status.getMemory() != null);
+		Assert.assertEquals(true, status.getMessage().getBytes() >= 0);
+		Assert.assertEquals(true, status.getMessage().getOverflowed() >= 0);
+		Assert.assertEquals(true, status.getMessage().getProduced() >= 0);
+		Assert.assertEquals(true, status.getOs() != null);
+		Assert.assertEquals(true, status.getRuntime() != null);
+		Assert.assertEquals(true, status.getThread() != null);
 	}
 }
