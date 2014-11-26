@@ -286,7 +286,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		if (m_config.isLocalMode()) {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
-
+	}
+	
+	public Set<String> getUnusedDomains(){
+		return m_invalidateDomains;
 	}
 
 	public boolean isAlertMachine() {
