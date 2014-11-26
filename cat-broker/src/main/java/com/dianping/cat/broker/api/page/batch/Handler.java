@@ -120,7 +120,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 	}
-
+	
 	private void processVersion2Record(int cityId, int operatorId, String record) {
 		String items[] = record.split("\t");
 
@@ -129,6 +129,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				int index = url.indexOf("?");
+
+				if (index > 0) {
+					url = url.substring(0, index);
+				}
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command != null) {
