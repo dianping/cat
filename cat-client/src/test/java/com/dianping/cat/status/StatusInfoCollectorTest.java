@@ -11,10 +11,10 @@ public class StatusInfoCollectorTest {
 	public void test() {
 		StatusInfo status = new StatusInfo();
 
-		status.accept(new StatusInfoCollector(null, null));
+		status.accept(new StatusInfoCollector(null));
 
-		Assert.assertEquals(true, status.findProperty("DiskVolume") != null);
-		Assert.assertEquals(true, status.findProperty("Max") != null);
-		Assert.assertEquals(true, status.findProperty("Arch") != null);
+		Assert.assertEquals(true, status.findExtension("DISK FREE") != null);
+		Assert.assertEquals(true, status.findExtension("MEMORY") != null);
+		Assert.assertEquals(true, status.findExtension("MEMORY").findDetail("Max") != null);
 	}
 }

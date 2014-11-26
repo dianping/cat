@@ -3,13 +3,14 @@
 	enable-merger="true" enable-model-test="true" enable-base-visitor="true">
   <entity name="status" class-name="StatusInfo" >
 		<attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
-		<entity-ref name="property" type="map" names="properties" method-find-or-create="true"/>
+		<entity-ref name="extension" type="map" names="extensions" method-find-or-create="true"/>
   </entity>
-  <entity name="property">
+  <entity name="extension">
     <attribute name="id" value-type="String" key="true"/>
-    <attribute name="value" value-type="String" />
-    <entity-ref name="extension" type="list" names="extensions" method-find-or-create="true"/>
+	<entity-ref name="detail" type="map" names="details" method-find-or-create="true"/>
   </entity>
-  <entity name="extension" dynamic-attributes="true">
+  <entity name="detail">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="value" value-type="double" primitive="true"/>
   </entity>
 </model>

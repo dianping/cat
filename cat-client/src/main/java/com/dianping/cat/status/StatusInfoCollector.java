@@ -10,15 +10,11 @@ import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
 
 import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.status.model.entity.Detail;
 import com.dianping.cat.status.model.entity.Extension;
-import com.dianping.cat.status.model.entity.Property;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.transform.BaseVisitor;
 
@@ -27,22 +23,10 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	private boolean m_dumpLocked;
 
-	private String m_jars;
-
 	private String m_dataPath = "/data";
 
-	public StatusInfoCollector(MessageStatistics statistics, String jars) {
+	public StatusInfoCollector(MessageStatistics statistics) {
 		m_statistics = statistics;
-		m_jars = jars;
-	}
-
-	private void appendExtension(Property property, Map<String, String> map) {
-		Extension e = new Extension();
-
-		for (Entry<String, String> entry : map.entrySet()) {
-			e.setDynamicAttribute(entry.getKey(), entry.getValue());
-		}
-		property.addExtension(e);
 	}
 
 	private int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
@@ -73,23 +57,6 @@ public class StatusInfoCollector extends BaseVisitor {
 		return count;
 	}
 
-	private String getThreadDump(ThreadInfo[] threads) {
-		StringBuilder sb = new StringBuilder(32768);
-		int index = 1;
-
-		TreeMap<String, ThreadInfo> sortedThreads = new TreeMap<String, ThreadInfo>();
-
-		for (ThreadInfo thread : threads) {
-			sortedThreads.put(thread.getThreadName(), thread);
-		}
-
-		for (ThreadInfo thread : sortedThreads.values()) {
-			sb.append(index++).append(": ").append(thread);
-		}
-
-		return sb.toString();
-	}
-
 	boolean isInstanceOfInterface(Class<?> clazz, String interfaceName) {
 		if (clazz == Object.class) {
 			return false;
@@ -108,31 +75,23 @@ public class StatusInfoCollector extends BaseVisitor {
 		return isInstanceOfInterface(clazz.getSuperclass(), interfaceName);
 	}
 
-	private void setDiskInfo(StatusInfo status) {
-		Property diskVolume = status.findOrCreateProperty("DiskVolume");
+	private void setDiskFreeInfo(StatusInfo status) {
+		Extension diskExtension = new Extension("DISK FREE");
+		status.addExtension(diskExtension);
+
 		File[] roots = File.listRoots();
 
 		if (roots != null) {
 			for (File root : roots) {
-				appendExtension(diskVolume, generateDiskMap(root));
+				diskExtension.addDetail(new Detail(root.getAbsolutePath()).setValue(root.getFreeSpace()));
 			}
 		}
 
 		File data = new File(m_dataPath);
 
 		if (data.exists()) {
-			appendExtension(diskVolume, generateDiskMap(data));
+			diskExtension.addDetail(new Detail(data.getAbsolutePath()).setValue(data.getFreeSpace()));
 		}
-	}
-
-	private Map<String, String> generateDiskMap(File data) {
-		Map<String, String> diskDataMap = new HashMap<String, String>();
-
-		diskDataMap.put("Name", data.getAbsolutePath());
-		diskDataMap.put("Total", Long.toString(data.getTotalSpace()));
-		diskDataMap.put("Free", Long.toString(data.getFreeSpace()));
-		diskDataMap.put("Usable", Long.toString(data.getUsableSpace()));
-		return diskDataMap;
 	}
 
 	public StatusInfoCollector setDumpLocked(boolean dumpLocked) {
@@ -141,82 +100,85 @@ public class StatusInfoCollector extends BaseVisitor {
 	}
 
 	private void setMemoryInfo(StatusInfo status) {
+		Extension memoryExtension = new Extension("MEMORY");
+		status.addExtension(memoryExtension);
 		MemoryMXBean memoryBean = ManagementFactory.getMemoryMXBean();
 		Runtime runtime = Runtime.getRuntime();
 
-		status.findOrCreateProperty("Max").setValue(Long.toString(runtime.maxMemory()));
-		status.findOrCreateProperty("Total").setValue(Long.toString(runtime.totalMemory()));
-		status.findOrCreateProperty("MemoryFree").setValue(Long.toString(runtime.freeMemory()));
-		status.findOrCreateProperty("HeapUsage").setValue(Long.toString(memoryBean.getHeapMemoryUsage().getUsed()));
-		status.findOrCreateProperty("NonHeapUsage").setValue(Long.toString(memoryBean.getNonHeapMemoryUsage().getUsed()));
+		memoryExtension.addDetail(new Detail("Max").setValue(runtime.maxMemory()));
+		memoryExtension.addDetail(new Detail("Total").setValue(runtime.totalMemory()));
+		memoryExtension.addDetail(new Detail("MemoryFree").setValue(runtime.freeMemory()));
+		memoryExtension.addDetail(new Detail("HeapUsage").setValue(memoryBean.getHeapMemoryUsage().getUsed()));
+		memoryExtension.addDetail(new Detail("NonHeapUsage").setValue(memoryBean.getNonHeapMemoryUsage().getUsed()));
 
 		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
 			if (mpBean.getName().contains("Eden")) {
-				status.findOrCreateProperty("EdenUsage").setValue(Long.toString(mpBean.getUsage().getUsed()));
+				memoryExtension.addDetail(new Detail("EdenUsage").setValue(mpBean.getUsage().getUsed()));
 			} else if (mpBean.getName().contains("Survivor")) {
-				status.findOrCreateProperty("SurvivorUsage").setValue(Long.toString(mpBean.getUsage().getUsed()));
+				memoryExtension.addDetail(new Detail("SurvivorUsage").setValue(mpBean.getUsage().getUsed()));
 			}
 		}
 
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
-		Property gc = status.findOrCreateProperty("GC");
 
 		for (GarbageCollectorMXBean mxbean : beans) {
 			if (mxbean.isValid()) {
-				Map<String, String> gcMap = new HashMap<String, String>();
+				String beanName = mxbean.getName();
+				long count = mxbean.getCollectionCount();
 
-				gcMap.put("Name", mxbean.getName());
-				gcMap.put("Count", Long.toString(mxbean.getCollectionCount()));
-				gcMap.put("Time", Long.toString(mxbean.getCollectionTime()));
-
-				appendExtension(gc, gcMap);
+				if ("ParNew".equals(beanName) || "PS Scavenge".equals(beanName)) {
+					memoryExtension.addDetail(new Detail("NewGcCount").setValue(count));
+				} else if ("ConcurrentMarkSweep".equals(beanName) || "PS MarkSweep".equals(beanName)) {
+					memoryExtension.addDetail(new Detail("OldGcCount").setValue(count));
+				}
 			}
 		}
 	}
 
 	private void setMessageInfo(StatusInfo status) {
 		if (m_statistics != null) {
-			status.findOrCreateProperty("CatMessageProduced").setValue(Long.toString(m_statistics.getProduced()));
-			status.findOrCreateProperty("CatMessageOverflowed").setValue(Long.toString(m_statistics.getOverflowed()));
-			status.findOrCreateProperty("CatMessageSize").setValue(Long.toString(m_statistics.getBytes()));
+			Extension messageExtension = new Extension("MESSAGE");
+			status.addExtension(messageExtension);
+
+			messageExtension.addDetail(new Detail("CatMessageProduced").setValue(m_statistics.getProduced()));
+			messageExtension.addDetail(new Detail("CatMessageOverflowed").setValue(m_statistics.getOverflowed()));
+			messageExtension.addDetail(new Detail("CatMessageSize").setValue(m_statistics.getBytes()));
 		}
 	}
 
 	private void setOsInfo(StatusInfo status) {
+		Extension osExtension = new Extension("OS");
+		status.addExtension(osExtension);
 		OperatingSystemMXBean bean = ManagementFactory.getOperatingSystemMXBean();
 
-		status.findOrCreateProperty("Arch").setValue(bean.getArch());
-		status.findOrCreateProperty("Name").setValue(bean.getName());
-		status.findOrCreateProperty("Version").setValue(bean.getVersion());
-		status.findOrCreateProperty("AvailableProcessors").setValue(Integer.toString(bean.getAvailableProcessors()));
-		status.findOrCreateProperty("SystemLoadAverage").setValue(Double.toString(bean.getSystemLoadAverage()));
+		osExtension.addDetail(new Detail("AvailableProcessors").setValue(bean.getAvailableProcessors()));
+		osExtension.addDetail(new Detail("SystemLoadAverage").setValue(bean.getSystemLoadAverage()));
 
 		// for Sun JDK
 		if (isInstanceOfInterface(bean.getClass(), "com.sun.management.OperatingSystemMXBean")) {
 			com.sun.management.OperatingSystemMXBean b = (com.sun.management.OperatingSystemMXBean) bean;
 
-			status.findOrCreateProperty("TotalPhysicalMemory").setValue(Long.toString(b.getTotalPhysicalMemorySize()));
-			status.findOrCreateProperty("FreePhysicalMemory").setValue(Long.toString(b.getFreePhysicalMemorySize()));
-			status.findOrCreateProperty("TotalSwapSpace").setValue(Long.toString(b.getTotalSwapSpaceSize()));
-			status.findOrCreateProperty("FreeSwapSpace").setValue(Long.toString(b.getFreeSwapSpaceSize()));
-			status.findOrCreateProperty("ProcessTime").setValue(Long.toString(b.getProcessCpuTime()));
-			status.findOrCreateProperty("CommittedVirtualMemory").setValue(
-			      Long.toString(b.getCommittedVirtualMemorySize()));
+			osExtension.addDetail(new Detail("TotalPhysicalMemory").setValue(b.getTotalPhysicalMemorySize()));
+			osExtension.addDetail(new Detail("FreePhysicalMemory").setValue(b.getFreePhysicalMemorySize()));
+			osExtension.addDetail(new Detail("TotalSwapSpace").setValue(b.getTotalSwapSpaceSize()));
+			osExtension.addDetail(new Detail("FreeSwapSpace").setValue(b.getFreeSwapSpaceSize()));
+			osExtension.addDetail(new Detail("ProcessTime").setValue(b.getProcessCpuTime()));
+			osExtension.addDetail(new Detail("CommittedVirtualMemory").setValue(b.getCommittedVirtualMemorySize()));
 		}
 	}
 
 	private void setRuntimeInfo(StatusInfo status) {
 		RuntimeMXBean runtimeBean = ManagementFactory.getRuntimeMXBean();
+		Extension runtimeExtension = new Extension("RUNTIME");
+		status.addExtension(runtimeExtension);
 
-		status.findOrCreateProperty("StartTime").setValue(Long.toString(runtimeBean.getStartTime()));
-		status.findOrCreateProperty("UpTime").setValue(Long.toString(runtimeBean.getUptime()));
-		status.findOrCreateProperty("JavaClasspath").setValue(m_jars);
-		status.findOrCreateProperty("JavaVersion").setValue(System.getProperty("java.version"));
-		status.findOrCreateProperty("UserDir").setValue(System.getProperty("user.dir"));
-		status.findOrCreateProperty("UserName").setValue(System.getProperty("user.name"));
+		runtimeExtension.addDetail(new Detail("StartTime").setValue(runtimeBean.getStartTime()));
+		runtimeExtension.addDetail(new Detail("UpTime").setValue(runtimeBean.getUptime()));
 	}
 
 	private void setThreadInfo(StatusInfo status) {
+		Extension threadExtension = new Extension("THREAD");
+		status.addExtension(threadExtension);
 		ThreadInfo[] threads;
 		ThreadMXBean threadbean = ManagementFactory.getThreadMXBean();
 
@@ -228,19 +190,18 @@ public class StatusInfoCollector extends BaseVisitor {
 			threads = threadbean.dumpAllThreads(false, false);
 		}
 
-		status.findOrCreateProperty("ThreadCount").setValue(Integer.toString(threadbean.getThreadCount()));
-		status.findOrCreateProperty("DaemonCount").setValue(Integer.toString(threadbean.getDaemonThreadCount()));
-		status.findOrCreateProperty("PeekCount").setValue(Integer.toString(threadbean.getPeakThreadCount()));
-		status.findOrCreateProperty("TotalStartedCount").setValue(Long.toString(threadbean.getTotalStartedThreadCount()));
-		status.findOrCreateProperty("CatThreadCount").setValue(Integer.toString(countThreadsByPrefix(threads, "Cat-")));
-		status.findOrCreateProperty("PigeonThreadCount").setValue(
-		      Integer.toString(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-", "Client-ResponseProcessor")));
+		threadExtension.addDetail(new Detail("ThreadCount").setValue(threadbean.getThreadCount()));
+		threadExtension.addDetail(new Detail("DaemonCount").setValue(threadbean.getDaemonThreadCount()));
+		threadExtension.addDetail(new Detail("PeekCount").setValue(threadbean.getPeakThreadCount()));
+		threadExtension.addDetail(new Detail("TotalStartedCount").setValue(threadbean.getTotalStartedThreadCount()));
+		threadExtension.addDetail(new Detail("CatThreadCount").setValue(countThreadsByPrefix(threads, "Cat-")));
+		threadExtension.addDetail(new Detail("PigeonThreadCount").setValue(countThreadsByPrefix(threads, "Pigeon-",
+		      "DPSF-", "Netty-", "Client-ResponseProcessor")));
 
 		int jbossThreadsCount = countThreadsByPrefix(threads, "http-", "catalina-exec-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
 
-		status.findOrCreateProperty("HttpThreadCount").setValue(Integer.toString(jbossThreadsCount + jettyThreadsCount));
-		status.findOrCreateProperty("Dump").setValue(getThreadDump(threads));
+		threadExtension.addDetail(new Detail("HttpThreadCount").setValue(jbossThreadsCount + jettyThreadsCount));
 	}
 
 	@Override
@@ -248,7 +209,7 @@ public class StatusInfoCollector extends BaseVisitor {
 		status.setTimestamp(new Date());
 
 		setOsInfo(status);
-		setDiskInfo(status);
+		setDiskFreeInfo(status);
 		setRuntimeInfo(status);
 		setMemoryInfo(status);
 		setThreadInfo(status);

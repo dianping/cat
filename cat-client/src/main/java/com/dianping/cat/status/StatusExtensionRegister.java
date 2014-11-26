@@ -3,11 +3,11 @@ package com.dianping.cat.status;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.status.model.entity.Property;
+import com.dianping.cat.status.model.entity.Extension;
 
 public class StatusExtensionRegister {
 
-	private List<Property> m_extensions = new ArrayList<Property>();
+	private List<Extension> m_extensions = new ArrayList<Extension>();
 
 	public static StatusExtensionRegister s_register = new StatusExtensionRegister();
 
@@ -18,11 +18,11 @@ public class StatusExtensionRegister {
 	private StatusExtensionRegister() {
 	}
 
-	public List<Property> getExtentionProperties() {
+	public List<Extension> geteExtensions() {
 		return m_extensions;
 	}
 
-	public void register(Property property) {
-		m_extensions.add(property);
+	public void register(Extension extension) {
+		m_extensions.add(extension);
 	}
 }

@@ -62,8 +62,6 @@ margin: 4px auto;
 		<tr id="memoryGraph">
 			<td><div id="MemoryFree" class="graph"></div></td>
 			<td><div id="HeapUsage" class="graph"></div></td>
-			<td><div id="EdenUsage" class="graph"></div></td>
-			<td><div id="SurvivorUsage" class="graph"></div></td>
 			<td><div id="NoneHeapUsage" class="graph"></div></td>
 			<script>
 			//10
@@ -73,14 +71,20 @@ margin: 4px auto;
 			var heapUsageGraphData = ${model.heapUsageGraph};
 			graphLineChart(document.getElementById('HeapUsage'), heapUsageGraphData);
 			//12
-			var edenUsageGraphData = ${model.edenUsageGraph};
-			graphLineChart(document.getElementById('EdenUsage'), edenUsageGraphData);
-			//13
-			var survivorUsageGraphData = ${model.survivorUsageGraph};
-			graphLineChart(document.getElementById('survivorUsage'), survivorUsageGraphData);
-			//14
 			var noneHeapUsageGraphData = ${model.noneHeapUsageGraph};
 			graphLineChart(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
+			</script>
+		</tr>
+		<tr id="memoryGenGraph">
+			<td><div id="EdenUsage" class="graph"></div></td>
+			<td><div id="SurvivorUsage" class="graph"></div></td>
+			<script>
+			//13
+			var edenUsageGraphData = ${model.edenUsageGraph};
+			graphLineChart(document.getElementById('EdenUsage'), edenUsageGraphData);
+			//14
+			var survivorUsageGraphData = ${model.survivorUsageGraph};
+			graphLineChart(document.getElementById('SurvivorUsage'), survivorUsageGraphData);
 			</script>
 		</tr>
 	</c:when>

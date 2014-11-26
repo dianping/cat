@@ -1,7 +1,5 @@
 package com.dianping.cat.status;
 
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Calendar;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.status.model.entity.Property;
+import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
 public class StatusUpdateTask implements Task, Initializable {
@@ -35,40 +33,12 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private long m_interval = 60 * 1000; // 60 seconds
 
-	private String m_jars;
-
-	private void buildClasspath() {
-		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
-		StringBuilder sb = new StringBuilder();
-
-		buildClasspath(loader, sb);
-		if (sb.length() > 0) {
-			m_jars = sb.substring(0, sb.length() - 1);
-		}
-	}
-
-	private void buildClasspath(ClassLoader loader, StringBuilder sb) {
-		if (loader instanceof URLClassLoader) {
-			URL[] urLs = ((URLClassLoader) loader).getURLs();
-			for (URL url : urLs) {
-				String jar = parseJar(url.toExternalForm());
-
-				if (jar != null) {
-					sb.append(jar).append(',');
-				}
-			}
-			ClassLoader parent = loader.getParent();
-
-			buildClasspath(parent, sb);
-		}
-	}
-
 	private void buildExtensionData(StatusInfo status) {
 		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
-		List<Property> extensions = res.getExtentionProperties();
+		List<Extension> extensions = res.geteExtensions();
 
-		for (Property extension : extensions) {
-			status.findOrCreateProperty(extension.getId()).setValue(extension.getValue());
+		for (Extension extension : extensions) {
+			status.addExtension(extension);
 		}
 	}
 
@@ -80,17 +50,6 @@ public class StatusUpdateTask implements Task, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-	}
-
-	private String parseJar(String path) {
-		if (path.endsWith(".jar")) {
-			int index = path.lastIndexOf('/');
-
-			if (index > -1) {
-				return path.substring(index + 1);
-			}
-		}
-		return null;
 	}
 
 	@Override
@@ -118,7 +77,6 @@ public class StatusUpdateTask implements Task, Initializable {
 			}
 		}
 
-		buildClasspath();
 		MessageProducer cat = Cat.getProducer();
 		Transaction reboot = cat.newTransaction("System", "Reboot");
 
@@ -136,7 +94,7 @@ public class StatusUpdateTask implements Task, Initializable {
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
 				try {
-					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jars);
+					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics);
 
 					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
 

@@ -7,7 +7,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -17,8 +16,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.status.model.entity.Detail;
 import com.dianping.cat.status.model.entity.Extension;
-import com.dianping.cat.status.model.entity.Property;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
@@ -26,6 +25,19 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Inject(ID)
 	private ReportManager<HeartbeatReport> m_reportManager;
+
+	private com.dianping.cat.consumer.heartbeat.model.entity.Extension convertExtension(Extension extension) {
+		com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
+
+		he.setId(extension.getId());
+		for (Detail detail : extension.getDetails().values()) {
+			com.dianping.cat.consumer.heartbeat.model.entity.Detail hd = new com.dianping.cat.consumer.heartbeat.model.entity.Detail(
+			      detail.getId()).setValue(detail.getValue());
+
+			he.addDetail(hd);
+		}
+		return he;
+	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -62,63 +74,10 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		int minute = cal.get(Calendar.MINUTE);
 		Period period = new Period(minute);
 
-		try {
-			for (Property property : info.getProperties().values()) {
-				if ("GC".equals(property.getId())) {
-					List<Extension> gcs = property.getExtensions();
-
-					for (Extension gc : gcs) {
-						String name = gc.getDynamicAttribute("Name");
-
-						if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
-							com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
-							      "NewGcCount");
-
-							hp.setValue(gc.getDynamicAttribute("Count"));
-							period.addProperty(hp);
-						} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
-							com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
-							      "NewGcCount");
-
-							hp.setValue(gc.getDynamicAttribute("Count"));
-							period.addProperty(hp);
-						}
-					}
-				} else if ("DiskVolume".equals(property.getId())) {
-					List<Extension> diskVolumes = property.getExtensions();
-
-					if (diskVolumes != null) {
-						com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property(
-						      "Disk");
-
-						for (Extension volumeInfo : diskVolumes) {
-							com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
-
-							he.setDynamicAttribute("Name", volumeInfo.getDynamicAttribute("Name"));
-							he.setDynamicAttribute("Total", volumeInfo.getDynamicAttribute("Total"));
-							he.setDynamicAttribute("Free", volumeInfo.getDynamicAttribute("Free"));
-							he.setDynamicAttribute("Usable", volumeInfo.getDynamicAttribute("Usable"));
-							hp.addExtension(he);
-						}
-						period.addProperty(hp);
-					}
-				} else {
-					period.addProperty(convertProperty(property));
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
+		for (Extension extension : info.getExtensions().values()) {
+			period.addExtension(convertExtension(extension));
 		}
-
 		return period;
-	}
-
-	private com.dianping.cat.consumer.heartbeat.model.entity.Property convertProperty(Property property) {
-		com.dianping.cat.consumer.heartbeat.model.entity.Property hp = new com.dianping.cat.consumer.heartbeat.model.entity.Property();
-
-		hp.setId(property.getId());
-		hp.setValue(property.getValue());
-		return hp;
 	}
 
 	@Override
