@@ -30,14 +30,15 @@ import javax.naming.ldap.LdapContext;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.LDAPConfigManager;
+import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.system.page.login.service.Token;
 
 public class LDAPService {
 
 	@Inject
-	private LDAPConfigManager m_LDAPConfigManager;
+	private ServerConfigManager m_serverConfigManager;
 
 	@SuppressWarnings("rawtypes")
 	public Token authenticate(String userName, String password) throws Exception {
@@ -79,9 +80,10 @@ public class LDAPService {
 
 		if (shortName != null && distinguishedName != null) {
 			env = new Hashtable<String, String>();
+			Ldap ldap = m_serverConfigManager.getLdap();
 
-			env.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
-			env.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
+			env.put(Context.INITIAL_CONTEXT_FACTORY, ldap.getLdapFactory());
+			env.put(Context.PROVIDER_URL, ldap.getLdapUrl());// LDAP server
 			env.put(Context.SECURITY_AUTHENTICATION, "simple");
 			env.put(Context.SECURITY_PRINCIPAL, distinguishedName);
 			env.put(Context.SECURITY_CREDENTIALS, password);
@@ -105,17 +107,17 @@ public class LDAPService {
 	@SuppressWarnings("rawtypes")
 	private NamingEnumeration getInfo(String sAMAccountName) throws NamingException {
 		Hashtable<String, String> solidEnv = new Hashtable<String, String>();
-		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, m_LDAPConfigManager.getLdapFactory());
-		solidEnv.put(Context.PROVIDER_URL, m_LDAPConfigManager.getLdapUrl());// LDAP server
+		Ldap ldap = m_serverConfigManager.getLdap();
+
+		solidEnv.put(Context.INITIAL_CONTEXT_FACTORY, ldap.getLdapFactory());
+		solidEnv.put(Context.PROVIDER_URL, ldap.getLdapUrl());// LDAP server
 		solidEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
-		solidEnv.put(Context.SECURITY_PRINCIPAL, "cn=" + m_LDAPConfigManager.getSolidUsername() + ","
-		      + m_LDAPConfigManager.getSolidDN());
-		solidEnv.put(Context.SECURITY_CREDENTIALS, m_LDAPConfigManager.getSolidPwd());
+		solidEnv.put(Context.SECURITY_PRINCIPAL, "cn=" + ldap.getSolidUsername() + "," + ldap.getSolidDN());
+		solidEnv.put(Context.SECURITY_CREDENTIALS, ldap.getSolidPassword());
 		LdapContext solidContext = new InitialLdapContext(solidEnv, null);
 		SearchControls constraints = new SearchControls();
 		constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
-		NamingEnumeration en = solidContext.search("", m_LDAPConfigManager.getLoginAttribute() + "=" + sAMAccountName,
-		      constraints);
+		NamingEnumeration en = solidContext.search("", ldap.getLoginAttribute() + "=" + sAMAccountName, constraints);
 
 		if (en == null) {
 			Cat.logEvent("LoginError", "HaveNoNamingEnumeration", Event.SUCCESS, null);

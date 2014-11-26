@@ -15,7 +15,7 @@ public class NetworkDecorator extends Decorator {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("[网络告警] [产品线 ").append(alert.getGroup()).append("]");
+		sb.append("[网络告警] [设备 ").append(alert.getGroup()).append("]");
 		sb.append("[网络指标 ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}

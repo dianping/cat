@@ -7,7 +7,6 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ReportType;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
@@ -25,16 +24,24 @@ public class TaskManager {
 
 	private static final int STATUS_TODO = 1;
 
+	public static final int REPORT_HOUR = 0;
+
+	public static final int REPORT_DAILY = 1;
+
+	public static final int REPORT_WEEK = 2;
+
+	public static final int REPORT_MONTH = 3;
+
 	private void createDailyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.DAILY);
+		createTask(period, domain, name, REPORT_DAILY);
 	}
 
 	private void createHourlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.HOUR);
+		createTask(period, domain, name, REPORT_HOUR);
 	}
 
 	private void createMonthlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.MONTH);
+		createTask(period, domain, name, REPORT_MONTH);
 	}
 
 	protected void createTask(Date period, String domain, String name, int reportType) throws DalException {
@@ -89,7 +96,7 @@ public class TaskManager {
 	}
 
 	private void createWeeklyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, ReportType.WEEK);
+		createTask(period, domain, name, REPORT_WEEK);
 
 	}
 

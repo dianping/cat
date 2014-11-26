@@ -8,22 +8,9 @@
 		<statement-cache-size>1000</statement-cache-size>
 		<properties>
 			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[jdbc:mysql://192.168.7.43:3306/cat]]></url>
-			<user>dpcom_cat</user>
-			<password>password</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-		</properties>
-	</data-source>
-	<data-source id="user">
-		<maximum-pool-size>3</maximum-pool-size>
-		<connection-timeout>1s</connection-timeout>
-		<idle-timeout>10m</idle-timeout>
-		<statement-cache-size>1000</statement-cache-size>
-		<properties>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[jdbc:mysql://10.1.1.231:3306/MonCenter]]></url>
-			<user>dpcom_cat</user>
-			<password>dp!@cattac</password>
+			<url><![CDATA[${jdbc.url}]]></url>
+			<user>${jdbc.user}</user>
+			<password>${jdbc.password}</password>
 			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 		</properties>
 	</data-source>

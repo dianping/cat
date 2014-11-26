@@ -11,8 +11,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ReportType;
 import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.task.TaskManager;
 
 public class ReportFacade extends ContainerHolder implements LogEnabled, Initializable {
 
@@ -37,13 +37,13 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 			} else {
 				boolean result = false;
 
-				if (type == ReportType.HOUR) {
+				if (type == TaskManager.REPORT_HOUR) {
 					result = reportBuilder.buildHourlyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == ReportType.DAILY) {
+				} else if (type == TaskManager.REPORT_DAILY) {
 					result = reportBuilder.buildDailyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == ReportType.WEEK) {
+				} else if (type == TaskManager.REPORT_WEEK) {
 					result = reportBuilder.buildWeeklyTask(reportName, reportDomain, reportPeriod);
-				} else if (type == ReportType.MONTH) {
+				} else if (type == TaskManager.REPORT_MONTH) {
 					result = reportBuilder.buildMonthlyTask(reportName, reportDomain, reportPeriod);
 				}
 				if (result) {
