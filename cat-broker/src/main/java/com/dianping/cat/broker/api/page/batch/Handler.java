@@ -176,7 +176,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidPar", items[4], Event.SUCCESS, items[4]);
+			Cat.logEvent("InvalidRecord", record, Event.SUCCESS, record);
 		}
 	}
 

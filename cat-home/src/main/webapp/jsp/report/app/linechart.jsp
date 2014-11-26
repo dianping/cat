@@ -143,7 +143,7 @@
 			var query2 = "";
 			var value = document.getElementById("checkbox").checked;
 
-			if (value == true) {
+			if (value) {
 				var time2 = $("#time2").val();
 				var command2 = $("#command2").val();
 				var code2 = $("#code2").val();
