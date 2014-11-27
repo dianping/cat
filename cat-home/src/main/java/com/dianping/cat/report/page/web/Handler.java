@@ -6,8 +6,10 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
@@ -22,15 +24,16 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.Monitor;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
+import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context> {
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -46,6 +49,74 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private WebGraphCreator m_graphCreator;
 
+	private Pair<Map<String, LineChart>, List<PieChart>> buildDisplayInfo(QueryEntity query, String title) {
+		Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(query, title);
+		Map<String, LineChart> lineCharts = charts.getKey();
+		List<PieChart> pieCharts = charts.getValue();
+
+		return new Pair<Map<String, LineChart>, List<PieChart>>(lineCharts, pieCharts);
+	}
+
+	private void buildInfoCharts(Model model, QueryEntity currentQuery, QueryEntity compareQuery) {
+		Map<String, LineChart> lineCharts = new LinkedHashMap<String, LineChart>();
+		List<PieChart> pieCharts = new LinkedList<PieChart>();
+		Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
+
+		lineCharts.putAll(currentPair.getKey());
+		pieCharts.addAll(currentPair.getValue());
+
+		if (compareQuery != null) {
+			Pair<Map<String, LineChart>, List<PieChart>> comparePair = buildDisplayInfo(compareQuery, "对比值");
+			for (Entry<String, LineChart> entry : comparePair.getKey().entrySet()) {
+				LineChart linechart = entry.getValue();
+				LineChart l = lineCharts.get(entry.getKey());
+
+				if (l != null) {
+					l.add(linechart.getSubTitles().get(0), linechart.getValueObjects().get(0));
+				}
+			}
+			pieCharts.addAll(comparePair.getValue());
+			model.setCompareStart(compareQuery.getStart());
+			model.setCompareEnd(compareQuery.getEnd());
+		}
+		for (Entry<String, LineChart> entry : lineCharts.entrySet()) {
+			if (WebGraphCreator.SUCESS_PERCENT.equals(entry.getKey())) {
+				LineChart linechart = entry.getValue();
+
+				linechart.setMinYlable(m_graphCreator.queryMinYlable(linechart.getValueObjects()));
+				linechart.setMaxYlabel(100.0);
+			}
+		}
+		model.setLineCharts(lineCharts);
+		model.setPieCharts(pieCharts);
+	}
+
+	private Pair<QueryEntity, QueryEntity> buildQueryEntities(Payload payload) {
+		Pair<Date, Date> startPair = payload.getHistoryStartDatePair();
+		Pair<Date, Date> endPair = payload.getHistoryEndDatePair();
+		List<String> urls = Splitters.by(";").split(payload.getUrl());
+		List<String> channels = Splitters.by(";").split(payload.getChannel());
+		List<String> cities = Splitters.by(";").split(payload.getCity());
+		String type = payload.getType();
+		QueryEntity current = buildQueryEntity(startPair.getKey(), endPair.getKey(), urls.get(0), type, channels.get(0),
+		      cities.get(0));
+		QueryEntity compare = null;
+
+		if (startPair.getValue() != null && endPair.getValue() != null && urls.size() == 2) {
+			compare = buildQueryEntity(startPair.getValue(), endPair.getValue(), urls.get(1), Monitor.TYPE_INFO,
+			      channels.get(1), cities.get(1));
+		}
+		return new Pair<QueryEntity, QueryEntity>(current, compare);
+	}
+
+	private QueryEntity buildQueryEntity(Date start, Date end, String url, String type, String channel, String city) {
+		QueryEntity queryEntity = new QueryEntity(start, end, url);
+
+		queryEntity.addPar("metricType", Constants.METRIC_USER_MONITOR).addPar("type", type).addPar("channel", channel)
+		      .addPar("city", city);
+		return queryEntity;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "web")
@@ -60,81 +131,42 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
-		Collection<PatternItem> rules = m_patternManager.queryUrlPatternRules();
-
-		long start = payload.getHistoryStartDate().getTime();
-		long end = payload.getHistoryEndDate().getTime();
-
-		start = start - start % TimeHelper.ONE_HOUR;
-		end = end - end % TimeHelper.ONE_HOUR;
-
-		Date startDate = new Date(start);
-		Date endDate = new Date(end);
-		String type = payload.getType();
-		String channel = payload.getChannel();
-		String city = payload.getCity();
-		Map<String, String> pars = new LinkedHashMap<String, String>();
-		String url = payload.getUrl();
-
-		if (url == null && rules.size() > 0) {
-			PatternItem patternItem = new ArrayList<PatternItem>(rules).get(0);
-
-			url = patternItem.getName();
-			payload.setGroup(patternItem.getGroup());
-			payload.setUrl(url);
-		}
-
-		pars.put("metricType", Constants.METRIC_USER_MONITOR);
-		pars.put("type", type);
-		pars.put("channel", channel);
-		pars.put("city", city);
-
+		Pair<QueryEntity, QueryEntity> queryEntities = buildQueryEntities(payload);
+		QueryEntity currentQuery = queryEntities.getKey();
+		QueryEntity compareQuery = queryEntities.getValue();
 		Action action = payload.getAction();
 
 		switch (action) {
 		case VIEW:
-			if (url != null) {
-				if (Monitor.TYPE_INFO.equals(type)) {
-					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
-					      url, pars);
-					Map<String, LineChart> lineCharts = charts.getKey();
-					List<PieChart> pieCharts = charts.getValue();
+			if (Monitor.TYPE_INFO.equals(payload.getType())) {
+				buildInfoCharts(model, currentQuery, compareQuery);
+			} else {
+				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
 
-					model.setLineCharts(lineCharts);
-					model.setPieCharts(pieCharts);
-				} else {
-					Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
-
-					model.setLineChart(pair.getKey());
-					model.setPieChart(pair.getValue());
-				}
+				model.setLineChart(pair.getKey());
+				model.setPieChart(pair.getValue());
 			}
-			model.setStart(startDate);
-			model.setEnd(endDate);
-			model.setPattermItems(rules);
+			model.setStart(currentQuery.getStart());
+			model.setEnd(currentQuery.getEnd());
+			model.setPattermItems(m_patternManager.queryUrlPatternRules());
 			model.setAction(Action.VIEW);
-			model.setPage(ReportPage.WEB);
 			model.setCityInfo(m_cityManager.getCityInfo());
 			break;
-
 		case JSON:
-			if (url != null) {
-				Map<String, Object> jsonObjs = new HashMap<String, Object>();
+			Map<String, Object> jsonObjs = new HashMap<String, Object>();
 
-				if (Monitor.TYPE_INFO.equals(type)) {
-					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
-					      url, pars);
+			if (Monitor.TYPE_INFO.equals(payload.getType())) {
+				Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
 
-					jsonObjs.put("lineCharts", charts.getKey());
-					jsonObjs.put("pieCharts", charts.getValue());
-				} else {
-					Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(startDate, endDate, url, pars);
+				jsonObjs.put("lineCharts", currentPair.getKey());
+				jsonObjs.put("pieCharts", currentPair.getValue());
+			} else {
+				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
 
-					jsonObjs.put("lineChart", pair.getKey());
-					jsonObjs.put("pieChart", pair.getValue());
-				}
-				model.setJson(new JsonBuilder().toJson(jsonObjs));
+				jsonObjs.put("lineChart", pair.getKey());
+				jsonObjs.put("pieChart", pair.getValue());
 			}
+			model.setJson(new JsonBuilder().toJson(jsonObjs));
 			break;
 		}
 
@@ -145,7 +177,68 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.WEB);
+		Collection<PatternItem> rules = m_patternManager.queryUrlPatternRules();
+		String url = payload.getUrl();
+
+		if (url == null && rules.size() > 0) {
+			PatternItem patternItem = new ArrayList<PatternItem>(rules).get(0);
+
+			url = patternItem.getName();
+			payload.setGroup(patternItem.getGroup());
+			payload.setUrl(url);
+		}
 
 		m_normalizePayload.normalize(model, payload);
+	}
+
+	public class QueryEntity {
+		private String m_url;
+
+		private Date m_start;
+
+		private Date m_end;
+
+		private Map<String, String> m_pars = new HashMap<String, String>();
+
+		public QueryEntity(Date start, Date end, String url) {
+			m_start = start;
+			m_end = end;
+			m_url = url;
+		}
+
+		public QueryEntity addPar(String par, String value) {
+			m_pars.put(par, value);
+			return this;
+		}
+
+		public Date getEnd() {
+			return m_end;
+		}
+
+		public Map<String, String> getPars() {
+			return m_pars;
+		}
+
+		public Date getStart() {
+			return m_start;
+		}
+
+		public String getType() {
+			return m_pars.get("type");
+		}
+
+		public String getUrl() {
+			return m_url;
+		}
+
+		public QueryEntity setEnd(Date end) {
+			m_end = end;
+			return this;
+		}
+
+		public QueryEntity setStart(Date start) {
+			m_start = start;
+			return this;
+		}
 	}
 }
