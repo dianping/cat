@@ -163,12 +163,12 @@ public class Handler implements PageHandler<Context> {
 					model.setStart(TimeHelper.getCurrentDay());
 					model.setEnd(new Date());
 				}
-				model.setPattermItems(m_patternManager.queryUrlPatternRules());
-				model.setAction(Action.VIEW);
-				model.setCityInfo(m_cityManager.getCityInfo());
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+			model.setPattermItems(m_patternManager.queryUrlPatternRules());
+			model.setAction(Action.VIEW);
+			model.setCityInfo(m_cityManager.getCityInfo());
 			break;
 		case JSON:
 			try {
