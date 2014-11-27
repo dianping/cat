@@ -28,6 +28,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
 import com.site.helper.Splitters;
+import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -125,19 +126,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion1Record(Integer cityId, Integer operatorId, String record) {
-		List<String> items = Splitters.by("\\t").split(record);
-		int length = items.size();
+		String[] items = record.split("\t");
+		int length = items.length;
 
 		if (length == 6) {
 			try {
-				String speedId = URLDecoder.decode(items.get(4), "utf-8").toLowerCase();
+				String speedId = URLDecoder.decode(items[4], "utf-8").toLowerCase();
 
 				if (speedId != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					long current = System.currentTimeMillis();
-					int network = Integer.parseInt(items.get(1));
-					int version = Integer.parseInt(items.get(2));
-					int platform = Integer.parseInt(items.get(3));
+					int network = Integer.parseInt(items[1]);
+					int version = Integer.parseInt(items[2]);
+					int platform = Integer.parseInt(items[3]);
 
 					for (int i = 5; i < length; i++) {
 						AppSpeedProto appData = new AppSpeedProto();
@@ -151,7 +152,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						offerAppSpeedData(appData, speedId, items, i);
 					}
 				} else {
-					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items.get(4));
+					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
@@ -161,8 +162,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void offerAppSpeedData(AppSpeedProto appData, String speedId, List<String> items, int i) {
-		List<String> fields = Splitters.by("-").split(items.get(i));
+	private void offerAppSpeedData(AppSpeedProto appData, String speedId, String[] items, int i) {
+		List<String> fields = Splitters.by("-").split(items[i]);
 		String step = fields.get(0);
 		long responseTime = Long.parseLong(fields.get(1));
 		int id = m_appSpeedConfigManager.querySpeedId(speedId, step);
@@ -204,11 +205,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
-		List<String> records = Splitters.by("\\n").noEmptyItem().split(content);
+		String[] records = content.split("\n");
 
 		for (String record : records) {
 			try {
-				processVersion1Record(cityId, operatorId, record);
+				if (StringUtils.isNotEmpty(record)) {
+					processVersion1Record(cityId, operatorId, record);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
