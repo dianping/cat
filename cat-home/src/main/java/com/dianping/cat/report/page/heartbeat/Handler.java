@@ -65,8 +65,6 @@ public class Handler implements PageHandler<Context> {
 		model.setNewGcCountGraph(displayHeartbeat.getNewGcCountGraph());
 		model.setOldGcCountGraph(displayHeartbeat.getOldGcCountGraph());
 		model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
-		model.setEdenUsageGraph(displayHeartbeat.getEdenUsageGraph());
-		model.setSurvivorUsageGraph(displayHeartbeat.getSurvivorUsageGraph());
 		model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
 		model.setDisks(displayHeartbeat.getDisks());
 		model.setDisksGraph(displayHeartbeat.getDisksGraph());

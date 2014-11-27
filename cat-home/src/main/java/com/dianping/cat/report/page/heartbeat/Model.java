@@ -37,10 +37,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_heapUsageGraph;
 
-	private String m_edenUsageGraph;
-
-	private String m_survivorUsageGraph;
-
 	private int m_hour;
 
 	private String m_httpThreadGraph;
@@ -144,10 +140,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public String getEdenUsageGraph() {
-		return m_edenUsageGraph;
-	}
-
 	public Map<String, Map<String, String>> getExtensionGraph() {
 		return m_extensionGraph;
 	}
@@ -227,10 +219,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_startedThreadGraph;
 	}
 
-	public String getSurvivorUsageGraph() {
-		return m_survivorUsageGraph;
-	}
-
 	public String getSystemLoadAverageGraph() {
 		return m_systemLoadAverageGraph;
 	}
@@ -273,10 +261,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setDisksGraph(String disksGraph) {
 		m_disksGraph = disksGraph;
-	}
-
-	public void setEdenUsageGraph(String edenUsageGraph) {
-		m_edenUsageGraph = edenUsageGraph;
 	}
 
 	public void setExtensionGraph(Map<String, Map<String, String>> extensionGraph) {
@@ -334,10 +318,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setStartedThreadGraph(String startedThreadGraph) {
 		m_startedThreadGraph = startedThreadGraph;
-	}
-
-	public void setSurvivorUsageGraph(String survivorUsageGraph) {
-		m_survivorUsageGraph = survivorUsageGraph;
 	}
 
 	public void setSystemLoadAverageGraph(String systemLoadAverageGraph) {

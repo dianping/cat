@@ -51,8 +51,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			result.put("StartedThread", getAddedCount(totalStartedThread));
 		}
 		String[] addedDatas = { "NewGcCount", "OldGcCount", "CatMessageProduced", "CatMessageSize", "CatMessageOverflow" };
-		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "EdenUsage", "SurvivorUsage", "NoneHeapUsage",
-		      "MemoryFree" };
+		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree" };
 
 		organiseAddedData(result, addedDatas);
 		divideByK(result, divideByKDates);
@@ -176,9 +175,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private Map<String, String[]> initial(int size) {
 		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
 		String[] names = { "ActiveThread", "HttpThread", "CatMessageOverflow", "CatMessageProduced", "CatMessageSize",
-		      "CatThreadCount", "DaemonThread", "HeapUsage", "EdenUsage", "SurvivorUsage", "MemoryFree", "NewGcCount",
-		      "NoneHeapUsage", "OldGcCount", "PigeonStartedThread", "SystemLoadAverage", "TotalStartedThread",
-		      "StartedThread" };
+		      "CatThreadCount", "DaemonThread", "HeapUsage", "MemoryFree", "NewGcCount", "NoneHeapUsage", "OldGcCount",
+		      "PigeonStartedThread", "SystemLoadAverage", "TotalStartedThread", "StartedThread" };
 		for (String name : names) {
 			String[] singlePeriod = initialData(size);
 			heartBeats.put(name, singlePeriod);
@@ -240,9 +238,6 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			model.setMemoryFreeGraph(getGraphItem("Memory Free (MB) ", "MemoryFree", start, size, graphData)
 			      .getJsonString());
 			model.setHeapUsageGraph(getGraphItem("Heap Usage (MB) ", "HeapUsage", start, size, graphData).getJsonString());
-			model.setEdenUsageGraph(getGraphItem("Eden Usage (MB) ", "EdenUsage", start, size, graphData).getJsonString());
-			model.setSurvivorUsageGraph(getGraphItem("Survivor Usage (MB) ", "SurvivorUsage", start, size, graphData)
-			      .getJsonString());
 			model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
 			      .getJsonString());
 		} else if (queryType.equalsIgnoreCase("disk")) {

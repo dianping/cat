@@ -2,12 +2,16 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -17,9 +21,14 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
-import com.dianping.cat.status.model.entity.Detail;
+import com.dianping.cat.status.model.entity.DiskInfo;
+import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
+import com.dianping.cat.status.model.entity.GcInfo;
+import com.dianping.cat.status.model.entity.MemoryInfo;
+import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
+import com.dianping.cat.status.model.entity.ThreadsInfo;
 
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
 	public static final String ID = "heartbeat";
@@ -44,23 +53,69 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		int minute = cal.get(Calendar.MINUTE);
 		Period period = new Period(minute);
 
-		for (Extension extension : info.getExtensions().values()) {
-			period.addExtension(convertExtension(extension));
+		try {
+			ThreadsInfo thread = info.getThread();
+			machine.setClasspath(info.getRuntime().getJavaClasspath());
+
+			period.setThreadCount(thread.getCount());
+			period.setDaemonCount(thread.getDaemonCount());
+			period.setTotalStartedCount(thread.getTotalStartedCount());
+			period.setCatThreadCount(thread.getCatThreadCount());
+			period.setPigeonThreadCount(thread.getPigeonThreadCount());
+			period.setHttpThreadCount(thread.getHttpThreadCount());
+
+			MessageInfo catInfo = info.getMessage();
+
+			period.setCatMessageProduced(catInfo.getProduced());
+			period.setCatMessageOverflow(catInfo.getOverflowed());
+			period.setCatMessageSize(catInfo.getBytes());
+
+			MemoryInfo memeryInfo = info.getMemory();
+			List<GcInfo> gcs = info.getMemory().getGcs();
+
+			for (GcInfo gc : gcs) {
+				String name = gc.getName();
+
+				if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
+					period.setNewGcCount(gc.getCount());
+				} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
+					period.setOldGcCount(gc.getCount());
+				}
+			}
+
+			period.setHeapUsage(memeryInfo.getHeapUsage());
+			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
+			period.setMemoryFree(memeryInfo.getFree());
+			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
+
+			DiskInfo diskInfo = info.getDisk();
+
+			if (diskInfo != null) {
+				for (DiskVolumeInfo volumeInfo : diskInfo.getDiskVolumes()) {
+					Disk disk = new Disk(volumeInfo.getId());
+
+					disk.setTotal(volumeInfo.getTotal());
+					disk.setFree(volumeInfo.getFree());
+					disk.setUsable(volumeInfo.getUsable());
+					period.addDisk(disk);
+				}
+			}
+
+			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
+				String id = entry.getKey();
+				Extension ext = entry.getValue();
+
+				com.dianping.cat.consumer.heartbeat.model.entity.Extension extension = period.findOrCreateExtension(id);
+				for (Entry<String, String> kv : ext.getDynamicAttributes().entrySet()) {
+					double value = Double.valueOf(kv.getValue());
+					extension.getDetails().put(kv.getKey(), new Detail(kv.getKey()).setValue(value));
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
+
 		return period;
-	}
-
-	private com.dianping.cat.consumer.heartbeat.model.entity.Extension convertExtension(Extension extension) {
-		com.dianping.cat.consumer.heartbeat.model.entity.Extension he = new com.dianping.cat.consumer.heartbeat.model.entity.Extension();
-
-		he.setId(extension.getId());
-		for (Detail detail : extension.getDetails().values()) {
-			com.dianping.cat.consumer.heartbeat.model.entity.Detail hd = new com.dianping.cat.consumer.heartbeat.model.entity.Detail(
-			      detail.getId()).setValue(detail.getValue());
-
-			he.addDetail(hd);
-		}
-		return he;
 	}
 
 	@Override

@@ -75,18 +75,6 @@ margin: 4px auto;
 			graphLineChart(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
 			</script>
 		</tr>
-		<tr id="memoryGenGraph">
-			<td><div id="EdenUsage" class="graph"></div></td>
-			<td><div id="SurvivorUsage" class="graph"></div></td>
-			<script>
-			//13
-			var edenUsageGraphData = ${model.edenUsageGraph};
-			graphLineChart(document.getElementById('EdenUsage'), edenUsageGraphData);
-			//14
-			var survivorUsageGraphData = ${model.survivorUsageGraph};
-			graphLineChart(document.getElementById('SurvivorUsage'), survivorUsageGraphData);
-			</script>
-		</tr>
 	</c:when>
 	<c:when test="${payload.type eq 'disk'}">
 		<tr id="memoryGraph"></tr>

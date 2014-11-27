@@ -53,10 +53,6 @@ public class DisplayHeartbeat {
 
 	private double[] m_heapUsage = new double[60];
 
-	private double[] m_edenUsage = new double[60];
-
-	private double[] m_survivorUsage = new double[60];
-
 	private double[] m_httpThreads = new double[60];
 
 	private double[] m_memoryFree = new double[60];
@@ -118,12 +114,6 @@ public class DisplayHeartbeat {
 
 			period.setHeapUsage(period.getHeapUsage() / K / K);
 			m_heapUsage[minute] = period.getHeapUsage();
-
-			period.setEdenUsage(period.getEdenUsage() / K / K);
-			m_edenUsage[minute] = period.getEdenUsage();
-
-			period.setSurvivorUsage(period.getSurvivorUsage() / K / K);
-			m_survivorUsage[minute] = period.getSurvivorUsage();
 
 			period.setNoneHeapUsage(period.getNoneHeapUsage() / K / K);
 			m_noneHeapUsage[minute] = period.getNoneHeapUsage();
@@ -387,24 +377,8 @@ public class DisplayHeartbeat {
 		return m_heapUsage;
 	}
 
-	public double[] getEdenUsage() {
-		return m_edenUsage;
-	}
-
-	public double[] getSurvivorUsage() {
-		return m_survivorUsage;
-	}
-
 	public String getHeapUsageGraph() {
 		return m_builder.build(new HeartbeatPayload(1, "Heap Usage", "Minute", "MB", m_heapUsage));
-	}
-
-	public String getEdenUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Eden Usage", "Minute", "MB", m_edenUsage));
-	}
-
-	public String getSurvivorUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Survivor Usage", "Minute", "MB", m_survivorUsage));
 	}
 
 	public String getHttpTheadGraph() {

@@ -51,8 +51,6 @@
 					        	<option value="OldGcCount">OldGcCount</option>
 					        	<option value="MemoryFree">MemoryFree</option>
 					        	<option value="HeapUsage">HeapUsage</option>
-					        	<option value="EdenUsage">EdenUsage</option>
-					        	<option value="SurvivorUsage">SurvivorUsage</option>
 					        	<option value="NoneHeapUsage">NoneHeapUsage</option>
 					        	<option value="SystemLoadAverage">SystemLoadAverage</option>
 					        	<option value="CatMessageOverflow">CatMessageOverflow</option>

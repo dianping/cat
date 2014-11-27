@@ -43,8 +43,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private HeartbeatReport m_currentReport;
 
 	private static final String[] m_metrics = { "ThreadCount", "DaemonCount", "TotalStartedCount", "CatThreadCount",
-	      "PiegonThreadCount", "HttpThreadCount", "NewGcCount", "OldGcCount", "MemoryFree", "HeapUsage", "EdenUsage",
-	      "SurvivorUsage", "NoneHeapUsage", "SystemLoadAverage", "CatMessageOverflow", "CatMessageSize" };
+	      "PiegonThreadCount", "HttpThreadCount", "NewGcCount", "OldGcCount", "MemoryFree", "HeapUsage",
+	      "NoneHeapUsage", "SystemLoadAverage", "CatMessageOverflow", "CatMessageSize" };
 
 	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
 		double[] array = map.get(name);
@@ -133,8 +133,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			buildArray(map, index, "OldGcCount", period.getOldGcCount());
 			buildArray(map, index, "MemoryFree", period.getMemoryFree());
 			buildArray(map, index, "HeapUsage", period.getHeapUsage());
-			buildArray(map, index, "EdenUsage", period.getEdenUsage());
-			buildArray(map, index, "SurvivorUsage", period.getSurvivorUsage());
 			buildArray(map, index, "NoneHeapUsage", period.getNoneHeapUsage());
 			buildArray(map, index, "SystemLoadAverage", period.getSystemLoadAverage());
 			buildArray(map, index, "CatMessageOverflow", period.getCatMessageOverflow());

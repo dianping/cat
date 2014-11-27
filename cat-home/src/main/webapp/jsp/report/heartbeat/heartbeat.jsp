@@ -81,14 +81,6 @@
 	</td>
 </tr>
 <tr>
-	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
-		  ${model.edenUsageGraph}
-		  ${model.survivorUsageGraph}
-		</svg>
-	</td>
-</tr>
-<tr>
 	<th>Disk Info</th>
 </tr>
 <tr>
@@ -139,8 +131,6 @@
 		<th>OldGcCount</th>
 		<th>SystemLoad</th>
 		<th>HeapUsage</th>
-		<th>EdenUsage</th>
-		<th>SurvivorUsage</th>
 		<th>NoneHeapUsage</th>
 		<th>MemoryFree</th>
 		<th>DiskFree</th>
@@ -160,8 +150,6 @@
 		<td>${item.oldGcCount}</td>
 		<td>${w:format(item.systemLoadAverage,'0.00')}</td>
 		<td>${w:format(item.heapUsage,'0.0MB')}</td>
-		<td>${w:format(item.edenUsage,'0.0MB')}</td>
-		<td>${w:format(item.survivorUsage,'0.0MB')}</td>
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>
 		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
