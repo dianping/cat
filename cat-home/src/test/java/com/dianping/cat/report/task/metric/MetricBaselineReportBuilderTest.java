@@ -12,9 +12,7 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.home.dal.report.Baseline;
-import com.dianping.cat.report.baseline.BaselineConfig;
-import com.dianping.cat.report.baseline.BaselineConfigManager;
-import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.service.BaselineService;
 
 public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 

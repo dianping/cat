@@ -1,4 +1,4 @@
-package com.dianping.cat.report.baseline.impl;
+package com.dianping.cat.report.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -18,7 +18,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
-import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.TaskHelper;
 
 public class DefaultBaselineService implements BaselineService {

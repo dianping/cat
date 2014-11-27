@@ -24,7 +24,7 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.report.baseline.BaselineService;
+import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelPeriod;
