@@ -48,10 +48,10 @@ public class StatusInfoCollector extends BaseVisitor {
 			if (mpBean.getName().contains("Eden")) {
 				long count = mpBean.getUsage().getUsed();
 
-				heapUsage.setDynamicAttribute("Eden", Long.toString(count));
+				heapUsage.setDynamicAttribute("EdenUsage", Long.toString(count));
 			} else if (mpBean.getName().contains("Survivor")) {
 				long count = mpBean.getUsage().getUsed();
-
+				
 				heapUsage.setDynamicAttribute("SurvivorUsage", Long.toString(count));
 			}
 		}
