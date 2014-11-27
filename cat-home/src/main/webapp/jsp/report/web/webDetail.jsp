@@ -92,7 +92,7 @@
 				<div>
 				<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 					<div style="float: left;">
-						<div id="${item.id}" style="float: left; width: 95%;"></div>
+						<div id="${item.id}" style="float: left; width: 98%;"></div>
 					</div>
 				</c:forEach></div>
 				<div>
@@ -104,14 +104,8 @@
 				</c:forEach></div>
 			</c:when>
 			<c:otherwise>
-				<div class="row-fluid">
-					<div class="span6">
-						<div id="lineChart" style="float: left; width: 100%;"></div>
-					</div>
-					<div class="span6">
-						<div id="pieChart" style="width:550px; height:400px;"></div>
-					</div>
-				</div>
+					<div id="lineChart" style="float: left; width: 98%;"></div>
+					<div id="pieChart" style="float: left; width: 98%;"></div>
 			</c:otherwise>
 		</c:choose>
 
