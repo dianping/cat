@@ -38,8 +38,8 @@
 				</select>
 				查询类型 <select style="width: 100px;" name="type" id="type">
 						<option value="info">访问情况</option>
-						<option value="httpStatus">HttpStatus</option>
-						<option value="errorCode">Code</option>
+						<option value="httpStatus">Http返回码</option>
+						<option value="errorCode">错误码</option>
 				</select>
 				<input class="btn btn-primary "
 					value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
