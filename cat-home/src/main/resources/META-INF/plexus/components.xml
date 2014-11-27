@@ -997,12 +997,12 @@
 			<implementation>com.dianping.cat.report.task.metric.MetricPointParser</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.baseline.BaselineCreator</role>
-			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineCreator</implementation>
+			<role>com.dianping.cat.report.task.metric.BaselineCreator</role>
+			<implementation>com.dianping.cat.report.task.metric.impl.DefaultBaselineCreator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.baseline.BaselineService</role>
-			<implementation>com.dianping.cat.report.baseline.impl.DefaultBaselineService</implementation>
+			<role>com.dianping.cat.report.service.BaselineService</role>
+			<implementation>com.dianping.cat.report.service.impl.DefaultBaselineService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.BaselineDao</role>
@@ -1010,8 +1010,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
-			<implementation>com.dianping.cat.report.baseline.BaselineConfigManager</implementation>
+			<role>com.dianping.cat.report.task.metric.BaselineConfigManager</role>
+			<implementation>com.dianping.cat.report.task.metric.BaselineConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
@@ -1031,13 +1031,13 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineCreator</role>
+					<role>com.dianping.cat.report.task.metric.BaselineCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineConfigManager</role>
+					<role>com.dianping.cat.report.task.metric.BaselineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2726,7 +2726,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2753,7 +2753,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2780,7 +2780,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2807,7 +2807,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
@@ -2844,7 +2844,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2892,7 +2892,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2922,7 +2922,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -3984,7 +3984,7 @@
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -4311,7 +4311,7 @@
 			<implementation>com.dianping.cat.report.page.network.GraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -4436,7 +4436,7 @@
 			<implementation>com.dianping.cat.report.page.web.graph.WebGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -4493,7 +4493,7 @@
 			<implementation>com.dianping.cat.report.page.system.graph.SystemGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -4544,7 +4544,7 @@
 			<implementation>com.dianping.cat.report.page.cdn.graph.CdnGraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>
@@ -4900,7 +4900,7 @@
 			<implementation>com.dianping.cat.report.page.database.GraphCreator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.DataExtractor</role>

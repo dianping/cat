@@ -1,4 +1,4 @@
-package com.dianping.cat.report.baseline;
+package com.dianping.cat.report.task.metric;
 
 import java.util.Arrays;
 

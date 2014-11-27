@@ -61,6 +61,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			Cat.logError(e);
+			t.setStatus(e);
 		} finally {
 			t.complete();
 		}

@@ -1,10 +1,10 @@
-package com.dianping.cat.report.baseline.impl;
+package com.dianping.cat.report.task.metric.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.dianping.cat.report.baseline.BaselineCreator;
+import com.dianping.cat.report.task.metric.BaselineCreator;
 
 public class DefaultBaselineCreator implements BaselineCreator {
 
