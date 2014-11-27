@@ -1,4 +1,4 @@
-package com.dianping.cat.report.chart.impl;
+package com.dianping.cat.report.graph.metric.impl;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -14,7 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.CachedMetricReportService;
+import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;

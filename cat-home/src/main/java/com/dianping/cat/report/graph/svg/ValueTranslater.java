@@ -1,4 +1,4 @@
-package com.dianping.cat.report.graph;
+package com.dianping.cat.report.graph.svg;
 
 public interface ValueTranslater {
 	public double getMaxValue(double[] values);

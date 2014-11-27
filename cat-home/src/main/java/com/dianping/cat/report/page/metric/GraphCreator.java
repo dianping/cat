@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.AbstractGraphCreator;
+import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;

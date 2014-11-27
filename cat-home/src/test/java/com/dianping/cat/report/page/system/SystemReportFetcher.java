@@ -18,7 +18,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.DataExtractor;
+import com.dianping.cat.report.graph.metric.DataExtractor;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 
 public class SystemReportFetcher extends ComponentTestCase {

@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.AbstractGraphCreator;
+import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 
 public class CdnGraphCreator extends AbstractGraphCreator {
