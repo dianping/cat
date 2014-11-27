@@ -1,6 +1,9 @@
 package com.dianping.cat.report.page.web.graph;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -21,16 +24,17 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
+import com.dianping.cat.report.page.web.Handler.QueryEntity;
 
 public class WebGraphCreator extends AbstractGraphCreator {
 
-	private static final String COUNT = "每分钟访问量(次数)";
+	private static final String COUNT = "访问量(次数/5分钟)";
 
-	private static final String AVG = "每分钟响应时间(ms)";
+	private static final String AVG = "平均响应时间(毫秒/5分钟)";
 
-	private static final String SUCESS_PERCENT = "每分钟调用成功率(%)";
+	public static final String SUCESS_PERCENT = "访问成功率(%/5分钟)";
 
-	private List<PieChart> buildDetailPieChart(MetricReport report) {
+	private List<PieChart> buildDetailPieChart(MetricReport report, String title) {
 		Map<String, Statistic> statics = report.getStatistics();
 		List<PieChart> charts = new ArrayList<PieChart>();
 
@@ -47,107 +51,106 @@ public class WebGraphCreator extends AbstractGraphCreator {
 				item.setTitle(tmp.getId());
 				items.add(item);
 			}
-			chart.setTitle(entry.getKey());
+			chart.setTitle(entry.getKey() + "【" + title + "】");
 			chart.addItems(items);
 			charts.add(chart);
 		}
 		return charts;
 	}
 
-	public Pair<LineChart, PieChart> buildErrorChartData(final Map<String, double[]> datas, Date startDate,
-	      Date endDate, final Map<String, double[]> dataWithOutFutures) {
+	public Pair<LineChart, PieChart> buildCodeChartData(final Map<String, Double[]> dataWithOutFutures, String type) {
 		LineChart lineChart = new LineChart();
-		int step = m_dataExtractor.getStep();
-		lineChart.setStart(startDate);
-		lineChart.setStep(step * TimeHelper.ONE_MINUTE);
+		lineChart.setUnit("");
+		lineChart.setHtmlTitle(type + "平均分布(个/5分钟)");
+
 		PieChart pieChart = new PieChart();
 		List<PieChart.Item> items = new ArrayList<PieChart.Item>();
 
 		pieChart.addItems(items);
-		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
+		for (Entry<String, Double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
-			double[] value = entry.getValue();
-			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
-			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
+			Double[] value = entry.getValue();
 
-			addLastMinuteData(current, all, m_lastMinute, endDate);
-			lineChart.setSize(value.length);
-			lineChart.add(entry.getKey(), current);
-
-			double sum = computeSum(current);
+			lineChart.add(key, value);
+			double sum = computeSum(value);
 			items.add(new Item().setTitle(entry.getKey()).setNumber(sum));
 		}
 		return new Pair<LineChart, PieChart>(lineChart, pieChart);
 	}
 
-	private Map<String, LineChart> buildInfoChartData(final Map<String, double[]> datas, Date startDate, Date endDate,
-	      final Map<String, double[]> dataWithOutFutures) {
+	private Map<String, LineChart> buildInfoChartData(final Map<String, Double[]> dataWithOutFutures, Date startDate,
+	      Date endDate, String title) {
 		Map<String, LineChart> charts = new LinkedHashMap<String, LineChart>();
 
-		int step = m_dataExtractor.getStep();
-
-		for (Entry<String, double[]> entry : dataWithOutFutures.entrySet()) {
+		for (Entry<String, Double[]> entry : dataWithOutFutures.entrySet()) {
 			String key = entry.getKey();
-			double[] value = entry.getValue();
+			Double[] value = entry.getValue();
 			LineChart lineChart = new LineChart();
 
 			lineChart.setId(key);
+			lineChart.setUnit("");
 			lineChart.setTitle(key);
-			lineChart.setStart(startDate);
-			lineChart.setSize(value.length);
-			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-
-			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
-			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
-
-			addLastMinuteData(current, all, m_lastMinute, endDate);
-			lineChart.add(entry.getKey(), current);
+			lineChart.setHtmlTitle(key);
+			lineChart.add(title, value);
 			charts.put(key, lineChart);
 		}
 		return charts;
 	}
 
-	public double computeSum(Map<Long, Double> data) {
+	public double computeSum(Double[] data) {
 		double result = 0;
 
-		for (double d : data.values()) {
-			result = result + d;
+		for (int i = 0; i < data.length; i++) {
+			if (data[i] != null) {
+				result = result + data[i];
+			}
 		}
 		return result;
 	}
 
-	private Map<String, double[]> fetchMetricCodeInfo(MetricReport report) {
+	private Map<String, Double[]> fetchMetricCodeInfo(MetricReport report) {
 		Map<String, MetricItem> items = report.getMetricItems();
-		Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
+		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		for (Entry<String, MetricItem> item : items.entrySet()) {
 			String id = item.getKey();
 			int index = id.indexOf("|");
 			String key = id.substring(index + 1);
 			Map<Integer, Segment> segments = item.getValue().getSegments();
-			double[] data = datas.get(key);
+			Double[] data = datas.get(key);
 
 			if (data == null) {
-				data = new double[60];
+				data = new Double[12];
 				datas.put(key, data);
 			}
 			for (Segment segment : segments.values()) {
-				int count = segment.getCount();
-				int minute = segment.getId();
-
-				data[minute] = count;
+				dataInc(data, segment.getId() / 5, segment.getCount());
 			}
 		}
 		return datas;
 	}
 
-	private Map<String, double[]> fetchMetricInfoData(MetricReport report) {
-		Map<String, double[]> data = new LinkedHashMap<String, double[]>();
+	private void dataInc(Double[] datas, int index, double value) {
+		if (datas[index] != null) {
+			datas[index] += value;
+		} else {
+			datas[index] = value;
+		}
+	}
 
-		double[] count = new double[60];
-		double[] avg = new double[60];
-		double[] error = new double[60];
-		double[] successPercent = new double[60];
+	private Map<String, Double[]> fetchMetricInfoData(MetricReport report) {
+		Map<String, Double[]> data = new LinkedHashMap<String, Double[]>();
+
+		Double[] count = new Double[12];
+		Double[] avg = new Double[12];
+		Double[] avgCount = new Double[12];
+		Double[] avgSum = new Double[12];
+		Double[] error = new Double[12];
+		Double[] successPercent = new Double[12];
+
+		for (int i = 0; i < successPercent.length; i++) {
+			successPercent[i] = 100.0;
+		}
 
 		data.put(COUNT, count);
 		data.put(AVG, avg);
@@ -160,77 +163,137 @@ public class WebGraphCreator extends AbstractGraphCreator {
 			Map<Integer, Segment> segments = item.getValue().getSegments();
 
 			for (Segment segment : segments.values()) {
-				int id = segment.getId();
+				int id = segment.getId() / 5;
 
 				if (key.endsWith(Constants.HIT)) {
-					count[id] = segment.getCount();
+					dataInc(count, id, segment.getCount());
 				} else if (key.endsWith(Constants.ERROR)) {
-					error[id] = segment.getCount();
+					dataInc(error, id, segment.getCount());
 				} else if (key.endsWith(Constants.AVG)) {
-					avg[id] = segment.getAvg();
+					dataInc(avgCount, id, segment.getCount());
+					dataInc(avgSum, id, segment.getSum());
 				}
 			}
 		}
 
-		for (int i = 0; i < 60; i++) {
-			double sum = count[i];
-			double success = count[i] - error[i];
+		for (int i = 0; i < 12; i++) {
+			if (avgSum[i] != null && avgCount[i] != null) {
+				avg[i] = avgSum[i] / avgCount[i];
+			}
+		}
 
-			if (sum > 0) {
-				successPercent[i] = success / sum * 100.0;
-			} else {
-				successPercent[i] = 100;
+		for (int i = 0; i < 12; i++) {
+			if (count[i] != null) {
+				double sum = count[i];
+				double success = count[i] - (error[i] != null ? error[i] : 0.0);
+
+				if (sum > 0) {
+					successPercent[i] = success / sum * 100.0;
+				} else {
+					successPercent[i] = 100.0;
+				}
 			}
 		}
 		return data;
 	}
 
-	private Map<String, double[]> prepareAllData(MetricReport all, String url, Map<String, String> pars, Date startDate,
-	      Date endDate) {
-		long start = startDate.getTime(), end = endDate.getTime();
-		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
-		Map<String, double[]> sourceValue = new LinkedHashMap<String, double[]>();
-		int index = 0;
-		String type = pars.get("type");
+	protected void mergeValue(Map<String, Double[]> all, Map<String, Double[]> item, int size, int index) {
+		for (Entry<String, Double[]> entry : item.entrySet()) {
+			String key = entry.getKey();
+			Double[] value = entry.getValue();
+			Double[] result = all.get(key);
+
+			if (result == null) {
+				result = new Double[size];
+				all.put(key, result);
+				if (SUCESS_PERCENT.equals(key)) {
+					for (int i = 0; i < size; i++) {
+						result[i] = 100.0;
+					}
+				}
+			}
+			if (value != null) {
+				int length = value.length;
+				int pos = index;
+				for (int i = 0; i < length && pos < size; i++, pos++) {
+					result[pos] = value[i];
+				}
+			}
+		}
+	}
+
+	private Map<String, Double[]> prepareAllData(MetricReport all, QueryEntity query) {
+		long start = query.getStart().getTime(), end = query.getEnd().getTime();
+		Date currentDay = TimeHelper.getCurrentDay(start);
+		int totalSize = queryDuration(currentDay, 288);
+		Map<String, Double[]> sourceValue = new LinkedHashMap<String, Double[]>();
+		String type = query.getPars().get("type");
 		MetricReportMerger merger = new MetricReportMerger(all);
 
 		for (; start < end; start += TimeHelper.ONE_HOUR) {
-			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
+			MetricReport report = m_metricReportService.queryUserMonitorReport(query.getUrl(), query.getPars(), new Date(
+			      start));
+			int index = (int) ((start - currentDay.getTime()) / (TimeHelper.ONE_MINUTE * 5));
 
 			if (Constants.TYPE_INFO.equals(type)) {
-				Map<String, double[]> currentValues = fetchMetricInfoData(report);
+				Map<String, Double[]> currentValues = fetchMetricInfoData(report);
 
-				mergeMap(sourceValue, currentValues, totalSize, index);
+				mergeValue(sourceValue, currentValues, totalSize, index);
 				report.accept(merger);
 			} else {
-				Map<String, double[]> currentValues = fetchMetricCodeInfo(report);
+				Map<String, Double[]> currentValues = fetchMetricCodeInfo(report);
 
-				mergeMap(sourceValue, currentValues, totalSize, index);
+				mergeValue(sourceValue, currentValues, totalSize, index);
 			}
-			index++;
 		}
 		return sourceValue;
 	}
 
-	public Pair<Map<String, LineChart>, List<PieChart>> queryBaseInfo(Date startDate, Date endDate, String url,
-	      Map<String, String> pars) {
-		MetricReport report = new MetricReport(url);
-		Map<String, double[]> oldCurrentValues = prepareAllData(report, url, pars, startDate, endDate);
-		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
-		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+	public Pair<Map<String, LineChart>, List<PieChart>> queryBaseInfo(QueryEntity queryEntity, String title) {
+		MetricReport report = new MetricReport(queryEntity.getUrl());
+		Map<String, Double[]> oldCurrentValues = prepareAllData(report, queryEntity);
+		Map<String, LineChart> lineCharts = buildInfoChartData(oldCurrentValues, queryEntity.getStart(),
+		      queryEntity.getEnd(), title);
+		List<PieChart> pieCharts = buildDetailPieChart(report, title);
 
-		Map<String, LineChart> lineCharts = buildInfoChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
-		List<PieChart> pieCharts = buildDetailPieChart(report);
 		return new Pair<Map<String, LineChart>, List<PieChart>>(lineCharts, pieCharts);
 	}
 
-	public Pair<LineChart, PieChart> queryErrorInfo(Date startDate, Date endDate, String url, Map<String, String> pars) {
-		MetricReport report = new MetricReport(url);
-		Map<String, double[]> oldCurrentValues = prepareAllData(report, url, pars, startDate, endDate);
-		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
-		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
+	private int queryDuration(Date period, int defaultValue) {
+		Calendar cal = Calendar.getInstance();
 
-		return buildErrorChartData(oldCurrentValues, startDate, endDate, dataWithOutFutures);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		if (cal.getTime().equals(period)) {
+			long start = cal.getTimeInMillis();
+			long current = System.currentTimeMillis();
+			int length = (int) (current - current % 300000 - start) / 300000;
+
+			return length < 0 ? 0 : length;
+		}
+		return defaultValue;
 	}
 
+	public Pair<LineChart, PieChart> queryErrorInfo(QueryEntity queryEntity) {
+		MetricReport report = new MetricReport(queryEntity.getUrl());
+		Map<String, Double[]> oldCurrentValues = prepareAllData(report, queryEntity);
+
+		return buildCodeChartData(oldCurrentValues, queryEntity.getType());
+	}
+
+	public double queryMinYlable(final List<Double[]> datas) {
+		double min = Double.MAX_VALUE;
+
+		for (Double[] data : datas) {
+			List<Double> dataList = Arrays.asList(data);
+			double tmp = Collections.min(dataList);
+			if (min > tmp) {
+				min = tmp;
+			}
+		}
+		return min;
+	}
 }

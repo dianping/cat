@@ -31,6 +31,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Date m_end;
 
+	private Date m_compareStart;
+
+	private Date m_compareEnd;
+
 	private String m_cityInfo;
 
 	private String m_json;
@@ -45,6 +49,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getCityInfo() {
 		return m_cityInfo;
+	}
+
+	public Date getCompareEnd() {
+		return m_compareEnd;
+	}
+
+	public Date getCompareStart() {
+		return m_compareStart;
 	}
 
 	@Override
@@ -119,6 +131,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCityInfo(String cityInfo) {
 		m_cityInfo = cityInfo;
+	}
+
+	public void setCompareEnd(Date compareEnd) {
+		m_compareEnd = compareEnd;
+	}
+
+	public void setCompareStart(Date compareStart) {
+		m_compareStart = compareStart;
 	}
 
 	public void setEnd(Date end) {

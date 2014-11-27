@@ -2,6 +2,7 @@ package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -26,6 +26,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
+import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -120,15 +121,15 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 	}
-	
-	private void processVersion2Record(int cityId, int operatorId, String record) {
-		String items[] = record.split("\t");
 
-		if (items.length == 10) {
+	private void processVersion2Record(int cityId, int operatorId, String record) {
+		List<String> items = Splitters.by("\\t").split(record);
+
+		if (items.size() == 10) {
 			AppDataProto appData = new AppDataProto();
 
 			try {
-				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String url = URLDecoder.decode(items.get(4), "utf-8").toLowerCase();
 				int index = url.indexOf("?");
 
 				if (index > 0) {
@@ -140,14 +141,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());
 					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setNetwork(Integer.parseInt(items.get(1)));
+					appData.setVersion(Integer.parseInt(items.get(2)));
+					appData.setConnectType(Integer.parseInt(items.get(3)));
+					appData.setCode(Integer.parseInt(items.get(5)));
+					appData.setPlatform(Integer.parseInt(items.get(6)));
+					appData.setRequestByte(Integer.parseInt(items.get(7)));
+					appData.setResponseByte(Integer.parseInt(items.get(8)));
+					appData.setResponseTime(Integer.parseInt(items.get(9)));
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
@@ -170,7 +171,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items.get(4));
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
@@ -199,13 +200,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {
-		String records[] = content.split("\n");
+		List<String> records = Splitters.by("\\n").noEmptyItem().split(content);
 
 		for (String record : records) {
 			try {
-				if (!StringUtils.isEmpty(record)) {
-					processVersion2Record(cityId, operatorId, record);
-				}
+				processVersion2Record(cityId, operatorId, record);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
