@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="display-policy" root="true">
+    <entity-ref name="metric" type="list" names="metrics" />
+  </entity>
+  <entity name="metric">
+    <attribute name="id" value-type="String" />
+    <attribute name="unit" value-type="String" />
+  </entity>
+</model>
+

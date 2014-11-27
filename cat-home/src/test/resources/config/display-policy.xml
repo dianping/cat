@@ -1,0 +1,4 @@
+<display-policy>
+	<metric id="EdenUsage" unit="M" />
+	<metric id="SurvivorUsage" unit="M" />
+</display-policy>

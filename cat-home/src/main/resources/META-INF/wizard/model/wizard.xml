@@ -72,4 +72,7 @@
    <model package="com.dianping.cat.home.jar" name="jar-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/jar/jar.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.display/policy" name="display-policy">
+      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/display-policy.xml</sample-model>
+   </model>
 </wizard>
