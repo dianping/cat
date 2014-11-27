@@ -20,15 +20,15 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
-import com.dianping.cat.storage.dump.MessageBucket;
-import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 	public static final String ID = "hdfs";

@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.dump;
+package com.dianping.cat.storage.message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;

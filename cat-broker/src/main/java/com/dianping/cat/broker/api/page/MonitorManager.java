@@ -16,7 +16,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.Monitor;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
@@ -55,26 +55,26 @@ public class MonitorManager implements Initializable, LogEnabled {
 		int count = entity.getCount();
 
 		if (duration > 0) {
-			logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Monitor.AVG);
+			logMetricForAvg(timestamp, duration, group, city + ":" + channel + ":" + Constants.AVG);
 		}
 
-		String hitKey = city + ":" + channel + ":" + Monitor.HIT;
+		String hitKey = city + ":" + channel + ":" + Constants.HIT;
 
 		logMetricForCount(timestamp, group, hitKey, count);
 
 		if (!"200".equals(httpStatus)) {
-			String key = city + ":" + channel + ":" + Monitor.ERROR;
+			String key = city + ":" + channel + ":" + Constants.ERROR;
 
 			logMetricForCount(timestamp, group, key, count);
 		}
 
 		if (!StringUtils.isEmpty(httpStatus)) {
-			String key = city + ":" + channel + ":" + Monitor.HTTP_STATUS + "|" + httpStatus;
+			String key = city + ":" + channel + ":" + Constants.HTTP_STATUS + "|" + httpStatus;
 
 			logMetricForCount(timestamp, group, key, count);
 		}
 		if (!StringUtils.isEmpty(errorCode)) {
-			String key = city + ":" + channel + ":" + Monitor.ERROR_CODE + "|" + errorCode;
+			String key = city + ":" + channel + ":" + Constants.ERROR_CODE + "|" + errorCode;
 
 			logMetricForCount(timestamp, group, key, count);
 		}

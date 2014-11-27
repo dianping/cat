@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatCoreModule;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
@@ -22,6 +21,7 @@ import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.config.url.UrlPatternHandler;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -35,10 +35,10 @@ import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.dump.LocalMessageBucket;
-import com.dianping.cat.storage.dump.LocalMessageBucketManager;
-import com.dianping.cat.storage.dump.MessageBucket;
-import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.storage.message.LocalMessageBucket;
+import com.dianping.cat.storage.message.LocalMessageBucketManager;
+import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {

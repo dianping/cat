@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.web.graph;
 import org.hsqldb.lib.StringUtil;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Monitor;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -34,30 +34,30 @@ public class WebReportConvertor extends BaseVisitor {
 			total = total + segment.getCount();
 		}
 
-		if (Monitor.TYPE_INFO.equals(m_type)) {
+		if (Constants.TYPE_INFO.equals(m_type)) {
 			String key = "";
 
-			if (info.equals(Monitor.HIT)) {
-				key = Monitor.HIT_COUNT;
-			} else if (info.equals(Monitor.ERROR)) {
-				key = Monitor.ERROR_COUNT;
+			if (info.equals(Constants.HIT)) {
+				key = Constants.HIT_COUNT;
+			} else if (info.equals(Constants.ERROR)) {
+				key = Constants.ERROR_COUNT;
 			} else {
 				return;
 			}
 			int index = city.indexOf('-');
 			if (StringUtil.isEmpty(m_city)) {
-				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+				StatisticsItem tem = m_report.findOrCreateStatistic(Constants.CITY + key).findOrCreateStatisticsItem(
 				      city.substring(0, index));
 
 				tem.setCount(tem.getCount() + total);
 			} else if (!m_city.equals(city)) {
-				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CITY + key).findOrCreateStatisticsItem(
+				StatisticsItem tem = m_report.findOrCreateStatistic(Constants.CITY + key).findOrCreateStatisticsItem(
 				      city.substring(index + 1));
 
 				tem.setCount(tem.getCount() + total);
 			}
 			if (StringUtil.isEmpty(m_channel)) {
-				StatisticsItem tem = m_report.findOrCreateStatistic(Monitor.CHANNEL + key).findOrCreateStatisticsItem(
+				StatisticsItem tem = m_report.findOrCreateStatistic(Constants.CHANNEL + key).findOrCreateStatisticsItem(
 				      channel);
 
 				tem.setCount(tem.getCount() + total);
@@ -86,15 +86,15 @@ public class WebReportConvertor extends BaseVisitor {
 	}
 
 	private boolean validate(String city, String channel, String info) {
-		if (Monitor.TYPE_INFO.equals(m_type)) {
+		if (Constants.TYPE_INFO.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateInfo(info)) {
 				return true;
 			}
-		} else if (Monitor.HTTP_STATUS.equals(m_type)) {
+		} else if (Constants.HTTP_STATUS.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateHttpStatus(info)) {
 				return true;
 			}
-		} else if (Monitor.ERROR_CODE.equals(m_type)) {
+		} else if (Constants.ERROR_CODE.equals(m_type)) {
 			if (validateCity(city) && validateChannel(channel) && validateErrorCode(info)) {
 				return true;
 			}
@@ -119,7 +119,7 @@ public class WebReportConvertor extends BaseVisitor {
 	}
 
 	private boolean validateErrorCode(String info) {
-		if (info.startsWith(Monitor.ERROR_CODE)) {
+		if (info.startsWith(Constants.ERROR_CODE)) {
 			return true;
 		} else {
 			return false;
@@ -127,7 +127,7 @@ public class WebReportConvertor extends BaseVisitor {
 	}
 
 	private boolean validateHttpStatus(String info) {
-		if (info.startsWith(Monitor.HTTP_STATUS)) {
+		if (info.startsWith(Constants.HTTP_STATUS)) {
 			return true;
 		} else {
 			return false;
@@ -135,7 +135,7 @@ public class WebReportConvertor extends BaseVisitor {
 	}
 
 	private boolean validateInfo(String info) {
-		if (Monitor.AVG.equals(info) || Monitor.HIT.equals(info) || Monitor.ERROR.equals(info)) {
+		if (Constants.AVG.equals(info) || Constants.HIT.equals(info) || Constants.ERROR.equals(info)) {
 			return true;
 		} else {
 			return false;

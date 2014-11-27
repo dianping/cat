@@ -25,8 +25,8 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 
 /**
  * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
@@ -37,7 +37,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	private ReportDelegate<T> m_reportDelegate;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private HourlyReportDao m_reportDao;
@@ -137,7 +137,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		Bucket<String> bucket = null;
+		ReportBucket<String> bucket = null;
 
 		if (reports == null) {
 			reports = new ConcurrentHashMap<String, T>();
@@ -170,7 +170,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		return reports;
 	}
 
-	public void setBucketManager(BucketManager bucketManager) {
+	public void setBucketManager(ReportBucketManager bucketManager) {
 		m_bucketManager = bucketManager;
 	}
 
@@ -194,7 +194,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	public void storeHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Checkpoint", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		Bucket<String> bucket = null;
+		ReportBucket<String> bucket = null;
 
 		try {
 			t.addData("reports", reports == null ? 0 : reports.size());

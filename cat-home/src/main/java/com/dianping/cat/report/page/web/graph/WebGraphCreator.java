@@ -12,7 +12,7 @@ import java.util.Map.Entry;
 
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.Monitor;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -165,11 +165,11 @@ public class WebGraphCreator extends AbstractGraphCreator {
 			for (Segment segment : segments.values()) {
 				int id = segment.getId() / 5;
 
-				if (key.endsWith(Monitor.HIT)) {
+				if (key.endsWith(Constants.HIT)) {
 					dataInc(count, id, segment.getCount());
-				} else if (key.endsWith(Monitor.ERROR)) {
+				} else if (key.endsWith(Constants.ERROR)) {
 					dataInc(error, id, segment.getCount());
-				} else if (key.endsWith(Monitor.AVG)) {
+				} else if (key.endsWith(Constants.AVG)) {
 					dataInc(avgCount, id, segment.getCount());
 					dataInc(avgSum, id, segment.getSum());
 				}
@@ -235,7 +235,7 @@ public class WebGraphCreator extends AbstractGraphCreator {
 			      start));
 			int index = (int) ((start - currentDay.getTime()) / (TimeHelper.ONE_MINUTE * 5));
 
-			if (Monitor.TYPE_INFO.equals(type)) {
+			if (Constants.TYPE_INFO.equals(type)) {
 				Map<String, Double[]> currentValues = fetchMetricInfoData(report);
 
 				mergeValue(sourceValue, currentValues, totalSize, index);

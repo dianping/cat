@@ -21,7 +21,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.Monitor;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.report.ReportPage;
@@ -103,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 		QueryEntity compare = null;
 
 		if (startPair.getValue() != null && endPair.getValue() != null && urls.size() == 2) {
-			compare = buildQueryEntity(startPair.getValue(), endPair.getValue(), urls.get(1), Monitor.TYPE_INFO,
+			compare = buildQueryEntity(startPair.getValue(), endPair.getValue(), urls.get(1), Constants.TYPE_INFO,
 			      channels.get(1), cities.get(1));
 		}
 		return new Pair<QueryEntity, QueryEntity>(current, compare);
@@ -138,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			if (Monitor.TYPE_INFO.equals(payload.getType())) {
+			if (Constants.TYPE_INFO.equals(payload.getType())) {
 				buildInfoCharts(model, currentQuery, compareQuery);
 			} else {
 				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
@@ -154,8 +153,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case JSON:
 			Map<String, Object> jsonObjs = new HashMap<String, Object>();
-
-			if (Monitor.TYPE_INFO.equals(payload.getType())) {
+			if (Constants.TYPE_INFO.equals(payload.getType())) {
 				Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
 
 				jsonObjs.put("lineCharts", currentPair.getKey());

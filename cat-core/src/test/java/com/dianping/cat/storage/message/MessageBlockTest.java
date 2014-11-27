@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.dump;
+package com.dianping.cat.storage.message;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -9,6 +9,10 @@ import java.util.zip.GZIPOutputStream;
 import junit.framework.Assert;
 
 import org.junit.Test;
+
+import com.dianping.cat.storage.message.MessageBlock;
+import com.dianping.cat.storage.message.MessageBlockReader;
+import com.dianping.cat.storage.message.MessageBlockWriter;
 
 public class MessageBlockTest {
 

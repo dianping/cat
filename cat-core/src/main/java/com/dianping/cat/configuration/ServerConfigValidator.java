@@ -1,4 +1,4 @@
-package com.dianping.cat;
+package com.dianping.cat.configuration;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.ConsumerConfig;

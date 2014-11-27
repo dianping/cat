@@ -15,8 +15,8 @@ import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.dump.LocalMessageBucketManager;
-import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.storage.message.LocalMessageBucketManager;
+import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class HistoricalMessageService extends BaseLocalModelService<String> {
 	@Inject(LocalMessageBucketManager.ID)

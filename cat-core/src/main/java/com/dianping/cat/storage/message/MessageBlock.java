@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.dump;
+package com.dianping.cat.storage.message;
 
 import java.util.ArrayList;
 import java.util.List;

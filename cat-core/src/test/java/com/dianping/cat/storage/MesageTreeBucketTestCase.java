@@ -15,6 +15,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.storage.report.ReportBucket;
 
 public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 
@@ -24,7 +25,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 
 	protected ExecutorService pool = null;
 
-	protected Bucket<MessageTree> bucket = null;
+	protected ReportBucket<MessageTree> bucket = null;
 
 	protected void printFails(final int fails, final long start) {
 		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
@@ -74,7 +75,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		}
 	}
 
-	protected abstract Bucket<MessageTree> createBucket() throws Exception;
+	protected abstract ReportBucket<MessageTree> createBucket() throws Exception;
 
 	@After
 	@Override
