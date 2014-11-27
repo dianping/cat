@@ -15,6 +15,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
+
 @RunWith(JUnit4.class)
 @Ignore
 public class BucketConcurrentTest extends ComponentTestCase {
@@ -28,8 +31,8 @@ public class BucketConcurrentTest extends ComponentTestCase {
 	@Test
 	public void testStringBucket() throws Exception {
 		long timestamp = System.currentTimeMillis();
-		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data");
+		ReportBucketManager manager = lookup(ReportBucketManager.class);
+		final ReportBucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -58,7 +61,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
-		final Bucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data");
+		final ReportBucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data");
 
 		for (int p = 0; p < 10; p++) {
 			final int num = p;

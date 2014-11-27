@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.dump;
+package com.dianping.cat.storage.message;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +26,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;

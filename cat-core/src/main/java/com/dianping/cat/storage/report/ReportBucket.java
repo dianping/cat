@@ -1,10 +1,10 @@
-package com.dianping.cat.storage;
+package com.dianping.cat.storage.report;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-public interface Bucket<T> {
+public interface ReportBucket<T> {
 	/**
 	 * Close bucket and release component instance
 	 * 

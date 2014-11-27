@@ -11,12 +11,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 
 public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport> {
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportBucketManager m_bucketManager;
 
 	public LocalHeartbeatService() {
 		super(HeartbeatAnalyzer.ID);
@@ -40,7 +40,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = null;
+		ReportBucket<String> bucket = null;
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
 			String xml = bucket.findById(domain);

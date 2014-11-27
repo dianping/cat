@@ -24,7 +24,7 @@ import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;

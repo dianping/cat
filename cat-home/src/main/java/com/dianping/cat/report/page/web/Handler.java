@@ -19,7 +19,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.Monitor;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.helper.TimeHelper;
@@ -94,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case VIEW:
 			if (url != null) {
-				if (Monitor.TYPE_INFO.equals(type)) {
+				if (Constants.TYPE_INFO.equals(type)) {
 					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
 					      url, pars);
 					Map<String, LineChart> lineCharts = charts.getKey();
@@ -121,7 +120,7 @@ public class Handler implements PageHandler<Context> {
 			if (url != null) {
 				Map<String, Object> jsonObjs = new HashMap<String, Object>();
 
-				if (Monitor.TYPE_INFO.equals(type)) {
+				if (Constants.TYPE_INFO.equals(type)) {
 					Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(startDate, endDate,
 					      url, pars);
 

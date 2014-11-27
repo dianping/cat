@@ -17,7 +17,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.Monitor;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
@@ -128,11 +127,11 @@ public class WebAlert extends BaseAlert implements Task {
 			for (Segment segment : segments.values()) {
 				int id = segment.getId();
 
-				if (key.endsWith(Monitor.HIT)) {
+				if (key.endsWith(Constants.HIT)) {
 					count[id] = segment.getCount();
-				} else if (key.endsWith(Monitor.ERROR)) {
+				} else if (key.endsWith(Constants.ERROR)) {
 					error[id] = segment.getCount();
-				} else if (key.endsWith(Monitor.AVG)) {
+				} else if (key.endsWith(Constants.AVG)) {
 					avg[id] = segment.getAvg();
 				}
 			}
@@ -181,7 +180,7 @@ public class WebAlert extends BaseAlert implements Task {
 			Map<String, String> pars = new HashMap<String, String>();
 
 			pars.put("metricType", Constants.METRIC_USER_MONITOR);
-			pars.put("type", Monitor.TYPE_INFO);
+			pars.put("type", Constants.TYPE_INFO);
 			pars.put("city", city);
 			pars.put("channel", channel);
 			request.getProperties().putAll(pars);

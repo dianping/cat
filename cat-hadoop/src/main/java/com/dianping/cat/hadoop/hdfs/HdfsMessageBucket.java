@@ -18,7 +18,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.dump.MessageBucket;
+import com.dianping.cat.storage.message.MessageBucket;
 
 public class HdfsMessageBucket implements MessageBucket {
 	public static final String ID = "hdfs";

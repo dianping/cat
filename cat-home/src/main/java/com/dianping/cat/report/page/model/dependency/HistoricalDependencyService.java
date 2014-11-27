@@ -11,12 +11,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 
 public class HistoricalDependencyService extends BaseHistoricalModelService<DependencyReport> {
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private ReportServiceManager m_reportService;
@@ -46,7 +46,7 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 	}
 
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = null;
+		ReportBucket<String> bucket = null;
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID);
 			String xml = bucket.findById(domain);

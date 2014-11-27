@@ -20,8 +20,8 @@ import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 
 public class DefaultReportManagerTest {
 
@@ -116,14 +116,14 @@ public class DefaultReportManagerTest {
 		Assert.assertEquals(3, m_bucketInsertCount);
 	}
 
-	public class MockBuckerManager implements BucketManager {
+	public class MockBuckerManager implements ReportBucketManager {
 
 		@Override
-		public void closeBucket(Bucket<?> bucket) {
+		public void closeBucket(ReportBucket<?> bucket) {
 		}
 
 		@Override
-		public Bucket<String> getReportBucket(long timestamp, String name) throws IOException {
+		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
 			return new MockStringBucket();
 		}
 
@@ -203,7 +203,7 @@ public class DefaultReportManagerTest {
 
 	}
 
-	public class MockStringBucket implements Bucket<String> {
+	public class MockStringBucket implements ReportBucket<String> {
 
 		@Override
 		public void close() throws IOException {
