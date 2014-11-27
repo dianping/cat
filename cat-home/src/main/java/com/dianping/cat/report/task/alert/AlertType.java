@@ -6,6 +6,8 @@ public enum AlertType {
 
 	Network("network"),
 
+	DataBase("database"),
+
 	System("system"),
 
 	Exception("exception"),

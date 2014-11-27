@@ -45,6 +45,14 @@ public enum JspFile {
 
 	NETWORK_RULE_DELETE("/jsp/system/networkRule/networkConfigs.jsp"),
 
+	DATABASE_RULE_CONFIG_LIST("/jsp/system/databaseRule/databaseConfigs.jsp"),
+	
+	DATABASE_RULE_ADD_OR_UPDATE("/jsp/system/databaseRule/databaseRuleAdd.jsp"),
+	
+	DATABASE_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/databaseRule/databaseConfigs.jsp"),
+	
+	DATABASE_RULE_DELETE("/jsp/system/databaseRule/databaseConfigs.jsp"),
+
 	SYSTEM_RULE_CONFIG_LIST("/jsp/system/systemRule/systemConfigs.jsp"),
 
 	SYSTEM_RULE_ADD_OR_UPDATE("/jsp/system/systemRule/systemRuleAdd.jsp"),
@@ -64,6 +72,8 @@ public enum JspFile {
 	ALERT_DEFAULT_RECEIVERS("/jsp/system/defaultReceiver/alertDefaultReceivers.jsp"),
 
 	ALERT_POLICY("/jsp/system/alert/policy.jsp"),
+
+	DISPLAY_POLICY("/jsp/system/display/policy.jsp"),
 
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 

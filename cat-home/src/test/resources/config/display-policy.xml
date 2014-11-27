@@ -1,0 +1,6 @@
+<display-policy>
+	<group id="HeapUsage" order="1">
+		<metric id="EdenUsage" unit="M" isDelta="false" order="1"/>
+		<metric id="SurvivorUsage" unit="M" isDelta="false" order="2"/>
+	</group>
+</display-policy>

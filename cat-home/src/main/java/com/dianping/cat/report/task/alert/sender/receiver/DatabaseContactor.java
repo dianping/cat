@@ -2,9 +2,9 @@ package com.dianping.cat.report.task.alert.sender.receiver;
 
 import com.dianping.cat.report.task.alert.AlertType;
 
-public class BusinessContactor extends ProjectContactor {
+public class DatabaseContactor extends ProjectContactor {
 
-	public static final String ID = AlertType.Business.getName();
+	public static final String ID = AlertType.DataBase.getName();
 
 	@Override
 	public String getId() {

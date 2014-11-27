@@ -84,6 +84,14 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.NETWORK_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
 		case NETWORK_RULE_DELETE:
 			return JspFile.NETWORK_RULE_DELETE.getPath();
+		case DATABASE_RULE_CONFIG_LIST:
+			return JspFile.DATABASE_RULE_CONFIG_LIST.getPath();
+		case DATABASE_RULE_ADD_OR_UPDATE:
+			return JspFile.DATABASE_RULE_ADD_OR_UPDATE.getPath();
+		case DATABASE_RULE_ADD_OR_UPDATE_SUBMIT:
+			return JspFile.DATABASE_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
+		case DATABASE_RULE_DELETE:
+			return JspFile.DATABASE_RULE_DELETE.getPath();
 		case SYSTEM_RULE_CONFIG_LIST:
 			return JspFile.SYSTEM_RULE_CONFIG_LIST.getPath();
 		case SYSTEM_RULE_ADD_OR_UPDATE:
@@ -168,6 +176,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
 		case ROUTER_CONFIG_UPDATE:
 			return JspFile.ROUTER_CONFIG_UPDATE.getPath();
+		case DISPLAY_POLICY:
+			return JspFile.DISPLAY_POLICY.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

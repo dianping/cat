@@ -21,6 +21,8 @@ import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
+import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
+import com.dianping.cat.system.page.config.processor.DisplayConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
@@ -54,6 +56,9 @@ public class Handler implements PageHandler<Context> {
 	private NetworkConfigProcessor m_networkConfigProcessor;
 
 	@Inject
+	private DatabaseConfigProcessor m_databaseConfigProcessor;
+
+	@Inject
 	private SystemConfigProcessor m_systemConfigProcessor;
 
 	@Inject
@@ -67,6 +72,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TransactionConfigProcessor m_transactionConfigProcessor;
+
+	@Inject
+	private DisplayConfigProcessor m_displayConfigProfessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
@@ -162,6 +170,13 @@ public class Handler implements PageHandler<Context> {
 			m_networkConfigProcessor.process(action, payload, model);
 			break;
 
+		case DATABASE_RULE_CONFIG_LIST:
+		case DATABASE_RULE_ADD_OR_UPDATE:
+		case DATABASE_RULE_ADD_OR_UPDATE_SUBMIT:
+		case DATABASE_RULE_DELETE:
+			m_databaseConfigProcessor.process(action, payload, model);
+			break;
+
 		case SYSTEM_RULE_CONFIG_LIST:
 		case SYSTEM_RULE_ADD_OR_UPDATE:
 		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
@@ -207,6 +222,10 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_DEFAULT_RECEIVERS:
 		case ALERT_POLICY:
 			m_alertConfigProcessor.process(action, payload, model);
+			break;
+
+		case DISPLAY_POLICY:
+			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
