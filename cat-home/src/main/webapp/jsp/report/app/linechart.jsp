@@ -261,7 +261,7 @@
 					}
 
 					var data = ${model.lineChart.jsonString};
-					graphMetricChartForApp(document
+					graphMetricChartForDay(document
 							.getElementById('${model.lineChart.id}'), data, datePair);
 				});
 	</script>
