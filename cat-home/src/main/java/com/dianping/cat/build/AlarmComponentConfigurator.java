@@ -6,11 +6,11 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.ProductLineConfigManager;

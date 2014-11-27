@@ -9,14 +9,14 @@ import java.util.Map.Entry;
 
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.Monitor;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.AbstractGraphCreator;
+import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
@@ -162,11 +162,11 @@ public class WebGraphCreator extends AbstractGraphCreator {
 			for (Segment segment : segments.values()) {
 				int id = segment.getId();
 
-				if (key.endsWith(Monitor.HIT)) {
+				if (key.endsWith(Constants.HIT)) {
 					count[id] = segment.getCount();
-				} else if (key.endsWith(Monitor.ERROR)) {
+				} else if (key.endsWith(Constants.ERROR)) {
 					error[id] = segment.getCount();
-				} else if (key.endsWith(Monitor.AVG)) {
+				} else if (key.endsWith(Constants.AVG)) {
 					avg[id] = segment.getAvg();
 				}
 			}
@@ -197,7 +197,7 @@ public class WebGraphCreator extends AbstractGraphCreator {
 		for (; start < end; start += TimeHelper.ONE_HOUR) {
 			MetricReport report = m_metricReportService.queryUserMonitorReport(url, pars, new Date(start));
 
-			if (Monitor.TYPE_INFO.equals(type)) {
+			if (Constants.TYPE_INFO.equals(type)) {
 				Map<String, double[]> currentValues = fetchMetricInfoData(report);
 
 				mergeMap(sourceValue, currentValues, totalSize, index);

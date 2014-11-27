@@ -8,7 +8,7 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.top.TopAnalyzer;

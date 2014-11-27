@@ -2,7 +2,7 @@ package com.dianping.cat.report.task.alert.exception;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;

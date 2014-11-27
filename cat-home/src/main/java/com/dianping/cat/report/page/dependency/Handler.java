@@ -22,7 +22,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;

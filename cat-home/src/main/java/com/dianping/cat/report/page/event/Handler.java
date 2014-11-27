@@ -28,7 +28,7 @@ import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;

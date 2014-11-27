@@ -9,7 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;

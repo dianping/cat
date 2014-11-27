@@ -34,8 +34,8 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class MetricAnalyzerTest extends ComponentTestCase {
@@ -186,14 +186,14 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 	}
 
-	public class MockBuckerManager implements BucketManager {
+	public class MockBuckerManager implements ReportBucketManager {
 
 		@Override
-		public void closeBucket(Bucket<?> bucket) {
+		public void closeBucket(ReportBucket<?> bucket) {
 		}
 
 		@Override
-		public Bucket<String> getReportBucket(long timestamp, String name) throws IOException {
+		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
 			return new MockStringBucket();
 		}
 
@@ -209,7 +209,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 	}
 
-	public static class MockStringBucket implements Bucket<String> {
+	public static class MockStringBucket implements ReportBucket<String> {
 		@Override
 		public void close() throws IOException {
 		}

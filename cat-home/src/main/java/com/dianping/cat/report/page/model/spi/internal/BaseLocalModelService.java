@@ -6,9 +6,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;

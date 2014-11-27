@@ -29,7 +29,7 @@
 					<role-hint>state</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.ServerConfigManager</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>

@@ -6,7 +6,7 @@ import java.util.Date;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.Monitor;
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
@@ -30,7 +30,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_group;
 
 	@FieldMeta("type")
-	private String m_type = Monitor.TYPE_INFO;
+	private String m_type = Constants.TYPE_INFO;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 

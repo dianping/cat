@@ -11,12 +11,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 
 public class HistoricalEventService extends BaseHistoricalModelService<EventReport> {
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private ReportServiceManager m_reportService;
@@ -45,7 +45,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = null;
+		ReportBucket<String> bucket = null;
 
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);

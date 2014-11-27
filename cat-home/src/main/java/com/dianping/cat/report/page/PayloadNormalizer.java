@@ -4,7 +4,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 
 public class PayloadNormalizer {
 

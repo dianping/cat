@@ -18,7 +18,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
