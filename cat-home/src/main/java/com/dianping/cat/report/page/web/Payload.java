@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.web;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
@@ -24,7 +26,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_city = "上海市";
 
 	@FieldMeta("channel")
-	private String m_channel;
+	private String m_channel = "";
 
 	@FieldMeta("group")
 	private String m_group;
@@ -55,29 +57,68 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_group;
 	}
 
-	public Date getHistoryEndDate() {
-		try {
-			if (m_customEnd != null && m_customEnd.length() > 0) {
-				return m_format.parse(m_customEnd);
-			} else {
-				return TimeHelper.getCurrentHour(1);
+	private Date generateDate(String time, long start) {
+		Date date = null;
+		String[] times = time.split(":");
+
+		if (times.length == 2) {
+			int hour = Integer.parseInt(times[0]);
+			int minute = Integer.parseInt(times[1]);
+			if (minute > 0) {
+				hour += 1;
 			}
-		} catch (Exception e) {
-			return TimeHelper.getCurrentHour(1);
+
+			date = new Date(TimeHelper.getCurrentDay(start, 0).getTime() + hour * TimeHelper.ONE_HOUR);
+			if (date.equals(TimeHelper.getCurrentDay(start, 1))) {
+				date = new Date(date.getTime() - TimeHelper.ONE_MINUTE);
+			}
+		} else {
+			date = TimeHelper.getCurrentHour(1);
 		}
+		return date;
 	}
 
-	public Date getHistoryStartDate() {
-		try {
-			if (m_customStart != null && m_customStart.length() > 0) {
+	public Pair<Date, Date> getHistoryEndDatePair() {
+		Date currentEnd = TimeHelper.getCurrentHour(1);
+		Date compareEnd = null;
 
-				return m_format.parse(m_customStart);
-			} else {
-				return TimeHelper.getCurrentHour(-2);
+		try {
+			if (m_customEnd != null && m_customEnd.length() > 0) {
+				String[] ends = m_customEnd.split(";");
+				Pair<Date, Date> startDatePair = getHistoryStartDatePair();
+				long start = startDatePair.getKey().getTime();
+				currentEnd = generateDate(ends[0], start);
+
+				if (ends.length == 2) {
+					start = startDatePair.getValue().getTime();
+					compareEnd = generateDate(ends[1], start);
+				}
 			}
 		} catch (Exception e) {
-			return TimeHelper.getCurrentHour(-2);
+			Cat.logError(e);
 		}
+		return new Pair<Date, Date>(currentEnd, compareEnd);
+	}
+
+	public Pair<Date, Date> getHistoryStartDatePair() {
+		Date currentStart = TimeHelper.getCurrentDay();
+		Date compareStart = null;
+
+		try {
+			if (m_customStart != null && m_customStart.length() > 0) {
+				String[] starts = m_customStart.split(";");
+				Date current = m_format.parse(starts[0]);
+				currentStart = new Date(current.getTime() - current.getTime() % TimeHelper.ONE_HOUR);
+
+				if (starts.length == 2) {
+					Date compare = m_format.parse(starts[1]);
+					compareStart = new Date(compare.getTime() - compare.getTime() % TimeHelper.ONE_HOUR);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new Pair<Date, Date>(currentStart, compareStart);
 	}
 
 	@Override

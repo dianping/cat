@@ -173,7 +173,7 @@
 
 							var data = ${model.appSpeedDisplayInfo.lineChart.jsonString};
 							
-							graphMetricChartForApp(document.getElementById('${model.appSpeedDisplayInfo.lineChart.id}'),
+							graphMetricChartForDay(document.getElementById('${model.appSpeedDisplayInfo.lineChart.id}'),
 									data, datePair); 
 						});
 	</script>

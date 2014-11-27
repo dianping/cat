@@ -12,18 +12,25 @@ public class SingleTest {
 	public void test() throws Exception {
 		while (true) {
 			for (int i = 0; i < 10; i++) {
-				URL url = new URL(buildUrl(i));
-				URLConnection URLconnection = url.openConnection();
-				URLconnection.setRequestProperty("User-Agent",
-				      "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
+				try {
+					URL url = new URL(buildUrl(i));
+					URLConnection URLconnection = url.openConnection();
 
-				HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
-				int responseCode = httpConnection.getResponseCode();
+					URLconnection.setConnectTimeout(500);
+					URLconnection.setReadTimeout(500);
+					URLconnection.setRequestProperty("User-Agent",
+					      "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
 
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					System.out.println("ok");
-				} else {
-					System.out.println(responseCode);
+					HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
+					int responseCode = httpConnection.getResponseCode();
+
+					if (responseCode == HttpURLConnection.HTTP_OK) {
+						System.out.println("ok");
+					} else {
+						System.out.println(responseCode);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 			Thread.sleep(1000);
@@ -33,28 +40,18 @@ public class SingleTest {
 
 	private String buildUrl(int i) {
 		StringBuilder sb = new StringBuilder(128);
-		sb.append("http://localhost:2765/broker-service/api/single?v=1&ts=123456&tu=http://j1.s1.dpfile.com/lib/1.0/cdn-perf/res/cdn_small.png/dnsLookup&d=1000&hs=200&ec=100");
+		int hs = 200;
+		int ec = 100;
+
+		if (i % 2 == 1) {
+			hs = 300;
+			ec = 200;
+		}
+		sb.append(
+		      "http://localhost:2765/broker-service/api/single?v=1&ts=123456&tu=http://j1.s1.dpfile.com/lib/1.0/cdn-perf/res/cdn_small.png/dnsLookup&d=1000&hs=")
+		      .append(hs).append("&ec=").append(ec);
 
 		return sb.toString();
 	}
-
-	// @Test
-	// public void test2() throws Exception{
-	// for (int i = 0; i < 1000; i++) {
-	// URL url = new URL("http://localhost:2281/cat/r/jsError?error=Script%20error.&file=&line=0&timestamp=1371196520045");
-	// URLConnection URLconnection = url.openConnection();
-	// URLconnection.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
-	// URLconnection.setRequestProperty("referer", "http://www.dianping.com/shop/2340226");
-	//
-	// HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
-	// int responseCode = httpConnection.getResponseCode();
-	//
-	// if (responseCode == HttpURLConnection.HTTP_OK) {
-	// } else {
-	// }
-	// Thread.sleep(100);
-	// }
-
-	// }
 
 }

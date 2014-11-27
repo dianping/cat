@@ -1,6 +1,7 @@
 package com.dianping.cat.broker.api.page.cdn;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +20,7 @@ import com.dianping.cat.broker.api.page.MonitorEntity;
 import com.dianping.cat.broker.api.page.MonitorManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.message.Event;
+import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -65,26 +67,26 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (userIp != null) {
 			try {
 				String content = payload.getContent();
-				String[] lines = content.split("\n");
+				List<String> lines = Splitters.by("\\n").noEmptyItem().split(content);
 
 				for (String line : lines) {
-					String[] tabs = line.split("\t");
+					List<String> tabs = Splitters.by("\\t").split(line);
 					// timstampTABtargetUrlTABdnslookupTABtcpconnectTABrequestTABresponseENTER
-					if (tabs.length == 6) {
+					if (tabs.size() == 6) {
 						// long timestamp = Long.parseLong(tabs[0]);
 						long timestamp = System.currentTimeMillis();
-						MonitorEntity entity = createEntity(tabs[1] + "/dnsLookup", timestamp, Double.parseDouble(tabs[2]),
-						      userIp);
+						MonitorEntity entity = createEntity(tabs.get(1) + "/dnsLookup", timestamp,
+						      Double.parseDouble(tabs.get(2)), userIp);
 
 						m_manager.offer(entity);
 
-						entity = createEntity(tabs[1] + "/tcpConnect", timestamp, Double.parseDouble(tabs[3]), userIp);
+						entity = createEntity(tabs.get(1) + "/tcpConnect", timestamp, Double.parseDouble(tabs.get(3)), userIp);
 						m_manager.offer(entity);
 
-						entity = createEntity(tabs[1] + "/request", timestamp, Double.parseDouble(tabs[4]), userIp);
+						entity = createEntity(tabs.get(1) + "/request", timestamp, Double.parseDouble(tabs.get(4)), userIp);
 						m_manager.offer(entity);
 
-						entity = createEntity(tabs[1] + "/response", timestamp, Double.parseDouble(tabs[5]), userIp);
+						entity = createEntity(tabs.get(1) + "/response", timestamp, Double.parseDouble(tabs.get(5)), userIp);
 						m_manager.offer(entity);
 					}
 				}

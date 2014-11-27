@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.monitor;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -19,6 +20,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.site.helper.Splitters;
 import com.site.lookup.util.StringUtils;
 
 public class Handler implements PageHandler<Context> {
@@ -27,20 +29,19 @@ public class Handler implements PageHandler<Context> {
 	private JsonBuilder m_builder;
 
 	private void buildBatchMetric(String content) {
-		String[] lines = content.split("\n");
-
+		List<String> lines = Splitters.by("\\n").noEmptyItem().split(content);
 		// group, domain, key, type, time, value
 		for (String line : lines) {
-			String[] tabs = line.split("\t");
+			List<String> tabs = Splitters.by("\\t").split(line);
 
-			if (tabs.length >= 6) {
+			if (tabs.size() == 6) {
 				try {
-					String group = tabs[0];
-					String domain = tabs[1];
-					String key = tabs[2];
-					String type = tabs[3];
-					long time = Long.parseLong(tabs[4]);
-					double value = Double.parseDouble(tabs[5]);
+					String group = tabs.get(0);
+					String domain = tabs.get(1);
+					String key = tabs.get(2);
+					String type = tabs.get(3);
+					long time = Long.parseLong(tabs.get(4));
+					double value = Double.parseDouble(tabs.get(5));
 					buildMetric(group, domain, key, type, time, value);
 				} catch (Exception e) {
 					Cat.logError("Unrecognized batch data: " + line, e);

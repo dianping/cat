@@ -27,6 +27,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -46,6 +47,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private DisplayPolicyManager m_manager;
 
 	private void buildHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
 		if (displayHeartbeat == null) {
@@ -106,8 +110,8 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
 			if (period.isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date),
-				      new Date(date + TimeHelper.ONE_HOUR), HeartbeatAnalyzer.ID);
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
+				      + TimeHelper.ONE_HOUR), HeartbeatAnalyzer.ID);
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -176,7 +180,7 @@ public class Handler implements PageHandler<Context> {
 				String displayIp = getIpAddress(report, payload);
 
 				payload.setRealIp(displayIp);
-				return new DisplayHeartbeat(m_builder).display(report, displayIp);
+				return new DisplayHeartbeat(m_builder, m_manager).display(report, displayIp);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);

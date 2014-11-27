@@ -2409,7 +2409,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -2422,7 +2422,20 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.receiver.DatabaseContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -2560,6 +2573,11 @@
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
 			<role-hint>network</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DatabaseDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
@@ -2745,6 +2763,33 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.alert.database.DatabaseAlert</role>
+			<implementation>com.dianping.cat.report.task.alert.database.DatabaseAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.baseline.BaselineService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -3374,6 +3419,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3391,6 +3439,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+			<implementation>com.dianping.cat.system.config.DisplayPolicyManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5044,6 +5104,9 @@
 					<role>com.dianping.cat.system.page.config.processor.NetworkConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -5057,6 +5120,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
@@ -5287,6 +5353,33 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.DatabaseRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.SystemConfigProcessor</implementation>
 			<requirements>
@@ -5433,6 +5526,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>

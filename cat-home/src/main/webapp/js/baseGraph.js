@@ -171,7 +171,7 @@ function graphMetricChart(container, data) {
 			});
 }
 
-function parseMetricLineDataForApp(data) {
+function parseMetricLineDataForDay(data) {
 	var res = [];
 	data.subTitles.forEach(function(title, i) {
 		var series = {}
@@ -182,7 +182,7 @@ function parseMetricLineDataForApp(data) {
 	return res;
 }
 
-function graphMetricChartForApp(container, data, datePair) {
+function graphMetricChartForDay(container, data, datePair) {
 	Highcharts.setOptions({
 		global : {
 			useUTC : true
@@ -190,7 +190,7 @@ function graphMetricChartForApp(container, data, datePair) {
 	});
 	var ylabelMin = data.minYlabel;
 	var ylabelMax = data.maxYlabel;
-	var _data = parseMetricLineDataForApp(data);
+	var _data = parseMetricLineDataForDay(data);
 	$(container).highcharts(
 			{
 				chart : {

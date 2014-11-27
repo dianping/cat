@@ -4,6 +4,7 @@ import java.io.File;
 import java.lang.management.GarbageCollectorMXBean;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
+import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadInfo;
@@ -15,6 +16,7 @@ import java.util.TreeMap;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
+import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.GcInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
@@ -36,6 +38,23 @@ public class StatusInfoCollector extends BaseVisitor {
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
 		m_statistics = statistics;
 		m_jars = jars;
+	}
+
+	private void appendExtension(StatusInfo status) {
+		Extension heapUsage = new Extension("HeapUsage");
+		status.addExtension(heapUsage);
+
+		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
+			if (mpBean.getName().contains("Eden")) {
+				long count = mpBean.getUsage().getUsed();
+
+				heapUsage.setDynamicAttribute("EdenUsage", Long.toString(count));
+			} else if (mpBean.getName().contains("Survivor")) {
+				long count = mpBean.getUsage().getUsed();
+				
+				heapUsage.setDynamicAttribute("SurvivorUsage", Long.toString(count));
+			}
+		}
 	}
 
 	private int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
@@ -216,6 +235,7 @@ public class StatusInfoCollector extends BaseVisitor {
 		status.setMessage(new MessageInfo());
 
 		super.visitStatus(status);
+		appendExtension(status);
 	}
 
 	@Override
