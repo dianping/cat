@@ -1,4 +1,4 @@
-package com.dianping.cat.report.graph;
+package com.dianping.cat.report.graph.svg;
 
 public interface GraphBuilder {
 	public String build(GraphPayload payload);

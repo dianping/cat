@@ -15,8 +15,8 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.report.graph.AbstractGraphPayload;
-import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.graph.svg.AbstractGraphPayload;
+import com.dianping.cat.report.graph.svg.GraphBuilder;
 
 public class DisplayHeartbeat {
 	private static final int K = 1024;

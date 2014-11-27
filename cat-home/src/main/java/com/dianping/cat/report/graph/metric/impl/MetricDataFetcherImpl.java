@@ -1,4 +1,4 @@
-package com.dianping.cat.report.chart.impl;
+package com.dianping.cat.report.graph.metric.impl;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
-import com.dianping.cat.report.chart.MetricDataFetcher;
+import com.dianping.cat.report.graph.metric.MetricDataFetcher;
 import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricDataFetcherImpl implements MetricDataFetcher {

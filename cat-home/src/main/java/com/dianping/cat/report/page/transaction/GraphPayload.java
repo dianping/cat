@@ -6,7 +6,7 @@ import java.util.Map;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.report.graph.AbstractGraphPayload;
+import com.dianping.cat.report.graph.svg.AbstractGraphPayload;
 
 public class GraphPayload {
 	abstract static class AbstractPayload extends AbstractGraphPayload {

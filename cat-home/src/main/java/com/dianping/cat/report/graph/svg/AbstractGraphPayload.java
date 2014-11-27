@@ -1,4 +1,4 @@
-package com.dianping.cat.report.graph;
+package com.dianping.cat.report.graph.svg;
 
 public abstract class AbstractGraphPayload implements GraphPayload {
 	private String m_axisXLabel;
