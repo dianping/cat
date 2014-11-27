@@ -2780,7 +2780,7 @@
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.baseline.BaselineService</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
