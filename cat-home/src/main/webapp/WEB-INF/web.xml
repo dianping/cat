@@ -8,7 +8,7 @@
 	</filter>
 	<filter>
 		<filter-name>domain-filter</filter-name>
-		<filter-class>com.dianping.cat.servlet.DomainFilter</filter-class>
+		<filter-class>com.dianping.cat.report.view.DomainFilter</filter-class>
 	</filter>
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>

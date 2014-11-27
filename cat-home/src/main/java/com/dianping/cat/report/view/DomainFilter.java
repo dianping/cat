@@ -1,4 +1,4 @@
-package com.dianping.cat.servlet;
+package com.dianping.cat.report.view;
 
 import java.io.IOException;
 
