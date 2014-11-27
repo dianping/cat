@@ -6,14 +6,13 @@ import java.util.Date;
 
 import org.junit.After;
 
-import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.StringBucketTestCase;
 
 public class LocalReportBucketTest extends StringBucketTestCase {
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Bucket<String> createBucket() throws Exception, IOException {
-		Bucket<String> bucket = lookup(Bucket.class, String.class.getName() + "-report");
+	protected ReportBucket<String> createBucket() throws Exception, IOException {
+		ReportBucket<String> bucket = lookup(ReportBucket.class, String.class.getName() + "-report");
 		bucket.initialize(null, "cat", new Date());
 		return bucket;
 	}

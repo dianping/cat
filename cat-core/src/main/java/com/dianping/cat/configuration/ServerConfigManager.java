@@ -1,4 +1,4 @@
-package com.dianping.cat;
+package com.dianping.cat.configuration;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;

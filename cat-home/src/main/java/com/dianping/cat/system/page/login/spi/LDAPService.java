@@ -30,7 +30,7 @@ import javax.naming.ldap.LdapContext;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.system.page.login.service.Token;

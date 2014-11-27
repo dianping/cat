@@ -12,7 +12,6 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.ServerConfigManager;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppCommandDataTableProvider;
@@ -20,6 +19,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;

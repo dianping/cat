@@ -27,8 +27,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -36,7 +36,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public static final String ID = "metric";
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private BusinessReportDao m_businessReportDao;
@@ -90,7 +90,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void loadReports() {
-		Bucket<String> reportBucket = null;
+		ReportBucket<String> reportBucket = null;
 
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
@@ -220,7 +220,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return count;
 	}
 
-	public void setBucketManager(BucketManager bucketManager) {
+	public void setBucketManager(ReportBucketManager bucketManager) {
 		m_bucketManager = bucketManager;
 	}
 
@@ -241,7 +241,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void storeReports(boolean atEnd) {
-		Bucket<String> reportBucket = null;
+		ReportBucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
 		t.setStatus(Message.SUCCESS);

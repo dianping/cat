@@ -15,8 +15,8 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.dump.LocalMessageBucketManager;
-import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.dianping.cat.storage.message.LocalMessageBucketManager;
+import com.dianping.cat.storage.message.MessageBucketManager;
 
 @RunWith(JUnit4.class)
 public class HdfsMessageBucketManagerTest extends ComponentTestCase {

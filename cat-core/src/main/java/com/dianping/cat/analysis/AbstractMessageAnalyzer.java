@@ -4,7 +4,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.ServerConfigManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
