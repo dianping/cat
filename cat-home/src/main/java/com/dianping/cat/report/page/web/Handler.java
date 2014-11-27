@@ -20,9 +20,11 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
@@ -59,31 +61,34 @@ public class Handler implements PageHandler<Context> {
 	private void buildInfoCharts(Model model, QueryEntity currentQuery, QueryEntity compareQuery) {
 		Map<String, LineChart> lineCharts = new LinkedHashMap<String, LineChart>();
 		List<PieChart> pieCharts = new LinkedList<PieChart>();
-		Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
 
-		lineCharts.putAll(currentPair.getKey());
-		pieCharts.addAll(currentPair.getValue());
+		if (currentQuery != null) {
+			Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
 
-		if (compareQuery != null) {
-			Pair<Map<String, LineChart>, List<PieChart>> comparePair = buildDisplayInfo(compareQuery, "对比值");
-			for (Entry<String, LineChart> entry : comparePair.getKey().entrySet()) {
-				LineChart linechart = entry.getValue();
-				LineChart l = lineCharts.get(entry.getKey());
+			lineCharts.putAll(currentPair.getKey());
+			pieCharts.addAll(currentPair.getValue());
 
-				if (l != null) {
-					l.add(linechart.getSubTitles().get(0), linechart.getValueObjects().get(0));
+			if (compareQuery != null) {
+				Pair<Map<String, LineChart>, List<PieChart>> comparePair = buildDisplayInfo(compareQuery, "对比值");
+				for (Entry<String, LineChart> entry : comparePair.getKey().entrySet()) {
+					LineChart linechart = entry.getValue();
+					LineChart l = lineCharts.get(entry.getKey());
+
+					if (l != null) {
+						l.add(linechart.getSubTitles().get(0), linechart.getValueObjects().get(0));
+					}
 				}
+				pieCharts.addAll(comparePair.getValue());
+				model.setCompareStart(compareQuery.getStart());
+				model.setCompareEnd(compareQuery.getEnd());
 			}
-			pieCharts.addAll(comparePair.getValue());
-			model.setCompareStart(compareQuery.getStart());
-			model.setCompareEnd(compareQuery.getEnd());
-		}
-		for (Entry<String, LineChart> entry : lineCharts.entrySet()) {
-			if (WebGraphCreator.SUCESS_PERCENT.equals(entry.getKey())) {
-				LineChart linechart = entry.getValue();
+			for (Entry<String, LineChart> entry : lineCharts.entrySet()) {
+				if (WebGraphCreator.SUCESS_PERCENT.equals(entry.getKey())) {
+					LineChart linechart = entry.getValue();
 
-				linechart.setMinYlable(m_graphCreator.queryMinYlable(linechart.getValueObjects()));
-				linechart.setMaxYlabel(100.0);
+					linechart.setMinYlable(m_graphCreator.queryMinYlable(linechart.getValueObjects()));
+					linechart.setMaxYlabel(100.0);
+				}
 			}
 		}
 		model.setLineCharts(lineCharts);
@@ -93,17 +98,22 @@ public class Handler implements PageHandler<Context> {
 	private Pair<QueryEntity, QueryEntity> buildQueryEntities(Payload payload) {
 		Pair<Date, Date> startPair = payload.getHistoryStartDatePair();
 		Pair<Date, Date> endPair = payload.getHistoryEndDatePair();
-		List<String> urls = Splitters.by(";").split(payload.getUrl());
-		List<String> channels = Splitters.by(";").split(payload.getChannel());
-		List<String> cities = Splitters.by(";").split(payload.getCity());
-		String type = payload.getType();
-		QueryEntity current = buildQueryEntity(startPair.getKey(), endPair.getKey(), urls.get(0), type, channels.get(0),
-		      cities.get(0));
+		QueryEntity current = null;
 		QueryEntity compare = null;
+		String url = payload.getUrl();
 
-		if (startPair.getValue() != null && endPair.getValue() != null && urls.size() == 2) {
-			compare = buildQueryEntity(startPair.getValue(), endPair.getValue(), urls.get(1), Constants.TYPE_INFO,
-			      channels.get(1), cities.get(1));
+		if (url != null) {
+			List<String> urls = Splitters.by(";").split(url);
+			List<String> channels = Splitters.by(";").split(payload.getChannel());
+			List<String> cities = Splitters.by(";").split(payload.getCity());
+			String type = payload.getType();
+			current = buildQueryEntity(startPair.getKey(), endPair.getKey(), urls.get(0), type, channels.get(0),
+			      cities.get(0));
+
+			if (startPair.getValue() != null && endPair.getValue() != null && urls.size() == 2) {
+				compare = buildQueryEntity(startPair.getValue(), endPair.getValue(), urls.get(1), Constants.TYPE_INFO,
+				      channels.get(1), cities.get(1));
+			}
 		}
 		return new Pair<QueryEntity, QueryEntity>(current, compare);
 	}
@@ -137,34 +147,49 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case VIEW:
-			if (Constants.TYPE_INFO.equals(payload.getType())) {
-				buildInfoCharts(model, currentQuery, compareQuery);
-			} else {
-				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
+			try {
+				if (currentQuery != null) {
+					if (Constants.TYPE_INFO.equals(payload.getType())) {
+						buildInfoCharts(model, currentQuery, compareQuery);
+					} else {
+						Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
 
-				model.setLineChart(pair.getKey());
-				model.setPieChart(pair.getValue());
+						model.setLineChart(pair.getKey());
+						model.setPieChart(pair.getValue());
+					}
+					model.setStart(currentQuery.getStart());
+					model.setEnd(currentQuery.getEnd());
+				} else {
+					model.setStart(TimeHelper.getCurrentDay());
+					model.setEnd(new Date());
+				}
+				model.setPattermItems(m_patternManager.queryUrlPatternRules());
+				model.setAction(Action.VIEW);
+				model.setCityInfo(m_cityManager.getCityInfo());
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			model.setStart(currentQuery.getStart());
-			model.setEnd(currentQuery.getEnd());
-			model.setPattermItems(m_patternManager.queryUrlPatternRules());
-			model.setAction(Action.VIEW);
-			model.setCityInfo(m_cityManager.getCityInfo());
 			break;
 		case JSON:
-			Map<String, Object> jsonObjs = new HashMap<String, Object>();
-			if (Constants.TYPE_INFO.equals(payload.getType())) {
-				Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
+			try {
+				Map<String, Object> jsonObjs = new HashMap<String, Object>();
+				if (currentQuery != null) {
+					if (Constants.TYPE_INFO.equals(payload.getType())) {
+						Pair<Map<String, LineChart>, List<PieChart>> currentPair = buildDisplayInfo(currentQuery, "当前值");
 
-				jsonObjs.put("lineCharts", currentPair.getKey());
-				jsonObjs.put("pieCharts", currentPair.getValue());
-			} else {
-				Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
+						jsonObjs.put("lineCharts", currentPair.getKey());
+						jsonObjs.put("pieCharts", currentPair.getValue());
+					} else {
+						Pair<LineChart, PieChart> pair = m_graphCreator.queryErrorInfo(currentQuery);
 
-				jsonObjs.put("lineChart", pair.getKey());
-				jsonObjs.put("pieChart", pair.getValue());
+						jsonObjs.put("lineChart", pair.getKey());
+						jsonObjs.put("pieChart", pair.getValue());
+					}
+				}
+				model.setJson(new JsonBuilder().toJson(jsonObjs));
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-			model.setJson(new JsonBuilder().toJson(jsonObjs));
 			break;
 		}
 
