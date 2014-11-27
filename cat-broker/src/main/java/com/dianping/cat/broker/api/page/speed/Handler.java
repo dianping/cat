@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -126,19 +125,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion1Record(Integer cityId, Integer operatorId, String record) {
-		String items[] = record.split("\t");
-		int length = items.length;
+		List<String> items = Splitters.by("\\t").split(record);
+		int length = items.size();
 
 		if (length == 6) {
 			try {
-				String speedId = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String speedId = URLDecoder.decode(items.get(4), "utf-8").toLowerCase();
 
 				if (speedId != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					long current = System.currentTimeMillis();
-					int network = Integer.parseInt(items[1]);
-					int version = Integer.parseInt(items[2]);
-					int platform = Integer.parseInt(items[3]);
+					int network = Integer.parseInt(items.get(1));
+					int version = Integer.parseInt(items.get(2));
+					int platform = Integer.parseInt(items.get(3));
 
 					for (int i = 5; i < length; i++) {
 						AppSpeedProto appData = new AppSpeedProto();
@@ -152,7 +151,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						offerAppSpeedData(appData, speedId, items, i);
 					}
 				} else {
-					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items[4]);
+					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items.get(4));
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
@@ -162,8 +161,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void offerAppSpeedData(AppSpeedProto appData, String speedId, String[] items, int i) {
-		List<String> fields = Splitters.by("-").split(items[i]);
+	private void offerAppSpeedData(AppSpeedProto appData, String speedId, List<String> items, int i) {
+		List<String> fields = Splitters.by("-").split(items.get(i));
 		String step = fields.get(0);
 		long responseTime = Long.parseLong(fields.get(1));
 		int id = m_appSpeedConfigManager.querySpeedId(speedId, step);
@@ -205,13 +204,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
-		String records[] = content.split("\n");
+		List<String> records = Splitters.by("\\n").noEmptyItem().split(content);
 
 		for (String record : records) {
 			try {
-				if (!StringUtils.isEmpty(record)) {
-					processVersion1Record(cityId, operatorId, record);
-				}
+				processVersion1Record(cityId, operatorId, record);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
