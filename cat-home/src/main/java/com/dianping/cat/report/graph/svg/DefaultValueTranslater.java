@@ -1,4 +1,4 @@
-package com.dianping.cat.report.graph;
+package com.dianping.cat.report.graph.svg;
 
 public class DefaultValueTranslater implements ValueTranslater {
 	@Override

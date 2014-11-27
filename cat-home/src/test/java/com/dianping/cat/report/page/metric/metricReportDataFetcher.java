@@ -15,9 +15,9 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.chart.CachedMetricReportService;
-import com.dianping.cat.report.chart.DataExtractor;
-import com.dianping.cat.report.chart.MetricDataFetcher;
+import com.dianping.cat.report.graph.metric.CachedMetricReportService;
+import com.dianping.cat.report.graph.metric.DataExtractor;
+import com.dianping.cat.report.graph.metric.MetricDataFetcher;
 
 public class metricReportDataFetcher extends ComponentTestCase {
 

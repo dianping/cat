@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.report.graph.svg.ValueTranslater;
+
 @RunWith(JUnit4.class)
 public class ValueTranslaterTest extends ComponentTestCase {
 	@Test

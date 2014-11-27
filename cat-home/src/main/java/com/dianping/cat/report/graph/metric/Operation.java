@@ -1,4 +1,4 @@
-package com.dianping.cat.report.chart;
+package com.dianping.cat.report.graph.metric;
 
 import java.util.ListIterator;
 import java.util.Stack;

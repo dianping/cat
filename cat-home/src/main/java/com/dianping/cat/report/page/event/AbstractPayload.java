@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.event;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.Range;
-import com.dianping.cat.report.graph.AbstractGraphPayload;
+import com.dianping.cat.report.graph.svg.AbstractGraphPayload;
 
 abstract class AbstractPayload extends AbstractGraphPayload {
 	private final EventName m_name;
