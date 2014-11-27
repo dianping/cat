@@ -1,5 +1,10 @@
 package com.dianping.cat.system.config;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -11,6 +16,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.display.policy.entity.DisplayPolicy;
+import com.dianping.cat.home.display.policy.entity.Group;
 import com.dianping.cat.home.display.policy.entity.Metric;
 import com.dianping.cat.home.display.policy.transform.DefaultSaxParser;
 
@@ -75,22 +81,69 @@ public class DisplayPolicyManager implements Initializable {
 		}
 	}
 
-	public int queryUnit(String metricName) {
-		Metric metric = m_config.findMetric(metricName);
+	public boolean isDelta(String groupName, String metricName) {
+		Group group = m_config.findGroup(groupName);
 
-		if (metric == null) {
-			return 1;
-		} else {
-			String metricUnit = metric.getUnit();
+		if (group != null) {
+			Metric metric = group.findMetric(metricName);
 
-			if ("K".equals(metricUnit)) {
-				return K;
-			} else if ("M".equals(metricUnit)) {
-				return K * K;
-			} else {
-				return 1;
+			if (metric != null) {
+				return metric.isIsDelta();
 			}
 		}
+		return false;
+	}
+
+	public List<Group> queryOrderedGroups() {
+		List<Group> list = new ArrayList<Group>();
+
+		for (Group group : m_config.getGroups().values()) {
+			list.add(group);
+		}
+		Collections.sort(list, new Comparator<Group>() {
+			@Override
+			public int compare(Group g1, Group g2) {
+				return g1.getOrder() - g2.getOrder();
+			}
+		});
+		return list;
+	}
+
+	public List<Metric> queryOrderedMetrics(String groupName) {
+		Group group = m_config.findGroup(groupName);
+		List<Metric> list = new ArrayList<Metric>();
+
+		if (group != null) {
+			for (Metric metric : group.getMetrics().values()) {
+				list.add(metric);
+			}
+			Collections.sort(list, new Comparator<Metric>() {
+				@Override
+				public int compare(Metric m1, Metric m2) {
+					return m1.getOrder() - m2.getOrder();
+				}
+			});
+		}
+		return list;
+	}
+
+	public int queryUnit(String groupName, String metricName) {
+		Group group = m_config.findGroup(groupName);
+
+		if (group != null) {
+			Metric metric = group.findMetric(metricName);
+
+			if (metric != null) {
+				String metricUnit = metric.getUnit();
+
+				if ("K".equals(metricUnit)) {
+					return K;
+				} else if ("M".equals(metricUnit)) {
+					return K * K;
+				}
+			}
+		}
+		return 1;
 	}
 
 	private boolean storeConfig() {

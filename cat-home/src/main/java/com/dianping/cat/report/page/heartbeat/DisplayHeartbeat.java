@@ -15,6 +15,8 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.home.display.policy.entity.Group;
+import com.dianping.cat.home.display.policy.entity.Metric;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.system.config.DisplayPolicyManager;
@@ -84,6 +86,66 @@ public class DisplayHeartbeat {
 		m_manager = manager;
 	}
 
+	private void addSortedGroups(Map<String, Map<String, double[]>> tmpExtensions) {
+		for (Group group : m_manager.queryOrderedGroups()) {
+			String groupName = group.getId();
+			Map<String, double[]> extensionGroup = m_extensions.get(group);
+
+			if (extensionGroup != null) {
+				tmpExtensions.put(groupName, extensionGroup);
+			}
+		}
+		for (String groupName : m_extensions.keySet()) {
+			if (tmpExtensions.get(groupName) == null) {
+				tmpExtensions.put(groupName, m_extensions.get(groupName));
+			}
+		}
+	}
+
+	private void buildExtensionGraph(Map<String, Map<String, String>> graphs, Entry<String, Map<String, double[]>> entry) {
+		String title = entry.getKey();
+		Map<String, String> map = graphs.get(title);
+		if (map == null) {
+			map = new HashMap<String, String>();
+			graphs.put(title, map);
+		}
+
+		int i = 0;
+		for (Entry<String, double[]> item : entry.getValue().entrySet()) {
+			String key = item.getKey();
+
+			map.put(key, m_builder.build(new HeartbeatPayload(i++, key, "Minute", "Count", item.getValue())));
+		}
+	}
+
+	private void dealWithExtensions() {
+		Map<String, Map<String, double[]>> tmpExtensions = new LinkedHashMap<String, Map<String, double[]>>();
+
+		addSortedGroups(tmpExtensions);
+		for (Entry<String, Map<String, double[]>> entry : tmpExtensions.entrySet()) {
+			String groupName = entry.getKey();
+
+			sortMetrics(entry);
+
+			for (Entry<String, double[]> metricEntry : entry.getValue().entrySet()) {
+				String metricName = metricEntry.getKey();
+				double[] values = metricEntry.getValue();
+
+				if (m_manager.isDelta(groupName, metricName)) {
+					metricEntry.setValue(getAddedCount(values));
+					values = metricEntry.getValue();
+				}
+
+				int unit = m_manager.queryUnit(groupName, metricName);
+
+				for (int i = 0; i <= 59; i++) {
+					values[i] = values[i] / unit;
+				}
+			}
+		}
+		m_extensions = tmpExtensions;
+	}
+
 	public DisplayHeartbeat display(HeartbeatReport report, String ip) {
 		if (report == null) {
 			return this;
@@ -126,27 +188,28 @@ public class DisplayHeartbeat {
 			m_systemLoadAverage[minute] = period.getSystemLoadAverage();
 
 			for (Entry<String, Extension> entry : period.getExtensions().entrySet()) {
-				Map<String, double[]> groups = m_extensions.get(entry.getKey());
+				String group = entry.getKey();
+				Map<String, double[]> groups = m_extensions.get(group);
 
 				if (groups == null) {
 					groups = new LinkedHashMap<String, double[]>();
 
-					m_extensions.put(entry.getKey(), groups);
+					m_extensions.put(group, groups);
 				}
 				for (Entry<String, Detail> detail : entry.getValue().getDetails().entrySet()) {
 					String key = detail.getKey();
 					double[] doubles = groups.get(key);
-					int unit = m_manager.queryUnit(key);
 
 					if (doubles == null) {
 						doubles = new double[60];
 						groups.put(key, doubles);
 					}
 
-					doubles[minute] = detail.getValue().getValue() / unit;
+					doubles[minute] = detail.getValue().getValue();
 				}
 			}
 		}
+		dealWithExtensions();
 
 		m_newThreads = getAddedCount(m_totalThreads);
 		m_addNewGcCount = getAddedCount(m_newGcCount);
@@ -242,60 +305,6 @@ public class DisplayHeartbeat {
 		return m_daemonThreads;
 	}
 
-	public Map<String, Map<String, String>> getExtensionGraph() {
-		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
-
-		for (Entry<String, Map<String, double[]>> items : m_extensions.entrySet()) {
-			Map<String, double[]> datas = items.getValue();
-			if (datas != null) {
-				if (items.getKey().equalsIgnoreCase(DAL)) {
-					for (Entry<String, double[]> entry : datas.entrySet()) {
-						String key = entry.getKey();
-						int pos = key.lastIndexOf('-');
-
-						if (pos > 0) {
-							String db = "Dal " + key.substring(0, pos);
-							String title = key.substring(pos + 1);
-
-							Map<String, String> map = graphs.get(db);
-							if (map == null) {
-								map = new HashMap<String, String>();
-								graphs.put(db, map);
-							}
-
-							if (!INDEX.containsKey(title)) {
-								INDEX.put(title, INDEX_COUNTER.getAndIncrement());
-							}
-
-							map.put(title, m_builder.build(new HeartbeatPayload(INDEX.get(title), title, "Minute", "Count",
-							      entry.getValue())));
-						}
-					}
-				} else {
-					buildExtensionGraph(graphs, items);
-				}
-			}
-		}
-
-		return graphs;
-	}
-
-	private void buildExtensionGraph(Map<String, Map<String, String>> graphs, Entry<String, Map<String, double[]>> entry) {
-		String title = entry.getKey();
-		Map<String, String> map = graphs.get(title);
-		if (map == null) {
-			map = new HashMap<String, String>();
-			graphs.put(title, map);
-		}
-
-		int i = 0;
-		for (Entry<String, double[]> item : entry.getValue().entrySet()) {
-			String key = item.getKey();
-
-			map.put(key, m_builder.build(new HeartbeatPayload(i++, key, "Minute", "Count", item.getValue())));
-		}
-	}
-
 	public String getDeamonThreadGraph() {
 		return m_builder.build(new HeartbeatPayload(6, "Daemon Thread", "Minute", "Count", m_daemonThreads));
 	}
@@ -375,6 +384,44 @@ public class DisplayHeartbeat {
 			}
 		}
 		return result;
+	}
+
+	public Map<String, Map<String, String>> getExtensionGraph() {
+		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
+
+		for (Entry<String, Map<String, double[]>> items : m_extensions.entrySet()) {
+			Map<String, double[]> datas = items.getValue();
+			if (datas != null) {
+				if (items.getKey().equalsIgnoreCase(DAL)) {
+					for (Entry<String, double[]> entry : datas.entrySet()) {
+						String key = entry.getKey();
+						int pos = key.lastIndexOf('-');
+
+						if (pos > 0) {
+							String db = "Dal " + key.substring(0, pos);
+							String title = key.substring(pos + 1);
+
+							Map<String, String> map = graphs.get(db);
+							if (map == null) {
+								map = new HashMap<String, String>();
+								graphs.put(db, map);
+							}
+
+							if (!INDEX.containsKey(title)) {
+								INDEX.put(title, INDEX_COUNTER.getAndIncrement());
+							}
+
+							map.put(title, m_builder.build(new HeartbeatPayload(INDEX.get(title), title, "Minute", "Count",
+							      entry.getValue())));
+						}
+					}
+				} else {
+					buildExtensionGraph(graphs, items);
+				}
+			}
+		}
+
+		return graphs;
 	}
 
 	public double[] getHeapUsage() {
@@ -459,6 +506,27 @@ public class DisplayHeartbeat {
 
 	public double[] getTotalThreads() {
 		return m_totalThreads;
+	}
+
+	private void sortMetrics(Entry<String, Map<String, double[]>> entry) {
+		String groupName = entry.getKey();
+		Map<String, double[]> metrics = entry.getValue();
+		Map<String, double[]> tmpMetrics = new LinkedHashMap<String, double[]>();
+
+		for (Metric metric : m_manager.queryOrderedMetrics(groupName)) {
+			String metricName = metric.getId();
+			double[] values = metrics.get(metricName);
+
+			if (values != null) {
+				tmpMetrics.put(metricName, values);
+			}
+		}
+		for (String metricName : metrics.keySet()) {
+			if (tmpMetrics.get(metricName) == null) {
+				tmpMetrics.put(metricName, metrics.get(metricName));
+			}
+		}
+		entry.setValue(tmpMetrics);
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {
