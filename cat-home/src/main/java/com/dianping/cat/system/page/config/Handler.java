@@ -22,6 +22,7 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
+import com.dianping.cat.system.page.config.processor.DisplayConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
@@ -71,6 +72,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TransactionConfigProcessor m_transactionConfigProcessor;
+
+	@Inject
+	private DisplayConfigProcessor m_displayConfigProfessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
@@ -218,6 +222,10 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_DEFAULT_RECEIVERS:
 		case ALERT_POLICY:
 			m_alertConfigProcessor.process(action, payload, model);
+			break;
+
+		case DISPLAY_POLICY:
+			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

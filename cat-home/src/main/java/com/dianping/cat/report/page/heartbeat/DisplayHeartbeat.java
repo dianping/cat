@@ -17,8 +17,12 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class DisplayHeartbeat {
+
+	private DisplayPolicyManager m_manager;
+
 	private static final int K = 1024;
 
 	private static final String DAL = "dal";
@@ -75,11 +79,9 @@ public class DisplayHeartbeat {
 
 	private Map<String, Map<String, double[]>> m_extensions = new HashMap<String, Map<String, double[]>>();
 
-	public DisplayHeartbeat() {
-	}
-
-	public DisplayHeartbeat(GraphBuilder builder) {
+	public DisplayHeartbeat(GraphBuilder builder, DisplayPolicyManager manager) {
 		m_builder = builder;
+		m_manager = manager;
 	}
 
 	public DisplayHeartbeat display(HeartbeatReport report, String ip) {
@@ -132,14 +134,16 @@ public class DisplayHeartbeat {
 					m_extensions.put(entry.getKey(), groups);
 				}
 				for (Entry<String, Detail> detail : entry.getValue().getDetails().entrySet()) {
-					double[] doubles = groups.get(detail.getKey());
+					String key = detail.getKey();
+					double[] doubles = groups.get(key);
+					int unit = m_manager.queryUnit(key);
 
 					if (doubles == null) {
 						doubles = new double[60];
-						groups.put(detail.getKey(), doubles);
+						groups.put(key, doubles);
 					}
 
-					doubles[minute] = detail.getValue().getValue();
+					doubles[minute] = detail.getValue().getValue() / unit;
 				}
 			}
 		}

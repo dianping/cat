@@ -73,6 +73,8 @@ public enum JspFile {
 
 	ALERT_POLICY("/jsp/system/alert/policy.jsp"),
 
+	DISPLAY_POLICY("/jsp/system/display/policy.jsp"),
+
 	EXCEPTION_THRESHOLD("/jsp/system/exception/exceptionThreshold.jsp"),
 
 	EXCEPTION("/jsp/system/exception/exception.jsp"),

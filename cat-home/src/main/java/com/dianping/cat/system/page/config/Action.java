@@ -99,6 +99,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	ALERT_POLICY("alertPolicy"),
 
+	DISPLAY_POLICY("displayPolicy"),
+
 	EXCEPTION("exception"),
 
 	EXCEPTION_THRESHOLD_UPDATE("exceptionThresholdUpdate"),

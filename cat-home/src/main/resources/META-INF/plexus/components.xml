@@ -3419,6 +3419,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3436,6 +3439,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+			<implementation>com.dianping.cat.system.config.DisplayPolicyManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5107,6 +5122,9 @@
 					<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 				</requirement>
 			</requirements>
@@ -5508,6 +5526,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>

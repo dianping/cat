@@ -176,6 +176,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
 		case ROUTER_CONFIG_UPDATE:
 			return JspFile.ROUTER_CONFIG_UPDATE.getPath();
+		case DISPLAY_POLICY:
+			return JspFile.DISPLAY_POLICY.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

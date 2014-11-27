@@ -32,6 +32,8 @@
 	       <li class="text-left" id="policy"><a href="?op=alertPolicy">告警策略配置</a></li>
 	       <li class="text-left" id="alertDefaultReceivers"><a href="?op=alertDefaultReceivers">默认告警人配置</a></li>
 	       <li class="text-left" id="routerConfigUpdate"><a href="?op=routerConfigUpdate">客户端路由配置</a></li>
+	       <li class='nav-header'>其它配置</li>
+	       <li class="text-left" id="displayPolicy"><a href="?op=displayPolicy">心跳报告配置</a></li>
          </ul>
 </div>
 
