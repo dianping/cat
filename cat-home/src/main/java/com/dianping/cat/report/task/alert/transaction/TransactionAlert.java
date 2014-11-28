@@ -24,7 +24,7 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.TransactionMergeManager;
+import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
@@ -40,7 +40,7 @@ public class TransactionAlert extends BaseAlert implements Task {
 	private ModelService<TransactionReport> m_service;
 
 	@Inject
-	private TransactionMergeManager m_mergeManager;
+	private TransactionMergeHelper m_mergeManager;
 
 	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);

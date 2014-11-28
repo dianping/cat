@@ -31,12 +31,12 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.event.EventMergeManager;
+import com.dianping.cat.report.page.event.EventMergeHelper;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
-import com.dianping.cat.report.page.transaction.TransactionMergeManager;
+import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -46,10 +46,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private TransactionMergeManager m_transactionMergeManger;
+	private TransactionMergeHelper m_transactionMergeManger;
 
 	@Inject
-	private EventMergeManager m_eventMergerMergeManager;
+	private EventMergeHelper m_eventMergerMergeManager;
 
 	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_eventService;

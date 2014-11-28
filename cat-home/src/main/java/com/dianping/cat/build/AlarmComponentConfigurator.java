@@ -23,7 +23,7 @@ import com.dianping.cat.home.dal.report.AlertSummaryDao;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.TransactionMergeManager;
+import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.task.alert.AlertInfo;
@@ -221,7 +221,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(UrlPatternConfigManager.class));
 
 		all.add(C(TransactionAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
-		      .req(RemoteMetricReportService.class, TransactionMergeManager.class, DataChecker.class, AlertManager.class)
+		      .req(RemoteMetricReportService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));

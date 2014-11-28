@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.event;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 
-public class EventMergeManager {
+public class EventMergeHelper {
 
 	public EventReport mergerAllIp(EventReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {

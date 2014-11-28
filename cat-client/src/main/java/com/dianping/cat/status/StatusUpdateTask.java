@@ -20,7 +20,6 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
 public class StatusUpdateTask implements Task, Initializable {
@@ -66,12 +65,12 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	private void buildExtensionData(StatusInfo status) {
 		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
-		List<Extension> extensions = res.getStatusExtension();
+		List<StatusExtension> extensions = res.getStatusExtension();
 
-		for (Extension extension : extensions) {
+		for (StatusExtension extension : extensions) {
 			String id = extension.getId();
 			String des = extension.getDescription();
-			Map<String, String> propertis = extension.getDynamicAttributes();
+			Map<String, String> propertis = extension.getProperties();
 
 			status.findOrCreateExtension(id).setDescription(des).getDynamicAttributes().putAll(propertis);
 		}
