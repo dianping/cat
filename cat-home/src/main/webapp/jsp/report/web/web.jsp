@@ -222,7 +222,7 @@
 				
 				$('#group2').val(group2);
 				$('#group2').change();
-				$("#url").val(url2);
+				$("#url2").val(url2);
 				var array2 = city2.split('-');
 
 				$('#province2').val(array2[0]);

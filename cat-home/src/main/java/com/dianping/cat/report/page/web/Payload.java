@@ -68,7 +68,7 @@ public class Payload extends AbstractReportPayload<Action> {
 				hour += 1;
 			}
 
-			date = new Date(TimeHelper.getCurrentDay(start, 0).getTime() + hour * TimeHelper.ONE_HOUR);
+			date = new Date(TimeHelper.getCurrentDay(start).getTime() + hour * TimeHelper.ONE_HOUR);
 			if (date.equals(TimeHelper.getCurrentDay(start, 1))) {
 				date = new Date(date.getTime() - TimeHelper.ONE_MINUTE);
 			}
@@ -78,8 +78,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return date;
 	}
 
+	private Date generateDefaultEnd() {
+		Date date = TimeHelper.getCurrentHour(1);
+		if (date.equals(TimeHelper.getCurrentDay(System.currentTimeMillis(), 1))) {
+			date = new Date(date.getTime() - TimeHelper.ONE_MINUTE);
+		}
+		return date;
+	}
+
 	public Pair<Date, Date> getHistoryEndDatePair() {
-		Date currentEnd = TimeHelper.getCurrentHour(1);
+		Date currentEnd = generateDefaultEnd();
 		Date compareEnd = null;
 
 		try {
