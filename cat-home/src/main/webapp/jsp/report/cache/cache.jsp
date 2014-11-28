@@ -65,7 +65,7 @@
 					<td style="text-align: left"><a
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
-					<td>${item.missed}</td>
+					<td>${w:format(item.missed,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
@@ -85,8 +85,8 @@
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
-			</th>
-							</tr>
+			</th></tr>
+			<tr><th>命中率计算方式: 1-missed/Get, mGet不在统计范围之内</th></tr>
 			<script>
 				function filterByName(date, domain, ip) {
 					var queryname = $("#queryname").val();

@@ -146,7 +146,7 @@ public class CacheReport {
 	}
 
 	public static class CacheNameItem {
-		private double m_hited;
+		private double m_hited = 1;
 
 		private long m_missed;
 

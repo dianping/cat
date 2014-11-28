@@ -133,4 +133,9 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	public void setStandalone(boolean standalone) {
 		m_standalone = standalone;
 	}
+
+	public void setDurationStart(long durationStart) {
+   	m_durationStart = durationStart;
+   }
+	
 }
