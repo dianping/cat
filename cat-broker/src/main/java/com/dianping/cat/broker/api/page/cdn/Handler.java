@@ -88,14 +88,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 							entity = createEntity(tabs[1] + "/response", timestamp, Double.parseDouble(tabs[5]), userIp);
 							m_manager.offer(entity);
+							Cat.logEvent("Cdn.Hit", tabs[1], Event.SUCCESS, userIp);
+						} else {
+							Cat.logEvent("Cdn.InvalidRecord", line, Event.SUCCESS, null);
 						}
 					}
 				}
 			} catch (Exception e) {
+				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("unknownIp", "cdn", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "Cdn", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 		response.getWriter().write("OK");

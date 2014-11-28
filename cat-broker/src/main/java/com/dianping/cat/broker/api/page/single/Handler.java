@@ -50,23 +50,23 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		MonitorEntity entity = new MonitorEntity();
+		String url = payload.getTargetUrl();
 		String userIp = m_util.getRemoteIp(request);
 
 		if (userIp != null) {
 			String errorCode = payload.getErrorCode();
 			String httpStatus = payload.getHttpStatus();
 
-			Cat.logEvent("ip", "hit", Event.SUCCESS, userIp);
-
 			entity.setDuration(payload.getDuration());
 			entity.setErrorCode(errorCode);
 			entity.setHttpStatus(httpStatus);
 			entity.setIp(userIp);
-			entity.setTargetUrl(payload.getTargetUrl());
+			entity.setTargetUrl(url);
 			entity.setTimestamp(System.currentTimeMillis());
 			m_manager.offer(entity);
+			Cat.logEvent("Single.Hit", url, Event.SUCCESS, userIp);
 		} else {
-			Cat.logEvent("unknownIp", "single", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "Single", Event.SUCCESS, url);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 		response.getWriter().write("OK");

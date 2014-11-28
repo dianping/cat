@@ -79,7 +79,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("unknownIp", "batch", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "Speed", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -104,10 +104,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				processVersion1Content(cityId, operatorId, content, version);
 				success = true;
 			} else {
-				Cat.logEvent("Invalid ip info", userIp, Event.SUCCESS, userIp);
+				Cat.logEvent("InvalidIpInfo", "speed:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else {
-			Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
+			Cat.logEvent("InvalidVersion", "speed:" + version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -119,7 +119,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			m_error++;
 
 			if (m_error % 1000 == 0) {
-				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
+				Cat.logEvent("Discard", "Speed", Event.SUCCESS, null);
 				m_logger.error("Error when offer appData to queue , discard number " + m_error);
 			}
 		}
@@ -131,58 +131,60 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		if (length == 6) {
 			try {
-				String speedId = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String page = URLDecoder.decode(items[4], "utf-8").toLowerCase();
 
-				if (speedId != null) {
-					// appData.setTimestamp(Long.parseLong(items[0]));
-					long current = System.currentTimeMillis();
-					int network = Integer.parseInt(items[1]);
-					int version = Integer.parseInt(items[2]);
-					int platform = Integer.parseInt(items[3]);
+				// appData.setTimestamp(Long.parseLong(items[0]));
+				long current = System.currentTimeMillis();
+				int network = Integer.parseInt(items[1]);
+				int version = Integer.parseInt(items[2]);
+				int platform = Integer.parseInt(items[3]);
 
-					for (int i = 5; i < length; i++) {
-						AppSpeedProto appData = new AppSpeedProto();
+				for (int i = 5; i < length; i++) {
+					AppSpeedProto appData = new AppSpeedProto();
 
-						appData.setTimestamp(current);
-						appData.setNetwork(network);
-						appData.setVersion(version);
-						appData.setPlatform(platform);
-						appData.setCity(cityId);
-						appData.setOperator(operatorId);
-						offerAppSpeedData(appData, speedId, items, i);
-					}
-				} else {
-					Cat.logEvent("PageNotFound", speedId, Event.SUCCESS, items[4]);
+					appData.setTimestamp(current);
+					appData.setNetwork(network);
+					appData.setVersion(version);
+					appData.setPlatform(platform);
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					offerAppSpeedData(appData, page, items, i);
 				}
 			} catch (Exception e) {
+				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidPar", record, Event.SUCCESS, record);
+			Cat.logEvent("Speed.InvalidRecord", record, Event.SUCCESS, null);
 		}
 	}
 
-	private void offerAppSpeedData(AppSpeedProto appData, String speedId, String[] items, int i) {
+	private void offerAppSpeedData(AppSpeedProto appData, String page, String[] items, int i) {
 		List<String> fields = Splitters.by("-").split(items[i]);
 		String step = fields.get(0);
 		long responseTime = Long.parseLong(fields.get(1));
-		int id = m_appSpeedConfigManager.querySpeedId(speedId, step);
-		boolean slow = responseTime > m_appSpeedConfigManager.querSpeedThreshold(speedId, step);
-		appData.setSpeedId(id);
+		int id = m_appSpeedConfigManager.querySpeedId(page, step);
 
-		if (slow) {
-			appData.setSlowCount(1);
-			appData.setSlowResponseTime(responseTime);
-		} else {
-			appData.setCount(1);
-			appData.setResponseTime(responseTime);
-		}
+		if (id > 0) {
+			boolean slow = responseTime > m_appSpeedConfigManager.querSpeedThreshold(page, step);
+			appData.setSpeedId(id);
 
-		if (responseTime >= 0) {
-			offerQueue(appData);
-			Cat.logEvent("page", speedId, Event.SUCCESS, null);
+			if (slow) {
+				appData.setSlowCount(1);
+				appData.setSlowResponseTime(responseTime);
+			} else {
+				appData.setCount(1);
+				appData.setResponseTime(responseTime);
+			}
+
+			if (responseTime >= 0) {
+				offerQueue(appData);
+				Cat.logEvent("Page", page, Event.SUCCESS, null);
+			} else {
+				Cat.logEvent("Speed.ResponseTimeError", page, Event.SUCCESS, String.valueOf(responseTime));
+			}
 		} else {
-			Cat.logEvent("ResponseTimeError", speedId, Event.SUCCESS, String.valueOf(responseTime));
+			Cat.logEvent("UnknownPage", page, Event.SUCCESS, page);
 		}
 	}
 
@@ -198,7 +200,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
 			} else {
-				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
+				Cat.logEvent("UnknownCityOperator", "speed:" + province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;

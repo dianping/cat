@@ -139,23 +139,23 @@ public class AppSpeedConfigManager implements Initializable {
 	}
 
 	public int querSpeedThreshold(String page, String step) {
-		int threshold = -1;
+		int value = -1;
 		Speed speed = m_speeds.get(page + "-" + step);
 
 		if (speed != null) {
-			threshold = speed.getThreshold();
+			value = speed.getThreshold();
 		}
-		return threshold;
+		return value;
 	}
 
 	public int querySpeedId(String page, String step) {
-		int threshold = -1;
+		int value = -1;
 		Speed speed = m_speeds.get(page + "-" + step);
 
 		if (speed != null) {
-			threshold = speed.getId();
+			value = speed.getId();
 		}
-		return threshold;
+		return value;
 	}
 
 	public Set<Integer> querySpeedIds() {
