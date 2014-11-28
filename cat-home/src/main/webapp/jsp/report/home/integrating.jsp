@@ -42,12 +42,12 @@
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-core</artifactId>   
-             <version>1.1.3</version>
+             <version>1.1.8</version>
              </dependency>
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-client</artifactId>   
-             <version>1.1.3</version>
+             <version>1.1.8</version>
              </dependency>
        <dependency>
               <groupId>com.dianping</groupId>
@@ -57,7 +57,7 @@
        <dependency>
               <groupId>com.dianping.dpsf</groupId>
               <artifactId>dpsf-net</artifactId>
-             <version>1.8.1</version>
+             <version>2.3.8</version>
        </dependency>
        <dependency>
               <groupId>com.dianping.hawk</groupId>
@@ -67,7 +67,7 @@
        <dependency>
               <groupId>com.dianping</groupId>
               <artifactId>avatar-cache</artifactId>
-             <version>2.2.4</version>
+             <version>2.5.10</version>
        </dependency> 
   </xmp>
   <p class="detailContent">      1、更新了这些JAR，默认就会URL，Pigeon，SQL的调用情况，业务可以根据项目需要选择是否升级这些JAR。  </p>

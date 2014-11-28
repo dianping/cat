@@ -135,7 +135,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	public void setDurationStart(long durationStart) {
-   	m_durationStart = durationStart;
-   }
-	
+		m_durationStart = durationStart;
+	}
+
 }

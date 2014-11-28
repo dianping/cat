@@ -186,7 +186,7 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Event build() {
-			m_event = new DefaultEvent(getType(), getName());
+			m_event = new DefaultEvent(getType(), getName(), null);
 			m_event.setTimestamp(getTimestampInMillis());
 			m_event.setStatus(getStatus());
 			m_event.addData(getData());
