@@ -75,7 +75,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("unknownIp", "batch", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "Batch", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -100,10 +100,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				processVersion2Content(cityId, operatorId, content, version);
 				success = true;
 			} else {
-				Cat.logEvent("Invalid ip info", userIp, Event.SUCCESS, userIp);
+				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else {
-			Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
+			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -115,7 +115,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			m_error++;
 
 			if (m_error % 1000 == 0) {
-				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
+				Cat.logEvent("Discard", "Batch", Event.SUCCESS, null);
 				m_logger.error("Error when offer appData to queue , discard number " + m_error);
 			}
 		}
@@ -165,18 +165,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setCommand(tooLong);
 							offerQueue(appData);
 						}
-						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					} else {
-						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
+				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, record);
+			Cat.logEvent("Batch.InvalidRecord", record, Event.SUCCESS, null);
 		}
 	}
 
@@ -192,7 +193,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
 			} else {
-				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
+				Cat.logEvent("UnknownCityOperator", "batch:" + province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;
