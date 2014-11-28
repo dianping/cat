@@ -146,7 +146,7 @@ public class CacheReport {
 	}
 
 	public static class CacheNameItem {
-		private double m_hited;
+		private double m_hited = 1;
 
 		private long m_missed;
 
@@ -174,12 +174,7 @@ public class CacheReport {
 				if ("get".equals(method)) {
 					m_get += transactionTotalCount;
 					m_missed = m_missed + eventName.getTotalCount();
-
-					if (m_get > 0) {
-						m_hited = 1 - (double) m_missed / m_get;
-					} else {
-						m_hited = 1;
-					}
+					m_hited = 1 - (double) m_missed / m_get;
 				} else if ("mGet".equals(method)) {
 					m_mget += transactionTotalCount;
 				} else if ("add".equals(method)) {
