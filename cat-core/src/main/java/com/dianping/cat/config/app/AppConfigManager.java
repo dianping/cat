@@ -77,9 +77,9 @@ public class AppConfigManager implements Initializable {
 		boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
 		int commandId;
 		if (isActivityCommand) {
-			commandId = findAvailableId(1000, 1500);
+			commandId = findAvailableId(1000, 1200);
 		} else {
-			commandId = findAvailableId(1, 200);
+			commandId = findAvailableId(1, 999);
 		}
 		command.setId(commandId);
 
