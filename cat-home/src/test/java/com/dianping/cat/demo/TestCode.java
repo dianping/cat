@@ -9,6 +9,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -27,6 +28,18 @@ public class TestCode {
 				Files.forIO().readFrom(in, "utf-8");
 			}
 		}
+	}
+	
+	@Test
+	public void testEvent() throws Exception{
+		for(int i=0;i<100;i++){
+		Event event = Cat.newEvent("fff", String.valueOf(i));
+		
+		event.setStatus(Event.SUCCESS);
+		event.complete();
+		}
+		
+		Thread.sleep(1000*1000);
 	}
 	
 	public void logError(Throwable able){

@@ -132,9 +132,8 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultEvent event = new DefaultEvent(type, name);
+			DefaultEvent event = new DefaultEvent(type, name, m_manager);
 
-			m_manager.add(event);
 			return event;
 		} else {
 			return NullMessage.EVENT;
@@ -211,9 +210,8 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name);
+			DefaultMetric metric = new DefaultMetric(type == null ? "" : type, name, m_manager);
 
-			m_manager.add(metric);
 			return metric;
 		} else {
 			return NullMessage.METRIC;
@@ -244,9 +242,8 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultTrace trace = new DefaultTrace(type, name);
+			DefaultTrace trace = new DefaultTrace(type, name, m_manager);
 
-			m_manager.add(trace);
 			return trace;
 		} else {
 			return NullMessage.TRACE;
