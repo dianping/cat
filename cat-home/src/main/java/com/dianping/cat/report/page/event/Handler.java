@@ -55,7 +55,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private EventMergeManager m_mergeManager;
+	private EventMergeHelper m_mergeManager;
 
 	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_service;

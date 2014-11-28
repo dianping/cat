@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.transaction;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
-public class TransactionMergeManager {
+public class TransactionMergeHelper {
 
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {

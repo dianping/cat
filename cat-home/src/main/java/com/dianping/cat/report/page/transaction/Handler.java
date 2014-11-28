@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private TransactionMergeManager m_mergeManager;
+	private TransactionMergeHelper m_mergeManager;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;

@@ -1230,7 +1230,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -2931,7 +2931,7 @@
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
@@ -3294,7 +3294,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
@@ -3335,8 +3335,8 @@
 			<implementation>com.dianping.cat.report.page.transaction.XmlViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
-			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeManager</implementation>
+			<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
@@ -3355,7 +3355,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
+					<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3392,8 +3392,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.event.EventMergeManager</role>
-			<implementation>com.dianping.cat.report.page.event.EventMergeManager</implementation>
+			<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.event.EventMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
@@ -3693,10 +3693,10 @@
 					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
+					<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
