@@ -143,7 +143,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		}
 		machine.setAvgTps(avgTps);
 		machine.setMaxTps(maxTps);
-		
+
 		return machine;
 	}
 
@@ -198,13 +198,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Override
 	protected void process(MessageTree tree) {
-		StateReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 		String domain = tree.getDomain();
-		String ip = tree.getIpAddress();
-		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
-		machine.findOrCreateProcessDomain(domain).addIp(ip);
 		if (m_serverConfigManager.validateDomain(domain)) {
+			StateReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
+			String ip = tree.getIpAddress();
+			Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+
+			machine.findOrCreateProcessDomain(domain).addIp(ip);
 			if (!m_projectService.containsDomainInCat(domain)) {
 				boolean insert = m_projectService.insertDomain(domain);
 
@@ -232,5 +233,4 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			}
 		}
 	}
-
 }
