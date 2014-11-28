@@ -78,8 +78,8 @@
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
-			</th>
-							</tr>
+			</th></tr>
+			<tr><th>命中率计算方式: 1-missed/Get, mGet不在统计范围之内</th></tr>
 			<script>
 				function filterByName(date, domain, ip, type) {
 					var queryname = $("#queryname").val();
