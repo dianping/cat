@@ -131,7 +131,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 						domains.add(report.getDomain());
 					}
 				}
-				g.put(date, domains);
+				m_domains.put(date, domains);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
