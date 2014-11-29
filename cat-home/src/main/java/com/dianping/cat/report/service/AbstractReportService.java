@@ -3,7 +3,10 @@ package com.dianping.cat.report.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -50,6 +53,16 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
 
+	private Map<Date, Set<String>> m_domains = new LinkedHashMap<Date, Set<String>>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<Date, Set<String>> eldest) {
+			return size() > 1000;
+		}
+	};
+
 	protected Logger m_logger;
 
 	public static final int s_hourly = 1;
@@ -87,14 +100,14 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	}
 
 	@Override
-   public void enableLogging(Logger logger) {
+	public void enableLogging(Logger logger) {
 		m_logger = logger;
-   }
+	}
 
 	public abstract T makeReport(String domain, Date start, Date end);
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
-		HashSet<String> domains = new HashSet<String>();
+		Set<String> domains = new HashSet<String>();
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 
@@ -104,39 +117,36 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		return domains;
 	}
 
-	private Set<String> queryAllDomains(Date start) {
-		Set<String> domains = new HashSet<String>();
-		try {
-			List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriod(start, HourlyReportEntity.READSET_DOMAIN_NAME);
+	private Set<String> queryAllDomains(Date date) {
+		Set<String> domains = m_domains.get(date);
 
-			if (reports != null) {
-				for (HourlyReport report : reports) {
-					domains.add(report.getDomain());
+		if (domains == null) {
+			domains = new HashSet<String>();
+			try {
+				List<HourlyReport> reports = m_hourlyReportDao
+				      .findAllByPeriod(date, HourlyReportEntity.READSET_DOMAIN_NAME);
+
+				if (reports != null) {
+					for (HourlyReport report : reports) {
+						domains.add(report.getDomain());
+					}
 				}
+				g.put(date, domains);
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
-		} catch (DalException e) {
-			Cat.logError(e);
 		}
 		return domains;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.report.service.RReportService#queryDailyReport(java.lang.String, java.util.Date, java.util.Date)
-    */
 	@Override
-   public abstract T queryDailyReport(String domain, Date start, Date end);
+	public abstract T queryDailyReport(String domain, Date start, Date end);
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.report.service.RReportService#queryHourlyReport(java.lang.String, java.util.Date, java.util.Date)
-    */
 	@Override
-   public abstract T queryHourlyReport(String domain, Date start, Date end);
+	public abstract T queryHourlyReport(String domain, Date start, Date end);
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.report.service.RReportService#queryMonthlyReport(java.lang.String, java.util.Date)
-    */
 	@Override
-   public abstract T queryMonthlyReport(String domain, Date start);
+	public abstract T queryMonthlyReport(String domain, Date start);
 
 	public T queryReport(String domain, Date start, Date end) {
 		int type = computeQueryType(start, end);
@@ -159,10 +169,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		return report;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.report.service.RReportService#queryWeeklyReport(java.lang.String, java.util.Date)
-    */
 	@Override
-   public abstract T queryWeeklyReport(String domain, Date start);
-	
+	public abstract T queryWeeklyReport(String domain, Date start);
+
 }
