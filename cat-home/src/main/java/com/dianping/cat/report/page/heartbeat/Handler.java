@@ -109,13 +109,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
-			if (period.isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(date), new Date(date
-				      + TimeHelper.ONE_HOUR), HeartbeatAnalyzer.ID);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
-			}
+			
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");

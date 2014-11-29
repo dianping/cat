@@ -2,6 +2,7 @@ package com.dianping.cat.broker.api.page.batch;
 
 import java.io.IOException;
 import java.net.URLDecoder;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,7 +26,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
-import com.site.lookup.util.StringUtils;
+import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -75,7 +76,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("UnknownIp", "Batch", Event.SUCCESS, null);
+			Cat.logEvent("unknownIp", "batch", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -100,10 +101,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				processVersion2Content(cityId, operatorId, content, version);
 				success = true;
 			} else {
-				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
+				Cat.logEvent("Invalid ip info", userIp, Event.SUCCESS, userIp);
 			}
 		} else {
-			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
+			Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -115,20 +116,20 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			m_error++;
 
 			if (m_error % 1000 == 0) {
-				Cat.logEvent("Discard", "Batch", Event.SUCCESS, null);
+				Cat.logEvent("Discard", "AppDataConsumer", Event.SUCCESS, null);
 				m_logger.error("Error when offer appData to queue , discard number " + m_error);
 			}
 		}
 	}
 
 	private void processVersion2Record(int cityId, int operatorId, String record) {
-		String[] items = record.split("\t");
+		List<String> items = Splitters.by("\\t").split(record);
 
-		if (items.length == 10) {
+		if (items.size() == 10) {
 			AppDataProto appData = new AppDataProto();
 
 			try {
-				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String url = URLDecoder.decode(items.get(4), "utf-8").toLowerCase();
 				int index = url.indexOf("?");
 
 				if (index > 0) {
@@ -140,14 +141,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());
 					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setNetwork(Integer.parseInt(items.get(1)));
+					appData.setVersion(Integer.parseInt(items.get(2)));
+					appData.setConnectType(Integer.parseInt(items.get(3)));
+					appData.setCode(Integer.parseInt(items.get(5)));
+					appData.setPlatform(Integer.parseInt(items.get(6)));
+					appData.setRequestByte(Integer.parseInt(items.get(7)));
+					appData.setResponseByte(Integer.parseInt(items.get(8)));
+					appData.setResponseTime(Integer.parseInt(items.get(9)));
 					appData.setCity(cityId);
 					appData.setOperator(operatorId);
 					appData.setCount(1);
@@ -165,19 +166,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setCommand(tooLong);
 							offerQueue(appData);
 						}
-						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					} else {
-						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("CommandNotFound", url, Event.SUCCESS, items.get(4));
 				}
 			} catch (Exception e) {
-				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("Batch.InvalidRecord", record, Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, record);
 		}
 	}
 
@@ -193,20 +193,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
 			} else {
-				Cat.logEvent("UnknownCityOperator", "batch:" + province + ":" + operatorStr, Event.SUCCESS, null);
+				Cat.logEvent("Unknown", province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;
 	}
 
 	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
+		List<String> records = Splitters.by("\\n").noEmptyItem().split(content);
 
 		for (String record : records) {
 			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion2Record(cityId, operatorId, record);
-				}
+				processVersion2Record(cityId, operatorId, record);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

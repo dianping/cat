@@ -26,7 +26,6 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -178,18 +177,6 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
 
-			if (payload.getPeriod().isLast()) {
-				Date start = new Date(payload.getDate());
-				Date end = new Date(payload.getDate() + TimeHelper.ONE_HOUR);
-
-				if (Constants.ALL.equals(domain)) {
-					report = m_reportService.queryTransactionReport(domain, start, end);
-				}
-				Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
-			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");

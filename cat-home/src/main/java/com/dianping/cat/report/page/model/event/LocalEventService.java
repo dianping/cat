@@ -30,12 +30,6 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		if (report == null && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
-			
-			if (report == null) {
-				report = new EventReport(domain);
-				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
-			}
 		}
 		return report;
 	}
@@ -46,8 +40,18 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
 			String xml = bucket.findById(domain);
+			EventReport report = null;
 
-			return xml == null ? null : DefaultSaxParser.parse(xml);
+			if (xml != null) {
+				report = DefaultSaxParser.parse(xml);
+			} else {
+				report = new EventReport(domain);
+				report.setStartTime(new Date(timestamp));
+				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+				report.getDomainNames().addAll(bucket.getIds());
+			}
+			return report;
+
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);

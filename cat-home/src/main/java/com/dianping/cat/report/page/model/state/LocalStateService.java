@@ -29,7 +29,7 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 		if (report == null && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
-		
+
 			if (report == null) {
 				report = new StateReport(domain);
 				report.setStartTime(new Date(startTime));

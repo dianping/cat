@@ -54,4 +54,5 @@ public interface ReportBucket<T> {
 	 * @throws IOException
 	 */
 	public boolean storeById(String id, T data) throws IOException;
+	
 }

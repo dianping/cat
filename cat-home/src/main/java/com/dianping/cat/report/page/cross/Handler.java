@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.cross;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -17,7 +16,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.cross.display.HostInfo;
@@ -78,13 +76,6 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
 			CrossReport report = response.getModel();
 
-			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeHelper.ONE_HOUR), CrossAnalyzer.ID);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
-			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable cross service registered for " + request + "!");
