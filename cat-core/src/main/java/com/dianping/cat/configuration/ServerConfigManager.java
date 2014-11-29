@@ -255,6 +255,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_invalidateDomains.add("MerchantAndroidCrashLog");
 		m_invalidateDomains.add("MerchantIOSCrashLog");
 		m_invalidateDomains.add("paas");
+		m_invalidateDomains.add("SMS-RECEIVER");
 
 		m_crashLogs.add("AndroidCrashLog");
 		m_crashLogs.add("iOSCrashLog");
@@ -288,8 +289,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
 	}
-	
-	public Set<String> getUnusedDomains(){
+
+	public Set<String> getUnusedDomains() {
 		return m_invalidateDomains;
 	}
 

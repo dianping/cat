@@ -16,7 +16,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.Action;
 import com.dianping.cat.report.page.app.Model;
@@ -128,13 +127,6 @@ public class CrashLogProcessor {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
 			ProblemReport report = response.getModel();
 
-			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeHelper.ONE_HOUR), ProblemAnalyzer.ID);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
-			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");

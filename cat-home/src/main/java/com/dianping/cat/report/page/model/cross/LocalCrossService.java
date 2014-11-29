@@ -30,12 +30,7 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 		if (report == null && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
-			
-			if (report == null) {
-				report = new CrossReport(domain);
-				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
-			}
+
 		}
 		return report;
 	}
@@ -45,8 +40,17 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, CrossAnalyzer.ID);
 			String xml = bucket.findById(domain);
+			CrossReport report = null;
 
-			return xml == null ? null : DefaultSaxParser.parse(xml);
+			if (xml != null) {
+				report = DefaultSaxParser.parse(xml);
+			} else {
+				report = new CrossReport(domain);
+				report.setStartTime(new Date(timestamp));
+				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+				report.getDomainNames().addAll(bucket.getIds());
+			}
+			return report;
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);

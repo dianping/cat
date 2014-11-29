@@ -29,12 +29,6 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		if (report == null && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
-			
-			if (report == null) {
-				report = new HeartbeatReport(domain);
-				report.setStartTime(new Date(startTime));
-				report.setEndTime(new Date(startTime + TimeHelper.ONE_HOUR - 1));
-			}
 		}
 		return report;
 	}
@@ -44,8 +38,17 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		try {
 			bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
 			String xml = bucket.findById(domain);
+			HeartbeatReport report = null;
 
-			return xml == null ? null : DefaultSaxParser.parse(xml);
+			if (xml != null) {
+				report = DefaultSaxParser.parse(xml);
+			} else {
+				report = new HeartbeatReport(domain);
+				report.setStartTime(new Date(timestamp));
+				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+				report.getDomainNames().addAll(bucket.getIds());
+			}
+			return report;
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);

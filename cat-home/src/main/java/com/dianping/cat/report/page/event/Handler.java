@@ -26,7 +26,6 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.page.JsonBuilder;
@@ -181,13 +180,6 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
 
-			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeHelper.ONE_HOUR), EventAnalyzer.ID);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
-			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
