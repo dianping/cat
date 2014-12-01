@@ -94,8 +94,8 @@ public class DisplayPolicyManager implements Initializable {
 		return false;
 	}
 
-	public List<Group> queryOrderedGroups() {
-		List<Group> list = new ArrayList<Group>();
+	public List<String> queryMetrics() {
+		List<String> metrics = new ArrayList<String>();
 
 		for (Group group : m_config.getGroups().values()) {
 			for (Metric metric : group.getMetrics().values()) {
@@ -112,18 +112,22 @@ public class DisplayPolicyManager implements Initializable {
 		for (Group group : m_config.getGroups().values()) {
 			groups.add(group);
 		}
-		Collections.sort(list, new Comparator<Group>() {
+		Collections.sort(groups, new Comparator<Group>() {
 			@Override
 			public int compare(Group g1, Group g2) {
 				return g1.getOrder() - g2.getOrder();
 			}
 		});
-		return list;
+		for (Group group : groups) {
+			names.add(group.getId());
+		}
+		return names;
 	}
 
-	public List<Metric> queryOrderedMetrics(String groupName) {
+	public List<String> queryOrderedMetricNames(String groupName) {
 		Group group = m_config.findGroup(groupName);
 		List<Metric> list = new ArrayList<Metric>();
+		List<String> metricNames = new ArrayList<String>();
 
 		if (group != null) {
 			for (Metric metric : group.getMetrics().values()) {
@@ -135,8 +139,11 @@ public class DisplayPolicyManager implements Initializable {
 					return m1.getOrder() - m2.getOrder();
 				}
 			});
+			for (Metric metric : group.getMetrics().values()) {
+				metricNames.add(metric.getId());
+			}
 		}
-		return list;
+		return metricNames;
 	}
 
 	public int queryUnit(String groupName, String metricName) {
