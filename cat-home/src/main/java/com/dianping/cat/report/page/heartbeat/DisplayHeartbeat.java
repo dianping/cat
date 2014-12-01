@@ -15,8 +15,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.home.display.policy.entity.Group;
-import com.dianping.cat.home.display.policy.entity.Metric;
 import com.dianping.cat.report.graph.svg.AbstractGraphPayload;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.system.config.DisplayPolicyManager;
@@ -87,9 +85,8 @@ public class DisplayHeartbeat {
 	}
 
 	private void addSortedGroups(Map<String, Map<String, double[]>> tmpExtensions) {
-		for (Group group : m_manager.queryOrderedGroups()) {
-			String groupName = group.getId();
-			Map<String, double[]> extensionGroup = m_extensions.get(group);
+		for (String groupName : m_manager.queryOrderedGroupNames()) {
+			Map<String, double[]> extensionGroup = m_extensions.get(groupName);
 
 			if (extensionGroup != null) {
 				tmpExtensions.put(groupName, extensionGroup);
@@ -513,8 +510,7 @@ public class DisplayHeartbeat {
 		Map<String, double[]> metrics = entry.getValue();
 		Map<String, double[]> tmpMetrics = new LinkedHashMap<String, double[]>();
 
-		for (Metric metric : m_manager.queryOrderedMetrics(groupName)) {
-			String metricName = metric.getId();
+		for (String metricName : m_manager.queryOrderedMetricNames(groupName)) {
 			double[] values = metrics.get(metricName);
 
 			if (values != null) {

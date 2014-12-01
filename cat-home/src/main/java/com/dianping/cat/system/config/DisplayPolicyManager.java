@@ -98,7 +98,19 @@ public class DisplayPolicyManager implements Initializable {
 		List<Group> list = new ArrayList<Group>();
 
 		for (Group group : m_config.getGroups().values()) {
-			list.add(group);
+			for (Metric metric : group.getMetrics().values()) {
+				metrics.add(metric.getId());
+			}
+		}
+		return metrics;
+	}
+
+	public List<String> queryOrderedGroupNames() {
+		List<Group> groups = new ArrayList<Group>();
+		List<String> names = new ArrayList<String>();
+
+		for (Group group : m_config.getGroups().values()) {
+			groups.add(group);
 		}
 		Collections.sort(list, new Comparator<Group>() {
 			@Override
