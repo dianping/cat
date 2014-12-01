@@ -22,7 +22,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class HostinfoService implements Initializable, LogEnabled {
 

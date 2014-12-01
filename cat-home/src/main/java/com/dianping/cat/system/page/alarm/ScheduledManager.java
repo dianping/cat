@@ -28,7 +28,7 @@ import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionEntity;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class ScheduledManager implements Initializable {
 

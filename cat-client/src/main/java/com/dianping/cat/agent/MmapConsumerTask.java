@@ -23,7 +23,7 @@ import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 public class MmapConsumerTask implements Task, Initializable, LogEnabled {
 	@Inject

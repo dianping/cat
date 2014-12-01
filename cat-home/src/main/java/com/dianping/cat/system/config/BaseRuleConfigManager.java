@@ -25,7 +25,7 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.RuleType;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public abstract class BaseRuleConfigManager {
 

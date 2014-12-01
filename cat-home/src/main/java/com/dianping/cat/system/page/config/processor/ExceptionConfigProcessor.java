@@ -19,7 +19,7 @@ import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class ExceptionConfigProcessor {
 

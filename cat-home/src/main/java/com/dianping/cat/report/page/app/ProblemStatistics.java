@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
-import com.site.helper.Splitters;
 
 public class ProblemStatistics extends BaseVisitor {
 

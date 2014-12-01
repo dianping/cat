@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
@@ -249,7 +248,7 @@ public class Handler implements PageHandler<Context> {
 			CacheReport cacheReport = buildCacheReport(transactionReport, eventReport, payload);
 
 			model.setReport(cacheReport);
-			if (!StringUtil.isEmpty(type)) {
+			if (!StringUtils.isEmpty(type)) {
 				model.setPieChart(buildPieChart(model.getReport()));
 			}
 		}

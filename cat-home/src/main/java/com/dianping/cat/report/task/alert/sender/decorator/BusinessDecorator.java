@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class BusinessDecorator extends Decorator {
 

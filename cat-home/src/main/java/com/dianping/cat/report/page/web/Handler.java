@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
@@ -31,7 +32,6 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
-import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context> {
 

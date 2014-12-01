@@ -7,7 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils
+;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -81,9 +82,9 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	}
 
 	public String mergeDes(String old, String des) {
-		if (StringUtil.isEmpty(old)) {
+		if (StringUtils.isEmpty(old)) {
 			return des;
-		} else if (StringUtil.isEmpty(des)) {
+		} else if (StringUtils.isEmpty(des)) {
 			return old;
 		} else {
 			return old + des;

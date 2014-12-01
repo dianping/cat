@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -65,7 +65,7 @@ public class PieGraphChartVisitor extends BaseVisitor {
 		String name = entry.getStatus();
 
 		if (type.equals(m_type)) {
-			if (StringUtil.isEmpty(m_status) || name.equals(m_status)) {
+			if (StringUtils.isEmpty(m_status) || name.equals(m_status)) {
 				super.visitEntry(entry);
 			}
 		}

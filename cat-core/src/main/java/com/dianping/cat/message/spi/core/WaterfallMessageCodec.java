@@ -8,6 +8,7 @@ import java.util.Stack;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Event;
@@ -16,7 +17,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.BufferWriter;
-import com.site.helper.Splitters;
 
 /**
  * Local use only, do not use it over network since it only supports one-way encoding

@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.configuration.app.entity.Code;
@@ -168,7 +168,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 		for (Command command : m_commands) {
 			String domain = command.getDomain();
-			if (StringUtil.isEmpty(domain)) {
+			if (StringUtils.isEmpty(domain)) {
 				domain = "default";
 			}
 			List<Command> commands = map.get(domain);

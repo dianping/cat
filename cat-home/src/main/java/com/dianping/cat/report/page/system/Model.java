@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.metric.Range;
-
-import org.unidal.web.mvc.view.annotation.EntityMeta;
-import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 @ModelMeta("system")
 public class Model extends AbstractReportModel<Action, Context> {
