@@ -24,7 +24,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class MonitorManager implements Initializable, LogEnabled {
 

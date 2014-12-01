@@ -12,7 +12,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
@@ -29,8 +31,6 @@ import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
-import com.site.helper.Splitters;
-import com.site.lookup.util.StringUtils;
 
 public class AppDataComparisonNotifier {
 

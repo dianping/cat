@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.site.helper.Splitters;
 import com.site.helper.Stringizers;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class ToolsTest {
 

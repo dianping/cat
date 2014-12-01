@@ -1,11 +1,12 @@
 package com.dianping.cat.report.page.cross;
 
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.service.HostinfoService;
-import com.site.lookup.util.StringUtils;
 
 public class CrossMethodVisitor extends BaseVisitor {
 

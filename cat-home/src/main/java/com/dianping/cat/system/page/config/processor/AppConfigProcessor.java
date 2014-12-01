@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.config.processor;
 import java.util.List;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -16,7 +17,6 @@ import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import com.site.helper.Splitters;
 
 public class AppConfigProcessor extends BaseProcesser {
 

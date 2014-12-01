@@ -7,7 +7,7 @@ import java.util.List;
 import com.dianping.cat.home.alert.summary.entity.Alert;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class AlertSummaryStringDecorator implements AlertSummaryDecorator {
 	

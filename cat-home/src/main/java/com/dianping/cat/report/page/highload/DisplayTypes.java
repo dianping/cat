@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.highload.entity.Name;
@@ -13,7 +13,7 @@ import com.dianping.cat.home.highload.entity.Type;
 public class DisplayTypes {
 
 	public HighloadReport display(String sortBy, HighloadReport report) {
-		if (!StringUtil.isEmpty(sortBy)) {
+		if (!StringUtils.isEmpty(sortBy)) {
 			for (Type type : report.getTypes()) {
 				List<Name> names = type.getNames();
 				Collections.sort(names, new NameComparator(sortBy));

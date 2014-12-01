@@ -28,7 +28,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 public class ChannelManager implements Task {
 

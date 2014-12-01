@@ -11,9 +11,8 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -116,7 +115,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			for (Command command : commands) {
 				int commandId = command.getId();
-				if (commandId >= 0 && commandId <= 200) {
+				if (commandId > 0 && commandId < 1000) {
 					remainCommands.add(command);
 				}
 			}
@@ -185,7 +184,7 @@ public class Handler implements PageHandler<Context> {
 			String name = payload.getName();
 			String title = payload.getTitle();
 
-			if (StringUtil.isEmpty(name)) {
+			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
 				try {
@@ -206,7 +205,7 @@ public class Handler implements PageHandler<Context> {
 			domain = payload.getDomain();
 			name = payload.getName();
 
-			if (StringUtil.isEmpty(name)) {
+			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
 				Pair<Boolean, List<Integer>> deleteCommandResult = m_manager.deleteCommand(domain, name);
@@ -264,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
 		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
 
-		if (StringUtil.isEmpty(payload.getQuery1())) {
+		if (StringUtils.isEmpty(payload.getQuery1())) {
 			if (!speeds.isEmpty()) {
 				List<Speed> first = speeds.get(speeds.keySet().toArray()[0]);
 
