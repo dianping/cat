@@ -120,7 +120,7 @@
 							</thead>
 							<tbody>
 							<c:forEach var="item" items="${model.commands}">
-								<c:if test="${item.id le 200}">
+								<c:if test="${item.id lt 1000}">
 									<tr>
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
@@ -175,16 +175,14 @@
 							<tbody>
 							<c:forEach var="entry" items="${model.speeds}">
 							<c:set var="item" value="${entry.value}"/>
-								<c:if test="${item.id le 200}">
-									<tr>
-										<td>${item.page }</td>
-										<td>${item.step }</td>
-										<td>${item.title }</td>
-										<td>${item.threshold }</td>
-										<td><a class='btn  btn-small btn-primary' href="?op=appSpeedUpdate&id=${item.id}&type=speed">编辑</a>
-										<a class='delete btn  btn-small btn-danger' href="?op=appSpeedDelete&id=${item.id}&type=speed">删除</a></td>
-									</tr>
-								</c:if>
+								<tr>
+									<td>${item.page }</td>
+									<td>${item.step }</td>
+									<td>${item.title }</td>
+									<td>${item.threshold }</td>
+									<td><a class='btn  btn-small btn-primary' href="?op=appSpeedUpdate&id=${item.id}&type=speed">编辑</a>
+									<a class='delete btn  btn-small btn-danger' href="?op=appSpeedDelete&id=${item.id}&type=speed">删除</a></td>
+								</tr>
 							</c:forEach>
 							</tbody>
 						</table>

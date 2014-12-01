@@ -115,7 +115,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			for (Command command : commands) {
 				int commandId = command.getId();
-				if (commandId >= 0 && commandId <= 200) {
+				if (commandId > 0 && commandId < 1000) {
 					remainCommands.add(command);
 				}
 			}
