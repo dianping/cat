@@ -139,7 +139,7 @@ public class DisplayPolicyManager implements Initializable {
 					return m1.getOrder() - m2.getOrder();
 				}
 			});
-			for (Metric metric : group.getMetrics().values()) {
+			for (Metric metric : list) {
 				metricNames.add(metric.getId());
 			}
 		}
