@@ -129,8 +129,8 @@ public class DisplayHeartbeat {
 				double[] values = metricEntry.getValue();
 
 				if (m_manager.isDelta(groupName, metricName)) {
-					metricEntry.setValue(getAddedCount(values));
-					values = metricEntry.getValue();
+					values = getAddedCount(values);
+					metricEntry.setValue(values);
 				}
 
 				int unit = m_manager.queryUnit(groupName, metricName);
