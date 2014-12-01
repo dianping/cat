@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
@@ -27,7 +28,6 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
-import com.site.helper.Splitters;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

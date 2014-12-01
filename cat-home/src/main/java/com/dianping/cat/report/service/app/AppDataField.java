@@ -1,6 +1,6 @@
 package com.dianping.cat.report.service.app;
 
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public enum AppDataField {
 	OPERATOR("operator"),

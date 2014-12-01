@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -25,7 +26,6 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.site.helper.Splitters;
 
 public class CrashLogProcessor {
 

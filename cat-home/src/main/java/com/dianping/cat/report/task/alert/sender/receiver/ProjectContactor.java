@@ -9,7 +9,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public abstract class ProjectContactor extends DefaultContactor implements Contactor {
 

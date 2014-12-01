@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -24,7 +25,6 @@ import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.service.ProjectService;
-import com.site.lookup.util.StringUtils;
 
 public class GraphCreator extends AbstractGraphCreator {
 

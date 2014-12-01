@@ -1,7 +1,6 @@
 package com.dianping.cat.system.page.config.processor;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -19,13 +18,12 @@ public class TopologyConfigProcessor {
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
-	
+
 	@Inject
 	private GlobalConfigProcessor m_globalConfigManager;
-	
+
 	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
-
 
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
 		String type = payload.getType();
@@ -36,11 +34,10 @@ public class TopologyConfigProcessor {
 		model.setEdgeConfig(config);
 	}
 
-
 	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {
 		EdgeConfig config = payload.getEdgeConfig();
 
-		if (!StringUtil.isEmpty(config.getType())) {
+		if (!StringUtils.isEmpty(config.getType())) {
 			model.setEdgeConfig(config);
 			payload.setType(config.getType());
 			return m_topologyConfigManager.insertEdgeConfig(config);
@@ -89,7 +86,7 @@ public class TopologyConfigProcessor {
 	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
 		String name = payload.getProductLineName();
 
-		if (!StringUtil.isEmpty(name)) {
+		if (!StringUtils.isEmpty(name)) {
 			model.setProductLine(m_productLineConfigManger.getCompany().findProductLine(name));
 		}
 	}
@@ -147,7 +144,7 @@ public class TopologyConfigProcessor {
 			String duplicateDomains = addProductlineResult.getValue();
 
 			model.setOpState(addProductlineResult.getKey());
-			if (!StringUtil.isEmpty(duplicateDomains)) {
+			if (!StringUtils.isEmpty(duplicateDomains)) {
 				model.setDuplicateDomains(addProductlineResult.getValue());
 			}
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());

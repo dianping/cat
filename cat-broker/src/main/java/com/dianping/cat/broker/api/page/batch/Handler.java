@@ -26,7 +26,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 

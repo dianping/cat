@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.codehaus.plexus.util.StringUtils;
-import org.hsqldb.lib.StringUtil;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -48,7 +47,7 @@ public class MetricConfigProcessor extends BaseProcesser {
 		String type = config.getType();
 		String metricKey = config.getMetricKey();
 
-		if (!StringUtil.isEmpty(domain) && !StringUtil.isEmpty(type) && !StringUtil.isEmpty(metricKey)) {
+		if (!StringUtils.isEmpty(domain) && !StringUtils.isEmpty(type) && !StringUtils.isEmpty(metricKey)) {
 			config.setId(m_metricConfigManager.buildMetricKey(domain, type, metricKey));
 
 			return m_metricConfigManager.insertMetricItemConfig(config);

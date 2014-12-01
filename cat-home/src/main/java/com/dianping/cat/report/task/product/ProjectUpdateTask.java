@@ -29,7 +29,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
 

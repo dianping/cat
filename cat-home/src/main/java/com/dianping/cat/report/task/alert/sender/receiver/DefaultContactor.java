@@ -3,8 +3,9 @@ package com.dianping.cat.report.task.alert.sender.receiver;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.helper.Splitters;
+
 import com.dianping.cat.home.alert.config.entity.Receiver;
-import com.site.helper.Splitters;
 
 public abstract class DefaultContactor {
 
