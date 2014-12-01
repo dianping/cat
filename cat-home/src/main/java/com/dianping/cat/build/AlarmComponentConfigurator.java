@@ -95,6 +95,7 @@ import com.dianping.cat.system.config.AlertPolicyManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DatabaseRuleConfigManager;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
@@ -205,7 +206,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      RemoteMetricReportService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(HeartbeatAlert.class)
-		      .req(ProductLineConfigManager.class, BaselineService.class)
+		      .req(ProductLineConfigManager.class, BaselineService.class, DisplayPolicyManager.class)
 		      .req(RemoteMetricReportService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
 		            AlertManager.class, AlertInfo.class).req(ModelService.class, HeartbeatAnalyzer.ID, "m_service")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));

@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,7 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class HeartbeatAlert extends BaseAlert implements Task {
 
@@ -37,6 +40,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
+
+	@Inject
+	private DisplayPolicyManager m_displayManager;
 
 	private HeartbeatReport m_lastReport;
 
@@ -53,6 +59,24 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			map.put(name, array);
 		}
 		array[index] = value;
+	}
+
+	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
+		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
+			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
+				double[] array = map.get(metricName);
+
+				if (array == null) {
+					array = new double[60];
+					map.put(metricName, array);
+				}
+				try {
+					array[index] = period.findExtension(groupName).findDetail(metricName).getValue();
+				} catch (Exception e) {
+					array[index] = 0;
+				}
+			}
+		}
 	}
 
 	private void checkAndGenerateCurrentReport(String domain) {
@@ -137,6 +161,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			buildArray(map, index, "SystemLoadAverage", period.getSystemLoadAverage());
 			buildArray(map, index, "CatMessageOverflow", period.getCatMessageOverflow());
 			buildArray(map, index, "CatMessageSize", period.getCatMessageSize());
+			buildArrayForExtensions(map, index, period);
 		}
 		convertToDeltaArray(map, "TotalStartedCount");
 		convertToDeltaArray(map, "NewGcCount");
@@ -159,6 +184,14 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		}
 	}
 
+	private List<String> getAllMetrics() {
+		List<String> metrics = new ArrayList<String>();
+
+		metrics.addAll(Arrays.asList(m_metrics));
+		metrics.addAll(m_displayManager.queryMetrics());
+		return metrics;
+	}
+
 	@Override
 	public String getName() {
 		return AlertType.HeartBeat.getName();
@@ -168,7 +201,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
 
-		for (String metric : m_metrics) {
+		for (String metric : getAllMetrics()) {
 			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();
