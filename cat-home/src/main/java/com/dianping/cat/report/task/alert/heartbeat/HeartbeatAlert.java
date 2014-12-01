@@ -71,7 +71,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 					map.put(metricName, array);
 				}
 				try {
-					array[index] = period.findExtension(groupName).findDetail(metricName).getValue();
+					int unit = m_displayManager.queryUnit(groupName, metricName);
+					array[index] = period.findExtension(groupName).findDetail(metricName).getValue() / unit;
 				} catch (Exception e) {
 					array[index] = 0;
 				}
@@ -168,22 +169,23 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 		for (int index = 0; index < periods.size(); index++) {
 			Period period = periods.get(index);
+			int minute = period.getMinute();
 
-			buildArray(map, index, "ThreadCount", period.getThreadCount());
-			buildArray(map, index, "DaemonCount", period.getDaemonCount());
-			buildArray(map, index, "TotalStartedCount", period.getTotalStartedCount());
-			buildArray(map, index, "CatThreadCount", period.getCatThreadCount());
-			buildArray(map, index, "PiegonThreadCount", period.getPigeonThreadCount());
-			buildArray(map, index, "HttpThreadCount", period.getHttpThreadCount());
-			buildArray(map, index, "NewGcCount", period.getNewGcCount());
-			buildArray(map, index, "OldGcCount", period.getOldGcCount());
-			buildArray(map, index, "MemoryFree", period.getMemoryFree());
-			buildArray(map, index, "HeapUsage", period.getHeapUsage());
-			buildArray(map, index, "NoneHeapUsage", period.getNoneHeapUsage());
-			buildArray(map, index, "SystemLoadAverage", period.getSystemLoadAverage());
-			buildArray(map, index, "CatMessageOverflow", period.getCatMessageOverflow());
-			buildArray(map, index, "CatMessageSize", period.getCatMessageSize());
-			buildArrayForExtensions(map, index, period);
+			buildArray(map, minute, "ThreadCount", period.getThreadCount());
+			buildArray(map, minute, "DaemonCount", period.getDaemonCount());
+			buildArray(map, minute, "TotalStartedCount", period.getTotalStartedCount());
+			buildArray(map, minute, "CatThreadCount", period.getCatThreadCount());
+			buildArray(map, minute, "PiegonThreadCount", period.getPigeonThreadCount());
+			buildArray(map, minute, "HttpThreadCount", period.getHttpThreadCount());
+			buildArray(map, minute, "NewGcCount", period.getNewGcCount());
+			buildArray(map, minute, "OldGcCount", period.getOldGcCount());
+			buildArray(map, minute, "MemoryFree", period.getMemoryFree());
+			buildArray(map, minute, "HeapUsage", period.getHeapUsage());
+			buildArray(map, minute, "NoneHeapUsage", period.getNoneHeapUsage());
+			buildArray(map, minute, "SystemLoadAverage", period.getSystemLoadAverage());
+			buildArray(map, minute, "CatMessageOverflow", period.getCatMessageOverflow());
+			buildArray(map, minute, "CatMessageSize", period.getCatMessageSize());
+			buildArrayForExtensions(map, minute, period);
 		}
 		convertToDeltaArray(map, "TotalStartedCount");
 		convertToDeltaArray(map, "NewGcCount");
