@@ -102,6 +102,28 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		m_currentReport = null;
 	}
 
+	private void convertDeltaExtensions(Map<String, double[]> map) {
+		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
+			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
+				if (m_displayManager.isDelta(groupName, metricName)) {
+					double[] sources = map.get(metricName);
+					double[] targets = new double[60];
+
+					for (int i = 1; i < 60; i++) {
+						if (sources[i - 1] > 0) {
+							double delta = sources[i] - sources[i - 1];
+
+							if (delta >= 0) {
+								targets[i] = delta;
+							}
+						}
+					}
+					map.put(metricName, targets);
+				}
+			}
+		}
+	}
+
 	private void convertToDeltaArray(Map<String, double[]> map, String name) {
 		double[] sources = map.get(name);
 		double[] targets = new double[60];
@@ -168,6 +190,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		convertToDeltaArray(map, "OldGcCount");
 		convertToDeltaArray(map, "CatMessageSize");
 		convertToDeltaArray(map, "CatMessageOverflow");
+		convertDeltaExtensions(map);
 		return map;
 	}
 
