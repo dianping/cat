@@ -84,37 +84,9 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private String extractStringFromJsonElement(String str) {
-		if (str != null && str.startsWith("[\"")) {
-			return str.replace("[\"", "").replace("\"]", "");
-		} else {
-			return str;
-		}
-	}
-
 	@Override
 	public String getName() {
 		return "product_update_task";
-	}
-
-	private String mergeAndBuildUniqueString(String baseStr, String appendStr) {
-		if (StringUtils.isEmpty(appendStr)) {
-			return baseStr;
-		}
-
-		StringBuilder builder = new StringBuilder(256);
-		builder.append(baseStr);
-
-		for (String str : appendStr.split(",")) {
-			String tmpStr = extractStringFromJsonElement(str);
-
-			if (builder.indexOf(tmpStr) < 0) {
-				builder.append(",");
-				builder.append(tmpStr);
-			}
-		}
-
-		return builder.toString();
 	}
 
 	public String parseDomain(String content) throws Exception {
@@ -400,15 +372,15 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		boolean isProjChanged = false;
 
 		if (!checkIfNullOrEqual(cmdbOwner, dbOwner)) {
-			pro.setOwner(mergeAndBuildUniqueString(cmdbOwner, dbOwner));
+			pro.setOwner(cmdbOwner);
 			isProjChanged = true;
 		}
 		if (!checkIfNullOrEqual(cmdbEmail, dbEmail)) {
-			pro.setEmail(mergeAndBuildUniqueString(cmdbEmail, dbEmail));
+			pro.setEmail(cmdbEmail);
 			isProjChanged = true;
 		}
 		if (!checkIfNullOrEqual(cmdbPhone, dbPhone)) {
-			pro.setPhone(mergeAndBuildUniqueString(cmdbPhone, dbPhone));
+			pro.setPhone(cmdbPhone);
 			isProjChanged = true;
 		}
 		if (!checkIfNullOrEqual(cmdbLevel, dbLevel)) {

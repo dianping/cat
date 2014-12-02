@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -29,6 +31,7 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class HeartbeatAlert extends BaseAlert implements Task {
 
@@ -37,6 +40,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
+
+	@Inject
+	private DisplayPolicyManager m_displayManager;
 
 	private HeartbeatReport m_lastReport;
 
@@ -53,6 +59,25 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			map.put(name, array);
 		}
 		array[index] = value;
+	}
+
+	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
+		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
+			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
+				double[] array = map.get(metricName);
+
+				if (array == null) {
+					array = new double[60];
+					map.put(metricName, array);
+				}
+				try {
+					int unit = m_displayManager.queryUnit(groupName, metricName);
+					array[index] = period.findExtension(groupName).findDetail(metricName).getValue() / unit;
+				} catch (Exception e) {
+					array[index] = 0;
+				}
+			}
+		}
 	}
 
 	private void checkAndGenerateCurrentReport(String domain) {
@@ -76,6 +101,28 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private void clearCacheReport() {
 		m_lastReport = null;
 		m_currentReport = null;
+	}
+
+	private void convertDeltaExtensions(Map<String, double[]> map) {
+		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
+			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
+				if (m_displayManager.isDelta(groupName, metricName)) {
+					double[] sources = map.get(metricName);
+					double[] targets = new double[60];
+
+					for (int i = 1; i < 60; i++) {
+						if (sources[i - 1] > 0) {
+							double delta = sources[i] - sources[i - 1];
+
+							if (delta >= 0) {
+								targets[i] = delta;
+							}
+						}
+					}
+					map.put(metricName, targets);
+				}
+			}
+		}
 	}
 
 	private void convertToDeltaArray(Map<String, double[]> map, String name) {
@@ -122,27 +169,30 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 		for (int index = 0; index < periods.size(); index++) {
 			Period period = periods.get(index);
+			int minute = period.getMinute();
 
-			buildArray(map, index, "ThreadCount", period.getThreadCount());
-			buildArray(map, index, "DaemonCount", period.getDaemonCount());
-			buildArray(map, index, "TotalStartedCount", period.getTotalStartedCount());
-			buildArray(map, index, "CatThreadCount", period.getCatThreadCount());
-			buildArray(map, index, "PiegonThreadCount", period.getPigeonThreadCount());
-			buildArray(map, index, "HttpThreadCount", period.getHttpThreadCount());
-			buildArray(map, index, "NewGcCount", period.getNewGcCount());
-			buildArray(map, index, "OldGcCount", period.getOldGcCount());
-			buildArray(map, index, "MemoryFree", period.getMemoryFree());
-			buildArray(map, index, "HeapUsage", period.getHeapUsage());
-			buildArray(map, index, "NoneHeapUsage", period.getNoneHeapUsage());
-			buildArray(map, index, "SystemLoadAverage", period.getSystemLoadAverage());
-			buildArray(map, index, "CatMessageOverflow", period.getCatMessageOverflow());
-			buildArray(map, index, "CatMessageSize", period.getCatMessageSize());
+			buildArray(map, minute, "ThreadCount", period.getThreadCount());
+			buildArray(map, minute, "DaemonCount", period.getDaemonCount());
+			buildArray(map, minute, "TotalStartedCount", period.getTotalStartedCount());
+			buildArray(map, minute, "CatThreadCount", period.getCatThreadCount());
+			buildArray(map, minute, "PiegonThreadCount", period.getPigeonThreadCount());
+			buildArray(map, minute, "HttpThreadCount", period.getHttpThreadCount());
+			buildArray(map, minute, "NewGcCount", period.getNewGcCount());
+			buildArray(map, minute, "OldGcCount", period.getOldGcCount());
+			buildArray(map, minute, "MemoryFree", period.getMemoryFree());
+			buildArray(map, minute, "HeapUsage", period.getHeapUsage());
+			buildArray(map, minute, "NoneHeapUsage", period.getNoneHeapUsage());
+			buildArray(map, minute, "SystemLoadAverage", period.getSystemLoadAverage());
+			buildArray(map, minute, "CatMessageOverflow", period.getCatMessageOverflow());
+			buildArray(map, minute, "CatMessageSize", period.getCatMessageSize());
+			buildArrayForExtensions(map, minute, period);
 		}
 		convertToDeltaArray(map, "TotalStartedCount");
 		convertToDeltaArray(map, "NewGcCount");
 		convertToDeltaArray(map, "OldGcCount");
 		convertToDeltaArray(map, "CatMessageSize");
 		convertToDeltaArray(map, "CatMessageOverflow");
+		convertDeltaExtensions(map);
 		return map;
 	}
 
@@ -159,6 +209,14 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		}
 	}
 
+	private List<String> getAllMetrics() {
+		List<String> metrics = new ArrayList<String>();
+
+		metrics.addAll(Arrays.asList(m_metrics));
+		metrics.addAll(m_displayManager.queryMetrics());
+		return metrics;
+	}
+
 	@Override
 	public String getName() {
 		return AlertType.HeartBeat.getName();
@@ -168,7 +226,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
 
-		for (String metric : m_metrics) {
+		for (String metric : getAllMetrics()) {
 			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();
