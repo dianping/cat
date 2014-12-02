@@ -89,7 +89,7 @@ public class Handler implements PageHandler<Context> {
 		if (message instanceof Transaction) {
 			((DefaultTransaction) message).setTimestamp(time);
 		}
-		if (!isNetwork(group) && !isSystem(group)) {
+		if (isGenericMetric(group)) {
 			tree.setDomain(domain);
 		}
 		metric.complete();
@@ -162,12 +162,20 @@ public class Handler implements PageHandler<Context> {
 		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
 	}
 
+	private boolean isGenericMetric(String group) {
+		return !isNetwork(group) && !isSystem(group) && isDatabase(group);
+	}
+
 	private boolean isNetwork(String group) {
-		return group.startsWith("f5") || group.startsWith("switch");
+		return group.startsWith("f5-") || group.startsWith("switch-");
 	}
 
 	private boolean isSystem(String group) {
-		return group.startsWith("system");
+		return group.startsWith("system-");
+	}
+
+	private boolean isDatabase(String group) {
+		return group.startsWith("db-");
 	}
 
 }
