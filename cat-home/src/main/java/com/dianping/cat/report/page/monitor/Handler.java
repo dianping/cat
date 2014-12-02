@@ -92,6 +92,7 @@ public class Handler implements PageHandler<Context> {
 		if (!isNetwork(group) && !isSystem(group)) {
 			tree.setDomain(domain);
 		}
+		metric.complete();
 		return defaultMetric;
 	}
 
