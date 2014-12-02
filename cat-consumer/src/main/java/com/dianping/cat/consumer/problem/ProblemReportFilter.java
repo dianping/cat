@@ -30,15 +30,6 @@ public class ProblemReportFilter extends BaseVisitor {
 
 	@Override
 	public void visitEntry(Entry entry) {
-		String status = entry.getStatus();
-		int length = status.length();
-
-		for (int i = 0; i < length; i++) {
-			// invalidate char
-			if (status.charAt(i) > 126 || status.charAt(i) < 32) {
-				continue;
-			}
-		}
 		super.visitEntry(entry);
 	}
 
