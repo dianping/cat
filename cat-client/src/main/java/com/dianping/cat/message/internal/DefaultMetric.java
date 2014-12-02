@@ -20,7 +20,7 @@ public class DefaultMetric extends AbstractMessage implements Metric {
 	public void complete() {
 		setCompleted(true);
 
-		if (m_manager != null && m_manager.getThreadLocalMessageTree().getMessage() == null) {
+		if (m_manager != null) {
 			m_manager.add(this);
 		}
 	}
