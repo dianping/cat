@@ -11,15 +11,15 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 
-public class ProblemReportURLFilter extends BaseVisitor {
+public class ProblemReportFilter extends BaseVisitor {
 
 	private int m_maxUrlSize = 100;
 
-	public ProblemReportURLFilter() {
+	public ProblemReportFilter() {
 
 	}
 
-	public ProblemReportURLFilter(int size) {
+	public ProblemReportFilter(int size) {
 		m_maxUrlSize = size;
 	}
 
@@ -30,6 +30,15 @@ public class ProblemReportURLFilter extends BaseVisitor {
 
 	@Override
 	public void visitEntry(Entry entry) {
+		String status = entry.getStatus();
+		int length = status.length();
+
+		for (int i = 0; i < length; i++) {
+			// invalidate char
+			if (status.charAt(i) > 126 || status.charAt(i) < 32) {
+				continue;
+			}
+		}
 		super.visitEntry(entry);
 	}
 
@@ -37,13 +46,27 @@ public class ProblemReportURLFilter extends BaseVisitor {
 	public void visitMachine(Machine machine) {
 		List<Entry> entries = machine.getEntries();
 		List<Entry> longUrls = new ArrayList<Entry>();
+		List<Entry> errorCodes = new ArrayList<Entry>();
 
 		for (Entry e : entries) {
-			String type = e.getType();
+			String status = e.getStatus();
+			int length = status.length();
 
-			if (ProblemType.LONG_URL.getName().equals(type)) {
+			for (int i = 0; i < length; i++) {
+				// invalidate char
+				if (status.charAt(i) > 126 || status.charAt(i) < 32) {
+					errorCodes.add(e);
+					break;
+				}
+			}
+
+			if (ProblemType.LONG_URL.getName().equals(e.getType())) {
 				longUrls.add(e);
 			}
+		}
+
+		for (int i = 0; i < errorCodes.size(); i++) {
+			entries.remove(errorCodes.get(i));
 		}
 
 		int size = longUrls.size();
