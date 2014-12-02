@@ -56,7 +56,8 @@
 <br/>
 
 <h4 class="text-error">APP异常日志监控文档</h4>
-<h5 class="text-info"> a). 安卓版APP日志发送到<span class="text-error">AndroidCrashLog</span>，苹果版APP日志发送到<span class="text-error">iOSCrashLog</span>。</h5>
+<h5 class="text-info"> a). 安卓版主APP日志发送到<span class="text-error">AndroidCrashLog</span>，苹果版主APP日志发送到<span class="text-error">iOSCrashLog</span></h5>
+<h5 class="text-info">&nbsp;&nbsp;&nbsp;&nbsp;安卓版点评管家日志发送到<span class="text-error">MerchantAndroidCrashLog</span>，苹果版点评管家日志发送到<span class="text-error">MerchantIOSCrashLog</span></h5>
 <h5 class="text-info"> b). 监控维度：平台类型、APP版本、平台版本、模块、错误级别</h5>
 
 
@@ -73,12 +74,15 @@
 		<tr><td>模块</td><td>moudle</td></tr>
 		<tr><td>错误级别</td><td>error</td></tr>
 	</table>
+	以下红色部分是需要根据自己业务做出相应修改的，这里只是示例。
 	<pre>
-Transaction t = Cat.newTransaction("CrashLog", "Android");
-Cat.logError(new RuntimeException("CrashLogTest"));
-MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+Transaction t = Cat.newTransaction(<span class="text-error">"CrashLog"</span>, <span class="text-error">"Android"</span>);
+Cat.logEvent("Error", <span class="text-error">"java.lang.ArrayIndexOutOfBoundsException"</span>, "ERROR", <span class="text-error">"Crash log detail stack info ! e.g. new RunTimeException("AndroidCrashLog").getMessage()"</span>);<span class="text-success">//前者表示异常类别，如下图Status；后者是具体的SampleLinks点开后的详细日志</span>
+MessageTree tree = Cat.getManager().getThreadLocalMessageTree(); 
 ((DefaultMessageTree) tree).setIpAddress("<span class="text-error">6.9:4.4.2:module:error</span>"); <span class="text-success">//红色部分为KEY</span>
-((DefaultMessageTree) tree).setDomain("AndroidCrashLog");  <span class="text-success">//iOS版APP日志发送到iOSCrashLog</span>
+((DefaultMessageTree) tree).setDomain(<span class="text-error">"AndroidCrashLog"</span>);  <span class="text-success">//iOS版APP日志发送到iOSCrashLog</span>
 t.complete();
 	</pre>	
+	<h5> <a href="/cat/r/app?op=crashLog">查看Log</a>，示例如下：</h5>
+	<img src="${model.webapp}/images/crashLog.jpg"/>
 
