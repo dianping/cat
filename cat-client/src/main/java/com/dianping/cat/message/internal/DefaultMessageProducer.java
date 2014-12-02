@@ -179,24 +179,8 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name,m_manager);
 
-			m_manager.add(heartbeat);
-			return heartbeat;
-		} else {
-			return NullMessage.HEARTBEAT;
-		}
-	}
-
-	public Heartbeat newHeartbeat(Transaction parent, String type, String name) {
-		if (!m_manager.hasContext()) {
-			m_manager.setup();
-		}
-
-		if (m_manager.isMessageEnabled() && parent != null) {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-
-			parent.addChild(heartbeat);
 			return heartbeat;
 		} else {
 			return NullMessage.HEARTBEAT;
