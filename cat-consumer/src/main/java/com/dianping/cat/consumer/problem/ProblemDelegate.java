@@ -39,7 +39,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		}
 
 		try {
-			ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter();
+			ProblemReportFilter problemReportURLFilter = new ProblemReportFilter();
 
 			for (Entry<String, ProblemReport> entry : reports.entrySet()) {
 				ProblemReport report = entry.getValue();
@@ -68,7 +68,8 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
 		} else if (m_manager.isCrashLog(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}
