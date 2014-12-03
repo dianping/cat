@@ -2822,6 +2822,9 @@
 					<role>com.dianping.cat.report.task.alert.DataChecker</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>

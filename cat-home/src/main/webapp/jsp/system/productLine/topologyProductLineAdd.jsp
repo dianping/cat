@@ -40,21 +40,6 @@
 							value="${model.productLine.order}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">产品线负责人</td>
-						<td><input name="productLine.owner"
-							value="${model.productLine.owner}" required /></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">通知邮件（逗号分隔）</td>
-						<td><input name="productLine.email" style="width:600px"
-							value="${model.productLine.email}" required /></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">通知短信（逗号分隔）</td>
-						<td><input name="productLine.phone" style="width:600px"
-							value="${model.productLine.phone}" required /></td>
-					</tr>
-					<tr>
 						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
 						<td><c:choose>
 								<c:when test="${model.productLine.applicationDashboard}">
@@ -174,6 +159,5 @@
 				document.getElementById("${domain.key}").checked = true;
 			</c:forEach>
 			$("#domainSelect").val(initDomains).trigger("change");
-			
 		});
 	</script>
