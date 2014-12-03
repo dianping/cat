@@ -102,10 +102,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return item;
 	}
 
-	private Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
+	private Map<String, double[]> getHeartBeatData(Payload payload) {
 		String ip = payload.getIpAddress();
-		Date start = TimeHelper.getYesterday();
-		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
 
 		return buildHeartbeatDatas(report, ip);
@@ -115,8 +115,9 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
+		
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
-		Map<String, double[]> graphData = getHeartBeatData(model, payload);
+		Map<String, double[]> graphData = getHeartBeatData(payload);
 		String queryType = payload.getType();
 
 		if (queryType.equalsIgnoreCase("thread")) {
