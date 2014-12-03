@@ -93,5 +93,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
+		$('a:contains("month")').parent().hide();
+		$('a:contains("week")').parent().hide();
 	});
 </script>

@@ -316,16 +316,16 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.TRANSACTION);
 		m_normalizePayload.normalize(model, payload);
 
-		if (StringUtils.isEmpty(payload.getQueryName())) {
-			payload.setQueryName(null);
-		}
 		if (StringUtils.isEmpty(payload.getType())) {
 			payload.setType(null);
 		}
 
 		String queryName = payload.getQueryName();
+		
 		if (queryName != null) {
 			model.setQueryName(queryName);
+		}else{
+			payload.setQueryName(null);
 		}
 	}
 

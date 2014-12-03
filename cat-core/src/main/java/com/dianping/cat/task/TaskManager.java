@@ -202,6 +202,29 @@ public class TaskManager {
 			public boolean shouldCreateWeeklyTask() {
 				return false;
 			}
+		},
+
+		HOURLY_AND_DAILY {
+
+			@Override
+			public boolean shouldCreateDailyTask() {
+				return true;
+			}
+
+			@Override
+			public boolean shouldCreateHourlyTask() {
+				return true;
+			}
+
+			@Override
+			public boolean shouldCreateMonthTask() {
+				return false;
+			}
+
+			@Override
+			public boolean shouldCreateWeeklyTask() {
+				return false;
+			}
 		};
 	}
 
