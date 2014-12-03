@@ -12,6 +12,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -89,7 +90,7 @@ public class Handler implements PageHandler<Context> {
 		if (message instanceof Transaction) {
 			((DefaultTransaction) message).setTimestamp(time);
 		}
-		if (!isNetwork(group) && !isSystem(group)) {
+		if (isGenericMetric(group)) {
 			tree.setDomain(domain);
 		}
 		metric.complete();
@@ -162,12 +163,21 @@ public class Handler implements PageHandler<Context> {
 		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
 	}
 
+	private boolean isGenericMetric(String group) {
+		return !isNetwork(group) && !isSystem(group) && isDatabase(group);
+	}
+
 	private boolean isNetwork(String group) {
-		return group.startsWith("f5") || group.startsWith("switch");
+		return group.startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX)
+		      || group.startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX);
 	}
 
 	private boolean isSystem(String group) {
-		return group.startsWith("system");
+		return group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX);
+	}
+
+	private boolean isDatabase(String group) {
+		return group.startsWith(ProductLineConfigManager.DATABASE_PREFIX);
 	}
 
 }
