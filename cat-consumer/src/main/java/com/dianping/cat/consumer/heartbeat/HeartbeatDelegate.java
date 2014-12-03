@@ -6,9 +6,9 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -34,9 +34,9 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 	}
 
 	@Override
-   public byte[] buildBinary(HeartbeatReport report) {
+	public byte[] buildBinary(HeartbeatReport report) {
 		return DefaultNativeBuilder.build(report);
-   }
+	}
 
 	@Override
 	public String buildXml(HeartbeatReport report) {
@@ -45,7 +45,8 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public boolean createHourlyTask(HeartbeatReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID, TaskProlicy.HOULY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID,
+		      TaskProlicy.HOURLY_AND_DAILY);
 	}
 
 	@Override
@@ -70,11 +71,11 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 		other.accept(merger);
 		return old;
 	}
-	
+
 	@Override
-   public HeartbeatReport parseBinary(byte[] bytes) {
+	public HeartbeatReport parseBinary(byte[] bytes) {
 		return DefaultNativeParser.parse(bytes);
-   }
+	}
 
 	@Override
 	public HeartbeatReport parseXml(String xml) throws Exception {
