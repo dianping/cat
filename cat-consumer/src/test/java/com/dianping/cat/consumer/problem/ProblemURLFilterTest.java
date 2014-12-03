@@ -12,7 +12,7 @@ public class ProblemURLFilterTest {
 
 	@Test
 	public void test() throws Exception{
-		ProblemReportURLFilter problemReportURLFilter = new ProblemReportURLFilter(5);
+		ProblemReportFilter problemReportURLFilter = new ProblemReportFilter(5);
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("problemURLFilter.xml"), "utf-8");
 		String resultXml = Files.forIO().readFrom(getClass().getResourceAsStream("problemURLFilterResult.xml"), "utf-8");
 		ProblemReport report = DefaultSaxParser.parse(oldXml);
