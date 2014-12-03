@@ -109,7 +109,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
-			
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
