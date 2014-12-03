@@ -90,6 +90,7 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=transactionRule">响应时间告警</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
 			       <!-- <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">框架异常配置</a></li> -->
+			       <li><a style="padding:1px 30px" href="/cat/s/config?op=displayPolicy">心跳报表配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=heartbeatRuleConfigList">心跳告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">应用阀值配置</a></li>
@@ -102,8 +103,6 @@
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
 			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
-			       <li class='nav-header' style="margin-top:0px;">其它配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=displayPolicy">心跳报告配置</a></li>
 			      </ul>
 			     </li>
         	 </ul>
