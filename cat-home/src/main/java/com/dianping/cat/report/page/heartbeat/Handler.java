@@ -158,6 +158,12 @@ public class Handler implements PageHandler<Context> {
 		}
 		m_normalizePayload.normalize(model, payload);
 
+		String reportType = payload.getReportType();
+
+		if ("month".equals(reportType) || "week".equals(reportType)) {
+			payload.setReportType("day");
+		}
+
 		String queryType = payload.getType();
 
 		if (queryType == null || queryType.trim().length() == 0) {
