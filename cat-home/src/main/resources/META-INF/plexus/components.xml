@@ -907,6 +907,12 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
