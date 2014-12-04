@@ -73,6 +73,16 @@
 <tr>
 	<td colspan="3"><iframe id="cat" style="display:none;" width="100%" height="400px"></iframe></td>
 </tr>
+
+<c:forEach var="extensionGroup" items="${model.extensionGroups}">
+	<tr>
+		<th colspan="3" style="text-align:left"><a  data-status="${extensionGroup}" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=extension&extensionType=${extensionGroup}">${extensionGroup}</a></th>
+	</tr>
+	<tr>
+		<td colspan="3"><iframe id="${extensionGroup}" style="display:none;" width="100%" height="400px"></iframe></td>
+	</tr>
+</c:forEach>
+
 </table>
 	<res:useJs value="${res.js.local['heartbeatHistory_js']}" target="head-buttom"/>
 	<script>

@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -137,6 +138,9 @@ public class Handler implements PageHandler<Context> {
 			buildHeartbeatGraphInfo(model, heartbeat);
 			break;
 		case HISTORY:
+			List<String> extensionGroups = m_manager.queryOrderedGroupNames();
+
+			model.setExtensionGroups(extensionGroups);
 			buildHistoryGraph(model, payload);
 			break;
 		case PART_HISTORY:

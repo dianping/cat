@@ -3443,14 +3443,8 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.JspViewer</implementation>
-			<requirements>
 				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3463,6 +3457,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.heartbeat.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
 		</component>

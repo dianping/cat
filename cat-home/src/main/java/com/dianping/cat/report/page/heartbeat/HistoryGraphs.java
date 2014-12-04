@@ -9,9 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -20,11 +19,15 @@ import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class HistoryGraphs extends BaseHistoryGraphs {
 
 	@Inject
 	private ReportServiceManager m_reportService;
+
+	@Inject
+	private DisplayPolicyManager m_manager;
 
 	public static final int K = 1024;
 
@@ -50,24 +53,35 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			updateMetricArray(datas, minute, "SystemLoadAverage", period.getSystemLoadAverage());
 			updateMetricArray(datas, minute, "TotalStartedThread", period.getTotalStartedCount());
 			updateMetricArray(datas, minute, "StartedThread", period.getTotalStartedCount());
+			for (Disk disk : period.getDisks()) {
+				String diskName = "Disk: " + disk.getPath();
+
+				updateMetricArray(datas, minute, diskName, disk.getFree());
+			}
+			dealWithExtensions(datas, minute, period);
 		}
 	}
 
 	private Map<String, double[]> buildHeartbeatDatas(HeartbeatReport report, String ip) {
 		Map<String, double[]> datas = new HashMap<String, double[]>();
+		Machine machine = report.findMachine(ip);
 
-		if (StringUtils.isEmpty(ip) || Constants.ALL.equals(ip)) {
-			for (Machine machine : report.getMachines().values()) {
-				addMachineDataToMap(datas, machine);
-			}
-		} else {
-			Machine machine = report.findMachine(ip);
-
-			if (machine != null) {
-				addMachineDataToMap(datas, machine);
-			}
+		if (machine != null) {
+			addMachineDataToMap(datas, machine);
 		}
 		return datas;
+	}
+
+	private void dealWithExtensions(Map<String, double[]> datas, int minute, Period period) {
+		for (String group : m_manager.queryOrderedGroupNames()) {
+			for (String metric : m_manager.queryOrderedMetricNames(group)) {
+				double value = period.findExtension(group).findDetail(metric).getValue();
+				int unit = m_manager.queryUnit(group, metric);
+				double actualValue = value / unit;
+
+				updateMetricArray(datas, minute, metric, actualValue);
+			}
+		}
 	}
 
 	private ArrayList<LineChart> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
@@ -82,12 +96,22 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				for (int i = 0; i < data.length; i++) {
 					data[i] = data[i] / (K * K * K);
 				}
-				String title = name + "[GB]";
+				String title = name + " Free [GB]";
 				LineChart disk = getGraphItem(title, name, start, size, graphData);
 				diskInfo.add(disk);
 			}
 		}
 		return diskInfo;
+	}
+
+	private List<LineChart> getExtensionGraphs(List<String> metrics, Map<String, double[]> graphData, Date start,
+	      int size) {
+		List<LineChart> graphs = new ArrayList<LineChart>();
+
+		for (String metric : metrics) {
+			graphs.add(getGraphItem(metric, metric, start, size, graphData));
+		}
+		return graphs;
 	}
 
 	private LineChart getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
@@ -115,7 +139,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	public void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		
+
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(payload);
 		String queryType = payload.getType();
@@ -161,6 +185,12 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			      start, size, graphData).getJsonString());
 			model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 			      graphData).getJsonString());
+		} else if (queryType.equalsIgnoreCase("extension")) {
+			List<String> metrics = m_manager.queryOrderedMetricNames(payload.getExtensionType());
+			List<LineChart> graphs = getExtensionGraphs(metrics, graphData, start, size);
+
+			model.setExtensionCount(metrics.size());
+			model.setExtensionHistoryGraphs(new JsonBuilder().toJson(graphs));
 		}
 	}
 
