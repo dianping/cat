@@ -31,7 +31,7 @@ public abstract class ProblemHandler {
 
 	public abstract void handle(Machine machine, MessageTree tree);
 
-	public void updateProblem(MessageTree tree, Entity entity, int value) {
+	public void updateEntity(MessageTree tree, Entity entity, int value) {
 		Duration duration = entity.findOrCreateDuration(value);
 		List<String> messages = duration.getMessages();
 

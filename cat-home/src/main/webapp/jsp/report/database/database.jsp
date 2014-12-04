@@ -77,7 +77,7 @@
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
 		            	<c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?op=view&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
+			              <li class='nav-header' id="${item.id}"><a href="?op=view&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
 			            </c:forEach>
 		              <li >&nbsp;</li>
 		            </ul>
@@ -98,7 +98,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var product = '${payload.product}';
-			$('#metric_'+product).addClass('active');
+			document.getElementById(product).addClass('active');
 			$('i[tips]').popover();
 
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
