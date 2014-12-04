@@ -12,6 +12,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("extensionType")
+	private String m_extensionType;
 
 	private String m_realIp;
 
@@ -24,6 +27,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getExtensionType() {
+		return m_extensionType;
+	}
+
 	public String getRealIp() {
 		return m_realIp;
 	}
@@ -34,6 +41,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setExtensionType(String extensionType) {
+		m_extensionType = extensionType;
 	}
 
 	public void setRealIp(String realIp) {
