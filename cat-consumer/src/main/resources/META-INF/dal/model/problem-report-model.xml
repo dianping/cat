@@ -9,8 +9,18 @@
 	</entity>
 	<entity name="machine">
 		<attribute name="ip" value-type="String" key="true" />
+		<entity-ref name="entity" type="map" names="entities" method-find-or-create="true" />
 	</entity>
 	<entity name="entry">
+		 <attribute name="type" value-type="String" />
+    	<attribute name="status" value-type="String" />
+		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
+		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
+	</entity>
+	<entity name="entity">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="type" value-type="String" />
+    	<attribute name="status" value-type="String" />
 		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
 	</entity>
