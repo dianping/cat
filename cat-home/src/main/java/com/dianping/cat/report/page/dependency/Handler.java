@@ -109,7 +109,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > 100 * 10000) {
+			if (machine.getTotalLoss() > 300 * 10000) {
 				errorServers.add(machine.getIp());
 			}
 		}

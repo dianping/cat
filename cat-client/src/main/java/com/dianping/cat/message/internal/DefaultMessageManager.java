@@ -536,6 +536,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					DefaultTransaction t = (DefaultTransaction) stack.get(i);
 
 					t.setTimestamp(timestamp);
+					t.setDurationStart(System.nanoTime());
 				}
 
 				DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
@@ -555,6 +556,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
+
 				flush(t);
 			}
 		}
