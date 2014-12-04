@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Stack;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -34,6 +35,16 @@ public class ProblemReportMerger extends DefaultMerger {
 		return result;
 	}
 
+	protected Entity findOrCreateEntity(Machine machine, Entity entity) {
+		String id = entity.getId();
+		String type = entity.getType();
+		String status = entity.getStatus();
+		Entity result = machine.findOrCreateEntity(id);
+
+		result.setStatus(status).setType(type);
+		return result;
+	}
+
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
 		List<String> oldMessages = old.getMessages();
@@ -47,7 +58,7 @@ public class ProblemReportMerger extends DefaultMerger {
 
 	protected List<String> mergeList(List<String> oldMessages, List<String> newMessages, int size) {
 		int originalSize = oldMessages.size();
-		
+
 		if (originalSize < size) {
 			int remainingSize = size - originalSize;
 
@@ -75,6 +86,13 @@ public class ProblemReportMerger extends DefaultMerger {
 
 		for (Entry source : from.getEntries()) {
 			Entry target = findOrCreateEntry(to, source);
+
+			objs.push(target);
+			source.accept(this);
+			objs.pop();
+		}
+		for (Entity source : from.getEntities().values()) {
+			Entity target = findOrCreateEntity(to, source);
 
 			objs.push(target);
 			source.accept(this);

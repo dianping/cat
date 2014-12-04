@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -57,12 +57,12 @@ public class ProblemReportVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		String type = entry.getType();
+	public void visitEntity(Entity entity) {
+		String type = entity.getType();
 
 		if (ProblemType.ERROR.getName().equals(type)) {
-			m_exception = entry.getStatus();
-			super.visitEntry(entry);
+			m_exception = entity.getStatus();
+			super.visitEntity(entity);
 		}
 	}
 

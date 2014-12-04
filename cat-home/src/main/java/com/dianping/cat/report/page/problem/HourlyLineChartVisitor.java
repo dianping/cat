@@ -7,8 +7,8 @@ import java.util.Map;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
@@ -76,17 +76,17 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		String type = entry.getType();
-		String state = entry.getStatus();
+	public void visitEntity(Entity entity) {
+		String type = entity.getType();
+		String state = entity.getStatus();
 
 		if (m_state == null) {
 			if (type.equals(m_type)) {
-				super.visitEntry(entry);
+				super.visitEntity(entity);
 			}
 		} else {
 			if (type.equals(m_type) && state.equals(m_state)) {
-				super.visitEntry(entry);
+				super.visitEntity(entity);
 			}
 		}
 	}

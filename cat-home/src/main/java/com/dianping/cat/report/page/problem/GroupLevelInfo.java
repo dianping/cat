@@ -1,14 +1,15 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.helper.SortHelper;
@@ -33,20 +34,22 @@ public class GroupLevelInfo {
 		if (machine == null) {
 			return null;
 		}
-		List<Entry> entries = machine.getEntries();
-		for (Entry temp : entries) {
-			Map<String, JavaThread> threads = temp.getThreads();
+		Collection<Entity> entities = machine.getEntities().values();
+
+		for (Entity entity : entities) {
+			Map<String, JavaThread> threads = entity.getThreads();
 
 			for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
 				JavaThread thread = entry.getValue();
 
 				String groupName = thread.getGroupName();
 				GroupStatistics statistics = findOrCreatGroupStatistics(groupName, m_minutes);
-				statistics.add(thread.getSegments(), temp.getType());
+				statistics.add(thread.getSegments(), entity.getType());
 			}
 		}
 		long currentTimeMillis = System.currentTimeMillis();
 		long currentHours = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
+		
 		if (currentHours == m_model.getLongDate()) {
 			for (int i = m_minutes; i >= 0; i--) {
 				m_datas.add(getShowDetailByMinte(i));

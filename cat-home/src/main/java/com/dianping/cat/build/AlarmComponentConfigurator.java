@@ -149,7 +149,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
-		      AlertSummaryExecutor.class));
+		      AlertSummaryExecutor.class, ProjectService.class));
 
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
 

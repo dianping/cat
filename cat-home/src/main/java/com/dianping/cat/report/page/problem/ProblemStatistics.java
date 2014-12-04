@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
@@ -26,7 +27,7 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private LongConfig m_longConfig = new LongConfig();
 
-	private List<Duration> getDurationsByType(String type, Entry entry) {
+	private List<Duration> getDurationsByType(String type, Entity entry) {
 		List<Duration> durations = new ArrayList<Duration>();
 		if (ProblemType.LONG_URL.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
@@ -91,10 +92,10 @@ public class ProblemStatistics extends BaseVisitor {
 		return this;
 	}
 
-	private void statisticsDuration(Entry entry) {
-		String type = entry.getType();
-		String status = entry.getStatus();
-		List<Duration> durations = getDurationsByType(type, entry);
+	private void statisticsDuration(Entity entity) {
+		String type = entity.getType();
+		String status = entity.getStatus();
+		List<Duration> durations = getDurationsByType(type, entity);
 		for (Duration duration : durations) {
 			TypeStatistics statusValue = m_status.get(type);
 
@@ -109,13 +110,12 @@ public class ProblemStatistics extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		if (m_allIp == true || m_ip.equals(machine.getIp())) {
-			List<Entry> entries = machine.getEntries();
-			
-			for (Entry entry : entries) {
+			Collection<Entity> entities = machine.getEntities().values();
+
+			for (Entity entry : entities) {
 				statisticsDuration(entry);
 			}
 		}
-		super.visitMachine(machine);
 	}
 
 	public static class StatusStatistics {

@@ -15,7 +15,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.Error;
@@ -145,10 +145,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		}
 
 		@Override
-		public void visitEntry(Entry entry) {
-			m_type = entry.getType();
-			m_state = entry.getStatus();
-			super.visitEntry(entry);
+		public void visitEntity(Entity entity) {
+			m_type = entity.getType();
+			m_state = entity.getStatus();
+			super.visitEntity(entity);
 		}
 
 		@Override

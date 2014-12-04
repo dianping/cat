@@ -3,7 +3,7 @@
    <domain>Cat</domain>
    <ip>192.168.165.1</ip>
    <machine ip="192.168.165.1">
-      <entry type="heartbeat" status="192.168.165.1">
+      <entity id="heartbeat:192.168.165.1" type="heartbeat" status="192.168.165.1">
          <duration value="0" count="1">
             <message>Cat-c0a8a501-1340700793104-0</message>
          </duration>
@@ -12,8 +12,8 @@
                <message>Cat-c0a8a501-1340700793104-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="long-url" status="home">
+      </entity>
+      <entity id="long-url:home" type="long-url" status="home">
          <duration value="50" count="1">
             <message>Cat-c0a8a501-1340700793743-0</message>
          </duration>
@@ -22,8 +22,8 @@
                <message>Cat-c0a8a501-1340700793743-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="long-url" status="p">
+      </entity>
+      <entity id="long-url:p" type="long-url" status="p">
          <duration value="50" count="8">
             <message>Cat-c0a8a501-1340700795112-0</message>
             <message>Cat-c0a8a501-1340700799623-0</message>
@@ -70,8 +70,8 @@
                <message>Cat-c0a8a501-1340700800046-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="url" status="p">
+      </entity>
+      <entity id="url:p" type="url" status="p">
          <duration value="0" count="10">
             <message>Cat-c0a8a501-1340700799568-0</message>
             <message>Cat-c0a8a501-1340700799623-0</message>
@@ -122,8 +122,8 @@
                <message>Cat-c0a8a501-1340700802937-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="failure" status="MVC:OutboundPhase">
+      </entity>
+      <entity id="failure:MVC:OutboundPhase" type="failure" status="MVC:OutboundPhase">
          <duration value="0" count="10">
             <message>Cat-c0a8a501-1340700799568-0</message>
             <message>Cat-c0a8a501-1340700799623-0</message>
@@ -174,8 +174,8 @@
                <message>Cat-c0a8a501-1340700802937-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="error" status="java.lang.RuntimeException">
+      </entity>
+      <entity id="error:java.lang.RuntimeException" type="error" status="java.lang.RuntimeException">
          <duration value="0" count="10">
             <message>Cat-c0a8a501-1340700799568-0</message>
             <message>Cat-c0a8a501-1340700799623-0</message>
@@ -226,8 +226,8 @@
                <message>Cat-c0a8a501-1340700802937-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="long-url" status="t">
+      </entity>
+      <entity id="long-url:t" type="long-url" status="t">
          <duration value="50" count="2">
             <message>Cat-c0a8a501-1340700805433-0</message>
             <message>Cat-c0a8a501-1340700808403-0</message>
@@ -238,8 +238,8 @@
                <message>Cat-c0a8a501-1340700808403-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="long-url" status="model">
+      </entity>
+      <entity id="long-url:model" type="long-url" status="model">
          <duration value="50" count="2">
             <message>Cat-c0a8a501-1340700810278-0</message>
             <message>Cat-c0a8a501-1340700810277-0</message>
@@ -254,8 +254,8 @@
                <message>Cat-c0a8a501-1340700810277-0</message>
             </segment>
          </thread>
-      </entry>
-      <entry type="long-url" status="m">
+      </entity>
+      <entity id="long-url:m" type="long-url" status="m">
          <duration value="50" count="1">
             <message>Cat-c0a8a501-1340700810268-0</message>
          </duration>
@@ -267,6 +267,6 @@
                <message>Cat-c0a8a501-1340700810268-0</message>
             </segment>
          </thread>
-      </entry>
+      </entity>
    </machine>
 </problem-report>

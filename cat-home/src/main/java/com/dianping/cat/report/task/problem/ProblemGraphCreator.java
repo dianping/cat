@@ -11,14 +11,16 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.GraphLine;
 
-public class ProblemGraphCreator{
+public class ProblemGraphCreator {
 
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName,
 	      ProblemReport report) {
@@ -37,12 +39,12 @@ public class ProblemGraphCreator{
 			graph.setName(reportName);
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
-			com.dianping.cat.consumer.problem.model.entity.Machine machine = report.findOrCreateMachine(ip);
+			Machine machine = report.findOrCreateMachine(ip);
 
-			for (com.dianping.cat.consumer.problem.model.entity.Entry entry : machine.getEntries()) {
-				Map<String, JavaThread> threads = entry.getThreads();
-				String type = entry.getType();
-				String status = entry.getStatus();
+			for (Entity entity : machine.getEntities().values()) {
+				Map<String, JavaThread> threads = entity.getThreads();
+				String type = entity.getType();
+				String status = entity.getStatus();
 
 				for (Entry<String, JavaThread> problemEntry : threads.entrySet()) {
 					JavaThread thread = problemEntry.getValue();

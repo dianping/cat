@@ -9,6 +9,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemReportConvertor;
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
@@ -65,15 +66,17 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 					reportModel.accept(merger);
 				}
 			} catch (DalNotFoundException e) {
-				//ignore
+				// ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
 		ProblemReport problemReport = merger.getProblemReport();
+		ProblemReportConvertor convertor = new ProblemReportConvertor();
 
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(end);
+		problemReport.accept(convertor);
 		return problemReport;
 	}
 
@@ -147,7 +150,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -161,47 +164,61 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 
 		Set<String> domains = queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 		problemReport.getDomainNames().addAll(domains);
+
+		ProblemReportConvertor convertor = new ProblemReportConvertor();
+		problemReport.accept(convertor);
 		return problemReport;
 	}
 
 	@Override
 	public ProblemReport queryMonthlyReport(String domain, Date start) {
+		ProblemReport problemReport = new ProblemReport(domain);
+
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
+				problemReport = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromMonthlyBinary(entity.getId(), domain);
+				problemReport = queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new ProblemReport(domain);
+		ProblemReportConvertor convertor = new ProblemReportConvertor();
+
+		problemReport.accept(convertor);
+		return problemReport;
 	}
 
 	@Override
 	public ProblemReport queryWeeklyReport(String domain, Date start) {
+		ProblemReport problemReport = new ProblemReport(domain);
+
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
+
+				problemReport = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromWeeklyBinary(entity.getId(), domain);
+				problemReport = queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new ProblemReport(domain);
+		ProblemReportConvertor convertor = new ProblemReportConvertor();
+
+		problemReport.accept(convertor);
+		return problemReport;
 	}
 
 }

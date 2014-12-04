@@ -6,7 +6,7 @@
    <domain>TuangouApi</domain>
    <ip>10.1.1.166</ip>
    <machine ip="10.1.1.166">
-      <entry type="long-url" status="/location.bin">
+      <entity id="long-url:/location.bin" type="long-url" status="/location.bin">
          <duration value="1000" count="45">
             <message>MobileApi-0a0101a6-1341417602352-0</message>
             <message>MobileApi-0a0101a6-1341417603095-0</message>
@@ -54,8 +54,8 @@
             <message>MobileApi-0a0101a6-1341418270613-0</message>
             <message>MobileApi-0a0101a6-1341418274245-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APILocation.getOffset">
+      </entity>
+      <entity id="long-sql:APILocation.getOffset" type="long-sql" status="APILocation.getOffset">
          <duration value="100" count="5">
             <message>MobileApi-0a0101a6-1341417603034-0</message>
             <message>MobileApi-0a0101a6-1341417603034-0</message>
@@ -63,8 +63,8 @@
             <message>MobileApi-0a0101a6-1341417603034-0</message>
             <message>MobileApi-0a0101a6-1341417603034-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/local.bin">
+      </entity>
+      <entity id="long-url:/local.bin" type="long-url" status="/local.bin">
          <duration value="1000" count="205">
             <message>MobileApi-0a0101a6-1341417607783-0</message>
             <message>MobileApi-0a0101a6-1341417612366-0</message>
@@ -127,8 +127,8 @@
             <message>MobileApi-0a0101a6-1341417976099-0</message>
             <message>MobileApi-0a0101a6-1341417983553-3</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/locationhd.bin">
+      </entity>
+      <entity id="long-url:/locationhd.bin" type="long-url" status="/locationhd.bin">
          <duration value="1000" count="40">
             <message>MobileApi-0a0101a6-1341417627154-0</message>
             <message>MobileApi-0a0101a6-1341417627588-0</message>
@@ -171,8 +171,8 @@
             <message>MobileApi-0a0101a6-1341418278188-0</message>
             <message>MobileApi-0a0101a6-1341418280202-0</message>
          </duration>
-      </entry>
-      <entry type="heartbeat" status="10.1.1.166">
+      </entity>
+      <entity id="heartbeat:10.1.1.166" type="heartbeat" status="10.1.1.166">
          <duration value="0" count="80">
             <message>MobileApi-0a0101a6-1341417628597-0</message>
             <message>MobileApi-0a0101a6-1341417688597-0</message>
@@ -235,8 +235,8 @@
             <message>MobileApi-0a0101a6-1341418228597-0</message>
             <message>MobileApi-0a0101a6-1341418288598-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/deallistpaged.bin">
+      </entity>
+      <entity id="long-url:/deallistpaged.bin" type="long-url" status="/deallistpaged.bin">
          <duration value="1000" count="10">
             <message>MobileApi-0a0101a6-1341417640708-0</message>
             <message>MobileApi-0a0101a6-1341417808230-0</message>
@@ -249,8 +249,8 @@
             <message>MobileApi-0a0101a6-1341417640708-0</message>
             <message>MobileApi-0a0101a6-1341417808230-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/localshop.bin">
+      </entity>
+      <entity id="long-url:/localshop.bin" type="long-url" status="/localshop.bin">
          <duration value="2000" count="30">
             <message>MobileApi-0a0101a6-1341417688403-0</message>
             <message>MobileApi-0a0101a6-1341417712066-0</message>
@@ -283,8 +283,8 @@
             <message>MobileApi-0a0101a6-1341417802670-0</message>
             <message>MobileApi-0a0101a6-1341418529368-4</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/couponlist.bin">
+      </entity>
+      <entity id="long-url:/couponlist.bin" type="long-url" status="/couponlist.bin">
          <duration value="1000" count="5">
             <message>MobileApi-0a0101a6-1341417688571-0</message>
             <message>MobileApi-0a0101a6-1341417688571-0</message>
@@ -292,8 +292,8 @@
             <message>MobileApi-0a0101a6-1341417688571-0</message>
             <message>MobileApi-0a0101a6-1341417688571-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/review.bin">
+      </entity>
+      <entity id="long-url:/review.bin" type="long-url" status="/review.bin">
          <duration value="1000" count="20">
             <message>MobileApi-0a0101a6-1341417688580-0</message>
             <message>MobileApi-0a0101a6-1341417763485-0</message>
@@ -316,8 +316,8 @@
             <message>MobileApi-0a0101a6-1341418146666-1</message>
             <message>MobileApi-0a0101a6-1341418228456-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APINotification.getNotificationList">
+      </entity>
+      <entity id="long-sql:APINotification.getNotificationList" type="long-sql" status="APINotification.getNotificationList">
          <duration value="100" count="5">
             <message>MobileApi-0a0101a6-1341417697607-0</message>
             <message>MobileApi-0a0101a6-1341417697607-0</message>
@@ -325,8 +325,8 @@
             <message>MobileApi-0a0101a6-1341417697607-0</message>
             <message>MobileApi-0a0101a6-1341417697607-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIPromo.getPromoByShop">
+      </entity>
+      <entity id="long-sql:APIPromo.getPromoByShop" type="long-sql" status="APIPromo.getPromoByShop">
          <duration value="1000" count="20">
             <message>MobileApi-0a0101a6-1341417712066-0</message>
             <message>MobileApi-0a0101a6-1341418025985-0</message>
@@ -349,8 +349,8 @@
             <message>MobileApi-0a0101a6-1341418026912-0</message>
             <message>MobileApi-0a0101a6-1341418529368-4</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/addcheckin.bin">
+      </entity>
+      <entity id="long-url:/addcheckin.bin" type="long-url" status="/addcheckin.bin">
          <duration value="5000" count="40">
             <message>MobileApi-0a0101a6-1341417726647-0</message>
             <message>MobileApi-0a0101a6-1341417764099-0</message>
@@ -393,8 +393,8 @@
             <message>MobileApi-0a0101a6-1341418257284-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIFavorite.getFavoriteShop">
+      </entity>
+      <entity id="long-sql:APIFavorite.getFavoriteShop" type="long-sql" status="APIFavorite.getFavoriteShop">
          <duration value="500" count="5">
             <message>MobileApi-0a0101a6-1341417764773-0</message>
             <message>MobileApi-0a0101a6-1341417764773-0</message>
@@ -402,8 +402,8 @@
             <message>MobileApi-0a0101a6-1341417764773-0</message>
             <message>MobileApi-0a0101a6-1341417764773-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIShop.getShop">
+      </entity>
+      <entity id="long-sql:APIShop.getShop" type="long-sql" status="APIShop.getShop">
          <duration value="1000" count="15">
             <message>MobileApi-0a0101a6-1341417764641-0</message>
             <message>MobileApi-0a0101a6-1341417764332-0</message>
@@ -421,8 +421,8 @@
             <message>MobileApi-0a0101a6-1341417764332-0</message>
             <message>MobileApi-0a0101a6-1341417763813-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/shopcheckin.bin">
+      </entity>
+      <entity id="long-url:/shopcheckin.bin" type="long-url" status="/shopcheckin.bin">
          <duration value="5000" count="20">
             <message>MobileApi-0a0101a6-1341417764460-0</message>
             <message>MobileApi-0a0101a6-1341417764557-0</message>
@@ -445,8 +445,8 @@
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIUser.getUserProfile">
+      </entity>
+      <entity id="long-sql:APIUser.getUserProfile" type="long-sql" status="APIUser.getUserProfile">
          <duration value="100" count="15">
             <message>MobileApi-0a0101a6-1341417764460-0</message>
             <message>MobileApi-0a0101a6-1341417764557-0</message>
@@ -464,8 +464,8 @@
             <message>MobileApi-0a0101a6-1341417764557-0</message>
             <message>MobileApi-0a0101a6-1341418509622-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/searchshop.bin">
+      </entity>
+      <entity id="long-url:/searchshop.bin" type="long-url" status="/searchshop.bin">
          <duration value="1000" count="10">
             <message>MobileApi-0a0101a6-1341417763813-0</message>
             <message>MobileApi-0a0101a6-1341418408600-0</message>
@@ -478,8 +478,8 @@
             <message>MobileApi-0a0101a6-1341417763813-0</message>
             <message>MobileApi-0a0101a6-1341418408600-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/login.bin">
+      </entity>
+      <entity id="long-url:/login.bin" type="long-url" status="/login.bin">
          <duration value="5000" count="15">
             <message>MobileApi-0a0101a6-1341417773817-0</message>
             <message>MobileApi-0a0101a6-1341418339012-0</message>
@@ -497,8 +497,8 @@
             <message>MobileApi-0a0101a6-1341418339012-0</message>
             <message>MobileApi-0a0101a6-1341418356525-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIUserInfo.addUserInfo">
+      </entity>
+      <entity id="long-sql:APIUserInfo.addUserInfo" type="long-sql" status="APIUserInfo.addUserInfo">
          <duration value="1000" count="30">
             <message>MobileApi-0a0101a6-1341417773817-0</message>
             <message>MobileApi-0a0101a6-1341418339012-0</message>
@@ -531,8 +531,8 @@
             <message>MobileApi-0a0101a6-1341418388176-0</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIUserInfo.updateUserInfo">
+      </entity>
+      <entity id="long-sql:APIUserInfo.updateUserInfo" type="long-sql" status="APIUserInfo.updateUserInfo">
          <duration value="1000" count="30">
             <message>MobileApi-0a0101a6-1341417764099-0</message>
             <message>MobileApi-0a0101a6-1341417871993-0</message>
@@ -565,8 +565,8 @@
             <message>MobileApi-0a0101a6-1341418257284-0</message>
             <message>MobileApi-0a0101a6-1341418334215-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIRank.getRankRecentAddShopIdList">
+      </entity>
+      <entity id="long-sql:APIRank.getRankRecentAddShopIdList" type="long-sql" status="APIRank.getRankRecentAddShopIdList">
          <duration value="100" count="10">
             <message>MobileApi-0a0101a6-1341417859770-0</message>
             <message>MobileApi-0a0101a6-1341418453624-0</message>
@@ -579,8 +579,8 @@
             <message>MobileApi-0a0101a6-1341417859770-0</message>
             <message>MobileApi-0a0101a6-1341418453624-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIShopDishPic.getShopDishPic">
+      </entity>
+      <entity id="long-sql:APIShopDishPic.getShopDishPic" type="long-sql" status="APIShopDishPic.getShopDishPic">
          <duration value="100" count="5">
             <message>MobileApi-0a0101a6-1341417867527-0</message>
             <message>MobileApi-0a0101a6-1341417867527-0</message>
@@ -588,8 +588,8 @@
             <message>MobileApi-0a0101a6-1341417867527-0</message>
             <message>MobileApi-0a0101a6-1341417867527-0</message>
          </duration>
-      </entry>
-      <entry type="call" status="receiptRemoteService:receiptRemoteService_1.0.0:getReceiptList">
+      </entity>
+      <entity id="call:receiptRemoteService:receiptRemoteService_1.0.0:getReceiptList" type="call" status="receiptRemoteService:receiptRemoteService_1.0.0:getReceiptList">
          <duration value="0" count="10">
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
@@ -602,8 +602,8 @@
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
          </duration>
-      </entry>
-      <entry type="error" status="com.dianping.dpsf.exception.NetTimeoutException">
+      </entity>
+      <entity id="error:com.dianping.dpsf.exception.NetTimeoutException" type="error" status="com.dianping.dpsf.exception.NetTimeoutException">
          <duration value="0" count="10">
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
@@ -616,8 +616,8 @@
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
          </duration>
-      </entry>
-      <entry type="error" status="java.lang.reflect.InvocationTargetException">
+      </entity>
+      <entity id="error:java.lang.reflect.InvocationTargetException" type="error" status="java.lang.reflect.InvocationTargetException">
          <duration value="0" count="25">
             <message>MobileApi-0a0101a6-1341417912867-0</message>
             <message>MobileApi-0a0101a6-1341417918990-0</message>
@@ -645,8 +645,8 @@
             <message>MobileApi-0a0101a6-1341418221392-0</message>
             <message>MobileApi-0a0101a6-1341418257284-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/searchsuggest.bin">
+      </entity>
+      <entity id="long-url:/searchsuggest.bin" type="long-url" status="/searchsuggest.bin">
          <duration value="1000" count="5">
             <message>MobileApi-0a0101a6-1341417928462-0</message>
             <message>MobileApi-0a0101a6-1341417928462-0</message>
@@ -654,8 +654,8 @@
             <message>MobileApi-0a0101a6-1341417928462-0</message>
             <message>MobileApi-0a0101a6-1341417928462-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/shoplist.bin">
+      </entity>
+      <entity id="long-url:/shoplist.bin" type="long-url" status="/shoplist.bin">
          <duration value="5000" count="5">
             <message>MobileApi-0a0101a6-1341418031346-0</message>
             <message>MobileApi-0a0101a6-1341418031346-0</message>
@@ -663,8 +663,8 @@
             <message>MobileApi-0a0101a6-1341418031346-0</message>
             <message>MobileApi-0a0101a6-1341418031346-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/localshophd.bin">
+      </entity>
+      <entity id="long-url:/localshophd.bin" type="long-url" status="/localshophd.bin">
          <duration value="1000" count="5">
             <message>MobileApi-0a0101a6-1341418048561-0</message>
             <message>MobileApi-0a0101a6-1341418048561-0</message>
@@ -672,8 +672,8 @@
             <message>MobileApi-0a0101a6-1341418048561-0</message>
             <message>MobileApi-0a0101a6-1341418048561-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/sendpromo.bin">
+      </entity>
+      <entity id="long-url:/sendpromo.bin" type="long-url" status="/sendpromo.bin">
          <duration value="1000" count="10">
             <message>MobileApi-0a0101a6-1341418090239-0</message>
             <message>MobileApi-0a0101a6-1341418157061-0</message>
@@ -686,8 +686,8 @@
             <message>MobileApi-0a0101a6-1341418090239-0</message>
             <message>MobileApi-0a0101a6-1341418157061-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APICheckList.addCheckIn">
+      </entity>
+      <entity id="long-sql:APICheckList.addCheckIn" type="long-sql" status="APICheckList.addCheckIn">
          <duration value="100" count="20">
             <message>MobileApi-0a0101a6-1341418046819-0</message>
             <message>MobileApi-0a0101a6-1341418085147-0</message>
@@ -710,8 +710,8 @@
             <message>MobileApi-0a0101a6-1341418322820-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APIBadge.getUserShopBadgeDifDateCount">
+      </entity>
+      <entity id="long-sql:APIBadge.getUserShopBadgeDifDateCount" type="long-sql" status="APIBadge.getUserShopBadgeDifDateCount">
          <duration value="100" count="90">
             <message>MobileApi-0a0101a6-1341418085147-0</message>
             <message>MobileApi-0a0101a6-1341418085147-0</message>
@@ -774,8 +774,8 @@
             <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/deallist.bin">
+      </entity>
+      <entity id="long-url:/deallist.bin" type="long-url" status="/deallist.bin">
          <duration value="1000" count="15">
             <message>MobileApi-0a0101a6-1341418197842-0</message>
             <message>MobileApi-0a0101a6-1341418427373-0</message>
@@ -793,8 +793,8 @@
             <message>MobileApi-0a0101a6-1341418427373-0</message>
             <message>MobileApi-0a0101a6-1341418465564-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/checkinsearchshop.bin">
+      </entity>
+      <entity id="long-url:/checkinsearchshop.bin" type="long-url" status="/checkinsearchshop.bin">
          <duration value="1000" count="5">
             <message>MobileApi-0a0101a6-1341418223954-0</message>
             <message>MobileApi-0a0101a6-1341418223954-0</message>
@@ -802,8 +802,8 @@
             <message>MobileApi-0a0101a6-1341418223954-0</message>
             <message>MobileApi-0a0101a6-1341418223954-0</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APICheckList.getLocalCheckInList">
+      </entity>
+      <entity id="long-sql:APICheckList.getLocalCheckInList" type="long-sql" status="APICheckList.getLocalCheckInList">
          <duration value="100" count="20">
             <message>MobileApi-0a0101a6-1341418250150-0</message>
             <message>MobileApi-0a0101a6-1341418269054-0</message>
@@ -826,8 +826,8 @@
             <message>MobileApi-0a0101a6-1341418461870-0</message>
             <message>MobileApi-0a0101a6-1341418495410-1</message>
          </duration>
-      </entry>
-      <entry type="sql" status="APIUserInfo.updateUserInfo">
+      </entity>
+      <entity id="sql:APIUserInfo.updateUserInfo" type="sql" status="APIUserInfo.updateUserInfo">
          <duration value="0" count="10">
             <message>MobileApi-0a0101a6-1341418257284-0</message>
             <message>MobileApi-0a0101a6-1341418334215-0</message>
@@ -840,8 +840,8 @@
             <message>MobileApi-0a0101a6-1341418257284-0</message>
             <message>MobileApi-0a0101a6-1341418334215-0</message>
          </duration>
-      </entry>
-      <entry type="error" status="java.sql.SQLException">
+      </entity>
+      <entity id="error:java.sql.SQLException" type="error" status="java.sql.SQLException">
          <duration value="0" count="35">
             <message>MobileApi-0a0101a6-1341418257284-0</message>
             <message>MobileApi-0a0101a6-1341418334215-0</message>
@@ -879,8 +879,8 @@
             <message>MobileApi-0a0101a6-1341418388176-0</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
          </duration>
-      </entry>
-      <entry type="error" status="java.net.SocketTimeoutException">
+      </entity>
+      <entity id="error:java.net.SocketTimeoutException" type="error" status="java.net.SocketTimeoutException">
          <duration value="0" count="5">
             <message>MobileApi-0a0101a6-1341418316922-0</message>
             <message>MobileApi-0a0101a6-1341418316922-0</message>
@@ -888,8 +888,8 @@
             <message>MobileApi-0a0101a6-1341418316922-0</message>
             <message>MobileApi-0a0101a6-1341418316922-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/regionhd.bin">
+      </entity>
+      <entity id="long-url:/regionhd.bin" type="long-url" status="/regionhd.bin">
          <duration value="2000" count="5">
             <message>MobileApi-0a0101a6-1341418316922-0</message>
             <message>MobileApi-0a0101a6-1341418316922-0</message>
@@ -897,8 +897,8 @@
             <message>MobileApi-0a0101a6-1341418316922-0</message>
             <message>MobileApi-0a0101a6-1341418316922-0</message>
          </duration>
-      </entry>
-      <entry type="sql" status="APIUserInfo.addUserInfo">
+      </entity>
+      <entity id="sql:APIUserInfo.addUserInfo" type="sql" status="APIUserInfo.addUserInfo">
          <duration value="0" count="25">
             <message>MobileApi-0a0101a6-1341418339012-0</message>
             <message>MobileApi-0a0101a6-1341418356525-0</message>
@@ -926,8 +926,8 @@
             <message>MobileApi-0a0101a6-1341418388176-0</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
          </duration>
-      </entry>
-      <entry type="error" status="org.springframework.dao.CannotAcquireLockException">
+      </entity>
+      <entity id="error:org.springframework.dao.CannotAcquireLockException" type="error" status="org.springframework.dao.CannotAcquireLockException">
          <duration value="0" count="15">
             <message>MobileApi-0a0101a6-1341418339012-0</message>
             <message>MobileApi-0a0101a6-1341418356525-0</message>
@@ -945,8 +945,8 @@
             <message>MobileApi-0a0101a6-1341418356525-0</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/thirdsignup.bin">
+      </entity>
+      <entity id="long-url:/thirdsignup.bin" type="long-url" status="/thirdsignup.bin">
          <duration value="5000" count="10">
             <message>MobileApi-0a0101a6-1341418383736-0</message>
             <message>MobileApi-0a0101a6-1341418388176-0</message>
@@ -959,8 +959,8 @@
             <message>MobileApi-0a0101a6-1341418383736-0</message>
             <message>MobileApi-0a0101a6-1341418388176-0</message>
          </duration>
-      </entry>
-      <entry type="long-url" status="/signup.bin">
+      </entity>
+      <entity id="long-url:/signup.bin" type="long-url" status="/signup.bin">
          <duration value="5000" count="5">
             <message>MobileApi-0a0101a6-1341418395870-1</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
@@ -968,8 +968,8 @@
             <message>MobileApi-0a0101a6-1341418395870-1</message>
             <message>MobileApi-0a0101a6-1341418395870-1</message>
          </duration>
-      </entry>
-      <entry type="long-sql" status="APICheckList.validateCheckinTime">
+      </entity>
+      <entity id="long-sql:APICheckList.validateCheckinTime" type="long-sql" status="APICheckList.validateCheckinTime">
          <duration value="1000" count="5">
             <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
@@ -977,6 +977,6 @@
             <message>MobileApi-0a0101a6-1341418515816-0</message>
             <message>MobileApi-0a0101a6-1341418515816-0</message>
          </duration>
-      </entry>
+      </entity>
    </machine>
 </problem-report>

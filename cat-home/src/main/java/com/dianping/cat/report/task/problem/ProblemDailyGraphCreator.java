@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
@@ -94,10 +94,10 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		m_currentType = entry.getType();
-		m_currentName = entry.getStatus();
-		super.visitEntry(entry);
+	public void visitEntity(Entity entity) {
+		m_currentType = entity.getType();
+		m_currentName = entity.getStatus();
+		super.visitEntity(entity);
 	}
 
 	@Override

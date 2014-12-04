@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
@@ -47,16 +47,15 @@ public class ProblemInfoVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		int count = 0;
-		String type = entry.getType();
-		String state = entry.getStatus();
-
-		for (Duration duration : entry.getDurations().values()) {
-			count += duration.getCount();
-		}
+	public void visitEntity(Entity entity) {
+		String type = entity.getType();
+		String state = entity.getStatus();
 
 		if ("error".equals(type)) {
+			int count = 0;
+			for (Duration duration : entity.getDurations().values()) {
+				count += duration.getCount();
+			}
 			Integer temp = m_errors.get(state);
 
 			if (temp == null) {

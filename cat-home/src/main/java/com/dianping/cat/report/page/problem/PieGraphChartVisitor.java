@@ -8,7 +8,7 @@ import java.util.Map;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -43,7 +43,7 @@ public class PieGraphChartVisitor extends BaseVisitor {
 			items.add(item);
 		}
 		chart.addItems(items);
-		
+
 		return chart;
 	}
 
@@ -60,13 +60,13 @@ public class PieGraphChartVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-		String type = entry.getType();
-		String name = entry.getStatus();
+	public void visitEntity(Entity entity) {
+		String type = entity.getType();
+		String name = entity.getStatus();
 
 		if (type.equals(m_type)) {
 			if (StringUtils.isEmpty(m_status) || name.equals(m_status)) {
-				super.visitEntry(entry);
+				super.visitEntity(entity);
 			}
 		}
 	}

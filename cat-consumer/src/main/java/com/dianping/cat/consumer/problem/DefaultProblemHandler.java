@@ -7,7 +7,7 @@ import java.util.Set;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -31,7 +31,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 		if (message instanceof Transaction) {
 			String type = message.getType();
 
-			//TODO remove me
+			// TODO remove me
 			if (!"ABTest".equals(type)) {
 				processTransaction(machine, (Transaction) message, tree);
 			}
@@ -47,8 +47,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			Entity problem = findOrCreateEntity(machine, type, status);
+			updateProblem(tree, problem, 0);
 		}
 	}
 
@@ -57,9 +57,9 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if ("heartbeat".equals(type)) {
 			String status = heartbeat.getName();
-			Entry entry = findOrCreateEntry(machine, type, status);
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			updateEntry(tree, entry, 0);
+			updateProblem(tree, problem, 0);
 		}
 	}
 
@@ -82,8 +82,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 				status = transaction.getType() + ":" + transaction.getName();
 			}
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			Entity problem = findOrCreateEntity(machine, type, status);
+			updateProblem(tree, problem, 0);
 		}
 
 		List<Message> children = transaction.getChildren();
