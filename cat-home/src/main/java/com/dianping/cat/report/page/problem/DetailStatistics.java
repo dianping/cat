@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.TreeMap;
 
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -98,16 +99,20 @@ public class DetailStatistics extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		if (machine.getIp().equals(m_ip)) {
-			List<Entry> entries = machine.getEntries();
-			for (Entry entry : entries) {
-				Map<String, JavaThread> threads = entry.getThreads();
+			Collection<Entity> entities = machine.getEntities().values();
+
+			for (Entity entity : entities) {
+				Map<String, JavaThread> threads = entity.getThreads();
+
 				for (JavaThread thread : threads.values()) {
 					String threadId = thread.getId();
 					String groupName = thread.getGroupName();
+
 					if (isContents(groupName, threadId)) {
 						Segment segment = thread.getSegments().get(m_minute);
+
 						if (segment != null) {
-							statisticsSegment(segment, entry.getType(), entry.getStatus());
+							statisticsSegment(segment, entity.getType(), entity.getStatus());
 						}
 					}
 				}

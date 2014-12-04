@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -65,8 +65,8 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
-		 processLongUrl(machine, tree);
-		 processLongService(machine, tree);
+		processLongUrl(machine, tree);
+		processLongService(machine, tree);
 
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
@@ -104,9 +104,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
 			String status = transaction.getName();
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			updateProblem(tree, problem, 0);
 		}
 	}
 
@@ -118,9 +118,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CALL.getName();
 			String status = transaction.getName();
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, (int) nomarizeDuration);
+			updateProblem(tree, problem, (int) nomarizeDuration);
 		}
 	}
 
@@ -139,9 +139,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 				if (nomarizeDuration > 0) {
 					String type = ProblemType.LONG_SERVICE.getName();
 					String status = message.getName();
+					Entity problem = findOrCreateEntity(machine, type, status);
 
-					Entry entry = findOrCreateEntry(machine, type, status);
-					updateEntry(tree, entry, (int) nomarizeDuration);
+					updateProblem(tree, problem, (int) nomarizeDuration);
 				}
 			}
 		}
@@ -155,9 +155,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_SQL.getName();
 			String status = transaction.getName();
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, (int) nomarizeDuration);
+			updateProblem(tree, problem, (int) nomarizeDuration);
 		}
 	}
 
@@ -173,9 +173,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			if (nomarizeDuration > 0) {
 				String type = ProblemType.LONG_URL.getName();
 				String status = message.getName();
+				Entity problem = findOrCreateEntity(machine, type, status);
 
-				Entry entry = findOrCreateEntry(machine, type, status);
-				updateEntry(tree, entry, (int) nomarizeDuration);
+				updateProblem(tree, problem, (int) nomarizeDuration);
 			}
 		}
 	}
@@ -195,7 +195,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 		for (Message message : messageList) {
 			if (message instanceof Transaction) {
-				 processTransaction(machine, (Transaction) message, tree);
+				processTransaction(machine, (Transaction) message, tree);
 			}
 		}
 	}
