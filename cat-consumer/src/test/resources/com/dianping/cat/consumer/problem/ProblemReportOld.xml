@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <problem-report domain="Cat" startTime="2012-06-26 16:00:00" endTime="2012-06-26 16:59:59">
    <domain>Cat</domain>
-   <ip>192.168.165.1</ip>
-   <machine ip="192.168.165.1">
-      <entry type="heartbeat" status="192.168.165.1">
+   <ip>192.168.165.2</ip>
+   <machine ip="192.168.165.2">
+      <entry type="heartbeat" status="192.168.165.2">
          <duration value="0" count="1">
             <message>Cat-c0a8a501-1340700793104-0</message>
          </duration>
