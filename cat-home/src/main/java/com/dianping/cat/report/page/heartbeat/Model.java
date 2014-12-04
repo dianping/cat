@@ -66,6 +66,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_totalThreadGraph;
 
+	private List<String> m_extensionGroups = new ArrayList<String>();
+
+	private int m_extensionCount;
+
+	private String m_extensionHistoryGraphs;
+
 	private Map<String, Map<String, String>> m_extensionGraph = new HashMap<String, Map<String, String>>();
 
 	public Model(Context ctx) {
@@ -140,8 +146,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public int getExtensionCount() {
+		return m_extensionCount;
+	}
+
 	public Map<String, Map<String, String>> getExtensionGraph() {
 		return m_extensionGraph;
+	}
+
+	public List<String> getExtensionGroups() {
+		return m_extensionGroups;
+	}
+
+	public String getExtensionHistoryGraphs() {
+		return m_extensionHistoryGraphs;
 	}
 
 	public int getExtensionTableHeight() {
@@ -263,8 +281,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_disksGraph = disksGraph;
 	}
 
+	public void setExtensionCount(int extensionCount) {
+		m_extensionCount = extensionCount;
+	}
+
 	public void setExtensionGraph(Map<String, Map<String, String>> extensionGraph) {
 		m_extensionGraph = extensionGraph;
+	}
+
+	public void setExtensionGroups(List<String> extensionGroups) {
+		m_extensionGroups = extensionGroups;
+	}
+
+	public void setExtensionHistoryGraphs(String extensionHistoryGraphs) {
+		m_extensionHistoryGraphs = extensionHistoryGraphs;
 	}
 
 	public void setHeapUsageGraph(String heapUsageGraph) {

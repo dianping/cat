@@ -247,7 +247,6 @@ public class HighLoadReportBuilder implements ReportTaskBuilder {
 				swap(0, i);
 				heapAdjust(0, i - 1);
 			}
-
 		}
 
 		private void swap(int index1, int index2) {

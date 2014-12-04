@@ -8,69 +8,80 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.core.dal.GraphDao;
-import com.dianping.cat.core.dal.GraphEntity;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
+import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
+import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.system.config.DisplayPolicyManager;
 
 public class HistoryGraphs extends BaseHistoryGraphs {
 
-	public static final int K = 1024;
+	@Inject
+	private ReportServiceManager m_reportService;
 
 	@Inject
-	private GraphDao m_graphDao;
+	private DisplayPolicyManager m_manager;
 
-	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
-		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR);
-		Map<String, String[]> hourlyDate = getHourlyDatas(graphs, start, size);
-		return getHeartBeatDatesEveryMinute(hourlyDate, size);
+	public static final int K = 1024;
+
+	private static final int MINUTE_ONE_DAY = 1440;
+
+	private void addMachineDataToMap(Map<String, double[]> datas, Machine machine) {
+		for (Period period : machine.getPeriods()) {
+			int minute = period.getMinute();
+
+			updateMetricArray(datas, minute, "ActiveThread", period.getThreadCount());
+			updateMetricArray(datas, minute, "HttpThread", period.getHttpThreadCount());
+			updateMetricArray(datas, minute, "CatMessageOverflow", period.getCatMessageOverflow());
+			updateMetricArray(datas, minute, "CatMessageProduced", period.getCatMessageProduced());
+			updateMetricArray(datas, minute, "CatMessageSize", period.getCatMessageSize());
+			updateMetricArray(datas, minute, "CatThreadCount", period.getCatThreadCount());
+			updateMetricArray(datas, minute, "DaemonThread", period.getDaemonCount());
+			updateMetricArray(datas, minute, "HeapUsage", period.getHeapUsage());
+			updateMetricArray(datas, minute, "MemoryFree", period.getMemoryFree());
+			updateMetricArray(datas, minute, "NewGcCount", period.getNewGcCount());
+			updateMetricArray(datas, minute, "NoneHeapUsage", period.getNoneHeapUsage());
+			updateMetricArray(datas, minute, "OldGcCount", period.getOldGcCount());
+			updateMetricArray(datas, minute, "PigeonStartedThread", period.getPigeonThreadCount());
+			updateMetricArray(datas, minute, "SystemLoadAverage", period.getSystemLoadAverage());
+			updateMetricArray(datas, minute, "TotalStartedThread", period.getTotalStartedCount());
+			updateMetricArray(datas, minute, "StartedThread", period.getTotalStartedCount());
+			for (Disk disk : period.getDisks()) {
+				String diskName = "Disk: " + disk.getPath();
+
+				updateMetricArray(datas, minute, diskName, disk.getFree());
+			}
+			dealWithExtensions(datas, minute, period);
+		}
 	}
 
-	private void divideByK(Map<String, double[]> result, String[] divideByKDates) {
-		for (String name : divideByKDates) {
-			double[] data = result.get(name);
+	private Map<String, double[]> buildHeartbeatDatas(HeartbeatReport report, String ip) {
+		Map<String, double[]> datas = new HashMap<String, double[]>();
+		Machine machine = report.findMachine(ip);
 
-			for (int i = 0; i < data.length; i++) {
-				data[i] = data[i] / (K * K);
+		if (machine != null) {
+			addMachineDataToMap(datas, machine);
+		}
+		return datas;
+	}
+
+	private void dealWithExtensions(Map<String, double[]> datas, int minute, Period period) {
+		for (String group : m_manager.queryOrderedGroupNames()) {
+			for (String metric : m_manager.queryOrderedMetricNames(group)) {
+				double value = period.findExtension(group).findDetail(metric).getValue();
+				int unit = m_manager.queryUnit(group, metric);
+				double actualValue = value / unit;
+
+				updateMetricArray(datas, minute, metric, actualValue);
 			}
 		}
-	}
-
-	private void formatHeartBeat(Map<String, double[]> result) {
-		double[] totalStartedThread = result.get("TotalStartedThread");
-		if (totalStartedThread != null) {
-			result.put("StartedThread", getAddedCount(totalStartedThread));
-		}
-		String[] addedDatas = { "NewGcCount", "OldGcCount", "CatMessageProduced", "CatMessageSize", "CatMessageOverflow" };
-		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree" };
-
-		organiseAddedData(result, addedDatas);
-		divideByK(result, divideByKDates);
-	}
-
-	private double[] getAddedCount(double[] source) {
-		int size = source.length;
-		double[] result = new double[size];
-
-		for (int i = 1; i <= size - 1; i++) {
-			if (source[i - 1] > 0) {
-				double d = source[i] - source[i - 1];
-				if (d < 0) {
-					d = source[i];
-				}
-				result[i] = d;
-			}
-		}
-		return result;
 	}
 
 	private ArrayList<LineChart> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
@@ -85,12 +96,22 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				for (int i = 0; i < data.length; i++) {
 					data[i] = data[i] / (K * K * K);
 				}
-				String title = name + "[GB]";
+				String title = name + " Free [GB]";
 				LineChart disk = getGraphItem(title, name, start, size, graphData);
 				diskInfo.add(disk);
 			}
 		}
 		return diskInfo;
+	}
+
+	private List<LineChart> getExtensionGraphs(List<String> metrics, Map<String, double[]> graphData, Date start,
+	      int size) {
+		List<LineChart> graphs = new ArrayList<LineChart>();
+
+		for (String metric : metrics) {
+			graphs.add(getGraphItem(metric, metric, start, size, graphData));
+		}
+		return graphs;
 	}
 
 	private LineChart getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
@@ -105,110 +126,22 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return item;
 	}
 
-	public Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
-		Date start = new Date(payload.getDate());
-		Date end = payload.getHistoryEndDate();
+	private Map<String, double[]> getHeartBeatData(Payload payload) {
 		String ip = payload.getIpAddress();
-		String domain = payload.getDomain();
-		List<Graph> graphs = new ArrayList<Graph>();
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
 
-		try {
-			graphs = this.m_graphDao.findByDomainNameIpDuration(start, end, ip, domain, HeartbeatAnalyzer.ID,
-			      GraphEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		return buildHeartbeatDatas(start, end, graphs);
-	}
-
-	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		final int minutesPerHour = 60;
-		int sizeOfHeartBeat = size * minutesPerHour;
-		Iterator<Entry<String, String[]>> iterator = heartBeats.entrySet().iterator();
-
-		while (iterator.hasNext()) {
-			Entry<String, String[]> entry = iterator.next();
-			String name = (String) entry.getKey();
-			double[] allDatePerMinutes = new double[sizeOfHeartBeat];
-			String[] allPeriods = entry.getValue();
-			for (int i = 0; i < allPeriods.length; i++) {
-				double[] datePerHour = new double[minutesPerHour];
-				String oneHour = allPeriods[i];
-				String[] dateInMinutes = oneHour.split(",");
-				for (int j = 0; j < dateInMinutes.length; j++) {
-					datePerHour[j] = Double.parseDouble(dateInMinutes[j]);
-				}
-				for (int m = 0; m < minutesPerHour; m++) {
-					int index = i * minutesPerHour + m;
-					allDatePerMinutes[index] = datePerHour[m];
-				}
-			}
-			result.put(name, allDatePerMinutes);
-		}
-		formatHeartBeat(result);
-		return result;
-	}
-
-	private Map<String, String[]> getHourlyDatas(List<Graph> graphs, Date start, int size) {
-		Map<String, String[]> heartBeats = initial(size);
-		for (Graph graph : graphs) {
-			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_HOUR);
-			String detailContent = graph.getDetailContent();
-			String[] alldates = detailContent.split("\n");
-
-			for (int i = 0; i < alldates.length; i++) {
-				String[] records = alldates[i].split("\t");
-				String name = records[DetailOrder.NAME.ordinal()];
-				String countPerHour = records[DetailOrder.COUNT_IN_MINUTES.ordinal()];
-				String[] singlePeriod = heartBeats.get(name);
-				if (singlePeriod == null) {
-					singlePeriod = initialData(size);
-					heartBeats.put(name, singlePeriod);
-				}
-				singlePeriod[indexOfperiod] = countPerHour;
-			}
-		}
-		return heartBeats;
-	}
-
-	private Map<String, String[]> initial(int size) {
-		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
-		String[] names = { "ActiveThread", "HttpThread", "CatMessageOverflow", "CatMessageProduced", "CatMessageSize",
-		      "CatThreadCount", "DaemonThread", "HeapUsage", "MemoryFree", "NewGcCount", "NoneHeapUsage", "OldGcCount",
-		      "PigeonStartedThread", "SystemLoadAverage", "TotalStartedThread", "StartedThread" };
-		for (String name : names) {
-			String[] singlePeriod = initialData(size);
-			heartBeats.put(name, singlePeriod);
-		}
-		return heartBeats;
-	}
-
-	private String[] initialData(int size) {
-		String[] singlePeriod = new String[size];
-		for (int index = 0; index < size; index++) {
-			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < 60; i++) {
-				sb.append("0,");
-			}
-			String hourData = sb.substring(0, sb.length() - 1);
-			singlePeriod[index] = hourData;
-		}
-		return singlePeriod;
-	}
-
-	private void organiseAddedData(Map<String, double[]> result, String[] addedNames) {
-		for (String addedName : addedNames) {
-			result.put(addedName, getAddedCount(result.get(addedName)));
-		}
+		return buildHeartbeatDatas(report, ip);
 	}
 
 	// show the graph of heartbeat
 	public void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
+
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
-		Map<String, double[]> graphData = getHeartBeatData(model, payload);
+		Map<String, double[]> graphData = getHeartBeatData(payload);
 		String queryType = payload.getType();
 
 		if (queryType.equalsIgnoreCase("thread")) {
@@ -252,6 +185,23 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			      start, size, graphData).getJsonString());
 			model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 			      graphData).getJsonString());
+		} else if (queryType.equalsIgnoreCase("extension")) {
+			List<String> metrics = m_manager.queryOrderedMetricNames(payload.getExtensionType());
+			List<LineChart> graphs = getExtensionGraphs(metrics, graphData, start, size);
+
+			model.setExtensionCount(metrics.size());
+			model.setExtensionHistoryGraphs(new JsonBuilder().toJson(graphs));
 		}
+	}
+
+	private void updateMetricArray(Map<String, double[]> datas, int minute, String metricName, double value) {
+		double[] values = datas.get(metricName);
+
+		if (values == null) {
+			values = new double[MINUTE_ONE_DAY];
+
+			datas.put(metricName, values);
+		}
+		values[minute] = value;
 	}
 }

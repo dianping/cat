@@ -164,7 +164,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
-		$($('.text-error')[3]).hide();
 	});
 </script>
 </jsp:body>

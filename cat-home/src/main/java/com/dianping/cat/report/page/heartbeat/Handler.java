@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -109,7 +110,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
-			
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
@@ -137,6 +138,9 @@ public class Handler implements PageHandler<Context> {
 			buildHeartbeatGraphInfo(model, heartbeat);
 			break;
 		case HISTORY:
+			List<String> extensionGroups = m_manager.queryOrderedGroupNames();
+
+			model.setExtensionGroups(extensionGroups);
 			buildHistoryGraph(model, payload);
 			break;
 		case PART_HISTORY:
@@ -157,6 +161,11 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress(payload.getRealIp());
 		}
 		m_normalizePayload.normalize(model, payload);
+
+		String reportType = payload.getReportType();
+		if ("month".equals(reportType) || "week".equals(reportType)) {
+			payload.setReportType("day");
+		}
 
 		String queryType = payload.getType();
 

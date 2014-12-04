@@ -100,17 +100,16 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class,
 		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
 		      MonthlyReportContentDao.class));
-		all.add(C(ReportService.class, Constants.REPORT_JAR, JarReportService.class).req(
-		      HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class,
-		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
-		      MonthlyReportContentDao.class));
+		all.add(C(ReportService.class, Constants.REPORT_JAR, JarReportService.class).req(HourlyReportDao.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 
 		all.add(C(ReportService.class, TopAnalyzer.ID, TopReportService.class).req(HourlyReportDao.class,
 		      HourlyReportContentDao.class));
 		all.add(C(ReportService.class, DependencyAnalyzer.ID, DependencyReportService.class).req(HourlyReportDao.class,
 		      HourlyReportContentDao.class));
 		all.add(C(ReportService.class, HeartbeatAnalyzer.ID, HeartbeatReportService.class).req(HourlyReportDao.class,
-		      HourlyReportContentDao.class));
+		      HourlyReportContentDao.class, DailyReportDao.class, DailyReportContentDao.class));
 		all.add(C(ReportService.class, MetricAnalyzer.ID, MetricReportService.class).req(HourlyReportDao.class,
 		      BusinessReportDao.class));
 

@@ -10,10 +10,12 @@ import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
@@ -43,6 +45,9 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	@Inject
 	private DisplayPolicyManager m_displayManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private HeartbeatReport m_lastReport;
 
@@ -322,10 +327,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				Set<String> domains = queryDomains();
 
 				for (String domain : domains) {
-					try {
-						processDomain(domain);
-					} catch (Exception e) {
-						Cat.logError(e);
+					if (m_configManager.validateDomain(domain) && StringUtils.isNotEmpty(domain)) {
+						try {
+							processDomain(domain);
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
 					}
 				}
 

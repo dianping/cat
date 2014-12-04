@@ -72,7 +72,7 @@
 				</tr>
 			</table>
 		      <div class="row-fluid">
-		        <div class="span2">
+		        <div class="span3">
 		          <div class="well sidebar-nav">
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
@@ -83,7 +83,7 @@
 		            </ul>
 		          </div><!--/.well -->
 		        </div><!--/span-->
-		        <div class="span10">
+		        <div class="span9">
 		        	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		       			<div style="float:left;">
 		       				<div id="${item.id}" class="metricGraph"></div>
@@ -98,7 +98,7 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var product = '${payload.product}';
-			document.getElementById(product).addClass('active');
+			$(document.getElementById(product)).addClass('active');
 			$('i[tips]').popover();
 
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
@@ -127,13 +127,6 @@
 	</script>
 </script>
 <style type="text/css">
-.row-fluid .span2 {
-	width: 15%;
-}
-
-.row-fluid .span10 {
-	width: 82%;
-}
 
 .nav-list>li>a,.nav-list .nav-header {
 	margin-left: -19px;

@@ -254,25 +254,28 @@
 			})
 			
 			$("#addCountTag").click(function(){
+				var existTags = $("#countSelect").multipleSelect('getSelects', 'text');
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span4" id="countInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="countInput" type="text" value="'+existTags+'"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
 			
 			$("#addSumTag").click(function(){
+				var existTags = $("#sumSelect").multipleSelect('getSelects', 'text');
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span4" id="sumInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="sumInput" type="text" value="'+existTags+'"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
 			
 			$("#addAvgTag").click(function(){
+				var existTags = $("#avgSelect").multipleSelect('getSelects', 'text');
 				$(this).parent().find(".tags").remove();
 				if($(this).parent().find(".tagsInput").length == 0){
-					$(this).before($('<input class="tagsInput span4" id="avgInput" type="text"></input>'));
+					$(this).before($('<input class="tagsInput span4" id="avgInput" type="text" value="'+existTags+'"></input>'));
 				}
 				$(this).addClass("disabled")
 			})
