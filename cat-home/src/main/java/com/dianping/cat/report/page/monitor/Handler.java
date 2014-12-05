@@ -164,7 +164,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean isGenericMetric(String group) {
-		return !isNetwork(group) && !isSystem(group) && isDatabase(group);
+		return !isNetwork(group) && !isSystem(group) && !isDatabase(group);
 	}
 
 	private boolean isNetwork(String group) {
