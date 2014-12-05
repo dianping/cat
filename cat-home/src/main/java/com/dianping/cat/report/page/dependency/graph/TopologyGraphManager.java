@@ -241,11 +241,11 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			List<DependencyReport> reports = new ArrayList<DependencyReport>();
 			Transaction t = Cat.newTransaction(DEPENDENCY, "FetchReport");
 
-			try {
-				for (String temp : domains) {
-					try {
-						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT.getStartTime()).setProperty("date",
-						      String.valueOf(currentHour));
+			for (String domain : domains) {
+				try {
+					if (m_manager.validateDomain(domain)) {
+						ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime()).setProperty(
+						      "date", String.valueOf(currentHour));
 						if (m_service.isEligable(request)) {
 							ModelResponse<DependencyReport> response = m_service.invoke(request);
 							DependencyReport report = response.getModel();
@@ -254,18 +254,14 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 								reports.add(report);
 							}
 						} else {
-							m_logger.warn(String.format("Can't get dependency report of %s", temp));
+							m_logger.warn(String.format("Can't get dependency report of %s", domain));
 						}
-					} catch (Exception e) {
-						Cat.logError(e);
 					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-				t.setStatus(Message.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
+			t.setStatus(Message.SUCCESS);
 			return reports;
 		}
 
