@@ -106,9 +106,7 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 	public void visitMachine(Machine machine) {
 		m_currentIp = machine.getIp();
 
-		for (Entity entity : machine.getEntities().values()) {
-			visitEntity(entity);
-		}
+		super.visitMachine(machine);
 	}
 
 	@Override

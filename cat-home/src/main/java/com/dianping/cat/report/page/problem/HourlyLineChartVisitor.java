@@ -94,9 +94,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		if (Constants.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
-			for (Entity entity : machine.getEntities().values()) {
-				visitEntity(entity);
-			}
+			super.visitMachine(machine);
 		}
 	}
 

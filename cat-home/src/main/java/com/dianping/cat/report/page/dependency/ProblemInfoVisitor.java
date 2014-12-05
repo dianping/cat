@@ -8,7 +8,6 @@ import java.util.Map;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
@@ -45,13 +44,6 @@ public class ProblemInfoVisitor extends BaseVisitor {
 			      .append(GraphConstrant.ENTER);
 		}
 		return sb.toString();
-	}
-
-	@Override
-	public void visitMachine(Machine machine) {
-		for (Entity entity : machine.getEntities().values()) {
-			visitEntity(entity);
-		}
 	}
 
 	@Override
