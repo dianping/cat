@@ -22,7 +22,7 @@ public class HeartbeatConfigProcessor extends BaseProcesser {
 			generateRuleItemList(m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE:
-			model.setHeartbeatExtensionMetrics(m_displayPolicyManager.queryMonitorMetrics());
+			model.setHeartbeatExtensionMetrics(m_displayPolicyManager.queryAlertMetrics());
 			generateRuleConfigContent(payload.getKey(), m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
