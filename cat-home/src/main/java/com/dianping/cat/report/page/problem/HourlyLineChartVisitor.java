@@ -7,6 +7,7 @@ import java.util.Map;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -73,6 +74,10 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		}
 		m_graphItem.add(buildSubTitle(), value);
 		return m_graphItem;
+	}
+
+	@Override
+	public void visitEntry(Entry entity) {
 	}
 
 	@Override

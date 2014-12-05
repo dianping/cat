@@ -5,6 +5,7 @@ import java.util.List;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -54,6 +55,10 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 		target.setCount(target.getCount() + count);
 		mergeList(oldMessages, newMessages, SIZE);
+	}
+
+	@Override
+	public void visitEntry(Entry entry) {
 	}
 
 	@Override

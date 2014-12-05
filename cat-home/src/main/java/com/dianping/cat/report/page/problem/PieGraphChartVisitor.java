@@ -9,6 +9,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -57,6 +58,10 @@ public class PieGraphChartVisitor extends BaseVisitor {
 		} else {
 			m_items.put(m_ip, count + old);
 		}
+	}
+
+	@Override
+	public void visitEntry(Entry entry) {
 	}
 
 	@Override
