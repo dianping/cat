@@ -47,8 +47,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
-			Entity problem = findOrCreateEntity(machine, type, status);
-			updateProblem(tree, problem, 0);
+			Entity entity = findOrCreateEntity(machine, type, status);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -57,9 +57,9 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if ("heartbeat".equals(type)) {
 			String status = heartbeat.getName();
-			Entity problem = findOrCreateEntity(machine, type, status);
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			updateProblem(tree, problem, 0);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -82,8 +82,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 				status = transaction.getType() + ":" + transaction.getName();
 			}
 
-			Entity problem = findOrCreateEntity(machine, type, status);
-			updateProblem(tree, problem, 0);
+			Entity entity = findOrCreateEntity(machine, type, status);
+			updateEntity(tree, entity, 0);
 		}
 
 		List<Message> children = transaction.getChildren();

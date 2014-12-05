@@ -27,40 +27,40 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private LongConfig m_longConfig = new LongConfig();
 
-	private List<Duration> getDurationsByType(String type, Entity entry) {
+	private List<Duration> getDurationsByType(String type, Entity entity) {
 		List<Duration> durations = new ArrayList<Duration>();
 		if (ProblemType.LONG_URL.getName().equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entity.getDurations().entrySet()) {
 				if (temp.getKey() >= m_longConfig.getUrlThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_SQL.getName().equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entity.getDurations().entrySet()) {
 				if (temp.getKey() >= m_longConfig.getSqlThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_SERVICE.getName().equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entity.getDurations().entrySet()) {
 				if (temp.getKey() >= m_longConfig.getServiceThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_CALL.getName().equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entity.getDurations().entrySet()) {
 				if (temp.getKey() >= m_longConfig.getCallThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else if (ProblemType.LONG_CACHE.getName().equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entity.getDurations().entrySet()) {
 				if (temp.getKey() >= m_longConfig.getCacheThreshold()) {
 					durations.add(temp.getValue());
 				}
 			}
 		} else {
-			durations.add(entry.getDurations().get(0));
+			durations.add(entity.getDurations().get(0));
 		}
 		return durations;
 	}
@@ -112,8 +112,8 @@ public class ProblemStatistics extends BaseVisitor {
 		if (m_allIp == true || m_ip.equals(machine.getIp())) {
 			Collection<Entity> entities = machine.getEntities().values();
 
-			for (Entity entry : entities) {
-				statisticsDuration(entry);
+			for (Entity entity : entities) {
+				statisticsDuration(entity);
 			}
 		}
 	}

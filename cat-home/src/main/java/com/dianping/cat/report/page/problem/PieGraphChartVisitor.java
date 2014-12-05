@@ -74,6 +74,7 @@ public class PieGraphChartVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		m_ip = machine.getIp();
+
 		super.visitMachine(machine);
 	}
 
