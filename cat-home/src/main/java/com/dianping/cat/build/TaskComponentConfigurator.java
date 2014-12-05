@@ -49,7 +49,6 @@ import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
 import com.dianping.cat.report.task.highload.HighLoadReportBuilder;
@@ -104,7 +103,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TransactionGraphCreator.class));
 		all.add(C(EventGraphCreator.class));
 		all.add(C(ProblemGraphCreator.class));
-		all.add(C(HeartbeatGraphCreator.class));
 
 		all.add(C(TransactionMerger.class));
 		all.add(C(EventMerger.class));
@@ -133,8 +131,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ProblemGraphCreator.class, ProblemMerger.class));
 
 		all.add(C(ReportTaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, ReportServiceManager.class) //
-		      .req(HeartbeatGraphCreator.class));
+		      .req(GraphDao.class, ReportServiceManager.class));
 
 		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class,
 		      ServerConfigManager.class));
@@ -160,9 +157,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(
 		      ReportServiceManager.class, ServerConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class)
-		      .req(ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class,
-		            HostinfoService.class));
+		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
+		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class, HostinfoService.class));
 
 		all.add(C(ReportTaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      ReportServiceManager.class, TopologyGraphBuilder.class, TopologyGraphDao.class));

@@ -983,10 +983,6 @@
 			<implementation>com.dianping.cat.report.task.problem.ProblemGraphCreator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
-			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionMerger</implementation>
 		</component>
@@ -1123,9 +1119,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
 				</requirement>
 			</requirements>
 		</component>
