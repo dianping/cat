@@ -88,7 +88,7 @@ public class DisplayPolicyManager implements Initializable {
 			Metric metric = group.findMetric(metricName);
 
 			if (metric != null) {
-				return metric.isIsDelta();
+				return metric.isDelta();
 			}
 		}
 		return false;
@@ -99,7 +99,7 @@ public class DisplayPolicyManager implements Initializable {
 
 		for (Group group : m_config.getGroups().values()) {
 			for (Metric metric : group.getMetrics().values()) {
-				if (metric.isIsMonitor()) {
+				if (metric.isMonitor()) {
 					metrics.add(metric.getId());
 				}
 			}
