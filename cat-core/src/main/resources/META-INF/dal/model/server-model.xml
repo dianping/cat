@@ -7,13 +7,7 @@
    	 	<entity-ref name="ldap" />
 	</entity>
 	<entity name="ldap" class-name="ldap">
-		<attribute name="loginAttribute" value-type="String" default-value="sAMAccountName" />
 		<attribute name="ldapUrl" value-type="String" default-value="ldap://192.168.50.11:389/DC=dianpingoa,DC=com" />
-		<attribute name="ldapBaseDN" value-type="String" default-value="OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com" />
-		<attribute name="ldapFactory" value-type="String" default-value="com.sun.jndi.ldap.LdapCtxFactory" />
-		<attribute name="solidDN" value-type="String" default-value="cn=Users,DC=dianpingoa,DC=com" />
-		<attribute name="solidUsername" value-type="String" default-value="lionauth" />
-		<attribute name="solidPassword" value-type="String" default-value="bxHxXopGJOy78Jze3LWi" />
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
