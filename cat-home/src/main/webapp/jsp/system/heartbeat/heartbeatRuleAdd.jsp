@@ -55,8 +55,9 @@
 					        	<option value="SystemLoadAverage">SystemLoadAverage</option>
 					        	<option value="CatMessageOverflow">CatMessageOverflow</option>
 					        	<option value="CatMessageSize">CatMessageSize</option>
-					        	<option value="EdenUsage">EdenUsage</option>
-					        	<option value="SurvivorUsage">SurvivorUsage</option>
+					        	<c:forEach var="metric" items="${model.heartbeatExtensionMetrics}" >
+					        		<option value="${metric}">${metric}</option>
+					        	</c:forEach>
 					        </select>
 					        <button class="btn btn-danger btn-small delete-metric-button" type="button">
 					            <i class="icon-trash icon-white"></i>

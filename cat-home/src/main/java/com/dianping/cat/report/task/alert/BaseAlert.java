@@ -34,9 +34,6 @@ import com.dianping.cat.system.config.BaseRuleConfigManager;
 public abstract class BaseAlert {
 
 	@Inject
-	protected BaseRuleConfigManager m_ruleConfigManager;
-
-	@Inject
 	protected AlertInfo m_alertInfo;
 
 	@Inject
@@ -82,10 +79,12 @@ public abstract class BaseAlert {
 		}
 	}
 
+	protected abstract BaseRuleConfigManager getRuleConfigManager();
+
 	protected List<AlertResultEntity> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
 		double[] baseline = null;
-		List<Config> configs = m_ruleConfigManager.queryConfigs(product, metricKey, type);
+		List<Config> configs = getRuleConfigManager().queryConfigs(product, metricKey, type);
 		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();

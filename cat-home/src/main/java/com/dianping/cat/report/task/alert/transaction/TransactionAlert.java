@@ -33,6 +33,8 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
+import com.dianping.cat.system.config.TransactionRuleConfigManager;
 
 public class TransactionAlert extends BaseAlert implements Task {
 
@@ -41,7 +43,10 @@ public class TransactionAlert extends BaseAlert implements Task {
 
 	@Inject
 	private TransactionMergeHelper m_mergeManager;
-
+	
+	@Inject
+	protected TransactionRuleConfigManager m_ruleConfigManager;
+	
 	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
@@ -57,7 +62,6 @@ public class TransactionAlert extends BaseAlert implements Task {
 
 		return result;
 	}
-
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
@@ -122,6 +126,11 @@ public class TransactionAlert extends BaseAlert implements Task {
 	@Override
 	public String getName() {
 		return AlertType.Transaction.getName();
+	}
+
+	@Override
+	protected BaseRuleConfigManager getRuleConfigManager() {
+		return m_ruleConfigManager;
 	}
 
 	private void processRule(Rule rule) {
