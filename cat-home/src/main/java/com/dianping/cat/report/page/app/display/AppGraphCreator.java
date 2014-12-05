@@ -32,11 +32,13 @@ public class AppGraphCreator {
 		double min = Double.MAX_VALUE;
 
 		for (Double[] data : datas) {
-			List<Double> dataList = Arrays.asList(data);
-			double tmp = Collections.min(dataList);
+			if (data.length > 0) {
+				List<Double> dataList = Arrays.asList(data);
+				double tmp = Collections.min(dataList);
 
-			if (min > tmp) {
-				min = tmp;
+				if (min > tmp) {
+					min = tmp;
+				}
 			}
 		}
 		return min;
