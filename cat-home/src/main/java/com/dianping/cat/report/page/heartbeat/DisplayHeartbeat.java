@@ -85,17 +85,12 @@ public class DisplayHeartbeat {
 	}
 
 	private void addSortedGroups(Map<String, Map<String, double[]>> tmpExtensions) {
-		for (String groupName : m_manager.queryOrderedGroupNames()) {
+		List<String> orderedGroupNames = m_manager.sortGroupNames(m_extensions.keySet());
+
+		for (String groupName : orderedGroupNames) {
 			Map<String, double[]> extensionGroup = m_extensions.get(groupName);
 
-			if (extensionGroup != null) {
-				tmpExtensions.put(groupName, extensionGroup);
-			}
-		}
-		for (String groupName : m_extensions.keySet()) {
-			if (tmpExtensions.get(groupName) == null) {
-				tmpExtensions.put(groupName, m_extensions.get(groupName));
-			}
+			tmpExtensions.put(groupName, extensionGroup);
 		}
 	}
 
@@ -121,24 +116,25 @@ public class DisplayHeartbeat {
 		addSortedGroups(tmpExtensions);
 		for (Entry<String, Map<String, double[]>> entry : tmpExtensions.entrySet()) {
 			String groupName = entry.getKey();
+			Map<String, double[]> originMetrics = entry.getValue();
+			List<String> metricNames = m_manager.sortMetricNames(groupName, originMetrics.keySet());
+			Map<String, double[]> normalizedMetrics = new LinkedHashMap<String, double[]>();
 
-			sortMetrics(entry);
+			for (String metricName : metricNames) {
+				double[] values = originMetrics.get(metricName);
 
-			for (Entry<String, double[]> metricEntry : entry.getValue().entrySet()) {
-				String metricName = metricEntry.getKey();
-				double[] values = metricEntry.getValue();
-
-				if (m_manager.isDelta(groupName, metricName)) {
+				if (m_manager.isDelta(metricName)) {
 					values = getAddedCount(values);
-					metricEntry.setValue(values);
 				}
 
-				int unit = m_manager.queryUnit(groupName, metricName);
+				int unit = m_manager.queryUnit(metricName);
 
 				for (int i = 0; i <= 59; i++) {
 					values[i] = values[i] / unit;
 				}
+				normalizedMetrics.put(metricName, values);
 			}
+			entry.setValue(normalizedMetrics);
 		}
 		m_extensions = tmpExtensions;
 	}
@@ -503,26 +499,6 @@ public class DisplayHeartbeat {
 
 	public double[] getTotalThreads() {
 		return m_totalThreads;
-	}
-
-	private void sortMetrics(Entry<String, Map<String, double[]>> entry) {
-		String groupName = entry.getKey();
-		Map<String, double[]> metrics = entry.getValue();
-		Map<String, double[]> tmpMetrics = new LinkedHashMap<String, double[]>();
-
-		for (String metricName : m_manager.queryOrderedMetricNames(groupName)) {
-			double[] values = metrics.get(metricName);
-
-			if (values != null) {
-				tmpMetrics.put(metricName, values);
-			}
-		}
-		for (String metricName : metrics.keySet()) {
-			if (tmpMetrics.get(metricName) == null) {
-				tmpMetrics.put(metricName, metrics.get(metricName));
-			}
-		}
-		entry.setValue(tmpMetrics);
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {

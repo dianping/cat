@@ -3,14 +3,15 @@ package com.dianping.cat.report.page.heartbeat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -75,21 +76,15 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	}
 
 	private void dealWithExtensions(Map<String, double[]> datas, int minute, Period period) {
-		for (String group : m_manager.queryOrderedGroupNames()) {
-			for (String metric : m_manager.queryOrderedMetricNames(group)) {
-				Extension findExtension = period.findExtension(group);
+		for (String group : period.getExtensions().keySet()) {
+			Extension currentExtension = period.findExtension(group);
 
-				if (findExtension != null) {
-					Detail findDetail = findExtension.findDetail(metric);
+			for (String metric : currentExtension.getDetails().keySet()) {
+				double value = currentExtension.findDetail(metric).getValue();
+				int unit = m_manager.queryUnit(metric);
+				double actualValue = value / unit;
 
-					if (findDetail != null) {
-						double value = findDetail.getValue();
-						int unit = m_manager.queryUnit(group, metric);
-						double actualValue = value / unit;
-
-						updateMetricArray(datas, minute, metric, actualValue);
-					}
-				}
+				updateMetricArray(datas, minute, metric, actualValue);
 			}
 		}
 	}
@@ -136,13 +131,19 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return item;
 	}
 
-	private Map<String, double[]> getHeartBeatData(Payload payload) {
-		String ip = payload.getIpAddress();
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
+	private Set<String> queryMetricNames(HeartbeatReport report, String groupName) {
+		Set<String> result = new HashSet<String>();
 
-		return buildHeartbeatDatas(report, ip);
+		for (Machine machine : report.getMachines().values()) {
+			for (Period period : machine.getPeriods()) {
+				Extension extension = period.findExtension(groupName);
+
+				if (extension != null) {
+					result.addAll(extension.getDetails().keySet());
+				}
+			}
+		}
+		return result;
 	}
 
 	// show the graph of heartbeat
@@ -151,7 +152,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		Date end = payload.getHistoryEndDate();
 
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
-		Map<String, double[]> graphData = getHeartBeatData(payload);
+		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
+		Map<String, double[]> graphData = buildHeartbeatDatas(report, payload.getIpAddress());
 		String queryType = payload.getType();
 
 		if (queryType.equalsIgnoreCase("thread")) {
@@ -196,7 +198,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 			      graphData).getJsonString());
 		} else if (queryType.equalsIgnoreCase("extension")) {
-			List<String> metrics = m_manager.queryOrderedMetricNames(payload.getExtensionType());
+			String groupName = payload.getExtensionType();
+			List<String> metrics = m_manager.sortMetricNames(groupName, queryMetricNames(report, groupName));
 			List<LineChart> graphs = getExtensionGraphs(metrics, graphData, start, size);
 
 			model.setExtensionCount(metrics.size());

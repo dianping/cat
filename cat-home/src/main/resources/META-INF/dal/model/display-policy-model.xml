@@ -13,6 +13,7 @@
     <attribute name="unit" value-type="String" />
     <attribute name="isDelta" value-type="boolean" />
     <attribute name="order" value-type="int" />
+    <attribute name="isMonitor" value-type="boolean" default-value="true" />
   </entity>
 </model>
 
