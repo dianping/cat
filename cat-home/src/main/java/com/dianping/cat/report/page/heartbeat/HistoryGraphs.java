@@ -10,7 +10,9 @@ import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -75,11 +77,19 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private void dealWithExtensions(Map<String, double[]> datas, int minute, Period period) {
 		for (String group : m_manager.queryOrderedGroupNames()) {
 			for (String metric : m_manager.queryOrderedMetricNames(group)) {
-				double value = period.findExtension(group).findDetail(metric).getValue();
-				int unit = m_manager.queryUnit(group, metric);
-				double actualValue = value / unit;
+				Extension findExtension = period.findExtension(group);
 
-				updateMetricArray(datas, minute, metric, actualValue);
+				if (findExtension != null) {
+					Detail findDetail = findExtension.findDetail(metric);
+
+					if (findDetail != null) {
+						double value = findDetail.getValue();
+						int unit = m_manager.queryUnit(group, metric);
+						double actualValue = value / unit;
+
+						updateMetricArray(datas, minute, metric, actualValue);
+					}
+				}
 			}
 		}
 	}
