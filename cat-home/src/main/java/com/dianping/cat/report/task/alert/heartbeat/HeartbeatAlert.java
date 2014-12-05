@@ -34,6 +34,7 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.DisplayPolicyManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 
@@ -239,6 +240,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	@Override
 	public String getName() {
 		return AlertType.HeartBeat.getName();
+	}
+
+	@Override
+	protected BaseRuleConfigManager getRuleConfigManager() {
+		return m_ruleConfigManager;
 	}
 
 	private void processDomain(String domain) {
