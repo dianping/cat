@@ -17,6 +17,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -67,20 +69,25 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
-		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
-			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
-				double[] array = map.get(metricName);
+		for (String metricName : m_displayManager.queryMonitorMetrics()) {
+			double[] array = map.get(metricName);
 
-				if (array == null) {
-					array = new double[60];
-					map.put(metricName, array);
+			if (array == null) {
+				array = new double[60];
+				map.put(metricName, array);
+			}
+			try {
+				int unit = m_displayManager.queryUnit(metricName);
+				for (Extension extension : period.getExtensions().values()) {
+					Detail detail = extension.findDetail(metricName);
+
+					if (detail != null) {
+						array[index] = detail.getValue() / unit;
+						return;
+					}
 				}
-				try {
-					int unit = m_displayManager.queryUnit(groupName, metricName);
-					array[index] = period.findExtension(groupName).findDetail(metricName).getValue() / unit;
-				} catch (Exception e) {
-					array[index] = 0;
-				}
+			} catch (Exception e) {
+				array[index] = 0;
 			}
 		}
 	}
@@ -109,9 +116,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private void convertDeltaExtensions(Map<String, double[]> map) {
-		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
-			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
-				if (m_displayManager.isDelta(groupName, metricName)) {
+		for (String metricName : m_displayManager.queryMonitorMetrics()) {
+				if (m_displayManager.isDelta(metricName)) {
 					double[] sources = map.get(metricName);
 					double[] targets = new double[60];
 
@@ -127,7 +133,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 					map.put(metricName, targets);
 				}
 			}
-		}
 	}
 
 	private void convertToDeltaArray(Map<String, double[]> map, String name) {
@@ -218,7 +223,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		List<String> metrics = new ArrayList<String>();
 
 		metrics.addAll(Arrays.asList(m_metrics));
-		metrics.addAll(m_displayManager.queryMetrics());
+		metrics.addAll(m_displayManager.queryMonitorMetrics());
 		return metrics;
 	}
 

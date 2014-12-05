@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -81,10 +83,8 @@ public class DisplayPolicyManager implements Initializable {
 		}
 	}
 
-	public boolean isDelta(String groupName, String metricName) {
-		Group group = m_config.findGroup(groupName);
-
-		if (group != null) {
+	public boolean isDelta(String metricName) {
+		for (Group group : m_config.getGroups().values()) {
 			Metric metric = group.findMetric(metricName);
 
 			if (metric != null) {
@@ -94,23 +94,45 @@ public class DisplayPolicyManager implements Initializable {
 		return false;
 	}
 
-	public List<String> queryMetrics() {
+	public List<String> queryMonitorMetrics() {
 		List<String> metrics = new ArrayList<String>();
 
 		for (Group group : m_config.getGroups().values()) {
 			for (Metric metric : group.getMetrics().values()) {
-				metrics.add(metric.getId());
+				if (metric.isIsMonitor()) {
+					metrics.add(metric.getId());
+				}
 			}
 		}
 		return metrics;
 	}
 
-	public List<String> queryOrderedGroupNames() {
-		List<Group> groups = new ArrayList<Group>();
-		List<String> names = new ArrayList<String>();
-
+	public int queryUnit(String metricName) {
 		for (Group group : m_config.getGroups().values()) {
-			groups.add(group);
+			if (group.findMetric(metricName) != null) {
+				Metric metric = group.findMetric(metricName);
+
+				if (metric != null) {
+					String metricUnit = metric.getUnit();
+
+					if ("K".equals(metricUnit)) {
+						return K;
+					} else if ("M".equals(metricUnit)) {
+						return K * K;
+					}
+				}
+			}
+		}
+		return 1;
+	}
+
+	public List<String> sortGroupNames(List<String> originGroupNames) {
+		List<Group> groups = new ArrayList<Group>();
+
+		for (Entry<String, Group> entry : m_config.getGroups().entrySet()) {
+			if (originGroupNames.contains(entry.getKey())) {
+				groups.add(entry.getValue());
+			}
 		}
 		Collections.sort(groups, new Comparator<Group>() {
 			@Override
@@ -118,20 +140,35 @@ public class DisplayPolicyManager implements Initializable {
 				return g1.getOrder() - g2.getOrder();
 			}
 		});
+
+		List<String> result = new ArrayList<String>();
+
 		for (Group group : groups) {
-			names.add(group.getId());
+			result.add(group.getId());
 		}
-		return names;
+		for (String originGroupName : originGroupNames) {
+			if (!result.contains(originGroupName)) {
+				result.add(originGroupName);
+			}
+		}
+		return result;
 	}
 
-	public List<String> queryOrderedMetricNames(String groupName) {
+	public List<String> sortGroupNames(Set<String> originGroupNameSet) {
+		return sortGroupNames(new ArrayList<String>(originGroupNameSet));
+	}
+
+	public List<String> sortMetricNames(String groupName, List<String> originMetricNames) {
 		Group group = m_config.findGroup(groupName);
-		List<Metric> list = new ArrayList<Metric>();
-		List<String> metricNames = new ArrayList<String>();
+		List<String> result = new ArrayList<String>();
 
 		if (group != null) {
-			for (Metric metric : group.getMetrics().values()) {
-				list.add(metric);
+			List<Metric> list = new ArrayList<Metric>();
+			
+			for (Entry<String, Metric> entry : group.getMetrics().entrySet()) {
+				if (originMetricNames.contains(entry.getKey())) {
+					list.add(entry.getValue());
+				}
 			}
 			Collections.sort(list, new Comparator<Metric>() {
 				@Override
@@ -140,29 +177,20 @@ public class DisplayPolicyManager implements Initializable {
 				}
 			});
 			for (Metric metric : list) {
-				metricNames.add(metric.getId());
+				result.add(metric.getId());
 			}
 		}
-		return metricNames;
+
+		for (String originMetricName : originMetricNames) {
+			if (!result.contains(originMetricName)) {
+				result.add(originMetricName);
+			}
+		}
+		return result;
 	}
 
-	public int queryUnit(String groupName, String metricName) {
-		Group group = m_config.findGroup(groupName);
-
-		if (group != null) {
-			Metric metric = group.findMetric(metricName);
-
-			if (metric != null) {
-				String metricUnit = metric.getUnit();
-
-				if ("K".equals(metricUnit)) {
-					return K;
-				} else if ("M".equals(metricUnit)) {
-					return K * K;
-				}
-			}
-		}
-		return 1;
+	public List<String> sortMetricNames(String groupName, Set<String> originMetricNames) {
+		return sortMetricNames(groupName, new ArrayList<String>(originMetricNames));
 	}
 
 	private boolean storeConfig() {

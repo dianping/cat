@@ -291,6 +291,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public Set<String> getUnusedDomains() {
+		return m_invalidateDomains;
+	}
+
 	public boolean isAlertMachine() {
 		if (m_config != null) {
 			boolean alert = m_config.isAlertMachine();
@@ -375,7 +379,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean validateDomain(String domain) {
+	public  boolean  validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 

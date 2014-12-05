@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,6 +19,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
@@ -82,7 +85,9 @@ public class Handler implements PageHandler<Context> {
 		Date start = new Date(payload.getDate() + 23 * TimeHelper.ONE_HOUR);
 		Date end = new Date(payload.getDate() + 24 * TimeHelper.ONE_HOUR);
 		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
+		List<String> extensionGroups = m_manager.sortGroupNames(extractExtensionGroups(report));
 
+		model.setExtensionGroups(extensionGroups);
 		model.setReport(report);
 		if (StringUtils.isEmpty(payload.getIpAddress()) || Constants.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
@@ -91,6 +96,19 @@ public class Handler implements PageHandler<Context> {
 			payload.setRealIp(ipAddress);
 		}
 		m_historyGraphs.showHeartBeatGraph(model, payload);
+	}
+
+	private Set<String> extractExtensionGroups(HeartbeatReport report) {
+		Set<String> groupNames = new HashSet<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			for (Period period : machine.getPeriods()) {
+				Set<String> tmpGroupNames = period.getExtensions().keySet();
+
+				groupNames.addAll(tmpGroupNames);
+			}
+		}
+		return groupNames;
 	}
 
 	private String getIpAddress(HeartbeatReport report, Payload payload) {
@@ -138,9 +156,6 @@ public class Handler implements PageHandler<Context> {
 			buildHeartbeatGraphInfo(model, heartbeat);
 			break;
 		case HISTORY:
-			List<String> extensionGroups = m_manager.queryOrderedGroupNames();
-
-			model.setExtensionGroups(extensionGroups);
 			buildHistoryGraph(model, payload);
 			break;
 		case PART_HISTORY:
