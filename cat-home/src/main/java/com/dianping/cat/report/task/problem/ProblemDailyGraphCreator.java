@@ -9,7 +9,6 @@ import java.util.Map;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
@@ -90,25 +89,26 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 	public void visitDuration(Duration duration) {
 		int count = duration.getCount();
 		MachineInfo info = findOrCreateMachine(m_currentIp);
+
 		buildMachineDetail(count, info);
 		buildMachineDetail(count, m_allMachine);
-	}
-
-	@Override
-	public void visitEntry(Entry entry) {
 	}
 
 	@Override
 	public void visitEntity(Entity entity) {
 		m_currentType = entity.getType();
 		m_currentName = entity.getStatus();
+
 		super.visitEntity(entity);
 	}
 
 	@Override
 	public void visitMachine(Machine machine) {
 		m_currentIp = machine.getIp();
-		super.visitMachine(machine);
+
+		for (Entity entity : machine.getEntities().values()) {
+			visitEntity(entity);
+		}
 	}
 
 	@Override

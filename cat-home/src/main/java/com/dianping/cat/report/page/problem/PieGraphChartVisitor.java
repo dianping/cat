@@ -9,7 +9,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -61,10 +60,6 @@ public class PieGraphChartVisitor extends BaseVisitor {
 	}
 
 	@Override
-	public void visitEntry(Entry entry) {
-	}
-
-	@Override
 	public void visitEntity(Entity entity) {
 		String type = entity.getType();
 		String name = entity.getStatus();
@@ -79,7 +74,10 @@ public class PieGraphChartVisitor extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		m_ip = machine.getIp();
-		super.visitMachine(machine);
+		
+		for (Entity entity : machine.getEntities().values()) {
+			visitEntity(entity);
+		}
 	}
 
 	@Override
