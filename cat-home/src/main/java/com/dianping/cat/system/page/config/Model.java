@@ -131,14 +131,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Speed> m_speeds;
 
 	private Speed m_speed;
-
-	public Speed getSpeed() {
-		return m_speed;
-	}
-
-	public void setSpeed(Speed speed) {
-		m_speed = speed;
-	}
+	
+	private List<String> m_heartbeatExtensionMetrics;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -348,6 +342,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return maps;
 	}
 
+	public List<String> getHeartbeatExtensionMetrics() {
+		return m_heartbeatExtensionMetrics;
+	}
+
 	public String getId() {
 		return m_id;
 	}
@@ -422,6 +420,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Collection<Rule> getRules() {
 		return m_rules;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
 	}
 
 	public Map<Integer, Speed> getSpeeds() {
@@ -536,6 +538,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
+	public void setHeartbeatExtensionMetrics(List<String> heartbeatExtensionMetrics) {
+		m_heartbeatExtensionMetrics = heartbeatExtensionMetrics;
+	}
+
 	public void setId(String id) {
 		m_id = id;
 	}
@@ -606,6 +612,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setRules(Collection<Rule> rules) {
 		m_rules = rules;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
 	}
 
 	public void setSpeeds(Map<Integer, Speed> speeds) {

@@ -11,10 +11,10 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
@@ -22,6 +22,8 @@ import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
+import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
 public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
@@ -29,6 +31,9 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected MetricConfigManager m_metricConfigManager;
+
+	@Inject
+	protected BusinessRuleConfigManager m_ruleConfigManager;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -38,6 +43,11 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	@Override
 	public String getName() {
 		return ID;
+	}
+
+	@Override
+	protected BaseRuleConfigManager getRuleConfigManager() {
+		return m_ruleConfigManager;
 	}
 
 	public boolean needAlert(MetricItemConfig config) {

@@ -1,5 +1,8 @@
 package com.dianping.cat.system.config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -9,7 +12,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
+import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
@@ -53,6 +58,16 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 			m_config = new MonitorRules();
 		}
 	}
-	
-	
+
+	public List<String> queryMetrics() {
+		List<String> metrics = new ArrayList<String>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			for (MetricItem item : rule.getMetricItems()) {
+				metrics.add(item.getMetricItemText());
+			}
+		}
+		return metrics;
+	}
+
 }

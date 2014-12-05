@@ -88,18 +88,18 @@ public class DisplayPolicyManager implements Initializable {
 			Metric metric = group.findMetric(metricName);
 
 			if (metric != null) {
-				return metric.isIsDelta();
+				return metric.isDelta();
 			}
 		}
 		return false;
 	}
 
-	public List<String> queryMonitorMetrics() {
+	public List<String> queryAlertMetrics() {
 		List<String> metrics = new ArrayList<String>();
 
 		for (Group group : m_config.getGroups().values()) {
 			for (Metric metric : group.getMetrics().values()) {
-				if (metric.isIsMonitor()) {
+				if (metric.isAlert()) {
 					metrics.add(metric.getId());
 				}
 			}
