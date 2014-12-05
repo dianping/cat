@@ -33,6 +33,7 @@ public class ProblemReportConvertor extends BaseVisitor {
 					entity.addThread(thread);
 				}
 			}
+			entries.clear();
 		}
 	}
 }

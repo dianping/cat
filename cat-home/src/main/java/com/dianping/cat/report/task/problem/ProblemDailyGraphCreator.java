@@ -89,6 +89,7 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 	public void visitDuration(Duration duration) {
 		int count = duration.getCount();
 		MachineInfo info = findOrCreateMachine(m_currentIp);
+
 		buildMachineDetail(count, info);
 		buildMachineDetail(count, m_allMachine);
 	}
@@ -97,12 +98,14 @@ public class ProblemDailyGraphCreator extends BaseVisitor {
 	public void visitEntity(Entity entity) {
 		m_currentType = entity.getType();
 		m_currentName = entity.getStatus();
+
 		super.visitEntity(entity);
 	}
 
 	@Override
 	public void visitMachine(Machine machine) {
 		m_currentIp = machine.getIp();
+
 		super.visitMachine(machine);
 	}
 
