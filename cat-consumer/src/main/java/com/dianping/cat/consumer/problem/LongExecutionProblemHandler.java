@@ -104,9 +104,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
 			String status = transaction.getName();
-			Entity problem = findOrCreateEntity(machine, type, status);
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			updateProblem(tree, problem, 0);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -118,9 +118,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CALL.getName();
 			String status = transaction.getName();
-			Entity problem = findOrCreateEntity(machine, type, status);
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			updateProblem(tree, problem, (int) nomarizeDuration);
+			updateEntity(tree, entity, (int) nomarizeDuration);
 		}
 	}
 
@@ -139,9 +139,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 				if (nomarizeDuration > 0) {
 					String type = ProblemType.LONG_SERVICE.getName();
 					String status = message.getName();
-					Entity problem = findOrCreateEntity(machine, type, status);
+					Entity entity = findOrCreateEntity(machine, type, status);
 
-					updateProblem(tree, problem, (int) nomarizeDuration);
+					updateEntity(tree, entity, (int) nomarizeDuration);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			String status = transaction.getName();
 			Entity problem = findOrCreateEntity(machine, type, status);
 
-			updateProblem(tree, problem, (int) nomarizeDuration);
+			updateEntity(tree, problem, (int) nomarizeDuration);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 				String status = message.getName();
 				Entity problem = findOrCreateEntity(machine, type, status);
 
-				updateProblem(tree, problem, (int) nomarizeDuration);
+				updateEntity(tree, problem, (int) nomarizeDuration);
 			}
 		}
 	}
