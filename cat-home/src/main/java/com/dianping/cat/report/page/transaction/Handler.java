@@ -136,7 +136,7 @@ public class Handler implements PageHandler<Context> {
 				} else {
 					Date endTime = report.getEndTime();
 					Date startTime = report.getStartTime();
-					
+
 					if (endTime != null && startTime != null) {
 						seconds = (endTime.getTime() - startTime.getTime()) / (double) 1000;
 					} else {
@@ -187,6 +187,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		String name = payload.getName();
+
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType()) //
 		      .setProperty("name", payload.getName())//
@@ -197,6 +198,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("all", "true");
 			name = Constants.ALL;
 		}
+
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 		return report;
@@ -233,8 +235,8 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
-
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
+
 			calculateTps(payload, report);
 			if (report != null) {
 				model.setReport(report);
@@ -252,15 +254,28 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+				report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+				      payload.getHistoryEndDate());
+
+				buildDistributionInfo(model, type, name, report);
+			}
+
 			m_historyGraph.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
 			report = getTransactionGraphReport(model, payload);
 
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+				buildDistributionInfo(model, type, name, report);
+			}
+
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
+
 			report = m_mergeManager.mergerAllName(report, ip, name);
+
 			model.setReport(report);
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
@@ -268,6 +283,7 @@ public class Handler implements PageHandler<Context> {
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			
 			calculateTps(payload, report);
 			if (report != null) {
 				model.setReport(report);
@@ -290,6 +306,7 @@ public class Handler implements PageHandler<Context> {
 		case GROUP_GRAPHS:
 			report = getTransactionGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
+			buildDistributionInfo(model, type, name, report);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
@@ -299,6 +316,11 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
+			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			      payload.getHistoryEndDate());
+			report = filterReportByGroup(report, domain, group);
+
+			buildDistributionInfo(model, type, name, report);
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
 			m_historyGraph.buildGroupTrendGraph(model, payload, ips);
@@ -312,6 +334,47 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+
+		chartVisitor.visitTransactionReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(buildDistributionDetails(report, type, name));
+	}
+
+	private List<DistributionDetail> buildDistributionDetails(TransactionReport report, String type, String name) {
+		List<DistributionDetail> details = new ArrayList<DistributionDetail>();
+
+		for (Machine machine : report.getMachines().values()) {
+			if (!Constants.ALL.equals(machine.getIp())) {
+				for (TransactionType t : machine.getTypes().values()) {
+					if (type != null && type.equals(t.getId())) {
+						DistributionDetail detail = new DistributionDetail();
+
+						if (StringUtils.isEmpty(name)) {
+							detail.setTotalCount(t.getTotalCount()).setFailCount(t.getFailCount())
+							      .setFailPercent(t.getFailPercent()).setIp(machine.getIp()).setAvg(t.getAvg())
+							      .setMin(t.getMin()).setMax(t.getMax()).setStd(t.getStd());
+
+						} else {
+							for (TransactionName n : t.getNames().values()) {
+								if (name.equals(n.getId())) {
+									detail.setTotalCount(n.getTotalCount()).setFailCount(n.getFailCount())
+									      .setFailPercent(n.getFailPercent()).setIp(machine.getIp()).setAvg(n.getAvg())
+									      .setMin(n.getMin()).setMax(n.getMax()).setStd(n.getStd());
+									break;
+								}
+							}
+						}
+						details.add(detail);
+						break;
+					}
+				}
+			}
+		}
+		return details;
+	}
+
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.TRANSACTION);
 		m_normalizePayload.normalize(model, payload);
@@ -321,10 +384,10 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		String queryName = payload.getQueryName();
-		
+
 		if (queryName != null) {
 			model.setQueryName(queryName);
-		}else{
+		} else {
 			payload.setQueryName(null);
 		}
 	}

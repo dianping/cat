@@ -1,5 +1,13 @@
 function hourlyGraphLineChart(cell,data){
+	cell.style.display = 'block';
+	cell.parentNode.style.display = 'block';
 	cell.innerHTML = data;
+	
+	data = $('#distributionChartMeta', cell).text();
+	
+	if (data != null && data.length > 0) {
+		graphPieChart($('#distributionChart', cell)[0], eval('(' + data + ')'));
+	}
 }
 
 function historyGraphLineChart(cell,response){
@@ -18,6 +26,12 @@ function historyGraphLineChart(cell,response){
 	data = $('#errorTrendMeta', cell).text();
 	graphLineChart($('#errorTrend', cell)[0], eval('(' + data
 			+ ')'));
+	
+	data = $('#distributionChartMeta', cell).text();
+	
+	if (data != null && data.length > 0) {
+		graphPieChart($('#distributionChart', cell)[0], eval('(' + data + ')'));
+	}
 }
 
 function selectByName(date, domain, ip, type) {

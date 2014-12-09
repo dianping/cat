@@ -351,8 +351,6 @@ $(document).delegate(
 						}
 					});
 				}
-				cell.style.display = 'block';
-				cell.parentNode.style.display = 'block';
 			} else {
 				anchor.innerHTML = '[:: show ::]';
 				cell.style.display = 'none';
@@ -399,7 +397,6 @@ $(document).delegate(
 $(document).delegate('.problem_status_graph_link', 'click', function(e) {
 	var anchor = this, el = $(anchor), id = el.attr('data-status');
 
-	console.log("id: " + id)
 	if (e.ctrlKey || e.metaKey) {
 		return true;
 	} else {

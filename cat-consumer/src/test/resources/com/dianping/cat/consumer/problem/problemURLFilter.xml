@@ -14,7 +14,7 @@
             <message>Cat-c0a8a501-1340700793743-0</message>
          </duration>
       </entity>
-      <entity id="problem:≈∆˚˙˚∆˚∆˚" type="problem" status="≈∆˚˙˚∆˚∆˚">
+      <entity id="problem:hello≈∆˚˙˚∆˚∆˚ world" type="problem" status="hello≈∆˚˙˚∆˚∆˚ world">
          <thread group-name="main" name="btpool0-1" id="33">
             <segment id="53" count="1">
                <message>Cat-c0a8a501-1340700793743-0</message>

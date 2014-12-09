@@ -25,6 +25,8 @@
 			<div id="hitTrend" class="graph"></div></td>
 		<td>
 			<div id="errorTrend" class="graph"></div></td>
+			<td>
+			<div id="errorTrend" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="responseTrendMeta">${model.responseTrend}</div>
@@ -32,6 +34,7 @@
 		<div id ="errorTrendMeta">${model.errorTrend}</div>
 	</td></tr>
 </table>
+
 <script type="text/javascript">
 	var responseTrendData = ${model.responseTrend};
 	var hitTrendData = ${model.hitTrend};
@@ -39,4 +42,40 @@
 	graphLineChart(document.getElementById('responseTrend'),responseTrendData);
 	graphLineChart(document.getElementById('hitTrend'),hitTrendData);
 	graphLineChart(document.getElementById('errorTrend'),errorTrendData);
+	
+	var distributionChartMeta = ${model.distributionChart};
+	
+	if(distributionChart!=null){
+		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
+	}
 </script>
+<c:if test="${payload.ipAddress eq 'All' }">
+<table class='data' style="width:60%;">
+	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
+	<tr>
+		<th class="right">Ip</th>
+		<th class="right">Total Count</th>
+		<th class="right">Failure Count</th>
+		<th class="right">Failure%</th>
+		<th class="right">Min(ms)</th>
+		<th class="right">Max(ms)</th>
+		<th class="right">Avg(ms)</th>
+		<th class="right">Std(ms)</th>
+	</tr>
+	<c:forEach var="item" items="${model.distributionDetails}" varStatus="status">
+	<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		<td>${item.ip}</td>
+		<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.failPercent/100,'0.0000%')}</td>
+		<td>${w:format(item.min,'###,##0.#')}</td>
+		<td>${w:format(item.max,'###,##0.#')}</td>
+		<td>${w:format(item.avg,'###,##0.0')}</td>
+		<td>${w:format(item.std,'###,##0.0')}</td>
+	</tr>
+	</c:forEach>
+</table>
+<br>
+<div id="distributionChart" class="graph"></div>
+<div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
+</c:if>
