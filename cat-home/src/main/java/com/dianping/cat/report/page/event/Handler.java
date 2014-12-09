@@ -285,7 +285,7 @@ public class Handler implements PageHandler<Context> {
 		case GROUP_GRAPHS:
 			report = getEventGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
-			
+
 			buildDistributionInfo(model, type, name, report);
 
 			if (name == null || name.length() == 0) {
@@ -298,7 +298,7 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GROUP_GRAPH:
 			report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
-			
+
 			buildDistributionInfo(model, type, name, report);
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
@@ -309,42 +309,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
-	   PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
 
-	   chartVisitor.visitEventReport(report);
-	   model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-	   model.setDistributionDetails(buildDistributionDetails(report, type, name));
-   }
-
-	private List<DistributionDetail> buildDistributionDetails(EventReport report, String type, String name) {
-		List<DistributionDetail> details = new ArrayList<DistributionDetail>();
-
-		for (Machine machine : report.getMachines().values()) {
-			if (!Constants.ALL.equals(machine.getIp())) {
-				for (EventType t : machine.getTypes().values()) {
-					if (type != null && type.equals(t.getId())) {
-						DistributionDetail detail = new DistributionDetail();
-
-						if (StringUtils.isEmpty(name)) {
-							detail.setTotalCount(t.getTotalCount()).setFailCount(t.getFailCount())
-							      .setFailPercent(t.getFailPercent()).setIp(machine.getIp());
-
-						} else {
-							for (EventName n : t.getNames().values()) {
-								if (name.equals(n.getId())) {
-									detail.setTotalCount(n.getTotalCount()).setFailCount(n.getFailCount())
-									      .setFailPercent(n.getFailPercent()).setIp(machine.getIp());
-									break;
-								}
-							}
-						}
-						details.add(detail);
-						break;
-					}
-				}
-			}
-		}
-		return details;
+		chartVisitor.visitEventReport(report);
+		detailVisitor.visitEventReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {
