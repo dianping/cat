@@ -117,43 +117,44 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		m_currentReport = null;
 	}
 
+	private void convertDefaultDeltaMetrics(Map<String, double[]> map) {
+		List<String> metrics = m_displayManager.queryDefaultDeltaMetrics();
+
+		for (String metric : metrics) {
+			convertToDelta(map, metric);
+		}
+	}
+
 	private void convertDeltaExtensions(Map<String, double[]> map) {
 		for (String metricName : m_extentionMetrics) {
 			if (m_displayManager.isDelta(metricName)) {
-				double[] sources = map.get(metricName);
-
-				if (sources != null) {
-					double[] targets = new double[60];
-
-					for (int i = 1; i < 60; i++) {
-						if (sources[i - 1] > 0) {
-							double delta = sources[i] - sources[i - 1];
-
-							if (delta >= 0) {
-								targets[i] = delta;
-							}
-						}
-					}
-					map.put(metricName, targets);
-				}
+				convertToDelta(map, metricName);
 			}
 		}
 	}
 
-	private void convertToDeltaArray(Map<String, double[]> map, String name) {
-		double[] sources = map.get(name);
-		double[] targets = new double[60];
+	private void convertDeltaMetrics(Map<String, double[]> map) {
+		convertDefaultDeltaMetrics(map);
+		convertDeltaExtensions(map);
+	}
 
-		for (int i = 1; i < 60; i++) {
-			if (sources[i - 1] > 0) {
-				double delta = sources[i] - sources[i - 1];
+	private void convertToDelta(Map<String, double[]> map, String metric) {
+		double[] sources = map.get(metric);
+		
+		if (sources != null) {
+			double[] targets = new double[60];
 
-				if (delta >= 0) {
-					targets[i] = delta;
+			for (int i = 1; i < 60; i++) {
+				if (sources[i - 1] > 0) {
+					double delta = sources[i] - sources[i - 1];
+
+					if (delta >= 0) {
+						targets[i] = delta;
+					}
 				}
 			}
+			map.put(metric, targets);
 		}
-		map.put(name, targets);
 	}
 
 	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute, int alreadyMinute) {
@@ -215,12 +216,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			buildArray(map, minute, "CatMessageSize", period.getCatMessageSize());
 			buildArrayForExtensions(map, minute, period);
 		}
-		convertToDeltaArray(map, "TotalStartedCount");
-		convertToDeltaArray(map, "NewGcCount");
-		convertToDeltaArray(map, "OldGcCount");
-		convertToDeltaArray(map, "CatMessageSize");
-		convertToDeltaArray(map, "CatMessageOverflow");
-		convertDeltaExtensions(map);
+		convertDeltaMetrics(map);
 		return map;
 	}
 
