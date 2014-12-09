@@ -15,6 +15,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
@@ -378,8 +379,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean validateDomain(String domain) {
-		return !m_invalidateDomains.contains(domain);
+	public  boolean  validateDomain(String domain) {
+		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 
 }

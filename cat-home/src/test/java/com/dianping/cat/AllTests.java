@@ -15,7 +15,6 @@ import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
-import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
@@ -68,8 +67,6 @@ CrossReportMergerTest.class,
 
 /* graph test */
 EventGraphDataTest.class,
-
-HeartbeatGraphDataTest.class,
 
 ProblemGraphDataTest.class,
 

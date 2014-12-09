@@ -3,6 +3,7 @@
 <h3 class="text-error">客户端版本说明</h3>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr class="text-success"><th width="8%">版本</th><th width="82%">说明</th><th width="10%">发布时间</th></tr>
+	<tr><td>1.1.9</td><td>1、修复了消息截断时候，统计时间的bug</td><td>2014-12-09</td></tr>
 	<tr><td>1.1.5</td><td>1、修复了CAT初始化路由出错导致监控信息丢失的bug</td><td>2014-11-21</td></tr>
 	<tr><td>1.1.2</td><td>1、动态配置CAT的路由策略，支持统一项目名调整</td><td>2014-08-02</td></tr>
 	<tr><td>1.0.1</td><td>1、将ABtest的功能从监控中分离</td><td>2014-01-02</td></tr>
