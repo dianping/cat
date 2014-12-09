@@ -96,17 +96,43 @@ public class DisplayHeartbeat {
 
 	private void buildExtensionGraph(Map<String, Map<String, String>> graphs, Entry<String, Map<String, double[]>> entry) {
 		String title = entry.getKey();
-		Map<String, String> map = graphs.get(title);
-		if (map == null) {
-			map = new HashMap<String, String>();
-			graphs.put(title, map);
-		}
 
-		int i = 0;
-		for (Entry<String, double[]> item : entry.getValue().entrySet()) {
-			String key = item.getKey();
+		if (title.equalsIgnoreCase(DAL)) {
+			for (Entry<String, double[]> subEntry : entry.getValue().entrySet()) {
+				String key = subEntry.getKey();
+				int pos = key.lastIndexOf('-');
 
-			map.put(key, m_builder.build(new HeartbeatPayload(i++, key, "Minute", "Count", item.getValue())));
+				if (pos > 0) {
+					String db = "Dal " + key.substring(0, pos);
+					String subTitle = key.substring(pos + 1);
+					Map<String, String> map = graphs.get(db);
+
+					if (map == null) {
+						map = new HashMap<String, String>();
+						graphs.put(db, map);
+					}
+
+					if (!INDEX.containsKey(subTitle)) {
+						INDEX.put(subTitle, INDEX_COUNTER.getAndIncrement());
+					}
+
+					map.put(subTitle, m_builder.build(new HeartbeatPayload(INDEX.get(subTitle), subTitle, "Minute", "Count",
+					      subEntry.getValue())));
+				}
+			}
+		} else {
+			Map<String, String> map = graphs.get(title);
+			if (map == null) {
+				map = new HashMap<String, String>();
+				graphs.put(title, map);
+			}
+
+			int i = 0;
+			for (Entry<String, double[]> item : entry.getValue().entrySet()) {
+				String key = item.getKey();
+
+				map.put(key, m_builder.build(new HeartbeatPayload(i++, key, "Minute", "Count", item.getValue())));
+			}
 		}
 	}
 
@@ -383,35 +409,7 @@ public class DisplayHeartbeat {
 		Map<String, Map<String, String>> graphs = new HashMap<String, Map<String, String>>();
 
 		for (Entry<String, Map<String, double[]>> items : m_extensions.entrySet()) {
-			Map<String, double[]> datas = items.getValue();
-			if (datas != null) {
-				if (items.getKey().equalsIgnoreCase(DAL)) {
-					for (Entry<String, double[]> entry : datas.entrySet()) {
-						String key = entry.getKey();
-						int pos = key.lastIndexOf('-');
-
-						if (pos > 0) {
-							String db = "Dal " + key.substring(0, pos);
-							String title = key.substring(pos + 1);
-
-							Map<String, String> map = graphs.get(db);
-							if (map == null) {
-								map = new HashMap<String, String>();
-								graphs.put(db, map);
-							}
-
-							if (!INDEX.containsKey(title)) {
-								INDEX.put(title, INDEX_COUNTER.getAndIncrement());
-							}
-
-							map.put(title, m_builder.build(new HeartbeatPayload(INDEX.get(title), title, "Minute", "Count",
-							      entry.getValue())));
-						}
-					}
-				} else {
-					buildExtensionGraph(graphs, items);
-				}
-			}
+			buildExtensionGraph(graphs, items);
 		}
 
 		return graphs;

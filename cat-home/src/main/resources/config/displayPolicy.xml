@@ -3,4 +3,11 @@
 		<metric id="EdenUsage" unit="M" delta="false" order="1"/>
 		<metric id="SurvivorUsage" unit="M" delta="false" order="2"/>
 	</group>
+	<group id="default">
+		<metric id="TotalStartedCount" />
+		<metric id="NewGcCount" />
+		<metric id="OldGcCount" />
+		<metric id="CatMessageSize" />
+		<metric id="CatMessageOverflow" />
+	</group>
 </display-policy>
