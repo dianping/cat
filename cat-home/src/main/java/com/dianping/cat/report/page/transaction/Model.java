@@ -19,9 +19,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
-	
+
 	private List<String> m_groups;
-	
+
 	private List<String> m_groupIps;
 
 	private String m_errorTrend;
@@ -48,11 +48,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_type;
 
 	private String m_pieChart;
-	
+
+	private String m_distributionChart;
+
+	private List<DistributionDetail> m_distributionDetails;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
-	
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.HOURLY_REPORT;
@@ -64,6 +68,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public DisplayTypes getDisplayTypeReport() {
 		return m_displayTypeReport;
+	}
+
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public List<DistributionDetail> getDistributionDetails() {
+		return m_distributionDetails;
 	}
 
 	@Override
@@ -111,12 +123,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<String> getGroupIps() {
-   	return m_groupIps;
-   }
+		return m_groupIps;
+	}
 
 	public List<String> getGroups() {
-   	return m_groups;
-   }
+		return m_groups;
+	}
 
 	public String getHitTrend() {
 		return m_hitTrend;
@@ -162,6 +174,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_displayTypeReport = dispalyReport;
 	}
 
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
+	public void setDistributionDetails(List<DistributionDetail> distributionDetails) {
+		m_distributionDetails = distributionDetails;
+	}
+
 	public void setErrorTrend(String errorTrend) {
 		m_errorTrend = errorTrend;
 	}
@@ -183,12 +203,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setGroupIps(List<String> groupIps) {
-   	m_groupIps = groupIps;
-   }
+		m_groupIps = groupIps;
+	}
 
 	public void setGroups(List<String> groups) {
-   	m_groups = groups;
-   }
+		m_groups = groups;
+	}
 
 	public void setHitTrend(String hitTrend) {
 		m_hitTrend = hitTrend;
@@ -217,5 +237,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
-	
+
 }

@@ -8,7 +8,7 @@ import org.unidal.helper.Files;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 
-public class ProblemURLFilterTest {
+public class ProblemFilterTest {
 
 	@Test
 	public void test() throws Exception {

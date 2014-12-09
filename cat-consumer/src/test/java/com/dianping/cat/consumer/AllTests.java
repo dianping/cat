@@ -29,7 +29,7 @@ import com.dianping.cat.consumer.problem.ProblemHandlerTest;
 import com.dianping.cat.consumer.problem.ProblemReportConvertorTest;
 import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
 import com.dianping.cat.consumer.problem.ProblemReportTest;
-import com.dianping.cat.consumer.problem.ProblemURLFilterTest;
+import com.dianping.cat.consumer.problem.ProblemFilterTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
@@ -99,7 +99,7 @@ DumpAnalyzerTest.class,
 
 TransactionReportTypeAggergatorTest.class,
 
-ProblemURLFilterTest.class, MetricAnalyzerTest.class,
+ProblemFilterTest.class, MetricAnalyzerTest.class,
 
 ProblemReportConvertorTest.class,
 

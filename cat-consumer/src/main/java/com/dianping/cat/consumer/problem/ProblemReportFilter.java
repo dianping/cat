@@ -24,27 +24,30 @@ public class ProblemReportFilter extends BaseVisitor {
 	public void visitMachine(Machine machine) {
 		Collection<Entity> entities = machine.getEntities().values();
 		List<Entity> longUrls = new ArrayList<Entity>();
-		List<Entity> errorCodes = new ArrayList<Entity>();
 
 		for (Entity e : entities) {
 			String status = e.getStatus();
+			StringBuilder sb = new StringBuilder();
 			int length = status.length();
+			char c;
+			String s = "";
 
 			for (int i = 0; i < length; i++) {
-				// invalidate char
-				if (status.charAt(i) > 126 || status.charAt(i) < 32) {
-					errorCodes.add(e);
-					break;
+				c = status.charAt(i);
+
+				if (c > 126 || c < 32) {
+					s = " ";
+				} else {
+					s = String.valueOf(c);
 				}
+				sb.append(s);
 			}
+			e.setStatus(sb.toString().replaceAll(" +", " "));
+			e.setId(e.getType() + ":" + e.getStatus());
 
 			if (ProblemType.LONG_URL.getName().equals(e.getType())) {
 				longUrls.add(e);
 			}
-		}
-
-		for (int i = 0; i < errorCodes.size(); i++) {
-			entities.remove(errorCodes.get(i));
 		}
 
 		int size = longUrls.size();
