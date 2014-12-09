@@ -6,7 +6,14 @@
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.transaction.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
-
+<style type="text/css">
+.data th{
+	word-break: normal;
+}
+.data td{
+	word-break: normal;
+}
+</style>
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
