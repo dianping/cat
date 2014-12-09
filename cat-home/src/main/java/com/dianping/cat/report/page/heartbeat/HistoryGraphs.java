@@ -36,6 +36,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 
 	private static final int MINUTE_ONE_DAY = 1440;
 
+	private Set<String> m_extensionMetrics = new HashSet<String>();
+
 	private void addMachineDataToMap(Map<String, double[]> datas, Machine machine) {
 		for (Period period : machine.getPeriods()) {
 			int minute = period.getMinute();
@@ -63,9 +65,11 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			}
 			dealWithExtensions(datas, minute, period);
 		}
+		convertToDeltaArray(datas);
 	}
 
 	private Map<String, double[]> buildHeartbeatDatas(HeartbeatReport report, String ip) {
+		m_extensionMetrics = new HashSet<String>();
 		Map<String, double[]> datas = new HashMap<String, double[]>();
 		Machine machine = report.findMachine(ip);
 
@@ -75,11 +79,43 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 		return datas;
 	}
 
+	private void convertToDeltaArray(Map<String, double[]> datas) {
+		convertToDeltaArrayPerHour(datas, "TotalStartedThread");
+		convertToDeltaArrayPerHour(datas, "StartedThread");
+		convertToDeltaArrayPerHour(datas, "NewGcCount");
+		convertToDeltaArrayPerHour(datas, "OldGcCount");
+		convertToDeltaArrayPerHour(datas, "CatMessageSize");
+		convertToDeltaArrayPerHour(datas, "CatMessageOverflow");
+		for (String metric : m_extensionMetrics) {
+			convertToDeltaArrayPerHour(datas, metric);
+		}
+	}
+
+	private void convertToDeltaArrayPerHour(Map<String, double[]> datas, String metric) {
+		double[] values = datas.get(metric);
+
+		if (values != null) {
+			double[] targets = new double[MINUTE_ONE_DAY];
+
+			for (int i = 1; i < MINUTE_ONE_DAY; i++) {
+				if (values[i - 1] > 0) {
+					double delta = values[i] - values[i - 1];
+
+					if (delta >= 0) {
+						targets[i] = delta;
+					}
+				}
+			}
+			datas.put(metric, targets);
+		}
+	}
+
 	private void dealWithExtensions(Map<String, double[]> datas, int minute, Period period) {
 		for (String group : period.getExtensions().keySet()) {
 			Extension currentExtension = period.findExtension(group);
 
 			for (String metric : currentExtension.getDetails().keySet()) {
+				m_extensionMetrics.add(metric);
 				double value = currentExtension.findDetail(metric).getValue();
 				int unit = m_manager.queryUnit(metric);
 				double actualValue = value / unit;
