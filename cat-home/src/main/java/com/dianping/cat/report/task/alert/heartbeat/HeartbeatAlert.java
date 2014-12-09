@@ -140,7 +140,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private void convertToDelta(Map<String, double[]> map, String metric) {
 		double[] sources = map.get(metric);
-		
+
 		if (sources != null) {
 			double[] targets = new double[60];
 
@@ -260,9 +260,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				for (Machine machine : m_currentReport.getMachines().values()) {
 					String ip = machine.getIp();
 					double[] arguments = generateArgumentMap(machine).get(metric);
-					double[] values = extract(arguments, maxMinute, minute);
 
-					processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+					if (arguments != null) {
+						double[] values = extract(arguments, maxMinute, minute);
+
+						processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+					}
 				}
 			} else if (minute < 0) {
 				checkAndGenerateLastReport(domain);
@@ -270,9 +273,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				for (Machine machine : m_lastReport.getMachines().values()) {
 					String ip = machine.getIp();
 					double[] arguments = generateArgumentMap(machine).get(metric);
-					double[] values = extract(arguments, maxMinute, 59);
 
-					processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+					if (arguments != null) {
+						double[] values = extract(arguments, maxMinute, 59);
+
+						processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+					}
 				}
 			} else {
 				checkAndGenerateCurrentReport(domain);
@@ -286,10 +292,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 						Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
 						Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
 
-						double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric), maxMinute,
-						      minute);
+						if (lastHourArguments != null && currentHourArguments != null) {
+							double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
+							      maxMinute, minute);
 
-						processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+							processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+						}
 					}
 				}
 			}
