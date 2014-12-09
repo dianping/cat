@@ -283,7 +283,7 @@ public class Handler implements PageHandler<Context> {
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			
+
 			calculateTps(payload, report);
 			if (report != null) {
 				model.setReport(report);
@@ -336,43 +336,12 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
 		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
 
 		chartVisitor.visitTransactionReport(report);
+		detailVisitor.visitTransactionReport(report);
 		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-		model.setDistributionDetails(buildDistributionDetails(report, type, name));
-	}
-
-	private List<DistributionDetail> buildDistributionDetails(TransactionReport report, String type, String name) {
-		List<DistributionDetail> details = new ArrayList<DistributionDetail>();
-
-		for (Machine machine : report.getMachines().values()) {
-			if (!Constants.ALL.equals(machine.getIp())) {
-				for (TransactionType t : machine.getTypes().values()) {
-					if (type != null && type.equals(t.getId())) {
-						DistributionDetail detail = new DistributionDetail();
-
-						if (StringUtils.isEmpty(name)) {
-							detail.setTotalCount(t.getTotalCount()).setFailCount(t.getFailCount())
-							      .setFailPercent(t.getFailPercent()).setIp(machine.getIp()).setAvg(t.getAvg())
-							      .setMin(t.getMin()).setMax(t.getMax()).setStd(t.getStd());
-
-						} else {
-							for (TransactionName n : t.getNames().values()) {
-								if (name.equals(n.getId())) {
-									detail.setTotalCount(n.getTotalCount()).setFailCount(n.getFailCount())
-									      .setFailPercent(n.getFailPercent()).setIp(machine.getIp()).setAvg(n.getAvg())
-									      .setMin(n.getMin()).setMax(n.getMax()).setStd(n.getStd());
-									break;
-								}
-							}
-						}
-						details.add(detail);
-						break;
-					}
-				}
-			}
-		}
-		return details;
+		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {
