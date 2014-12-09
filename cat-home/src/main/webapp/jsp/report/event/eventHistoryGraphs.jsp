@@ -40,13 +40,6 @@
 		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
 	}
 </script>
-<style type="text/css">
-.graph {
-	width: 600px;
-	height: 400px;
-	margin: 4px auto;
-}
-</style>
 <c:if test="${payload.ipAddress eq 'All' }">
 <table class='data' style="width:100%;">
 	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
@@ -70,10 +63,5 @@
 <div id="distributionChart" class="graph"></div>
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
 </c:if>
-<script type="text/javascript">
-	
-</script>
-
-
 <br>
 
