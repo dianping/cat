@@ -5432,6 +5432,9 @@
 					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>

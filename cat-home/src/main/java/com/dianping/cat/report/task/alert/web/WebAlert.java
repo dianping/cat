@@ -34,11 +34,16 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
+import com.dianping.cat.system.config.WebRuleConfigManager;
 
 public class WebAlert extends BaseAlert implements Task {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
+	
+	@Inject
+	protected WebRuleConfigManager m_ruleConfigManager;
 
 	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {
@@ -200,6 +205,11 @@ public class WebAlert extends BaseAlert implements Task {
 	@Override
 	public String getName() {
 		return AlertType.Web.getName();
+	}
+
+	@Override
+	protected BaseRuleConfigManager getRuleConfigManager() {
+		return m_ruleConfigManager;
 	}
 
 	private void processUrl(PatternItem item) {

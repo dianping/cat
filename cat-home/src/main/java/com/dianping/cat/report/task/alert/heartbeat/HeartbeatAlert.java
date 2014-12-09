@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +16,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -33,7 +34,9 @@ import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 
 public class HeartbeatAlert extends BaseAlert implements Task {
 
@@ -49,13 +52,14 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	@Inject
 	private ServerConfigManager m_configManager;
 
+	@Inject
+	protected HeartbeatRuleConfigManager m_ruleConfigManager;
+
 	private HeartbeatReport m_lastReport;
 
 	private HeartbeatReport m_currentReport;
 
-	private static final String[] m_metrics = { "ThreadCount", "DaemonCount", "TotalStartedCount", "CatThreadCount",
-	      "PiegonThreadCount", "HttpThreadCount", "NewGcCount", "OldGcCount", "MemoryFree", "HeapUsage",
-	      "NoneHeapUsage", "SystemLoadAverage", "CatMessageOverflow", "CatMessageSize" };
+	private Set<String> m_extentionMetrics = new HashSet<String>();
 
 	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
 		double[] array = map.get(name);
@@ -67,20 +71,25 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
-		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
-			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
-				double[] array = map.get(metricName);
+		for (String metricName : extractExtentionMetrics(period)) {
+			double[] array = map.get(metricName);
 
-				if (array == null) {
-					array = new double[60];
-					map.put(metricName, array);
+			if (array == null) {
+				array = new double[60];
+				map.put(metricName, array);
+			}
+			try {
+				int unit = m_displayManager.queryUnit(metricName);
+				for (Extension extension : period.getExtensions().values()) {
+					Detail detail = extension.findDetail(metricName);
+
+					if (detail != null) {
+						array[index] = detail.getValue() / unit;
+						return;
+					}
 				}
-				try {
-					int unit = m_displayManager.queryUnit(groupName, metricName);
-					array[index] = period.findExtension(groupName).findDetail(metricName).getValue() / unit;
-				} catch (Exception e) {
-					array[index] = 0;
-				}
+			} catch (Exception e) {
+				array[index] = 0;
 			}
 		}
 	}
@@ -109,10 +118,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	private void convertDeltaExtensions(Map<String, double[]> map) {
-		for (String groupName : m_displayManager.queryOrderedGroupNames()) {
-			for (String metricName : m_displayManager.queryOrderedMetricNames(groupName)) {
-				if (m_displayManager.isDelta(groupName, metricName)) {
-					double[] sources = map.get(metricName);
+		for (String metricName : m_extentionMetrics) {
+			if (m_displayManager.isDelta(metricName)) {
+				double[] sources = map.get(metricName);
+
+				if (sources != null) {
 					double[] targets = new double[60];
 
 					for (int i = 1; i < 60; i++) {
@@ -168,7 +178,20 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		return result;
 	}
 
+	private List<String> extractExtentionMetrics(Period period) {
+		List<String> metrics = new ArrayList<String>();
+
+		for (Extension extension : period.getExtensions().values()) {
+			Set<String> tmpMetrics = extension.getDetails().keySet();
+
+			metrics.addAll(tmpMetrics);
+			m_extentionMetrics.addAll(tmpMetrics);
+		}
+		return metrics;
+	}
+
 	private Map<String, double[]> generateArgumentMap(Machine machine) {
+		m_extentionMetrics = new HashSet<String>();
 		Map<String, double[]> map = new HashMap<String, double[]>();
 		List<Period> periods = machine.getPeriods();
 
@@ -214,24 +237,22 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		}
 	}
 
-	private List<String> getAllMetrics() {
-		List<String> metrics = new ArrayList<String>();
-
-		metrics.addAll(Arrays.asList(m_metrics));
-		metrics.addAll(m_displayManager.queryMetrics());
-		return metrics;
-	}
-
 	@Override
 	public String getName() {
 		return AlertType.HeartBeat.getName();
 	}
 
+	@Override
+	protected BaseRuleConfigManager getRuleConfigManager() {
+		return m_ruleConfigManager;
+	}
+
 	private void processDomain(String domain) {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
+		List<String> metrics = m_ruleConfigManager.queryMetrics();
 
-		for (String metric : getAllMetrics()) {
+		for (String metric : metrics) {
 			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();

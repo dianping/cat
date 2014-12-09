@@ -11,7 +11,7 @@
   <entity name="metric">
     <attribute name="id" value-type="String" />
     <attribute name="unit" value-type="String" />
-    <attribute name="isDelta" value-type="boolean" />
+    <attribute name="delta" value-type="boolean" />
     <attribute name="order" value-type="int" />
   </entity>
 </model>

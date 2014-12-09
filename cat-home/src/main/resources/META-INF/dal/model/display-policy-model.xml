@@ -11,8 +11,9 @@
   <entity name="metric">
     <attribute name="id" value-type="String" key="true" />
     <attribute name="unit" value-type="String" />
-    <attribute name="isDelta" value-type="boolean" />
+    <attribute name="delta" value-type="boolean" />
     <attribute name="order" value-type="int" />
+    <attribute name="alert" value-type="boolean" default-value="true" />
   </entity>
 </model>
 
