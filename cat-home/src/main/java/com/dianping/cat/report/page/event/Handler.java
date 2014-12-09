@@ -236,10 +236,20 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+				report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(),
+				      payload.getHistoryEndDate());
+				buildDistributionInfo(model, type, name, report);
+			}
+
 			m_historyGraphs.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
 			report = getEventGraphReport(model, payload);
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+				buildDistributionInfo(model, type, name, report);
+			}
+
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
 
 			if (name == null || name.length() == 0) {
@@ -276,6 +286,8 @@ public class Handler implements PageHandler<Context> {
 			report = getEventGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 
+			buildDistributionInfo(model, type, name, report);
+
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
@@ -284,12 +296,26 @@ public class Handler implements PageHandler<Context> {
 			buildEventNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
+			report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = filterReportByGroup(report, domain, group);
+
+			buildDistributionInfo(model, type, name, report);
 			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
 			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
+
+		chartVisitor.visitEventReport(report);
+		detailVisitor.visitEventReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {

@@ -14,12 +14,16 @@ public class TpsStatistics extends BaseVisitor {
 
 	@Override
 	public void visitName(TransactionName name) {
-		name.setTps(name.getTotalCount() * 1.0 / m_duration);
+		if (m_duration > 0) {
+			name.setTps(name.getTotalCount() * 1.0 / m_duration);
+		}
 	}
 
 	@Override
 	public void visitType(TransactionType type) {
-		type.setTps(type.getTotalCount() * 1.0 / m_duration);
-		super.visitType(type);
+		if (m_duration > 0) {
+			type.setTps(type.getTotalCount() * 1.0 / m_duration);
+			super.visitType(type);
+		}
 	}
 }

@@ -21,8 +21,10 @@
 	<tr>
 		<td><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
 		<div id="errorTrend" class="graph"></div></td>
+		<c:if test="${payload.ipAddress eq 'All' }">
 		<td><h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
 		<div id="distributionChart" class="graph"></div></td>
+		</c:if>
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="errorTrendMeta">${model.errorsTrend}</div>
