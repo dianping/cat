@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
@@ -229,10 +230,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private void processDomain(String domain) {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
-		Set<String> metrics = m_ruleConfigManager.queryMetrics();
+		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 
-		for (String metric : metrics) {
-			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
+		for (Entry<String, List<Config>> entry : configsMap.entrySet()) {
+			String metric = entry.getKey();
+			List<Config> configs = entry.getValue();
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();
 			List<Condition> conditions = resultPair.getValue();
