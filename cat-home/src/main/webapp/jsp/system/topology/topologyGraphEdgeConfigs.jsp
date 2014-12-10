@@ -76,7 +76,7 @@
 			<c:if test="${w:size(model.edgeConfigs) ==0 }">
 				<div class="row-fluid">
 				<div class="span10"><h5 class="text-center text-error">拓扑图依赖关系配置信息 </h5></div>
-				<div class="span2 text-center"><a class="btn btn-primary btn-small  update" href="?op=topologyGraphEdgeConfigAdd">新增</a></div>
+				<div class="span2 text-center"><a class="btn btn-primary btn-sm  update" href="?op=topologyGraphEdgeConfigAdd">新增</a></div>
 			</div>
 			</c:if>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
@@ -100,7 +100,7 @@
 				     			<th><h5 class='text-center'>异常Warning阀值</h5></th>
 				     			<th><h5 class='text-center'>异常Error阀值</h5></th><th><h5 class='text-center'>响应时间Warning阀值</h5></th>
 				     			<th><h5 class='text-center'>响应时间Error阀值</h5></th>
-				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn btn-primary btn-small update" href="?op=topologyGraphEdgeConfigAdd&type=${item.key}">新增</a></h5></th>
+				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn btn-primary btn-sm update" href="?op=topologyGraphEdgeConfigAdd&type=${item.key}">新增</a></h5></th>
 				     		</tr>
 				     		<tr class="text-error">
 				     			<td><h5>默认值</h5></td>
@@ -121,8 +121,8 @@
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
 					     		<td style="text-align:right">${temp.warningResponseTime}</td>
 					     		<td style="text-align:right">${temp.errorResponseTime}</td>
-						     	<td style="text-align:center"><a href="?op=topologyGraphEdgeConfigAdd&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn update btn-primary btn-small">修改</a>
-						     		<a href="?op=topologyGraphEdgeConfigDelete&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn btn-primary btn-small btn-danger delete">删除</a></td>
+						     	<td style="text-align:center"><a href="?op=topologyGraphEdgeConfigAdd&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn update btn-primary btn-sm">修改</a>
+						     		<a href="?op=topologyGraphEdgeConfigDelete&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn btn-primary btn-sm btn-danger delete">删除</a></td>
 					     		</tr>
 					     	</c:forEach>
 				     	</table>

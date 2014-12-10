@@ -27,26 +27,25 @@
 		$('#frequentNavbar').html(html);
 	});
 </script>
-
 <div class="report">
-	<table class="header">
-		<tr>
-			<td class="position">项目：<span class="text-error">${model.domain}</span>
+	<div class="breadcrumbs" id="breadcrumbs">
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+		<span class="position"><span class="text-danger"><strong>&nbsp;&nbsp;${model.domain}</strong></span>
 			【<a href="javascript:showDomain()" id="switch">切换</a>】
 			【<a href="javascript:showFrequent()" id="frequent">常用</a>】
-			</td> 
-			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><jsp:invoke fragment="subtitle"/></span></td>
-			<td class="nav">
-				<span class="text-error switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-error">【切到历史模式】</span></a></span>
-				<c:forEach var="nav" items="${model.navs}">
+			</span>
+		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
+		<!-- #section:basics/content.searchbox -->
+		<div class="nav-search nav" id="nav-search">
+			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
-			</td>
-		</tr>
-	</table>
-	
-	<div class="domainNavbar" style="display:none;">
+		</div><!-- /.nav-search -->
+	</div>
+	<div class="domainNavbar" style="display:none;font-size:small;">
 		<table border="1" rules="all">
 			<c:forEach var="item" items="${model.domainGroups}">
 				<tr>
@@ -75,7 +74,6 @@
 	<div class="frequentNavbar" style="display:none;font-size:small">
 		<table class="table" border="1" rules="all">
 			<tr>
-				<td style="width:70px;" class="text-success">最近访问</td>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>
 		</table>

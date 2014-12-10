@@ -44,7 +44,7 @@
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
 	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
 	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
-	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small btn-primary">新增</a></h5></th>
+	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm btn-primary">新增</a></h5></th>
 	     		</tr>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
@@ -52,8 +52,8 @@
 	     			<td>${item.productlineText}</td>
 	     			<td>${item.metricText}</td>
 		     		<td style="text-align:center;white-space: nowrap">
-		     			<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-small">修改</a>
-			     		<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-primary btn-small btn-danger delete">删除</a>
+		     			<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm">修改</a>
+			     		<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-primary btn-sm btn-danger delete">删除</a>
 			     	</td>
 		     		</tr>
 		     	</c:forEach>

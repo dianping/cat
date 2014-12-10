@@ -4,155 +4,461 @@
 <jsp:useBean id="navBar"
 	class="com.dianping.cat.report.view.NavigationBar" scope="page" />
 <res:bean id="res" />
-<html>
-<head>
-<title>CAT - ${model.page.description}</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<res:cssSlot id="head-css" />
-<res:jsSlot id="head-js" />
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
-<res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
-<res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
-</head>
-	<div class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-       	  <a class="brand" style="padding-right:20px" href="/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CAT</a>
-          <div class="nav-collapse collapse">
-          	<div class="nav pull-right">
-					<li id="loginInfo" ></li>
-          	</div>
-          	
-           <ul class="nav">
-            	<c:forEach var="page" items="${navBar.visiblePages}">
-					<c:if test="${page.standalone}">
-						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
-							href="${model.webapp}/${page.moduleName}/${page.path}?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">${page.title}</a></li>
-					</c:if>
-					<c:if
-						test="${not page.standalone and model.page.name == page.name}">
-						<li class="active"><a href="#">${page.title}</a></li>
-					</c:if>
-				</c:forEach>
-            </ul> 
-            <ul class="nav">
-          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Monitors<b class="caret"></b></a>
-          			<ul class="dropdown-menu">
-					<li class="nav-header">监控大盘</li>
-					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">系统报错大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/metric?op=dashboard&domain=${model.domain}">业务监控大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/network?op=dashboard&domain=${model.domain}">网络监控大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控大盘</a></li>
-					<li class="nav-header">监控报表</li>
-					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">数据库监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息查询</a></li>
-					<li class="nav-header">离线报表</li>
-					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">项目资源消耗</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/highload?&op=${payload.action.name}">全局资源消耗</a></li>
-	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">报表容量统计</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">全局异常统计</a></li>
-				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上JAR版本</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
-				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
-					<li class="nav-header">订阅报表</li>
-				    <li><a style="padding:1px 30px" href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
-	  				<li><a style="padding:1px 30px" href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
-	          		</ul>
-          		</li>
-          	</ul>
-          	<ul class="nav">
-         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configs<b class="caret"></b></a>
-          		<ul class="dropdown-menu">
-		           <li class='nav-header' style="margin-top:0px;">项目配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">监控分组配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRule">WEB告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appList">APP监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRule">APP告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
-		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=transactionRule">响应时间告警</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
-			       <!-- <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">框架异常配置</a></li> -->
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=displayPolicy">心跳报表配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=heartbeatRuleConfigList">心跳告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">应用阀值配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">应用依赖配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigList">网络告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=databaseRuleConfigList">数据库告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigList">系统告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
-			      </ul>
-			     </li>
-        	 </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true" style="width:380px">
-		<form class="form-horizontal" name="login" method="post" action="/cat/s/login">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h5 id="myModalLabel" class="text-success text-center">用户登录</h5>
+<html lang="en"><head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta charset="utf-8">
+	<title>CAT</title>
+	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-skins.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-rtl.min.css">
+	<script src="${model.webapp}/assets/js/ace-extra.min.js"></script>
+	<script src="${model.webapp}/assets/js/bootstrap.min.js"></script>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+	<res:useCss value='${res.css.local.body_css}' target="head-css" />
+	</head>
+
+	<body class="no-skin">
+		<!-- #section:basics/navbar.layout -->
+		<div id="navbar" class="navbar navbar-default">
+			<script type="text/javascript">
+				try{ace.settings.check('navbar' , 'fixed')}catch(e){}
+			</script>
+
+			<div class="navbar-container" id="navbar-container">
+				<!-- #section:basics/sidebar.mobile.toggle -->
+				<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler">
+					<span class="sr-only">Toggle sidebar</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+
+				<!-- /section:basics/sidebar.mobile.toggle -->
+				<div class="navbar-header pull-left">
+					<!-- #section:basics/navbar.layout.brand -->
+					<a href="#" class="navbar-brand">
+						<small>
+							CAT
+						</small>
+					</a>
+
+					<!-- /section:basics/navbar.layout.brand -->
+
+					<!-- #section:basics/navbar.toggle -->
+
+					<!-- /section:basics/navbar.toggle -->
+				</div>
+				<!-- #section:basics/navbar.dropdown -->
+				<div class="navbar-buttons navbar-header pull-right" role="navigation">
+				<ul class="nav ace-nav" style="height:auto;">
+					<!-- #section:basics/navbar.user_menu -->
+					<li class="light-blue">
+						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
+							<span class="user-info">
+								<span id="loginInfo" ></span>
+							</span>
+		
+							<i class="ace-icon fa fa-caret-down"></i>
+						</a>
+						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+							<li>
+								<a href="#">
+									<a href="/cat/s/login?op=logout" >注销</a>
+								</a>
+							</li>
+						</ul>
+					</li>
+		
+					<!-- /section:basics/navbar.user_menu -->
+				</ul>
+			</div> 
+				<!-- /section:basics/navbar.dropdown -->
+			</div><!-- /.navbar-container -->
+		</div>
+
+		<!-- /section:basics/navbar.layout -->
+		<div class="main-container" id="main-container">
+			<script type="text/javascript">
+				try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+			</script>
+			<!-- #section:basics/sidebar -->
+			<div id="sidebar" class="sidebar   responsive">
+				<script type="text/javascript">
+					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+				</script>
+				<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+					<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+						<button class="btn btn-success">
+							<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
+						</button>
+						<button class="btn btn-info">
+							<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
+						</button>
+						<!-- #section:basics/sidebar.layout.shortcuts -->
+						<button class="btn btn-warning">
+							<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
+						</button>
+						<button class="btn btn-danger">
+							<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
+						</button>
+					</div>
+					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+						<span class="btn btn-success"></span>
+						<span class="btn btn-info"></span>
+						<span class="btn btn-warning"></span>
+						<span class="btn btn-danger"></span>
+					</div>
+				</div>
+				<ul class="nav  nav-list" style="top: 0px;">
+					<li id="Web_report" >
+						<a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text">Web</span>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					</li><li id="App_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">App</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
+								<b class="arrow"></b></li>
+							<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
+								<b class="arrow"></b></li>
+							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
+								<b class="arrow"></b></li>
+							<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
+								<b class="arrow"></b></li>
+							<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
+								<b class="arrow"></b></li>
+						</ul>
+					</li>
+					<li id="Metric_report" >
+						<a href="/cat/r/metric?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+							<i class="menu-icon fa fa-tachometer"></i>
+							<span class="menu-text">Metric</span>
+						</a>
+						<b class="arrow"></b>
+					</li>
+					<li id="Transaction_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Transaction</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Transaction_report_hour"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Transaction_report_day"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="Transaction_report_week"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="Transaction_report_month"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Event_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Event</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Event_report_hour"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Event_report_day"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="Event_report_week"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="Event_report_month"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Problem_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Problem</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Problem_report_hour"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Problem_report_day"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="Problem_report_week"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="Problem_report_month"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Heartbeat_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Heartbeat</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Heartbeat_report_hour"><a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Heartbeat_report_day"><a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Cross_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Cross</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Cross_report_hour"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cross_report_day"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cross_report_week"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cross_report_month"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Cache_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Cache</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="Cache_report_hour"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cache_report_day"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cache_report_week"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="Cache_report_month"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+				
+					</li><li id="Dependency_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Dependency</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+						</ul>
+				
+					</li><li id="State_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">State</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="State_report_hour"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<b class="arrow"></b></li>
+							<li id="State_report_day"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+								<b class="arrow"></b></li>
+							<li id="State_report_week"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
+								<b class="arrow"></b></li>
+							<li id="State_report_month"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
+								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
+								<b class="arrow"></b></li>
+						</ul>
+					</li></ul>
+			</ul>
+				
+				<!-- #section:basics/sidebar.layout.minimize -->
+				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+				</div>
+
+				<!-- /section:basics/sidebar.layout.minimize -->
+				<script type="text/javascript">
+					try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+				</script>
 			</div>
-			<div class="control-group">
-				<label class="control-label text-success" for="account">用户名</label>
-				<div class="controls">
-					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
-						placeholder="域账号（例如:yong.you）" />
+				
+			<!-- /section:basics/sidebar -->
+			<div class="main-content">
+ 				<div id="dialog-message" class="hide">
+					<p>
+						你确定要删除吗？(不可恢复)
+					</p>
+				</div>
+ 				<div style="padding-right:8px;">
+ 				<jsp:doBody/>
+ 				</div>
+				<!-- #section:basics/content.breadcrumbs -->
+				<!-- /section:basics/content.breadcrumbs -->
+			</div><!-- /.main-content -->
+
+			<div class="footer">
+				<div class="footer-inner">
+					<!-- #section:basics/footer -->
+					<div class="footer-content">
+						<span class="bigger-120">
+							<span class="blue bolder">CAT</span>
+							Application © 2003-2014
+						</span>
+					</div>
+					<!-- /section:basics/footer -->
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label text-success" for="password">密码</label>
-				<div class="controls">
-					<input type="password" name="password" id="password" onkeydown='if(event.keyCode==13){loginSubmit.click()}' style="height:auto" class="input-xlarge"
-						placeholder="域账号密码（例如:XXX）" />
-				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-				<input id="loginSubmit" type="submit"  class="btn btn-primary" name="login" value="登录" />
-			</div>
-		</form>
-	</div>
-<style>
-	.nav-list  li  a{
-		padding:0px 15px;
-	}
-	.nav li  +.nav-header{
-		margin-top:2px;
-	}
-	.nav-header{
-		padding:1px 3px;
-	}
-	.row-fluid .span2{
-		width:12%;
-	}
-</style>
-	<script>
+
+			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
+				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
+			</a>
+		</div><!-- /.main-container -->
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='${model.webapp}/assets/js/jquery.min.js'>"+"<"+"/script>");
+		</script><script src="${model.webapp}/assets/js/jquery.min.js"></script>
+
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+<script type="text/javascript">
+ window.jQuery || document.write("<script src='${model.webapp}/assets/js/jquery1x.min.js'>"+"<"+"/script>");
+</script>
+<![endif]-->
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${model.webapp}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+
+		<!-- page specific plugin scripts -->
+		<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
+		<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
+		<!-- ace scripts -->
+		<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
+		<script src="${model.webapp}/assets/js/ace.min.js"></script>
+
+		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($) {
+				//override dialog's title function to allow for HTML titles
+				$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+					_title: function(title) {
+						var $title = this.options.title || '&nbsp;'
+						if( ("title_html" in this.options) && this.options.title_html == true )
+							title.html($title);
+						else title.text($title);
+					}
+				}));
+			
+				$(".delete").on('click', function(e) {
+					e.preventDefault();
+					var anchor = this;
+					var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
+						modal: true,
+						title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CRM管理系统提示</h4></div>",
+						title_html: true,
+						buttons: [ 
+							{
+								text: "Cancel",
+								"class" : "btn btn-xs",
+								click: function() {
+									$( this ).dialog( "close" ); 
+								} 
+							},
+							{
+								text: "OK",
+								"class" : "btn btn-primary btn-xs",
+								click: function() {
+									window.location.href=anchor.href;
+								} 
+							}
+						]
+					});
+			
+				});
+				
+				//tooltips
+				$( "#show-option" ).tooltip({
+					show: {
+						effect: "slideDown",
+						delay: 250
+					}
+				});
+			
+				$( "#hide-option" ).tooltip({
+					hide: {
+						effect: "explode",
+						delay: 250
+					}
+				});
+				$( "#open-event" ).tooltip({
+					show: null,
+					position: {
+						my: "left top",
+						at: "left bottom"
+					},
+					open: function( event, ui ) {
+						ui.tooltip.animate({ top: ui.tooltip.position().top + 10 }, "fast" );
+					}
+				});
+				//Menu
+				$( "#menu" ).menu();
+			
+				//spinner
+				var spinner = $( "#spinner" ).spinner({
+					create: function( event, ui ) {
+						//add custom classes and icons
+						$(this)
+						.next().addClass('btn btn-success').html('<i class="ace-icon fa fa-plus"></i>')
+						.next().addClass('btn btn-danger').html('<i class="ace-icon fa fa-minus"></i>')
+						
+						//larger buttons on touch devices
+						if('touchstart' in document.documentElement) 
+							$(this).closest('.ui-spinner').addClass('ui-spinner-touch');
+					}
+				});
+			
+				//slider example
+				$( "#slider" ).slider({
+					range: true,
+					min: 0,
+					max: 500,
+					values: [ 75, 300 ]
+				});
+			
+			
+				//jquery accordion
+				$( "#accordion" ).accordion({
+					collapsible: true ,
+					heightStyle: "content",
+					animate: 250,
+					header: ".accordion-header"
+				}).sortable({
+					axis: "y",
+					handle: ".accordion-header",
+					stop: function( event, ui ) {
+						// IE doesn't register the blur when sorting
+						// so trigger focusout handlers to remove .ui-state-focus
+						ui.item.children( ".accordion-header" ).triggerHandler( "focusout" );
+					}
+				});
+				//jquery tabs
+				$( "#tabs" ).tabs();
+			});
+		</script>
+		<script>
 		function getcookie(objname) {
 			var arrstr = document.cookie.split("; ");
 			for ( var i = 0; i < arrstr.length; i++) {
@@ -195,17 +501,25 @@
 				}
 				var name = decodeURI(temp);
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="/cat/s/login?op=logout">'+name +'&nbsp;登出</a>';
-			}else{
+				loginInfo.innerHTML ='欢迎您,'+name;
+			} else{
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="#loginModal" data-toggle="modal">登录</a>';
+				loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';
+			}
+			
+			
+			var page = '${model.page.title}';
+			$('#'+page+"_report").addClass("active open");
+			
+			var op = '${payload.action.name}';
+			
+			if(op=='view'){
+				$('#'+page+"_report_hour").addClass("active");
+			}else{
+				$('#'+page+"_report_"+'${payload.reportType}').addClass("active");
 			}
 		});
 	</script>
-	<jsp:doBody />
-	<table class="footer" style="margin-top:5px;">
-		<tr><td>©2003-2014 dianping.com, All Rights Reserved.</td></tr>
-	</table>
-	<res:jsSlot id="bottom-js" />
 </body>
 </html>
+

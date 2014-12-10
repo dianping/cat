@@ -24,7 +24,7 @@
 					<td style="text-align:right;">${itemValue.errorCount}</td>
 					<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 					<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
-					<td><a class="nodeConfigUpdate btn btn-primary btn-small" target="_blank" href="/cat/s/config?op=topologyGraphNodeConfigAdd&type=${itemValue.name}&domain=${model.domain}">配置阀值</a></td>
+					<td><a class="nodeConfigUpdate btn btn-primary btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphNodeConfigAdd&type=${itemValue.name}&domain=${model.domain}">配置阀值</a></td>
 				</tr>		
 			</c:forEach></tbody>
 		</table>
@@ -54,10 +54,10 @@
 					<td>
 					<c:choose>
 						<c:when test="${itemValue.type eq 'PigeonServer' || itemValue.type eq 'PigeonService'}">
-							<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=PigeonCall&to=${model.domain}&from=${itemValue.target}">配置阀值</a>
+							<a class="btn btn-primary edgeConfigUpdate btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=PigeonCall&to=${model.domain}&from=${itemValue.target}">配置阀值</a>
 						</c:when>
 						<c:otherwise>
-							<a class="btn btn-primary edgeConfigUpdate btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a>
+							<a class="btn btn-primary edgeConfigUpdate btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a>
 						</c:otherwise>
 					</c:choose>
 					</td>

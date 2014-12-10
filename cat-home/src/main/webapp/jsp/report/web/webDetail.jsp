@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <div class="report">
-		<table>
+		<table width="100%">
 			<tr>
 				<th class="left">
 				<div id="datetimepicker1" class="input-append date"

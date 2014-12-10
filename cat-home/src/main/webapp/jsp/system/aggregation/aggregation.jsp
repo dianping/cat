@@ -35,7 +35,7 @@
 					<th width="15%">联系邮件</th>
 					<!-- <th width="15%">显示名称</th>
 					<th width="8%">示例</th> -->
-					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=aggregationUpdate">新增</a></th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=aggregationUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.aggregationRules}"
@@ -58,8 +58,8 @@
 						<td>${item.mails}</td><%-- 
 						<td>${item.displayName}</td>
 						<td>${item.sample}</td> --%>
-						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&pattern=${item.pattern}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&pattern=${item.pattern}">删除</a></td>
+						<td><a class='btn  btn-sm btn-primary'href="?op=aggregationUpdate&pattern=${item.pattern}">编辑</a>
+						<a class='delete btn  btn-sm btn-danger' href="?op=aggregationDelete&pattern=${item.pattern}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

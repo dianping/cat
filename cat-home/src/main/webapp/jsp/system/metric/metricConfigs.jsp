@@ -80,7 +80,7 @@
 				     			<th width="6%"><h5 class='text-center'>总和</h5></th>
 				     			<th width="20%"><h5 class='text-center'>标签</h5></th>
 				     			<th width="13%"><h5 class='text-center'>操作
-								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-small" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
+								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-sm" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
  								--%></h5></th>
 				     		</tr>
 					     	<c:forEach var="config" items="${value}">
@@ -121,9 +121,9 @@
 				     				</c:if>
 				     			</td>
 					     		<td style="text-align:center;white-space: nowrap">
-					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small">修改</a>
-						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-small btn-danger delete">删除</a>
-					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-small">告警</a>
+					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-sm">修改</a>
+						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-sm btn-danger delete">删除</a>
+					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-sm">告警</a>
 						     	</td>
 					     		</tr>
 					     	</c:forEach>

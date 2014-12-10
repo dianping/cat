@@ -16,7 +16,7 @@
 	
 <table class="machines">
 	<tr style="text-align:left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&domain=${model.domain}&date=${model.date}${payload.queryString}&ip=All&reportType=${model.reportType}${model.customDate}"
 						class="current">All</a>
@@ -40,11 +40,7 @@
 		</th></tr>
 		
 		<tr class="left">
-			<th>机器分组: &nbsp;&nbsp; 
-				<c:if test="${empty model.groups}">
-			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
-				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a></span>
-			</c:if> 
+			<th>
 				<c:forEach var="group" items="${model.groups}">
 		   	  		&nbsp;[&nbsp;
 		   	  			<a  href="?op=historyGroupReport&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&group=${group}${payload.queryString}">${group}</a>

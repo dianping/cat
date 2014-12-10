@@ -24,7 +24,7 @@
 					<th width="15%">项目组</th>
 					<th width="30%">Type</th>
 					<th width="30%">Name</th>
-					<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=transactionRuleUpdate">新增</a></th>
+					<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=transactionRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">
@@ -36,8 +36,8 @@
 						<td>${domain}</td>
 						<td>${type}</td>
 						<td>${name}</td>
-						<td><a class='btn  btn-small btn-primary'href="?op=transactionRuleUpdate&ruleId=${item.id}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=transactionRuleDelete&ruleId=${item.id}">删除</a></td>
+						<td><a class='btn  btn-sm btn-primary'href="?op=transactionRuleUpdate&ruleId=${item.id}">编辑</a>
+						<a class='delete btn  btn-sm btn-danger' href="?op=transactionRuleDelete&ruleId=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

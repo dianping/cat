@@ -1,0 +1,805 @@
+.enable_plugin_jqgrid() when(@enable-plugin-jqgrid = true) {
+
+.ui-jqgrid {
+ .ui-jqgrid-view,
+ .ui-paging-info,
+ .ui-pg-table,
+ .ui-pg-selbox {
+    font-size: @baseFontSize;
+ }
+
+ .ui-jqgrid-title {
+    float: left;
+    margin: 8px;
+ }
+ .ui-jqgrid-title-rtl {
+	float: right;
+	margin: 8px;
+ }
+}
+
+
+.ui-jqgrid-view > .ui-jqgrid-titlebar { 
+    height: 40px;
+    line-height: 24px;
+    color: #FFF;
+    background: @table-header-bg; 
+	padding:0;
+	font-size: floor(@baseFontSize * 1.2);
+}
+
+
+.ui-jqgrid tr.jqgrow.ui-row-rtl td:last-child {
+	border-right:none;
+	border-left:1px solid #E1E1E1;
+}
+
+.ui-jqgrid .ui-jqgrid-hdiv {
+	background-color:@modal-footer-bg;
+    border: 1px solid #D3D3D3;
+	border-width:1px 0 0 1px;
+
+    line-height: 15px;
+    font-weight: bold;
+    color: #777;
+    text-shadow: none;
+}
+
+
+.ui-jqgrid .ui-jqgrid-htable {
+	thead {
+		background-color:@modal-footer-bg;
+	}
+	th span.ui-jqgrid-resize {
+		height: 45px !important;
+	}
+	th div {
+		padding-top: 12px;
+		padding-bottom: 12px;
+	}
+}
+
+
+.ui-jqgrid-hdiv .ui-jqgrid-htable {
+  border-top:none;
+}
+//when titlebar is hidden
+.ui-jqgrid-hdiv .ui-jqgrid-htable {
+  border-top: 1px solid #E1E1E1;
+}
+
+.ui-jqgrid-titlebar {
+ position:relative;
+ top:1px;//so it will cover the .ui-jqgrid-htable border if it's visible
+ z-index:1;
+}
+
+
+.ui-jqgrid {
+ tr.jqgrow , tr.ui-row-ltr , tr.ui-row-rtl{
+	border:none;
+ }
+ tr.ui-row-ltr td, tr.ui-row-rtl td {
+	border-bottom: 1px solid #E1E1E1;
+	padding:6px 4px;
+	border-color:#E1E1E1;
+ }
+
+ tr.ui-state-highlight.ui-row-ltr td {	
+	border-right-color:#C7D3A9;
+ }
+ tr.ui-state-highlight.ui-row-rtl td {	
+	border-left-color:#C7D3A9;
+ }
+}
+
+.ui-jqgrid-btable .ui-widget-content {
+	&.ui-priority-secondary{
+		background-image:none;
+		background-color: #F9F9F9;
+		opacity: 1;
+	}
+	&.ui-state-hover {
+		background-image:none;
+		background-color: #EFF4F7;
+		opacity: 1;
+	}
+	&.ui-state-highlight {
+		background-color:#E4EFC9;
+	}
+}
+
+
+
+.ui-jqgrid {
+	.ui-jqgrid-pager {
+		line-height: 15px;
+		height: 55px;
+		
+		padding-top:3px !important;
+		padding-bottom:5px !important;
+		
+		background-color:@modal-footer-bg !important;
+		
+		border-bottom: 1px solid #E1E1E1 !important;
+		border-top: 1px solid #E1E1E1 !important;
+		//border:1px solid #E1E1E1 !important;
+	}
+	
+
+	.ui-pg-input {
+		font-size: inherit;
+		width:24px;
+		
+		height:20px;
+		line-height:16px;
+		.box-sizing(content-box);
+		
+		text-align:center;
+		padding-top:1px; padding-bottom:1px;
+	}
+
+	.ui-pg-selbox {
+		display: block;
+		height:24px;
+		width:60px;
+		margin: 0;
+		padding: 1px;
+		line-height: normal;
+	}
+	
+	.ui-jqgrid-htable th div{
+		overflow:visible;
+	}
+	
+	.ui-pager-control {
+		height: 50px;
+		position: relative;
+		padding-left:9px;
+		padding-right:9px;
+	}
+	
+	
+	.ui-jqgrid-toppager {
+		height:auto !important;
+		background-color:@modal-footer-bg;
+		border-bottom:1px solid #E1E1E1 !important;
+	}
+
+	.jqgrow .editable {
+		max-width: 90%;
+		max-width: calc(98% - 6px) !important;
+	}
+}
+
+
+
+.ui-pg-table .navtable .ui-corner-all{
+    border-radius: 0;
+}
+
+
+.ui-jqgrid .ui-pg-button:hover {
+    padding: 1px;
+}
+
+.ui-jqgrid .ui-pg-button .ui-separator {
+	margin-left:4px;
+	margin-right:4px;
+	border-color:#C9D4DB;
+}
+
+.ui-jqgrid .ui-jqgrid-btable {
+ border-left:1px solid #E1E1E1;
+}
+.ui-jqgrid .ui-jqgrid-bdiv {
+	border-top:1px solid #E1E1E1;
+	//.box-sizing(content-box);
+}
+
+
+
+
+.ui-jqgrid .loading {
+	position: absolute; 
+	top: 45%;
+	left: 45%;
+	width: auto;
+	height: auto;
+	z-index: 101;
+	
+	padding: 6px; 
+	margin: 5px;
+	
+	text-align: center;
+	//display: none;
+	font-weight: bold;
+
+	font-size: @baseFontSize - 1;
+	
+	background-color: #FFF;
+	border: 2px solid #8EB8D1;
+	color: #E2B018;
+}
+
+
+
+
+
+
+.ui-jqgrid .ui-search-toolbar {
+	 border-top: 1px solid #E1E1E1;
+}
+.ui-jqgrid .ui-jqgrid-labels {
+	border-bottom:none;
+	background:#F2F2F2;
+	#gradient > .vertical(@table-labels-grad-color1 , @table-labels-grad-color2);
+	
+	padding:0 !important;
+	border-left:1px solid #E1E1E1 !important;
+	
+	th {
+		border-right:1px solid #E1E1E1 !important;
+		text-align:left !important;
+	}
+}
+
+
+/* checkbox container */
+.ui-jqgrid-labels th[id*="_cb"]:first-child > div {
+ padding-top:0;
+ text-align:center !important;
+}
+
+
+
+
+.ui-jqgrid-sortable {
+  padding-left:4px;
+  font-size:@baseFontSize;
+  color:#777;
+  font-weight:bold;
+
+  &:hover {
+	color:@table-sort-hover;
+  }
+}
+
+th[aria-selected=true] {
+ #gradient > .vertical(#EFF3F8 , #E3E7ED);
+ .ui-jqgrid-sortable {
+	color:@table-sort-active;
+ }
+}
+
+
+
+.ui-icon {
+  text-indent:0;
+  color: @table-sort-active;
+  float: none;
+  right: 2px;
+  //position: absolute;
+  
+  .rtl & {
+	right: auto;
+	left: 2px;
+  }
+}
+
+
+.ui-grid-ico-sort:before {
+ display: inline;
+ content: "\f0d7";
+ font-family: FontAwesome;
+ font-size: 12px;
+}
+.ui-icon-asc:before {
+ content:"\f0d8";
+}
+.ui-state-disabled {
+ color:#BBB;
+}
+
+
+
+.ui-pg-table > tbody > tr > .ui-pg-button > .ui-icon {
+  display:inline-block;
+  padding:0;
+  width:24px; height:24px; line-height:22px;
+  text-align:center;
+  
+  position:static;
+  float:none;
+  margin:0 2px !important;
+  
+
+  color:#808080;
+  border:1px solid #CCC;
+  background-color:#FFF;
+  border-radius:100%;
+
+  &:hover {
+		color:#699AB5;
+		border-color:#699AB5;
+  }
+  &:before {
+	width:20px;
+	text-align:center;
+	display:inline-block;
+  }
+}
+
+.ui-pg-table > tbody > tr > .ui-pg-button.ui-state-disabled .ui-icon{
+  color:#B0B0B0;
+  background-color:#F7F7F7;
+  border-color:#DDD;
+ 
+  .transform(~"scale(0.9)");
+}
+
+
+
+
+
+
+.ui-jqgrid-btable {
+	input , textarea, select{
+		padding:2px;
+		width:auto;
+		max-width:100%;
+		margin-bottom:0;
+	}
+	select  {
+		padding:1px;
+		height:25px;
+		line-height:25px;
+	}
+}
+
+.ui-pg-div .ui-icon{
+  display: inline-block;
+  width: 18px;
+  float: none;
+  
+  position: static;
+  text-align: center;
+  opacity: 0.85;
+  
+  .transition(~"all 0.12s");
+  margin: 0 1px;
+  
+  vertical-align: middle;
+  cursor: pointer;
+  
+  font-size: 17px;
+  
+  &:hover{
+	.transform(~"scale(1.2)");
+	opacity: 1;
+	position: static;
+	margin: 0 1px;
+  }
+  &:before {
+	font-family:FontAwesome;
+	display:inline;
+  }
+}
+
+.ui-icon-pencil { color:#478FCA; }
+.ui-icon-pencil:before { content:"\f040"; }
+.ui-icon-trash { color:#DD5A43; }
+.ui-icon-trash:before { content:"\f014"; }
+.ui-icon-disk { color:#69AA46; }
+.ui-icon-disk:before { content:"\f00c"; }
+.ui-icon-cancel { color:#DD5A43; }
+.ui-icon-cancel:before { content:"\f00d"; }
+
+
+
+.ui-jqdialog-content, .ui-jqdialog .ui-jqdialog-content {
+	font-size:@baseFontSize;
+	padding:4px 0 0;
+
+	.formdata {
+		font-size:@baseFontSize;
+		padding:6px 12px;
+	}
+
+	.form-view-data {
+		vertical-align:middle;
+		font-size:@baseFontSize;
+	}
+	
+	
+	&[id*="alertcnt_"]{
+		padding: 8px 11px;
+	}
+}
+
+.ui-jqdialog-content {
+	.CaptionTD {
+		font-size: @baseFontSize - 1;
+		text-align: right;
+		color: #666;
+	}
+	.FormData {
+		border-bottom:1px dotted #E8E8E8;
+		&:last-child {
+			border-bottom:none;
+		}
+		
+		> td {
+			padding-top:6px;
+			padding-bottom:6px;
+		}
+	}
+	input.FormElement {
+		width:auto;
+	}
+	select.FormElement {
+		padding:1px;
+		height:25px;
+		line-height:25px;
+		width:auto;
+	}
+	td.EditButton {
+		padding:8px;
+	}
+}
+
+
+.EditTable {
+  background-color:@modal-footer-bg;
+  border-top:1px solid #D6E1EA !important;
+  padding:8px;
+  
+  tr:first-child{
+	display:none;
+  }
+
+  
+  .navButton .fm-button {
+	float:none !important;
+	width:auto !important;
+	margin:1px 1px 2px !important;
+	background-color:transparent;
+	border-radius:100%;
+	
+	&:hover {
+		background-color:transparent;
+	}
+	&:focus {
+		outline:none;
+	}
+	
+	.@{icon} {
+		display:inline-block;
+		color:#999;
+		border:1px solid #AAA;
+		width:26px;
+		height:26px; line-height:26px;
+		text-align:center;
+		border-radius:100%;
+
+		background-color:#FFF;
+	}
+	
+	&:hover .@{icon} {
+		color:#699AB5;
+		border-color:#699AB5;
+	}
+	
+	&.ui-state-disabled , &.ui-state-disabled:hover {
+		.@{icon} {
+			color:#BBB;
+			border-color:#CCC;
+			.transform(~"scale(0.88)");
+		}
+	}
+
+  }
+}
+
+
+.FormGrid  .EditTable {
+  background-color:#FFF;
+  border-top:none !important;
+  padding:0;
+
+  tr:first-child{
+	display:none;
+  }
+}
+
+
+ .ui-jqgrid .ui-jqgrid-view {
+	input, select, textarea, button {
+		font-size: @baseFontSize;
+	}
+ }
+
+
+.ui-jqdialog-content .searchFilter {
+ select {
+	padding:1px;
+	height:26px;
+	line-height:26px;
+	width:auto;  max-width:95%;
+	margin-bottom:0;
+ }
+ .input-elm {
+	margin-bottom:0;
+	height:18px;
+	line-height:18px;
+	width:95% !important;
+	padding-left:1px;
+	padding-right:1px;
+	
+	.box-sizing(content-box);
+ }
+ 
+ table {
+	margin-left:4px;
+ }
+ tr td {
+	padding:5px 0;
+ }
+ 
+ .add-group , .add-rule , .delete-group {
+	margin-left: 4px !important;
+	font-size: @baseFontSize + 2 !important;
+ }
+
+ .delete-rule {
+	border:none;
+	background-color:#FFF;
+    color: #D15B47;
+    font-size: 20px;
+    width: 22px;
+    line-height: 10px;
+    padding: 0;
+    text-shadow: none !important;
+    
+	display:inline-block;
+	.transition(~"all 0.1s");
+	opacity:0.85;
+	&:hover {
+		.transform(~"scale(1.1)");
+		color:#B74635;
+		opacity:1;
+	}	
+ }
+ 
+ 
+ .queryresult {
+	margin-bottom:11px;
+	td.query {
+		padding:6px 11px;
+		border:1px solid #E1E1E1;
+		background-color:#EEEEEE;
+		&:empty {
+			display:none;
+		}
+	}
+ }
+
+}
+
+
+
+
+
+
+.ui-state-error {
+    background-color: @state-danger-bg;
+    border: 1px solid @state-danger-border;
+    color: @state-danger-text;
+	
+	margin:4px 4px 8px;
+    padding: 6px 10px;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	
+	font-size:@baseFontSize;
+}
+
+
+
+.ui-jqdialog .ui-widget-header {
+	#gradient > .vertical(#FFFFFF , #EEEEEE);
+
+	border-image: none;
+	border-bottom:1px solid solid;
+	color: #669FC7;
+	min-height: 38px;
+	position: relative;
+	
+	.ui-jqdialog-title{
+		line-height: 38px;
+		margin: 0;
+		padding: 0;
+		padding-left: 12px;
+		text-align: left;
+	}
+}
+
+
+.widget-header .ui-jqdialog-title{
+	padding-left:0 !important;
+	padding-right:0 !important;
+}
+
+.ui-jqdialog .ui-widget-header .widget-header{
+	border-bottom:none;
+}
+.ui-jqdialog .ui-jqdialog-titlebar {
+	border-bottom:1px solid #DDD !important;
+}
+
+.fm-button {
+	margin:0 4px;
+}
+.fm-button:not(.btn) {
+	background-color: @btn-default;
+	border-radius: 0 ;
+	box-shadow: none;
+	color: #FFFFFF ;
+	cursor: pointer;
+	display: inline-block;
+	font-size: @baseFontSize;
+	line-height: 28px;padding: 0 12px 1px;
+	margin: 0 8px;
+	position: relative;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+	.transition(~"all 0.15s");
+	vertical-align: middle;
+
+}
+.fm-button.ui-state-default:hover {
+	background-color:@btn-default-hover;
+}
+
+
+//search toolbar
+.ui-jqgrid .ui-jqgrid-htable .ui-search-toolbar th {
+	height: 30px;
+    padding-top:2px;
+	white-space: normal;
+	div {
+		padding-top: 0;
+		padding-bottom: 0;
+		height: 30px;
+		line-height: 26px;
+	}
+}
+
+
+//titlebar close/open button
+.ui-jqgrid .ui-jqgrid-titlebar-close {
+   top: 10%;
+   height: auto;
+   padding: 0;
+   margin: 2px 8px 0 0;
+   text-align: center;
+   border-radius: 4px;
+   
+   &:hover {
+	background-color: rgba(255,255,255,0.2);
+   }
+
+  .ui-icon:before {
+	display: inline-block;
+    font-family: FontAwesome;
+	content: "\f077";
+	color: #FFF;
+  }
+  .ui-icon-circle-triangle-s:before {
+	content: "\f078";
+  }
+}
+
+
+
+.ui-jqgrid .tree-wrap-ltr {
+	margin: 0 4px;
+	float: none;
+	display: inline;
+}
+.ui-jqgrid .tree-wrap-rtl {
+	margin: 2px 4px 0;
+}
+
+///
+//subgrid
+.ui-jqgrid .ui-subgrid {
+ border-bottom: 1px solid #E1E1E1;
+ background-color: #F6FAFF;
+
+ .ui-jqgrid-btable {
+	background-color: #FFF;
+ }
+
+ .ui-jqgrid .ui-jqgrid-hdiv {
+	background-color: transparent;
+	margin-top: 4px;
+	.ui-jqgrid-htable {
+		
+		.ui-jqgrid-labels {
+			border-bottom: 1px solid #E1E1E1;
+			background: #F1F1F1;
+		}
+		
+		th[aria-selected="true"] {
+			background: #E5E9EF;
+		}
+		th .ui-jqgrid-sortable {
+			font-size: 12px;
+		}
+		th div {
+			padding-top: 8px;
+			padding-bottom: 8px;
+		}
+		th span.ui-jqgrid-resize {
+			height: 36px !important;
+		}
+	}
+ }
+ .ui-jqgrid .ui-jqgrid-bdiv {
+	height: auto !important;
+	max-height: 150px;
+	margin-bottom: 4px;
+
+	border-top-width: 0;	
+	border-bottom: 1px solid #E1E1E1;
+ } 
+}
+
+.ui-jqgrid  {
+ .ui-sgcollapsed > a:hover {
+	text-decoration: none;
+ }
+}
+
+
+
+
+@media only screen and (max-width: @screen-xs-max) {
+
+ .ui-jqgrid .ui-jqgrid-pager {
+    height: 90px;
+    > .ui-pager-control {
+		height: 85px;
+		padding-top: 9px;
+		
+		> .ui-pg-table {
+			> tbody > tr > td { 
+				vertical-align: top; 
+				
+				//move the center one a bit down
+				&#grid-pager_center {
+					width: 0 !important;
+					position: static;
+					
+					> .ui-pg-table {
+						margin: 36px auto 0;
+						position: absolute;
+						right: 0;
+						left: 0;
+						text-align: center;
+					}
+				}
+			}
+		}
+    }
+ }
+}
+
+@media only screen and (max-width: @screen-xs-max) and (-webkit-min-device-pixel-ratio:0) {
+ .ui-jqgrid .ui-jqgrid-pager > .ui-pager-control > .ui-pg-table > tbody > tr > td#grid-pager_center > .ui-pg-table {
+	width: 300px;//required by chrome to put the table at center
+ }
+}
+
+
+}
+.enable_plugin_jqgrid();

@@ -18,17 +18,17 @@
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名
 	<input type="text" name="hostname" id="hostname" value="${payload.hostname}" style="height:auto" class="input-small"> 
-	<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
+	<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		
 	<c:if test="${!payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(true)">全屏</a>
+			<a id="fullScreen" class='btn btn-sm btn-primary' onclick="queryFullScreen(true)">全屏</a>
 	</c:if>
 	<c:if test="${payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(false)">全屏</a>
+			<a id="fullScreen" class='btn btn-sm btn-primary' onclick="queryFullScreen(false)">全屏</a>
 	</c:if>
-	<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-	<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-	<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
+	<a id="refresh10" class='btn btn-sm btn-primary' onclick="queryFrequency(10)">10秒</a>
+	<a id="refresh20" class='btn btn-sm btn-primary' onclick="queryFrequency(20)">20秒</a>
+	<a id="refresh30" class='btn btn-sm btn-primary' onclick="queryFrequency(30)">30秒</a>
 	类型
 	<input type="checkbox" checked="checked" id="show_puppet" class="typeCheckbox"/>   puppet 
 	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>   workflow 

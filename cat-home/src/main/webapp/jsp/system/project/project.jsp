@@ -49,8 +49,8 @@
 						<td>${item.cmdbProductline}</td>
 						<td>${item.email}</td>
 						<td>${item.phone}</td>
-						<td><a  class="btn btn-primary btn-small" href="?op=update&projectId=${item.id}">编辑</a>
-						<a  class="btn btn-danger btn-small delete" href="?op=projectDelete&projectId=${item.id}">删除</a></td>
+						<td><a  class="btn btn-primary btn-sm" href="?op=update&projectId=${item.id}">编辑</a>
+						<a  class="btn btn-danger btn-sm delete" href="?op=projectDelete&projectId=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 			</table>

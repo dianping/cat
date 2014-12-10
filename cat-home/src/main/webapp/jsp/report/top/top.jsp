@@ -33,9 +33,9 @@
 	</table>
 	
 	<div class='text-center' style="margin:3px;">
-		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=10">10秒定时刷新</a>
-		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=20">20秒定时刷新</a>
-		<a class='btn btn-small btn-primary' href="?refresh=true&frequency=30">30秒定时刷新</a>
+		<a class='btn btn-sm btn-primary' href="?refresh=true&frequency=10">10秒定时刷新</a>
+		<a class='btn btn-sm btn-primary' href="?refresh=true&frequency=20">20秒定时刷新</a>
+		<a class='btn btn-sm btn-primary' href="?refresh=true&frequency=30">30秒定时刷新</a>
 	</div>
     <%@ include file="topMetric.jsp"%>
 	<table  class="footer">

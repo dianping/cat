@@ -40,14 +40,14 @@
 						<td>${item.scheduledReport.names}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
-									<a class="btn btn-primary btn-small" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0" onclick="return sub(this)">订阅</a>
+									<a class="btn btn-primary btn-sm" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0" onclick="return sub(this)">订阅</a>
 								</c:when>
 								<c:otherwise>
-									<a class="btn btn-danger btn-small" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1" onclick="return sub(this)">取消</a>
+									<a class="btn btn-danger btn-sm" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1" onclick="return sub(this)">取消</a>
 								</c:otherwise>
 							</c:choose> 
-							<a class="btn btn-primary btn-small" href="?op=scheduledReportUpdate&scheduledReportId=${item.scheduledReport.id}"  target="_blank">编辑</a> 
-							<a class="delete btn btn-danger btn-small" href="?op=scheduledReportDelete&scheduledReportId=${item.scheduledReport.id}">删除</a> 
+							<a class="btn btn-primary btn-sm" href="?op=scheduledReportUpdate&scheduledReportId=${item.scheduledReport.id}"  target="_blank">编辑</a> 
+							<a class="delete btn btn-danger btn-sm" href="?op=scheduledReportDelete&scheduledReportId=${item.scheduledReport.id}">删除</a> 
 						</td>
 					</tr>
 				</c:forEach></tbody>

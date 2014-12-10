@@ -1,0 +1,584 @@
+//some checkbox & switch variables
+@checkbox-color: #32A3CE;
+@checkbox-border-color: #C8C8C8;
+@checkbox-checked-border: #ADB8C0;
+@checkbox-hover-border: #FF893C;
+@checkbox2-bg: #F9A021;
+
+@switch-checked-bg: #8AB2C9;
+@switch-checked-border: #6A8CA8;
+@switch4-bg: #8B9AA3;
+@switch4-color: #939393;
+@switch4-checked-bg: #468FCC;
+
+@switch6-checked-border: #B7D3E5;
+@switch6-checked-bg: #FF893C;
+
+@switch7-checked-bg: #468FCC;
+@switch7-checked-border: #6FB3E0;
+
+
+@switch-1-text: "ON\a0\a0\a0\a0\a0\a0\a0\a0\a0OFF";
+@switch-2-text: "YES\a0\a0\a0\a0\a0\a0\a0\a0\a0NO";
+@switch-4-text: "ON\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0OFF";
+@switch-5-text: "YES\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0NO";
+@switch-7-text: "OFF\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0\a0ON";
+
+@lbl_selector: ~"+ .lbl";
+//@lbl_selector: ~"~ .lbl";//uncomment for ASP.NET or use css builder tool
+
+.enable_checkbox() when(@enable-checkbox = true) {
+//Checkbox & Radio
+
+@lbl: @lbl_selector;//+ .lbl   or   ~ .lbl  (for ASP.NET)
+
+input[type=checkbox].ace , input[type=radio].ace {
+	opacity: 0;
+	position: absolute;	
+	z-index: 1;//so that it is clickable and above (.lbl)
+	
+	width: 18px;
+	height: 18px;
+	cursor: pointer;
+
+	label & {
+		z-index: -100 !important;
+		width: 1 !important;//width '0' has issues with jQuery Validate not recognizing this
+		height: 0 !important;
+		//position: fixed;
+		//we don't need it to be hoverable/clickable when inside a label
+	}
+	
+	&:checked, &:focus {
+		outline:none !important;
+	}
+	
+	@{lbl} {
+		position: relative;
+		display:inline-block;
+		margin:0;
+		line-height:20px;
+
+		min-height:18px;
+		min-width:18px;
+		font-weight:normal;
+		
+		cursor: pointer;
+
+
+		&::before {
+			cursor: pointer;
+		
+			font-family: fontAwesome;
+			font-weight: normal;
+			font-size: 12px;
+			color: @checkbox-color;
+			content: "\a0";
+			display: inline-block;
+			background-color: #FAFAFA;
+			border: 1px solid @checkbox-border-color;
+			box-shadow: 0 1px 2px rgba(0,0,0,0.05);/*, inset 0px -15px 10px -12px rgba(0,0,0,0.05);*/
+			border-radius: 0;
+			display: inline-block;
+			text-align: center;
+			
+			//vertical-align: text-bottom;
+			//vertical-align: middle;
+
+			height: 16px;
+			line-height: 14px;
+			min-width: 16px;	
+			
+			margin-right: 1px;
+			
+			position: relative;
+			top: -1px;
+		}
+	}//.lbl
+	
+	&:checked @{lbl}::before ,
+	{
+		display:inline-block;
+		content: '\f00c';
+		background-color: #F5F8FC;
+		border-color:@checkbox-checked-border;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px -15px 10px -12px rgba(0,0,0,0.05), inset 15px 10px -12px rgba(255,255,255,0.1);
+	}
+	&:hover @{lbl}::before , @{lbl}:hover::before {
+		border-color:@checkbox-hover-border;
+	}
+
+	
+	&:active , &:checked:active {
+		@{lbl}::before {
+			box-shadow: 0 1px 2px rgba(0,0,0,0.05), inset 0px 1px 3px rgba(0,0,0,0.1);
+		}
+	}
+	
+	
+	&.ace-checkbox-2 @{lbl}::before {
+		box-shadow: none;
+	}
+	&.ace-checkbox-2:checked @{lbl}::before {
+		background-color: @checkbox2-bg;
+		border-color: @checkbox2-bg;
+		color: #FFF;
+	}
+
+	&:disabled @{lbl}::before ,
+	&[disabled] @{lbl}::before ,
+	&.disabled @{lbl}::before {
+		background-color:#DDD !important;
+		border-color:#CCC !important;
+		box-shadow:none !important;
+		color:#BBB;
+	}
+}
+//opera fix
+//no_such_element:-o-prefocus, input[type=checkbox].ace @{lbl}::before, input[type=radio].ace @{lbl}::before {
+	//vertical-align: middle;
+//}
+
+
+		
+input.ace @{lbl} {
+	.checkbox-paddings() {// a little paddings for .lbl
+		 .checkbox-paddingX (@index) when (@index >= 0) {
+			&.padding-@{index}::before {
+				margin-right: unit(@index,px);
+			}
+		   .checkbox-paddingX(@index - 4);
+		  }
+		  .checkbox-paddingX(16);
+	}
+	.checkbox-paddings();
+}
+
+
+/**
+input[type=radio].ace @{lbl}::before {
+	border-radius:100%;
+	font-size: 34px;
+	font-family: Helvetica, Arial, "Sans-Serif";//looks better but incosistent
+	line-height: 13px;
+}
+*/
+input[type=radio].ace @{lbl}::before {
+	border-radius: 100%;
+	font-size: 10px;
+	font-family: FontAwesome;//let's use a fonts that's available everywhere
+	text-shadow: 0 0 1px @checkbox-color;
+
+	line-height: 15px;
+
+	height: 17px;
+	min-width: 17px;
+}
+input[type=radio].ace:checked @{lbl}::before {
+	content:"\f111";
+}
+
+
+
+
+
+
+
+/* CSS3 on/off switches */
+//use like <input type="checkbox" class="ace ace-switch" /> <span class="lbl"></span>
+
+.enable_switches() when(@enable-switch = true) {
+
+input[type=checkbox].ace.ace-switch {
+  width: 55px;
+  height: 25px;
+
+	@{lbl} {
+		margin:0 4px;
+		min-height:24px;
+		
+		&::before {
+			font-family: 'Open Sans';
+			content: @switch-1-text;
+
+			color: #999;
+			text-shadow: 0 0 0 #999;
+			font-weight: normal;
+			font-size: 11px;
+
+			line-height: 17px;// line-height:21px \9;/*ie9*/
+			height: 20px;
+			overflow: hidden;
+
+			border-radius: 12px;
+
+			background-color: #F5F5F5;
+			//.box-shadow(~"inset 0px 2px 2px 0px rgba(0,0,0,.2)");
+			.box-shadow(~"inset 0 1px 1px 0 rgba(0, 0, 0, 0.15)");
+			
+
+			border: 1px solid #CCC;
+
+			text-align: left;
+			float: left;
+			padding: 0;
+			width: 52px;
+			text-indent: -21px;// text-indent: -21px \9;
+			margin-right: 0;
+
+			.transition(~"text-indent .3s ease");
+			
+			top: auto;
+		}
+		
+		&::after {
+			font-family: 'Open Sans';
+			content: 'III'; 
+			font-size: 12px;
+			font-weight: normal;
+			letter-spacing: 0;
+			color: #AAA;
+			
+			text-shadow: none;
+			//text-shadow: 0 0 0 #999;
+			
+			
+			background-color: #FFF;
+			
+			//text-align: center;
+			//text-indent: -2px;
+			
+			border-radius: 100%;
+			
+			width: 22px;
+			height: 22px;
+			line-height: 22px;
+			text-align: center;
+			
+			
+			position: absolute;
+			top: -2px;
+			left: -3px;
+			
+			.box-shadow(~"0px 1px 1px 1px rgba(0,0,0,.3)");
+			//text-shadow:0px 1px 1px rgba(0,0,0,0.3) inset;
+
+			.transition(~"left .3s ease");
+		}
+	}
+	
+	&:checked @{lbl} {
+		&::before {
+			text-indent: 8px;
+
+			color: #FFF;
+			text-shadow: 0 0 0 #FFF;
+			background-color: @switch-checked-bg;
+			border-color: @switch-checked-border;
+		}
+		&::after {
+			left: 34px;
+			background-color: #FFF;
+			color: #98A0A5;
+			//text-shadow: 0 0 0 #465868;
+		}
+	}
+	
+	
+	&.ace-switch-2 @{lbl}::before {
+		content: @switch-2-text;
+	}
+
+	&.ace-switch-3 @{lbl}::after {
+		font-family: FontAwesome;
+		font-size: 13px;
+		line-height: 22px;
+		content: "\f00d";
+		top: -1px;
+		text-shadow: none;
+		padding: 0;
+		text-align: center;
+		color: #BBB;
+		letter-spacing: 0;
+	}
+	&.ace-switch-3:checked @{lbl}::after {
+		content: "\f00c";
+		color: #8AB2C9;
+		text-shadow: none;
+	}
+	
+	//switch style 4 & 5
+	.enable_switch_style_4() when(@enable-switch-style-4 = true) {
+	  &.ace-switch-4 , &.ace-switch-5 {
+		width: 60px;
+		@{lbl}::before {
+			content: @switch-4-text;
+			//font-family:Arial, Helvetica, sans-serif;
+			//font-weight:bolder;
+			font-size: 12px;
+			line-height: 21px;
+			height: 24px;
+			overflow: hidden;
+			//line-height:25px \9;
+			
+			border-radius: 12px;
+			
+			display: inline-block;
+			background-color: @switch4-bg;
+			border: 1px solid @switch4-bg;
+
+			color: #FFF;
+			width: 56px;
+			text-indent: -25px;// text-indent: -28px \9;
+			text-shadow: 0 0 0 #FFF;
+			
+			display: inline-block;
+			position: relative;
+			
+			//margin-right:8px;
+			
+			box-shadow:none;
+			
+			.transition(~"all .3s ease");
+		}
+		
+		@{lbl}::after {
+			content: 'III'; 
+	
+			font-size: 11px;
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			
+			letter-spacing: 0;
+			
+			width: 20px;
+			height: 20px;
+			line-height: 19px;
+			
+			text-shadow: none !important;
+			color: @switch4-color;
+			background-color:#FFF;
+
+			.transition(~"all .3s ease");
+		}
+
+		
+		&:checked @{lbl} {
+			&::before {
+				text-indent: 9px;
+				background-color: @switch4-checked-bg;
+				border-color: #468FCC;
+			}
+			&::after {
+				left: 34px;
+				background-color: #FFF;
+				color: darken(@switch4-color , 6%);
+			}
+		}
+		
+		
+	  }
+	  &.ace-switch-5 @{lbl}::before {
+		content: @switch-5-text;
+	  }
+	  &.ace-switch-5:checked @{lbl}::before {
+		text-indent: 8px;
+	  }
+	}
+	.enable_switch_style_4();
+	
+	
+	.enable_switch_style_6() when(@enable-switch-style-6 = true) {
+	  //switch style 6
+	  &.ace-switch-6 {
+		@{lbl} {
+			position: relative;
+			&::before {
+				font-family: FontAwesome;
+				content: "\f00d";
+				text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+				box-shadow: none;
+				border-width: 0;
+
+				font-weight: lighter;
+				font-size: 16px;
+
+
+				border-radius: 12px;
+
+				display: inline-block;
+				background-color: #888;
+
+				color: #F2F2F2;
+
+				width: 52px;
+				height: 22px;
+				line-height: 21px;
+				text-indent: 32px;
+
+				.transition(~"background 0.1s ease");
+			}
+			&::after {
+				content: ''; text-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+
+				position: absolute;
+				top: 2px;
+				left: 3px;
+				
+				border-radius: 12px;
+				box-shadow:0 -1px 0 rgba(0, 0, 0, 0.25);
+
+				width: 18px;
+				height: 18px;
+				text-align: center;
+				
+				background-color: #F2F2F2;
+				border: 4px solid #F2F2F2;
+				
+				.transition(~"left 0.2s ease");
+			}
+		}
+		
+		&:checked @{lbl} {
+			&::before {
+				content: "\f00c";
+				text-indent:6px;
+
+				color:#FFF;
+				border-color:@switch6-checked-border;
+				background-color:@switch6-checked-bg;
+			}
+			&::after {
+				left:32px;
+
+				background-color:#FFF;
+				border:4px solid #FFF;
+				text-shadow:0 -1px 0 rgba(0, 200, 0, 0.25);
+			}
+		}
+	  }
+	}
+	.enable_switch_style_6();
+	
+	
+	.enable_switch_style_7() when(@enable-switch-style-7 = true) {
+	  &.ace-switch-7 {
+		width:75px;
+
+		@{lbl} {
+			position: relative;
+			&::before {
+				content: @switch-7-text;
+
+				font-weight: bolder;
+				font-size: 13px;
+				line-height: 20px;
+
+				display: inline-block;
+				background-color: #FFF;
+				border: 2px solid #AAA;
+				border-radius: 0;
+				box-shadow: none;
+
+				color: #AAA;
+
+				width: 74px;
+				height: 26px;
+				line-height: 22px;
+				overflow: hidden;
+				text-indent: 5px;
+				
+				display: inline-block;
+				position: relative;
+				
+				//margin-right:8px;
+
+				.transition(~"all 0.2s ease");
+			}
+			
+			&::after {
+				content: '\f00d';
+				font-family: FontAwesome;
+				font-size: 16px;
+
+				position: absolute;
+				top: 3px;
+				left: 39px;
+				width: 32px;
+				height: 20px;
+				line-height: 18px;
+				
+				text-align: center;
+				padding: 0;
+				text-indent: 0;
+				
+				background-color: #AAA;
+				color: #FFF;
+				border-radius: 0;
+				box-shadow: none;
+
+				.transition(~"all 0.2s ease-in-out");
+			}
+		}
+		
+		&:checked @{lbl} {
+			&::before {
+				color: @switch7-checked-bg;
+				background-color: #FFF;
+				text-indent: -28px;
+				border-color: @switch7-checked-border;
+			}
+			&::after {
+				left: 3px;
+				content: '\f00c';
+				background-color: @switch7-checked-bg;
+				color: #FFF;
+			}
+		}
+
+	  }
+	}
+	.enable_switch_style_7();
+}
+
+
+ //any custom text
+ input[type=checkbox].ace.ace-switch @{lbl}[data-lbl]::before {
+	content: attr(data-lbl);
+ }
+
+ input[type=checkbox].ace.ace-switch.btn-empty @{lbl}::after {
+	content: "";
+ }
+ input[type=checkbox].ace.ace-switch.btn-rotate @{lbl}::after {
+	content: "\2261";// the 3 line (menu) character 
+	line-height: 20px;
+	font-size:17px; 
+ }
+
+ input[type=checkbox].ace.ace-switch-4.btn-rotate @{lbl}::after,
+ input[type=checkbox].ace.ace-switch-5.btn-rotate @{lbl}::after {
+	line-height: 17px;
+ }
+ 
+ 
+ //flat, square
+ input[type=checkbox].ace.ace-switch.btn-flat @{lbl}::before,
+ input[type=checkbox].ace.ace-switch.btn-flat @{lbl}::after {
+	border-radius: 0 !important;
+ }
+ input[type=checkbox].ace.ace-switch.ace-switch-4 , input[type=checkbox].ace.ace-switch.ace-switch-5 {
+	@{lbl}::before {
+		text-indent: -24px;
+	}
+	&:checked @{lbl}::before {
+		text-indent: 7px;
+	}
+ }
+
+}
+.enable_switches();
+
+}
+.enable_checkbox();

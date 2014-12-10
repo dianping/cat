@@ -106,7 +106,7 @@
 									<th width="10%">Warning阈值</th>
 									<th width="10%">Error阈值</th>
 									<th width="15%">操作&nbsp;&nbsp; <a
-										class='create btn btn-primary btn-small'
+										class='create btn btn-primary btn-sm'
 										href="?op=exceptionThresholdAdd">新增</a></th>
 								</tr>
 							</thead>
@@ -120,8 +120,8 @@
 										<td>${item.error}</td>
 										<td>
 										<c:if test="${item.domain ne 'Default'}">
-											<a class='update btn  btn-small btn-primary' href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
-											<a class='delete btn  btn-small btn-danger' href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}&type=异常阈值">删除</a>
+											<a class='update btn  btn-sm btn-primary' href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
+											<a class='delete btn  btn-sm btn-danger' href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}&type=异常阈值">删除</a>
 										</c:if>
 										</td>
 									</tr>
@@ -140,7 +140,7 @@
 									<th width="25%">域名</th>
 									<th width="60%">异常名称</th>
 									<th width="15%">操作&nbsp;&nbsp; <a
-										class='create btn btn-primary btn-small'
+										class='create btn btn-primary btn-sm'
 										href="?op=exceptionExcludeAdd">新增</a></th>
 								</tr>
 							</thead>
@@ -152,8 +152,8 @@
 										<td>${item.id}</td>
 										<td>
 										<c:if test="${item.domain ne 'Default'}">
-											<a class='update btn  btn-small btn-primary' href="?op=exceptionExcludeUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
-											<a class='delete btn  btn-small btn-danger' href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.id}&type=异常过滤">删除</a>
+											<a class='update btn  btn-sm btn-primary' href="?op=exceptionExcludeUpdate&domain=${item.domain}&exception=${item.id}">编辑</a>
+											<a class='delete btn  btn-sm btn-danger' href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.id}&type=异常过滤">删除</a>
 										</c:if>
 										</td>
 									</tr>

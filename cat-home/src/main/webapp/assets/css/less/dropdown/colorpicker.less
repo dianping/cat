@@ -1,0 +1,65 @@
+.enable_simple_color_picker() when(@enable-simple-color-picker = true) {
+
+.dropdown-colorpicker {
+ > .dropdown-menu {
+	padding: 4px;
+	min-width: 130px;
+	max-width: 130px;
+	
+	
+	top: 80%;
+	left: -7px;
+	&.dropdown-menu-right {
+		right: -7px;
+		left: auto;
+	}
+	
+	 > li {
+		display:block;
+		float:left;
+		width:20px; height:20px;
+		margin:2px;
+		 > .colorpick-btn {
+			  display:block;
+			  width:20px; height:20px;
+			  
+			  margin:0; padding:0;		  
+			  border-radius:0;
+			  position:relative;
+			  
+			  .transition(~"all ease 0.1s");
+			  
+			  &:hover {
+				 text-decoration:none;
+				 .opacity(0.8);
+				 .scale(1.08, 1.08);
+			  }
+			  &.selected:after {
+				content: "\f00c";
+				display: inline-block;
+				font-family: FontAwesome;
+				font-size: 11px;
+				color: #FFF;
+				
+				position:absolute; left:0; right:0; text-align:center; line-height:20px;
+			  }
+		 }
+		
+	 }
+ }
+}
+
+.btn-colorpicker {
+	display:inline-block;
+	width:20px; height:20px;
+	background-color:#DDD;
+	vertical-align:middle;
+ 
+	border-radius:0;
+}
+
+
+
+
+}
+.enable_simple_color_picker();

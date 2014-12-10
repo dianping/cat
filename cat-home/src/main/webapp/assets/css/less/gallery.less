@@ -1,0 +1,187 @@
+.enable_image_gallery() when(@enable-image-gallery = true) {
+
+//gallery
+.ace-thumbnails {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  > li {
+	float: left;
+	display: block;
+	position: relative;
+	overflow: hidden;
+
+	margin: 2px;
+	border: 2px solid #333;
+	
+	> :first-child {
+		display: block;
+		position: relative;
+		&:focus {
+			outline: none;
+		}
+	}
+	
+	.tags {
+		display: inline-block;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		//left: 0;
+		overflow: visible;
+ 
+		direction: rtl;
+		
+		//set these so that it's not confused with tags plugin
+		padding: 0;
+		margin: 0;
+		height: auto;
+		width: auto;
+		background-color: transparent;
+		border-width: 0;
+		vertical-align: inherit;
+		
+		> .label-holder {
+			.opacity(0.92);
+			display: table;
+			margin: 1px 0 0 0;
+
+			direction: ltr;
+			text-align: left;
+			
+			&:hover {
+				.opacity(1);
+			}
+		}
+	}
+
+
+	> .tools {
+		 position: absolute;
+		 top: 0;
+		 bottom: 0;
+		 left: -30px;
+		 width: 24px;
+		 
+		 background-color: rgba(0,0,0,0.55);
+
+		 text-align: center; 
+		 vertical-align: middle;
+		 
+		.transition(~"all 0.2s ease");
+		
+
+		&.tools-right {
+			left: auto;
+			right: -30px;
+		}
+		&.tools-bottom {
+			width: auto;
+			height: 28px;
+			left: 0;
+			right: 0;
+			top: auto;
+			bottom: -30px;
+		}
+		&.tools-top {
+			width: auto;
+			height: 28px;
+			left: 0;
+			right: 0;
+			top: -30px;
+			bottom: auto;
+		}
+	}
+	
+	&:hover > {
+		> .tools { left: 0; right: 0; }
+		> .tools.tools-bottom { top: auto; bottom: 0; }
+		> .tools.tools-top { bottom: auto; top: 0; }
+		> .tools.tools-right { left: auto; right: 0; }
+	}
+	> .in {
+		&.tools { left: 0; right: 0; }
+		&.tools.tools-bottom { top: auto; bottom: 0; }
+		&.tools.tools-top { bottom: auto; top: 0; }
+		&.tools.tools-right { left: auto; right: 0; }
+	}
+	
+	
+
+	> .tools > a , > :first-child .inner a {
+		display: inline-block;
+		color: #FFF;
+		font-size: @font-size-gallery-hover-tools;
+		font-weight: normal;
+		padding: 0 4px;
+		
+		&:hover {
+			text-decoration: none;
+			color: #C9E2EA;
+		}
+	}
+	.tools.tools-bottom > a , .tools.tools-top > a {
+		display: inline-block;
+	}
+  
+  
+  //the custom text on hover
+	> :first-child > .text {
+		position: absolute;
+		right: 0;
+		left: 0;
+		bottom: 0;
+		top: 0;
+
+		text-align: center;
+		color: #FFF;
+		background-color:rgba(0,0,0,0.55);
+
+		.opacity(0);
+		.transition(~"all 0.2s ease");
+		
+		&:before {/* makes the inner text become vertically centered*/
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: 0; /* Adjusts for spacing */
+		}
+		
+		> .inner {
+			 padding: 4px 0;
+			 margin: 0;
+
+			 display: inline-block;
+			 vertical-align: middle;
+			 max-width: 90%;
+		}
+	}
+	&:hover > :first-child  > .text{
+		.opacity(1);
+	}
+
+  }//li
+}
+
+
+
+
+//gallery
+@media only screen and (max-width: @screen-xs) {
+.ace-thumbnails { 
+ text-align: center;
+ }
+ 
+ .ace-thumbnails > li {
+	float: none;
+	display: inline-block;
+ }
+}
+
+
+
+
+}
+.enable_image_gallery();

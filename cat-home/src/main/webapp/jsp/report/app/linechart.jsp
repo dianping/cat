@@ -266,17 +266,7 @@
 				});
 	</script>
 	
-	<div class="row-fluid">
-		<%@include file="menu.jsp"%>
-	<div class="span10">
 		<%@include file="linechartDetail.jsp"%>
-	</div>
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
 </a:body>
 
 <style type="text/css">

@@ -31,7 +31,7 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 			<div class="opNav">
 				<div class="row-fluid">
 					<div class="span12 text-center">

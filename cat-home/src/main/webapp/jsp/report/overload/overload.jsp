@@ -36,9 +36,9 @@
 				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
 				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
 			</div>
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
+			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 			<%--<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
-			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>&nbsp;&nbsp;
+			<a id="fullScreen" class='btn btn-sm btn-primary'>全屏</a>&nbsp;&nbsp;
 			 <div class="btn-group" data-toggle="buttons-checkbox">
 			  <button id="hourlyButton" type="button" class="btn btn-info">小时</button>
 			  <button id="dailyButton" type="button" class="btn btn-info">天报</button>

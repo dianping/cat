@@ -22,7 +22,7 @@
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr class="left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a
 								href="?op=view&domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
@@ -43,13 +43,7 @@
 
 <table class="groups">
 	<tr class="left">
-		<th>机器分组: &nbsp;&nbsp; 
-			<c:if test="${empty model.groups}">
-			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
-				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a>
-						</span>
-			</c:if> 
-			
+		<th>
 			<c:forEach var="group" items="${model.groups}">
 				<c:choose>
 							<c:when test="${payload.group eq group}">
@@ -143,7 +137,7 @@
 						<th class="left" colspan="13"><input type="text"
 							name="queryname" id="queryname" size="40"
 							value="${model.queryName}">
-		    <input class="btn btn-primary  btn-small" value="Filter"
+		    <input class="btn btn-primary  btn-sm" value="Filter"
 							onclick="selectGroupByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 							type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。

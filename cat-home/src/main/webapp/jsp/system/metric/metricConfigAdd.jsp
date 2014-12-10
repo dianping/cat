@@ -109,10 +109,10 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-small" id="addCountTag" type="button">
+						<button class="btn btn-success btn-sm" id="addCountTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-small" id="deleteCountTag" type="button">
+			            <button class="btn btn-danger btn-sm" id="deleteCountTag" type="button">
 				            删除<i class="icon-trash icon-white"></i>
 				        </button>				     
 				        <span class="text-error"><strong>【添加业务大盘标签会自动进行基线告警】</strong></span>
@@ -144,10 +144,10 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-small" id="addAvgTag" type="button">
+						<button class="btn btn-success btn-sm" id="addAvgTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-small" id="deleteAvgTag" type="button">
+			            <button class="btn btn-danger btn-sm" id="deleteAvgTag" type="button">
 				            删除<i class="icon-trash icon-white"></i>
 				        </button>
 				        
@@ -179,10 +179,10 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-small" id="addSumTag" type="button">
+						<button class="btn btn-success btn-sm" id="addSumTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-small" id="deleteSumTag" type="button">
+			            <button class="btn btn-danger btn-sm" id="deleteSumTag" type="button">
 				            删除<i class="icon-trash icon-white"></i>
 				        </button>
 			            <input name="sumTags" type="hidden"/>

@@ -83,7 +83,7 @@
 		<th width="10%">返回码</th>
 		<th width="20%">局部设置</th>
 		<th width="20%">局部状态</th>
-		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code">新增</a></th>
+		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code">新增</a></th>
 	</tr></thead>
 	
 	<tbody>
@@ -101,8 +101,8 @@
 				</c:otherwise>
 				</c:choose>
 				</td>
-				<td><a class='btn  btn-small btn-primary' href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">编辑</a>
-				<a class='delete btn  btn-small btn-danger' href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">删除</a></td>
+				<td><a class='btn  btn-sm btn-primary' href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">编辑</a>
+				<a class='delete btn  btn-sm btn-danger' href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">删除</a></td>
 			</tr>
 	</c:forEach>
 	

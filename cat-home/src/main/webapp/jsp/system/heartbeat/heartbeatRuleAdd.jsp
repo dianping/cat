@@ -28,7 +28,7 @@
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>
 				</div>
 				<div id="metrics" class="config">
-					<button class="btn btn-success btn-small" id="add-metric-button" type="button">
+					<button class="btn btn-success btn-sm" id="add-metric-button" type="button">
 					    添加匹配对象<i class="icon-plus icon-white"></i>
 					</button>
 					
@@ -59,7 +59,7 @@
 					        		<option value="${metric}">${metric}</option>
 					        	</c:forEach>
 					        </select>
-					        <button class="btn btn-danger btn-small delete-metric-button" type="button">
+					        <button class="btn btn-danger btn-sm delete-metric-button" type="button">
 					            <i class="icon-trash icon-white"></i>
 					        </button>
 					    </div>

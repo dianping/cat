@@ -31,11 +31,11 @@
 			</div>
 			项目
 			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen()">全屏</a>
-			<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-			<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-			<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
+			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
+			<a id="fullScreen" class='btn btn-sm btn-primary' onclick="queryFullScreen()">全屏</a>
+			<a id="refresh10" class='btn btn-sm btn-primary' onclick="queryFrequency(10)">10秒</a>
+			<a id="refresh20" class='btn btn-sm btn-primary' onclick="queryFrequency(20)">20秒</a>
+			<a id="refresh30" class='btn btn-sm btn-primary' onclick="queryFrequency(30)">30秒</a>
 			<br>
 			告警类型（可多选）&nbsp;&nbsp;
 			<div class="types">

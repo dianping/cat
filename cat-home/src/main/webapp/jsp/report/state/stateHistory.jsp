@@ -18,7 +18,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a
 								href="?op=history&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
@@ -46,11 +46,11 @@
 		</th>
 	</tr>
 </table>
-<table  class="data" width="80%">
+<table  class="data" width="100%">
 	<tr>
-		<th width="35%" colspan=2>指标</th>
+		<th width="30%" colspan=2>指标</th>
 		<th width="20%">值</th>
-		<th width="45%">备注</th>
+		<th width="50%">备注</th>
 	</tr>
 	</tr>
 	<tr class='odd'>

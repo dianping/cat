@@ -16,7 +16,7 @@
 		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 		<div class="opNav">
 		<%@ include file="metricOpNav.jsp" %>
 		<table>

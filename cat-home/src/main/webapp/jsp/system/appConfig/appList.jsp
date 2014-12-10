@@ -115,7 +115,7 @@
 								<th width="40%">名称</th>
 								<th width="20%">项目</th>
 								<th width="20%">标题</th>
-								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate&type=api">新增</a></th>
+								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm update' href="?op=appUpdate&type=api">新增</a></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -125,8 +125,8 @@
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
 										<td>${item.title }</td>
-										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}&type=api">编辑</a>
-										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}&type=api">删除</a></td>
+										<td><a class='btn  btn-sm btn-primary update' href="?op=appUpdate&id=${item.id}&type=api">编辑</a>
+										<a class='delete btn  btn-sm btn-danger' href="?op=appPageDelete&id=${item.id}&type=api">删除</a></td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -140,7 +140,7 @@
 								<th width="20%">名称</th>
 								<th width="35%">项目</th>
 								<th width="30%">标题</th>
-								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small update' href="?op=appUpdate&type=activity">新增</a></th>
+								<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm update' href="?op=appUpdate&type=activity">新增</a></th>
 							</tr></thead>
 							
 							<tbody>
@@ -150,8 +150,8 @@
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
 										<td>${item.title }</td>
-										<td><a class='btn  btn-small btn-primary update' href="?op=appUpdate&id=${item.id}&type=activity">编辑</a>
-										<a class='delete btn  btn-small btn-danger' href="?op=appPageDelete&id=${item.id}&type=activity">删除</a></td>
+										<td><a class='btn  btn-sm btn-primary update' href="?op=appUpdate&id=${item.id}&type=activity">编辑</a>
+										<a class='delete btn  btn-sm btn-danger' href="?op=appPageDelete&id=${item.id}&type=activity">删除</a></td>
 									</tr>
 								</c:if>
 							</c:forEach>
@@ -169,7 +169,7 @@
 								<th width="20%">加载阶段</th>
 								<th width="20%">说明</th>
 								<th width="20%">延时阈值(毫秒)</th>
-								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appSpeedAdd&type=speed">新增</a></th>
+								<th width="20%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=appSpeedAdd&type=speed">新增</a></th>
 							</tr>
 							</thead>
 							<tbody>
@@ -180,8 +180,8 @@
 									<td>${item.step }</td>
 									<td>${item.title }</td>
 									<td>${item.threshold }</td>
-									<td><a class='btn  btn-small btn-primary' href="?op=appSpeedUpdate&id=${item.id}&type=speed">编辑</a>
-									<a class='delete btn  btn-small btn-danger' href="?op=appSpeedDelete&id=${item.id}&type=speed">删除</a></td>
+									<td><a class='btn  btn-sm btn-primary' href="?op=appSpeedUpdate&id=${item.id}&type=speed">编辑</a>
+									<a class='delete btn  btn-sm btn-danger' href="?op=appSpeedDelete&id=${item.id}&type=speed">删除</a></td>
 								</tr>
 							</c:forEach>
 							</tbody>

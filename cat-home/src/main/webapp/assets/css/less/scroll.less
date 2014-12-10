@@ -1,0 +1,246 @@
+@scroll-bar-width: 8px;
+@scroll-thin-width: 6px;
+
+
+//.scroll-active {
+ .ace-scroll {
+	overflow: hidden;
+ }
+ .scroll-content {
+	position: static;
+	overflow: hidden;
+ }
+//}
+
+
+
+.scroll-track {
+  position: absolute;
+  top: auto;
+  bottom: auto;
+  right: 0;
+  
+  width: @scroll-bar-width;
+  height: auto;// will be determined at runtime
+  background-color: #E7E7E7;
+
+  z-index: 99;//to appear above content
+  
+  	width: 0;
+	opacity: 0;
+	
+}
+.scroll-bar {
+ position: absolute;
+ top: 0;
+ left: 0;
+ width: inherit;
+ background-color: #ACE;
+ /**transition-property: top;
+ transition-duration: 0.1s;*/
+ 
+ background: saturate(darken(#CFDFEA , 5%), 5%);
+}
+
+
+.scroll-hz .scroll-track {
+ top: auto;
+ left: auto;
+ right: auto;
+ bottom: 0;
+ 
+ height: @scroll-bar-width;
+ width: auto;// will be determined at runtime
+}
+.scroll-hz .scroll-bar {
+ height: inherit;
+ width: auto;
+}
+
+
+
+
+
+.scroll-active .scroll-track {
+	.transition(~"all .25s ease 0.6s");
+}
+.scroll-active:hover .scroll-track,
+.scroll-active .scroll-track.active,
+.scroll-active .scroll-track:active
+{
+	width: @scroll-bar-width;
+	opacity: 1;
+
+	.transition-duration(0.15s);
+	.transition-delay(0s);
+}
+
+
+
+.scroll-track.active > .scroll-bar {
+ transition-property: none !important; 
+ transition-duration: 0s !important; 
+}
+
+
+
+
+
+
+//optional styling classes
+.scroll-margin .scroll-track {
+ right: 1px;
+}
+.scroll-left .scroll-track {
+  right: auto;
+  left: 0;
+  .scroll-margin& {
+	left: 1px;
+  }
+}
+
+//for horizontal
+.scroll-top .scroll-track {
+  bottom: auto;
+  top: 0;
+
+  .scroll-margin& {
+	top: 1px;
+  }
+}
+
+.scroll-dark {
+  .scroll-bar {
+	background-color: rgba(0,0,0,0.25);
+  }
+  .scroll-track {
+	background-color: rgba(0,0,0,0.15);
+  }
+}
+.scroll-light {
+  .scroll-bar {
+	background-color: rgba(0,0,0,0.14);
+  }
+  .scroll-track {
+	background-color: rgba(0,0,0,0.07);
+  }
+}
+.no-track .scroll-track {
+  background-color: transparent;
+}
+
+
+.scroll-visible {
+	.scroll-track {
+		opacity: 1;
+		width: @scroll-bar-width;
+	}
+}
+.scroll-visible.scroll-hz {
+	.scroll-track {
+		height: @scroll-bar-width;
+		width: auto;
+	}
+}
+
+
+.scroll-thin {
+	&:hover .scroll-track, .scroll-track:active, .scroll-track.active, &.scroll-visible .scroll-track {
+		width: @scroll-thin-width;
+	}
+}
+.scroll-thin.scroll-hz {
+	&:hover .scroll-track, .scroll-track:active, .scroll-track.active, &.scroll-visible .scroll-track {
+		width: auto;
+		height: @scroll-thin-width;
+	}
+}
+
+
+
+//style like latest version of Chrome
+.scroll-chrome {
+  .scroll-bar {
+	background-color: transparent;
+	width: 11px;
+	
+	&:before {
+		display: block;
+		content: "";
+		position: absolute;
+		top: 1px;
+		bottom: 3px;
+		left: 1px;
+		right: 1px;
+		
+		background-color: #D9D9D9;
+		border:1px solid #BBB;
+		border-radius: 1px;
+	}
+  }
+  .scroll-track {
+	width: 12px !important;
+	background-color: #F2F2F2;
+	border: 1px solid;
+	border-width: 1px 0 1px 1px;
+	border-color: #E6E6E6 transparent #E6E6E6 #DBDBDB;
+	
+	&:hover {
+		.scroll-bar:before {
+			background-color: #C0C0C0;
+			border-color: #A6A6A6;
+		}
+	}
+	
+	&.active {
+		.scroll-bar:before {
+			background-color: #A9A9A9;
+			border-color: #8B8B8B;
+		}
+	}
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+//special nav-list scroller case
+.nav-wrap + .scroll-active .scroll-track {
+	width: @scroll-bar-width;
+}
+
+.nav-scroll.scroll-active .scroll-track 
+{
+	width: @scroll-bar-width;
+	right: 0;
+}
+.nav-wrap:hover + .scroll-active .scroll-track ,
+.nav-scroll.scroll-active:hover .scroll-track
+{
+	width: @scroll-bar-width;
+	opacity: 1;
+
+	.transition-duration(0.15s);
+	.transition-delay(0s);
+}
+.nav-scroll.scroll-active:hover .scroll-track {
+	width: @scroll-bar-width;
+}
+
+
+
+.nav-scroll.ace-scroll {
+ & , & .scroll-content {
+	overflow: visible;
+ }
+ &.scroll-active , &.scroll-active .scroll-content {
+	overflow: hidden;
+ }
+}

@@ -32,7 +32,7 @@
 					<th width="15%">属于组</th>
 					<th width="42%">Pattern内容</th>
 					<th width="15%">项目组</th>
-					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=urlPatternUpdate">新增</a></th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=urlPatternUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.patternItems}"
@@ -42,8 +42,8 @@
 						<td>${item.group}</td>
 						<td>${item.pattern}</td>
 						<td>${item.domain}</td>
-						<td><a class='btn  btn-small btn-primary'href="?op=urlPatternUpdate&key=${item.name}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=urlPatternDelete&key=${item.name}">删除</a></td>
+						<td><a class='btn  btn-sm btn-primary'href="?op=urlPatternUpdate&key=${item.name}">编辑</a>
+						<a class='delete btn  btn-sm btn-danger' href="?op=urlPatternDelete&key=${item.name}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

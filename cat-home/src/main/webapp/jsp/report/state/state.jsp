@@ -17,7 +17,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}"
 								class="current">All</a>
@@ -49,11 +49,11 @@
 	<h3 class="text-center text-success">CAT服务端正常</h3>
 </c:if>
 
-<table class="data" width="80%">
+<table class="data" width="100%">
 	<tr>
-		<th width="35%" colspan=2>指标</th>
+		<th width="30%" colspan=2>指标</th>
 		<th width="20%">值</th>
-		<th width="45%">备注</th>
+		<th width="50%">备注</th>
 	</tr>
 	<tr class='odd'>
 		<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=total" data-status="total" class="state_graph_link">[:: show ::]</a></td>

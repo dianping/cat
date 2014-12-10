@@ -51,7 +51,7 @@
 					<th width="6%">地区</th>
 					<th width="6%">运营商</th>
 					<th width="6%">告警指标</th>
-					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appRuleUpdate">新增</a></th>
+					<th width="13%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=appRuleUpdate">新增</a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">
@@ -181,8 +181,8 @@
 							<c:if test="${type eq 'success'}">成功率</c:if>  
 							<c:if test="${type eq 'delay'}">响应时间</c:if> 
 						</td>
-						<td><a class='btn  btn-small btn-primary'href="?op=appRuleUpdate&ruleId=${item.id}">编辑</a>
-						<a class='delete btn  btn-small btn-danger' href="?op=appRuleDelete&ruleId=${item.id}">删除</a></td>
+						<td><a class='btn  btn-sm btn-primary'href="?op=appRuleUpdate&ruleId=${item.id}">编辑</a>
+						<a class='delete btn  btn-sm btn-danger' href="?op=appRuleDelete&ruleId=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

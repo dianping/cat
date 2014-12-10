@@ -40,7 +40,7 @@
 						</td>
 						<td>${item.title}</td>
 						<td>${w:format(item.creationDate,'yyyy-MM-dd HH:mm:ss')}</td>
-						<td><a  class="btn btn-primary btn-small" href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
+						<td><a  class="btn btn-primary btn-sm" href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
 					</tr>
 				</c:forEach></tbody>
 			</table>

@@ -14,7 +14,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align:left">
-		<th>机器: &nbsp;[&nbsp; 
+		<th>&nbsp;[&nbsp; 
 					<a href="?op=history&domain=${model.domain}&date=${model.date}${payload.queryString}&ip=All&reportType=${model.reportType}${model.customDate}"
 					>All</a>
 			&nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
@@ -26,10 +26,7 @@
 		</th></tr>
 		
 		<tr class="left">
-			<th>机器分组: &nbsp;&nbsp; 
-				<c:if test="${empty model.groups}">
-			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
-				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a></span>
+			<th>
 			</c:if> 
 				<c:forEach var="group" items="${model.groups}">
 				 <c:choose><c:when test="${payload.group eq group}">

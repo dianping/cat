@@ -1,0 +1,59 @@
+.enable_plugin_typeahead() when(@enable-plugin-typeahead = true) {
+
+input.typeahead,
+input.tt-query,
+input.tt-hint {
+  min-width: 175px;
+  font-size: 16px;
+  line-height: 24px;
+  border: 1px solid #CCC;
+
+  border-radius: 0;
+  outline: none;
+}
+
+input.tt-hint , .form-group input.tt-hint {
+  background-color: #FFF !important;
+  color: #B0B0B0 !important;
+}
+.tt-dropdown-menu {
+  text-align: left;
+
+  position: absolute;
+  left: 0 !important;
+  right: 0 !important;
+  min-width: 175px;
+ 
+  margin-top: 2px;
+  padding: 8px 0;
+  background-color: #FFF;
+  border: 1px solid #D0D0D0;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  
+  border-radius: 0;
+  .box-shadow(~"0 2px 4px rgba(0, 0, 0, 0.2)");
+}
+
+.tt-suggestion {
+  padding: 3px 12px 4px;
+  font-size: 16px;
+  line-height: 24px;
+  
+  &.tt-cursor {
+	color: #FFF;
+	background-color: #4F99C6;
+	cursor: pointer;
+  }
+  
+  p {
+	margin: 0;
+  }
+}
+
+input.typeahead.scrollable ~ .tt-dropdown-menu {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+}
+.enable_plugin_typeahead();

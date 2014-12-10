@@ -163,7 +163,7 @@
 		
 		<c:choose>
 			<c:when test="${empty network}">
-			<td><button class="btn btn-small btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-sm btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${network}</td>
@@ -172,7 +172,7 @@
 		
 		<c:choose>
 			<c:when test="${empty appVersion}">
-			<td><button class="btn btn-small btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-sm btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${appVersion}</td>
@@ -181,7 +181,7 @@
 		
 		<c:choose>
 			<c:when test="${empty channel}">
-			<td><button class="btn btn-small btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-sm btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${channel}</td>
@@ -191,7 +191,7 @@
 		<c:choose>
 			<c:when test="${empty platform}">
 			<td>
-			<button class="btn btn-small btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<button class="btn btn-sm btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${platform}</td>
@@ -200,7 +200,7 @@
 		
 		<c:choose>
 			<c:when test="${empty city}">
-			<td><button class="btn btn-small btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-sm btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${city}</td>
@@ -209,7 +209,7 @@
 		
 		<c:choose>
 			<c:when test="${empty operator}">
-			<td><button class="btn btn-small btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-sm btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${operator}</td>

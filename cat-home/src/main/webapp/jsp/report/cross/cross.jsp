@@ -14,7 +14,7 @@
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
 	<tr class="left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}" class="current">All</a>
 				</c:when>

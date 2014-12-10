@@ -80,7 +80,7 @@
 						<th width="5%">系统监控</th>
 						<th width="5%">数据库监控</th>
 						<!-- <th width="40%">项目列表</th> -->
-						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-small'>新增</a></th>
+						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-sm'>新增</a></th>
 					</tr>
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
 						<tr><td>${item.id}</td><td>${item.title}</td>
@@ -102,8 +102,8 @@
 								${domain.key},
 							</c:forEach>
 						</td> --%>
-						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class='update btn btn-primary btn-small'>修改</a>
-						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class='delete btn-danger btn btn-primary btn-small'>删除</a></td>
+						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class='update btn btn-primary btn-sm'>修改</a>
+						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class='delete btn-danger btn btn-primary btn-sm'>删除</a></td>
 					</tr>
 				</c:forEach>
 			</table></div></c:forEach></div></div>

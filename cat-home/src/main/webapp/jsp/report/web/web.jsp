@@ -165,6 +165,7 @@
 			$('#datetimepicker2').datetimepicker({
 				pickDate: false
 			});
+			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
 			$('#datetimepicker3').datetimepicker();

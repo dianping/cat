@@ -1,0 +1,112 @@
+.enable_plugin_colorbox() when(@enable-plugin-colorbox = true) {
+
+
+//colorbox plugin used in gallery page
+#colorbox:focus , #colorbox:active {
+ outline:none;
+}
+#cboxTopLeft, #cboxTopCenter, #cboxTopRight,
+#cboxMiddleLeft, #cboxMiddleRight,
+#cboxBottomLeft, #cboxBottomCenter, #cboxBottomRight
+{
+  background:none !important;
+  opacity:0;
+}
+#cboxContent {
+  border:12px solid #000;
+  background-color:#FFF;
+  padding:7px;
+}
+#cboxOverlay {
+  background:rgba(0,0,0,0.95);
+  background:#000;
+}
+#cboxCurrent {
+  left: 64px;
+  margin-bottom:4px;
+  font-size: @baseFontSize + 1;
+}
+#cboxTitle {
+  margin-bottom:4px;
+  font-size: @baseFontSize + 1;
+  color:#777;
+}
+
+
+#cboxNext , #cboxPrevious , #cboxClose {
+ background:none;
+ text-indent:0;
+ width:26px; height:26px; line-height:22px;
+ padding:0 4px;
+ text-align:center;
+ 
+ border:2px solid #999;
+ border-radius:16px;
+ 
+ color:#666;
+ font-size: 12px;
+
+ margin-left: 5px;
+ margin-bottom: 5px;
+}
+#cboxNext:hover , #cboxPrevious:hover {
+ color:#333;
+ border-color:#666;
+}
+#cboxContent {
+ overflow:visible;
+}
+#cboxClose {
+    background-color: #000;
+	    
+	border: 2px solid #FFF;
+    border-radius: 32px;
+    
+    color: #FFF;
+	font-size: 21px;
+	
+    height: 28px;
+	width: 28px;
+	
+	padding-bottom: 2px;
+	margin-left: 0;
+	
+	right: -14px;
+    top: -14px;
+}
+
+
+#cboxLoadingOverlay {
+  background:none !important;
+}
+#cboxLoadingGraphic {
+  background:#FFF none !important;
+  text-align:center;
+  
+  > .@{icon} {
+	 display: inline-block;
+	 background-color: #FFF;
+	 border-radius: 8px;
+
+	 width: 32px;
+	 height: 32px;
+	 
+	 position: relative;
+	 top: 48%;
+
+
+	 text-align: center;
+	 vertical-align: middle;
+
+	 .animation(~"spin 1.5s infinite linear");
+	 
+	 
+	 font-size: 24px;
+	 color: #FE7E3E;
+ }
+
+}
+
+
+}
+.enable_plugin_colorbox();

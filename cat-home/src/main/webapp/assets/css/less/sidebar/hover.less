@@ -1,0 +1,225 @@
+@hover-submenu-background-active: #F5F5F5;
+@hover-submenu-item-background-hover: #EEF3F7;
+@hover-submenu-item-color-hover: #2E7DB4;
+
+
+.enable_submen_hover() when (@enable-submenu-hover = true) {
+ 
+ @media only screen and (min-width: @screen-hover-menu) {
+  .nav-list li.hover {
+	 > .submenu {
+		position: absolute;
+		left: 100%;
+		margin-left: -2px;
+
+		top: -10px;
+		bottom: auto;
+		z-index: @zindex-submenu;
+
+		width: @sidebar-width;
+		border: 1px solid;
+		
+		display: none !important;
+
+		//.transition(~"max-height 0s linear 0.4s, z-index 0s linear 0.4s, opacity 0.1s linear 0.3s");
+	 }
+	 &:hover > .submenu {
+		display: block !important;
+	 }
+
+	 //hide the tree like lines
+	 > .submenu {
+		&:before , > li:before {
+			display: none;
+		}
+	 }
+
+
+	 &.active > a:after {
+		display: block;
+	 }
+	 //hide the active caret when hovered, li > .arrow is show instead
+	 &.active:hover > a.dropdown-toggle:after {
+		display: none;
+	 }
+
+	 //hide the submenu active caret
+	 .submenu > li.active > a:after {
+		display: none !important;
+	 }
+  }
+
+
+
+
+	//the submenu shown from bottom not top, i.e. when we want to move the submenu up so that it doesn't go out of the window
+	.nav-list li.hover > .submenu.bottom {
+		top: auto;
+		bottom: -10px;
+
+		&:before , &:after {
+			top: auto;
+			bottom: 18px;
+		}
+	}
+
+
+
+	.nav-list li.hover > .submenu {
+		padding: 0 2px;
+		> li > a {
+			margin-top: 2px;
+			margin-bottom: 2px;
+			padding-left: 18px;
+
+			border-top-width: 0;
+		}
+	}
+	.nav-list > li.hover > .submenu > li.active > a {
+		font-weight: bold;
+	}
+
+
+
+
+
+	.nav-list > li > .submenu li.hover > .submenu {
+		> li > a {
+			padding-left: 12px !important;
+			margin-left: auto !important;
+			> .menu-icon {
+				margin-right: 2px;
+			}
+		}
+	}
+
+
+	.nav-list > li .submenu > li.hover > a {
+		padding-left: 22px;
+		> .menu-icon {
+			left: 4px;
+		}
+	}
+
+ }//@media
+
+
+
+  .enable_collapsible_responsive_menu_hover() when (@enable-collapsible-responsive-menu = true) {
+	//reset .hover styles for small screens with .navbar-collapse
+	@media (min-width: @screen-hover-menu) and (max-width: @grid-float-breakpoint-max) {
+	 .sidebar.navbar-collapse {
+		.nav-list li.hover > .submenu {
+			position: relative;
+			left: auto;
+			top: auto;
+			z-index: auto;
+			
+			margin: auto;
+			padding: 0;
+
+			width: auto;
+			
+			.box-shadow(none);
+			border-width: 0;
+
+			> li:before , &:before {
+				display: block;
+			}
+			li > a {
+				padding-left: 37px;	
+			}
+		}
+		.nav-list > li.hover > .submenu {
+			border-top-width: 1px;
+		}
+
+		.nav-list li.hover > .submenu > li > a > .menu-icon {
+			background-color: inherit;
+			margin-right: auto;
+			width: @submenu-item-icon-size;
+			position: absolute;
+		}
+		.nav-list > li .submenu > li.hover > a > .menu-icon {
+			left: 10px;
+		}
+
+		.nav-list li.hover > .submenu > li.active > a {
+			font-weight: normal;
+		}
+
+		.nav-list li.hover > .submenu > li {
+			&:hover, &.active {
+				> a > .menu-icon {
+					display: inline-block;
+				}
+			}
+		}
+
+
+		.nav-list > li > .submenu li.hover > .submenu  {
+			padding-left: 0;
+			padding-right: 0;
+		}
+		.nav-list > li > .submenu li.hover > .submenu > li > a {
+			padding-left: 22px !important;
+			margin-left: 20px !important;
+			> .menu-icon {
+				.3rd_level_icon();
+			}
+		}
+		.nav-list > li > .submenu li > .submenu > li.hover > .submenu > li > a {
+			margin-left: 20px !important;
+			padding-left: 38px !important;
+		}
+
+		.nav-list li.hover > .submenu > li > a {
+			border-top-width: 1px;
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+		.nav-list > li.hover > .submenu > li:first-child > a {
+			border-top-width: 0;
+		}
+
+
+		//.nav-list > li > .submenu li.open.hover:not(:hover):not(:focus):not(.active) > a > .menu-icon {
+			//display: none;
+		//}
+
+		//-li > .arrow
+		.nav-list li.hover > .submenu, .nav-list li.hover:hover > .submenu , .nav-list li.hover > .arrow {
+			display: none !important;
+		}
+
+
+		.nav-list li.hover.active > .submenu {
+			display: block !important;
+		}
+		.nav-list li.hover > .submenu.nav-hide {
+			display: none !important;
+		}
+		.nav-list li.hover > .submenu.nav-show {
+			display: block !important;
+		}
+	  }
+	}
+	
+	@media (min-width: max(@screen-compact-menu, @screen-hover-menu)) and (max-width: @grid-float-breakpoint-max) {
+	 .sidebar.navbar-collapse {
+		&.compact {
+			.nav-list > li.hover.active > a:after {
+				display: none;
+			}
+		}
+	 }
+	}
+
+  }//@enable-collapsible-responsive-menu
+  .enable_collapsible_responsive_menu_hover();
+
+}//@enable-submenu-hover
+.enable_submen_hover();
+
+
+
