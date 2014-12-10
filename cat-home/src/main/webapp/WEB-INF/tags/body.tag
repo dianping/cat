@@ -11,8 +11,9 @@
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
+	 <link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
+<%-- 	 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+ --%>	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
@@ -21,8 +22,11 @@
 	<script src="${model.webapp}/assets/js/ace-extra.min.js"></script>
 	<script src="${model.webapp}/assets/js/bootstrap.min.js"></script>
 	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 	<res:useCss value='${res.css.local.body_css}' target="head-css" />
+	<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
+	<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
+	<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
+	<script src="${model.webapp}/assets/js/ace.min.js"></script>
 	</head>
 
 	<body class="no-skin">
@@ -120,12 +124,12 @@
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="Web_report" >
 						<a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-							<i class="menu-icon fa fa-tachometer"></i>
+							<i class="menu-icon fa fa-globe"></i>
 							<span class="menu-text">Web</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
-					</li><li id="App_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">App</span>
+					</li><li id="App_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-user"></i> <span class="menu-text">App</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -148,17 +152,17 @@
 					</li>
 					<li id="Metric_report" >
 						<a href="/cat/r/metric?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-							<i class="menu-icon fa fa-tachometer"></i>
+							<i class="menu-icon glyphicon glyphicon-signal"></i>
 							<span class="menu-text">Metric</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="Transaction_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Transaction</span>
-							<b class="arrow fa fa-angle-down"></b>
+					<li id="Transaction_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-time"></i> <span class="menu-text">Transaction</span>
+							<b class="arrow fa fa-angle-down "></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="Transaction_report_hour"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+								<i class="menu-icon fa fa-angle-down "></i>小时模式</a>
 								<b class="arrow"></b></li>
 							<li id="Transaction_report_day"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
 								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
@@ -171,7 +175,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Event_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Event</span>
+					</li><li id="Event_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon  glyphicon glyphicon-check"></i> <span class="menu-text">Event</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -189,7 +193,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Problem_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Problem</span>
+					</li><li id="Problem_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bolt"></i> <span class="menu-text">Problem</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -207,7 +211,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Heartbeat_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Heartbeat</span>
+					</li><li id="Heartbeat_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-heart"></i> <span class="menu-text">Heartbeat</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -219,8 +223,8 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Cross_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Cross</span>
-							<b class="arrow fa fa-angle-down"></b>
+					</li><li id="Cross_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-exchange"></i> <span class="menu-text">Cross</span>
+							<b class="arrow fa fa-angle-down "></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="Cross_report_hour"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
@@ -237,8 +241,8 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Cache_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Cache</span>
-							<b class="arrow fa fa-angle-down"></b>
+					</li><li id="Cache_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-coffee"></i> <span class="menu-text">Cache</span>
+							<b class="arrow fa fa-angle-down "></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="Cache_report_hour"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
@@ -255,13 +259,13 @@
 								<b class="arrow"></b></li>
 						</ul>
 				
-					</li><li id="Dependency_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Dependency</span>
-							<b class="arrow fa fa-angle-down"></b>
+					</li><li id="Dependency_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-external-link"></i> <span class="menu-text">Dependency</span>
+							<b class="arrow fa fa-angle-down "></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 						</ul>
 				
-					</li><li id="State_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">State</span>
+					</li><li id="State_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">State</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -279,8 +283,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li></ul>
-			</ul>
-				
+				</ul>
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
 					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
@@ -306,48 +309,8 @@
 				<!-- /section:basics/content.breadcrumbs -->
 			</div><!-- /.main-content -->
 
-			<div class="footer">
-				<div class="footer-inner">
-					<!-- #section:basics/footer -->
-					<div class="footer-content">
-						<span class="bigger-120">
-							<span class="blue bolder">CAT</span>
-							Application © 2003-2014
-						</span>
-					</div>
-					<!-- /section:basics/footer -->
-				</div>
-			</div>
 
-			<a href="#" id="btn-scroll-up" class="btn-scroll-up btn btn-sm btn-inverse">
-				<i class="ace-icon fa fa-angle-double-up icon-only bigger-110"></i>
-			</a>
 		</div><!-- /.main-container -->
-
-		<!-- basic scripts -->
-
-		<!--[if !IE]> -->
-		<script type="text/javascript">
-			window.jQuery || document.write("<script src='${model.webapp}/assets/js/jquery.min.js'>"+"<"+"/script>");
-		</script><script src="${model.webapp}/assets/js/jquery.min.js"></script>
-
-		<!-- <![endif]-->
-
-		<!--[if IE]>
-<script type="text/javascript">
- window.jQuery || document.write("<script src='${model.webapp}/assets/js/jquery1x.min.js'>"+"<"+"/script>");
-</script>
-<![endif]-->
-		<script type="text/javascript">
-			if('ontouchstart' in document.documentElement) document.write("<script src='${model.webapp}/assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-		</script>
-
-		<!-- page specific plugin scripts -->
-		<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
-		<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
-		<!-- ace scripts -->
-		<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
-		<script src="${model.webapp}/assets/js/ace.min.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">

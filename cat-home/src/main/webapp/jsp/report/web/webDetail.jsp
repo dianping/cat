@@ -3,21 +3,18 @@
 		<table width="100%">
 			<tr>
 				<th class="left">
-				<div id="datetimepicker1" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="startTime" name="time" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span></div>结束
-					<div id="datetimepicker2" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="endTime" name="time2" style="height: 30px; width: 70px;"
-							data-format="hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div>
+				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="startTime" name="time"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="endTime" name="time2"  size="8" class="{required:true,date:true}"
+		              data-format="HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
 				组&nbsp;<select style="width: 100px;" name="group" id="group">
 				</select> URL <select style="width: 500px;" name="url" id="url"></select>
 				省份 <select style="width: 100px;" name="province" id="province">
@@ -41,7 +38,7 @@
 						<option value="httpStatus">Http返回码</option>
 						<option value="errorCode">错误码</option>
 				</select>
-				<input class="btn btn-primary "
+				<input class="btn btn-sm btn-primary "
 					value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 					onclick="query()" type="submit">&nbsp;<input class="btn btn-primary" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox" id="checkboxLabel"
@@ -52,21 +49,18 @@
 		<table id="history" style="display: none">
 			<tr>
 				<th class="left">
-					<div id="datetimepicker3" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="startTime2" name="time" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span></div>结束
-					<div id="datetimepicker4" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="endTime2" name="time2" style="height: 30px; width: 70px;"
-							data-format="hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div>
+					<div id="datetimepicker3" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="startTime2" name="time"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		        <div id="datetimepicker4" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="endTime2" name="time2"  size="8" class="{required:true,date:true}"
+		              data-format="HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
 				组&nbsp;<select style="width: 100px;" name="group2" id="group2">
 				</select> URL <select style="width: 500px;" name="url2" id="url2"></select>
 				省份 <select style="width: 100px;" name="province2" id="province2">
@@ -108,10 +102,4 @@
 					<div id="pieChart" style="float: left; width: 98%;"></div>
 			</c:otherwise>
 		</c:choose>
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
 	</div>

@@ -2,22 +2,20 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <table>
 			<tr>
-				<th align=left>开始
-					<div id="datetimepicker1" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time" name="time" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span></div>结束
-					<div id="datetimepicker2" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time2" name="time2" style="height: 30px; width: 70px;"
-							data-format="hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 命令字 <select id="command" style="width: 350px;">
+				<th align=left>
+				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="time" name="time"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="time2" name="time2"  size="8" class="{required:true,date:true}"
+		              data-format="HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		         命令字 <select id="command" style="width: 350px;">
 						<c:forEach var="item" items="${model.commands}" varStatus="status">
 							<c:choose>
 								<c:when test="${empty item.title}">
@@ -76,7 +74,7 @@
 						<option value='operator'>运营商</option>
 				</select>
 				
-				 <input class="btn btn-primary "
+				 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />
 				</th>
@@ -85,8 +83,8 @@
 		<h5 class="text-center">请求量分布</h5>
 		<div id="piechart"></div>
 		<br/>
-<table id="web_content" class="table table-striped table-bordered table-condensed">
-	<thead><tr class="text-success">
+	<table id="web_content" class="table table-striped table-bordered table-condensed">
+		<thead><tr class="text-success">
 		<c:if test="${payload.groupByField.name eq 'code'}">
 		<th>返回码</th>
 		</c:if>

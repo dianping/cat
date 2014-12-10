@@ -58,7 +58,7 @@
 		</th>
 	</tr>
 </table>
-<table class='data' rules="all" style="width:100%;">
+<table class='data'  style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>

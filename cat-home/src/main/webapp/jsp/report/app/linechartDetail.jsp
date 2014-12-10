@@ -1,16 +1,15 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<table >
+<table width="100%">
 			<tr>
-				<th align=left>时间
-					<div id="datetimepicker1" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time" name="time" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 
-						项目<select id="domains" style="width: 200px;"></select>
+				<th>
+					<div id="datetimepicker1" class="input-append  date" style="float:left;">
+		           时间<input id="time" name="time"  size="13" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		         
+						&nbsp;&nbsp;项目<select id="domains" style="width: 200px;"></select>
 						命令字 <select id="command" style="width: 240px;">
 						</select> 
 				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
@@ -51,7 +50,7 @@
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> <input class="btn btn-primary "
+				</select> <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox"
@@ -61,16 +60,14 @@
 		</table>
 		<table id="history" style="display: none">
 			<tr>
-				<th align=left>时间
-					<div id="datetimepicker2" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time2" name="time2" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 
-						项目<select id="domains2" style="width: 200px;"></select>
+				<th align=left>
+				<div id="datetimepicker2" class="input-append  date" style="float:left;">
+		           时间<input id="time2" name="time2"  size="13" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+						&nbsp;&nbsp;项目<select id="domains2" style="width: 200px;"></select>
 						命令字 <select id="command2" style="width: 240px;">
 						</select> 
 						 返回码 <select id="code2" style="width: 120px;">
@@ -117,12 +114,12 @@
 			</tr>
 		</table>
 
-		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-info"><input type="radio"
+		<div>
+			<label class="btn btn-info btn-sm"><input type="radio"
 				name="typeCheckbox" value="request">请求数
-			</label> <label class="btn btn-info"> <input type="radio"
+			</label> <label class="btn btn-info btn-sm"> <input type="radio"
 				name="typeCheckbox" value="success">成功率
-			</label> <label class="btn btn-info">  <input type="radio"
+			</label> <label class="btn btn-info btn-sm">  <input type="radio"
 				name="typeCheckbox" value="delay">成功延时
 			</label>
 		</div>

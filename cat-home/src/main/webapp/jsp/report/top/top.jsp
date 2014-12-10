@@ -38,11 +38,6 @@
 		<a class='btn btn-sm btn-primary' href="?refresh=true&frequency=30">30秒定时刷新</a>
 	</div>
     <%@ include file="topMetric.jsp"%>
-	<table  class="footer">
-		<tr>
-			<td>[ end ]</td>
-		</tr>
-	</table>
 </div>
 </a:body>
 <script type="text/javascript">
