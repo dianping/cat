@@ -58,12 +58,12 @@
 		</th>
 	</tr>
 </table>
-<table class='data'  style="width:100%;">
+<table class='table table-striped table-hover table-condensed'  style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure</a></th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
 				<th class="right">Sample Link</th>
 				<th class="right">Min(ms)</th>
@@ -77,7 +77,7 @@
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td class="left"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 					&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
@@ -92,7 +92,8 @@
 					<td>${w:format(e.std,'###,##0.0')}</td>
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr style="display:none"></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -103,8 +104,8 @@
 			<tr>
 			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
@@ -113,11 +114,11 @@
 			<th>Std(ms)</th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
-			<tr class="graphs"><td colspan="12"><div id="-1" style="display:none"></div></td></tr>
+			<tr class="graphs"><td colspan="12" style="display:none"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space:normal">
@@ -149,7 +150,8 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="	"><td colspan="12"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="	"><td colspan="12" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

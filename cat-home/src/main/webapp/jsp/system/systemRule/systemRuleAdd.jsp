@@ -25,7 +25,7 @@
 				<h3 class="text-center text-success">编辑系统监控规则</h3>
 				
 				<div class="config">
-				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-error">String，唯一性</span>
+				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
 				</div>
 				<div id="metrics" class="config">
 					<button class="btn btn-success btn-sm" id="add-metric-button"

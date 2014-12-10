@@ -39,6 +39,7 @@
 		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
 		<!-- #section:basics/content.searchbox -->
 		<div class="nav-search nav" id="nav-search">
+			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史模式】</span></a></span>
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>
@@ -46,7 +47,7 @@
 		</div><!-- /.nav-search -->
 	</div>
 	<div class="domainNavbar" style="display:none;font-size:small;">
-		<table border="1" rules="all">
+		<table class="table table-striped table-hover table-condensed">
 			<c:forEach var="item" items="${model.domainGroups}">
 				<tr>
 					<c:set var="detail" value="${item.value}" />

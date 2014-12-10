@@ -21,7 +21,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="title text-success"><span class="text-success"><span class="text-danger">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			</td>
 			<td class="nav" >
 				<c:forEach var="nav" items="${model.navs}">

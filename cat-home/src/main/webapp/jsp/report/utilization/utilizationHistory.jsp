@@ -23,10 +23,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="title"><span class="text-success"><span class="text-danger">【报表时间】</span>&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</td>
 			</td>
 			<td class="nav">
-					<a class="switch" href="?domain=${model.domain}&op=utilization"><span class="text-error">【切到小时模式】</span></a>
+					<a class="switch" href="?domain=${model.domain}&op=utilization"><span class="text-danger">【切到小时模式】</span></a>
 					<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">

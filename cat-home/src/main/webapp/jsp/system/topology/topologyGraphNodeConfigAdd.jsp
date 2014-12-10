@@ -10,8 +10,8 @@
 
 
 <form name="topologyGraphNodeConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphNodeConfigAddSumbit">
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改拓扑节点配置信息</h4>
+	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+	<h4 class="text-center text-danger">修改拓扑节点配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
 			<td width="40%"  style="text-align:right" class="text-success">节点规则类型</td>

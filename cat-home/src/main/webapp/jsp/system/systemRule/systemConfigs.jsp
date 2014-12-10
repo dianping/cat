@@ -49,7 +49,7 @@
 				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<table class="table table-striped table-bordered table-condensed table-hover">
 	     		<tr class="text-success">
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
@@ -67,7 +67,7 @@
 	     			<td>${item.metricText}</td>
 	     			<td>
 	     				<c:if test="${item.monitorCount}">
-	     					<span class="text-error">是</span>
+	     					<span class="text-danger">是</span>
 	     				</c:if>
 	     				<c:if test="${item.monitorCount == false}">
 	     					<span>否</span>
@@ -75,7 +75,7 @@
 	     			</td>
 	     			<td>
 	     				<c:if test="${item.monitorAvg}">
-	     					<span class="text-error">是</span>
+	     					<span class="text-danger">是</span>
 	     				</c:if>
 	     				<c:if test="${item.monitorAvg == false}">
 	     					<span>否</span>
@@ -83,7 +83,7 @@
 	     			</td>
 	     			<td>
 	     				<c:if test="${item.monitorSum}">
-	     					<span class="text-error">是</span>
+	     					<span class="text-danger">是</span>
 	     				</c:if>
 	     				<c:if test="${item.monitorSum == false}">
 	     					<span>否</span>

@@ -19,9 +19,8 @@
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	
 	<div class='report'>
-		<%@ include file="dependencyOpNav.jsp" %>
-		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
-	    			<%@ include file="dependencyLineGraph.jsp"%>
+		<div class="tabbable text-danger" id="content"> <!-- Only required for left/right tabs -->
+			<%@ include file="dependencyLineGraph.jsp"%>
 	  </div>
 </jsp:body>
 </a:report>

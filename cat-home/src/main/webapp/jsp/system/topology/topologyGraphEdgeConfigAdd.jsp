@@ -4,8 +4,8 @@
 
 <form name="topologyGraphEdgeConfigAddSumbit" id="form" method="post"
 	action="${model.pageUri}?op=topologyGraphEdgeConfigAddSumbit">
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改依赖关系配置信息</h4>
+	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+	<h4 class="text-center text-danger">修改依赖关系配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
 			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>

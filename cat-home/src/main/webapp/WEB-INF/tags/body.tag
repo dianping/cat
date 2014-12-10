@@ -11,9 +11,8 @@
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-	 <link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
-<%-- 	 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
- --%>	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
@@ -48,17 +47,11 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="#" class="navbar-brand">
+					<a href="http://github.com/dianping/cat"  target="_blank" class="navbar-brand">
 						<small>
 							CAT
 						</small>
 					</a>
-
-					<!-- /section:basics/navbar.layout.brand -->
-
-					<!-- #section:basics/navbar.toggle -->
-
-					<!-- /section:basics/navbar.toggle -->
 				</div>
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
@@ -69,22 +62,17 @@
 							<span class="user-info">
 								<span id="loginInfo" ></span>
 							</span>
-		
 							<i class="ace-icon fa fa-caret-down"></i>
 						</a>
 						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
-								<a href="#">
+									<a href="http://github.com/dianping/cat" target="_blank">关注</a>
 									<a href="/cat/s/login?op=logout" >注销</a>
-								</a>
 							</li>
 						</ul>
 					</li>
-		
-					<!-- /section:basics/navbar.user_menu -->
 				</ul>
 			</div> 
-				<!-- /section:basics/navbar.dropdown -->
 			</div><!-- /.navbar-container -->
 		</div>
 
@@ -122,6 +110,24 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
+					<li id="Dashboard_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Dashboard</span>
+							<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
+							<li id="dashbord_system"><a href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>系统报错</a>
+								<b class="arrow"></b></li>
+							<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
+								<b class="arrow"></b></li>
+							<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
+								<b class="arrow"></b></li>
+							<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
+								<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
+								<b class="arrow"></b></li>
+						</ul>
+					</li>
 					<li id="Web_report" >
 						<a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
 							<i class="menu-icon fa fa-globe"></i>
@@ -129,7 +135,7 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					</li><li id="App_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-user"></i> <span class="menu-text">App</span>
+					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-earphone"></i> <span class="menu-text">App</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -150,139 +156,68 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="Metric_report" >
+					<%-- <li id="Metric_report" >
 						<a href="/cat/r/metric?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
 							<i class="menu-icon glyphicon glyphicon-signal"></i>
 							<span class="menu-text">Metric</span>
 						</a>
-						<b class="arrow"></b>
+					</li> --%>
+					<li id="Transaction_report" >
+						<a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon glyphicon glyphicon-time"></i>
+							<span class="menu-text">Transaction</span>
+						</a>
 					</li>
-					<li id="Transaction_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-time"></i> <span class="menu-text">Transaction</span>
-							<b class="arrow fa fa-angle-down "></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="Transaction_report_hour"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-angle-down "></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="Transaction_report_day"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-							<li id="Transaction_report_week"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="Transaction_report_month"><a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-				
-					</li><li id="Event_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon  glyphicon glyphicon-check"></i> <span class="menu-text">Event</span>
+					<li id="Event_report" >
+						<a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon glyphicon glyphicon-check"></i>
+							<span class="menu-text">Event</span>
+						</a>
+					</li>					
+					<li id="Problem_report" >
+						<a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-bolt"></i>
+							<span class="menu-text">Problem</span>
+						</a>
+					</li>			
+					<li id="Heartbeat_report" >
+						<a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon  fa fa-heart"></i>
+							<span class="menu-text">Heartbeat</span>
+						</a>
+					</li>		
+					<li id="Cross_report" >
+						<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon  fa fa-exchange"></i>
+							<span class="menu-text">Cross</span>
+						</a>
+					</li>		
+					<li id="Cache_report" >
+						<a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon  fa fa-coffee"></i>
+							<span class="menu-text">Cache</span>
+						</a>
+					</li>
+					<li id="Dependency_report" class="hsub"><a href="/cat/r/dependency?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-earphone"></i> <span class="menu-text">Dependency</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="Event_report_hour"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
+							<li id="dependency_trend"><a href="/cat/r/dependency?op=lineChart&domain=${model.domain}&date=${model.date}">
+								<i class="menu-icon fa fa-caret-right"></i>趋势图</a>
 								<b class="arrow"></b></li>
-							<li id="Event_report_day"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
+							<li id="dependency_topo"><a href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">
+								<i class="menu-icon fa fa-caret-right"></i>拓扑图</a>
 								<b class="arrow"></b></li>
-							<li id="Event_report_week"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="Event_report_month"><a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
+							
 						</ul>
-				
-					</li><li id="Problem_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bolt"></i> <span class="menu-text">Problem</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="Problem_report_hour"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="Problem_report_day"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-							<li id="Problem_report_week"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="Problem_report_month"><a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-				
-					</li><li id="Heartbeat_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-heart"></i> <span class="menu-text">Heartbeat</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="Heartbeat_report_hour"><a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="Heartbeat_report_day"><a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-				
-					</li><li id="Cross_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-exchange"></i> <span class="menu-text">Cross</span>
-							<b class="arrow fa fa-angle-down "></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="Cross_report_hour"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cross_report_day"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cross_report_week"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cross_report_month"><a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-				
-					</li><li id="Cache_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-coffee"></i> <span class="menu-text">Cache</span>
-							<b class="arrow fa fa-angle-down "></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="Cache_report_hour"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cache_report_day"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cache_report_week"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="Cache_report_month"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-				
-					</li><li id="Dependency_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-external-link"></i> <span class="menu-text">Dependency</span>
-							<b class="arrow fa fa-angle-down "></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-						</ul>
-				
-					</li><li id="State_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">State</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="State_report_hour"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-								<i class="menu-icon fa fa-caret-right"></i>小时模式</a>
-								<b class="arrow"></b></li>
-							<li id="State_report_day"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=day&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>天模式</a>
-								<b class="arrow"></b></li>
-							<li id="State_report_week"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=week&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>周模式</a>
-								<b class="arrow"></b></li>
-							<li id="State_report_month"><a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=month&op=history">
-								<i class="menu-icon fa fa-caret-right"></i>月模式</a>
-								<b class="arrow"></b></li>
-						</ul>
-					</li></ul>
+					</li>
+					<li id="State_report" >
+						<a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon  fa fa-cogs"></i>
+							<span class="menu-text">State</span>
+						</a>
+					</li>
+					</ul>
 				</ul>
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
@@ -305,14 +240,8 @@
  				<div style="padding-right:8px;">
  				<jsp:doBody/>
  				</div>
-				<!-- #section:basics/content.breadcrumbs -->
-				<!-- /section:basics/content.breadcrumbs -->
 			</div><!-- /.main-content -->
-
-
 		</div><!-- /.main-container -->
-
-		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
 			jQuery(function($) {
 				//override dialog's title function to allow for HTML titles
@@ -349,9 +278,7 @@
 							}
 						]
 					});
-			
 				});
-				
 				//tooltips
 				$( "#show-option" ).tooltip({
 					show: {
@@ -464,23 +391,13 @@
 				}
 				var name = decodeURI(temp);
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='欢迎您,'+name;
+				loginInfo.innerHTML ='欢迎'+name;
 			} else{
 				var loginInfo=document.getElementById('loginInfo');
 				loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';
 			}
-			
-			
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
-			
-			var op = '${payload.action.name}';
-			
-			if(op=='view'){
-				$('#'+page+"_report_hour").addClass("active");
-			}else{
-				$('#'+page+"_report_"+'${payload.reportType}').addClass("active");
-			}
 		});
 	</script>
 </body>

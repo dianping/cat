@@ -29,7 +29,7 @@
 		</br>
 			<table class=" table table-striped table-bordered table-condensed"  width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="15%" style="width:15%">项目名</th>
 					<th width="15%">CMDB</th>
 					<th width="5%">级别</th>
@@ -41,7 +41,7 @@
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.projects}"
 					varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>${item.domain}</td>
 						<td>${item.cmdbDomain}</td>
 						<td>${item.level}</td>

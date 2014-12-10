@@ -28,7 +28,7 @@
 			</br>
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="10%">告警名</th>
 					<th width="10%">组</th>
 					<th width="35%">URL</th>
@@ -51,7 +51,7 @@
 					<c:set var="operator" value="${fn:substringAfter(cityOperator, ';')}" />
 					<c:set var="type" value="${strs[1]}" />
 					<c:set var="name" value="${strs[2]}" />
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>${name}</td>
 						<c:forEach var="i" items="${model.patternItems}">
 							<c:if test="${i.name eq urlId}"><td>${i.group}</td><td>${i.pattern}</td></c:if>

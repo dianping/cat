@@ -5,12 +5,12 @@
 </div>
  <div class="row-fluid">
  		<div class="span6">
- 			<h5 class="text-error text-center">项目本身详细数据</h5>
+ 			<h5 class="text-danger text-center">项目本身详细数据</h5>
  			<table	class="contents table table-striped table-bordered table-condensed">
 			<thead>	<tr>
 				<th>Name</th>
-				<th>Total Count</th>
-				<th>Failure Count</th>
+				<th>Total</th>
+				<th>Failure</th>
 				<th>Failure%</th>
 				<th>Avg(ms)</th>
 				<th>Config</th>
@@ -30,13 +30,13 @@
 		</table>
  		</div>
  		<div class="span6">
- 			<h5 class="text-error text-center">依赖项目详细数据</h5>
+ 			<h5 class="text-danger text-center">依赖项目详细数据</h5>
 		<table class="contentsDependency table table-striped table-bordered table-condensed">
 			<thead>	<tr>
 				<th>Type</th>
 				<th>Target</th>
-				<th>Total Count</th>
-				<th>Failure Count</th>
+				<th>Total</th>
+				<th>Failure</th>
 				<th>Failure%</th>
 				<th>Avg(ms)</th>
 				<th>Config</th>

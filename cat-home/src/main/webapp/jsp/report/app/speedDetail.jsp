@@ -141,7 +141,7 @@
 	<tbody>
 	<c:set var="summarys" value="${model.appSpeedSummarys}" />
 		<c:forEach var="entry" items="${summarys['当前值']}" >
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<tr class="right">
 	 		<td style="text-align: center">${entry.value.dayTime}</td>
 			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
@@ -158,7 +158,7 @@
 				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
 				</c:when>
 				<c:otherwise>
-				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				<td class="text-danger">${w:format(ratio,'#0.000')}%</td>
 				</c:otherwise>
 				</c:choose>
 			</c:if>
@@ -197,7 +197,7 @@
 	<tbody id="details">
 		<c:set var="details" value="${model.appSpeedDetails}" />
 		<c:forEach var="entry" items="${details['当前值']}" >
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right" >
+		<tr class="right" >
 	 		<td style="text-align: center">${entry.value.dateTime}</td>
 			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
@@ -214,7 +214,7 @@
 				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
 				</c:when>
 				<c:otherwise>
-				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				<td class="text-danger">${w:format(ratio,'#0.000')}%</td>
 				</c:otherwise>
 				</c:choose>
 			</c:if>

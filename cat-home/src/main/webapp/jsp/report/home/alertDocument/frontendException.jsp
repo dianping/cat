@@ -8,10 +8,10 @@
 <img class="img-polaroid" width='60%'
 	src="${model.webapp}/images/alert/frontendException.png" />
 <p>各个参数含义如下</p>
-<p><span class="text-error">[报表类型、域名]</span>：请勿更改</p>
-<p><span class="text-error">[模版]</span>：被监控的网址</p>
-<p><span class="text-error">[告警阈值]</span>：在一分钟内js抛出error个数的上限值。超过这个值就会发出告警</p>
-<p><span class="text-error">[联系人邮件]</span>：告警联系人。多个联系人请用，分开</p>
+<p><span class="text-danger">[报表类型、域名]</span>：请勿更改</p>
+<p><span class="text-danger">[模版]</span>：被监控的网址</p>
+<p><span class="text-danger">[告警阈值]</span>：在一分钟内js抛出error个数的上限值。超过这个值就会发出告警</p>
+<p><span class="text-danger">[联系人邮件]</span>：告警联系人。多个联系人请用，分开</p>
 <br/>
 <h4 class="text-success">规则更新</h4>
 <p>1).点击config－－外部监控配置－－JS合并规则，进入前端JS监控规则配置页面。</p>

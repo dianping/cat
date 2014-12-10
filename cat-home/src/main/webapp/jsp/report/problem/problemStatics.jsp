@@ -74,7 +74,7 @@
 		</th>
 	</tr>
 </table>
-<table class="data"  style="width:100%">
+<table class="table table-hover table-striped"  style="width:100%">
 	<tr>
 		<th width="12%">Type</th>
 		<th width="4%">Total</th>
@@ -85,24 +85,24 @@
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)*2}"
-				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">
-				<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+			<td rowspan="${w:size(statistics.value.status)*3}" top">
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
+				</br>
+				<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 			</td>
-			<td rowspan="${w:size(statistics.value.status)*2}" class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} right top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
+			<td rowspan="${w:size(statistics.value.status)*3}"  right top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+				<td>
 					<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'} right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+				<td  right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
+				<td >
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
@@ -110,10 +110,12 @@
 				<c:if test="${index.index != 0}">
 				</tr>
 				</c:if>
-				<tr><td colspan="3"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
+				<tr><td colspan="3"  style="display:none"></td></tr>
+				<tr><td colspan="3"  style="display:none"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</tr>
-		<tr class="graphs"><td colspan="5"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
+		<tr class="graphs"><td colspan="5" style="display:none"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
+		<tr></tr>
 	</c:forEach>
 </table>
 

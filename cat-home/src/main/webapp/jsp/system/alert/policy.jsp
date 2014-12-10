@@ -21,8 +21,8 @@
 			<form name="alertPolicy" id="form" method="post"
 				action="${model.pageUri}?op=alertPolicy"
 				onsubmit="return validate_form(this)">
-				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">告警类型</h4>
+				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+				<h4 class="text-center text-danger">告警类型</h4>
 				<table
 					class="table table-striped table-bordered table-condensed table-hover">
 					<tr>

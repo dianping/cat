@@ -41,10 +41,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.alertReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.alertReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
+			<td class="title"><span class="text-success"><span class="text-danger">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.alertReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.alertReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
 			</td>
 			<td class="nav" >
-				<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-error">【切到历史模式】</span></a>
+				<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-danger">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?op=alert&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>

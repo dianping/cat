@@ -37,7 +37,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.httpThreadGraph}
 		  ${model.catThreadGraph}
 		  ${model.pigeonThreadGraph}
@@ -49,7 +49,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.activeThreadGraph}
 		  ${model.startedThreadGraph}
 		  ${model.totalThreadGraph}
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.newGcCountGraph}
 		  ${model.oldGcCountGraph}
 		  ${model.systemLoadAverageGraph}
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.memoryFreeGraph}
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
@@ -85,7 +85,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="${model.diskRows * 190 }" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="${model.diskRows * 190 }" xmlns="http://www.w3.org/2000/svg">
 		  ${model.disksGraph}
 		</svg>
 	</td>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.catMessageProducedGraph}
 		  ${model.catMessageOverflowGraph}
 		  ${model.catMessageSizeGraph}
@@ -110,7 +110,7 @@
 		<td>
 		<c:set var="size" value="${fn:length(entry.value) }"/>
 		<c:set var="extensionHeight" value="${(size % 3) == 0 ? (size/3)*190 : ((size/3)+1)*190 }"/>
-			<svg version="1.1" width="1400" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
+			<svg version="1.1" width="1200" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
 				<c:forEach items="${entry.value}" var="kv">
 					${kv.value }
 				</c:forEach>
@@ -139,7 +139,7 @@
 		<th>CatSize</th>
 	</tr>
 	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<tr class="right">
 		<td class="center">${item.minute}</td>
 		<td>${item.threadCount}</td>
 		<td>${item.daemonCount}</td>

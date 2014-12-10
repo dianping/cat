@@ -77,12 +77,12 @@
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.config.nodeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>
-				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> <h5 class="text-error">${key}</h5></a></li>
+				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> <h5 class="text-danger">${key}</h5></a></li>
 				</c:forEach>
 			  </ul>
 			  <div class="tab-content">
@@ -90,7 +90,7 @@
 				     <c:set var="key" value="${item.key}"/>
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
-					    <h4 class="text-center text-error">拓扑图节点配置信息：${item.key}</h4>
+					    <h4 class="text-center text-danger">拓扑图节点配置信息：${item.key}</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th><h5 class='text-center'>项目</h5></th><th><h5 class='text-center'>异常Warning阀值</h5></th>
@@ -98,7 +98,7 @@
 				     			<th><h5 class='text-center'>响应时间Error阀值</h5></th>
 				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn update btn-primary btn-sm" href="?op=topologyGraphNodeConfigAdd&type=${item.key}">新增</a></h5></th>
 				     		</tr>
-				     		<tr class="text-error"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
+				     		<tr class="text-danger"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
 					     		<td><h5 class="text-right">${value.defaultErrorThreshold}</h5></td>
 						     	<c:if test="${item.key eq 'Exception'}">
 						     		<td><h5 class="text-right">——</h5></td>

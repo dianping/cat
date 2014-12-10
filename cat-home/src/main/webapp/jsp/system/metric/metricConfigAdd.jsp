@@ -25,7 +25,7 @@
 			</br>
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<form name="metricConfigAddSubmit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSubmit">
-			<span class="text-center text-error" id="state">&nbsp;</span>
+			<span class="text-center text-danger" id="state">&nbsp;</span>
 			<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
 			<table class="table table-striped table-bordered table-condensed">
 				<tr>
@@ -115,7 +115,7 @@
 			            <button class="btn btn-danger btn-sm" id="deleteCountTag" type="button">
 				            删除<i class="icon-trash icon-white"></i>
 				        </button>				     
-				        <span class="text-error"><strong>【添加业务大盘标签会自动进行基线告警】</strong></span>
+				        <span class="text-danger"><strong>【添加业务大盘标签会自动进行基线告警】</strong></span>
 			            <input name="countTags" type="hidden"/>
 					</td>
 				</tr>

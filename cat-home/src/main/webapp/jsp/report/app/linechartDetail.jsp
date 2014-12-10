@@ -144,7 +144,7 @@
 	</tr></thead>
 	<tbody>
 	<c:forEach var="item" items="${model.appDataDetailInfos}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<tr class="right">
 		<c:set var="networkCode" value="${item.network}"/>
 		<c:set var="appVersionCode" value="${item.appVersion}"/>
 		<c:set var="channelCode" value="${item.connectType}"/>

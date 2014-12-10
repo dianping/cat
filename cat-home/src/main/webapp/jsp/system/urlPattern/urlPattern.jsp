@@ -27,7 +27,7 @@
 			</br>
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="15%">唯一ID</th>
 					<th width="15%">属于组</th>
 					<th width="42%">Pattern内容</th>
@@ -37,7 +37,7 @@
 
 				<c:forEach var="item" items="${model.patternItems}"
 					varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>${item.name}</td>
 						<td>${item.group}</td>
 						<td>${item.pattern}</td>

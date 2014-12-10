@@ -1,8 +1,8 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <c:forEach var="item" items="${model.minutes}" varStatus="status">
 	<c:if test="${status.index % 30 ==0}">
-		<div class="pagination">
-		<ul>
+		<div >
+		<ul class="pagination">
 	</c:if>
 		<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
 		class="href${item}" href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&minute=${item}&productLine=${payload.productLine}&fullScreen=${payload.fullScreen}&refresh=${payload.refresh}&frequency=${payload.frequency}">

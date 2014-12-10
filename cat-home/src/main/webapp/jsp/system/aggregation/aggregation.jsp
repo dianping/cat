@@ -27,7 +27,7 @@
 			</br>
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="15%">报表类型</th>
 					<th width="10%">域名</th>
 					<th width="40%">规则</th>
@@ -40,7 +40,7 @@
 
 				<c:forEach var="item" items="${model.aggregationRules}"
 					varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<c:choose>
 							<c:when test="${item.type == 1}">
 								<td>transaction</td>

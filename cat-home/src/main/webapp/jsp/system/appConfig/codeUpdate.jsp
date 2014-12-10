@@ -24,20 +24,20 @@
 			
 			if(codeId == "undefined" || codeId.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeId").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			
 			if(codeName == "undefined" || codeName.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeName").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			if(codeStatus == "undefined" || codeStatus.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeStatus").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeStatus").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
@@ -68,11 +68,11 @@
 		</td>
 		</c:when>
 		<c:otherwise>
-			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-error">（* 仅支持数字）</span><br/>
+			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-danger">（* 仅支持数字）</span><br/>
 		</c:otherwise>
 		</c:choose>
 		<tr>
-			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-error">（* 支持数字、字符）</span><br/>
+			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-danger">（* 支持数字、字符）</span><br/>
 </td>
 </tr>
 <tr>

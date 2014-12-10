@@ -100,6 +100,10 @@ $(document).ready(function() {
 		$('.opNav').slideUp();
 		$('#switch').html("显示");
 	}	
+	
+	$('#Dashboard_report').addClass("open active");
+	$('#dashbord_system').addClass("active");
+	$('#Dependency_report').removeClass("open active");
 });
 
 function showOpNav() {

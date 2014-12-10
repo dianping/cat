@@ -18,10 +18,10 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.serviceReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.serviceReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="title text-success"><span class="text-success"><span class="text-danger">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.serviceReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.serviceReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			</td>
 			<td class="nav" >
-				<a href="?op=historyService&domain=${model.domain}" class="switch"><span class="text-error">【切到历史模式】</span></a>
+				<a href="?op=historyService&domain=${model.domain}" class="switch"><span class="text-danger">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="?date=${model.date}&step=${nav.hours}&${navUrlPrefix}&op=service">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -48,7 +48,7 @@
 				</tr>
 			
 				<c:forEach var="item" items="${model.serviceList}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>${item.id}</td>
 						<td style="text-align:right">${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 						<td style="text-align:right">${w:format(item.failureCount,'#,###,###,###,##0')}</td>

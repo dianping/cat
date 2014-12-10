@@ -21,8 +21,8 @@
 			<form name="alertDefaultReceivers" id="form" method="post"
 				action="${model.pageUri}?op=alertDefaultReceivers"
 				onsubmit="return validate_form(this)">
-				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">告警默认发送人</h4>
+				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+				<h4 class="text-center text-danger">告警默认发送人</h4>
 				<table
 					class="table table-striped table-bordered table-condensed table-hover">
 					<tr>

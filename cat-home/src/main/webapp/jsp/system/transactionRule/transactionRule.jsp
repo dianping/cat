@@ -20,7 +20,7 @@
 			</br>
 			<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="15%">项目组</th>
 					<th width="30%">Type</th>
 					<th width="30%">Name</th>
@@ -32,7 +32,7 @@
 					<c:set var="domain" value="${conditions[0]}" />
 					<c:set var="type" value="${conditions[1]}" />
 					<c:set var="name" value="${conditions[2]}" />
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>${domain}</td>
 						<td>${type}</td>
 						<td>${name}</td>

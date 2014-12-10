@@ -79,7 +79,7 @@
 	<br/>
 <table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
 	<thead>
-	<tr class="odd">
+	<tr >
 		<th width="10%">返回码</th>
 		<th width="20%">局部设置</th>
 		<th width="20%">局部状态</th>
@@ -97,7 +97,7 @@
 					<span class="text-success">成功</span>
 				</c:when>
 				<c:otherwise>
-					<span class="text-error">失败</span>
+					<span class="text-danger">失败</span>
 				</c:otherwise>
 				</c:choose>
 				</td>
@@ -108,7 +108,7 @@
 	
 	<tr><td colspan="4"></td></tr>
 	<thead>
-	<tr class="odd">
+	<tr >
 		<th>返回码</th>
 		<th>全局设置</th>
 		<th colspan="2">全局状态</th>
@@ -123,7 +123,7 @@
 					<span class="text-success">成功</span>
 				</c:when>
 				<c:otherwise>
-					<span class="text-error">失败</span>
+					<span class="text-danger">失败</span>
 				</c:otherwise>
 				</c:choose>
 				</td>

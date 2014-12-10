@@ -21,7 +21,7 @@
 	 </div>
 	 <div class="span10">
 	 <br/>
-	<table class='data'>
+	<table  class='table table-hover table-striped table-condensed' >
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
@@ -36,7 +36,7 @@
 		<th colspan="3" title="一次请求中缓存调用次数统计">Cache Ratio</th>
 		<th colspan="3" title="一次请求中缓存调用时间统计">Cache Cost</th>
 	</tr>
-	<tr class="odd">
+	<tr >
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callMinCount">Min</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callMaxCount">Max</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callAvgCount">Avg</a></td>
@@ -60,7 +60,7 @@
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}"
 				varStatus="status">
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
+				<tr class="  right">
 					<td  class="left">${item.type}</td>
 					<td  class="left longText" style="white-space:normal">${w:shorten(item.name, 120)}</td>
 					<td>${item.count}</td>

@@ -93,6 +93,9 @@
 			$('.opNav').slideUp();
 			$('#switch').html("显示");
 		}
+		$('#Dashboard_report').addClass("open active");
+		$('#dashbord_metric').addClass("active");
+
 	});
 	
 	function showOpNav() {

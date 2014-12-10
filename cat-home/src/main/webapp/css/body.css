@@ -1,74 +1,13 @@
-.report .header {
-	background: #f5f5f5;
-	font-weight: bold;
-	border: solid #ccc 1px;
-	border-radius: 4px;
-	width: 100%;
-}
-
-.report .header .nav {
-	text-align: right;
-	font-weight: bold;
-	color: black;
-}
-
-.footer {
-	background: #f5f5f5;
-	font-weight: bold;
-	border: solid #ccc 1px;
-	width: 100%;
-	text-align: center;
-	border-radius: 4px;
-}
-
 .current {
 	background-color: #3CB371;
 }
 
 table{
 	font-size:14px;
-	rules:all；
 }
 
 .machines th{
-	font-size:13px;
-}
-
-.data{
-	border:1px solid #dddddd;
-	border-radius:4px;
-}
-
-.data tr.head th {
-	background-color: #f2f2f2;
-}
-
-.data tr th {
-	background-color: #f2f2f2;
-}
-
-.data tr.odd td {
-	background-color: #f5f5f5;
-}
-
-.data tr.even td {
-	background-color: white;
-}
-
-.data tr.odd th {
-	background-color: #f5f5f5;
-}
-
-.data tr.even th {
-	background-color: white;
-}
-
-.data td.odd {
-	background-color: #f5f5f5;
-}
-
-.data td.even {
-	background-color: white;
+	font-size:14px;
 }
 
 th{
@@ -182,10 +121,13 @@ a.heartbeat {
 .center {
 	text-align: center;
 }
+.breadcrumbs{
+	font-size:14px;
+}
 
 .department {
 	text-align: left;
-	font-size:15px;
+	font-size:14px;
 	width: 100px;
 }
 
@@ -218,8 +160,8 @@ a.heartbeat {
 
 .pieChart {
 	text-align: left;
-	width: 700px;
-	height: 450px;
+	width: 500px;
+	height: 300px;
 	margin: 4px auto;
 }
 

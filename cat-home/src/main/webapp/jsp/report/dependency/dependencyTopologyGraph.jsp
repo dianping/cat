@@ -11,23 +11,17 @@
 	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
 	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	
+
 <div class="report">
-	<div class="row-fluid">
- 		<div class="span12 text-center">
-		<%@ include file="dependencyOpNav.jsp"%>
-	    </div></div>
-  		<div class="tabbable tabs-left "  > <!-- Only required for left/right tabs -->
-  			<ul class="nav nav-tabs alert-info">
-   			 	<li style="margin-left:20px;" class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>依赖拓扑</strong></a></li>
-   			 	<li class="text-right"><a id="tab3Href" href="#tab3" data-toggle="tab"><strong>数据配置</strong></a></li>
+  		<div class="tabbable tabs-left"  > <!-- Only required for left/right tabs -->
+  			<ul class="nav nav-tabs padding-12  ">
+   			 	<li class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>拓扑</strong></a></li>
+   			 	<li class="text-right"><a id="tab3Href" href="#tab3" data-toggle="tab"><strong>配置</strong></a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -37,7 +31,6 @@
 					  </div>
 	    		</div>
 	    		<div class="tab-pane" id="tab3">
-	   				<%@ include file="dependencyTimeNavTab3.jsp"%>
 	  				<%@ include file="dependencyDetailData.jsp"%>
 	    		</div>
   			</div>
@@ -48,6 +41,7 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#dependency_topo').addClass('active');
 		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.contents').dataTable({

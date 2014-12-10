@@ -21,8 +21,8 @@
 
 <form name="exceptionConfig" id="form" method="post"
 	action="${model.pageUri}?op=exceptionExcludeUpdateSubmit&domain=${payload.domain}&exception=${payload.exception}&type=异常过滤">
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改异常报警配置信息</h4>
+	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+	<h4 class="text-center text-danger">修改异常报警配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed table-hover">
 	<c:set  var="action" value="exceptionExcludeUpdate"/>
 		<tr>

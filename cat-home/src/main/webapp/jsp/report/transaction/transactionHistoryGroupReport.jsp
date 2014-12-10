@@ -34,14 +34,12 @@
 				<c:choose>
 							<c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a class="current"
-									href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
-		   	  			<a
-									href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise>
 						</c:choose>
@@ -66,16 +64,16 @@
 
 	});
 </script>
-<table class='data'>
+<table class='table table-hover table-striped table-condensed' >
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>
 			<th style="text-align: left;"><a
 							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=type${model.customDate}">Type</a></th>
 			<th class="right"><a
-							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=total${model.customDate}">Total Count</a></th>
+							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=total${model.customDate}">Total</a></th>
 			<th class="right"><a
-							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
+							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure</a></th>
 			<th class="right"><a
 							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th>
@@ -94,7 +92,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td style="text-align: left">
 							<a
 								href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}"
@@ -116,9 +114,9 @@
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11"><div id="${status.index}"
-									style="display: none"></div></td>
-						</tr>
+					<td colspan="12" style="display: none"><div id="${status.index}"
+								style="display: none"></div></td>
+					</tr><tr></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -159,9 +157,9 @@
 							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
 			<th class="right"><a
-							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total Count</a></th>
+							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total</a></th>
 			<th class="right"><a
-							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure Count</a></th>
+							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure</a></th>
 			<th class="right"><a
 							href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
 			<th class="right">Sample Link</th>
@@ -183,12 +181,11 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td class="longText" style="text-align: left; white-space: normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a
-											href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}"
+					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}"
 											class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise>
@@ -209,9 +206,9 @@
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="12"><div id="${status.index}"
-									style="display: none"></div></td>
-						</tr>
+						<td colspan="12" style="display: none"><div id="${status.index}" style="display: none"></div></td>
+				</tr>
+				<tr></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
@@ -228,10 +225,7 @@
 			</tr>
 		</table>
 		<script type="text/javascript">
-			var data = $
-			{
-				model.pieChart
-			};
+			var data = ${model.pieChart};
 			graphPieChart(document.getElementById('transactionGraph'), data);
 		</script>
 	</c:when>

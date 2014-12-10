@@ -23,23 +23,23 @@
 					<tr>
 						<th width="10%">唯一ID</th>
 						<td width="50%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
-						<td width="40%"><span class="text-error">不能有特殊字符，仅限于英文字母和-</span></td>
+						<td width="40%"><span class="text-danger">不能有特殊字符，仅限于英文字母和-</span></td>
 					</tr>
 					<tr>
 						<th>所属组</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.group" required value="${model.patternItem.group}"/></td>
-						<td><span class="text-error">暂时不起作用，仅仅用作url的分组，用于展示目的</span></td>
+						<td><span class="text-danger">暂时不起作用，仅仅用作url的分组，用于展示目的</span></td>
 					</tr>
 					<tr>
 						<th>Pattern名</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.pattern" required value="${model.patternItem.pattern}"/></td>
-						<td><span class="text-error">支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api，
+						<td><span class="text-danger">支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api，
 													<br/>部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
 					</tr>
 					<tr>
 						<th>项目组</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.domain" required value="${model.patternItem.domain}"/></td>
-						<td><span class="text-error">根据项目组查找需要发送告警的联系人信息</span></td>
+						<td><span class="text-danger">根据项目组查找需要发送告警的联系人信息</span></td>
 					</tr>
 					<tr>
 						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="提交" /></td>

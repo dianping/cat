@@ -56,12 +56,12 @@
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
-			<h5 id="state" class="text-center text-error">&nbsp;</h5>
+			<h5 id="state" class="text-center text-danger">&nbsp;</h5>
 			<div class="tabbable"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status">
 			  		<c:set var="type" value="${item.key}"/>
-				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h4 class="text-error">${type}</h4></a></li>
+				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h4 class="text-danger">${type}</h4></a></li>
 				</c:forEach>
 			  </ul>
 				<div class="tab-content">
@@ -85,17 +85,17 @@
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
 						<tr><td>${item.id}</td><td>${item.title}</td>
 						<td>${item.order}</td>
-						<td><c:if test="${item.metricDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.metricDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						<td><c:if test="${item.userMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.userMonitorDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.userMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						<td><c:if test="${item.applicationDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.applicationDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.applicationDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						<td><c:if test="${item.networkDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.networkDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.networkDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						<td><c:if test="${item.systemMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.systemMonitorDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.systemMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						<td><c:if test="${item.databaseMonitorDashboard}"><span class="text-error"><strong>是</strong></span></c:if>
+						<td><c:if test="${item.databaseMonitorDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
 							<c:if test="${!item.databaseMonitorDashboard}"><span><strong>否</strong></span></c:if>  </td>
 						<%-- <td>
 							<c:forEach var="domain" items="${item.domains}"> 

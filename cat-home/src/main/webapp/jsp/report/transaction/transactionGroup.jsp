@@ -79,16 +79,16 @@
 		});
 	});
 </script>
-<table class='data'>
+<table class='table table-hover table-striped table-condensed' >
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
 						<th class="left"><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">Type</a></th>
 				<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total</a></th>
 				<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure</a></th>
 				<th><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">Failure%</a></th>
 				<th>Sample Link</th>
@@ -107,7 +107,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td class="left"><a
 								href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${item.type}"
 								class="graph_link" data-status="${status.index}">[:: show ::]</a>
@@ -127,9 +127,9 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11"><div id="${status.index}"
+							<td colspan="11" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
-						</tr>
+						</tr><tr></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -150,9 +150,9 @@
 			<a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
 			<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure</a></th>
 			<th><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th>Sample Link</th>
@@ -177,7 +177,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
@@ -213,9 +213,9 @@
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11"><div id="${status.index}"
+							<td colspan="11" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
-						</tr>
+						</tr><tr></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
@@ -231,10 +231,7 @@
 			</tr>
 		</table>
 		<script type="text/javascript">
-			var data = $
-			{
-				model.pieChart
-			};
+			var data = ${model.pieChart};
 			graphPieChart(document.getElementById('transactionGraph'), data);
 		</script>
 	</c:when>

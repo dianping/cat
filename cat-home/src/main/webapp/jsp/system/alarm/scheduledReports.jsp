@@ -28,7 +28,7 @@
 		<div class="span10">
 			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
 				<thead>
-				<tr class="odd">
+				<tr >
 					<th><span class="text-success">项目名</span></th>
 					<th><span class="text-success">报表内容</span></th>
 					<th><span class="text-success">操作</span>&nbsp;&nbsp;</th>

@@ -38,7 +38,7 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<table class="table table-striped table-bordered table-condensed table-hover">
 	     		<tr class="text-success">
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>

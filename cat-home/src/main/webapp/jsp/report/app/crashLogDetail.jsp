@@ -6,9 +6,9 @@
 		<c:set var="navUrlPrefix" value="op=${payload.action.name}&query1=${payload.query1}"/> 
 		<c:choose>
 				<c:when test="${payload.action.name eq 'crashLog'}">
-					<td class="title"><span class="text-error">【报表时间】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
+					<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
 					<td class="nav">
-					<span class="text-error switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-error">【切到历史模式】</span></a></span>
+					<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史模式】</span></a></span>
 					<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 					</c:forEach>
@@ -17,9 +17,9 @@
 				</c:when>
 				<c:otherwise>
 					<c:if test="${payload.action.name eq 'historyCrashLog'}">
-						<td class="title"><span class="text-error">【报表时间】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
+						<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
 						<td class="nav">
-						<span class="text-error switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-error">【切到小时模式】</span></a></span>
+						<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
 						<c:forEach var="nav" items="${model.historyNavs}">
 						<c:choose>
 							<c:when test="${nav.title eq model.reportType}">
@@ -105,7 +105,7 @@
 	</div>
 	<br>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<table class="data"  style="width:100%">
+<table class="table table-hover table-striped"  style="width:100%">
 	<tr>
 		<th width="5%">Total</th>
 		<th width="45%">Status</th>
@@ -115,17 +115,17 @@
 	<c:forEach var="statistics" items="${model.problemStatistics.types}"
 		varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)*2}" class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
+			<td rowspan="${w:size(statistics.value.status)*2}">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+				<td >
 					${status.value.status}
 				</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'} right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+				<td class="right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
+				<td >
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>

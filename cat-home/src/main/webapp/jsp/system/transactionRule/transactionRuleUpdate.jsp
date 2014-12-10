@@ -44,14 +44,14 @@ function update() {
     var domain = $("#domain").val();
     if(domain == "undefined" || domain == ""){
 		if($("#errorMessage").length == 0){
-			$("#domain").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#domain").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
     var type = $("#type").val();
     if(type == "undefined" || type == ""){
 		if($("#errorMessage").length == 0){
-			$("#type").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#type").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}

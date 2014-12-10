@@ -18,8 +18,8 @@
 		<div class="span10">
 			<form name="domainMetricRuleConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=domainMetricRuleConfigUpdate">
-				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">业务监控规则相关信息</h4>
+				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+				<h4 class="text-center text-danger">业务监控规则相关信息</h4>
 				<table class="table table-striped table-bordered table-condensed table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>

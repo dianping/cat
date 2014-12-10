@@ -81,7 +81,7 @@
 		<div class="span10">
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content">
 				<!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs">
@@ -89,18 +89,18 @@
 					<c:forEach var="key" items="${keys}" varStatus="status">
 						<li id="tab-${key}" class="text-right"><a
 							href="#tabContent-${key}" data-toggle="tab">
-								<h5 class="text-error">${key}</h5>
+								<h5 class="text-danger">${key}</h5>
 						</a></li>
 					</c:forEach>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-异常阈值">
-						<h4 class="text-center text-error">异常阈值配置</h4>
+						<h4 class="text-center text-danger">异常阈值配置</h4>
 						<table
 							class="table table-striped table-bordered table-condensed table-hover"
 							id="content-异常阈值" width="100%">
 							<thead>
-								<tr class="odd">
+								<tr >
 									<th width="25%">域名</th>
 									<th width="40%">异常名称</th>
 									<th width="10%">Warning阈值</th>
@@ -113,7 +113,7 @@
 							<tbody>
 								<c:forEach var="item" items="${model.exceptionLimits}"
 									varStatus="status">
-									<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+									<tr class="">
 										<td>${item.domain}</td>
 										<td>${item.id}</td>
 										<td>${item.warning}</td>
@@ -131,12 +131,12 @@
 					</div>
 
 					<div class="tab-pane" id="tabContent-异常过滤">
-						<h4 class="text-center text-error">异常过滤配置</h4>
+						<h4 class="text-center text-danger">异常过滤配置</h4>
 						<table
 							class="table table-striped table-bordered table-condensed table-hover"
 							id="contents-异常过滤" width="100%">
 							<thead>
-								<tr class="odd">
+								<tr >
 									<th width="25%">域名</th>
 									<th width="60%">异常名称</th>
 									<th width="15%">操作&nbsp;&nbsp; <a
@@ -147,7 +147,7 @@
 							<tbody>
 								<c:forEach var="item" items="${model.exceptionExcludes}"
 									varStatus="status">
-									<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+									<tr class="">
 										<td>${item.domain}</td>
 										<td>${item.id}</td>
 										<td>

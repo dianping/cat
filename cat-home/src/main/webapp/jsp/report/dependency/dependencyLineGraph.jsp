@@ -2,7 +2,7 @@
 <div id="fullScreenData">
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-error text-center'>当前小时内项目本身指标趋势图</h4>
+		<h4 class='text-danger text-center'>当前小时内项目本身指标趋势图</h4>
 		<table>
 			<tr>
 				<c:forEach var="item" items="${model.indexGraph}" varStatus="status">
@@ -16,7 +16,7 @@
 </div>
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-error text-center'>当前小时内项目依赖指标趋势图</h4>
+		<h4 class='text-danger text-center'>当前小时内项目依赖指标趋势图</h4>
 		<table>
 		<c:forEach var="charts" items="${model.dependencyGraph}" varStatus="type">
 			<th colspan="3"><h4 class='text-center text-success'>${charts.key}</h4></th>
@@ -42,6 +42,9 @@
 			graphLineChart(document.getElementById('item${type.index}-${status.index}'),${item});
 		</c:forEach>
 </c:forEach>
+$(document).ready(function() {
+	$('#dependency_trend').addClass('active');
+});
 </script>
 
 

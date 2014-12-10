@@ -51,13 +51,13 @@
 			<%@include file="../configTree.jsp"%>
 		</div>
 		<div class="span10">
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
+			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs span2">
 			  	<c:forEach var="item" items="${model.productMetricConfigs}" varStatus="status">
 			  		<c:set var="product" value="${item.key}"/>
 				     <c:set var="key" value="${product.id}"/>
-				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> <h5 class="text-error">${product.title}</h5></a></li>
+				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> <h5 class="text-danger">${product.title}</h5></a></li>
 				</c:forEach>
 			  </ul>
 			  <div class="tab-content">
@@ -66,7 +66,7 @@
 				     <c:set var="key" value="${product.id}"/>
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
-					    <h4 class="text-center text-error">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;业务大盘标签会默认进行基线告警</h4>
+					    <h4 class="text-center text-danger">${product.title}：产品线内业务监控配置&nbsp;&nbsp;&nbsp;&nbsp;业务大盘标签会默认进行基线告警</h4>
 				     	<table class="table table-striped table-bordered table-condensed table-hover">
 				     		<tr class="text-success">
 				     			<th width="9%"><h5 class='text-center'>项目</h5></th>
@@ -90,7 +90,7 @@
 				     			<td>${config.viewOrder}</td>
 				     			<td>
 				     				<c:if test="${config.alarm}">
-				     					<span class="text-error">是</span>
+				     					<span class="text-danger">是</span>
 				     				</c:if>
 				     				<c:if test="${config.alarm == false}">
 				     					<span>否</span>
