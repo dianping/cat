@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.event;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.unidal.lookup.util.StringUtils;
@@ -27,6 +29,21 @@ public class DistributionDetailVisitor extends BaseVisitor {
 	}
 
 	public List<DistributionDetail> getDetails() {
+		Collections.sort(m_details, new Comparator<DistributionDetail>() {
+
+			@Override
+			public int compare(DistributionDetail o1, DistributionDetail o2) {
+				long gap = o2.getTotalCount() - o1.getTotalCount();
+
+				if (gap > 0) {
+					return 1;
+				} else if (gap < 0) {
+					return -1;
+				} else {
+					return 0;
+				}
+			}
+		});
 		return m_details;
 	}
 
