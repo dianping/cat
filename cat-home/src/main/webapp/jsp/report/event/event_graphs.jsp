@@ -43,7 +43,7 @@
 </table>
 <br>
 
-<div id="distributionChart" class="graph"></div>
+<div id="distributionChart" class="pieChart"></div>
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
 </c:if>
 <script type="text/javascript">
