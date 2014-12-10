@@ -1,7 +1,9 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -59,8 +61,8 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		}
 	}
 
-	public List<String> queryMetrics() {
-		List<String> metrics = new ArrayList<String>();
+	public Set<String> queryMetrics() {
+		Set<String> metrics = new HashSet<String>();
 
 		for (Rule rule : m_config.getRules().values()) {
 			for (MetricItem item : rule.getMetricItems()) {

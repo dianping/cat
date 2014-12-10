@@ -4,10 +4,10 @@
 		<metric id="SurvivorUsage" unit="M" delta="false" order="2"/>
 	</group>
 	<group id="default">
-		<metric id="TotalStartedCount" />
-		<metric id="NewGcCount" />
-		<metric id="OldGcCount" />
-		<metric id="CatMessageSize" />
-		<metric id="CatMessageOverflow" />
+		<metric id="TotalStartedCount" delta="true"/>
+		<metric id="NewGcCount"  delta="true"/>
+		<metric id="OldGcCount"  delta="true"/>
+		<metric id="CatMessageSize"  delta="true"/>
+		<metric id="CatMessageOverflow"  delta="true"/>
 	</group>
 </display-policy>

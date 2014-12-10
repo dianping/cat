@@ -246,7 +246,7 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private void processDomain(String domain) {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
-		List<String> metrics = m_ruleConfigManager.queryMetrics();
+		Set<String> metrics = m_ruleConfigManager.queryMetrics();
 
 		for (String metric : metrics) {
 			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
