@@ -59,8 +59,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 
 	private HeartbeatReport m_currentReport;
 
-	private Set<String> m_extentionMetrics = new HashSet<String>();
-
 	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
 		double[] array = map.get(name);
 		if (array == null) {
@@ -117,25 +115,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		m_currentReport = null;
 	}
 
-	private void convertDefaultDeltaMetrics(Map<String, double[]> map) {
-		List<String> metrics = m_displayManager.queryDefaultDeltaMetrics();
-
-		for (String metric : metrics) {
-			convertToDelta(map, metric);
-		}
-	}
-
-	private void convertDeltaExtensions(Map<String, double[]> map) {
-		for (String metricName : m_extentionMetrics) {
-			if (m_displayManager.isDelta(metricName)) {
-				convertToDelta(map, metricName);
+	private void convertDeltaMetrics(Map<String, double[]> map) {
+		for (String metric : map.keySet()) {
+			if (m_displayManager.isDelta(metric)) {
+				convertToDelta(map, metric);
 			}
 		}
-	}
-
-	private void convertDeltaMetrics(Map<String, double[]> map) {
-		convertDefaultDeltaMetrics(map);
-		convertDeltaExtensions(map);
 	}
 
 	private void convertToDelta(Map<String, double[]> map, String metric) {
@@ -186,13 +171,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			Set<String> tmpMetrics = extension.getDetails().keySet();
 
 			metrics.addAll(tmpMetrics);
-			m_extentionMetrics.addAll(tmpMetrics);
 		}
 		return metrics;
 	}
 
 	private Map<String, double[]> generateArgumentMap(Machine machine) {
-		m_extentionMetrics = new HashSet<String>();
 		Map<String, double[]> map = new HashMap<String, double[]>();
 		List<Period> periods = machine.getPeriods();
 
