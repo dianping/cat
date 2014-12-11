@@ -11,8 +11,8 @@
 
 <a:body>
 	<jsp:body>
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	<%@ include file="alter_query.jsp"%>
 	<table	class="problem table table-striped table-condensed table-bordered  table-hover">
 		<tr class="text-success">
@@ -48,6 +48,9 @@
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		
+		$('#System_report').addClass('active open');
+		$('#system_alteration').addClass('active');
+	
 		$(".out_url").each(function(){
 			var cur = $(this);
 			cur.attr("href", decodeURIComponent(cur.attr("href")));
@@ -92,14 +95,6 @@
 			}
 		})
 		
-		var refresh = ${payload.refresh};
-		var frequency = ${payload.frequency};
-		if(refresh){
-			$('#refresh${payload.frequency}').addClass('btn-danger');
-			setInterval(function(){
-				location.reload();				
-			},frequency*1000);
-		};
 	});
 </script>
 </jsp:body>

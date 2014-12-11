@@ -68,15 +68,6 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 				</div>
 			</div>
-			<%-- <div class="row-fluid">
-				<div class="span12">
-				   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-		   				<div style="float:left;">
-				   				<div id="${item.title}" class="metricGraph"></div>
-				   			</div>
-					</c:forEach>
-				</div>
-			</div> --%>
 			<div class="row-fluid">
 				<div class="span12">
 					<%@ include file="../top/topMetric.jsp"%>
