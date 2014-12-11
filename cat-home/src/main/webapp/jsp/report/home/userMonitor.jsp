@@ -1,7 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h3 class="text-danger">用户侧监控文档</h3>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
-  <ul class="nav nav-tabs" style="background-color:#f5f5f5">
+  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#userDocoument1" data-toggle="tab"><strong>手机APP端监控</strong></a></li>
     <li><a href="#userDocoument2" data-toggle="tab"><strong>浏览器WEB端监控</strong></a></a></li>
   </ul>

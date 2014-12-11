@@ -15,6 +15,18 @@
       <path>/WEB-INF/tags/body.tag</path>
    </tag-file>
    <tag-file>
+      <name>home</name>
+      <path>/WEB-INF/tags/home.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>config</name>
+      <path>/WEB-INF/tags/config.tag</path>
+   </tag-file>   
+   <tag-file>
+      <name>offline</name>
+      <path>/WEB-INF/tags/offline.tag</path>
+   </tag-file>
+   <tag-file>
       <name>report</name>
       <path>/WEB-INF/tags/hourlyReport.tag</path>
    </tag-file>

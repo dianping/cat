@@ -1,7 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h3 class="text-danger">接口文档</h3>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
-  <ul class="nav nav-tabs" style="background-color:#f5f5f5">
+  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#interfaceDocoument0" data-toggle="tab"><strong>报表接口</strong></a></li>
     <li><a href="#interfaceDocoument1" data-toggle="tab"><strong>用户侧监控</strong></a></li>
     <li><a href="#interfaceDocoument2" data-toggle="tab"><strong>线上变更</strong></a></li>

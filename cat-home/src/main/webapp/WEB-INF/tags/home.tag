@@ -108,112 +108,75 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="Dashboard_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Dashboard</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="dashbord_system"><a href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>系统报错</a>
-								<b class="arrow"></b></li>
-							<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
-								<b class="arrow"></b></li>
-							<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
-								<b class="arrow"></b></li>
-							<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
-								<b class="arrow"></b></li>
-						</ul>
-					</li>
-					<li id="Web_report" >
-						<a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-							<i class="menu-icon fa fa-globe"></i>
-							<span class="menu-text">Web</span>
+					<li id="indexButton" >
+						<a href="/cat/r/home?op=view&docName=index">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">项目首页</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-earphone"></i> <span class="menu-text">App</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
-								<b class="arrow"></b></li>
-							<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
-								<b class="arrow"></b></li>
-							<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
-								<b class="arrow"></b></li>
-							<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
-								<b class="arrow"></b></li>
-							<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
-								<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
-								<b class="arrow"></b></li>
-						</ul>
+					<li id="releaseButton" >
+						<a href="/cat/r/home?op=view&docName=release">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">版本说明</span>
+						</a>
+						<b class="arrow"></b>
 					</li>
-					<%-- <li id="Metric_report" >
-						<a href="/cat/r/metric?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
-							<i class="menu-icon glyphicon glyphicon-signal"></i>
-							<span class="menu-text">Metric</span>
+					<li id="userButton" >
+						<a href="/cat/r/home?op=view&docName=user">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">用户文档</span>
 						</a>
-					</li> --%>
-					<li id="Transaction_report" >
-						<a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon glyphicon glyphicon-time"></i>
-							<span class="menu-text">Transaction</span>
-						</a>
+						<b class="arrow"></b>
 					</li>
-					<li id="Event_report" >
-						<a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon glyphicon glyphicon-check"></i>
-							<span class="menu-text">Event</span>
+					<li id="userMonitorButton" >
+						<a href="/cat/r/home?op=view&docName=userMonitor">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">用户侧监控</span>
 						</a>
-					</li>					
-					<li id="Problem_report" >
-						<a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon fa fa-bolt"></i>
-							<span class="menu-text">Problem</span>
+						<b class="arrow"></b>
+					</li><li id="alertButton" >
+						<a href="/cat/r/home?op=view&docName=alert">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">告警文档</span>
 						</a>
-					</li>			
-					<li id="Heartbeat_report" >
-						<a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-heart"></i>
-							<span class="menu-text">Heartbeat</span>
+						<b class="arrow"></b>
+					</li><li id="integrationButton" >
+						<a href="/cat/r/home?op=view&docName=integration">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">集成文档</span>
 						</a>
-					</li>		
-					<li id="Cross_report" >
-						<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-exchange"></i>
-							<span class="menu-text">Cross</span>
+						<b class="arrow"></b>
+					</li><li id="interfaceButton" >
+						<a href="/cat/r/home?op=view&docName=interface">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">接口文档</span>
 						</a>
-					</li>		
-					<li id="Cache_report" >
-						<a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-coffee"></i>
-							<span class="menu-text">Cache</span>
+						<b class="arrow"></b>
+					</li><li id="developButton" >
+						<a href="/cat/r/home?op=view&docName=develop">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">开发者文档</span>
 						</a>
-					</li>
-					<li id="Dependency_report" class="hsub"><a href="/cat/r/dependency?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-road"></i> <span class="menu-text">Dependency</span>
-							<b class="arrow fa fa-angle-down"></b>
-					</a> <b class="arrow"></b>
-						<ul class="submenu">
-							<li id="dependency_trend"><a href="/cat/r/dependency?op=lineChart&domain=${model.domain}&date=${model.date}">
-								<i class="menu-icon fa fa-caret-right"></i>趋势图</a>
-								<b class="arrow"></b></li>
-							<li id="dependency_topo"><a href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">
-								<i class="menu-icon fa fa-caret-right"></i>拓扑图</a>
-								<b class="arrow"></b></li>
-							
-						</ul>
-					</li>
-					<li id="State_report" >
-						<a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-cogs"></i>
-							<span class="menu-text">State</span>
+						<b class="arrow"></b>
+					</li><li id="designButton" >
+						<a href="/cat/r/home?op=view&docName=design">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">设计文档</span>
 						</a>
+						<b class="arrow"></b>
+					</li><li id="problemButton" >
+						<a href="/cat/r/home?op=view&docName=problem">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">常见问题</span>
+						</a>
+						<b class="arrow"></b>
+					</li><li id="pluginButton" >
+						<a href="/cat/r/home?op=view&docName=plugin">
+							<i class="menu-icon fa fa-book"></i>
+							<span class="menu-text">插件扩展</span>
+						</a>
+						<b class="arrow"></b>
 					</li>
 					</ul>
 				</ul>
@@ -230,11 +193,6 @@
 				
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
- 				<div id="dialog-message" class="hide">
-					<p>
-						你确定要删除吗？(不可恢复)
-					</p>
-				</div>
  				<div style="padding-right:8px;">
  				<jsp:doBody/>
  				</div>
@@ -251,32 +209,6 @@
 						else title.text($title);
 					}
 				}));
-			
-				$(".delete").on('click', function(e) {
-					e.preventDefault();
-					var anchor = this;
-					var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
-						modal: true,
-						title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CRM管理系统提示</h4></div>",
-						title_html: true,
-						buttons: [ 
-							{
-								text: "Cancel",
-								"class" : "btn btn-xs",
-								click: function() {
-									$( this ).dialog( "close" ); 
-								} 
-							},
-							{
-								text: "OK",
-								"class" : "btn btn-primary btn-xs",
-								click: function() {
-									window.location.href=anchor.href;
-								} 
-							}
-						]
-					});
-				});
 				//tooltips
 				$( "#show-option" ).tooltip({
 					show: {
@@ -356,26 +288,6 @@
 				}
 			}
 			return "";
-		}
-		function showDomain() {
-			var b = $('#switch').html();
-			if (b == '切换') {
-				$('.domainNavbar').slideDown();
-				$('#switch').html("收起");
-			} else {
-				$('.domainNavbar').slideUp();
-				$('#switch').html("切换");
-			}
-		}
-		function showFrequent(){
-			var b = $('#frequent').html();
-			if (b == '常用') {
-				$('.frequentNavbar').slideDown();
-				$('#frequent').html("收起");
-			} else {
-				$('.frequentNavbar').slideUp();
-				$('#frequent').html("常用");
-			}
 		}
 		$(document).ready(function() {
 			var ct = getcookie("ct");
