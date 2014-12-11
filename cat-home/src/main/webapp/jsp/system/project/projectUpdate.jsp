@@ -12,18 +12,11 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#projectList').addClass('active');
+			$('#projects_config').addClass('active open');
+			$('#projects').addClass('active');
 		});
 	</script>
 	
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		</br>
-
 <form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
 	<table class="table table-striped table-condensed table-bordered ">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
@@ -69,9 +62,9 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
+			<td><input class='btn btn-primary btn-sm' type="submit" name="submit" value="submit" /></td>
 		</tr>
 	</table>
-</form></div></div></div>
+</form>
 
 </a:body>

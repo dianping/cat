@@ -105,7 +105,7 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="Dashboard_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">Dashboard</span>
+					<li id="Dashboard_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-tachometer"></i> <span class="menu-text">Dashboard</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -130,7 +130,7 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-earphone"></i> <span class="menu-text">App</span>
+					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">App</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -165,13 +165,13 @@
 					</li>
 					<li id="Event_report" >
 						<a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon glyphicon glyphicon-check"></i>
+							<i class="menu-icon fa fa-flag"></i>
 							<span class="menu-text">Event</span>
 						</a>
 					</li>					
 					<li id="Problem_report" >
 						<a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon fa fa-bolt"></i>
+							<i class="menu-icon glyphicon glyphicon-exclamation-sign"></i>
 							<span class="menu-text">Problem</span>
 						</a>
 					</li>			
@@ -183,13 +183,13 @@
 					</li>		
 					<li id="Cross_report" >
 						<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-exchange"></i>
+							<i class="menu-icon  glyphicon glyphicon-random"></i>
 							<span class="menu-text">Cross</span>
 						</a>
 					</li>		
 					<li id="Cache_report" >
 						<a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-coffee"></i>
+							<i class="menu-icon glyphicon glyphicon-flash"></i>
 							<span class="menu-text">Cache</span>
 						</a>
 					</li>
@@ -208,7 +208,7 @@
 					</li>
 					<li id="State_report" >
 						<a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-cogs"></i>
+							<i class="menu-icon fa fa-bar-chart-o"></i>
 							<span class="menu-text">State</span>
 						</a>
 					</li>

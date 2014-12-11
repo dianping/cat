@@ -48,14 +48,7 @@
 			}
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			</div>
 			<h5 id="state" class="text-center text-danger">&nbsp;</h5>
 			<div class="tabbable"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
@@ -107,8 +100,6 @@
 					</tr>
 				</c:forEach>
 			</table></div></c:forEach></div></div>
-		</div>
-	</div>
 	<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
 		<script>
 			$(document).ready(function(){
