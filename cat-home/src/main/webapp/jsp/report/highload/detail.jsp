@@ -14,7 +14,7 @@
 	<div class="tab-content">
 		<c:forEach var="type" items="${model.report.types}" varStatus="status">
 			<div class="tab-pane" id="${type.id}Content">
-				<table	class="problem table table-striped table-bordered table-condensed table-hover">
+				<table	class="problem table table-striped table-condensed table-bordered  table-hover">
 					<thead>
 					<tr class="text-success">
 						<th width="8%" class="tableHeader" data-sortBy="domain">项目</th>

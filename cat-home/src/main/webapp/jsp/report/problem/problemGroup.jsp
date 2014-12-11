@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <res:bean id="res"/>
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<td title="time\group">T\G</td>
 			<c:forEach var="group" items="${model.groupLevelInfo.groups}"

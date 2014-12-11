@@ -49,7 +49,7 @@
 	<h3 class="text-center text-success">CAT服务端正常</h3>
 </c:if>
 
-<table class="table table-hover table-striped" width="100%">
+<table class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<th width="30%" colspan=2>指标</th>
 		<th width="20%">值</th>
@@ -170,7 +170,7 @@
 	<tr class="graphs"><td colspan="4" style="display:none"><div id="delayAvg" style="display:none"></div></td></tr>
 </table>
 </br>
-<table class="table table-hover table-striped" width="100%">
+<table class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<td width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
 		<td colspan='2' width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>

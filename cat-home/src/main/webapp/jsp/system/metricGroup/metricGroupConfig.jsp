@@ -20,7 +20,7 @@
 				action="${model.pageUri}?op=metricGroupConfigUpdate">
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<h4 class="text-center text-danger">业务指标分组相关信息</h4>
-				<table class="table table-striped table-bordered table-condensed table-hover">
+				<table class="table table-striped table-condensed table-bordered  table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>

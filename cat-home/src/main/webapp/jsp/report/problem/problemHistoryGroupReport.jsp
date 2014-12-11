@@ -27,7 +27,6 @@
 		
 		<tr class="left">
 			<th>
-			</c:if> 
 				<c:forEach var="group" items="${model.groups}">
 				 <c:choose><c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
@@ -77,7 +76,7 @@
 	</tr>
 </table>
 
-<table class="table table-hover table-striped" style="width:100%">
+<table class="table table-hover table-striped table-condensed" style="width:100%">
 	<tr>
 		<th width="12%">Type</th>
 		<th width="4%">Total</th>

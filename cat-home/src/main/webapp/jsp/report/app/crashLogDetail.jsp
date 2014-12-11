@@ -105,7 +105,7 @@
 	</div>
 	<br>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<table class="table table-hover table-striped"  style="width:100%">
+<table class="table table-hover table-striped table-condensed"  style="width:100%">
 	<tr>
 		<th width="5%">Total</th>
 		<th width="45%">Status</th>

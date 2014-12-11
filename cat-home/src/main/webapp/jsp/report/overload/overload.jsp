@@ -52,7 +52,7 @@
 			<br><br>
 		</div>
 		<div id="DatabaseReport">
-			<table	class="problem table table-striped table-bordered table-condensed table-hover" id="contents">
+			<table	class="problem table table-striped table-condensed table-bordered  table-hover" id="contents">
 				<thead>
 				<tr class="text-success">
 					<th width="20%">日期</th>

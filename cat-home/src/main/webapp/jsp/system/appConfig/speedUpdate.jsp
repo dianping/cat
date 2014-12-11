@@ -59,7 +59,7 @@
 		<div class="span10">
 		</br>
 
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-condensed table-bordered ">
 		<c:choose>
 		<c:when test="${payload.action.name eq 'appSpeedAdd' }">
 		<tr><td>页面URL</td><td><input name="page" value="${model.speed.page}" id="page" />&nbsp;&nbsp;<span class="text-danger">*</span></td><td>支持数字、字符，例如：index.bin<br/></td></tr>

@@ -14,7 +14,7 @@
 	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<%@ include file="alter_query.jsp"%>
-	<table	class="problem table table-striped table-bordered table-condensed table-hover">
+	<table	class="problem table table-striped table-condensed table-bordered  table-hover">
 		<tr class="text-success">
 			<th width="15%">时间</th>
 			<th width="5%">类型</th>

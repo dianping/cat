@@ -38,7 +38,7 @@
 	</div>
 	<div class="span10">
 	<br/>
-	<table id="contents" class="table table-striped table-bordered table-condensed table-hover">
+	<table id="contents" class="table table-striped table-condensed table-bordered  table-hover">
 		<thead>
 		<tr>
 			<th>domain</th>

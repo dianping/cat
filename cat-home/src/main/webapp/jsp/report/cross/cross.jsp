@@ -42,7 +42,7 @@
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>
-<table class="table table-striped table-condensed ">
+<table class="table table-striped table-condensed  ">
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr><td colspan="7" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
 		<tr>

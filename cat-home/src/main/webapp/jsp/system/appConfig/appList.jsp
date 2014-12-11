@@ -109,7 +109,7 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
-						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="40%">名称</th>
@@ -134,7 +134,7 @@
 						</table>
 					</div>
 					<div class="tab-pane" id="tabContent-activity">
-						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="20%">名称</th>
@@ -162,7 +162,7 @@
 						<%@include file="code.jsp"%>
 					</div>
 					<div class="tab-pane" id="tabContent-speed">
-						<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="20%">页面</th>

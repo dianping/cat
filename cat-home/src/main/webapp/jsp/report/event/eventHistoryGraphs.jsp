@@ -41,7 +41,7 @@
 	}
 </script>
 <c:if test="${payload.ipAddress eq 'All' }">
-<table  class='table table-hover table-striped table-condensed'  style="width:100%;">
+<table  class='table table-hover table-striped table-condensed '  style="width:100%;">
 	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
 	<tr>
 		<th class="right">Ip</th>

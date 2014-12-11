@@ -48,7 +48,7 @@
 </table>
     <c:choose>
 		<c:when test="${empty payload.type}">
-		<table class="table table-hover table-striped">
+		<table class="table table-hover table-striped table-condensed">
 		<tr>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
@@ -76,7 +76,7 @@
 		<c:otherwise>
 		<div class="row-fluid">
 		<div class="span7 ">
-		<table class="table table-hover table-striped">
+		<table class='table table-hover table-striped table-condensed '>
 			<tr>
 								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40"

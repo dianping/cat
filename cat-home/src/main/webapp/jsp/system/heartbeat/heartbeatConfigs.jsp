@@ -39,7 +39,7 @@
 		</div>
 		<div class="span10">
 			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
-			<table class="table table-striped table-bordered table-condensed table-hover">
+			<table class="table table-striped table-condensed table-bordered  table-hover">
 	     		<tr class="text-success">
 	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
 	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>

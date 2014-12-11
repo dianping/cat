@@ -73,7 +73,7 @@
 			<br><br>
 		</div>
 		<div id="alertReport">
-			<table	class="problem table table-striped table-bordered table-condensed table-hover">
+			<table	class="problem table table-striped table-condensed table-bordered  table-hover">
 				<tr class="text-success">
 					<th width="10%">时间</th>
 					<th width="5%">类型</th>

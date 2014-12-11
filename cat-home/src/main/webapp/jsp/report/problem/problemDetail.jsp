@@ -11,7 +11,7 @@
 <jsp:useBean id="model"
 	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
-<table class="table table-hover table-striped">
+<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<th colspan="5">${model.detailStatistics.subTitle}</th>
 	</tr>

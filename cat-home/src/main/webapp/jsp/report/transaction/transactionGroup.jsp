@@ -79,7 +79,7 @@
 		});
 	});
 </script>
-<table class='table table-hover table-striped table-condensed' >
+<table class='table table-hover table-striped table-condensed ' >
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>

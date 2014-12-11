@@ -72,7 +72,7 @@
 	</tr>
 </table>
 
-<table class="table table-hover table-striped" style="width:100%">
+<table class="table table-hover table-striped table-condensed" style="width:100%">
 	<tr>
 		<th width="12%">Type</th>
 		<th width="4%">Total</th>
@@ -83,14 +83,14 @@
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)*2}"
+			<td rowspan="${w:size(statistics.value.status)*3}"
 				class=" top">
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 				<br/>
 				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 			</td>
-			<td rowspan="${w:size(statistics.value.status)*2}"
+			<td rowspan="${w:size(statistics.value.status)*3}"
 				class=" top right">${w:format(statistics.value.count,'#,###,###,###,##0')}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
@@ -110,10 +110,12 @@
 				<c:if test="${index.index != 0}">
 				</tr>
 				</c:if>
-				<tr><td colspan="3"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
+				<tr></tr>
+				<tr><td colspan="3" style="display:none"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
 			</c:forEach>
 			</tr>
-		<tr class="graphs"><td colspan="5"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
+		<tr></tr>
+		<tr class="graphs"><td colspan="5"  style="display:none"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
 	</c:forEach>
 </table>
 

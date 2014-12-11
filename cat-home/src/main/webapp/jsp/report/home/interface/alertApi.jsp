@@ -6,7 +6,7 @@
 	http://主机域名:端口/cat/r/alert?
 </pre>
 <p>参数说明</p>
-<table style="width:50%" class="table table-striped table-bordered table-condensed">
+<table style="width:50%" class="table table-striped table-condensed table-bordered ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>执行操作<span class="text-danger">  必需[唯一值：alert]</span></td></tr>
 	<tr><td>channel</td><td>渠道类型<span class="text-danger">  必需[可能值：mail, sms, weixin]</span></td></tr>

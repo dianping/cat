@@ -54,7 +54,7 @@
 	</tr>
 </table>
 
-<table class='table table-hover table-striped table-condensed' style="width:100%;">
+<table class='table table-hover table-striped table-condensed ' style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>
@@ -91,7 +91,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
 				<tr></tr>
 			</c:forEach>
 		</c:when>

@@ -54,7 +54,7 @@
 		<div class="span10">
 		</br>
 
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-condensed table-bordered ">
 		
 		<c:if test="${payload.action.name eq 'appCodeUpdate' }">
 		<tr>

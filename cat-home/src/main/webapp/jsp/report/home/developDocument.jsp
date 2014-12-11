@@ -7,7 +7,7 @@
   	  <p>下例是某个实际传输的heartbeat消息:</p>
   	  <xmp>H2012-04-26 16:00:42.775        Heartbeat       192.168.63.141  0  <os name="Mac OS X" arch="x86_64" version="Mac OS X"/>
   	  </xmp>
-  	  <table class="table table-striped table-bordered">
+  	  <table class="table table-striped table-condensed table-bordered">
   	  	<tr><td class="text-info">Timestamp</td><td>记录消息产生的时刻, 格式"yyyy-mm-dd HH:MM:SS.sss".</td></tr>
   	  	<tr><td class="text-info">Type</td><td>大小写敏感的字符串. 常见的Transaction type有 "URL", "SQL", "Email", "Exec"等. 常见的Event type有 "Info", "Warn", "Error", 还有"Cat"用来表示Cat内部的消息.</td></tr>
   	  	<tr><td class="text-info">Name</td><td>大小写敏感的字符串. type和name的组合要满足全局唯一性. 常见的URL transaction type的name如 "ViewItem", "MakeBid", "SignIn"等. SQL transaction type的name如 "AddFeedback", "GetAccountDetailUnit4", "IncrementFeedbackAndTotalScore"等.</td></tr>

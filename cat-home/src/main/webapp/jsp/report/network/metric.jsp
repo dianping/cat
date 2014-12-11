@@ -11,9 +11,7 @@
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
 		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
@@ -74,8 +72,8 @@
 					</th>
 				</tr>
 			</table>
-		      <div class="row-fluid">
-		        <div class="span2">
+		      <div class="col-xs-12">
+		        <div class="col-sm-2">
 		          <div class="well sidebar-nav">
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
@@ -87,7 +85,7 @@
 		            </ul>
 		          </div><!--/.well -->
 		        </div><!--/span-->
-		        <div class="span10">
+		        <div class="col-sm-10">
 		        	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		       			<div style="float:left;">
 		       				<div id="${item.id}" class="metricGraph"></div>

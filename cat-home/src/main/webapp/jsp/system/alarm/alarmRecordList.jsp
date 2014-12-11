@@ -22,7 +22,7 @@
 		<%@include file="./alarm.jsp"%>
 		</div>
 		<div class="span10">
-			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
+			<table class="alarm table table-striped table-condensed table-bordered  " id="contents" width="100%">
 				<thead>
 				<tr >
 					<th><span class="text-success">邮件类型</span></th>

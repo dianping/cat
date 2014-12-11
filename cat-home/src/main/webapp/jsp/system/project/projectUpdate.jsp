@@ -25,7 +25,7 @@
 		</br>
 
 <form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-condensed table-bordered ">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
 		<input type="hidden" name="project.bu" value="${model.project.bu}" />

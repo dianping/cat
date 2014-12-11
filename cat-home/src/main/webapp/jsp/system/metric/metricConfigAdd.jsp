@@ -27,7 +27,7 @@
 		<form name="metricConfigAddSubmit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSubmit">
 			<span class="text-center text-danger" id="state">&nbsp;</span>
 			<input name="productLineName" value="${payload.productLineName}" type="hidden"/>
-			<table class="table table-striped table-bordered table-condensed">
+			<table class="table table-striped table-condensed table-bordered ">
 				<tr>
 					<td width="15%" style="text-align:right" class="text-success" width="50%">项目名称</td>
 					<td width="35%" >

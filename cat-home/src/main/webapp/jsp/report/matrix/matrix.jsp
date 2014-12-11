@@ -21,7 +21,7 @@
 	 </div>
 	 <div class="span10">
 	 <br/>
-	<table  class='table table-hover table-striped table-condensed' >
+	<table  class='table table-hover table-striped table-condensed ' >
 	<tr>
 		<th class="left" rowspan="2">Type</th>
 		<th class="left" width="20%" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>

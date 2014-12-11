@@ -77,7 +77,7 @@
 					type="submit" />
 	<br/>
 	<br/>
-<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 	<thead>
 	<tr >
 		<th width="10%">返回码</th>

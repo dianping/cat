@@ -27,7 +27,7 @@
 	action="${model.pageUri}?op=exceptionThresholdUpdateSubmit&type=异常阈值">
 	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 	<h4 class="text-center text-danger">修改异常报警配置信息</h4>
-	<table class="table table-striped table-bordered table-condensed table-hover">
+	<table class="table table-striped table-condensed table-bordered  table-hover">
 	<c:set  var="action" value="exceptionThresholdUpdate"/>
 		<tr>
 			<td style="text-align:right" class="text-success">项目名称</td>

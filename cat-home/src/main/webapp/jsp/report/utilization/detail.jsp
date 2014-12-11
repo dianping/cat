@@ -13,7 +13,7 @@
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
 					<div class="report">
-						<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
+						<table id="web_content" class="table table-striped table-condensed table-bordered  table-hover">
 							<thead>
 							<tr>
 								<th>Web应用</th>
@@ -56,7 +56,7 @@
 				</div>
 				<div class="tab-pane" id="tab2">
 					<div class="report">
-						<table id="service_content" class="table table-striped table-bordered table-condensed table-hover">
+						<table id="service_content" class="table table-striped table-condensed table-bordered  table-hover">
 							<thead>
 								<tr>
 								<th>Service应用</th>

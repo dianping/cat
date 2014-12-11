@@ -119,13 +119,10 @@
 	</tr>
 </c:forEach>
 </table>
-<table class="heartbeat">
+<table class='table table-hover table-striped table-condensed'>
 	<tr>
 		<th>Minute</th>
 		<th>ActiveThread</th>
-		<th>DeamonThread</th>
-		<th>StartedThead</th>
-		<th>CatThead</th>
 		<th>PigeonThead</th>
 		<th>NewGcCount</th>
 		<th>OldGcCount</th>
@@ -134,17 +131,11 @@
 		<th>NoneHeapUsage</th>
 		<th>MemoryFree</th>
 		<th>DiskFree</th>
-		<th>CatProduced</th>
-		<th>CatOverflow</th>
-		<th>CatSize</th>
 	</tr>
 	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
 		<tr class="right">
 		<td class="center">${item.minute}</td>
 		<td>${item.threadCount}</td>
-		<td>${item.daemonCount}</td>
-		<td>${item.totalStartedCount}</td>
-		<td>${item.catThreadCount}</td>
 		<td>${item.pigeonThreadCount}</td>
 		<td>${item.newGcCount}</td>
 		<td>${item.oldGcCount}</td>
@@ -153,9 +144,6 @@
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>
 		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
-		<td>${w:format(item.catMessageProduced,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.catMessageOverflow,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.catMessageSize,'#,##0.0MB')}</td>
 		</tr>
 	</c:forEach>
 </table>

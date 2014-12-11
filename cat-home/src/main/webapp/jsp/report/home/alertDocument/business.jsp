@@ -49,7 +49,7 @@
 	http://cat.dianpingoa.com/cat/r/monitor?
 </pre>
 <p>参数说明</p>
-<table style="width:90%" class="table table-striped table-bordered table-condensed">
+<table style="width:90%" class="table table-striped table-condensed table-bordered ">
 	<tr><th width="30%">参数</th><th>说明</th></tr>
 	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-danger">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</span></td></tr>
 	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-danger">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用TuanGouWeb这类命名方式</span></td></tr>

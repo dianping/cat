@@ -19,7 +19,7 @@
 		</br>
 			<h3 class="text-center text-success">编辑WEB监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed table-bordered'>
 				<tr>
 				<th align=left>
 				<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />

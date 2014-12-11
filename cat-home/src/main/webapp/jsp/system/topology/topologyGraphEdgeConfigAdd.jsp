@@ -6,7 +6,7 @@
 	action="${model.pageUri}?op=topologyGraphEdgeConfigAddSumbit">
 	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 	<h4 class="text-center text-danger">修改依赖关系配置信息</h4>
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-condensed table-bordered ">
 		<tr>
 			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>
 			<td><select id="type" name="edgeConfig.type">

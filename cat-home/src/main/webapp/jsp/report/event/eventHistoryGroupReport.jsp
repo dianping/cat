@@ -24,7 +24,7 @@
 
 <table class="groups">
 	<tr class="left">
-		<th
+		<th>
    	 		<c:forEach var="group" items="${model.groups}">
 				<c:choose><c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
@@ -58,7 +58,7 @@ $(document).ready(function() {
 });
 </script>
 
-<table class='table table-hover table-striped table-condensed'>
+<table class='table table-hover table-striped table-condensed '>
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>

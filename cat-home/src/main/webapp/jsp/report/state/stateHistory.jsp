@@ -46,7 +46,7 @@
 		</th>
 	</tr>
 </table>
-<table  class="table table-hover table-striped" width="100%">
+<table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<th width="30%" colspan=2>指标</th>
 		<th width="20%">值</th>
@@ -226,7 +226,7 @@
 			</tr>
 </table>
 </br>
-<table  class="table table-hover table-striped" width="100%">
+<table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
 		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>

@@ -2,7 +2,7 @@
 <c:forEach var="item" items="${model.minutes}" varStatus="status">
 	<c:if test="${status.index % 30 ==0}">
 		<div class="pagination">
-		<ul>
+		<ul class="pagination">
 	</c:if>
 		<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
 		class="href${item}" href='javascript:void(0)' disabled='true'>
@@ -24,12 +24,9 @@
 .pagination {
 	margin: 4px 0;
 }
-.pagination {
-text-align: center;
+.pagination ul > li > a {
+	padding: 4px 10px;
 }
-	.pagination ul > li > a {
-		padding: 4px 10px;
-	}
 </style>
 
 <script type="text/javascript">

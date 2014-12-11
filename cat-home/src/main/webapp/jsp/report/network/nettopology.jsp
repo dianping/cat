@@ -3,12 +3,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.network.Context" scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.network.Payload" scope="request" />
-<jsp:useBean id="model"
-	type="com.dianping.cat.report.page.network.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.network.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.network.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.network.Model" scope="request" />
 <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
@@ -56,8 +53,7 @@
 			<res:useCss value='${res.css.local.table_css}' target="head-css" />
 			<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
 
-
-<div class="report">
+		<div class="report">
 			<table class="header">
 				<tr>
 					<td class="title">&nbsp;&nbsp;From
@@ -74,9 +70,8 @@
 			<%@ include file="metricOpNav.jsp"%>
 			<%@ include file="TimeNavTab.jsp"%>
 			</div>
-			<div class="row-fluid">
-
-				<div class="span2">
+			<div class="col-xs-12">
+				<div class="col-sm-2">
 					<div class="well sidebar-nav">
 		            <ul class="nav nav-list">
 		            	 <li class='nav-header' id="${item.id}"></li>
@@ -90,10 +85,7 @@
 		          </div><!--/.well -->
 				</div>
 				<!--/span-->
-				
-
-				<div id="content" class="span10">
-
+				<div id="content" class="col-sm-10">
 					<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
 						<div class="topology">
 							<p>${topo.key}</p>
@@ -116,7 +108,7 @@
 	</style>
 				</c:otherwise>
 </c:choose>
-			<style type="text/css">
+<style type="text/css">
 
 .topology {
 	text-align: center;
@@ -125,10 +117,6 @@
 	float: left;
 }
 
-p {
-	font-size: 18px;
-	font-weight: bold;
-}
 </style>
 
 <script type="text/javascript">
@@ -164,9 +152,5 @@ function showOpNav() {
 	width: 82%;
 }
 
-.nav-list>li>a,.nav-list .nav-header {
-	margin-left: -19px;
-	margin-right: -19px;
-}
 </style>
 
