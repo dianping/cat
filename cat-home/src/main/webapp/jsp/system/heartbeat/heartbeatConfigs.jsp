@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -16,11 +16,8 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#application_config').addClass('active open');
 			$('#heartbeatRuleConfigList').addClass('active');
-			
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此规则吗(不可恢复)？");
-			});
 			
 			var state = '${model.opState}';
 			if(state=='Success'){
@@ -33,31 +30,24 @@
 			},3000);
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
-			<table class="table table-striped table-condensed   table-hover">
+			<table class="table table-striped table-condensed table-bordered  table-hover">
 	     		<tr class="text-success">
-	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
+	     			<th width="30%"><h5 class='text-center'>规则id</h5></th>
 	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
 	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
-	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm btn-primary">新增</a></h5></th>
+	     			<th width="8%">操作 <a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	     		</tr>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
 	     			<td>${item.id}</td>
 	     			<td>${item.productlineText}</td>
 	     			<td>${item.metricText}</td>
-		     		<td style="text-align:center;white-space: nowrap">
-		     			<a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm">修改</a>
-			     		<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-primary btn-sm btn-danger delete">删除</a>
-			     	</td>
+			     	<td><a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 		     		</tr>
 		     	</c:forEach>
 	     	</table>
-		</div>
-	</div>
-</a:body>
+</a:config>

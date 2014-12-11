@@ -9,22 +9,15 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 	
-<a:body>
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			<div>
-			</br>
-			<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
+<a:config>
+			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
 				<tr >
-					<th width="15%">项目组</th>
+					<th width="20%">项目组</th>
 					<th width="30%">Type</th>
-					<th width="30%">Name</th>
-					<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=transactionRuleUpdate">新增</a></th>
+					<th width="40%">Name</th>
+					<th width="10%">操作 <a href="?op=transactionRuleUpdate" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
 				<c:forEach var="item" items="${model.rules}" varStatus="status">
@@ -36,20 +29,21 @@
 						<td>${domain}</td>
 						<td>${type}</td>
 						<td>${name}</td>
-						<td><a class='btn  btn-sm btn-primary'href="?op=transactionRuleUpdate&ruleId=${item.id}">编辑</a>
-						<a class='delete btn  btn-sm btn-danger' href="?op=transactionRuleDelete&ruleId=${item.id}">删除</a></td>
+						<td><a href="?op=transactionRuleUpdate&ruleId=${item.id}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=transactionRuleDelete&ruleId=${item.id}" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>
 			</table>
-		</div>
-		</div></div></div>
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#application_config').addClass('active open');
 			$('#transactionRule').addClass('active');
 			$(".delete").bind("click", function() {
 				return confirm("确定要删除此项目吗(不可恢复)？");
 			});
  		});
 	</script>
-</a:body>
+</a:config>

@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -18,6 +18,7 @@
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#application_config').addClass('active open');
 			$('#metricConfigList').addClass('active');
 			
 			var productLine = '${payload.productLineName}';
@@ -27,10 +28,6 @@
 			$('#tab-'+productLine).addClass('active');
 			$('#tabContent-'+productLine).addClass('active');
 
-			
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
 			
 			var action = '${payload.action.name}';
 			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
@@ -46,12 +43,6 @@
 			}
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs span2">
 			  	<c:forEach var="item" items="${model.productMetricConfigs}" varStatus="status">
@@ -80,7 +71,7 @@
 				     			<th width="6%"><h5 class='text-center'>总和</h5></th>
 				     			<th width="20%"><h5 class='text-center'>标签</h5></th>
 				     			<th width="13%"><h5 class='text-center'>操作
-								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-sm" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
+								<%--&nbsp;&nbsp;<a class="btn update btn-primary btn-xs" href="?op=metricConfigAdd&metricKey=${config.metricKey}&domain=${config.domain}&productLineName=${key}">新增</a>
  								--%></h5></th>
 				     		</tr>
 					     	<c:forEach var="config" items="${value}">
@@ -121,9 +112,11 @@
 				     				</c:if>
 				     			</td>
 					     		<td style="text-align:center;white-space: nowrap">
-					     			<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-sm">修改</a>
-						     		<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-sm btn-danger delete">删除</a>
-					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-sm">告警</a>
+						     	<a href="?op=metricConfigAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=metricConfigDelete&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+					     			<a href="?op=metricRuleAdd&metricKey=${config.metricKey}&type=${config.type}&domain=${config.domain}&productLineName=${key}" id="alertRule" class="btn btn-primary btn-xs">告警</a>
 						     	</td>
 					     		</tr>
 					     	</c:forEach>
@@ -132,6 +125,4 @@
 				</c:forEach>
 			  </div>
 		   </div>
-		</div>
-	</div>
-</a:body>
+</a:config>
