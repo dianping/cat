@@ -107,20 +107,6 @@ public class DisplayPolicyManager implements Initializable {
 		return metrics;
 	}
 
-	public List<String> queryDefaultDeltaMetrics() {
-		Group group = m_config.findGroup("default");
-		List<String> metrics = new ArrayList<String>();
-
-		if (group != null) {
-			for (Metric metric : group.getMetrics().values()) {
-				if (metric.isDelta()) {
-					metrics.add(metric.getId());
-				}
-			}
-		}
-		return metrics;
-	}
-
 	public int queryUnit(String metricName) {
 		for (Group group : m_config.getGroups().values()) {
 			if (group.findMetric(metricName) != null) {
