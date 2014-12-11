@@ -15,6 +15,7 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#alert_config').addClass('active');
 			$('#networkRuleConfigList').addClass('active');
 			
 			$(".delete").bind("click", function() {

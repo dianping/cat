@@ -178,7 +178,7 @@
 							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用阈值</a>
 								<b class="arrow"></b></li>
-							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=dtopologyGraphEdgeConfigList">
+							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖</a>
 								<b class="arrow"></b></li>
 						</ul>
