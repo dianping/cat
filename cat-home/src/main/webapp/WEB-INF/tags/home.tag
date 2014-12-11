@@ -37,52 +37,52 @@
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="indexButton" >
 						<a href="/cat/r/home?op=view&docName=index">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon glyphicon glyphicon-home"></i>
 							<span class="menu-text">项目首页</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
 					<li id="releaseButton" >
 						<a href="/cat/r/home?op=view&docName=release">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon glyphicon glyphicon-book"></i>
 							<span class="menu-text">版本说明</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
 					<li id="userButton" >
 						<a href="/cat/r/home?op=view&docName=user">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-users"></i>
 							<span class="menu-text">用户文档</span>
 						</a>
 						<b class="arrow"></b>
 					</li>
 					<li id="userMonitorButton" >
 						<a href="/cat/r/home?op=view&docName=userMonitor">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-globe"></i>
 							<span class="menu-text">用户侧监控</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="alertButton" >
 						<a href="/cat/r/home?op=view&docName=alert">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-bell"></i>
 							<span class="menu-text">告警文档</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="integrationButton" >
 						<a href="/cat/r/home?op=view&docName=integration">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-cutlery"></i>
 							<span class="menu-text">集成文档</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="interfaceButton" >
 						<a href="/cat/r/home?op=view&docName=interface">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon glyphicon glyphicon-align-left"></i>
 							<span class="menu-text">接口文档</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="developButton" >
 						<a href="/cat/r/home?op=view&docName=develop">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon glyphicon glyphicon-refresh"></i>
 							<span class="menu-text">开发者文档</span>
 						</a>
 						<b class="arrow"></b>
@@ -94,13 +94,13 @@
 						<b class="arrow"></b>
 					</li><li id="problemButton" >
 						<a href="/cat/r/home?op=view&docName=problem">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-inbox"></i>
 							<span class="menu-text">常见问题</span>
 						</a>
 						<b class="arrow"></b>
 					</li><li id="pluginButton" >
 						<a href="/cat/r/home?op=view&docName=plugin">
-							<i class="menu-icon fa fa-book"></i>
+							<i class="menu-icon fa fa-key"></i>
 							<span class="menu-text">插件扩展</span>
 						</a>
 						<b class="arrow"></b>
@@ -120,8 +120,23 @@
 				
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
- 				<div style="padding-right:8px;">
+ 				<div style="padding-top:5px;padding-right:8px;">
  				<jsp:doBody/>
  				</div>
 			</div><!-- /.main-content -->
 		</div></a:base>
+		<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#tab_realtime").click(function(){
+			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#tab_offtime").click(function(){
+			window.location.href = "/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#tab_document").click(function(){
+			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#tab_config").click(function(){
+			window.location.href = "/cat/s/config?op=topologyProductLines";
+		});});
+</script>

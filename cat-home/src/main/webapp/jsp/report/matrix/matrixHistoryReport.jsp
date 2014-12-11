@@ -7,19 +7,15 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.matrix.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.matrix.Model" scope="request" />
 
-<a:historyReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
+<a:offlineHistoryReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#matrix').addClass('active');
+		$('#matrix_report').addClass('active');
 	});
 </script>
 <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
 	 <br/>
 	<table  class='table table-hover table-striped table-condensed ' >
 	<tr>
@@ -88,8 +84,8 @@
 					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Log</a></td>
 				</tr>
 			</c:forEach>
-</table></div></div>
+</table></div>
 
 </jsp:body>
 
-</a:historyReport>
+</a:offlineHistoryReport>
