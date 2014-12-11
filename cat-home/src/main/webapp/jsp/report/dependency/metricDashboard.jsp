@@ -57,21 +57,16 @@
 	    </div>
 	</c:when>
 	<c:otherwise>
-			<a:report title="Dependency Report"
+		<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=metricDashboard">
 		<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
 		<div class="report">
-			<div class="row-fluid">
-				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div>
+			<div class="text-center">
+		 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div>
-			<div class="row-fluid">
-				<div class="span12">
-					<%@ include file="../top/topMetric.jsp"%>
-				</div>
+			<div class="">
+				<%@ include file="../top/topMetric.jsp"%>
 			</div>
 	</jsp:body>
 	</a:report>

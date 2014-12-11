@@ -55,7 +55,6 @@
 		<div class="report">
 			<div class="row-fluid">
 				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div></div>
 			<div id="fullScreenData">

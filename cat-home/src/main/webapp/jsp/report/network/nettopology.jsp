@@ -57,7 +57,6 @@
 					</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
 					]&nbsp;
 			</div></div>
-			<%@ include file="metricOpNav.jsp"%>
 			<%@ include file="TimeNavTab.jsp"%>
 			</div>
 			<div class="col-xs-12">
