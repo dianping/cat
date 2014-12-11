@@ -24,19 +24,14 @@
 		<div class="opNav">
 		<%@ include file="metricOpNav.jsp" %>
 		<%@ include file="TimeNavTab.jsp"%>
-
 		</div>
-		<div class="row-fluid">
 		<div id="content">
-
 					<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
 						<div class="topology">
 							<p>${topo.key}</p>
 							<div id="topo-${idx.index}"></div>
 						</div>
 					</c:forEach>
-
-				</div>
 				</div>
 			<style type="text/css">
 		.topology {
@@ -49,62 +44,35 @@
 	</c:when>
 	<c:otherwise>
 		<a:body>
-
 			<res:useCss value='${res.css.local.table_css}' target="head-css" />
 			<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
 
 		<div class="report">
-			<table class="header">
-				<tr>
-					<td class="title">&nbsp;&nbsp;From
-						${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to
-						${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-					<td class="nav"><c:forEach var="nav" items="${model.navs}">
-							&nbsp;[ <a
-								href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-						</c:forEach> &nbsp;[ <a
-						href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
-						]&nbsp;</td>
-				</tr>
-			</table>
+						<div class="breadcrumbs" id="breadcrumbs">
+			<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<div class="nav-search nav" id="nav-search">
+				<c:forEach var="nav" items="${model.navs}">
+						&nbsp;[ <a
+							href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
+					]&nbsp;
+			</div></div>
 			<%@ include file="metricOpNav.jsp"%>
 			<%@ include file="TimeNavTab.jsp"%>
 			</div>
 			<div class="col-xs-12">
-				<div class="col-sm-2">
-					<div class="well sidebar-nav">
-		            <ul class="nav nav-list">
-		            	 <li class='nav-header' id="${item.id}"></li>
-		            	<li class='nav-header active' id="metric_nettopology"><a href="?op=view"><strong>核心拓扑</strong></a></li>
-		            	 <c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?op=metric&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
-			             </c:forEach>
-			            
-		              <li >&nbsp;</li>
-		            </ul>
-		          </div><!--/.well -->
-				</div>
-				<!--/span-->
-				<div id="content" class="col-sm-10">
-					<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
-						<div class="topology">
-							<p>${topo.key}</p>
-							<div id="topo-${idx.index}"></div>
-						</div>
-					</c:forEach>
-
-				</div>
+				<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
+					<div class="topology" >
+						<p>${topo.key}</p>
+						<div id="topo-${idx.index}"></div>
+					</div>
+				</c:forEach>
 			</div>
-			
-
 			</a:body>
 			<style type="text/css">
-.topology {
-	width: 520px;
-	}
-	.row-fluid {
-	min-width: 1300px;
-}	
+		.topology {
+			width: 520px;
+		}
 	</style>
 				</c:otherwise>
 </c:choose>

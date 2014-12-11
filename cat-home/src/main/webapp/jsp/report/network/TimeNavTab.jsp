@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <c:forEach var="item" items="${model.minutes}" varStatus="status">
 	<c:if test="${status.index % 30 ==0}">
-		<div class="pagination">
+		<div class="text-center">
 		<ul class="pagination">
 	</c:if>
 		<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
