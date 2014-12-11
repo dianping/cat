@@ -17,7 +17,7 @@
 				action="${model.pageUri}?op=displayPolicy"
 				onsubmit="return validate_form(this)">
 				<table
-					class="table table-striped table-condensed table-bordered  table-hover">
+					class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width: 100%" rows="20"
 								cols="150">${model.content}</textarea></td>

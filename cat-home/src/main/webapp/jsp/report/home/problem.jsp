@@ -1,7 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 
 <h3 class="text-danger">常见问题说明</h3>
-<table class='table table-striped table-condensed table-bordered '>
+<table class='table table-striped table-condensed  '>
 	<tr class="text-success"><th>常见问题</th><th>问题解答</th></tr>
 	<tr style="color:red"><td>在cat上显示两个不同项目名</<td><td>由于phoenix灰度升级，业务可以直接升级至1.1.3，解决问题。</td></tr>
 	<tr style="color:red"><td>CAT实时接口文档</<td><td><a href="https://docs.google.com/a/dianping.com/spreadsheet/ccc?key=0AsZINNb1ERcAdDdjQk5oaUZ1bmF6WmZlMjNxLUpwOWc&usp=drive_web" target="blank">接口文档</a></td></tr>

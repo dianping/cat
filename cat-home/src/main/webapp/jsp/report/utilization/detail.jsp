@@ -1,19 +1,14 @@
 	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <div class="row-fluid">
-      <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	</div>
-	<div class="span10">
-			</br>
 			<div class="tabbable "  > <!-- Only required for left/right tabs -->
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-tabs" style="height:50px">
 			 	<li class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>Web</strong></a></li>
 			 	<li class="text-right "><a id="tab2Href" href="#tab2" data-toggle="tab"><strong>Service</strong></a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab1">
-					<div class="report">
-						<table id="web_content" class="table table-striped table-condensed table-bordered  table-hover">
+					<div class="report"  style="display:inline-flex;">
+						<table id="web_content" class="table table-striped table-condensed   table-hover">
 							<thead>
 							<tr>
 								<th>Web应用</th>
@@ -55,8 +50,8 @@
 					</div>
 				</div>
 				<div class="tab-pane" id="tab2">
-					<div class="report">
-						<table id="service_content" class="table table-striped table-condensed table-bordered  table-hover">
+					<div class="report"  style="display:inline-flex;">
+						<table id="service_content" class="table table-striped table-condensed   table-hover">
 							<thead>
 								<tr>
 								<th>Service应用</th>
@@ -98,5 +93,4 @@
 				</div>
 			</div>
 		</div>
-	</div>
 </div>

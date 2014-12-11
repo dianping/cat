@@ -17,7 +17,7 @@
 	<pre>	http://{ip}/broker-service/api/single</pre>
 	
 	<p>参数说明</p>
-	<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+	<table style="width:70%" class="table table-striped table-condensed  ">
 		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>ts</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
@@ -28,7 +28,7 @@
 	</table>
 
 自定义 HttpStatus 表
-	<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+	<table style="width:70%" class="table table-striped table-condensed  ">
 		<tr><th>code名称</th><th>code含义</th></tr>	
 		<tr><td>-100</td><td>如果当前没有连接，不能连接到网络</td></tr>
 		<tr><td>-107</td><td>回传的数据格式出错</td></tr>
@@ -52,7 +52,7 @@
 	<pre>	http://{ip}/broker-service/api/batch</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=2&c=</span>”(v=1已遗弃)，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
 	
-	<table class="table table-striped table-condensed table-bordered ">
+	<table class="table table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
 		<tr><td>network</td><td>2G,3G,4G,WIFI(iOS只有3G和WIFI)</td><td>int</td></tr>
@@ -86,7 +86,7 @@
 	<pre>	http://{ip}/broker-service/api/speed</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=1&c=</span>”，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
 	
-	<table class="table table-striped table-condensed table-bordered ">
+	<table class="table table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
 		<tr><td>network</td><td>2G,3G,4G,WIFI (iOS只有3G和WIFI)</td><td>int</td></tr>
@@ -118,7 +118,7 @@
 	<pre>	http://{ip}/broker-service/api/js</pre>
 	
 	<p>参数说明</p>
-	<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+	<table style="width:70%" class="table table-striped table-condensed  ">
 		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>timestamp</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
@@ -146,7 +146,7 @@
 	</pre>
 	
 	<p>参数说明</p>
-	<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+	<table style="width:70%" class="table table-striped table-condensed  ">
 		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
@@ -158,7 +158,7 @@
 <br/>
 <h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>
 
-<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+<table style="width:70%" class="table table-striped table-condensed  ">
 	<tr><th>ID</th><th>描述</th></tr>
 	<tr><td>唯一ID</td><td>不能有特殊字符，仅限于英文字母和-</td></tr>	
 	<tr><td>所属组</td><td>分析时不起作用，仅仅用作url的分组，用于展示目的</td></tr>	
@@ -173,7 +173,7 @@
 	http://主机域名:端口/cat/r/app?
 </pre>
 <p>参数说明</p>
-<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+<table style="width:70%" class="table table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>linechartJson[查看API访问趋势、运营活动趋势]、piechartJson[查看访问量分布]<span class="text-danger">  必需</span></td></tr>
 	<tr><td>其他参数</td><td>参考端到端APP监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-danger">  必需</span></td></tr>
@@ -191,7 +191,7 @@
 	http://主机域名:端口/cat/r/web?
 </pre>
 <p>参数说明</p>
-<table style="width:70%" class="table table-striped table-condensed table-bordered ">
+<table style="width:70%" class="table table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>json<span class="text-danger">  必需</span></td></tr>
 	<tr><td>其他参数</td><td>参考端到端WEB监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-danger">  必需</span></td></tr>

@@ -2,7 +2,7 @@
 <h4 class="text-info">对所有应用异常进行监控，通过对异常次数的判断选择进行警告的发送，并统计出异常警告报表。</h4>
 <br/>
 <h4 class="text-success">1. 异常阈值<a href="/cat/s/config?op=exception">配置</a></h4>
-<table style="width:90%" class="table table-striped table-condensed table-bordered ">
+<table style="width:90%" class="table table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
 		<td>域名</td>
@@ -23,7 +23,7 @@
 <br/>
 <h4 class="text-success">2. 异常过滤<a href="/cat/s/config?op=exception">配置</a></h4>
 <p>对于不想进行异常告警的异常，可以在异常过滤配置里进行设置</p>
-<table style="width:90%" class="table table-striped table-condensed table-bordered ">
+<table style="width:90%" class="table table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
 		<td>域名</td>

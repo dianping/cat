@@ -89,7 +89,7 @@
 					<div class="tab-pane" id="tabContent-异常阈值">
 						<h4 class="text-center text-danger">异常阈值配置</h4>
 						<table
-							class="table table-striped table-condensed table-bordered  table-hover"
+							class="table table-striped table-condensed   table-hover"
 							id="content-异常阈值" width="100%">
 							<thead>
 								<tr >
@@ -128,7 +128,7 @@
 					<div class="tab-pane" id="tabContent-异常过滤">
 						<h4 class="text-center text-danger">异常过滤配置</h4>
 						<table
-							class="table table-striped table-condensed table-bordered  table-hover"
+							class="table table-striped table-condensed   table-hover"
 							id="contents-异常过滤" width="100%">
 							<thead>
 								<tr >

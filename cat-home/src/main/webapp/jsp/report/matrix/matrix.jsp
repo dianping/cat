@@ -7,24 +7,20 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.matrix.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.matrix.Model"	scope="request" />
 
-<a:report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
+<a:offlineReport title="Matrix Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#matrix').addClass('active');
+		$('#matrix_report').addClass('active');
 	});
 </script>
 <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
 	 <br/>
 	<table  class='table table-hover table-striped table-condensed ' >
 	<tr>
 		<th class="left" rowspan="2">Type</th>
-		<th class="left" width="20%" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
+		<th class="left" width="10%" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
 		<th rowspan="2" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
 		<th rowspan="2" title="所有请求中平均响应时间"><a href="?date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
 		<th rowspan="2">Log</th>
@@ -86,8 +82,8 @@
 			<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Log</a></td>
 		</tr>
 	</c:forEach>
-</table></div></div>
+</table></div>
 
 </jsp:body>
-</a:report>
+</a:offlineReport>
 

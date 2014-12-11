@@ -7,12 +7,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:body>
+<a:offline>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#bug').addClass('active');
+		$('#bug_report').addClass('active');
 	});
 </script>
 <div class="report">
@@ -31,13 +31,8 @@
 	</table>
 </div>
 <div class="row-fluid">
-    <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	</div>
-	<div class="span10">
 		<div class="report">
 			<%@ include file="detail.jsp"%>
 		</div>
-	</div>
 </div>
-</a:body>
+</a:offline>

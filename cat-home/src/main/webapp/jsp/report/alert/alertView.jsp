@@ -54,7 +54,7 @@
 			</div>
 		</div>
 		<div id="alertReport">
-			<table	class="table table-striped table-condensed table-bordered  table-hover">
+			<table	class="table table-striped table-condensed   table-hover">
 				<tr class="text-success">
 					<th width="10%">时间</th>
 					<th width="5%">类型</th>

@@ -24,7 +24,7 @@
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<h4 class="text-center text-danger">告警默认发送人</h4>
 				<table
-					class="table table-striped table-condensed table-bordered  table-hover">
+					class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width: auto" rows="20"
 								cols="150">${model.content}</textarea></td>

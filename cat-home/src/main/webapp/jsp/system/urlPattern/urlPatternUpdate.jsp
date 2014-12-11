@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 			<h3 class="text-center text-success">修改Web端URL的规则</h3>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit">
-				<table style='width:100%' class='table table-striped table-condensed table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 					<tr>
 						<th width="10%">唯一ID</th>
 						<td width="40%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>

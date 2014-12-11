@@ -7,7 +7,7 @@
 <p>c） 告警周期：一分钟</p>
 <br/>
 <h4 class="text-success">2. 响应时间阈值<a href="/cat/s/config?op=transactionRule">配置</a></h4>
-<table style="width:90%" class="table table-striped table-condensed table-bordered ">
+<table style="width:90%" class="table table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
 		<td>域名</td>

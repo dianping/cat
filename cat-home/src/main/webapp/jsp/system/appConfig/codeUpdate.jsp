@@ -48,7 +48,6 @@
 	</script>
 	
 	<table class="table table-striped table-condensed table-bordered ">
-		
 		<c:if test="${payload.action.name eq 'appCodeUpdate' }">
 		<tr>
 			<td>命令字</td><td><input name="commandId" value="${model.updateCommand.name}" id="commandId" disabled /><br/>

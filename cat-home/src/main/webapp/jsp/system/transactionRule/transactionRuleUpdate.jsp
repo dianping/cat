@@ -12,7 +12,7 @@
 <a:config>
 			<h3 class="text-center text-success">编辑Transaction监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-condensed table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
 				<c:set var="domain" value="${conditions[0]}" />
 				<c:set var="type" value="${conditions[1]}" />
