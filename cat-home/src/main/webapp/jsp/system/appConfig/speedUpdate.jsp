@@ -12,6 +12,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
 		});
 		

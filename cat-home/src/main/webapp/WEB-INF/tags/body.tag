@@ -279,7 +279,7 @@
 					var anchor = this;
 					var dialog = $( "#dialog-message" ).removeClass('hide').dialog({
 						modal: true,
-						title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CRM管理系统提示</h4></div>",
+						title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CAT提示</h4></div>",
 						title_html: true,
 						buttons: [ 
 							{

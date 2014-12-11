@@ -15,12 +15,6 @@
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
 			<form method="post">
 				<h3 class="text-center text-success">编辑心跳监控规则</h3>
 				
@@ -67,14 +61,11 @@
 				</div>
 				${model.content}
 				<div style='text-align: center'>
-					<input class="btn btn-primary" id="ruleSubmitButton" type="text"
+					<input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text"
 						name="submit" value="提交">
 					</button>
 				</div>
 			</form>
-		</div>
-	</div>
-	
 	<script type="text/javascript">
 		function drawMetricItems(metricsStr, newMetric) {
 	        var metrics = null;
@@ -148,6 +139,7 @@
 		 $(document).ready(function() {
 			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			var newMetric = $('#metricItem').clone();
+			$('#application_config').addClass('active open');
 			$('#heartbeatRuleConfigList').addClass('active');
 			
 			var configHeader = '${model.configHeader}';

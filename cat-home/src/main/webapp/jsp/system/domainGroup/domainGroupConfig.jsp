@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -13,11 +13,10 @@
 
 			<form name="domainGroupConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=domainGroupConfigUpdate">
-				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<h4 class="text-center text-danger">项目机器分组配置【请不要修改其他项目节点，新增自己项目节点即可】</h4>
 				<table class="table table-striped table-condensed table-bordered  table-hover">
 					<tr>
-						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
+						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>
 					<tr>
 						<td style="text-align:center"><input class='btn btn-primary' 
@@ -25,10 +24,10 @@
 					</tr>
 				</table>
 			</form>
-</a:body>
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#projects').addClass('active open');
+			$('#projects_config').addClass('active open');
 			$('#domainGroupConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

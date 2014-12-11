@@ -26,13 +26,13 @@
 			<thead>
 				<tr >
 					<th width="20%">项目名</th>
-					<th width="15%">CMDB</th>
+					<th width="20%">CMDB</th>
 					<th width="5%">级别</th>
 					<th width="10%">BU</th>
 					<th width="10%">CMDB产品线</th>
 					<th width="15%">组邮件</th>
-					<th width="15%">组号码</th>
-					<th width="10%">操作</th>
+					<th width="12%">组号码</th>
+					<th width="8%">操作</th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.projects}"
 					varStatus="status">
@@ -44,9 +44,9 @@
 						<td>${item.cmdbProductline}</td>
 						<td>${item.email}</td>
 						<td>${item.phone}</td>
-						<td><a href="?op=update&projectId=${item.id}" class="btn btn-primary btn-sm">
+						<td><a href="?op=update&projectId=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=projectDelete&projectId=${item.id}" class="btn btn-danger btn-sm" >
+						<a href="?op=projectDelete&projectId=${item.id}" class="btn btn-danger btn-xs" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach></tbody>

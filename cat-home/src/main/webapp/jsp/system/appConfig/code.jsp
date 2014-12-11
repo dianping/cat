@@ -72,7 +72,7 @@
 项目<select id="domain" style="width: 100px;"></select>
 	命令字 <select id="command" style="width: 240px;"></select>
 	&nbsp;&nbsp;
-	<input class="btn btn-primary "
+	<input class="btn btn-primary btn-xs"
 					value="&nbsp;&nbsp;&nbsp;返回码&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />
 	<br/>
@@ -80,10 +80,11 @@
 <table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 	<thead>
 	<tr >
-		<th width="10%">返回码</th>
-		<th width="20%">局部设置</th>
+		<th width="20%">返回码</th>
+		<th width="50%">局部设置</th>
 		<th width="20%">局部状态</th>
-		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-sm' href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code">新增</a></th>
+		<th width="10%">操作 <a href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	</tr></thead>
 	
 	<tbody>
@@ -101,8 +102,10 @@
 				</c:otherwise>
 				</c:choose>
 				</td>
-				<td><a class='btn  btn-sm btn-primary' href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">编辑</a>
-				<a class='delete btn  btn-sm btn-danger' href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">删除</a></td>
+				<td><a href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 			</tr>
 	</c:forEach>
 	
