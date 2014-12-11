@@ -22,12 +22,12 @@
 
 <div class="tabbable tabs-left " id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs alert-info">
-    <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top${payload.topCounts}</a></li>
-    <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top${payload.topCounts}</a></li>
-    <li class='text-right'><a href="#tab3" data-toggle="tab">Service最慢Top${payload.topCounts}</a></li>
-    <li class='text-right'><a href="#tab4" data-toggle="tab">SQL最慢Top${payload.topCounts}</a></li>
-    <li class='text-right'><a href="#tab5" data-toggle="tab">Call最慢Top${payload.topCounts}</a></li>
-    <li class='text-right'><a href="#tab6" data-toggle="tab">Cache最慢Top${payload.topCounts}</a></li>
+    <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多排行</a></li>
+    <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢排行</a></li>
+    <li class='text-right'><a href="#tab3" data-toggle="tab">Service最慢排行</a></li>
+    <li class='text-right'><a href="#tab4" data-toggle="tab">SQL最慢排行</a></li>
+    <li class='text-right'><a href="#tab5" data-toggle="tab">Call最慢排行</a></li>
+    <li class='text-right'><a href="#tab6" data-toggle="tab">Cache最慢排行</a></li>
   </ul>
   <c:set var="date" value="${w:format(model.topReport.startTime,'yyyyMMddHH')}"/>
   <div class="tab-content" style="white-space:nowrap">

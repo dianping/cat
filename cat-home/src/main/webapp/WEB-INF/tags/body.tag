@@ -216,10 +216,13 @@
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="system_network"><a href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<li id="system_cdn"><a href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+								<i class="menu-icon fa fa-caret-right"></i>CDN监控</a>
+								<b class="arrow"></b></li>
+							<li id="system_network"><a href="/cat/r/network?op=metric&product=f5-3600-2-dianping-com&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 								<i class="menu-icon fa fa-caret-right"></i>网络监控</a>
 								<b class="arrow"></b></li>
-							<li id="system_database"><a href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<li id="system_database"><a href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 								<i class="menu-icon fa fa-caret-right"></i>数据库</a>
 								<b class="arrow"></b></li>
 							<li id="system_paas"><a href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">

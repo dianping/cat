@@ -7,100 +7,69 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.database.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.database.Model" scope="request"/>
 
-<c:choose>
-	<c:when test="${payload.fullScreen}">
-		<res:bean id="res" />
-		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
-		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-		<div class="opNav">
-		<table>
-			<tr style="text-align: left">
-				<th>&nbsp;&nbsp;时间段选择: 
-					<c:forEach var="range" items="${model.allRange}">
-						<c:choose>
-							<c:when test="${payload.timeRange eq range.duration}">
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
-							</c:when>
-							<c:otherwise>
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
-							</c:otherwise>
-							</c:choose>
-					</c:forEach>
-				</th>
-			</tr>
-		</table></div>
-      	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-   			<div style="float:left;">
-   				<div id="${item.id}" class="metricGraph"></div>
-   			</div>
+<a:body>
+<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+<div class="report">
+	<div class="breadcrumbs" id="breadcrumbs">
+	<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+	<!-- #section:basics/content.searchbox -->
+	<div class="nav-search nav" id="nav-search">
+		<c:forEach var="nav" items="${model.navs}">
+			&nbsp;[ <a href="${model.baseUri}?op=view&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 		</c:forEach>
-	</c:when>
-	<c:otherwise>
-		<a:body>
-		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<div class="report">
-			<table class="header">
-				<tr>
-					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-					<td class="nav">
-						<c:forEach var="nav" items="${model.navs}">
-							&nbsp;[ <a href="${model.baseUri}?op=view&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-						</c:forEach>
-						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=view&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
-					</td>
-				</tr>
-			</table>	
-			<table>
-				<tr style="text-align: left">
-					<th>&nbsp;&nbsp;时间段选择: 
-						<c:forEach var="range" items="${model.allRange}">
-							<c:choose>
-								<c:when test="${payload.timeRange eq range.duration}">
-									&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
-								</c:when>
-								<c:otherwise>
-									&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
-								</c:otherwise>
-								</c:choose>
-						</c:forEach>
-					</th>
-				</tr>
-			</table>
-		      <div class="row-fluid">
-		        <div class="span3">
-		          <div class="well sidebar-nav">
-		            <ul class="nav nav-list">
-		            	 <li class='nav-header' id="${item.id}"></li>
-		            	<c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="${item.id}"><a href="?op=view&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
-			            </c:forEach>
-		              <li >&nbsp;</li>
-		            </ul>
-		          </div><!--/.well -->
-		        </div><!--/span-->
-		        <div class="span9">
-		        	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-		       			<div style="float:left;">
-		       				<div id="${item.id}" class="metricGraph"></div>
-		       			</div>
+		&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=view&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+	</div></div>
+	<table>
+		<tr style="text-align: left">
+			<th>
+				&nbsp;&nbsp;数据库
+				<select id="database" onchange="databaseChange()">
+					<c:forEach var="item" items="${model.productLines}" varStatus="status">
+						<option value="${item.id}">${item.id}</option>
 					</c:forEach>
-				</div>
-			</div>
-		</div>
-		</a:body>
-	</c:otherwise></c:choose>
+				</select>
+				
+				&nbsp;&nbsp;时间段 
+				<c:forEach var="range" items="${model.allRange}">
+					<c:choose>
+						<c:when test="${payload.timeRange eq range.duration}">
+							&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+						</c:when>
+						<c:otherwise>
+							&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+						</c:otherwise>
+						</c:choose>
+				</c:forEach>
+			</th>
+		</tr>
+	</table>
+    <div class="col-xs-12" style="padding-left:0px;">
+       	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
+      			<div style="float:left;">
+      				<div id="${item.id}" class="metricGraph"></div>
+      			</div>
+		</c:forEach>
+	</div>
+</div>
+</a:body>
 	
 	<script type="text/javascript">
+		function databaseChange(){
+			var date='${model.date}';
+			var domain='${model.domain}';
+			var product=$('#database').val();
+			var timeRange=${payload.timeRange};
+			var href = "?op=view&date="+date+"&domain="+domain+"&product="+product+"&timeRange="+timeRange;
+			window.location.href=href;
+		}
+	
 		$(document).ready(function() {
 			var product = '${payload.product}';
-			$(document.getElementById(product)).addClass('active');
 			$('i[tips]').popover();
-
+			$('#System_report').addClass('active open');
+			$('#system_database').addClass('active');
+			$('#database').val(product);
+			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
@@ -126,10 +95,3 @@
 		}
 	</script>
 </script>
-<style type="text/css">
-
-.nav-list>li>a,.nav-list .nav-header {
-	margin-left: -19px;
-	margin-right: -19px;
-}
-</style>
