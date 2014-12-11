@@ -396,6 +396,10 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
+			
+			$("#tab_offtime").click(function(){
+				window.location.href = "/cat/r/matrix";
+			})
 		});
 	</script>
 </body>

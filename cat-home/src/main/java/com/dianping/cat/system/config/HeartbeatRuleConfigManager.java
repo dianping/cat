@@ -1,8 +1,6 @@
 package com.dianping.cat.system.config;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
