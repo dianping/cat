@@ -231,19 +231,6 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
-			
-			$("#tab_realtime").click(function(){
-				window.location.href = "/cat/r/t?";
-			});
-			$("#tab_offtime").click(function(){
-				window.location.href = "/cat/r/matrix?";
-			});
-			$("#tab_document").click(function(){
-				window.location.href = "/cat/r/home?";
-			});
-			$("#tab_config").click(function(){
-				window.location.href = "/cat/s/config?op=topologyProductLines";
-			});
 		});
 	</script>
 </body>

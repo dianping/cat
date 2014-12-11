@@ -157,8 +157,23 @@
 						你确定要删除吗？(不可恢复)
 					</p>
 				</div>
- 				<div style="padding-right:8px;">
+ 				<div style="padding-top:5px;padding-right:8px;">
  				<jsp:doBody/>
  				</div>
 			</div>
 		</div></a:base>
+		<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#tab_realtime").click(function(){
+			window.location.href = "/cat/r/t?";
+		});
+		$("#tab_offtime").click(function(){
+			window.location.href = "/cat/r/matrix?";
+		});
+		$("#tab_document").click(function(){
+			window.location.href = "/cat/r/home?";
+		});
+		$("#tab_config").click(function(){
+			window.location.href = "/cat/s/config?op=topologyProductLines";
+		});});
+</script>
