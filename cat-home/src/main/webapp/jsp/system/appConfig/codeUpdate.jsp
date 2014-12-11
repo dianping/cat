@@ -8,10 +8,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
 			$('#codeStatus').val(${model.code.status});
 		});
@@ -46,16 +47,7 @@
 		}) 
 	</script>
 	
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		</br>
-
-	<table class="table table-striped table-condensed  ">
-		
+	<table class="table table-striped table-condensed table-bordered ">
 		<c:if test="${payload.action.name eq 'appCodeUpdate' }">
 		<tr>
 			<td>命令字</td><td><input name="commandId" value="${model.updateCommand.name}" id="commandId" disabled /><br/>
@@ -86,6 +78,5 @@
 			<td colspan="2" style="text-align:center;"><button class="btn btn-primary" id="updateSubmit">提交</button></td>
 		</tr>
 	</table>
-</div></div></div>
 
-</a:body>
+</a:config>

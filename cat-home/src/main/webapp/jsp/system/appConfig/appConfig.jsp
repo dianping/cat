@@ -11,11 +11,6 @@
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<form name="appConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=appConfigUpdate">
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
@@ -30,8 +25,6 @@
 					</tr>
 				</table>
 			</form>
-		</div>
-	</div>
 </a:body>
 <script type="text/javascript">
 		$(document).ready(function() {

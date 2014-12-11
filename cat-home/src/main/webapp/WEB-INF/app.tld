@@ -11,6 +11,10 @@
 		<body-content>JSP</body-content>
    </tag>
    <tag-file>
+      <name>base</name>
+      <path>/WEB-INF/tags/base.tag</path>
+   </tag-file>
+   <tag-file>
       <name>body</name>
       <path>/WEB-INF/tags/body.tag</path>
    </tag-file>
@@ -33,14 +37,6 @@
    <tag-file>
       <name>offlineReport</name>
       <path>/WEB-INF/tags/offlineReport.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>noSwitchReport</name>
-      <path>/WEB-INF/tags/noSwitchReport.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>simpleReport</name>
-      <path>/WEB-INF/tags/simpleReport.tag</path>
    </tag-file>
    <tag-file>
       <name>historyReport</name>

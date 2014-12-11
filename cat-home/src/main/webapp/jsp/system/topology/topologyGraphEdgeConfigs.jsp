@@ -8,20 +8,14 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#topylogyEdgeConfigList').addClass('active');
-			/* $('#content .nav-tabs a').mouseenter(function (e) {
-				  e.preventDefault();
-				  $(this).tab('show');
-			}); */
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
+			$('#application_config').addClass('active open');
+			$('#topylogyNodeConfigList').addClass('active');
 			var type = '${payload.type}';
 			if(type==''){
 				type = 'PigeonCall';
@@ -64,11 +58,6 @@
 			}
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<!-- Modal -->
 			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 			</div>
@@ -130,6 +119,4 @@
 				</c:forEach>
 			  </div>
 		   </div>
-		</div>
-	</div>
-</a:body>
+</a:config>

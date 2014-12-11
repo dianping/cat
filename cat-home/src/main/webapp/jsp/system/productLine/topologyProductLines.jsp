@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -23,7 +23,7 @@
 			$('#tab-'+type).addClass('active');
 			$('#tabContent-'+type).addClass('active');
 
-			
+			$('#projects_config').addClass('active open');
 			$('#topologyProductLines').addClass('active');
 			$('#content .nav-tabs a').mouseenter(function (e) {
 				  e.preventDefault();
@@ -48,17 +48,9 @@
 			}
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			</div>
-			<h5 id="state" class="text-center text-danger">&nbsp;</h5>
 			<div class="tabbable"> <!-- Only required for left/right tabs -->
-			  <ul class="nav nav-tabs">
+			  <ul class="nav nav-tabs" style="height:60px;">
 			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status">
 			  		<c:set var="type" value="${item.key}"/>
 				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h4 class="text-danger">${type}</h4></a></li>
@@ -68,19 +60,20 @@
 			  	<c:forEach var="listItem" items="${model.typeToProductLines}" varStatus="status">
 				<c:set var="type" value="${listItem.key}"/>
 				<div class="tab-pane" id="tabContent-${type}">
-				<table class="table table-striped table-condensed ">
+				<table class="table table-striped table-condensed table-hover table-bordered">
 					<tr class="text-success">
-						<th width="10%">产品线</th>
-						<th width="10%">标题</th>
+						<th width="15%">产品线</th>
+						<th width="20%">标题</th>
 						<th width="5%">顺序</th>
-						<th width="5%">业务监控</th>
-						<th width="5%">端到端监控</th>
-						<th width="5%">应用监控</th>
-						<th width="5%">网络监控</th>
-						<th width="5%">系统监控</th>
-						<th width="5%">数据库监控</th>
+						<th width="7%">业务监控</th>
+						<th width="7%">端到端监控</th>
+						<th width="7%">应用监控</th>
+						<th width="7%">网络监控</th>
+						<th width="7%">系统监控</th>
+						<th width="7%">数据库监控</th>
 						<!-- <th width="40%">项目列表</th> -->
-						<th width="10%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class='update btn btn-primary btn-sm'>新增</a></th>
+						<th width="8%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 					</tr>
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
 						<tr><td>${item.id}</td><td>${item.title}</td>
@@ -102,13 +95,13 @@
 								${domain.key},
 							</c:forEach>
 						</td> --%>
-						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class='update btn btn-primary btn-sm'>修改</a>
-						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class='delete btn-danger btn btn-primary btn-sm'>删除</a></td>
+						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class="btn btn-danger btn-xs" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach>
 			</table></div></c:forEach></div></div>
-		</div>
-	</div>
 	<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
 		<script>
 			$(document).ready(function(){
@@ -116,4 +109,4 @@
 			})
 		</script>
 	</c:if>
-</a:body>
+</a:config>>

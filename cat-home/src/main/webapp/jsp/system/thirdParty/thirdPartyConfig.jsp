@@ -4,23 +4,15 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 <res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<form name="thirdPartyConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=thirdPartyConfigUpdate">
-				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-				<h4 class="text-center text-danger">第三方监控配置</h4>
-				
-				<table class="table table-striped table-condensed   table-hover">
+				<table class="table table-striped table-condensed table-bordered  table-hover">
 					<tr>
 						<td style="width:60%">
 						<textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea>
@@ -43,16 +35,15 @@
 						</td>
 					</tr>
 					<tr>
-						<td style="text-align:center"><input class='btn btn-primary' 
+						<td style="text-align:center" colspan="2"><input class='btn btn-primary btn-sm' 
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form>
-		</div>
-	</div>
-</a:body>
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
+			$('#application_config').addClass('active open');
 			$('#thirdPartyConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
