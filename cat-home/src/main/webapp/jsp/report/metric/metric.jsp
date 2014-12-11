@@ -111,7 +111,6 @@
 	}
 
 	$(document).ready(function() {
-		
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			var data = ${item.jsonString};
 			graphMetricChart(document.getElementById('${item.id}'), data);

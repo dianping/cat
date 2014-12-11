@@ -18,22 +18,8 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 
 <div class="report">
-  		<div class="tabbable tabs-left"  > <!-- Only required for left/right tabs -->
-  			<ul class="nav nav-tabs padding-12  ">
-   			 	<li class="text-right active"><a id="tab1Href" href="#tab1" data-toggle="tab"><strong>拓扑</strong></a></li>
-   			 	<li class="text-right"><a id="tab3Href" href="#tab3" data-toggle="tab"><strong>配置</strong></a></li>
-  			</ul>
-  			<div class="tab-content">
-	    		<div class="tab-pane active" id="tab1">
-	   				<%@ include file="dependencyTimeNavTab1.jsp"%>
-	    			<div class="text-center" id="fullScreenData">
-						<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
-					  </div>
-	    		</div>
-	    		<div class="tab-pane" id="tab3">
-	  				<%@ include file="dependencyDetailData.jsp"%>
-	    		</div>
-  			</div>
+		<div class="text-center"><%@ include file="dependencyTimeNavTab1.jsp"%> </div>
+		<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
   	</div>
   		
   </div>

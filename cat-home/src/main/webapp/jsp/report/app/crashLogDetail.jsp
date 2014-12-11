@@ -56,49 +56,24 @@
 						<div>
 						<label class="btn btn-info btn-sm">
 		    				<input type="checkbox" id="appVersionAll" onclick="clickAll('${model.fieldsInfo.appVersions}', 'appVersion')" unchecked>All
-		  				</label>
-	    	
-	    				<c:forEach var="item" items="${model.fieldsInfo.appVersions}" varStatus="status">
-      						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="appVersion_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.appVersions}', 'appVersion')" unchecked>${item}
-		  					</label>
-						</c:forEach>
+		  				</label><c:forEach var="item" items="${model.fieldsInfo.appVersions}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="appVersion_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.appVersions}', 'appVersion')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
-					<tr><td width="60px;">平台版本</td><td><div>
-						<label class="btn btn-info btn-sm">
+					<tr><td width="60px;">平台版本</td><td><div><label class="btn btn-info btn-sm">
 		    				<input type="checkbox" id="platformVersionAll" onclick="clickAll('${model.fieldsInfo.platVersions}', 'platformVersion')" unchecked>All
-		  				</label>
-	    	
-	    				<c:forEach var="item" items="${model.fieldsInfo.platVersions}" varStatus="status">
-      						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="platformVersion_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.platVersions}', 'platformVersion')" unchecked>${item}
-		  					</label>
-						</c:forEach>
+		  				</label><c:forEach var="item" items="${model.fieldsInfo.platVersions}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="platformVersion_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.platVersions}', 'platformVersion')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
 					<tr><td width="60px;"> 模块</td><td><div>
 						<label class="btn btn-info btn-sm">
 		    				<input type="checkbox" id="moduleAll" onclick="clickAll('${model.fieldsInfo.modules}', 'module')" unchecked>All
-		  				</label>
-	    	
-	    				<c:forEach var="item" items="${model.fieldsInfo.modules}" varStatus="status">
-      						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="module_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.modules}', 'module')" unchecked>${item}
-		  					</label>
-						</c:forEach>
+		  				</label><c:forEach var="item" items="${model.fieldsInfo.modules}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="module_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.modules}', 'module')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
 					<tr><td width="60px;"> 级别</td><td><div>
 						<label class="btn btn-info btn-sm">
 		    				<input type="checkbox" id="levelAll" onclick="clickAll('${model.fieldsInfo.levels}', 'level')"  unchecked>All
-		  				</label>
-	    	
-	    				<c:forEach var="item" items="${model.fieldsInfo.levels}" varStatus="status">
-      						<label class="btn btn-info btn-sm">
-		    				<input type="checkbox" id="level_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.levels}', 'level')" unchecked>${item}
-		  					</label>
-						</c:forEach>
+		  				</label><c:forEach var="item" items="${model.fieldsInfo.levels}" varStatus="status"><label class="btn btn-info btn-sm"><input type="checkbox" id="level_${item}" value="${item}" onclick="clickMe('${model.fieldsInfo.levels}', 'level')" unchecked>${item}</label></c:forEach>
 						</div>
 						</td></tr>
 	</table>

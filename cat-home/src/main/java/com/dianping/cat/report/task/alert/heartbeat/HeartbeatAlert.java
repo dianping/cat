@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.helper.Threads.Task;
@@ -58,8 +59,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private HeartbeatReport m_lastReport;
 
 	private HeartbeatReport m_currentReport;
-
-	private Set<String> m_extentionMetrics = new HashSet<String>();
 
 	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
 		double[] array = map.get(name);
@@ -117,25 +116,12 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		m_currentReport = null;
 	}
 
-	private void convertDefaultDeltaMetrics(Map<String, double[]> map) {
-		List<String> metrics = m_displayManager.queryDefaultDeltaMetrics();
-
-		for (String metric : metrics) {
-			convertToDelta(map, metric);
-		}
-	}
-
-	private void convertDeltaExtensions(Map<String, double[]> map) {
-		for (String metricName : m_extentionMetrics) {
-			if (m_displayManager.isDelta(metricName)) {
-				convertToDelta(map, metricName);
+	private void convertDeltaMetrics(Map<String, double[]> map) {
+		for (String metric : map.keySet()) {
+			if (m_displayManager.isDelta(metric)) {
+				convertToDelta(map, metric);
 			}
 		}
-	}
-
-	private void convertDeltaMetrics(Map<String, double[]> map) {
-		convertDefaultDeltaMetrics(map);
-		convertDeltaExtensions(map);
 	}
 
 	private void convertToDelta(Map<String, double[]> map, String metric) {
@@ -186,13 +172,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 			Set<String> tmpMetrics = extension.getDetails().keySet();
 
 			metrics.addAll(tmpMetrics);
-			m_extentionMetrics.addAll(tmpMetrics);
 		}
 		return metrics;
 	}
 
 	private Map<String, double[]> generateArgumentMap(Machine machine) {
-		m_extentionMetrics = new HashSet<String>();
 		Map<String, double[]> map = new HashMap<String, double[]>();
 		List<Period> periods = machine.getPeriods();
 
@@ -246,10 +230,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	private void processDomain(String domain) {
 		clearCacheReport();
 		int minute = getAlreadyMinute();
-		Set<String> metrics = m_ruleConfigManager.queryMetrics();
+		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 
-		for (String metric : metrics) {
-			List<Config> configs = m_ruleConfigManager.queryConfigs(domain, metric, null);
+		for (Entry<String, List<Config>> entry : configsMap.entrySet()) {
+			String metric = entry.getKey();
+			List<Config> configs = entry.getValue();
 			Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
 			int maxMinute = resultPair.getKey();
 			List<Condition> conditions = resultPair.getValue();
