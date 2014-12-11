@@ -38,21 +38,6 @@
 		});
 	});
 </script>
-<div class="report">
-	<table class="header">
-		<tr>
-			<td class="title"><span class="text-success"><span class="text-danger">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
-			</td>
-			<td class="nav" >
-				<a href="?domain=${model.domain}&op=summary" class="switch"><span class="text-danger">【切到历史模式】</span></a>
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?op=summary&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=alert">now</a> ]&nbsp;
-			</td>
-		</tr>
-	</table>
-</div>
 <div class="row-fluid">
 		<div class="report">
 			<%@ include file="detail.jsp"%>
