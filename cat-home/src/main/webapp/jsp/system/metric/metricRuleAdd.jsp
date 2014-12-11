@@ -8,19 +8,13 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
 			<form method="post">
 				<h3 class="text-center text-success">编辑应用监控规则</h3>
 				
@@ -53,8 +47,6 @@
 					</button>
 				</div>
 			</form>
-		</div>
-	</div>
 	
 	<script type="text/javascript">
 		function drawMetricItems(metricsStr, newMetric) {
@@ -144,6 +136,7 @@
 		    }
 		 $(document).ready(function() {
 			initRuleConfigs();
+			
 			$('#metricConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			
@@ -153,7 +146,6 @@
 			$(document).delegate("#ruleSubmitButton","click",function(){
 				var key = $('#ruleId').val();
 				var metrics = generateMetricsJsonString();
-				var configStr = generateConfigsJsonString();
 			    window.location.href = "?op=metricRuleAddSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
 			});
 			
@@ -166,4 +158,4 @@
 	        });
 		});
 	</script>
-</a:body>
+</a:config>

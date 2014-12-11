@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -13,8 +13,6 @@
 
 			<form name="appConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=appConfigUpdate">
-				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-				<h4 class="text-center text-danger">手机端配置（请增加COMMAND节点，ID增加，不要删除其他节点）</h4>
 				<table class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
@@ -25,9 +23,13 @@
 					</tr>
 				</table>
 			</form>
-</a:body>
+							<h4 class="text-center text-danger">手机端配置（请增加COMMAND节点，ID增加，不要删除其他节点）</h4>
+							<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+			
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
+			$('#userMonitor_config').addClass('active open');
 			$('#appConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

@@ -89,8 +89,6 @@ public enum JspFile {
 
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
-	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
 	WEB_RULE("/jsp/system/webRule/webRule.jsp"),

@@ -8,22 +8,14 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
 			<form method="post">
-				<h3 class="text-center text-success">编辑系统监控规则</h3>
-				
 				<div class="config">
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
 				</div>
@@ -56,12 +48,8 @@
 				<div style='text-align: center'>
 					<input class="btn btn-primary" id="ruleSubmitButton" type="text"
 						name="submit" value="提交">
-					</button>
 				</div>
 			</form>
-		</div>
-	</div>
-	
 	<script type="text/javascript">
 		function drawMetricItems(metricsStr, newMetric) {
 	        if (metricsStr == undefined || metricsStr == "") {
@@ -150,6 +138,7 @@
 		    }
 		 $(document).ready(function() {
 			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
+			$('#alert_config').addClass('active open');
 			$('#systemRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			
@@ -172,4 +161,4 @@
 	        });
 		});
 	</script>
-</a:body>
+</a:config>

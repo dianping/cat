@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -17,12 +17,6 @@
 	<res:useCss value="${res.css.local['multiple-select.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
 	
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<form name="metricConfigAddSubmit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSubmit">
 			<span class="text-center text-danger" id="state">&nbsp;</span>
@@ -193,12 +187,10 @@
 					<td colspan='3'><input name="metricItemConfig.showDashboardOrder" value="${model.metricItemConfig.showDashboardOrder}" required/></td>
 				</tr>
 				<tr>
-					<td style="text-align:center" colspan='4'><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
+					<td style="text-align:center" colspan='4'><input class='btn btn-primary btn-sm' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 				</tr>
 			</table>
 		</form>
-		</div>
-	</div>
 
 	<script>
 		$(document).ready(function(){
@@ -308,4 +300,4 @@
 			})
 		})
 	</script>
-</a:body>
+</a:config>
