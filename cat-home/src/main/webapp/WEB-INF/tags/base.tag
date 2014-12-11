@@ -418,10 +418,6 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
-			
-			$("#tab_offtime").click(function(){
-				window.location.href = "/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
-			});
 		});
 	</script>
 </body>
