@@ -68,7 +68,7 @@
 			  	<c:forEach var="listItem" items="${model.typeToProductLines}" varStatus="status">
 				<c:set var="type" value="${listItem.key}"/>
 				<div class="tab-pane" id="tabContent-${type}">
-				<table class="table table-striped table-condensed table-bordered">
+				<table class="table table-striped table-condensed ">
 					<tr class="text-success">
 						<th width="10%">产品线</th>
 						<th width="10%">标题</th>

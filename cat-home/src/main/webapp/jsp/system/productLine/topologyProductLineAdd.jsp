@@ -21,7 +21,7 @@
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<h4 class="text-center text-danger">修改产品线配置信息</h4>
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
-				<table class="table table-striped table-condensed table-bordered ">
+				<table class="table table-striped table-condensed  ">
 					<tr>
 						<td style="width:25%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"

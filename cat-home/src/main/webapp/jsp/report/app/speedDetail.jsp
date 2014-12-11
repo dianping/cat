@@ -110,7 +110,7 @@
 			<div id="${model.appSpeedDisplayInfo.lineChart.id}"></div>
 		</div>
 		<br/>
-<table id="web_content" class="table table-striped table-condensed table-bordered  table-hover">
+<table id="web_content" class="table table-striped table-condensed   table-hover">
 	<thead>
 	<tr>
 	<c:choose>
@@ -167,7 +167,7 @@
 	</tbody>
 </table>
 
-<table id="web_content" class="table table-striped table-condensed table-bordered  table-hover">
+<table id="web_content" class="table table-striped table-condensed   table-hover">
 	<thead>
 	<tr>
 	<c:choose>

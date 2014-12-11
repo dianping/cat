@@ -20,7 +20,7 @@
 				action="${model.pageUri}?op=appConfigUpdate">
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<h4 class="text-center text-danger">手机端配置（请增加COMMAND节点，ID增加，不要删除其他节点）</h4>
-				<table class="table table-striped table-condensed table-bordered  table-hover">
+				<table class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width:auto" rows="20" cols="150">${model.content}</textarea></td>
 					</tr>

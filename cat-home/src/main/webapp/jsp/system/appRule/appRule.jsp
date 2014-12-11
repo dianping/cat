@@ -38,7 +38,7 @@
 		<div class="span10">
 			<div>
 			</br>
-			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
+			<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
 			<thead>
 				<tr >
 					<th width="15%">告警名</th>

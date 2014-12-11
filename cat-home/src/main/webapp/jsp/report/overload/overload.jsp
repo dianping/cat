@@ -10,49 +10,31 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
-<a:body>
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+<a:offline>
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 	<div style="height:24px"></div>
    <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
-		<div id="queryBar">
-			<div class="text-left"></div>
-			开始
-			<div id="startDatePicker" class="input-append date" >
-				<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
-			结束
-			<div id="endDatePicker" class="input-append date" >
-				<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
+		<div id="queryBar"">
+			<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
+	           开始<input id="startTime" name="startTime"  size="16" class="{required:true,date:true}"
+	              data-format="yyyy-MM-dd HH:mm" value="<fmt:formatDate value='${payload.startTime}' pattern='yyyy-MM-dd HH:mm'/>"  type="text"></input> <span class="add-on">
+	              <i class="ace-icon fa fa-calendar"></i>
+	           </span>
+	        </div>
+	        <div id="endDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
+	           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" class="{required:true,date:true}"
+	              data-format="yyyy-MM-dd HH:mm" value="<fmt:formatDate value='${payload.endTime}' pattern='yyyy-MM-dd HH:mm'/>"  type="text"></input> <span class="add-on">
+	              <i class="ace-icon fa fa-calendar"></i>
+	           </span>
+	        </div>
 			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
-			<%--<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
-			<a id="fullScreen" class='btn btn-sm btn-primary'>全屏</a>&nbsp;&nbsp;
-			 <div class="btn-group" data-toggle="buttons-checkbox">
-			  <button id="hourlyButton" type="button" class="btn btn-info">小时</button>
-			  <button id="dailyButton" type="button" class="btn btn-info">天报</button>
-			  <button id="weeklyButton" type="button" class="btn btn-info">周报</button>
-			  <button id="monthlyButton" type="button" class="btn btn-info">月报</button>
-			  <input type='hidden' id='hourlyStatus' value='${payload.showHourly}'/>
-			  <input type='hidden' id='dailyStatus' value='${payload.showDaily}'/>
-			  <input type='hidden' id='weeklyStatus' value='${payload.showWeekly}'/>
-			  <input type='hidden' id='monthlyStatus' value='${payload.showMonthly}' />
-			</div> --%>
-			<br><br>
 		</div>
-		<div id="DatabaseReport">
-			<table	class="problem table table-striped table-condensed table-bordered  table-hover" id="contents">
+		<div id="DatabaseReport" style="display:inline-flex;">
+			<table class="table table-striped table-condensed  table-hover" style="width:100%" id="contents">
 				<thead>
 				<tr class="text-success">
 					<th width="20%">日期</th>
@@ -104,11 +86,11 @@
 				</c:forEach>
 				</tbody>
 			</table>
-		</div></div></div>
+		</div></div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  init();
-			  $('#overload').addClass("active");
+			  $('#overload_report').addClass("active");
 			  
 	        <c:if test="${payload.fullScreen}">
 	          $('#fullScreen').addClass('btn-danger');
@@ -190,4 +172,4 @@
 	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime;
 	      }
 		</script>
-</a:body>
+</a:offline>

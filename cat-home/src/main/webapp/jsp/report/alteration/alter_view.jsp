@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
 	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	<%@ include file="alter_query.jsp"%>
-	<table	class="problem table table-striped table-condensed table-bordered  table-hover">
+	<table	class="problem table table-striped table-condensed   table-hover">
 		<tr class="text-success">
 			<th width="15%">时间</th>
 			<th width="5%">类型</th>

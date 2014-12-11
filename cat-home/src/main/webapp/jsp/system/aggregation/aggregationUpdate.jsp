@@ -17,7 +17,7 @@
 		<div class="span10">
 		</br>
 			<form name="aggregationUpdate" id="form" method="post" action="${model.pageUri}?op=aggregationUpdateSubmit">
-				<table style='width:100%' class='table table-striped table-condensed table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 					<tr>
 						<td>报表类型</td>
 						<td><select id="reportType" name = "aggregation.type">	

@@ -42,7 +42,7 @@
 		</tr>
 		</table>
 		<br>
-		<table class="table table-bordered">
+		<table class="table ">
 		<tr><td width="60px;">
 				平台类型</td><td><select id="platformType" style="width: 200px;">
 					<option value='AndroidCrashLog'>Android (主App)</option>

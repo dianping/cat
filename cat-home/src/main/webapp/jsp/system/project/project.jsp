@@ -27,7 +27,7 @@
 		</div>
 		<div class="span10">
 		</br>
-			<table class=" table table-striped table-condensed table-bordered "  width="100%">
+			<table class=" table table-striped table-condensed  "  width="100%">
 			<thead>
 				<tr >
 					<th width="15%" style="width:15%">项目名</th>
