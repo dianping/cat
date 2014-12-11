@@ -49,6 +49,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private static final String VERSION_TWO = "2";
 
+	private static final String VERSION_THREE = "3";
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -102,6 +104,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			} else {
 				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
 			}
+		} else if (VERSION_THREE.equals(version)) {
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+
+			if (infoPair != null) {
+				int cityId = infoPair.getKey();
+				int operatorId = infoPair.getValue();
+				String content = payload.getContent();
+
+				processVersion3Content(cityId, operatorId, content, version);
+				success = true;
+			} else {
+				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
+			}
 		} else {
 			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
 		}
@@ -118,6 +133,66 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Cat.logEvent("Discard", "Batch", Event.SUCCESS, null);
 				m_logger.error("Error when offer appData to queue , discard number " + m_error);
 			}
+		}
+	}
+
+	private void processVersion3Record(int cityId, int operatorId, String record) {
+		String[] items = record.split("\t");
+
+		if (items.length == 11) {
+			AppDataProto appData = new AppDataProto();
+
+			try {
+				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				int index = url.indexOf("?");
+
+				if (index > 0) {
+					url = url.substring(0, index);
+				}
+				Integer command = m_appConfigManager.getCommands().get(url);
+
+				if (command != null) {
+					// appData.setTimestamp(Long.parseLong(items[0]));
+					appData.setTimestamp(System.currentTimeMillis());
+					appData.setCommand(command);
+					appData.setNetwork(Integer.parseInt(items[1]));
+					appData.setVersion(Integer.parseInt(items[2]));
+					appData.setConnectType(Integer.parseInt(items[3]));
+					appData.setCode(Integer.parseInt(items[5]));
+					appData.setPlatform(Integer.parseInt(items[6]));
+					appData.setRequestByte(Integer.parseInt(items[7]));
+					appData.setResponseByte(Integer.parseInt(items[8]));
+					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					appData.setCount(1);
+
+					int responseTime = appData.getResponseTime();
+
+					if (responseTime < 60 * 1000 && responseTime >= 0) {
+						offerQueue(appData);
+
+						Cat.logEvent("Batch.Command", url, Event.SUCCESS, null);
+					} else if (responseTime > 0) {
+						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
+
+						if (tooLong != null) {
+							appData.setCommand(tooLong);
+							offerQueue(appData);
+						}
+						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+					} else {
+						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+					}
+				} else {
+					Cat.logEvent("Batch.UnknownCommand", url, Event.SUCCESS, items[4]);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				m_logger.error(e.getMessage(), e);
+			}
+		} else {
+			Cat.logEvent("Batch.InvalidRecord", record, Event.SUCCESS, null);
 		}
 	}
 
@@ -197,6 +272,20 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 		return null;
+	}
+
+	private void processVersion3Content(Integer cityId, Integer operatorId, String content, String version) {
+		String[] records = content.split("\n");
+
+		for (String record : records) {
+			try {
+				if (StringUtils.isNotEmpty(record)) {
+					processVersion3Record(cityId, operatorId, record);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
 	}
 
 	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {

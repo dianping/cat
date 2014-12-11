@@ -1,7 +1,10 @@
 package com.dianping.cat.system.config;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -16,6 +19,7 @@ import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.message.Event;
 
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
@@ -23,6 +27,46 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 	private ContentFetcher m_getter;
 
 	private static final String CONFIG_NAME = "heartbeatRuleConfig";
+
+	private void addRuleToMap(Rule rule, String metric, int priority, Map<String, Map<Integer, List<Rule>>> rules) {
+		Map<Integer, List<Rule>> rulesByPriority = rules.get(metric);
+
+		if (rulesByPriority == null) {
+			rulesByPriority = new HashMap<Integer, List<Rule>>();
+
+			rules.put(metric, rulesByPriority);
+		}
+
+		List<Rule> ruleList = rulesByPriority.get(priority);
+
+		if (ruleList == null) {
+			ruleList = new ArrayList<Rule>();
+
+			rulesByPriority.put(priority, ruleList);
+		}
+
+		ruleList.add(rule);
+	}
+
+	private Map<String, List<com.dianping.cat.home.rule.entity.Config>> extractConfigs(String domain,
+	      Map<String, Map<Integer, List<Rule>>> rulesByMetricPriority) {
+		Map<String, List<com.dianping.cat.home.rule.entity.Config>> result = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
+
+		for (Entry<String, Map<Integer, List<Rule>>> entry : rulesByMetricPriority.entrySet()) {
+			String metric = entry.getKey();
+			List<Rule> rules = getMaxPriorityRules(entry.getValue());
+			List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+
+			for (Rule rule : rules) {
+				configs.addAll(rule.getConfigs());
+
+				String nameValuePairs = "product=" + domain + "&metricKey=" + metric;
+				Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, nameValuePairs);
+			}
+			result.put(metric, configs);
+		}
+		return result;
+	}
 
 	@Override
 	protected String getConfigName() {
@@ -59,15 +103,23 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		}
 	}
 
-	public Set<String> queryMetrics() {
-		Set<String> metrics = new HashSet<String>();
+	public Map<String, List<com.dianping.cat.home.rule.entity.Config>> queryConfigsByDomain(String domain) {
+		Map<String, Map<Integer, List<Rule>>> rules = new HashMap<String, Map<Integer, List<Rule>>>();
 
 		for (Rule rule : m_config.getRules().values()) {
-			for (MetricItem item : rule.getMetricItems()) {
-				metrics.add(item.getMetricItemText());
+			for (MetricItem metricItem : rule.getMetricItems()) {
+				String domainPattern = metricItem.getProductText();
+				int matchLevel = validateRegex(domainPattern, domain);
+
+				if (matchLevel > 0) {
+					String metric = metricItem.getMetricItemText();
+
+					addRuleToMap(rule, metric, matchLevel, rules);
+				}
 			}
 		}
-		return metrics;
+
+		return extractConfigs(domain, rules);
 	}
 
 }

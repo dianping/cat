@@ -57,7 +57,6 @@
 					</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
 					]&nbsp;
 			</div></div>
-			<%@ include file="metricOpNav.jsp"%>
 			<%@ include file="TimeNavTab.jsp"%>
 			</div>
 			<div class="col-xs-12">
@@ -104,6 +103,11 @@ function showOpNav() {
 	}
 }
 
+$(document).ready(function() {
+	$('#Dashboard_report').addClass("open active");
+	$('#dashbord_network').addClass("active");
+});
+
 <c:choose>
 <c:when test="${payload.fullScreen}">
 	showOpNav();
@@ -111,14 +115,4 @@ function showOpNav() {
 </c:choose>
 
 </script>
-<style type="text/css">
-.row-fluid .span2 {
-	width: 15%;
-}
-
-.row-fluid .span10 {
-	width: 82%;
-}
-
-</style>
 
