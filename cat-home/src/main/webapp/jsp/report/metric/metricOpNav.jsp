@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <div class='text-right' style="margin-left:20px;">
-	<a id="fullScreen"  class='btn btn-sm btn-primary' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${!payload.fullScreen}&hideNav=${payload.hideNav}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}&timeRange=${payload.timeRange}">全屏</a>
+	<a id="fullScreen"  class='btn btn-sm btn-primary btn-sm' href="?op=${payload.action.name}&tag=${payload.tag}&product=${payload.product}&group=${payload.group}&fullScreen=${!payload.fullScreen}&hideNav=${payload.hideNav}&refresh=${payload.refresh}&frequency=${payload.frequency}&domain=${model.domain}&timeRange=${payload.timeRange}">全屏</a>
 </div>
 <script type="text/javascript">
 
