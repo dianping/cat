@@ -16,7 +16,6 @@
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
-	<div style="height:24px"></div>
    <div class="row-fluid">
 		<div id="queryBar"">
 			<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
@@ -31,7 +30,7 @@
 	              <i class="ace-icon fa fa-calendar"></i>
 	           </span>
 	        </div>
-			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
+			&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
 		<div id="DatabaseReport" style="display:inline-flex;">
 			<table class="table table-striped table-condensed  table-hover" style="width:100%" id="contents">
