@@ -45,7 +45,7 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="http://github.com/dianping/cat"  target="_blank" class="navbar-brand">
+					<a href="/cat/r/home"   class="navbar-brand">
 						<small>
 							CAT
 						</small>
@@ -54,13 +54,13 @@
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav" style="height:auto;">
-					<li>
+					<li class="light-blue">
 						<a href="http://github.com/dianping/cat/" target="_blank">
 							<i class="ace-icon glyphicon glyphicon-star-empty"></i>
 							<span>Star</span>
 						</a>
 					</li>
-					<li class="light-blue">
+					<li class="light-blue" >
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 							<span class="user-info">
 								<span id="loginInfo" ></span>

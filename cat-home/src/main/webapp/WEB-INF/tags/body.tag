@@ -15,7 +15,7 @@
 					<button class="btn btn-success" id="tab_realtime">
 						<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
 					</button>
-					<button class="btn btn-info" id="tab_offtime">
+					<button class="btn btn-grey" id="tab_offtime">
 						<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
 					</button>
 					<!-- #section:basics/sidebar.layout.shortcuts -->

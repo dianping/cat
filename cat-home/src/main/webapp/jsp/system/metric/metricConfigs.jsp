@@ -44,11 +44,11 @@
 		});
 	</script>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-			  <ul class="nav nav-tabs span2">
+			  <ul class="nav nav-tabs padding-12 ">
 			  	<c:forEach var="item" items="${model.productMetricConfigs}" varStatus="status">
 			  		<c:set var="product" value="${item.key}"/>
 				     <c:set var="key" value="${product.id}"/>
-				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> <h5 class="text-danger">${product.title}</h5></a></li>
+				    <li id="tab-${key}" class="text-right"><a href="#tabContent-${key}" data-toggle="tab"> ${product.title}</a></li>
 				</c:forEach>
 			  </ul>
 			  <div class="tab-content">

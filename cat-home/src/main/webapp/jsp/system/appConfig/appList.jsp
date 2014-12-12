@@ -61,12 +61,12 @@
 			})
  		});
 	</script>
-			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-				<ul class="nav nav-tabs span2" id="myTab">
-				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-danger"><strong>API命令字</strong></h5></a></li>
-				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-danger"><strong>活动命令字</strong></h5></a></li>
-				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <h5 class="text-danger"><strong>返回码</strong></h5></a></li>
-				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"> <h5 class="text-danger"><strong>测速配置</strong></h5></a></li>
+			<div class="tabbable" id="content"> <!-- Only required for left/right tabs -->
+				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
+				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <strong>API命令字</strong></a></li>
+				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <strong>活动命令字</strong></a></li>
+				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
+				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"><strong>测速配置</strong></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
