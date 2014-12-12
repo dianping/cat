@@ -22,7 +22,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportServiceManager m_manager;
-
+	
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "highload")
@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-
+		
 		switch (action) {
 		case VIEW:
 			Date startDate = payload.getDate();
