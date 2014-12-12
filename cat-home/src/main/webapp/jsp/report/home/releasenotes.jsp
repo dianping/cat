@@ -1,6 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-
-<h3 class="text-danger">客户端版本说明</h3>
 <table class='table table-striped table-condensed  '>
 	<tr class="text-success"><th width="8%">版本</th><th width="82%">说明</th><th width="10%">发布时间</th></tr>
 	<tr><td>1.1.9</td><td>1、修复了消息截断时候，统计时间的bug</td><td>2014-12-09</td></tr>

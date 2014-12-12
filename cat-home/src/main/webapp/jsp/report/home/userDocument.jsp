@@ -1,5 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h3 class="text-danger">用户文档</h3>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#userDocoument1" data-toggle="tab"><strong>Overall</strong></a></li>

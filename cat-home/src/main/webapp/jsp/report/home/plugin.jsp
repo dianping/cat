@@ -1,6 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8"%>
-
-<h3 class="text-danger">Chrome插件</h3>
 <ul class="nav-list">
 	<li>下载<a href="/cat/s/plugin/chrome">Chrome扩展插件</a>，保存到cat.crx文件</li>
 	<li>选择菜单：窗口 --&gt; 扩展程序, 或者在URL中输入：chrome://extensions</li>
