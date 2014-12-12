@@ -47,7 +47,7 @@
 		</div>
 	</div>
 	<div class="domainNavbar" style="display:none;font-size:small;">
-		<table class="table table-striped table-hover table-condensed">
+		<table class="table table-striped table-bordered table-hover table-condensed">
 			<c:forEach var="item" items="${model.domainGroups}">
 				<tr>
 					<c:set var="detail" value="${item.value}" />

@@ -159,7 +159,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.LINE_CHART;
+			m_action = Action.EXCEPTION_DASHBOARD;
 		}
 	}
 

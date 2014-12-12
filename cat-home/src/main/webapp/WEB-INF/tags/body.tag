@@ -33,7 +33,7 @@
 					<span class="btn btn-danger"></span>
 				</div>
 			</div>
-			<ul class="nav  nav-list" style="top: 0px;">
+			<ul class="nav nav-list" style="top: 0px;">
 				<li id="Dashboard_report" class="hsub"><a href="cat/r/t" class="dropdown-toggle"> <i class="menu-icon fa fa-tachometer"></i> <span class="menu-text">Dashboard</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>

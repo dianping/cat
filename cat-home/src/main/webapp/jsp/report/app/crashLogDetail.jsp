@@ -1,55 +1,49 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <c:set var="report" value="${model.problemReport}" />
 	<div class="report">
-	<table class="header">
-		<tr>
 		<c:set var="navUrlPrefix" value="op=${payload.action.name}&query1=${payload.query1}"/> 
+		<table style="width:100%;">
 		<c:choose>
 				<c:when test="${payload.action.name eq 'crashLog'}">
-					<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</span></td>
-					<td class="nav">
-					<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史模式】</span></a></span>
+				<td><span class="text-danger title">【时段】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</span>
+					</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史模式】</span></a></span>
 					<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 					</c:forEach>
 					&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 					</td>
 				</c:when>
-				<c:otherwise>
-					<c:if test="${payload.action.name eq 'historyCrashLog'}">
-						<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
-						<td class="nav">
-						<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
-						<c:forEach var="nav" items="${model.historyNavs}">
-						<c:choose>
-							<c:when test="${nav.title eq model.reportType}">
-									&nbsp;[ <a href="?${navUrlPrefix}&reportType=${nav.title}&date=${model.date}" class="current">${nav.title}</a> ]
-							</c:when>
-							<c:otherwise>
-									&nbsp;[ <a href="?${navUrlPrefix}&reportType=${nav.title}&date=${model.date}">${nav.title}</a> ]
-							</c:otherwise>
-						</c:choose>
-						</c:forEach>
-						&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]
-						&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]
-						&nbsp;[ <a href="?${navUrlPrefix}&reportType=${model.reportType}&nav=next">now</a> ]
-						</td>
-					</c:if>
-				</c:otherwise>
+		<c:otherwise>
+			<c:if test="${payload.action.name eq 'historyCrashLog'}">
+				<td><span class="text-danger title">【时段】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</span>
+				</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
+				<c:forEach var="nav" items="${model.historyNavs}">
+				<c:choose>
+					<c:when test="${nav.title eq model.reportType}">
+							&nbsp;[ <a href="?${navUrlPrefix}&reportType=${nav.title}&date=${model.date}" class="current">${nav.title}</a> ]
+					</c:when>
+					<c:otherwise>
+							&nbsp;[ <a href="?${navUrlPrefix}&reportType=${nav.title}&date=${model.date}">${nav.title}</a> ]
+					</c:otherwise>
 				</c:choose>
-			
-		</tr>
-		</tr>
+				</c:forEach>
+				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?${navUrlPrefix}&reportType=${model.reportType}&nav=next">now</a> ]
+				 </td>
+			</c:if>
+		</c:otherwise>
+		</c:choose>
 		</table>
 		<br>
 		<table class="table ">
-		<tr><td width="60px;">
+		<tr><td width="100px;">
 				平台类型</td><td><select id="platformType" style="width: 200px;">
 					<option value='AndroidCrashLog'>Android (主App)</option>
 					<option value='iOSCrashLog'>iOS (主App)</option>
 					<option value='MerchantAndroidCrashLog'>Android (点评管家)</option>
 					<option value='MerchantIOSCrashLog'>iOS (点评管家)</option>
-					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary "
+					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary btn-sm "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /></td></tr>
 					<tr><td width="60px;">APP版本</td><td>
