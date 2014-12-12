@@ -56,7 +56,7 @@
 				<ul class="nav ace-nav" style="height:auto;">
 					<li class="light-blue">
 						<a href="http://github.com/dianping/cat/" target="_blank">
-							<i class="ace-icon glyphicon glyphicon-star-empty"></i>
+							<i class="ace-icon glyphicon glyphicon-star"></i>
 							<span>Star</span>
 						</a>
 					</li>

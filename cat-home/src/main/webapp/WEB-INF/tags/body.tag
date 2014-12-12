@@ -94,7 +94,7 @@
 				</li>					
 				<li id="Problem_report" >
 					<a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-						<i class="menu-icon glyphicon glyphicon-exclamation-sign"></i>
+						<i class="menu-icon fa fa-bug"></i>
 						<span class="menu-text">Problem</span>
 					</a>
 				</li>			
@@ -131,7 +131,7 @@
 				</li>
 				<li id="Matrix_report" >
 					<a href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-						<i class="menu-icon  fa fa-cog"></i>
+						<i class="menu-icon  fa  fa-flask"></i>
 						<span class="menu-text">Matrix</span>
 					</a>
 				</li>
