@@ -20,11 +20,6 @@
 		<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-		<div class="opNav">
-		<%@ include file="metricOpNav.jsp" %>
-		<%@ include file="TimeNavTab.jsp"%>
-		</div>
 		<div id="content">
 					<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
 						<div class="topology">

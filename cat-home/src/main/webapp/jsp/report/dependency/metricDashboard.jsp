@@ -31,23 +31,7 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-			<div class="opNav">
-				<div class="row-fluid">
-					<div class="span12 text-center">
-						<%@ include file="dependencyOpNav.jsp"%>
-				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div></div></div>
 			<div id="fullScreenData">
-				<%-- <div class="row-fluid">
-					<div class="span12">
-					   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-			   				<div style="float:left;">
-					   				<div id="${item.title}" class="metricGraph"></div>
-					   			</div>
-						</c:forEach>
-					</div>
-				</div> --%>
 				<div class="row-fluid">
 					<div class="span12">
 						<%@ include file="../top/topMetric.jsp"%>
