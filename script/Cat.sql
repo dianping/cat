@@ -145,16 +145,6 @@ CREATE TABLE `sqltable` (
   KEY `sql_name` (`sql_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放SQL和操作的表名的关系';
 
-CREATE TABLE `subscriber` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `domain` char(250) NOT NULL COMMENT '域名',
-  `group` char(250) NOT NULL COMMENT '域名',
-  `owner` char(250) NOT NULL COMMENT '域名',
-  `address` varchar(1000) NOT NULL COMMENT '订阅者地址',
-  `type` int(4) NOT NULL DEFAULT '0' COMMENT '订阅类型(0,表示邮件；1，表示短信)',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知订阅者表';
-
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `producer`      varchar(20) NOT NULL COMMENT '任务创建者ip',
@@ -171,67 +161,6 @@ CREATE TABLE `task` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `task_period_domain_name_type` (`report_period`,`report_domain`,`report_name`,`task_type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台任务';
-
-CREATE TABLE `alarmTemplate` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(64) DEFAULT NULL COMMENT '告警模板名称',
-  `content` text DEFAULT NULL COMMENT '告警模板内容',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警模板';
-
-CREATE TABLE `alarmRule` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `template_id` int(11) NOT NULL   COMMENT '告警模板ID' ,
-  `domain` varchar(64) DEFAULT NULL COMMENT '具体项目名称',
-  `content` text DEFAULT NULL COMMENT '自定义告警模板内容',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警规则实例表';
-
-CREATE TABLE `alarmRuleSubscription` (
-  `alarm_rule_id` int(11) NOT NULL COMMENT '告警规则ID',
-  `user_id` int(11) NOT NULL COMMENT '用户ID',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`alarm_rule_id`,`user_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅告警记录表';
-
-CREATE TABLE `mailRecord` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) NOT NULL COMMENT '发送邮件的内容，1表示告警邮件，2表示每日报表邮件',
-  `rule_id` int(11) NOT NULL COMMENT '用户订阅ID外间',
-  `receivers` varchar(500) NOT NULL COMMENT '接受用户邮件列表',
-  `title` varchar(200) NOT NULL COMMENT '邮件标题',
-  `content` text NOT NULL COMMENT '邮件具体内容',
-  `status` int(11) NOT NULL COMMENT '1表示发送成功、2表示发送失败',
-  `creation_date` datetime NOT NULL COMMENT '创建时间',
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件通知记录表';
-
-CREATE TABLE `scheduledReport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `domain` varchar(64) DEFAULT NULL COMMENT '具体项目名称',
-  `names` varchar(200) DEFAULT NULL COMMENT '发送具体的报表,逗号分割',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警规则实例表';
-
-CREATE TABLE `scheduledReportSubscription` (
-  `scheduled_report_id` int(11) NOT NULL COMMENT '定时任务ID',
-  `user_id` int(11) NOT NULL COMMENT '用户ID',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`scheduled_report_id`,`user_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
-
-CREATE TABLE `scheduledSubscription` (
-  `scheduled_report_id` int(11) NOT NULL COMMENT '定时任务ID',
-  `user_name` varchar(20) NOT NULL COMMENT '用户域账号',
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  PRIMARY KEY (`scheduled_report_id`,`user_name`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
 
 CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -271,20 +200,6 @@ CREATE TABLE `config` (
   PRIMARY KEY (`id`),
   KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
-
-CREATE TABLE `event` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` int(11) NOT NULL COMMENT '1、运维系统告警，2、DB告警，3、CAT内容告警',
-  `link` varchar(500) DEFAULT NULL COMMENT '详细信息link',
-  `domain` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,
-  `ip` varchar(32) DEFAULT NULL COMMENT '错误机器IP',
-  `subject` varchar(200) DEFAULT NULL COMMENT '事件标题',
-  `content` text COMMENT '事件内容',
-  `date` datetime NOT NULL COMMENT '事件发生时间',
-  `creation_date` datetime NOT NULL COMMENT '记录创建时间',
-  PRIMARY KEY (`id`),
-  KEY `ix_date_domain` (`date`,`domain`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件记录表';
 
 CREATE TABLE `baseline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

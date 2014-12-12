@@ -1,5 +1,4 @@
 	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
-	<h4 class='text-danger'>项目Bug异常数据 <a class="btn  btn-sm btn-danger" target='_blank' href="/cat/s/config?op=bugConfigUpdate">异常规范配置</a></h4>
 	<table class="table table-striped table-condensed   table-hover">
 	<tr>
 			<th width="10%">部门</th>

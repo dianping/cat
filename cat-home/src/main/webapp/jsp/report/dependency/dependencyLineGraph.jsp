@@ -7,7 +7,7 @@
 			<tr>
 				<c:forEach var="item" items="${model.indexGraph}" varStatus="status">
 					<td>
-						<div id="item${status.index}" style="width:450px;height:400px;"></div>
+						<div id="item${status.index}" style="width:380px;height:300px;"></div>
 					</td>
 				</c:forEach>
 			</tr>
@@ -25,7 +25,7 @@
 			<tr>
 			<c:forEach var="item" items="${value}" varStatus="status">
 					<td>
-						<div id="item${type.index}-${status.index}" style="width:450px;height:350px;"></div></td>
+						<div id="item${type.index}-${status.index}" style="width:380px;height:300px;"></div></td>
 			</c:forEach></tr>
 		</c:forEach></table>
 	</div>
