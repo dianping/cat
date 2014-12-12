@@ -1,0 +1,40 @@
+.border-radius(@r) {
+	border-radius: @r;
+}
+
+
+
+
+//transform
+.transform(@transformation) {
+	-moz-transform:@transformation;
+	-webkit-transform:@transformation;
+	-o-transform:@transformation;
+	-ms-transform:@transformation;
+	transform:@transformation;
+}
+.transform-origin(@origin) {
+  -moz-transform-origin:@origin;
+  -webkit-transform-origin:@origin;
+  -o-transform-origin:@origin;
+  -ms-transform-origin:@origin;
+  transform-origin:@origin;
+}
+
+
+//animation
+.animation(@params) {
+  -moz-animation:@params;
+  -webkit-animation:@params;
+  -o-animation:@params;
+  -ms-animation:@params;
+  animation:@params;
+}
+
+.animation-duration(@duration:1s) {
+  -moz-animation-duration:@duration;
+  -webkit-animation-duration:@duration;
+  -o-animation-duration:@duration;
+  -ms-animation-duration:@duration;
+  animation-duration:@duration;
+}

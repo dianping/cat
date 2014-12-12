@@ -22,9 +22,9 @@
 		<%@include file="./alarm.jsp"%>
 		</div>
 		<div class="span10">
-			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
+			<table class="alarm table table-striped table-condensed   " id="contents" width="100%">
 				<thead>
-				<tr class="odd">
+				<tr >
 					<th><span class="text-success">邮件类型</span></th>
 					<th><span class="text-success">邮件标题</span></th>
 					<th><span class="text-success">发送时间</span></th>
@@ -32,7 +32,7 @@
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.mailRecords}"
 					varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr class="">
 						<td>
 							<c:if test="${item.type == 1}">日常报表</c:if>
 							<c:if test="${item.type == 2}">异常告警</c:if>
@@ -40,7 +40,7 @@
 						</td>
 						<td>${item.title}</td>
 						<td>${w:format(item.creationDate,'yyyy-MM-dd HH:mm:ss')}</td>
-						<td><a  class="btn btn-primary btn-small" href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
+						<td><a  class="btn btn-primary btn-sm" href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
 					</tr>
 				</c:forEach></tbody>
 			</table>

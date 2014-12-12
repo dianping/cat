@@ -1458,9 +1458,6 @@
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
 				</requirement>
 			</requirements>
@@ -1474,24 +1471,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.app.AppSpeedDataDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1510,10 +1489,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
@@ -2265,82 +2241,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
 			<implementation>com.dianping.cat.home.dal.report.WeeklyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>mail-record</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>mail-record</logical-table-name>
-				<physical-table-name>mailRecord</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>scheduled-report</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>scheduled-report</logical-table-name>
-				<physical-table-name>scheduledReport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>scheduled-report-subscription</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>scheduled-report-subscription</logical-table-name>
-				<physical-table-name>scheduledReportSubscription</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>scheduled-subscription</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>scheduled-subscription</logical-table-name>
-				<physical-table-name>scheduledSubscription</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -4605,6 +4505,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4936,87 +4839,6 @@
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.alarm.Handler</role>
-			<implementation>com.dianping.cat.system.page.alarm.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.page.alarm.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.alarm.RecordManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.alarm.JspViewer</role>
-			<implementation>com.dianping.cat.system.page.alarm.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.alarm.RecordManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.RecordManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.login.Handler</role>

@@ -8,13 +8,12 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 
 <a:historyReport title="HeartBeat History Report">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-<br>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器:
+		<th>
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${payload.realIp eq ip}">

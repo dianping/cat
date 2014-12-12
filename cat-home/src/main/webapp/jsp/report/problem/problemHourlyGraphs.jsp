@@ -11,8 +11,8 @@
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
 .graph {
-	width: 600px;
-	height: 400px;
+	width: 500px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>

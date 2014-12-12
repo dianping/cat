@@ -9,18 +9,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		
-		</br>
+<a:config>
 			<h3 class="text-center text-success">编辑Transaction监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
 				<c:set var="domain" value="${conditions[0]}" />
 				<c:set var="type" value="${conditions[1]}" />
@@ -32,11 +24,11 @@
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
-						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-mini" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
+						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
-			</form> </div></div></div>
-</a:body>
+			</form>
+</a:config>
 
 <script type="text/javascript">
 function update() {
@@ -44,14 +36,14 @@ function update() {
     var domain = $("#domain").val();
     if(domain == "undefined" || domain == ""){
 		if($("#errorMessage").length == 0){
-			$("#domain").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#domain").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
     var type = $("#type").val();
     if(type == "undefined" || type == ""){
 		if($("#errorMessage").length == 0){
-			$("#type").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#type").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
@@ -78,6 +70,7 @@ function update() {
 			$("#name").val("All");
 		}
 		
+		$('#application_config').addClass('active open');
 		$('#transactionRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

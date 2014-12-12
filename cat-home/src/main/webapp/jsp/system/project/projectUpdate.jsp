@@ -8,24 +8,17 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#projectList').addClass('active');
+			$('#projects_config').addClass('active open');
+			$('#projects').addClass('active');
 		});
 	</script>
 	
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		</br>
-
 <form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
-	<table class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-condensed ">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
 		<input type="hidden" name="project.bu" value="${model.project.bu}" />
@@ -35,7 +28,7 @@
 		<tr>
 			<td>项目名称</td>
 			<td>${model.project.domain}</td>
-			<td></td>
+			<td style="color:red">注意：如果CMDB中存在该项目信息，信息修改会被CMDB同步更新覆盖掉。</td>
 		</tr>
 		<tr>
 			<td>CMDB项目名称</td>
@@ -68,10 +61,9 @@
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
+			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="submit" /></td>
 		</tr>
 	</table>
-</form></div></div></div>
+</form>
 
-</a:body>
+</a:config>

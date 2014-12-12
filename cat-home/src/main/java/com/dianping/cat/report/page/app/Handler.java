@@ -27,6 +27,7 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
@@ -65,6 +66,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CrashLogProcessor m_crashLogProcessor;
+	
+	@Inject
+	private PayloadNormalizer m_normalizePayload;
 
 	private Pair<LineChart, List<AppDataDetail>> buildLineChart(Model model, Payload payload, AppDataField field,
 	      String sortBy) {
@@ -313,6 +317,8 @@ public class Handler implements PageHandler<Context> {
 		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
+		
+		m_normalizePayload.normalize(model, payload);
 	}
 
 	private void setUpdateResult(Model model, int i) {

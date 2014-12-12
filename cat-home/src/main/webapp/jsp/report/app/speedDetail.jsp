@@ -1,16 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <table >
 			<tr>
-				<th align=left>时间
-					<div id="datetimepicker1" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time" name="time" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 
-						页面 <select id="page" style="width: 240px;">
+				<th align=left>
+					<div id="datetimepicker1" class="input-append  date" style="float:left;">
+			           时间<input id="time" name="time"  size="13" class="{required:true,date:true}"
+			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
+			              <i class="ace-icon fa fa-calendar"></i>
+			           </span>
+			        </div>
+						&nbsp;&nbsp;页面 <select id="page" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>
 						</c:forEach>
@@ -48,7 +46,7 @@
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> <input class="btn btn-primary "
+				</select> <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox"
@@ -58,16 +56,14 @@
 		</table>
 		<table id="history" style="display: none">
 			<tr>
-				<th align=left>时间
-					<div id="datetimepicker2" class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="time2" name="time2" style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 
-						页面 <select id="page2" style="width: 240px;">
+				<th align=left>
+					<div id="datetimepicker2" class="input-append  date" style="float:left;">
+			           时间<input id="time2" name="time2"  size="13" class="{required:true,date:true}"
+			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
+			              <i class="ace-icon fa fa-calendar"></i>
+			           </span>
+			        </div>
+					 &nbsp;&nbsp;页面 <select id="page2" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>
 						</c:forEach>
@@ -114,7 +110,7 @@
 			<div id="${model.appSpeedDisplayInfo.lineChart.id}"></div>
 		</div>
 		<br/>
-<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
+<table id="web_content" class="table table-striped table-condensed   table-hover">
 	<thead>
 	<tr>
 	<c:choose>
@@ -145,7 +141,7 @@
 	<tbody>
 	<c:set var="summarys" value="${model.appSpeedSummarys}" />
 		<c:forEach var="entry" items="${summarys['当前值']}" >
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<tr class="right">
 	 		<td style="text-align: center">${entry.value.dayTime}</td>
 			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
@@ -162,7 +158,7 @@
 				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
 				</c:when>
 				<c:otherwise>
-				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				<td class="text-danger">${w:format(ratio,'#0.000')}%</td>
 				</c:otherwise>
 				</c:choose>
 			</c:if>
@@ -171,7 +167,7 @@
 	</tbody>
 </table>
 
-<table id="web_content" class="table table-striped table-bordered table-condensed table-hover">
+<table id="web_content" class="table table-striped table-condensed   table-hover">
 	<thead>
 	<tr>
 	<c:choose>
@@ -201,7 +197,7 @@
 	<tbody id="details">
 		<c:set var="details" value="${model.appSpeedDetails}" />
 		<c:forEach var="entry" items="${details['当前值']}" >
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right" >
+		<tr class="right" >
 	 		<td style="text-align: center">${entry.value.dateTime}</td>
 			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
@@ -218,7 +214,7 @@
 				<td class="text-success">${w:format(ratio,'#0.000')}%</td>
 				</c:when>
 				<c:otherwise>
-				<td class="text-error">${w:format(ratio,'#0.000')}%</td>
+				<td class="text-danger">${w:format(ratio,'#0.000')}%</td>
 				</c:otherwise>
 				</c:choose>
 			</c:if>

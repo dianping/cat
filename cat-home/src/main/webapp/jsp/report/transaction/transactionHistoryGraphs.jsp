@@ -12,8 +12,8 @@
 <script type="text/javascript" src="/cat/js/transaction.js"></script>
 <style type="text/css">
 .graph {
-	width: 450px;
-	height: 350px;
+	width: 400px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>
@@ -25,8 +25,7 @@
 			<div id="hitTrend" class="graph"></div></td>
 		<td>
 			<div id="errorTrend" class="graph"></div></td>
-			<td>
-			<div id="errorTrend" class="graph"></div></td>
+		<td>
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="responseTrendMeta">${model.responseTrend}</div>
@@ -50,12 +49,12 @@
 	}
 </script>
 <c:if test="${payload.ipAddress eq 'All' }">
-<table class='data' style="width:60%;">
+<table  class='table table-hover table-striped table-condensed '  style="width:60%;">
 	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
 	<tr>
 		<th class="right">Ip</th>
-		<th class="right">Total Count</th>
-		<th class="right">Failure Count</th>
+		<th class="right">Total</th>
+		<th class="right">Failure</th>
 		<th class="right">Failure%</th>
 		<th class="right">Min(ms)</th>
 		<th class="right">Max(ms)</th>
@@ -63,7 +62,7 @@
 		<th class="right">Std(ms)</th>
 	</tr>
 	<c:forEach var="item" items="${model.distributionDetails}" varStatus="status">
-	<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+	<tr class=" right">
 		<td>${item.ip}</td>
 		<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 		<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>

@@ -32,7 +32,7 @@
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 				<div class="opNav">
 				<div class="row-fluid">
 					<div class="span12 text-center">
@@ -55,7 +55,6 @@
 		<div class="report">
 			<div class="row-fluid">
 				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
@@ -74,6 +73,10 @@
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		$('.position').hide();
 		$('.switch').hide();
+		$('#Dashboard_report').addClass("open active");
+		$('#dashbord_application').addClass("active");
+		$('#Dependency_report').removeClass("open active");
+
 		var data = ${model.dashboardGraph};
 		
 		new  StarTopoList('container', data ,{

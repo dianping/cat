@@ -8,20 +8,16 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.matrix.Model" scope="request" />
 
 <a:historyReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#matrix').addClass('active');
+		$('#matrix_report').addClass('active');
 	});
 </script>
 <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
 	 <br/>
-	<table class='data'>
+	<table  class='table table-hover table-bordered table-striped table-condensed ' >
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
@@ -36,7 +32,7 @@
 		<th colspan="3" title="一次请求中缓存调用次数统计">Cache Ratio</th>
 		<th colspan="3" title="一次请求中缓存调用时间统计">Cache Cost</th>
 	</tr>
-	<tr class="odd">
+	<tr >
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callMinCount">Min</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callMaxCount">Max</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&sort=callAvgCount">Avg</a></td>
@@ -60,35 +56,35 @@
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}"
 				varStatus="status">
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
+				<tr class="  right">
 					<td  class="left">${item.type}</td>
 					<td  class="left longText" style="white-space:normal">${w:shorten(item.name, 120)}</td>
 					<td>${item.count}</td>
 					<td>${w:format(item.avg,'0.0')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">L</a></td>
 					<td>${item.callMin}</td>
 					<td>${item.callMax}</td>
 					<td>${w:format(item.callAvg,'0.0')}</td>
 					<td>${item.callTime}</td>
 					<td>${w:format(item.callTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">L</a></td>
 				
 					<td>${item.sqlMin}</td>
 					<td>${item.sqlMax}</td>
 					<td>${w:format(item.sqlAvg,'0.0')}</td>
 					<td>${item.sqlTime}</td>
 					<td>${w:format(item.sqlTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">L</a></td>
 				
 					<td>${item.cacheMin}</td>
 					<td>${item.cacheMax}</td>
 					<td>${w:format(item.cacheAvg,'0.0')}</td>
 					<td>${item.cacheTime}</td>
 					<td>${w:format(item.cacheTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">L</a></td>
 				</tr>
 			</c:forEach>
-</table></div></div>
+</table></div>
 
 </jsp:body>
 

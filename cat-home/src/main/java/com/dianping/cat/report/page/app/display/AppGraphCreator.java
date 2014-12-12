@@ -1,8 +1,6 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -28,22 +26,6 @@ public class AppGraphCreator {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	private double queryMinYlable(final List<Double[]> datas) {
-		double min = Double.MAX_VALUE;
-
-		for (Double[] data : datas) {
-			if (data.length > 0) {
-				List<Double> dataList = Arrays.asList(data);
-				double tmp = Collections.min(dataList);
-
-				if (min > tmp) {
-					min = tmp;
-				}
-			}
-		}
-		return min;
-	}
-
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
@@ -51,7 +33,7 @@ public class AppGraphCreator {
 		lineChart.setHtmlTitle(queryType(type));
 
 		if (AppDataService.SUCCESS.equals(type)) {
-			lineChart.setMinYlable(queryMinYlable(datas));
+			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
 

@@ -52,7 +52,7 @@
 		<th>Avg(ms)</th>
 	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">
-		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		<tr class=" right">
 			<td class="left">${item.type}</td>
 			<td>${item.domain}</td>
 			<td>${item.ip}</td>

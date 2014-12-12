@@ -130,7 +130,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
-			m_action = Action.PROJECT_ALL;
+			m_action = Action.TOPOLOGY_GRAPH_PRODUCT_LINE;
 		}
 		return m_action;
 	}

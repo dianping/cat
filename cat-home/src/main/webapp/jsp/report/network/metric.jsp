@@ -11,17 +11,15 @@
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
 		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 		<div class="opNav">
 		<%@ include file="metricOpNav.jsp" %>
 		<table>
 			<tr style="text-align: left">
-				<th>&nbsp;&nbsp;时间段选择: 
+				<th>&nbsp;&nbsp;时间段 
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
@@ -44,23 +42,26 @@
 	<c:otherwise>
 		<a:body>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<div class="report">
-			<table class="header">
-				<tr>
-					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-					<td class="nav">
-						<c:forEach var="nav" items="${model.navs}">
+			
+			<div class="breadcrumbs" id="breadcrumbs">
+			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<div class="nav-search nav" id="nav-search">
+				<c:forEach var="nav" items="${model.navs}">
 							&nbsp;[ <a href="${model.baseUri}?op=metric&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 						</c:forEach>
 						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=metric&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
-					</td>
-				</tr>
-			</table>	
-				<%@ include file="metricOpNav.jsp" %>
+			</div></div>
 			<table>
 				<tr style="text-align: left">
-					<th>&nbsp;&nbsp;时间段选择: 
+					<th>
+						&nbsp;&nbsp;网络设备
+						<select id="network" onchange="networkChange()">
+							<c:forEach var="item" items="${model.productLines}" varStatus="status">
+								<option value="${item.id}">${item.id}</option>
+							</c:forEach>
+						</select>
+						&nbsp;&nbsp;时间段 
 						<c:forEach var="range" items="${model.allRange}">
 							<c:choose>
 								<c:when test="${payload.timeRange eq range.duration}">
@@ -74,37 +75,33 @@
 					</th>
 				</tr>
 			</table>
-		      <div class="row-fluid">
-		        <div class="span2">
-		          <div class="well sidebar-nav">
-		            <ul class="nav nav-list">
-		            	 <li class='nav-header' id="${item.id}"></li>
-		            	<li class='nav-header' id="metric_nettopology"><a href="?op=view"><strong>核心拓扑</strong></a></li>
-		            	<c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?op=metric&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
-			            </c:forEach>
-		              <li >&nbsp;</li>
-		            </ul>
-		          </div><!--/.well -->
-		        </div><!--/span-->
-		        <div class="span10">
+		      <div class="col-xs-12">
 		        	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		       			<div style="float:left;">
 		       				<div id="${item.id}" class="metricGraph"></div>
 		       			</div>
 					</c:forEach>
-				</div>
 			</div>
 		</div>
 		</a:body>
 	</c:otherwise></c:choose>
 	
 	<script type="text/javascript">
+		function networkChange(){
+			var date='${model.date}';
+			var domain='${model.domain}';
+			var network=$('#network').val();
+			var timeRange=${payload.timeRange};
+			var href = "?op=metric&date="+date+"&domain="+domain+"&product="+network+"&timeRange="+timeRange;
+			window.location.href=href;
+		}
+	
 		$(document).ready(function() {
 			var product = '${payload.product}';
-			$('#metric_'+product).addClass('active');
+			$('#network').val(product);
 			$('i[tips]').popover();
-
+			$('#System_report').addClass("open active");
+			$('#system_network').addClass("active");
 			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};
@@ -118,7 +115,6 @@
 				$('#switch').html("显示");
 			}
 		});
-		
 		function showOpNav() {
 			var b = $('#switch').html();
 			if (b == '隐藏') {
@@ -131,17 +127,3 @@
 		}
 	</script>
 </script>
-<style type="text/css">
-.row-fluid .span2 {
-	width: 15%;
-}
-
-.row-fluid .span10 {
-	width: 82%;
-}
-
-.nav-list>li>a,.nav-list .nav-header {
-	margin-left: -19px;
-	margin-right: -19px;
-}
-</style>

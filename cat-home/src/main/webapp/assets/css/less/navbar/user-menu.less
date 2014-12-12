@@ -1,0 +1,102 @@
+ .user-menu > li > a {
+	padding: 4px 12px;
+
+	> .@{icon} {
+		margin-right: 6px;
+		font-size: 120%;
+	}
+ }
+
+ .user-info {
+	max-width: 100px;
+	display: inline-block;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+
+	vertical-align: top;
+	line-height: 15px; 
+	position: relative;
+	top: 6px;
+
+	 small {
+		display: block;
+	 }
+ }
+
+ .user_info_minified() {
+	.user-menu {
+		padding-top: 42px !important;
+	}
+	.nav-user-photo {
+		margin-right: 0;
+	}
+	.user-info {
+		position:absolute !important;
+		margin-top: 40px;
+		margin-left: 1px;
+		right: 2px;
+
+		z-index: @zindex-navbar-fixed + 2;
+		color: #777;
+		font-size: @font-size-user-menu;
+		width: 156px;
+		max-width: 156px;
+		
+		padding-left: 8px;
+		padding-right: 8px;
+		height: 32px;
+		line-height: 26px !important;
+
+
+		display: none;
+
+		border-bottom: 1px solid #E5E5E5;
+
+		text-align: center;
+
+		vertical-align: none;
+		line-height: normal;
+		
+		cursor: text;
+	}
+
+	.user-info > small {
+		display: inline;
+		opacity: 1;
+	}
+ }
+
+ @media (min-width: @screen-topbar-down-min) and (max-width: @screen-qhd-width) , (max-width: @screen-topbar-down-small) {
+    .navbar:not(.navbar-collapse) .navbar-buttons {
+		.user_info_minified();
+	}
+	li.open .user-info {
+		display: inline-block !important;
+		//right: 2px;
+	}
+ }
+ @media (max-width: @screen-topbar-down-small) {
+   .navbar.navbar-collapse .navbar-buttons {
+		.user_info_minified();
+	}
+	li.open .user-info {
+		display: inline-block !important;
+		right: 2px;
+	}
+ }
+ @media (min-width: @grid-float-breakpoint) {
+   .user-min {
+		.user_info_minified();
+		
+		.user-info {
+			right: -3px;//because .dropdown is a bit margined
+		}
+		&.open .user-info {
+			display: inline-block !important;
+		}
+   }
+ }
+
+

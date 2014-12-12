@@ -9,18 +9,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		
-		</br>
+<a:config>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 			<tr>
 			<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />
 			<c:set var="name" value="${strs[2]}" />
@@ -83,8 +75,8 @@
 						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-mini" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
-			</form> </div></div></div>
-</a:body>
+			</form>
+</a:config>
 
 <script type="text/javascript">
 var commandInfo = ${model.commandJson};
@@ -155,6 +147,7 @@ function update() {
 		$("#operator").val(operator);
 		$("#metric").val(metric);
 		
+		$('#userMonitor_config').addClass('active open');
 		$('#appRule').addClass('active');
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){

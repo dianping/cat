@@ -269,7 +269,6 @@ public class Handler implements PageHandler<Context> {
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
-
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}

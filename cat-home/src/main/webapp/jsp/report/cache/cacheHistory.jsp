@@ -18,12 +18,12 @@
 	title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&type=${payload.type}${model.customDate}'>${payload.type}</a>"
 	navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp; <c:forEach var="ip" items="${model.ips}">
+		<th>&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -41,7 +41,7 @@
 </table>
 	<c:choose>
 		<c:when test="${empty payload.type}">
-		<table class="data" style="min-width:900px">
+		<table class="table table-hover table-striped table-condensed ">
 		<tr>
 			<th class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
@@ -54,7 +54,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.type}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
+				<tr class="  right">
 					<td style="text-align: left"><a
 								href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
@@ -69,7 +69,7 @@
 		<c:otherwise>
 			<div class="row-fluid">
 			<div class="span7">
-			<table class="data" style="min-width:900px">
+			<table class="table table-hover table-striped table-condensed ">
 			<tr>
 								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40"
@@ -110,7 +110,7 @@
 								varStatus="status">
 				<c:set var="e" value="${item.name}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}  right">
+				<tr class="  right">
 					<td
 										style="text-align: left; word-wrap: break-word; word-break: break-all;">
 					${w:shorten(e.id, 80)}</td>

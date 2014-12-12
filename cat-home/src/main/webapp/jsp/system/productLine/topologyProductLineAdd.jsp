@@ -4,26 +4,20 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<form name="topologyGraphEdgeConfigAddSumbit" id="form" method="get"
 				action="${model.pageUri}?op=topologyProductLineAddSubmit">
-				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">修改产品线配置信息</h4>
+				<h4 class="text-center text-danger">修改产品线配置信息</h4>
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-condensed table-border table-hover ">
 					<tr>
-						<td style="width:25%;text-align: right" class="text-success">产品线名称（全英文）</td>
+						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
 							value="${model.productLine.id}" required />
 							<input name="type" value="${payload.type}" type="hidden"/>	
@@ -107,7 +101,7 @@
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
 						<td>
-							<table>
+							<table class="table table-striped table-condensed table-hover" >
 								<tr>
 								<c:forEach var="item" items="${model.projects}" varStatus="status">
 									<c:choose>
@@ -142,11 +136,10 @@
 					</tr>
 				</table>
 			</form>
-		</div>
-	</div>
-</a:body>
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
+			$('#projects_config').addClass('active open');
 			$('#topologyProductLines').addClass('active');
 			$("#domainSelect").select2({
 				placeholder : "选择属于这个产品线的项目",

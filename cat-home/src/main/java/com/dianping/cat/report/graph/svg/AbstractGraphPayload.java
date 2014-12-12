@@ -47,7 +47,7 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 
 	@Override
 	public int getDisplayWidth() {
-		return getWidth();
+		return getWidth() - 50;
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 
 	@Override
 	public int getMarginBottom() {
-		return 60;
+		return 50;
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 
 	@Override
 	public int getWidth() {
-		return 580;
+		return 580 - 50;
 	}
 
 	@Override

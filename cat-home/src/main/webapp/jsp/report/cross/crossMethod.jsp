@@ -14,7 +14,7 @@
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
 								class="current">All</a>
@@ -44,7 +44,7 @@
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>
-<table class='table table-striped table-condensed '>
+<table class='table table-striped table-condensed  '>
 		
 		<c:choose>
 		<c:when test="${!empty model.methodInfo.callProjectsInfo}">
@@ -96,7 +96,7 @@
 			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+			<tr class=" right">
 		         	<td class="left">${callInfo.type}</td>
 					<td class="left">${callInfo.ip}</td>
 					<td class="left">${callInfo.id}</td>
@@ -138,7 +138,7 @@
 				</c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		         <tr class=" right">
 		            <td class="left">${serviceInfo.type}</td>
 					<td class="left">${serviceInfo.ip}</td>
 					<td class="left">${serviceInfo.id}</td>

@@ -7,17 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 <a:body>
-	<div class="row-fluid">
-		<%@include file="menu.jsp"%>
-	<div class="span10">
-		<%@include file="crashLogDetail.jsp"%>
-	</div>
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
+	<%@include file="crashLogDetail.jsp"%>
 </a:body>
 
 <script type="text/javascript">

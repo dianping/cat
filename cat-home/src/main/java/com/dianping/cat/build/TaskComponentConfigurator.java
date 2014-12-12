@@ -23,9 +23,6 @@ import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
-import com.dianping.cat.home.dal.alarm.MailRecordDao;
-import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
-import com.dianping.cat.home.dal.alarm.ScheduledSubscriptionDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
@@ -90,7 +87,6 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
-import com.dianping.cat.system.page.alarm.ScheduledManager;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -201,17 +197,14 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppDataComparisonNotifier.class).req(AppDataService.class)
 		      .req(AppComparisonConfigManager.class, AppConfigManager.class)
-		      .req(SenderManager.class, MailRecordDao.class, AppDataComparisonRender.class));
+		      .req(SenderManager.class,  AppDataComparisonRender.class));
 
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
-		all.add(C(ScheduledManager.class).req(ScheduledReportDao.class, ScheduledSubscriptionDao.class,
-		      ProjectService.class, ServerConfigManager.class));
-
 		all.add(C(ReportTaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class)//
-		      .req(ReportServiceManager.class, ScheduledManager.class)//
-		      .req(MailRecordDao.class, AppDataComparisonNotifier.class, ServerConfigManager.class));
+		      .req(ReportServiceManager.class, ProjectService.class)//
+		      .req(AppDataComparisonNotifier.class, ServerConfigManager.class));
 
 		all.add(C(ReportTaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));

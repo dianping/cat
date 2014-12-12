@@ -8,10 +8,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
 			$('#codeStatus').val(${model.code.status});
 		});
@@ -24,20 +25,20 @@
 			
 			if(codeId == "undefined" || codeId.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeId").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			
 			if(codeName == "undefined" || codeName.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeName").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
 			if(codeStatus == "undefined" || codeStatus.trim().length == 0){
 				if($("#errorMessage").length == 0){
-					$("#codeStatus").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#codeStatus").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
@@ -46,16 +47,7 @@
 		}) 
 	</script>
 	
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		</br>
-
-	<table class="table table-striped table-bordered table-condensed">
-		
+	<table class="table table-striped table-condensed table-bordered ">
 		<c:if test="${payload.action.name eq 'appCodeUpdate' }">
 		<tr>
 			<td>命令字</td><td><input name="commandId" value="${model.updateCommand.name}" id="commandId" disabled /><br/>
@@ -68,11 +60,11 @@
 		</td>
 		</c:when>
 		<c:otherwise>
-			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-error">（* 仅支持数字）</span><br/>
+			<td>返回码</td><td><input name="codeId" value="${model.code.id}" id="codeId" /><span class="text-danger">（* 仅支持数字）</span><br/>
 		</c:otherwise>
 		</c:choose>
 		<tr>
-			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-error">（* 支持数字、字符）</span><br/>
+			<td>返回码说明</td><td><input name="codeName" value="${model.code.name}" id="codeName" /><span class="text-danger">（* 支持数字、字符）</span><br/>
 </td>
 </tr>
 <tr>
@@ -86,6 +78,5 @@
 			<td colspan="2" style="text-align:center;"><button class="btn btn-primary" id="updateSubmit">提交</button></td>
 		</tr>
 	</table>
-</div></div></div>
 
-</a:body>
+</a:config>

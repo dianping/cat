@@ -9,9 +9,9 @@
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query() {
@@ -100,6 +100,8 @@
 					$('#type').val('${payload.type}');
 					$('#domain').val('${payload.domain}');
 					$('#productLine').val('${payload.productLine}');
+					$('#System_report').addClass('active open');
+					$('#system_paas').addClass('active');
 					
 					var curIpAddrs = '';
 					if("${payload.ipAddrs}" == ''){
@@ -185,10 +187,7 @@
 				
 			});
 	</script>
-
-	
 	<div class="report">
-	
 		<table>
 			<tr>
 				<th class="left">
@@ -207,32 +206,26 @@
 					</select>
 				</th>
 
-				<th class="right">开始时间
-					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" >
-						</input>
-						<span class="add-on">
-							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-						</span>
-					</div>
-           
-					结束时间
-					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" ></input> 
-						<span class="add-on" ondragleave="query()"> 
-							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-						</span>
-					</div>
-					<input class="btn btn-primary " value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit">
+				<th class="right">
+					<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           &nbsp;&nbsp;开始时间<input id="startTime" name="startTime"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div><div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           &nbsp;&nbsp;结束时间<input id="endTime" name="endTime"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+					&nbsp;&nbsp;<input class="btn btn-sm btn-primary " value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit">
 				</th>
 			</tr>
 		</table>
-	
-		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-info">
+		<div >
+			<label class="btn btn-sm btn-info">
 		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
 		  	</label>
-	    	
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
       			<label class="btn btn-info">
 		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
@@ -247,11 +240,5 @@
        			</div>
 			</c:forEach>
 		</div>
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
 	</div>
 </a:body>

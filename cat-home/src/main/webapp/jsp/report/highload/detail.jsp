@@ -6,7 +6,7 @@
 	}
 </style>
 <div class="tabbable "  > <!-- Only required for left/right tabs -->
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs" style="height:50px">
 		<c:forEach var="type" items="${model.report.types}" varStatus="status">
 			<li class="text-right navTabs" id="${type.id}"><a href="#${type.id}Content" data-toggle="tab"><strong>${type.id}</strong></a></li>
 		</c:forEach>
@@ -14,7 +14,7 @@
 	<div class="tab-content">
 		<c:forEach var="type" items="${model.report.types}" varStatus="status">
 			<div class="tab-pane" id="${type.id}Content">
-				<table	class="problem table table-striped table-bordered table-condensed table-hover">
+				<table	class="problem table table-striped table-condensed   table-hover">
 					<thead>
 					<tr class="text-success">
 						<th width="8%" class="tableHeader" data-sortBy="domain">项目</th>

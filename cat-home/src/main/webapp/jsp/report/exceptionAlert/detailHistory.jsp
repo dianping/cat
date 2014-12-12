@@ -19,9 +19,9 @@
 </div>
 
 	<br>
-		<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+		<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
 			<thead>
-				<tr class="odd">
+				<tr >
 					<th width="40%">域名</th>
 					<th width="20%">Warning警告</th>
 					<th width="20%">Error警告</th>
@@ -35,7 +35,7 @@
 					<td>${domain.name}</td>
 					<td>${domain.warnNumber}</td>
 					<td>${domain.errorNumber}</td>
-					<td><a class='detail btn btn-primary btn-small' href="?op=historyAlertDetail&domain=${domain.name}&startDate=${payload.historyStartDate}&endDate=${payload.historyEndDate}">Detail</a></td>
+					<td><a class='detail btn btn-primary btn-sm' href="?op=historyAlertDetail&domain=${domain.name}&startDate=${payload.historyStartDate}&endDate=${payload.historyEndDate}">Detail</a></td>
 				</tr>
 			</c:forEach>
 			</tbody>

@@ -8,47 +8,20 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#topylogyEdgeConfigList').addClass('active');
-			/* $('#content .nav-tabs a').mouseenter(function (e) {
-				  e.preventDefault();
-				  $(this).tab('show');
-			}); */
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
+			$('#application_config').addClass('active open');
+			$('#topologyGraphEdgeConfigList').addClass('active');
 			var type = '${payload.type}';
 			if(type==''){
 				type = 'PigeonCall';
 			}
 			$('#tab-'+type).addClass('active');
 			$('#tabContent-'+type).addClass('active');
-			
-			$(document).delegate('.update', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				//var cell = document.getElementById('');
-				$.ajax({
-					type: "get",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#myModal').html(response);
-						$('#myModal').modal();
-						edgeValidate();
-					}
-				});
-			});
 			
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphEdgeConfigDelete'||action=='topologyGraphEdgeConfigAddSumbit'){
@@ -64,52 +37,45 @@
 			}
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-			</div>
-			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<c:if test="${w:size(model.edgeConfigs) ==0 }">
 				<div class="row-fluid">
-				<div class="span10"><h5 class="text-center text-error">拓扑图依赖关系配置信息 </h5></div>
-				<div class="span2 text-center"><a class="btn btn-primary btn-small  update" href="?op=topologyGraphEdgeConfigAdd">新增</a></div>
+				<div class="span10"><h5 class="text-center text-danger">拓扑图依赖关系配置信息 </h5></div>
+				<div class="span2 text-center"><a class="btn btn-primary btn-sm  update" href="?op=topologyGraphEdgeConfigAdd">新增</a></div>
 			</div>
 			</c:if>
-			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
+			<div class="tabbable tabs-left" id="content" > <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.edgeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>
-				    <li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> <h5 class="text-error">${item.key}</h5></a></li>
+				    <li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> <h5 class="text-danger">${item.key}</h5></a></li>
+				    
 				</c:forEach>
 			  </ul>
-			  <div class="tab-content">
+			  <div class="tab-content" >
 			  	<c:forEach var="item" items="${model.edgeConfigs}" varStatus="status">
 				     <c:set var="key" value="${item.key}"/>
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${item.key}">
-					    <h4 class="text-center text-error">拓扑图依赖关系配置信息:${item.key}</h4>
-				     	<table class="table table-striped table-bordered table-condensed table-hover">
-				     		<tr class="text-success">
-				     			<th><h5 class='text-center'>类型</h5></th>
-				     			<th><h5 class='text-center'>调用者</h5></th>
-				     			<th><h5 class='text-center'>被调用者</h5></th>
-				     			<th><h5 class='text-center'>异常Warning阀值</h5></th>
-				     			<th><h5 class='text-center'>异常Error阀值</h5></th><th><h5 class='text-center'>响应时间Warning阀值</h5></th>
-				     			<th><h5 class='text-center'>响应时间Error阀值</h5></th>
-				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn btn-primary btn-small update" href="?op=topologyGraphEdgeConfigAdd&type=${item.key}">新增</a></h5></th>
-				     		</tr>
-				     		<tr class="text-error">
-				     			<td><h5>默认值</h5></td>
-				     			<th><h5>ALL</h5></th>
-				     			<th><h5>ALL</h5></th>
-				     			<td style="text-align:right"><h5>${value.nodeConfig.defaultWarningThreshold}</h5></td>
-				     			<td style="text-align:right"><h5>${value.nodeConfig.defaultErrorThreshold}</h5></td>
-					     		<td style="text-align:right"><h5>${value.nodeConfig.defaultWarningResponseTime}</h5></td>
-					     		<td style="text-align:right"><h5>${value.nodeConfig.defaultErrorResponseTime}</h5></td>
+					    <h4 class="text-center text-danger">拓扑图依赖关系配置信息:${item.key}</h4>
+				     	<table class="table table-striped table-condensed  table-bordered table-hover" >
+				     		<thead><tr>
+				     			<th>类型</th>
+				     			<th>调用者</th>
+				     			<th>被调用者</th>
+				     			<th>异常Warning阀值</th>
+				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
+				     			<th>响应时间Error阀值</th>
+				     			<th width="8%">操作 <a href="?op=topologyGraphEdgeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+				     		</tr></thead>
+				     		<tr class="text-danger">
+				     			<td>默认值</td>
+				     			<th>ALL</th>
+				     			<th>ALL</th>
+				     			<td style="text-align:right">${value.nodeConfig.defaultWarningThreshold}</td>
+				     			<td style="text-align:right">${value.nodeConfig.defaultErrorThreshold}</td>
+					     		<td style="text-align:right">${value.nodeConfig.defaultWarningResponseTime}</td>
+					     		<td style="text-align:right">${value.nodeConfig.defaultErrorResponseTime}</td>
 						     	<td></td>
 					     		</tr>
 					     	<c:forEach var="temp" items="${value.edgeConfigs}">
@@ -121,8 +87,10 @@
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
 					     		<td style="text-align:right">${temp.warningResponseTime}</td>
 					     		<td style="text-align:right">${temp.errorResponseTime}</td>
-						     	<td style="text-align:center"><a href="?op=topologyGraphEdgeConfigAdd&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn update btn-primary btn-small">修改</a>
-						     		<a href="?op=topologyGraphEdgeConfigDelete&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn btn-primary btn-small btn-danger delete">删除</a></td>
+						     		<td><a href="?op=topologyGraphEdgeConfigAdd&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=topologyGraphEdgeConfigDelete&type=${temp.type}&from=${temp.from}&to=${temp.to}" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					     		</tr>
 					     	</c:forEach>
 				     	</table>
@@ -130,6 +98,4 @@
 				</c:forEach>
 			  </div>
 		   </div>
-		</div>
-	</div>
-</a:body>
+</a:config>

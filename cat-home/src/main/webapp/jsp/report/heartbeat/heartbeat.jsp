@@ -13,10 +13,10 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 <table class="machines">
-	<th style="text-align:left">机器: 
+	<th style="text-align:left">
 		<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
@@ -37,7 +37,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.httpThreadGraph}
 		  ${model.catThreadGraph}
 		  ${model.pigeonThreadGraph}
@@ -49,7 +49,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.activeThreadGraph}
 		  ${model.startedThreadGraph}
 		  ${model.totalThreadGraph}
@@ -61,7 +61,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.newGcCountGraph}
 		  ${model.oldGcCountGraph}
 		  ${model.systemLoadAverageGraph}
@@ -73,7 +73,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.memoryFreeGraph}
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
@@ -85,7 +85,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="${model.diskRows * 190 }" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="${model.diskRows * 190 }" xmlns="http://www.w3.org/2000/svg">
 		  ${model.disksGraph}
 		</svg>
 	</td>
@@ -95,7 +95,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1200" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.catMessageProducedGraph}
 		  ${model.catMessageOverflowGraph}
 		  ${model.catMessageSizeGraph}
@@ -110,7 +110,7 @@
 		<td>
 		<c:set var="size" value="${fn:length(entry.value) }"/>
 		<c:set var="extensionHeight" value="${(size % 3) == 0 ? (size/3)*190 : ((size/3)+1)*190 }"/>
-			<svg version="1.1" width="1400" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
+			<svg version="1.1" width="1200" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
 				<c:forEach items="${entry.value}" var="kv">
 					${kv.value }
 				</c:forEach>
@@ -119,13 +119,10 @@
 	</tr>
 </c:forEach>
 </table>
-<table class="heartbeat">
+<table class='table table-hover table-striped table-condensed'>
 	<tr>
 		<th>Minute</th>
 		<th>ActiveThread</th>
-		<th>DeamonThread</th>
-		<th>StartedThead</th>
-		<th>CatThead</th>
 		<th>PigeonThead</th>
 		<th>NewGcCount</th>
 		<th>OldGcCount</th>
@@ -134,17 +131,11 @@
 		<th>NoneHeapUsage</th>
 		<th>MemoryFree</th>
 		<th>DiskFree</th>
-		<th>CatProduced</th>
-		<th>CatOverflow</th>
-		<th>CatSize</th>
 	</tr>
 	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'} right">
+		<tr class="right">
 		<td class="center">${item.minute}</td>
 		<td>${item.threadCount}</td>
-		<td>${item.daemonCount}</td>
-		<td>${item.totalStartedCount}</td>
-		<td>${item.catThreadCount}</td>
 		<td>${item.pigeonThreadCount}</td>
 		<td>${item.newGcCount}</td>
 		<td>${item.oldGcCount}</td>
@@ -153,9 +144,6 @@
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>
 		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
-		<td>${w:format(item.catMessageProduced,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.catMessageOverflow,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.catMessageSize,'#,##0.0MB')}</td>
 		</tr>
 	</c:forEach>
 </table>

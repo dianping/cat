@@ -229,7 +229,7 @@ public class Handler implements PageHandler<Context> {
 			type = payload.getType();
 			state = payload.getStatus();
 			start = report.getStartTime();
-			vistor = new HourlyLineChartVisitor("", type, state, start);
+			vistor = new HourlyLineChartVisitor(Constants.ALL, type, state, start);
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			buildDistributionChart(model, payload, report);

@@ -1,7 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h3 class="text-error">告警文档</h3>
 <div class="tabbable">
-  <ul class="nav nav-tabs" style="background-color:#f5f5f5">
+  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#overall" data-toggle="tab"><strong>综述</strong></a></li>
     <li><a href="#business" data-toggle="tab"><strong>业务告警</strong></a></a></li>
     <li><a href="#transaction" data-toggle="tab"><strong>响应时间告警</strong></a></li>

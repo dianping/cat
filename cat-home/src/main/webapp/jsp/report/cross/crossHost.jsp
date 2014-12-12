@@ -14,7 +14,7 @@
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&project=${payload.projectName}"
 								class="current">All</a>
@@ -44,7 +44,7 @@
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>
-<table class='table table-striped table-condensed '>
+<table class='table table-striped table-condensed  '>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr><td colspan="7" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
 		<tr>
@@ -57,7 +57,7 @@
 			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.hostInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+			<tr class=" right">
 		         	<td class="left">${callInfo.type}</td>
 		         	<td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callInfo.ip}&project=${payload.projectName}">${callInfo.ip}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -96,7 +96,7 @@
 		         </c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.hostInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		         <tr class=" right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${serviceInfo.ip}&project=${payload.projectName}">${serviceInfo.ip}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>

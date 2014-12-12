@@ -31,7 +31,7 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 			<div class="opNav">
 				<div class="row-fluid">
 					<div class="span12 text-center">
@@ -57,30 +57,16 @@
 	    </div>
 	</c:when>
 	<c:otherwise>
-			<a:report title="Dependency Report"
+		<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=metricDashboard">
 		<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
 		<div class="report">
-			<div class="row-fluid">
-				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div>
+			<div class="text-center">
+		 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div>
-			<%-- <div class="row-fluid">
-				<div class="span12">
-				   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-		   				<div style="float:left;">
-				   				<div id="${item.title}" class="metricGraph"></div>
-				   			</div>
-					</c:forEach>
-				</div>
-			</div> --%>
-			<div class="row-fluid">
-				<div class="span12">
-					<%@ include file="../top/topMetric.jsp"%>
-				</div>
+			<div class="">
+				<%@ include file="../top/topMetric.jsp"%>
 			</div>
 	</jsp:body>
 	</a:report>
@@ -100,6 +86,10 @@ $(document).ready(function() {
 		$('.opNav').slideUp();
 		$('#switch').html("显示");
 	}	
+	
+	$('#Dashboard_report').addClass("open active");
+	$('#dashbord_system').addClass("active");
+	$('#Dependency_report').removeClass("open active");
 });
 
 function showOpNav() {

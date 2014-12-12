@@ -18,7 +18,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a
 								href="?op=history&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
@@ -46,14 +46,14 @@
 		</th>
 	</tr>
 </table>
-<table  class="data" width="80%">
+<table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
-		<th width="35%" colspan=2>指标</th>
+		<th width="30%" colspan=2>指标</th>
 		<th width="20%">值</th>
-		<th width="45%">备注</th>
+		<th width="50%">备注</th>
 	</tr>
 	</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=total"
 					data-status="total" class="state_graph_link">[:: show ::]</a></td>
@@ -61,10 +61,11 @@
 		<td class="right">${w:format(model.state.total.total,'#,###,###,###,##0.#')}</td>
 		<td>服务器接受到消息总量</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="total" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="total" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=totalLoss"
 					data-status="totalLoss" class="state_graph_link">[:: show ::]</a></td>
@@ -79,10 +80,11 @@
 		</c:choose>
 		<td>服务器进行encode以及analyze处理来不及而丢失消息总量</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="totalLoss" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="totalLoss" style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=avgTps"
 					data-status="avgTps" class="state_graph_link">[:: show ::]</a></td>
@@ -90,10 +92,11 @@
 		<td class="right">${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
 		<td>平均每分钟处理消息量</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="avgTps" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="avgTps" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=maxTps"
 					data-status="maxTps" class="state_graph_link">[:: show ::]</a></td>
@@ -101,10 +104,11 @@
 		<td class="right">${w:format(model.state.total.maxTps,'###,###,###,##0')}</td>
 		<td>单台机器平均每分钟最大处理消息数目</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="maxTps" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="maxTps" style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=dump"
 					data-status="dump" class="state_graph_link">[:: show ::]</a></td>
@@ -112,10 +116,11 @@
 		<td class="right">${w:format(model.state.total.dump,'###,###,###,##0')}</td>
 		<td>将消息进行gzip压缩消息数目</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="dump" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="dump" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=dumpLoss"
 					data-status="dumpLoss" class="state_graph_link">[:: show ::]</a></td>
@@ -130,10 +135,11 @@
 		</c:choose>
 		<td>将消息进行gzip压缩，gzip线程太忙而丢失消息丢失数目</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="dumpLoss" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="dumpLoss" style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=pigeonTimeError"
 					data-status="pigeonTimeError" class="state_graph_link">[:: show ::]</a></td>
@@ -141,10 +147,11 @@
 		<td class="right">${w:format(model.state.total.pigeonTimeError,'###,###,###,##0')}</td>
 		<td>这个场景用于Pigeon，服务端id是由客户端产生，客户端和服务端时钟差2小时，会导致存储丢失</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="pigeonTimeError" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="pigeonTimeError" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=networkTimeError"
 					data-status="networkTimeError" class="state_graph_link">[:: show ::]</a></td>
@@ -152,11 +159,12 @@
 		<td class="right">${w:format(model.state.total.networkTimeError,'###,###,###,##0')}</td>
 		<td>CAT分小时处理，当一个小时过去了，默认会延迟3分钟结束当前小时，在3分钟后还接受上个小时消息，直接丢弃</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="networkTimeError"
+				<td colspan="4" style="display: none"><div id="networkTimeError"
 						style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockTotal"
 					data-status="blockTotal" class="state_graph_link">[:: show ::]</a></td>
@@ -164,10 +172,11 @@
 		<td class="right">${w:format(model.state.total.blockTotal,'###,###,###,##0')}</td>
 		<td>CAT是分块存储，消息块成功放入存储队列</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="blockTotal" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="blockTotal" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockLoss"
 					data-status="blockLoss" class="state_graph_link">[:: show ::]</a></td>
@@ -175,10 +184,11 @@
 		<td class="right">${w:format(model.state.total.blockLoss,'###,###,###,##0')}</td>
 		<td>将存储块写入磁盘的线程太忙，存储队列溢出的消息块数量</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="blockLoss" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="blockLoss" style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockTime"
 					data-status="blockTime" class="state_graph_link">[:: show ::]</a></td>
@@ -186,10 +196,11 @@
 		<td class="right">${w:format(model.state.total.blockTime/1000/60,'###,###,###,##0')}</td>
 		<td>存储消息花费的CPU时间</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="blockTime" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="blockTime" style="display: none"></div></td>
 			</tr>
-	<tr class='even'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=size"
 					data-status="size" class="state_graph_link">[:: show ::]</a></td>
@@ -197,10 +208,11 @@
 		<td class="right">${w:format(model.state.total.size/1024/1024/1024,'0.00#')}</td>
 		<td>压缩前所有存储消息的总大小</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="size" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="size" style="display: none"></div></td>
 			</tr>
-	<tr class='odd'>
+	<tr>
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=delayAvg"
 					data-status="delayAvg" class="state_graph_link">[:: show ::]</a></td>
@@ -208,24 +220,25 @@
 		<td class="right">${w:format(model.state.total.delayAvg,'0.#')}</td>
 		<td>客户端产生消息，到服务端存储之间的时钟误差。（在机器时钟完全准确的情况下）</td>
 	</tr>
+	<tr></tr>
 	<tr class="graphs">
-				<td colspan="4"><div id="delayAvg" style="display: none"></div></td>
+				<td colspan="4" style="display: none"><div id="delayAvg" style="display: none"></div></td>
 			</tr>
 </table>
 </br>
-<table  class="data" width="100%">
-	<tr class='odd'>
-		<td width="15%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
-		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
-		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">Analyzer丢失消息总量</a></td>
-		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
-		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
+<table  class="table table-hover table-striped table-condensed" width="100%">
+	<tr>
+		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
+		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total">处理消息总量</a></td>
+		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss">丢失消息总量</a></td>
+		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size">压缩前消息大小(GB)</a></td>
+		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg">平均消息大小(KB)</a></td>
 		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine">机器总数</a></td>
-		<td>项目对应机器列表</td>
+		<td width="45%">项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
 				varStatus="status">
-		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		<tr class="">
 			<c:set var="lastIndex" value="${status.index}" />
 			<td>${item.name}</td>
 			<td style="text-align: right;">${w:format(item.total,'#,###,###,###,##0.#')}</td>
@@ -236,17 +249,18 @@
 			<td style="white-space: normal">${item.ips}</td>
 		</tr>
 		<tr class="graphs">
-					<td colspan="7"><div id="${item.name}:total"
+					<td colspan="10" style="display: none"><div id="${item.name}:total"
 							style="display: none"></div></td>
 				</tr>
 		<tr class="graphs">
-					<td colspan="7"><div id="${item.name}:totalLoss"
+					<td colspan="10" style="display: none"><div id="${item.name}:totalLoss"
 							style="display: none"></div></td>
 				</tr>
 		<tr class="graphs">
-					<td colspan="7"><div id="${item.name}:size"
+					<td colspan="10" style="display: none"><div id="${item.name}:size"
 							style="display: none"></div></td>
 				</tr>
+		<tr></tr>
 	</c:forEach>
 	<tr style="color: white;">
 				<td>${lastIndex+1}</td>

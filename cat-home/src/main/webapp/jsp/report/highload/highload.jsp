@@ -10,33 +10,24 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.highload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.highload.Model" scope="request" />
 
-<a:body>
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
-	<div style="height:24px"></div>
-   <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
+<a:offline>
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 		<div id="queryBar">
-			<div class="text-left"></div>
-			日期： &nbsp;
-			<div id="datePicker" class="input-append date" >
-				<input name="time" id="time" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.date}" pattern="yyyy-MM-dd"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>&nbsp;&nbsp;
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
+			<div id="datePicker" class="input-append date" style="margin-bottom: 0px;float:left;">
+	           日期
+	           <span>&nbsp;&nbsp;&nbsp;&nbsp;<input id="time" name="time"  size="16" class="{required:true,date:true}"
+	              data-format="yyyy-MM-dd HH:mm" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"  type="text"/>
+	            <span class="add-on"><i class="ace-icon fa fa-calendar"></i></span></span>
+	        </div>
+			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
 		<div class="report">
 			<%@ include file="detail.jsp"%>
 		</div>
-	</div>
-  </div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
-			  $('#highload').addClass("active");
+			  $('#highload_report').addClass("active");
 	          $('#datePicker').datetimepicker({format: 'yyyy-MM-dd'});
 	      });
 	      
@@ -45,4 +36,4 @@
 	        window.location.href="?op=view&date="+time;
 	      }
 		</script>
-</a:body>
+</a:offline>

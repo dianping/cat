@@ -2,37 +2,32 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html; charset=utf-8"%>
 	<div class="text-left"></div>
-	开始
-	<div id="startDatePicker" class="input-append date" >
-		<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
-		value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-	</div>
-	结束
-	<div id="endDatePicker" class="input-append date" >
-		<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
-		value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-	</div>
+	<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
+        开始<input id="startTime" name="startTime"  value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>"  size="16" class="{required:true,date:true}"
+           data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+           <i class="ace-icon fa fa-calendar"></i>
+        </span>
+     </div>
+     <div id="endDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
+        &nbsp;&nbsp;结束<input id="endTime" name="endTime"  value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>"  size="16" class="{required:true,date:true}"
+           data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+           <i class="ace-icon fa fa-calendar"></i>
+        </span>
+     </div>
 	应用名
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名
 	<input type="text" name="hostname" id="hostname" value="${payload.hostname}" style="height:auto" class="input-small"> 
-	<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
+	<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		
-	<c:if test="${!payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(true)">全屏</a>
-	</c:if>
-	<c:if test="${payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(false)">全屏</a>
-	</c:if>
-	<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-	<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-	<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
 	类型
-	<input type="checkbox" checked="checked" id="show_puppet" class="typeCheckbox"/>   puppet 
-	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>   workflow 
-	<input type="checkbox" checked="checked" id="show_lazyman" class="typeCheckbox"/>   lazyman 
+	<label class="btn btn-info btn-sm">
+	<input type="checkbox" checked="checked" id="show_puppet" class="typeCheckbox"/>puppet 
+	</label><label class="btn btn-info btn-sm">
+	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>workflow 
+	</label><label class="btn btn-info btn-sm">
+	<input type="checkbox" checked="checked" id="show_lazyman" class="typeCheckbox"/>lazyman 
+	</label>
 	<br>
 	</div>
 

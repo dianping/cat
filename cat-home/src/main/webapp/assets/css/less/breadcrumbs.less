@@ -1,0 +1,303 @@
+//some breadcrumbs variables
+
+
+@breadcrumb-background: #F5F5F5;
+@breadcrumb-border: #E5E5E5;
+@breadcrumb-text-color: #555;
+@breadcrumb-link-color: #4C8FBD;
+
+@breadcrumb-separator: "\f105";//font awesome icon
+@breadcrumb-margin-left: 12px;//!ignore
+
+
+.enable_breadcrumbs() when(@enable-breadcrumbs = true) {
+
+	// breadcrumbs and searchbox
+	.breadcrumbs {
+	 position: relative;
+	 z-index: auto;
+
+	 border-bottom: 1px solid @breadcrumb-border;
+	 background-color: @breadcrumb-background;
+	 
+	 min-height: @breadcrumb-height;
+	 line-height: (@breadcrumb-height - 1);
+
+	 padding: 0 12px 0 0;
+	}
+
+
+
+	.breadcrumb {
+	 background-color: transparent;
+	 display: inline-block;
+	 line-height: 20px;
+
+	 margin: 6px 22px 0 @breadcrumb-margin-left;
+	 padding: 0;
+
+	 font-size: @font-size-breadcrumb;
+	 color: #333;
+	 
+	 border-radius: 0;
+	  > li {
+		& , &.active {
+		  color: @breadcrumb-text-color;
+		  padding: 0 3px 0 3px;
+		}
+
+		
+		> a {
+		  display: inline-block;
+		  color: @breadcrumb-link-color;
+		}
+		
+		+ li:before {
+			//float: left;//it has a problem with fontAwesome in RTL
+			font-family: FontAwesome;
+			font-size: @font-size-breadcrumb-sep;
+			content:@breadcrumb-separator;
+			color: @breadcrumb-arrow-color;
+			
+			padding: 0;
+			margin: 0 8px 0 0;
+			position: relative;
+			top: 1px;
+		}
+	  }
+	  
+
+	  .home-icon {
+		 font-size: 20px;
+
+		 margin-left: 2px;
+		 margin-right: 2px;
+
+		 vertical-align: top;
+	  }
+
+	}
+
+	@media only screen and (max-width: @screen-xs) {
+	 .breadcrumb > li > a {
+		padding:0 1px;
+	 }
+	}
+
+	//some changes in margins and paddings
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+	 .menu-toggler + .sidebar.responsive + .main-content .breadcrumb {
+		margin-left: 90px;
+	 }
+	}
+	@media only screen and (max-width: @screen-tiny) {
+	 .breadcrumb {
+		margin-left: 8px;
+	 }
+	 .menu-toggler + .sidebar.responsive + .main-content .breadcrumb {
+		margin-left: 36px;
+	 }
+	}
+
+}
+.enable_breadcrumbs();
+
+
+
+.enable_fixed_breadcrumbs() when(@enable-fixed-breadcrumbs = true) {
+ //fixed breadcrumbs
+ @media (min-width: @screen-fixed-breadcrumbs) {
+  .breadcrumbs-fixed {
+	position: fixed;
+	right: 0;
+	left: 0;
+	top: auto;
+	z-index: @zindex-breadcrumbs-fixed;
+
+    + .page-content {
+		padding-top: @page-content-padding-top + @breadcrumb-height;
+	}
+  }
+  .sidebar + .main-content .breadcrumbs-fixed {
+	left: (@sidebar-width);
+  }
+
+
+  //android's default browser has a problem with "top: auto" when fixed
+  body.mob-safari {
+	 .breadcrumbs-fixed {
+		top: @navbar-min-height;
+	 }
+	 /**
+	 //not needed because breadcrumbs is not fixed at this point
+	 media (max-width: @screen-topbar-down) {
+	  .navbar-fixed-top:not(.navbar-collapse) + .main-container .breadcrumbs-fixed {
+		top: (@navbar-min-height * 2);
+	  }
+	 }*/
+  }
+ }//@media
+
+
+ //when sidebar is compact or minimized
+ @media (min-width: max(@grid-float-breakpoint, @screen-compact-menu)) {
+  .sidebar.compact + .main-content .breadcrumbs-fixed {
+	left: (@sidebar-compact-width);
+  }
+ }
+
+ @media (min-width: @grid-float-breakpoint) {
+  .sidebar.menu-min + .main-content .breadcrumbs-fixed {
+	left: (@sidebar-min-width); 
+  }
+ }
+
+ @media (min-width: @screen-fixed-breadcrumbs) and (max-width: @grid-float-breakpoint-max) {
+  .breadcrumbs-fixed, .sidebar.menu-min + .main-content .breadcrumbs-fixed {
+	left: 0;
+  }
+  .sidebar.responsive-min , .sidebar.responsive-max {
+	+ .main-content .breadcrumbs-fixed {
+		left: (@sidebar-min-width);
+	}
+  }
+ }
+
+.enable_container_breadcrumbs() when(@enable-container = true) {
+.container.main-container {
+ @media (min-width: max(@screen-sm-min , @screen-fixed-breadcrumbs, @screen-compact-menu)) {
+	.sidebar.compact + .main-content .breadcrumbs-fixed {
+		left: auto;
+		right: auto;
+		width: @container-sm - @sidebar-compact-width;
+	}
+ } 
+ @media (min-width: max(@screen-sm-min , @screen-fixed-breadcrumbs)) {
+	.breadcrumbs-fixed {
+		left: auto;
+		right: auto;
+		width: @container-sm;
+	}
+	.sidebar + .main-content .breadcrumbs-fixed {
+		left: auto;
+		right: auto;
+		width: @container-sm - @sidebar-width;
+	}
+	.sidebar.menu-min + .main-content .breadcrumbs-fixed {
+		left: auto;
+		right: auto;
+		width: @container-sm - @sidebar-min-width;
+	}
+ }
+ 
+ @media (min-width: max(@screen-compact-menu, @screen-md-min)) {
+  .sidebar.compact + .main-content .breadcrumbs-fixed {
+	width: @container-md - @sidebar-compact-width;
+  }
+ }
+ @media (min-width: @screen-md-min) {
+	.breadcrumbs-fixed {
+		width: @container-md;
+	}
+	.sidebar + .main-content .breadcrumbs-fixed {
+		width: @container-md - @sidebar-width;
+	}
+	.sidebar.menu-min + .main-content .breadcrumbs-fixed {
+		width: @container-md - @sidebar-min-width;
+	}
+ }
+ 
+ @media (min-width: max(@screen-compact-menu, @screen-md-min)) {
+    .sidebar.compact + .main-content .breadcrumbs-fixed {
+		width: @container-lg - @sidebar-compact-width;
+	}
+ }
+ @media (min-width: @screen-lg-min) {
+	.breadcrumbs-fixed {
+		width: @container-lg;
+	}
+	.sidebar + .main-content .breadcrumbs-fixed {
+		width: @container-lg - @sidebar-width;
+	}
+	.sidebar.menu-min + .main-content .breadcrumbs-fixed {
+		width: @container-lg - @sidebar-min-width;
+	}
+ }
+}
+
+
+.container.main-container {
+
+ @media (min-width: max(@screen-sm-min , @screen-compact-menu, @screen-fixed-breadcrumbs)) and (max-width: @grid-float-breakpoint-max) {
+	.sidebar.compact + .main-content .breadcrumbs-fixed	{
+		width: @container-sm;
+	}
+ } 
+ @media (min-width: max(@screen-sm-min , @screen-fixed-breadcrumbs)) and (max-width: @grid-float-breakpoint-max) {
+	.breadcrumbs-fixed,
+	.sidebar.menu-min + .main-content .breadcrumbs-fixed {
+		width: @container-sm;
+	}
+
+	.sidebar.responsive-min , .sidebar.responsive-max {
+		+ .main-content .breadcrumbs-fixed {
+			left: auto;
+			right: auto;
+			width: @container-sm - @sidebar-min-width;
+		}
+	}
+ }
+}
+
+}
+.enable_container_breadcrumbs();
+
+}
+.enable_fixed_breadcrumbs();
+
+
+
+
+
+
+
+
+
+//***************************************************************************
+//***************************************************************************
+//if you don't want fixed breadcrumbs on smaller devices
+//uncomment the following
+/**
+@media (max-width: @grid-float-breakpoint-max) {
+ .breadcrumbs-fixed {
+	position: relative;
+	left: auto !important;
+	right: auto !important;
+	top: auto !important;
+	width: auto !important;
+	
+	+ .page-content {
+		padding-top: @page-content-padding-top;
+	}
+ }
+}
+*/
+
+
+
+//and maybe disable fixed breadcrumbs on horizontal menu style, because of too much fixed height occupied!
+ .disable_fixed_breadcrumbs_on_horizontal_menu() when(@enable-horizontal-menu = true) {
+	@media (min-width: @grid-float-breakpoint) {
+		.h-sidebar + .main-content .breadcrumbs.breadcrumbs-fixed {
+		  position: relative !important;
+		  top: auto;
+		  left: auto;
+		  z-index: auto;
+		  width: auto !important;
+		}
+		.h-sidebar + .main-content .page-content {
+		  padding-top: @page-content-padding-top !important;
+		}
+	}
+ }
+ .disable_fixed_breadcrumbs_on_horizontal_menu();

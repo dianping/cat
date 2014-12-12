@@ -12,12 +12,7 @@
 		<remote-servers>127.0.0.1:2281</remote-servers>		
 	</console>
 	
-	<ldap loginAttribute="sAMAccountName" ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com" 
-	ldapBaseDN="OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com" 
-	ldapFactory="com.sun.jndi.ldap.LdapCtxFactory" 
-	solidDN="cn=Users,DC=dianpingoa,DC=com" 
-	solidUsername="lionauth" 
-	solidPassword="bxHxXopGJOy78Jze3LWi"/>
+	<ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
 	
 </config>
 
@@ -46,12 +41,7 @@
 		<remote-servers>192.168.0.1:2281,192.168.0.2:2281</remote-servers>		
 	</console>
 	
-	<ldap loginAttribute="sAMAccountName" ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com" 
-	ldapBaseDN="OU=IT,OU=SHA,OU=Normal,OU=1_UserAccount,DC=dianpingoa,DC=com" 
-	ldapFactory="com.sun.jndi.ldap.LdapCtxFactory" 
-	solidDN="cn=Users,DC=dianpingoa,DC=com" 
-	solidUsername="lionauth" 
-	solidPassword="bxHxXopGJOy78Jze3LWi"/>
+	<ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
 </config>
 
 -->

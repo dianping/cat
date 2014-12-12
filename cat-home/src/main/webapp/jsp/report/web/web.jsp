@@ -3,18 +3,15 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.web.Context" scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.web.Payload" scope="request" />
-<jsp:useBean id="model"
-	type="com.dianping.cat.report.page.web.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.web.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.web.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var urlData = ${model.items};
@@ -165,6 +162,7 @@
 			$('#datetimepicker2').datetimepicker({
 				pickDate: false
 			});
+			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
 			$('#datetimepicker3').datetimepicker();

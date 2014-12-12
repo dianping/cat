@@ -17,12 +17,12 @@
 	title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&group=${payload.group}&domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
 	navUrlPrefix="op=groupReport&group=${payload.group}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr class="left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a
 								href="?op=view&domain=${model.domain}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">All</a>
@@ -43,13 +43,7 @@
 
 <table class="groups">
 	<tr class="left">
-		<th>机器分组: &nbsp;&nbsp; 
-			<c:if test="${empty model.groups}">
-			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
-				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a>
-						</span>
-			</c:if> 
-			
+		<th>
 			<c:forEach var="group" items="${model.groups}">
 				<c:choose>
 							<c:when test="${payload.group eq group}">
@@ -85,16 +79,16 @@
 		});
 	});
 </script>
-<table class='data'>
+<table class='table table-hover table-striped table-condensed ' >
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
 						<th class="left"><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">Type</a></th>
 				<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total</a></th>
 				<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure</a></th>
 				<th><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">Failure%</a></th>
 				<th>Sample Link</th>
@@ -113,7 +107,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td class="left"><a
 								href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${item.type}"
 								class="graph_link" data-status="${status.index}">[:: show ::]</a>
@@ -133,9 +127,9 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11"><div id="${status.index}"
+							<td colspan="11" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
-						</tr>
+						</tr><tr></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -143,7 +137,7 @@
 						<th class="left" colspan="13"><input type="text"
 							name="queryname" id="queryname" size="40"
 							value="${model.queryName}">
-		    <input class="btn btn-primary  btn-small" value="Filter"
+		    <input class="btn btn-primary  btn-sm" value="Filter"
 							onclick="selectGroupByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 							type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。
@@ -156,9 +150,9 @@
 			<a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
 			<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<th><a
-							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
+							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure</a></th>
 			<th><a
 							href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th>Sample Link</th>
@@ -183,7 +177,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
@@ -219,9 +213,9 @@
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11"><div id="${status.index}"
+							<td colspan="11" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
-						</tr>
+						</tr><tr></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
@@ -237,10 +231,7 @@
 			</tr>
 		</table>
 		<script type="text/javascript">
-			var data = $
-			{
-				model.pieChart
-			};
+			var data = ${model.pieChart};
 			graphPieChart(document.getElementById('transactionGraph'), data);
 		</script>
 	</c:when>

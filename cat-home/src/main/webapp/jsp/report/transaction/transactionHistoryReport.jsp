@@ -15,12 +15,12 @@
 }
 </style>
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器:
+		<th>
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		    <c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -44,11 +44,7 @@
 </script>
 <table class="groups">
 	<tr class="left">
-		<th>机器分组: &nbsp;&nbsp;
-			<c:if test="${empty model.groups}">
-			    <span class="text-error">将几台机器的IP合并成为一个组，可以方便查询这个组内的几台机器相关信息，比如微信组。
-				<a href="/cat/s/config?op=domainGroupConfigUpdate">配置link</a></span>
-			</c:if> 
+		<th>
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
 	   	  			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
@@ -58,13 +54,13 @@
 	</tr>
 </table>
 
-<table class='data' style="width:100%;">
+<table class='table table-hover table-striped table-condensed ' style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>
 			<th  style="text-align: left;"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=type${model.customDate}">Type</a></th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">Total Count</a></th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">Total</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th>
 			<th class="right">Min(ms)</th>
@@ -79,7 +75,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td style="text-align: left">
 							<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 							&nbsp;&nbsp;&nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a></td>
@@ -95,13 +91,14 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
 		<tr><th  style="text-align:left;" colspan='13'>
 			<input type="text" id="queryname" size="40"  value="${model.queryName}">
-		    <input  class="btn btn-primary btn-small"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    <input  class="btn btn-primary btn-sm"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 		</th></tr><script>
 			function filterByName(date,domain,ip,type){
@@ -116,8 +113,8 @@
 			<th style="text-align: left;">
 			<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total Count</a></th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure Count</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
 			<th class="right">Sample Link</th>
 			<th class="right">Min(ms)</th>
@@ -133,7 +130,7 @@
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
-				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+				<tr class=" right">
 					<td class="longText" style="text-align:left;white-space:normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
@@ -154,7 +151,8 @@
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="12"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

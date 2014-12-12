@@ -1,0 +1,145 @@
+.enable_navbar_dropdown_positions() when(@enable-navbar-dropdowns = true) {
+
+
+@media only screen and (max-width: @screen-xs-max) {
+ .ace-nav > li:nth-last-child(4) > .dropdown-menu.dropdown-menu-right {
+	right: -100px;
+	&:before, &:after {
+		right: 120px;
+	}
+ }
+
+ .ace-nav > li:nth-last-child(3) > .dropdown-menu.dropdown-menu-right {
+	right: -80px;
+	&:before, &:after {
+		right: 100px;
+	}
+ }
+
+ .user-menu.dropdown-close.dropdown-menu-right {
+	right: 0 !important;
+ }
+}
+
+
+@media only screen and (min-width: @screen-topbar-down-min) and (max-width: @screen-xs-max) {
+  //if there's only one item except for user_info
+ .navbar.navbar-collapse {
+  .ace-nav > li:nth-last-child(2):nth-child(1) > .dropdown-menu.dropdown-menu-right,
+  .ace-nav > li:nth-last-child(2):nth-child(2) > .dropdown-menu.dropdown-menu-right {
+	left: auto;
+	right: -60px;
+
+	&:before, &:after {
+		right: 80px;
+		left: auto;
+	}
+  }
+ }
+}
+
+
+@media only screen and (max-width: @screen-xs) {
+ .ace-nav > li:nth-last-child(4) > .dropdown-menu.dropdown-menu-right {
+	right: -120px;
+	
+	&:before, &:after {
+		right: 140px;
+	}
+ } 
+ .ace-nav > li:nth-last-child(3) > .dropdown-menu.dropdown-menu-right {
+	right: -90px;
+	
+	&:before, &:after {
+		right: 110px;
+	}
+ }
+ 
+ .ace-nav > li:nth-last-child(2) > .dropdown-menu.dropdown-menu-right {
+	right: -50px;
+	
+	&:before, &:after {
+		right: 70px;
+	}
+ }
+}
+
+
+@media only screen and (max-width: @screen-topbar-down) {
+ .ace-nav > li:nth-last-child(4) > .dropdown-menu.dropdown-menu-right {
+	left: -10px;
+	right: auto;
+
+	&:before, &:after {
+		right: auto;
+		left: 30px;
+	}
+ }
+
+ .ace-nav > li:nth-last-child(3) > .dropdown-menu.dropdown-menu-right {
+	left: -50px;
+	right: auto;
+	
+	&:before, &:after {
+		left: 75px;
+		right: auto;
+	}
+ }
+
+ .ace-nav > li:nth-last-child(2) > .dropdown-menu.dropdown-menu-right {
+	left: -70px;
+	right: auto;
+	
+	&:before, &:after {
+		left: 90px;
+		right: auto;
+	}
+ }
+}
+
+@media only screen and (max-width: @screen-mini-max) {
+  //when there are only two items (apart from user menu)
+ .ace-nav > li:nth-last-child(2) > .dropdown-menu.dropdown-menu-right {
+	left: -110px;
+	right: auto;
+
+	&:before, &:after {
+		left: 130px;
+		right: auto;	
+	}
+ }
+
+ .ace-nav > li:nth-child(2):nth-last-child(2) > .dropdown-menu.dropdown-menu-right {
+	left: -85px;
+	right: auto;
+
+	&:before, &:after {
+		left: 105px;
+		right: auto;
+	}
+ }
+
+ .ace-nav > li:nth-child(1):nth-last-child(3) > .dropdown-menu.dropdown-menu-right {
+	left: -35px;
+	right: auto;
+
+	&:before, &:after {
+		left: 55px;
+		right: auto;
+	}
+ }
+
+ //when there is only one item (apart from user menu)
+ .ace-nav > li:nth-child(1):nth-last-child(2) > .dropdown-menu.dropdown-menu-right {
+	left: -60px;
+	right: auto;
+
+	&:before, &:after {
+		left: 75px;
+		right: auto;
+	}
+ }
+}
+
+}
+.enable_navbar_dropdown_positions();

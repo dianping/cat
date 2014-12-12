@@ -10,10 +10,10 @@
 
 <a:body>
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
+	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	
 	<script type="text/javascript">
 		function query(){
@@ -22,7 +22,6 @@
 			var cdn = $("#cdn").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
-			
 			window.location.href="?province="+province+"&city="+city+"&cdn="+cdn+"&startDate="+start+"&endDate="+end;
 		}
 		
@@ -77,7 +76,8 @@
 			$('.date').datetimepicker();
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'yyyy-MM-dd HH:mm')}");
-			
+			$('#System_report').addClass('active open');
+			$('#system_cdn').addClass('active');
 			$('#cdn').on('change', cdnChange).val('${payload.cdn}');
 			cdnChange();
 			
@@ -119,25 +119,22 @@
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 
 				</th>
-				<th class="right">开始时间
-					<div class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime"
-							style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 结束时间
-					<div class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime"
-							style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> <input class="btn btn-primary "
+				<th class="right">
+				
+				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           开始<input id="startTime" name="startTime"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" class="{required:true,date:true}"
+		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+				 &nbsp;&nbsp;
+				 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 					onclick="query()" type="submit">
 				</div>
@@ -151,12 +148,5 @@
 						<div id="${item.id}" style="width:450px; height:380px;"></div>
 					</div>
 				</c:forEach></div>
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
 	</div>
-	
 </a:body>
