@@ -4,14 +4,14 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class HighloadBuilderTest extends ComponentTestCase {
 
 	// @Test
 	public void testHighloadBuilder() {
 		long time = System.currentTimeMillis();
-		ReportTaskBuilder updater = lookup(ReportTaskBuilder.class, HighLoadReportBuilder.ID);
+		TaskBuilder updater = lookup(TaskBuilder.class, HighLoadReportBuilder.ID);
 
 		updater.buildDailyTask(Constants.HIGH_LOAD_REPORT, "", TimeHelper.addDays(TimeHelper.getYesterday(), -2));
 		System.out.println("done: " + Long.toString(System.currentTimeMillis() - time));

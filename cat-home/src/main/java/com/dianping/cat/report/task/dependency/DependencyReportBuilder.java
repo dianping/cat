@@ -17,9 +17,9 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class DependencyReportBuilder implements ReportTaskBuilder {
+public class DependencyReportBuilder implements TaskBuilder {
 
 	public static final String ID = DependencyAnalyzer.ID;
 

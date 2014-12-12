@@ -18,9 +18,9 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class AppDatabasePruner implements ReportTaskBuilder {
+public class AppDatabasePruner implements TaskBuilder {
 
 	public static final String ID = Constants.APP_DATABASE_PRUNER;
 

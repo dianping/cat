@@ -12,7 +12,6 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
-import com.dianping.cat.report.service.CachedReportTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.alert.app.AppAlert;
 import com.dianping.cat.report.task.alert.business.BusinessAlert;
@@ -49,9 +48,7 @@ public class CatHomeModule extends AbstractModule {
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
-			CachedReportTask cachedReportTask = ctx.lookup(CachedReportTask.class);
 
-			Threads.forGroup("cat").start(cachedReportTask);
 			Threads.forGroup("cat").start(domainNavManager);
 			Threads.forGroup("cat").start(taskConsumer);
 		}

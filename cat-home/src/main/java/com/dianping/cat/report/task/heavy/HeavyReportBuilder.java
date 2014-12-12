@@ -20,9 +20,9 @@ import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class HeavyReportBuilder implements ReportTaskBuilder {
+public class HeavyReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_HEAVY;
 	

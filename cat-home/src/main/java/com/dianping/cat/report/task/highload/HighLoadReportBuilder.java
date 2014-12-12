@@ -24,10 +24,10 @@ import com.dianping.cat.home.highload.entity.Name;
 import com.dianping.cat.home.highload.entity.Type;
 import com.dianping.cat.home.highload.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
-public class HighLoadReportBuilder implements ReportTaskBuilder {
+public class HighLoadReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ReportServiceManager m_reportService;

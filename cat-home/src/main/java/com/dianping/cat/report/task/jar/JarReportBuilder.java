@@ -24,9 +24,9 @@ import com.dianping.cat.home.jar.entity.Jar;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.jar.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class JarReportBuilder implements ReportTaskBuilder {
+public class JarReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_JAR;
 

@@ -1,12 +1,8 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.report.task.cached;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -33,18 +29,15 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.ReportServiceManager;
 
-public class CachedReportTask implements Task, LogEnabled {
-
-	private long m_end;
+public class CachedReportTask implements Task {
 
 	@Inject
 	private ReportServiceManager m_reportService;
 
 	@Inject
 	private ServerConfigManager m_configManger;
-
-	private Logger m_logger;
 
 	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
 		MonthlyReport report = new MonthlyReport();
@@ -70,11 +63,6 @@ public class CachedReportTask implements Task, LogEnabled {
 		report.setPeriod(period);
 		report.setType(1);
 		return report;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override
@@ -142,7 +130,7 @@ public class CachedReportTask implements Task, LogEnabled {
 
 				EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 				new EventReportCountFilter().visitEventReport(eventReport);
-				
+
 				m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, EventAnalyzer.ID),
 				      com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder.build(eventReport));
 
@@ -172,34 +160,8 @@ public class CachedReportTask implements Task, LogEnabled {
 
 	@Override
 	public void run() {
-		boolean active = true;
-
-		while (active) {
-			Date date = TimeHelper.getCurrentDay();
-			long time = date.getTime();
-			Calendar cal = Calendar.getInstance();
-
-			// assume dailyreport job has been completed in two hours.
-			if (time > m_end && cal.get(Calendar.HOUR_OF_DAY) >= 3) {
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-				Date start = new Date();
-
-				try {
-					reloadCurrentWeekly();
-					reloadCurrentMonthly();
-					m_end = date.getTime();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				m_logger.info(String.format("reload report start at %s, end at %s", sdf.format(start),
-				      sdf.format(new Date())));
-			}
-			try {
-				Thread.sleep(60 * 60 * 1000);
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
+		reloadCurrentWeekly();
+		reloadCurrentMonthly();
 	}
 
 	@Override

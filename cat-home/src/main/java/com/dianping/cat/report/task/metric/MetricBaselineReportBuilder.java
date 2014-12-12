@@ -22,9 +22,9 @@ import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.MetricType;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class MetricBaselineReportBuilder implements ReportTaskBuilder, LogEnabled {
+public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 
 	public static final String ID = MetricAnalyzer.ID;
 

@@ -18,10 +18,10 @@ import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
-public class AlertReportBuilder implements ReportTaskBuilder {
+public class AlertReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_ALERT;
 

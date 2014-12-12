@@ -23,10 +23,10 @@ import com.dianping.cat.home.nettopo.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
-public class NetTopologyReportBuilder implements ReportTaskBuilder {
+public class NetTopologyReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_NET_TOPOLOGY;
 

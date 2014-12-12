@@ -40,6 +40,8 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.alert.exception.AlertReportBuilder;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
+import com.dianping.cat.report.task.cached.CachedReportBuilder;
+import com.dianping.cat.report.task.cached.CachedReportTask;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.AppDatabasePruner;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -76,7 +78,7 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.router.RouterConfigBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
@@ -109,61 +111,60 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(BaselineService.class, DefaultBaselineService.class).req(BaselineDao.class));
 		all.add(C(BaselineConfigManager.class, BaselineConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, MetricBaselineReportBuilder.ID, MetricBaselineReportBuilder.class)
+		all.add(C(TaskBuilder.class, MetricBaselineReportBuilder.ID, MetricBaselineReportBuilder.class)
 		      .req(ReportServiceManager.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, TransactionReportBuilder.ID, TransactionReportBuilder.class) //
+		all.add(C(TaskBuilder.class, TransactionReportBuilder.ID, TransactionReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportServiceManager.class)//
 		      .req(TransactionGraphCreator.class, TransactionMerger.class));
 
-		all.add(C(ReportTaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
+		all.add(C(TaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportServiceManager.class)//
 		      .req(EventGraphCreator.class, EventMerger.class));//
 
-		all.add(C(ReportTaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
+		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ReportServiceManager.class)//
 		      .req(ProblemGraphCreator.class, ProblemMerger.class));
 
-		all.add(C(ReportTaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
+		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
 		      .req(GraphDao.class, ReportServiceManager.class));
 
-		all.add(C(ReportTaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class,
+		all.add(C(TaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ReportServiceManager.class,
 		      ServerConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(
-		      ReportServiceManager.class, HostinfoService.class));
+		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(ReportServiceManager.class,
+		      HostinfoService.class));
 
-		all.add(C(ReportTaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(
-		      ReportServiceManager.class));
+		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(ReportServiceManager.class));
 
-		all.add(C(ReportTaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(
-		      ReportServiceManager.class));
+		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(ReportServiceManager.class));
 
-		all.add(C(ReportTaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class).req(
-		      ReportServiceManager.class));
+		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class).req(ReportServiceManager.class));
 
-		all.add(C(ReportTaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(
-		      ReportServiceManager.class, RouterConfigManager.class));
+		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(ReportServiceManager.class,
+		      RouterConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(
-		      ReportServiceManager.class, ExceptionConfigManager.class, ServerConfigManager.class));
+		all.add(C(TaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(ReportServiceManager.class,
+		      ExceptionConfigManager.class, ServerConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(
-		      ReportServiceManager.class, ServerConfigManager.class));
+		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(ReportServiceManager.class,
+		      ServerConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
+		all.add(C(TaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
 		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class, HostinfoService.class));
 
-		all.add(C(ReportTaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
+		all.add(C(TaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      ReportServiceManager.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
 
-		all.add(C(ReportTaskBuilder.class, NetTopologyReportBuilder.ID, NetTopologyReportBuilder.class).req(
+		all.add(C(TaskBuilder.class, NetTopologyReportBuilder.ID, NetTopologyReportBuilder.class).req(
 		      ReportServiceManager.class, NetGraphBuilder.class, NetGraphConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(ReportServiceManager.class,
+		all.add(C(TaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(ReportServiceManager.class,
 		      ServerConfigManager.class));
+
+		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
 
 		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
 
@@ -182,13 +183,13 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableCapacityService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, OverloadDao.class));
 
-		all.add(C(ReportTaskBuilder.class, CapacityUpdateTask.ID, CapacityUpdateTask.class)
+		all.add(C(TaskBuilder.class, CapacityUpdateTask.ID, CapacityUpdateTask.class)
 		      .req(CapacityUpdater.class, HourlyCapacityUpdater.ID, "m_hourlyUpdater")
 		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID, "m_dailyUpdater")
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
 
-		all.add(C(ReportTaskBuilder.class, HighLoadReportBuilder.ID, HighLoadReportBuilder.class)//
+		all.add(C(TaskBuilder.class, HighLoadReportBuilder.ID, HighLoadReportBuilder.class)//
 		      .req(ReportServiceManager.class, ProjectService.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
@@ -197,16 +198,16 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppDataComparisonNotifier.class).req(AppDataService.class)
 		      .req(AppComparisonConfigManager.class, AppConfigManager.class)
-		      .req(SenderManager.class,  AppDataComparisonRender.class));
+		      .req(SenderManager.class, AppDataComparisonRender.class));
 
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
-		all.add(C(ReportTaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
+		all.add(C(TaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class)//
 		      .req(ReportServiceManager.class, ProjectService.class)//
 		      .req(AppDataComparisonNotifier.class, ServerConfigManager.class));
 
-		all.add(C(ReportTaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
+		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
 
 		all.add(C(ReportFacade.class));

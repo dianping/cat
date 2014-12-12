@@ -9,9 +9,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class CapacityUpdateTask implements ReportTaskBuilder, LogEnabled {
+public class CapacityUpdateTask implements TaskBuilder, LogEnabled {
 
 	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;
 

@@ -17,9 +17,9 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class StateReportBuilder implements ReportTaskBuilder {
+public class StateReportBuilder implements TaskBuilder {
 
 	public static final String ID = StateAnalyzer.ID;
 

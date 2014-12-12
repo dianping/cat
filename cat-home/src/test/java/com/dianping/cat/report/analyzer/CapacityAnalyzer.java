@@ -4,13 +4,13 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.report.task.overload.CapacityUpdateTask;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class CapacityAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		ReportTaskBuilder builder = lookup(ReportTaskBuilder.class, CapacityUpdateTask.ID);
+		TaskBuilder builder = lookup(TaskBuilder.class, CapacityUpdateTask.ID);
 
 		builder.buildHourlyTask("cat", "cat", null);
 		builder.buildDailyTask("cat", "cat", null);
