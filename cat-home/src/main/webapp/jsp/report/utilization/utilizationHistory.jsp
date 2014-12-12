@@ -25,7 +25,7 @@
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
-		<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span>
+		<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</span>
 		<div class="nav-search nav" id="nav-search">
 			<a class="switch" href="?domain=${model.domain}&op=utilization"><span class="text-danger">【切到小时模式】</span></a>
 					<c:forEach var="nav" items="${model.historyNavs}">

@@ -8,7 +8,7 @@
          <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
             <description>Problem Discovered</description>
          </page>
-         <page name="transaction" title="Transaction" default="true" path="t" view="/jsp/report/transaction/transaction.jsp">
+         <page name="transaction" title="Transaction" path="t" view="/jsp/report/transaction/transaction.jsp">
             <description>Transaction Summary Report</description>
          </page>
          <page name="event" title="Event" path="e" view="/jsp/report/event/event.jsp">
@@ -44,7 +44,7 @@
          <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
-         <page name="dependency" title="Dependency" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
+         <page name="dependency" title="Dependency"  default="true"  path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
             <description>Dependency</description>
          </page>
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">

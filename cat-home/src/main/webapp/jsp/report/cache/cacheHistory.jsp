@@ -18,7 +18,7 @@
 	title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&type=${payload.type}${model.customDate}'>${payload.type}</a>"
 	navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
