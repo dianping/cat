@@ -6,7 +6,7 @@
 		<c:set var="navUrlPrefix" value="op=${payload.action.name}&query1=${payload.query1}"/> 
 		<c:choose>
 				<c:when test="${payload.action.name eq 'crashLog'}">
-					<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</span></td>
+					<td class="title"><span class="text-danger">【时段】</span><span class="text-success">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</span></td>
 					<td class="nav">
 					<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史模式】</span></a></span>
 					<c:forEach var="nav" items="${model.navs}">
@@ -17,7 +17,7 @@
 				</c:when>
 				<c:otherwise>
 					<c:if test="${payload.action.name eq 'historyCrashLog'}">
-						<td class="title"><span class="text-danger">【报表时间】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</span></td>
+						<td class="title"><span class="text-danger">【时段】</span><span class="text-success">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</span></td>
 						<td class="nav">
 						<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
 						<c:forEach var="nav" items="${model.historyNavs}">

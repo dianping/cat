@@ -36,7 +36,7 @@
 			【<a href="javascript:showDomain()" id="switch">切换</a>】
 			【<a href="javascript:showFrequent()" id="frequent">常用</a>】
 			</span>
-		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
+		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
 		<!-- #section:basics/content.searchbox -->
 		<div class="nav-search nav" id="nav-search">
 			<span class="text-danger">【<a href="?domain=${model.domain}" class="switch"><span class="text-danger">切到小时模式</span></a>】</span>
