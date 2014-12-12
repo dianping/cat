@@ -73,7 +73,6 @@
 								</c:choose>
 						</c:forEach>
 					</th>
-					<th><%@ include file="metricOpNav.jsp" %></th>
 				</tr>
 			</table>
 		      <div class="col-xs-12">
