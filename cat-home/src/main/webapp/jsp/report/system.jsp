@@ -80,14 +80,14 @@
 
 		$(document).ready(
 				function() {
-					$('#datetimepicker1').datetimepicker().on('hide', function(ev){
+					$('#datetimepicker1').datetimepicker({format: 'yyyy-MM-dd hh:mm'}).on('hide', function(ev){
 						var timestamp = $("#datetimepicker2").data("datetimepicker").getDate().valueOf();
 						if (ev.date.valueOf() > timestamp){
 				        	alert("结束时间不能晚于结束时间！");
 				        	$("#startTime").val($("#endTime").val());
 				        	} 
 					});
-					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
+					$('#datetimepicker2').datetimepicker({format: 'yyyy-MM-dd hh:mm'}).on('hide', function(ev){
 						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
 						if (ev.date.valueOf() < timestamp){
 				        	alert("结束时间不能早于开始时间！");
@@ -208,13 +208,13 @@
 
 				<th class="right">
 					<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;开始时间<input id="startTime" name="startTime"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           &nbsp;&nbsp;开始时间<input id="startTime" name="startTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div><div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;结束时间<input id="endTime" name="endTime"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           &nbsp;&nbsp;结束时间<input id="endTime" name="endTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>

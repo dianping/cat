@@ -3,7 +3,7 @@
 			<tr>
 				<th>
 					<div id="datetimepicker1" class="input-append  date" style="float:left;">
-		           时间<input id="time" name="time"  size="13" class="{required:true,date:true}"
+		           时间<input id="time" name="time"  size="13" 
 		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
@@ -62,7 +62,7 @@
 			<tr>
 				<th align=left>
 				<div id="datetimepicker2" class="input-append  date" style="float:left;">
-		           时间<input id="time2" name="time2"  size="13" class="{required:true,date:true}"
+		           时间<input id="time2" name="time2"  size="13" 
 		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>

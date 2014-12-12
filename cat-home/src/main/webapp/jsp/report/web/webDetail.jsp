@@ -4,13 +4,13 @@
 			<tr>
 				<th class="left">
 				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="startTime" name="time"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           开始<input id="startTime" name="time"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="endTime" name="time2"  size="8" class="{required:true,date:true}"
+		           开始<input id="endTime" name="time2"  size="8" 
 		              data-format="HH:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
@@ -50,13 +50,13 @@
 			<tr>
 				<th class="left">
 					<div id="datetimepicker3" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="startTime2" name="time"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           开始<input id="startTime2" name="time"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
 		        <div id="datetimepicker4" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="endTime2" name="time2"  size="8" class="{required:true,date:true}"
+		           开始<input id="endTime2" name="time2"  size="8" 
 		              data-format="HH:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>

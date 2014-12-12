@@ -73,7 +73,7 @@
 		}
 
 		$(document).ready(function() {
-			$('.date').datetimepicker();
+			$('.date').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'yyyy-MM-dd HH:mm')}");
 			$('#System_report').addClass('active open');
@@ -122,14 +122,14 @@
 				<th class="right">
 				
 				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="startTime" name="startTime"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           开始<input id="startTime" name="startTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" class="{required:true,date:true}"
-		              data-format="yyyy-MM-dd HH:mm" type="text"></input> <span class="add-on">
+		           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>

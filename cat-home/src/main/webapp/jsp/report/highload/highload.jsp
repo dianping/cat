@@ -16,8 +16,8 @@
 		<div id="queryBar">
 			<div id="datePicker" class="input-append date" style="margin-bottom: 0px;float:left;">
 	           日期
-	           <span>&nbsp;&nbsp;&nbsp;&nbsp;<input id="time" name="time"  size="16" class="{required:true,date:true}"
-	              data-format="yyyy-MM-dd HH:mm" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"  type="text"/>
+	           <span>&nbsp;&nbsp;&nbsp;&nbsp;<input id="time" name="time"  size="16" 
+	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"  type="text"/>
 	            <span class="add-on"><i class="ace-icon fa fa-calendar"></i></span></span>
 	        </div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
