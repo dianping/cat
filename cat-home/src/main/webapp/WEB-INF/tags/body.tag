@@ -39,7 +39,7 @@
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
 						<li id="dashbord_system"><a href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>系统报错</a>
+							<i class="menu-icon fa fa-caret-right"></i>报错大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
@@ -129,6 +129,12 @@
 						
 					</ul>
 				</li>
+				<li id="Matrix_report" >
+					<a href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon  fa fa-cog"></i>
+						<span class="menu-text">Matrix</span>
+					</a>
+				</li>
 				<li id="State_report" >
 					<a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 						<i class="menu-icon fa fa-bar-chart-o"></i>
@@ -190,7 +196,7 @@
 			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#tab_offtime").click(function(){
-			window.location.href = "/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+			window.location.href = "/cat/r/statistics?op=service&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#tab_document").click(function(){
 			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
@@ -198,5 +204,7 @@
 		$("#tab_config").click(function(){
 			window.location.href = "/cat/s/config?op=topologyProductLines";
 		});});
+		$("#tab_realtime").addClass("disabled");
+
 </script>
 

@@ -54,7 +54,12 @@
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav" style="height:auto;">
-					<!-- #section:basics/navbar.user_menu -->
+					<li>
+						<a href="http://github.com/dianping/cat/" target="_blank">
+							<i class="ace-icon glyphicon glyphicon-star-empty"></i>
+							<span>Star</span>
+						</a>
+					</li>
 					<li class="light-blue">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 							<span class="user-info">
@@ -64,8 +69,8 @@
 						</a>
 						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
-									<a href="http://github.com/dianping/cat" target="_blank">关注</a>
-									<a href="/cat/s/login?op=logout" >注销</a>
+									<a href="/cat/s/login?op=logout" ><i class="ace-icon fa fa-power-off"></i>
+									注销</a>
 							</li>
 						</ul>
 					</li>
@@ -224,7 +229,7 @@
 				}
 				var name = decodeURI(temp);
 				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='欢迎'+name;
+				loginInfo.innerHTML ='欢迎，'+name;
 			} else{
 				var loginInfo=document.getElementById('loginInfo');
 				loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';

@@ -1,5 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h3 class="text-danger">告警文档</h3>
 <div class="tabbable">
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#overall" data-toggle="tab"><strong>综述</strong></a></li>

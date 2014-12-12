@@ -35,14 +35,6 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="matrix_report" >
-						<a href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon  fa fa-cog"></i>
-							<span class="menu-text">项目资源消耗</span>
-						</a>
-					</li>
-				</ul>
-				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="highload_report" >
 						<a href="/cat/r/highload?&op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}">
 							<i class="menu-icon  fa fa-cogs"></i>
@@ -144,7 +136,7 @@
 			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#tab_offtime").click(function(){
-			window.location.href = "/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+			window.location.href = "/cat/r/statistics?op=service&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#tab_document").click(function(){
 			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
@@ -152,4 +144,6 @@
 		$("#tab_config").click(function(){
 			window.location.href = "/cat/s/config?op=topologyProductLines";
 		});});
+		$("#tab_offtime").addClass("disabled");
+
 </script>

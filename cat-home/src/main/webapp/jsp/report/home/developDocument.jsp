@@ -1,5 +1,4 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h3 class="text-danger">开发者文档</h3>
 <dl>
   <dt><h5 class="text-success">1.CAT消息协议</h5></dt>
   <dd>CAT客户端可以向服务端发送Transaction, Event, Heartbeat三种消息. 消息的传输格式如下:

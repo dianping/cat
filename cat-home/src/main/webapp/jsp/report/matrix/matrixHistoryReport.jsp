@@ -7,7 +7,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.matrix.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.matrix.Model" scope="request" />
 
-<a:offlineHistoryReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
+<a:historyReport title="History Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 <script type="text/javascript">
@@ -17,7 +17,7 @@
 </script>
 <div class="row-fluid">
 	 <br/>
-	<table  class='table table-hover table-striped table-condensed ' >
+	<table  class='table table-hover table-bordered table-striped table-condensed ' >
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
@@ -61,31 +61,31 @@
 					<td  class="left longText" style="white-space:normal">${w:shorten(item.name, 120)}</td>
 					<td>${item.count}</td>
 					<td>${w:format(item.avg,'0.0')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">L</a></td>
 					<td>${item.callMin}</td>
 					<td>${item.callMax}</td>
 					<td>${w:format(item.callAvg,'0.0')}</td>
 					<td>${item.callTime}</td>
 					<td>${w:format(item.callTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.callUrl}?domain=${model.domain}">L</a></td>
 				
 					<td>${item.sqlMin}</td>
 					<td>${item.sqlMax}</td>
 					<td>${w:format(item.sqlAvg,'0.0')}</td>
 					<td>${item.sqlTime}</td>
 					<td>${w:format(item.sqlTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.sqlUrl}?domain=${model.domain}">L</a></td>
 				
 					<td>${item.cacheMin}</td>
 					<td>${item.cacheMax}</td>
 					<td>${w:format(item.cacheAvg,'0.0')}</td>
 					<td>${item.cacheTime}</td>
 					<td>${w:format(item.cacheTimePercent,'00.0%')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">Log</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.cacheUrl}?domain=${model.domain}">L</a></td>
 				</tr>
 			</c:forEach>
 </table></div>
 
 </jsp:body>
 
-</a:offlineHistoryReport>
+</a:historyReport>

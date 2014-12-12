@@ -17,7 +17,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器:
+		<th>
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a
 							href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.type}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}">${ip}</a>
