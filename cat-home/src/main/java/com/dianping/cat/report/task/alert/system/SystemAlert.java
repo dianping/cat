@@ -65,8 +65,6 @@ public class SystemAlert extends BaseAlert implements Task, LogEnabled {
 			} catch (Exception e) {
 				t.setStatus(e);
 			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;

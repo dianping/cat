@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.alert;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -56,10 +55,6 @@ public abstract class BaseAlert {
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	protected Logger m_logger;
-
-	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
 	protected String buildMetricName(String metricKey) {
 		try {
@@ -137,39 +132,10 @@ public abstract class BaseAlert {
 	}
 
 	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
-		if (period == ModelPeriod.CURRENT) {
-			MetricReport report = m_currentReports.get(product);
+		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
+		MetricReport report = m_service.invoke(request);
 
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime()).setProperty(
-				      "requireAll", "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_currentReports.put(product, report);
-				}
-				return report;
-			}
-		} else if (period == ModelPeriod.LAST) {
-			MetricReport report = m_lastReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime()).setProperty("requireAll",
-				      "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_lastReports.put(product, report);
-				}
-				return report;
-			}
-		} else {
-			throw new RuntimeException("internal error, this can't be reached.");
-		}
+		return report;
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {

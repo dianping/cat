@@ -41,9 +41,13 @@ public class WebAlert extends BaseAlert implements Task {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
-	
+
 	@Inject
 	protected WebRuleConfigManager m_ruleConfigManager;
+
+	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
+
+	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
 	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {

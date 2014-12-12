@@ -17,7 +17,7 @@ import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.DatabaseRuleConfigManager;
 
 public class DatabaseAlert extends BaseAlert implements Task, LogEnabled {
-	
+
 	@Inject
 	protected DatabaseRuleConfigManager m_ruleConfigManager;
 
@@ -30,10 +30,12 @@ public class DatabaseAlert extends BaseAlert implements Task, LogEnabled {
 	public String getName() {
 		return AlertType.DataBase.getName();
 	}
+
 	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
 	}
+
 	@Override
 	public void run() {
 		boolean active = true;
@@ -58,13 +60,10 @@ public class DatabaseAlert extends BaseAlert implements Task, LogEnabled {
 						Cat.logError(e);
 					}
 				}
-
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
 			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;
