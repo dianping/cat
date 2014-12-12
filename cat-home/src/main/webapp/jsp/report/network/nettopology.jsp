@@ -87,27 +87,10 @@
 	$_netgraph.build("topo-${idx.index}",${topo.value});
 </c:forEach>
 
-function showOpNav() {
-	var b = $('#switch').html();
-	if (b == '隐藏') {
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	} else {
-		$('.opNav').slideDown();
-		$('#switch').html("隐藏");
-	}
-}
-
 $(document).ready(function() {
 	$('#Dashboard_report').addClass("open active");
 	$('#dashbord_network').addClass("active");
 });
-
-<c:choose>
-<c:when test="${payload.fullScreen}">
-	showOpNav();
-</c:when>
-</c:choose>
 
 </script>
 

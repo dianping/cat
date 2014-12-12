@@ -64,37 +64,13 @@ $(document).ready(function() {
 	$('.position').hide();
 	$('.switch').hide();
 	
-	var hide =${payload.hideNav};
-	
-	if(hide){
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	}	
-	
 	$('#Dashboard_report').addClass("open active");
 	$('#dashbord_system').addClass("active");
 	$('#Dependency_report').removeClass("open active");
 });
 
-function showOpNav() {
-	var b = $('#switch').html();
-	if (b == '隐藏') {
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	} else {
-		$('.opNav').slideDown();
-		$('#switch').html("隐藏");
-	}
-}
 </script>
-<!-- <script type="text/javascript">
-	$(document).ready(function() {
-		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-			var data = ${item.jsonString};
-			graphMetricChart(document.getElementById('${item.title}'), data);
-		</c:forEach>
-	});
-</script> -->
+
 <style>
 .pagination{
 		margin:4px 0;

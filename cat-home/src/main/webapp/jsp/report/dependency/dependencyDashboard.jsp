@@ -32,13 +32,6 @@
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-				<div class="opNav">
-				<div class="row-fluid">
-					<div class="span12 text-center">
-						<%@ include file="dependencyOpNav.jsp"%>
-				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div></div></div>
 			<div id="fullScreenData">
 				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
@@ -131,24 +124,8 @@
 			showLeft: true,
 			showUp: false
 		});
-
-		var hide =${payload.hideNav};
-		if(hide){
-			$('.opNav').slideUp();
-			$('#switch').html("显示");
-		}	
 	});
 
-	function showOpNav() {
-		var b = $('#switch').html();
-		if (b == '隐藏') {
-			$('.opNav').slideUp();
-			$('#switch').html("显示");
-		} else {
-			$('.opNav').slideDown();
-			$('#switch').html("隐藏");
-		}
-	}
 </script>
 <style>
 .pagination{

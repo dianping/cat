@@ -107,23 +107,6 @@
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
 			</c:forEach>
-
-			var hide =${payload.hideNav};
-			
-			if(hide){
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			}
 		});
-		function showOpNav() {
-			var b = $('#switch').html();
-			if (b == '隐藏') {
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			} else {
-				$('.opNav').slideDown();
-				$('#switch').html("隐藏");
-			}
-		}
 	</script>
 </script>
