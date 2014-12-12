@@ -30,6 +30,7 @@ public class GraphCreator extends AbstractGraphCreator {
 			buildLineChartTitle(alertKeys, lineChart, key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
+			lineChart.setUnit("Value/秒");
 			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
 			double[] baselines = queryBaseline(key, startDate, endDate);
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
