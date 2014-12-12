@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}"
 		target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}"
@@ -13,20 +13,13 @@
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<form name="alertDefaultReceivers" id="form" method="post"
 				action="${model.pageUri}?op=alertDefaultReceivers"
 				onsubmit="return validate_form(this)">
-				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-				<h4 class="text-center text-danger">告警默认发送人</h4>
 				<table
 					class="table table-striped table-condensed   table-hover">
 					<tr>
-						<td><textarea name="content" style="width: auto" rows="20"
+						<td><textarea name="content" style="width: 100%" rows="20"
 								cols="150">${model.content}</textarea></td>
 					</tr>
 					<input name="allOnOrOff" id="allOnOrOff" type="text" value=""
@@ -38,12 +31,12 @@
 							class='btn btn-primary' id="allOff" value="暂停告警" /></td>
 					</tr>
 				</table>
+								<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 			</form>
-		</div>
-	</div>
-</a:body>
+</a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#alert_config').addClass('active open');
 		$('#alertDefaultReceivers').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {

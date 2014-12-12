@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 			<h3 class="text-center text-success">修改Web端URL的规则</h3>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit">
-				<table style='width:100%' class='table table-striped table-condensed '>
+				<table style='width:100%' class='table table-striped table-condensed table-bordered table-hover'>
 					<tr>
 						<th width="10%">唯一ID</th>
 						<td width="40%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
@@ -35,7 +35,7 @@
 						<td><span class="text-danger">根据项目组查找需要发送告警的联系人信息</span></td>
 					</tr>
 					<tr>
-						<td style='text-align:center' colspan='3'><input class='btn btn-primary' type="submit" name="submit" value="提交" /></td>
+						<td style='text-align:center' colspan='3'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form> 

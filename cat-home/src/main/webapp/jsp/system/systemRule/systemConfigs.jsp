@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -16,11 +16,8 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#alert_config').addClass('active open');
 			$('#systemRuleConfigList').addClass('active');
-			
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此规则吗(不可恢复)？");
-			});
 			
 			var state = '${model.opState}';
 			if(state=='Success'){
@@ -33,11 +30,6 @@
 			},3000);
 		});
 	</script>
-	<div class="row-fluid">
-        <div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
 			<div id="ruleModal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
 				<div class="modal-header text-center">
 				    <h3 id="ruleLabel">系统规则配置</h3>
@@ -49,17 +41,17 @@
 				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
-			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
-			<table class="table table-striped table-condensed   table-hover">
-	     		<tr class="text-success">
-	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
-	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
-	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
-	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
-	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
-	     			<th width="4%"><h5 class='text-center'>总和</h5></th>
-	     			<th width="10%"><h5 class='text-center'>操作&nbsp;&nbsp;<a href="?op=systemRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm btn-primary">新增</a></h5></th>
-	     		</tr>
+			<table class="table table-striped table-condensed table-bordered  table-hover">
+	     		<thead><tr>
+	     			<th width="20%">规则id</th>
+	     			<th width="26%">项目配置</th>
+	     			<th width="29%">指标配置</th>
+	     			<th width="4%">次数</th>
+	     			<th width="7%">平均值</th>
+	     			<th width="4%">总和</th>
+	     			<th width="8%">操作 <a href="?op=systemRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
 	     			<td>${item.id}</td>
@@ -89,13 +81,12 @@
 	     					<span>否</span>
 	     				</c:if>
 	     			</td>
-		     		<td style="text-align:center;white-space: nowrap">
-		     			<a href="?op=systemRuleUpdate&key=${item.id}" class="btn update btn-primary btn-sm">修改</a>
-			     		<a href="?op=systemRulDelete&key=${item.id}" class="btn btn-primary btn-sm btn-danger delete">删除</a>
-			     	</td>
+			     		
+					<td><a href="?op=systemRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=systemRulDelete&key=${item.id}" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 		     		</tr>
 		     	</c:forEach>
 	     	</table>
-		</div>
-	</div>
-</a:body>
+</a:config>

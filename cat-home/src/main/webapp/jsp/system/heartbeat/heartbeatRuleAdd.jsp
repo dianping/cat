@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -22,7 +22,7 @@
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
 				</div>
 				<div id="metrics" class="config">
-					<button class="btn btn-success btn-sm" id="add-metric-button" type="button">
+					<button class="btn btn-success btn-xs" id="add-metric-button" type="button">
 					    添加匹配对象<i class="icon-plus icon-white"></i>
 					</button>
 					
@@ -53,8 +53,8 @@
 					        		<option value="${metric}">${metric}</option>
 					        	</c:forEach>
 					        </select>
-					        <button class="btn btn-danger btn-sm delete-metric-button" type="button">
-					            <i class="icon-trash icon-white"></i>
+					        <button class="btn btn-danger btn-xs delete-metric-button" type="button">
+					            <i class="ace-icon fa fa-trash-o bigger-120"></i>
 					        </button>
 					    </div>
 				    </div>
@@ -161,4 +161,4 @@
 	        });
 		});
 	</script>
-</a:body>
+</a:config>

@@ -13,6 +13,7 @@
 
 			<form name="appComparisonConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=appComparisonConfigUpdate">
+				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<table class="table table-striped table-condensed table-bordered  table-hover">
 					<tr>
 						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>

@@ -28,6 +28,7 @@
 					</tr>
 				</table>
 			</form>
+			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {

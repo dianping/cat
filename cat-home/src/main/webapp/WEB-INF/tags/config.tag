@@ -36,7 +36,7 @@
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="projects_config" class="hsub">
-					<a href="/cat/s/config?op=projects" class="dropdown-toggle"> <i class="menu-icon fa fa-bar-chart-o"></i> <span class="menu-text">项目配置</span>
+					<a href="/cat/s/config?op=projects" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">项目配置</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -52,7 +52,7 @@
 						</ul>
 					</li>
 					<li id="userMonitor_config" class="hsub" >
-						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa fa-cogs"></i><span class="menu-text">用户监控配置</span>
+						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">用户监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
 						<ul class="submenu">
@@ -80,7 +80,7 @@
 						</ul>
 					</li>
 					<li id="application_config" class="hsub">
-					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">应用监控配置</span>
+					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon fa  fa-cloud"></i> <span class="menu-text">应用监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -105,13 +105,19 @@
 							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用阈值</a>
 								<b class="arrow"></b></li>
-							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=dtopologyGraphEdgeConfigList">
+							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖</a>
+								<b class="arrow"></b></li>
+							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
+								<b class="arrow"></b></li>
+							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">
-					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">监控告警配置</span>
+					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon fa fa-bullhorn"></i> <span class="menu-text">监控告警配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
@@ -133,8 +139,8 @@
 							<li id="alertDefaultReceivers"><a href="/cat/s/config?op=alertDefaultReceivers">
 								<i class="menu-icon fa fa-caret-right"></i>默认告警人</a>
 								<b class="arrow"></b></li>
-							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
+							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>框架异常配置</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>

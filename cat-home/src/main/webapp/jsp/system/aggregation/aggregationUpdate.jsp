@@ -72,6 +72,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#aggregationList').addClass('active');
+		$('#userMonitor_config').addClass('active open');
+		$('#aggregations').addClass('active');
 	});
 </script>

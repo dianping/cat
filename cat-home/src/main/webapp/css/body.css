@@ -219,4 +219,8 @@ a{
 	width:70px;
 	height:30px;
 }
+.checkbox input[type=checkbox], .checkbox-inline{
+	position:relative;
+	margin-left:0px;
+}
 

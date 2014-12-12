@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig_js']}" target="head-js" />
@@ -17,12 +17,6 @@
 	<res:useCss value="${res.css.local['multiple-select.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
 	
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-			</br>
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<form name="metricConfigAddSubmit" id="form" method="post" action="${model.pageUri}?op=metricConfigAddSubmit">
 			<span class="text-center text-danger" id="state">&nbsp;</span>
@@ -109,11 +103,11 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-sm" id="addCountTag" type="button">
+						<button class="btn btn-success btn-xs" id="addCountTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-sm" id="deleteCountTag" type="button">
-				            删除<i class="icon-trash icon-white"></i>
+			            <button class="btn btn-danger btn-xs" id="deleteCountTag" type="button">
+				            删除<i class="ace-icon fa fa-trash-o bigger-120"></i>
 				        </button>				     
 				        <span class="text-danger"><strong>【添加业务大盘标签会自动进行基线告警】</strong></span>
 			            <input name="countTags" type="hidden"/>
@@ -144,11 +138,11 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-sm" id="addAvgTag" type="button">
+						<button class="btn btn-success btn-xs" id="addAvgTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-sm" id="deleteAvgTag" type="button">
-				            删除<i class="icon-trash icon-white"></i>
+			            <button class="btn btn-danger btn-xs" id="deleteAvgTag" type="button">
+				            删除<i class="ace-icon fa fa-trash-o bigger-120"></i>
 				        </button>
 				        
 			            <input name="avgTags" type="hidden"/>
@@ -179,11 +173,11 @@
       							</c:otherwise>
       						</c:choose>
 						</select>
-						<button class="btn btn-success btn-sm" id="addSumTag" type="button">
+						<button class="btn btn-success btn-xs" id="addSumTag" type="button">
 			                添加其他标签<i class="icon-plus icon-white"></i>
 			            </button>
-			            <button class="btn btn-danger btn-sm" id="deleteSumTag" type="button">
-				            删除<i class="icon-trash icon-white"></i>
+			            <button class="btn btn-danger btn-xs" id="deleteSumTag" type="button">
+				            删除<i class="ace-icon fa fa-trash-o bigger-120"></i>
 				        </button>
 			            <input name="sumTags" type="hidden"/>
 					</td>
@@ -193,15 +187,14 @@
 					<td colspan='3'><input name="metricItemConfig.showDashboardOrder" value="${model.metricItemConfig.showDashboardOrder}" required/></td>
 				</tr>
 				<tr>
-					<td style="text-align:center" colspan='4'><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
+					<td style="text-align:center" colspan='4'><input class='btn btn-primary btn-xs' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 				</tr>
 			</table>
 		</form>
-		</div>
-	</div>
 
 	<script>
 		$(document).ready(function(){
+			$('#application_config').addClass('active open');
 			$('#metricConfigList').addClass('active');
 			
 			var tagName, tagType;
@@ -308,4 +301,4 @@
 			})
 		})
 	</script>
-</a:body>
+</a:config>
