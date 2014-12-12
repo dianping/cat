@@ -3,6 +3,7 @@ package com.dianping.cat.report.page;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -200,5 +201,32 @@ public class LineChart {
 			m_ylabel = Arrays.copyOf(ylable, ylable.length);
 		}
 		return this;
+	}
+
+	public double queryMinYlable(final List<Double[]> datas) {
+		double min = Double.MAX_VALUE;
+
+		for (Double[] data : datas) {
+			if (data.length > 0) {
+				List<Double> dataList = Arrays.asList(data);
+				double tmp = Collections.min(dataList);
+
+				if (min > tmp) {
+					min = tmp;
+				}
+			}
+		}
+		return min;
+	}
+
+	public double queryMinYlable(final double[] datas) {
+		double min = Double.MAX_VALUE;
+
+		for (int i = 0; i < datas.length; i++) {
+			if (datas[i] < min) {
+				min = datas[i];
+			}
+		}
+		return min;
 	}
 }

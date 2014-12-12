@@ -86,7 +86,7 @@ public class Handler implements PageHandler<Context> {
 				if (WebGraphCreator.SUCESS_PERCENT.equals(entry.getKey())) {
 					LineChart linechart = entry.getValue();
 
-					linechart.setMinYlable(m_graphCreator.queryMinYlable(linechart.getValueObjects()));
+					linechart.setMinYlable(linechart.queryMinYlable(linechart.getValueObjects()));
 					linechart.setMaxYlabel(100.0);
 				}
 			}
