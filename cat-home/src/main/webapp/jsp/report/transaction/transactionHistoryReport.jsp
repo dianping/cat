@@ -20,7 +20,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器:
+		<th>
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		    <c:choose>
 					<c:when test="${model.ipAddress eq ip}">
