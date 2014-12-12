@@ -22,7 +22,7 @@
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
 				</div>
 				<div id="metrics" class="config">
-					<button class="btn btn-success btn-sm" id="add-metric-button"
+					<button class="btn btn-success btn-xs" id="add-metric-button"
 						type="button">
 						添加匹配对象<i class="icon-plus icon-white"></i>
 					</button>
@@ -40,9 +40,9 @@
 						</label> <label class="checkbox inline"> <input name="avg"
 							class="avg" type="checkbox">avg
 						</label>
-						<button class="btn btn-danger btn-sm delete-metric-button"
+						<button class="btn btn-danger btn-xs delete-metric-button"
 							type="button">
-							<i class="icon-trash icon-white"></i>
+							<i class="ace-icon fa fa-trash-o bigger-120"></i>
 						</button>
 					</div>
 				</div>
@@ -142,7 +142,7 @@
 		    }
 		 $(document).ready(function() {
 			initRuleConfigs();
-			$('#alert_config').addClass('active');
+			$('#alert_config').addClass('active open');
 			$('#networkRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
 			

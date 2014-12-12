@@ -29,7 +29,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active');
+			$('#alert_config').addClass('active');
 			$('#bugConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

@@ -15,7 +15,7 @@
 				action="${model.pageUri}?op=topologyProductLineAddSubmit">
 				<h4 class="text-center text-danger">修改产品线配置信息</h4>
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
-				<table class="table table-striped table-condensed  ">
+				<table class="table table-striped table-condensed table-border table-hover ">
 					<tr>
 						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
@@ -101,7 +101,7 @@
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
 						<td>
-							<table>
+							<table class="table table-striped table-condensed table-hover" >
 								<tr>
 								<c:forEach var="item" items="${model.projects}" varStatus="status">
 									<c:choose>

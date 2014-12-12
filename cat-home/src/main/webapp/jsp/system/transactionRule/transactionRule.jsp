@@ -41,9 +41,6 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#transactionRule').addClass('active');
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
  		});
 	</script>
 </a:config>

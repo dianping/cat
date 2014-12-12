@@ -30,14 +30,14 @@
 			},3000);
 		});
 	</script>
-			<table class="table table-striped table-condensed table-bordered  table-hover">
-	     		<tr class="text-success">
-	     			<th width="30%"><h5 class='text-center'>规则id</h5></th>
-	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
-	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
+			<table class="table table-striped table-condensed  table-bordered table-hover">
+	     		<thead><tr>
+	     			<th width="30%">规则id</th>
+	     			<th width="26%">项目配置</th>
+	     			<th width="29%">指标配置</th>
 	     			<th width="8%">操作 <a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-	     		</tr>
+	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
 	     			<td>${item.id}</td>

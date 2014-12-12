@@ -35,7 +35,7 @@
 				$('#tabContent-api').addClass('active');
 			}
 			
-			$(document).delegate('.update', 'click', function(e){
+			/* $(document).delegate('.update', 'click', function(e){
 				var anchor = this,
 					el = $(anchor);
 				
@@ -52,7 +52,7 @@
 						$('#modal').modal();
 					}
 				});
-			});
+			}); */
 			
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
@@ -87,7 +87,7 @@
 				<div class="modal-body" id="modalBody">
 				</div>
 				<div class="modal-footer">
-				    <button class="btn btn-primary" id="updateSubmit">提交</button>
+				    <button class="btn btn-primary btn-sm" id="updateSubmit">提交</button>
 				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
 				</div>
 			</div>
@@ -100,7 +100,7 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
-						<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="30%">名称</th>
@@ -128,7 +128,7 @@
 						</table>
 					</div>
 					<div class="tab-pane" id="tabContent-activity">
-						<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed  table-bordered table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="40%">名称</th>
@@ -159,7 +159,7 @@
 						<%@include file="code.jsp"%>
 					</div>
 					<div class="tab-pane" id="tabContent-speed">
-						<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 							<thead>
 							<tr >
 								<th width="20%">页面</th>

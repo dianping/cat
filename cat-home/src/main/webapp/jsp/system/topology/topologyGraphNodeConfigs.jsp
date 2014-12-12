@@ -18,7 +18,6 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#topologyGraphNodeConfigList').addClass('active');
-			console.log('hello')
 			
  			var type = '${payload.type}';
 			if(type==''){
@@ -27,28 +26,6 @@
 			
 			$('#tab-'+type).addClass('active');
 			$('#tabContent-'+type).addClass('active');
-			
-			$(document).delegate('.update', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				//var cell = document.getElementById('');
-				$.ajax({
-					type: "get",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#myModal').html(response);
-						$('#myModal').modal();
-						nodeValidate();
-						$("#id").select2();
-					}
-				});
-			});
 			
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphNodeConfigDelete'||action=='topologyGraphNodeConfigAddSumbit'){
@@ -80,14 +57,14 @@
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent-${key}">
 					    <h4 class="text-center text-danger">拓扑图节点配置信息：${item.key}</h4>
-				     	<table class="table table-striped table-condensed   table-hover">
-				     		<tr class="text-success">
-				     			<th><h5 class='text-center'>项目</h5></th><th><h5 class='text-center'>异常Warning阀值</h5></th>
-				     			<th><h5 class='text-center'>异常Error阀值</h5></th><th><h5 class='text-center'>响应时间Warning阀值</h5></th>
-				     			<th><h5 class='text-center'>响应时间Error阀值</h5></th>
+				     	<table class="table table-striped table-condensed  table-bordered table-hover">
+				     		<thead><tr>
+				     			<th>项目</th><th>异常Warning阀值</th>
+				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
+				     			<th>响应时间Error阀值</th>
 				     			<th width="8%">操作 <a href="?op=topologyGraphNodeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-				     		</tr>
+				     		</tr></thead>
 				     		<tr class="text-danger"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
 					     		<td><h5 class="text-right">${value.defaultErrorThreshold}</h5></td>
 						     	<c:if test="${item.key eq 'Exception'}">

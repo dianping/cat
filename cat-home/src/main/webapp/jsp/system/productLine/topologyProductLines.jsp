@@ -53,7 +53,7 @@
 			  <ul class="nav nav-tabs" style="height:60px;">
 			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status">
 			  		<c:set var="type" value="${item.key}"/>
-				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h4 class="text-danger">${type}</h4></a></li>
+				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"> <h5 class="text-danger"><strong>${type}</strong></h5></a></li>
 				</c:forEach>
 			  </ul>
 				<div class="tab-content">
@@ -61,7 +61,7 @@
 				<c:set var="type" value="${listItem.key}"/>
 				<div class="tab-pane" id="tabContent-${type}">
 				<table class="table table-striped table-condensed table-hover table-bordered">
-					<tr class="text-success">
+					<thead><tr>
 						<th width="15%">产品线</th>
 						<th width="20%">标题</th>
 						<th width="5%">顺序</th>
@@ -74,7 +74,7 @@
 						<!-- <th width="40%">项目列表</th> -->
 						<th width="8%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-					</tr>
+					</tr></thead>
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
 						<tr><td>${item.id}</td><td>${item.title}</td>
 						<td>${item.order}</td>

@@ -30,16 +30,16 @@
 		});
 	</script>
 			<table class="table table-striped table-condensed table-bordered  table-hover">
-	     		<tr class="text-success">
-	     			<th width="20%"><span class='text-center'>规则id</span></th>
-	     			<th width="26%"><span class='text-center'>产品线配置</span></th>
-	     			<th width="29%"><span class='text-center'>指标配置</span></th>
-	     			<th width="4%"><span class='text-center'>次数</span></th>
-	     			<th width="7%"><span class='text-center'>平均值</span></th>
-	     			<th width="4%"><span class='text-center'>总和</span></th>
+	     		<thead><tr>
+	     			<th width="20%">规则id</th>
+	     			<th width="26%">产品线配置</th>
+	     			<th width="29%">指标配置</th>
+	     			<th width="4%">次数</th>
+	     			<th width="7%">平均值</th>
+	     			<th width="4%">总和</th>
 	     			<th width="8%">操作 <a href="?op=networkRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-	     		</tr>
+	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
 	     			<td>${item.id}</td>

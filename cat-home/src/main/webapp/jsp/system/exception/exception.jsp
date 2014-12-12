@@ -45,29 +45,6 @@
 					$('#state').html('&nbsp;');
 				},3000);
 			}
-			
-			$(document).delegate('.update,.create', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				$.ajax({
-					type: "get",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						var responseTrim = response.trim();
-						$('#myModal').html(responseTrim);
-						$('#myModal').modal();
- 						$("#domainId").select2();
- 						$("#smsSending").select2();
- 						exceptionValidate();
-					}
-				});
-			});
 		});
 	</script>
 	
@@ -89,7 +66,7 @@
 					<div class="tab-pane" id="tabContent-异常阈值">
 						<h4 class="text-center text-danger">异常阈值配置</h4>
 						<table
-							class="table table-striped table-condensed   table-hover"
+							class="table table-striped table-condensed table-bordered  table-hover"
 							id="content-异常阈值" width="100%">
 							<thead>
 								<tr >
@@ -128,7 +105,7 @@
 					<div class="tab-pane" id="tabContent-异常过滤">
 						<h4 class="text-center text-danger">异常过滤配置</h4>
 						<table
-							class="table table-striped table-condensed   table-hover"
+							class="table table-striped table-condensed  table-bordered table-hover"
 							id="contents-异常过滤" width="100%">
 							<thead>
 								<tr >

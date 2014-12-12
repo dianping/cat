@@ -19,10 +19,6 @@
 			$('#alert_config').addClass('active open');
 			$('#systemRuleConfigList').addClass('active');
 			
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此规则吗(不可恢复)？");
-			});
-			
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
@@ -46,16 +42,16 @@
 				</div>
 			</div>
 			<table class="table table-striped table-condensed table-bordered  table-hover">
-	     		<tr class="text-success">
-	     			<th width="20%"><h5 class='text-center'>规则id</h5></th>
-	     			<th width="26%"><h5 class='text-center'>项目配置</h5></th>
-	     			<th width="29%"><h5 class='text-center'>指标配置</h5></th>
-	     			<th width="4%"><h5 class='text-center'>次数</h5></th>
-	     			<th width="7%"><h5 class='text-center'>平均值</h5></th>
-	     			<th width="4%"><h5 class='text-center'>总和</h5></th>
+	     		<thead><tr>
+	     			<th width="20%">规则id</th>
+	     			<th width="26%">项目配置</th>
+	     			<th width="29%">指标配置</th>
+	     			<th width="4%">次数</th>
+	     			<th width="7%">平均值</th>
+	     			<th width="4%">总和</th>
 	     			<th width="8%">操作 <a href="?op=systemRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-	     		</tr>
+	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">
 	     			<tr>
 	     			<td>${item.id}</td>

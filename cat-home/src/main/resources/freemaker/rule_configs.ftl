@@ -25,7 +25,7 @@
 <div id="configs">
     <div class="config" id="configSample">
         <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
-            <button class="btn btn-success btn-small" id="add-config-button" type="button">
+            <button class="btn btn-success btn-xs" id="add-config-button" type="button">
                 添加监控规则<i class="icon-plus icon-white"></i>
             </button>
         </p>
@@ -61,25 +61,25 @@
                         <option value="SumMinVal">总和最小值</option>
                     </select>
                     阈值：<input name="value" class="value input-mini" type="text"/>
-                    <button class="btn btn-danger btn-small delete-subcondition-button" type="button">
+                    <button class="btn btn-danger btn-xs delete-subcondition-button" type="button">
                         删除子条件<i class="icon-trash icon-white"></i>
                     </button>
                 </div>
             </div>
-            <button class="btn btn-success btn-small add-subCondition-button" type="button">
+            <button class="btn btn-success btn-xs add-subCondition-button" type="button">
                 添加子条件<i class="icon-plus icon-white"></i>
             </button>
-            <button class="btn btn-danger btn-small delete-condition-button" type="button">
+            <button class="btn btn-danger btn-xs delete-condition-button" type="button">
                 删除监控条件<i class="icon-trash icon-white"></i>
             </button>
-            <button class="btn btn-info btn-small define-button" type="button">
+            <button class="btn btn-info btn-xs define-button" type="button">
                 自定义监控规则<i class="icon-user icon-white"></i>
             </button>
         </div>
-        <button class="btn btn-success btn-small add-condition-button" type="button">
+        <button class="btn btn-success btn-xs add-condition-button" type="button">
             添加监控条件<i class="icon-plus icon-white"></i>
         </button>
-        <button class="btn btn-danger btn-small delete-config-button" type="button">
+        <button class="btn btn-danger btn-xs delete-config-button" type="button">
             删除监控规则<i class="icon-trash icon-white"></i>
         </button>
     </div>
@@ -192,7 +192,7 @@ function changeToUserDefine(currentElement){
 
 function initIntro(){
 	var context = $("#configSample").first();
-	var startButton = $('<button class="btn btn-info btn-small help" type="button">如何使用?</button>');
+	var startButton = $('<button class="btn btn-info btn-xs help" type="button">如何使用?</button>');
 	
 	context.find("button").first().after(startButton);
 	context.find(".configDuration").first().attr("data-step","1").attr("data-intro","定义一个时间段。一个时间段下可以有多个监控条件，只要有一个条件被触发，cat就会发出告警");

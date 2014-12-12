@@ -8,7 +8,31 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-
+<a:config>
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#application_config').addClass('active open');
+			$('#topologyGraphNodeConfigList').addClass('active');
+			
+			var action = '${payload.action.name}';
+			if(action=='topologyGraphNodeConfigDelete'||action=='topologyGraphNodeConfigAddSumbit'){
+				var state = '${model.opState}';
+				if(state=='Success'){
+					$('#state').html('操作成功');
+				}else{
+					$('#state').html('操作失败');
+				}
+				setInterval(function(){
+					$('#state').html('&nbsp;');
+				},3000);
+			}
+		});
+	</script>
 <form name="topologyGraphNodeConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphNodeConfigAddSumbit">
 	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 	<h4 class="text-center text-danger">修改拓扑节点配置信息</h4>
@@ -62,7 +86,8 @@
 		</c:if>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
+			<td><input class='btn btn-primary btn-sm' id="addOrUpdateNodeSubmit" type="submit" name="submit" value="提交" /></td>
 		</tr>
 	</table>
 </form>
+</a:config>
