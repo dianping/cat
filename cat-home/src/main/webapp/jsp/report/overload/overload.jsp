@@ -16,7 +16,6 @@
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
-	<div style="height:24px"></div>
    <div class="row-fluid">
 		<div id="queryBar"">
 			<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">

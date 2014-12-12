@@ -13,15 +13,14 @@
 <a:offline>
 	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
 	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
-	<div style="height:24px"></div>
 		<div id="queryBar">
 			<div id="datePicker" class="input-append date" style="margin-bottom: 0px;float:left;">
-	           日期：
-	           <span><input id="time" name="time"  size="16" class="{required:true,date:true}"
+	           日期
+	           <span>&nbsp;&nbsp;&nbsp;&nbsp;<input id="time" name="time"  size="16" class="{required:true,date:true}"
 	              data-format="yyyy-MM-dd HH:mm" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"  type="text"/>
 	            <span class="add-on"><i class="ace-icon fa fa-calendar"></i></span></span>
 	        </div>
-			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
+			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
 		<div class="report">
 			<%@ include file="detail.jsp"%>
