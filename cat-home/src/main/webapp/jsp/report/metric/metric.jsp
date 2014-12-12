@@ -78,7 +78,6 @@
 					</c:forEach>
 				</th>
 				<th class="text-right">
-					<%@ include file="metricOpNav.jsp" %>
 				</th>
 			</tr>
 		</table>
