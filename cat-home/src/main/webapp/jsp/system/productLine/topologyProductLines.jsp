@@ -29,10 +29,6 @@
 				  e.preventDefault();
 				  $(this).tab('show');
 			});
-			
-			$(".delete").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
 
 			var action = '${payload.action.name}';
 			if(action=='topologyProductLineDelete'||action=='topologyProductLineAddSubmit'){
@@ -97,7 +93,7 @@
 						</td> --%>
 						<td><a href="?op=topologyProductLineAdd&productLineName=${item.id}&type=${type}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class="btn btn-danger btn-xs" >
+						<a href="?op=topologyProductLineDelete&productLineName=${item.id}&type=${type}" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach>

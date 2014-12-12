@@ -35,25 +35,6 @@
 				$('#tabContent-api').addClass('active');
 			}
 			
-			/* $(document).delegate('.update', 'click', function(e){
-				var anchor = this,
-					el = $(anchor);
-				
-				if(e.ctrlKey || e.metaKey){
-					return true;
-				}else{
-					e.preventDefault();
-				}
-				$.ajax({
-					type: "post",
-					url: anchor.href,
-					success : function(response, textStatus) {
-						$('#modalBody').html(response);
-						$('#modal').modal();
-					}
-				});
-			}); */
-			
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
 				var title = $("#commandTitle").val();
@@ -80,23 +61,12 @@
 			})
  		});
 	</script>
-			<div id="modal" class="modal hide fade" style="width:650px" tabindex="-1" role="dialog" aria-labelledby="ruleLabel" aria-hidden="true">
-				<div class="modal-header text-center">
-				    <h3>App Command编辑</h3>
-				</div>
-				<div class="modal-body" id="modalBody">
-				</div>
-				<div class="modal-footer">
-				    <button class="btn btn-primary btn-sm" id="updateSubmit">提交</button>
-				    <button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-				</div>
-			</div>
 			<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs span2" id="myTab">
-				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-danger">API命令字</h5></a></li>
-				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-danger">活动命令字</h5></a></li>
-				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <h5 class="text-danger">返回码</h5></a></li>
-				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"> <h5 class="text-danger">测速配置</h5></a></li>
+				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <h5 class="text-danger"><strong>API命令字</strong></h5></a></li>
+				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <h5 class="text-danger"><strong>活动命令字</strong></h5></a></li>
+				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <h5 class="text-danger"><strong>返回码</strong></h5></a></li>
+				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"> <h5 class="text-danger"><strong>测速配置</strong></h5></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">

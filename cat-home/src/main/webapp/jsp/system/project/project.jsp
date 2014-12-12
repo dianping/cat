@@ -15,9 +15,6 @@
 		$(document).ready(function() {
 			$('#projects_config').addClass('active open');
 			$('#projects').addClass('active');
-			$(".btn-danger").bind("click", function() {
-				return confirm("确定要删除此项目吗(不可恢复)？");
-			});
 		});
 	</script>
 	
@@ -46,7 +43,7 @@
 						<td>${item.phone}</td>
 						<td><a href="?op=update&projectId=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=projectDelete&projectId=${item.id}" class="btn btn-danger btn-xs" >
+						<a href="?op=projectDelete&projectId=${item.id}" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach></tbody>
