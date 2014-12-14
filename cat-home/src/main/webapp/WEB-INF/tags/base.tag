@@ -45,11 +45,12 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="/cat/r/home"   class="navbar-brand">
+					<a href="/cat/r/home"  class="navbar-brand">
 						<small>
-							CAT
+							<span>CAT</span>（Central Application Tracking）
 						</small>
 					</a>
+					
 				</div>
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
@@ -69,8 +70,8 @@
 						</a>
 						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
-									<a href="/cat/s/login?op=logout" ><i class="ace-icon fa fa-power-off"></i>
-									注销</a>
+								<a href="/cat/s/login?op=logout" ><i class="ace-icon fa fa-power-off"></i>
+								注销</a>
 							</li>
 						</ul>
 					</li>
