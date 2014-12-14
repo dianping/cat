@@ -29,7 +29,7 @@
 <p>&nbsp;&nbsp;&nbsp;&nbsp;condition由subcondition组成。一个condition下的多个subcondition为串联关系，只有当一个condition下的全部subcondition被触发，该condition才被触发。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;subcondition有八种类型，由type属性指定。subcondition的内容为对应的阈值，请注意阈值只能由数字组成，当阈值表达百分比时，不能在最后加上百分号。八种类型如下：</p>
 <table style="width: 50%"
-	class="table table-striped table-condensed  ">
+	class="table table-bordered table-striped table-condensed  ">
 	<tr>
 		<th width="30%">类型</th>
 		<th>说明</th>

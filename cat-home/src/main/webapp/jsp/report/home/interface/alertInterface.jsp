@@ -6,7 +6,7 @@
 	http://主机域名:端口/cat/r/alert?
 </pre>
 <p>参数说明</p>
-<table style="width:70%" class="table table-striped table-condensed  ">
+<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>执行操作<span class="text-danger">  必需[只能为insert]</span></td></tr>
 	<tr><td>domain</td><td>告警项目名<span class="text-danger">  必需</span></td></tr>

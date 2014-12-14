@@ -14,17 +14,17 @@
 								<th>Web应用</th>
 								<th>CMDB</th>
 								<th>机器数</th>
-								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的URL访问总量"></i></th>
-								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器URL每秒的访问最大量"></i></th>
-								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
+								<th>访问量<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的URL访问总量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器URL每秒的访问最大量"></i></th>
+								<th>单机QPS<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器URL每秒的访问最大量"></i></th>
 								<th>错误量</th>
 								<th>错误量%</th>
 								<th>响应时间(ms)</th>
-								<th>95Line(ms)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内URL响应时间的95线"></i></th>
-								<th>Load(平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
-								<th>Load(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
-								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
-								<th>FullGc(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
+								<th>95Line(ms)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内URL响应时间的95线"></i></th>
+								<th>Load(平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
+								<th>Load(最大)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
+								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
+								<th>FullGc(最大)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
 							</tr></thead>
 						<tbody>
 							<c:forEach var="item" items="${model.utilizationWebList}" varStatus="status">
@@ -57,17 +57,17 @@
 								<th>Service应用</th>
 								<th>CMDB</th>
 								<th>机器数</th>
-								<th>访问量<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的Service访问总量"></i></th>
-								<th>集群QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器Service每秒的访问最大量"></i></th>
-								<th>单机QPS<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器Service每秒的访问最大量"></i></th>
+								<th>访问量<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】的Service访问总量"></i></th>
+								<th>集群QPS<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】集群机器Service每秒的访问最大量"></i></th>
+								<th>单机QPS<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】单台机器Service每秒的访问最大量"></i></th>
 								<th>错误量</th>
 								<th>错误量%</th>
 								<th>响应时间</th>
-								<th>95Line<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内Service响应时间的95线"></i></th>
-								<th>Load(平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
-								<th>Load(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
-								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
-								<th>FullGc(最大)<i tips="" data-trigger="hover" class="icon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
+								<th>95Line<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内Service响应时间的95线"></i></th>
+								<th>Load(平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
+								<th>Load(最大)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
+								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>
+								<th>FullGc(最大)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内单台机器fullGc的最大数量"></i></th>
 							</tr></thead>
 						<tbody>
 							<c:forEach var="item" items="${model.utilizationServiceList}" varStatus="status">
