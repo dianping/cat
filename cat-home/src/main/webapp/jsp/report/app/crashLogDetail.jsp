@@ -6,7 +6,7 @@
 		<c:choose>
 				<c:when test="${payload.action.name eq 'crashLog'}">
 				<td><span class="text-danger title">【时段】</span><span class="text-success">${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</span>
-					</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史模式】</span></a></span>
+					</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=historyCrashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到历史】</span></a></span>
 					<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 					</c:forEach>
@@ -16,7 +16,7 @@
 		<c:otherwise>
 			<c:if test="${payload.action.name eq 'historyCrashLog'}">
 				<td><span class="text-danger title">【时段】</span><span class="text-success">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</span>
-				</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
+				</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时】</span></a></span>
 				<c:forEach var="nav" items="${model.historyNavs}">
 				<c:choose>
 					<c:when test="${nav.title eq model.reportType}">

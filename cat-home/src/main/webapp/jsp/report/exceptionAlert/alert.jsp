@@ -45,7 +45,7 @@
 	</script>
 	<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.alertReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.alertReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 	<div class="nav-search nav" id="nav-search">
-		<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-danger">【切到历史模式】</span></a>
+		<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-danger">【切到历史】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?op=alert&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>

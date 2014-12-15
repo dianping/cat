@@ -8,7 +8,7 @@
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
-<a:body>
+<a:body_with_nav>
 <script>
 	function buildHref(domain){
 		var href = '<a href="?domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
@@ -28,23 +28,6 @@
 	});
 </script>
 <div class="report">
-	<div class="breadcrumbs" id="breadcrumbs">
-		<script type="text/javascript">
-			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-		</script>
-		<span class="position"><span class="text-danger"><strong>&nbsp;&nbsp;${model.domain}</strong></span>
-			【<a href="javascript:showDomain()" id="switch">切换</a>】【<a href="javascript:showFrequent()" id="frequent">常用</a>】
-			</span>
-		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
-		<!-- #section:basics/content.searchbox -->
-		<div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史】</span></a></span>
-			<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
-		</div><!-- /.nav-search -->
-	</div>
 	<div class="domainNavbar" style="display:none;font-size:small;">
 		<table class="table table-striped table-hover table-bordered table-condensed">
 			<c:forEach var="item" items="${model.domainGroups}">
@@ -72,13 +55,27 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table class="table" border="1" rules="all">
+		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>
 		</table>
 	</div>
+	<div class="breadcrumbs" id="breadcrumbs">
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
+		<!-- #section:basics/content.searchbox -->
+		<div class="nav-search nav" id="nav-search">
+			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史】</span></a></span>
+			<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
+		</div><!-- /.nav-search -->
+	</div>
 	<jsp:doBody />
 </div>
 
-</a:body>
+</a:body_with_nav>
