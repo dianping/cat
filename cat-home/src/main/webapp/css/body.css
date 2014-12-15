@@ -223,4 +223,7 @@ a{
 	position:relative;
 	margin-left:0px;
 }
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	z-index:0;
+}
 

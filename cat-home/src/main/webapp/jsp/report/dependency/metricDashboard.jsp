@@ -7,18 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-	
-<style>
-	.tooltip-inner {
-		max-width:36555px;
-	 }
-	.tab-content	table {
-	  max-width: 100%;
-	  background-color: transparent;
-	  border-collapse: collapse;
-	  border-spacing: 0; 
-	}
-</style>
  <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
@@ -52,6 +40,17 @@
 			<div class="">
 				<%@ include file="../top/topMetric.jsp"%>
 			</div>
+			<style>
+			.ui-tooltip {
+				max-width:36555px;
+			 }
+			.tab-content	table {
+			  max-width: 100%;
+			  background-color: transparent;
+			  border-collapse: collapse;
+			  border-spacing: 0; 
+			}
+		</style>
 	</jsp:body>
 	</a:report>
 	</c:otherwise>
@@ -60,10 +59,24 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#minute'+${model.minute}).addClass('disabled');
-	$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+	$( ".hreftip" ).tooltip({
+		show: true,
+		delay:{show:10000, hide:100000}, 
+		html:true,
+		position: {
+			my: "left top",
+			at: "left bottom"
+		},
+		content: function() {
+		  return $( this ).attr( "title" );
+		},
+		open: function( event, ui ) {
+			ui.tooltip.animate({ top: ui.tooltip.position().top + 10 }, "fast" );
+		}
+	});
+	
 	$('.position').hide();
 	$('.switch').hide();
-	
 	$('#Dashboard_report').addClass("open active");
 	$('#dashbord_system').addClass("active");
 	$('#Dependency_report').removeClass("open active");

@@ -40,15 +40,15 @@
 	              <tr class="">
 	                 <c:choose>
 						<c:when test="${detail.alert == 2}">
-							 <td style="background-color:red;color:white;"><a class="hreftip"  style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+							 <td style="background-color:red;color:white;"><a class="hreftip"  style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}"  title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
 	                		 <td style="background-color:red;color:white;text-align:right">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:when test="${detail.alert == 1}">
-							 <td style="background-color:#bfa22f;color:white;"><a class="hreftip" style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+							 <td style="background-color:#bfa22f;color:white;"><a class="hreftip" style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
 	                		 <td style="background-color:#bfa22f;color:white;text-align:right">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:otherwise>
-							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
 	                		 <td style="text-align:right">${w:format(detail.value,'0')}</td>
 						</c:otherwise>
 					 </c:choose>
