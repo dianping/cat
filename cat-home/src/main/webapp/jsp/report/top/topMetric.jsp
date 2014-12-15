@@ -19,7 +19,6 @@
 <c:if test="${ empty model.message}">
 	<h3 class="text-center text-success">CAT服务端正常</h3>
 </c:if>
-
 <div class="tabbable tabs-left " id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs alert-info">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多排行</a></li>
@@ -29,6 +28,7 @@
     <li class='text-right'><a href="#tab5" data-toggle="tab">Call最慢排行</a></li>
     <li class='text-right'><a href="#tab6" data-toggle="tab">Cache最慢排行</a></li>
   </ul>
+  
   <c:set var="date" value="${w:format(model.topReport.startTime,'yyyyMMddHH')}"/>
   <div class="tab-content" style="white-space:nowrap">
     <div class="tab-pane  active" id="tab1">
