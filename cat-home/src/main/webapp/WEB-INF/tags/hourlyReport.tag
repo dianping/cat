@@ -25,35 +25,19 @@
 			html+= href;
 		}
 		$('#frequentNavbar').html(html);
+		$("#search_go").bind("click",function(e){
+			var newUrl = '${model.baseUri}?domain='+$( "#search" ).val() +'&date=${model.date}';
+			window.location.href = newUrl;
+		});
+		$('#wrap_search').submit(
+				function(){
+					var newUrl = '${model.baseUri}?domain='+$( "#search" ).val() +'&date=${model.date}';
+					window.location.href = newUrl;
+				}		
+		);
 	});
 </script>
 <div class="report">
-	<div class="domainNavbar" style="display:none;font-size:small;">
-		<table class="table table-striped table-hover table-bordered table-condensed">
-			<c:forEach var="item" items="${model.domainGroups}">
-				<tr>
-					<c:set var="detail" value="${item.value}" />
-					<td class="department" rowspan="${w:size(detail.projectLines)}">${item.key}</td>
-					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
-							<c:if test="${index.index != 0}">
-								<tr>
-							</c:if>
-							<td class="department">${productline.key}</td>
-							<td><div class="domain">
-								<c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a class='domainItem'
-											href="${model.baseUri}?domain=${domain}&date=${model.date}"
-											class="current">[&nbsp;${domain}&nbsp;]</a></c:when>
-											<c:otherwise><a class='domainItem'
-											href="${model.baseUri}?domain=${domain}&date=${model.date}">[&nbsp;${domain}&nbsp;]</a>
-									</c:otherwise></c:choose>&nbsp;
-								</c:forEach>
-							</div>
-							</td><c:if test="${index.index != 0}"></tr></c:if>
-					</c:forEach>
-				</tr>
-			</c:forEach>
-		</table>
-	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
 		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
 			<tr>
@@ -66,7 +50,6 @@
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
 		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
-		<!-- #section:basics/content.searchbox -->
 		<div class="nav-search nav" id="nav-search">
 			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史】</span></a></span>
 			<c:forEach var="nav" items="${model.navs}">

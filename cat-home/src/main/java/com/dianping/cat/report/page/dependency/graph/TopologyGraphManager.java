@@ -46,6 +46,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private TopologyGraphBuilder m_graphBuilder;
+	
+	@Inject
+	private DependencyItemBuilder m_itemBuilder;
 
 	@Inject
 	private ProductLineConfigManager m_productLineConfigManger;
@@ -211,7 +214,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		private void buildReport(Collection<String> domains) {
 			long current = System.currentTimeMillis();
 			long currentHour = current - current % TimeHelper.ONE_HOUR;
-			TopologyGraphBuilder builder = new TopologyGraphBuilder();
+			TopologyGraphBuilder builder = new TopologyGraphBuilder().setItemBuilder(m_itemBuilder);
 
 			for (String domain : domains) {
 				try {

@@ -52,8 +52,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
@@ -66,7 +66,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -76,6 +76,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4016,6 +4019,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
@@ -4032,6 +4038,27 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -5096,18 +5123,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -54,12 +54,23 @@
 						</small>
 					</a>
 				</div>
-				<div class="navbar-header pull-left position">
-					<span style="float:left;padding-top:5px;"><a href="javascript:showDomain()"  class="btn btn-sm btn-pink"  id="switch"><small>切换</small></a>
-						<a href="javascript:showFrequent()"  class="btn btn-sm btn-pink"  id="frequent"><small>常用</small></a>
-					</span>
-					<span class="navbar-brand "><span style="color:#E1E1E1;">${model.domain}</span></span>
+					<form id="wrap_search">
+				<div class="navbar-header pull-left position" style="width:350px;padding-top:5px;">
+						<div class="input-group">
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button>
+						</span>
+						<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-default" type="button" id="search_go">
+								Go!
+							</button> 
+						</span>
+						</div>
 				</div>
+							<input type="submit" value="提交" />
+					</form>
+				
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav" style="height:auto;">
@@ -206,24 +217,14 @@
 			}
 			return "";
 		}
-		function showDomain() {
-			var b = $('#switch').html();
-			if (b == '<small>切换</small>') {
-				$('.domainNavbar').slideDown();
-				$('#switch').html("<small>收起</small>");
-			} else {
-				$('.domainNavbar').slideUp();
-				$('#switch').html("<small>切换</small>");
-			}
-		}
 		function showFrequent(){
 			var b = $('#frequent').html();
-			if (b == '<small>常用</small>') {
+			if (b == '常用') {
 				$('.frequentNavbar').slideDown();
-				$('#frequent').html("<small>收起</small>");
+				$('#frequent').html("收起");
 			} else {
 				$('.frequentNavbar').slideUp();
-				$('#frequent').html("<small>常用</small>");
+				$('#frequent').html("常用");
 			}
 		}
 		$(document).ready(function() {
@@ -245,6 +246,52 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
+			
+			
+			//custom autocomplete (category selection)
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [
+				{ label: "anders", category: "" },
+				{ label: "andreas", category: "" },
+				{ label: "antal", category: "" },
+				{ label: "annhhx10", category: "Products" },
+				{ label: "annk K12", category: "Products" },
+				{ label: "annttop C13", category: "Products" },
+				{ label: "anders andersson", category: "People" },
+				{ label: "andreas andersson", category: "People" },
+				{ label: "andreas johnson", category: "People" }
+			];
+			
+			var data = [];
+			<c:forEach var="item" items="${model.domainGroups}">
+				<c:set var="detail" value="${item.value}" />
+					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+					<c:forEach var="domain" items="${productline.value.lineDomains}">
+							var item = {};
+							item['label'] = '${domain}';
+							item['category'] ='${productline.key}';
+							
+							data.push(item);
+					</c:forEach>
+			</c:forEach></c:forEach>
+			
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
 		});
 	</script>
 </body>

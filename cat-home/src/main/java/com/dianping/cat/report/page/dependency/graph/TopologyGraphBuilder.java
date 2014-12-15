@@ -7,8 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.unidal.lookup.util.StringUtils
-;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -24,7 +23,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private String m_domain;
 
-	private TopologyGraphItemBuilder m_itemBuilder;
+	private DependencyItemBuilder m_itemBuilder;
 
 	private Map<Long, TopologyGraph> m_graphs = new HashMap<Long, TopologyGraph>();
 
@@ -124,7 +123,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
-		
+
 		if (!m_pigeonServices.contains(type)) {
 			TopologyEdge edge = m_itemBuilder.buildEdge(m_domain, dependency);
 			TopologyGraph graph = findOrCreateGraph();
@@ -165,6 +164,11 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	public void visitSegment(Segment segment) {
 		m_minute = segment.getId();
 		super.visitSegment(segment);
+	}
+
+	public TopologyGraphBuilder setItemBuilder(DependencyItemBuilder itemBuilder) {
+		m_itemBuilder = itemBuilder;
+		return this;
 	}
 
 }
