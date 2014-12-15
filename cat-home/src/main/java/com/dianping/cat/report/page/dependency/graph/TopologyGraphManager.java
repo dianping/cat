@@ -45,9 +45,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private ModelService<DependencyReport> m_service;
 
 	@Inject
-	private TopologyGraphBuilder m_graphBuilder;
-	
-	@Inject
 	private DependencyItemBuilder m_itemBuilder;
 
 	@Inject
@@ -61,6 +58,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private DomainNavManager m_domainNavManager;
+
+	private TopologyGraphBuilder m_currentBuilder;
 
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>();
 
@@ -86,7 +85,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 						allDomains.add(nodeName);
 						if (node != null) {
-							dashboardGraph.addNode(realName, m_graphBuilder.cloneNode(node));
+							dashboardGraph.addNode(realName, m_currentBuilder.cloneNode(node));
 						}
 					}
 				}
@@ -98,7 +97,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				String to = edge.getTarget();
 
 				if (allDomains.contains(self) && allDomains.contains(to)) {
-					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
+					dashboardGraph.addEdge(m_currentBuilder.cloneEdge(edge));
 				}
 			}
 		}
@@ -113,7 +112,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		topylogyGraph.setType(GraphConstrant.PROJECT);
 		topylogyGraph.setStatus(GraphConstrant.OK);
 
-		if (all != null) {
+		if (all != null && m_currentBuilder != null) {
 			TopologyNode node = all.findTopologyNode(domain);
 
 			if (node != null) {
@@ -126,15 +125,15 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			for (TopologyEdge edge : edges) {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
-				TopologyEdge cloneEdge = m_graphBuilder.cloneEdge(edge);
+				TopologyEdge cloneEdge = m_currentBuilder.cloneEdge(edge);
 
 				if (self.equals(domain)) {
 					TopologyNode other = all.findTopologyNode(target);
 
 					if (other != null) {
-						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_currentBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
 					topylogyGraph.addTopologyEdge(cloneEdge);
@@ -142,9 +141,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					TopologyNode other = all.findTopologyNode(self);
 
 					if (other != null) {
-						topylogyGraph.addTopologyNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addTopologyNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addTopologyNode(m_currentBuilder.createNode(target));
 					}
 					cloneEdge.setTarget(edge.getSelf());
 					cloneEdge.setSelf(edge.getTarget());
@@ -236,7 +235,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 			}
-			m_graphBuilder = builder;
+			m_currentBuilder = builder;
 		}
 
 		@Override

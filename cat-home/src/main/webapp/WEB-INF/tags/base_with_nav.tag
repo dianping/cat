@@ -54,22 +54,21 @@
 						</small>
 					</a>
 				</div>
-					<form id="wrap_search">
 				<div class="navbar-header pull-left position" style="width:350px;padding-top:5px;">
+					<form id="wrap_search">
 						<div class="input-group">
-						<span class="input-group-btn">
-							<button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button>
-						</span>
-						<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
-						<span class="input-group-btn">
-							<button class="btn btn-sm btn-default" type="button" id="search_go">
-								Go!
-							</button> 
-						</span>
+							<span class="input-group-btn ">
+								<button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button>
+							</span>
+							<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-pink" type="button" id="search_go">
+									Go!
+								</button> 
+							</span>
 						</div>
-				</div>
-							<input type="submit" value="提交" />
 					</form>
+				</div>
 				
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">

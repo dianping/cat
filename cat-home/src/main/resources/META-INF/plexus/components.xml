@@ -63,7 +63,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
@@ -4016,9 +4015,6 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
@@ -4034,10 +4030,6 @@
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>

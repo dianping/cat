@@ -95,7 +95,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
-		all.add(C(TopologyGraphBuilder.class).req(DependencyItemBuilder.class).is(PER_LOOKUP));
+		all.add(C(TopologyGraphBuilder.class).req(DependencyItemBuilder.class));
 
 		all.add(C(TopologyGraphManager.class)
 		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class) //

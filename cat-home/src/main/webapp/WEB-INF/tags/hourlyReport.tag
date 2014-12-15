@@ -33,6 +33,7 @@
 			function(){
 				var newUrl = '${model.baseUri}?domain='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
+				return false;
 			}		
 		);
 	});
