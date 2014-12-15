@@ -48,7 +48,7 @@
 	                		 <td style="background-color:#bfa22f;color:white;text-align:right">${w:format(detail.value,'0')}</td>
 						</c:when>
 						<c:otherwise>
-							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+							 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" data-toggle="tooltip" data-placement="top" title="${detail.errorInfo}" data-original-title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
 	                		 <td style="text-align:right">${w:format(detail.value,'0')}</td>
 						</c:otherwise>
 					 </c:choose>

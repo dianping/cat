@@ -13,7 +13,6 @@
 
 			<form name="netGraphConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=netGraphConfigUpdate">
-				<h4 class="text-center text-danger">网络拓扑图配置</h4>
 				<table class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
