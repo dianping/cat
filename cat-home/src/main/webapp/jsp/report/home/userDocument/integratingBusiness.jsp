@@ -29,7 +29,7 @@
 	http://cat.dianpingoa.com/cat/r/systemMonitor?
 </pre>
 <p>参数说明</p>
-<table style="width:50%" class="table table-striped table-condensed  ">
+<table style="width:50%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th>说明</th></tr>
 	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-danger">必需</span></td></tr>
 	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-danger">必需</span></td></tr>

@@ -1,5 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<table class='table table-striped table-condensed  '>
+<table class='table table-bordered table-striped table-condensed  '>
 	<tr class="text-success"><th width="8%">版本</th><th width="82%">说明</th><th width="10%">发布时间</th></tr>
 	<tr><td>1.1.9</td><td>1、修复了消息截断时候，统计时间的bug</td><td>2014-12-09</td></tr>
 	<tr><td>1.1.5</td><td>1、修复了CAT初始化路由出错导致监控信息丢失的bug</td><td>2014-11-21</td></tr>

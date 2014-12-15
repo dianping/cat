@@ -147,12 +147,6 @@ public class ChannelManager implements Task {
 	}
 
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
-		StringBuilder sb = new StringBuilder();
-
-		for (InetSocketAddress address : addresses) {
-			sb.append(address.getAddress().getHostAddress()).append(":").append(address.getPort()).append(',');
-		}
-
 		try {
 			int len = addresses.size();
 
@@ -184,7 +178,16 @@ public class ChannelManager implements Task {
 			m_logger.error(e.getMessage(), e);
 		}
 
-		m_logger.info("Error when init CAT server " + sb.toString());
+		try {
+			StringBuilder sb = new StringBuilder();
+
+			for (InetSocketAddress address : addresses) {
+				sb.append(address.toString()).append(";");
+			}
+			m_logger.info("Error when init CAT server " + sb.toString());
+		} catch (Exception e) {
+			// ignore
+		}
 		return null;
 	}
 

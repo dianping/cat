@@ -24,7 +24,7 @@
 
 <div id="configs">
     <div class="config" id="configSample">
-        <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
+        <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" id="configTip"></i> 
             <button class="btn btn-success btn-xs" id="add-config-button" type="button">
                 添加监控规则<i class="icon-plus icon-white"></i>
             </button>
@@ -34,7 +34,7 @@
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         </div>
         <div class="condition">
-            <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="conditionTip"></i></p>
+            <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" id="conditionTip"></i></p>
             持续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
             告警级别：
             <select name="level" class="level span2">
