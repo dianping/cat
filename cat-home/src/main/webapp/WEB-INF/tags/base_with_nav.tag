@@ -53,7 +53,7 @@
 						</small>
 					</a>
 				</div>
-				<div class="navbar-header pull-left position" style="width:500px;">
+				<div class="navbar-header pull-left position" style="width:auto;">
 					<span style="float:left;padding-top:5px;"><a href="javascript:showDomain()"  class="btn btn-sm btn-success"  id="switch"><small>切换</small></a>
 						<a href="javascript:showFrequent()"  class="btn btn-sm btn-success"  id="frequent"><small>常用</small></a>
 					</span>
