@@ -74,11 +74,11 @@
 
 <table class="table table-hover table-striped table-condensed" style="width:100%">
 	<tr>
-		<th width="12%">Type</th>
+		<th width="7%">Type</th>
 		<th width="4%">Total</th>
 		<th width="30%">Status</th>
 		<th width="4%">Count</th>
-		<th width="50%">SampleLinks</th>
+		<th width="55%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
