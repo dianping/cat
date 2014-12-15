@@ -30,10 +30,10 @@
 			window.location.href = newUrl;
 		});
 		$('#wrap_search').submit(
-				function(){
-					var newUrl = '${model.baseUri}?domain='+$( "#search" ).val() +'&date=${model.date}';
-					window.location.href = newUrl;
-				}		
+			function(){
+				var newUrl = '${model.baseUri}?domain='+$( "#search" ).val() +'&date=${model.date}';
+				window.location.href = newUrl;
+			}		
 		);
 	});
 </script>

@@ -29,6 +29,12 @@
 			var newUrl = '${model.baseUri}?op=history&domain='+$( "#search" ).val() +'&date=${model.date}';
 			window.location.href = newUrl;
 		});
+		$('#wrap_search').submit(
+				function(){
+					var newUrl = '${model.baseUri}?op=history&domain='+$( "#search" ).val() +'&date=${model.date}';
+					window.location.href = newUrl;
+				}		
+		);
 	});
 </script>
 <div class="report">
