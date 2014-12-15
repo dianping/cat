@@ -62,7 +62,6 @@ $(document).ready(function() {
 	$( ".hreftip" ).tooltip({
 		show: true,
 		delay:{show:10000, hide:100000}, 
-		html:true,
 		position: {
 			my: "left top",
 			at: "left bottom"
