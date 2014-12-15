@@ -33,8 +33,7 @@
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
 		<span class="position"><span class="text-danger"><strong>&nbsp;&nbsp;${model.domain}</strong></span>
-			【<a href="javascript:showDomain()" id="switch">切换</a>】
-			【<a href="javascript:showFrequent()" id="frequent">常用</a>】
+			【<a href="javascript:showDomain()" id="switch">切换</a>】【<a href="javascript:showFrequent()" id="frequent">常用</a>】
 			</span>
 		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
 		<!-- #section:basics/content.searchbox -->

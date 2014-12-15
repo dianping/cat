@@ -13,7 +13,7 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 <table class="machines">
 	<th style="text-align:left">
