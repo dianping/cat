@@ -55,7 +55,7 @@
 					</a>
 				</div>
 				<div class="navbar-header pull-left position" style="width:350px;padding-top:5px;">
-					<form id="wrap_search">
+					<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
 							<span class="input-group-btn ">
 								<button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button>
