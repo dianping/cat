@@ -20,6 +20,17 @@
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
 			<div id="fullScreenData">
+				<style>
+					.ui-tooltip {
+						max-width:36555px;
+					 }
+					.tab-content	table {
+					  max-width: 100%;
+					  background-color: transparent;
+					  border-collapse: collapse;
+					  border-spacing: 0; 
+					}
+				</style>
 				<div class="row-fluid">
 					<div class="span12">
 						<%@ include file="../top/topMetric.jsp"%>
@@ -97,14 +108,3 @@ $(document).ready(function() {
 
 </script>
 
-<style>
-.pagination{
-		margin:4px 0;
-	}
-	.pagination ul{
-		margin-top:0px;
-	}
-	.pagination ul > li > a, .pagination ul > li > span{
-		padding:3px 10px;
-	}
-</style>
