@@ -46,8 +46,9 @@
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
 					<a href="/cat/r/home"  class="navbar-brand">
-						<small>
-							<span>CAT</span>（Central Application Tracking）
+						<span>CAT</span>
+						<small style="font-size:65%">
+							（Central Application Tracking）
 						</small>
 					</a>
 					

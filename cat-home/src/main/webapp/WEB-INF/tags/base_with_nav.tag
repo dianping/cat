@@ -48,16 +48,17 @@
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
 					<a href="/cat/r/home"  class="navbar-brand">
-						<small>
-							<span>CAT</span>（Central Application Tracking）
+						<span>CAT</span>
+						<small style="font-size:65%">
+							（Central Application Tracking）
 						</small>
 					</a>
 				</div>
 				<div class="navbar-header pull-left position">
-					<span style="float:left;padding-top:5px;"><a href="javascript:showDomain()"  class="btn btn-sm btn-success"  id="switch"><small>切换</small></a>
-						<a href="javascript:showFrequent()"  class="btn btn-sm btn-success"  id="frequent"><small>常用</small></a>
+					<span style="float:left;padding-top:5px;"><a href="javascript:showDomain()"  class="btn btn-sm btn-pink"  id="switch"><small>切换</small></a>
+						<a href="javascript:showFrequent()"  class="btn btn-sm btn-pink"  id="frequent"><small>常用</small></a>
 					</span>
-					<span class="navbar-brand "><span  class="text-danger">${model.domain}</span></span>
+					<span class="navbar-brand "><span style="color:#E1E1E1;">${model.domain}</span></span>
 				</div>
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
