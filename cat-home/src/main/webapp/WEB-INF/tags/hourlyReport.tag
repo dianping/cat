@@ -33,13 +33,12 @@
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
 		<span class="position"><span class="text-danger"><strong>&nbsp;&nbsp;${model.domain}</strong></span>
-			【<a href="javascript:showDomain()" id="switch">切换</a>】
-			【<a href="javascript:showFrequent()" id="frequent">常用</a>】
+			【<a href="javascript:showDomain()" id="switch">切换</a>】【<a href="javascript:showFrequent()" id="frequent">常用</a>】
 			</span>
 		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
 		<!-- #section:basics/content.searchbox -->
 		<div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史模式】</span></a></span>
+			<span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">【切到历史】</span></a></span>
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>

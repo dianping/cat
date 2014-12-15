@@ -22,7 +22,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;From ${w:format(model.topReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.topReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
+			<td class="title">&nbsp;&nbsp;${w:format(model.topReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.topReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 		<td class="nav" >
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
