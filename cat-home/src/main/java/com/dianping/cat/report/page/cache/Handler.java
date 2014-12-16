@@ -16,7 +16,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -29,7 +28,6 @@ import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
-import com.dianping.cat.report.page.event.TpsStatistics;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.MergeAllMachine;
 import com.dianping.cat.report.page.transaction.MergeAllName;
@@ -85,52 +83,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		chart.addItems(items);
 		return chart.getJsonString();
-	}
-
-	private void calculateEventTps(Payload payload, EventReport report) {
-		try {
-			if (report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds = 0;
-
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (startTime != null && endTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
-					}
-				}
-				new TpsStatistics(seconds).visitEventReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private void calculateTransactionTps(Payload payload, TransactionReport report) {
-		try {
-			if (report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds = 0;
-
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (startTime != null && endTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
-					}
-				}
-				new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	private EventReport getHistoryEventReport(Payload payload) {
@@ -241,8 +193,6 @@ public class Handler implements PageHandler<Context> {
 			eventReport = getHistoryEventReport(payload);
 			break;
 		}
-		calculateEventTps(payload, eventReport);
-		calculateTransactionTps(payload, transactionReport);
 
 		if (transactionReport != null && eventReport != null) {
 			CacheReport cacheReport = buildCacheReport(transactionReport, eventReport, payload);

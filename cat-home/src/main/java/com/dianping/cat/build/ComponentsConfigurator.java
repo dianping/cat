@@ -23,7 +23,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;

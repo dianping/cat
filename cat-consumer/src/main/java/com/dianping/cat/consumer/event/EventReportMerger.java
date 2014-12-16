@@ -21,6 +21,7 @@ public class EventReportMerger extends DefaultMerger {
 	public void mergeName(EventName old, EventName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
+		old.setTps(old.getTps() + other.getTps());
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
@@ -57,6 +58,7 @@ public class EventReportMerger extends DefaultMerger {
 	public void mergeType(EventType old, EventType other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
+		old.setTps(old.getTps() + other.getTps());
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());

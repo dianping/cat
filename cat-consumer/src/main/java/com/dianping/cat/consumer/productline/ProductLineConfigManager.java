@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.metric;
+package com.dianping.cat.consumer.productline;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +54,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	private static final String CONFIG_NAME = "productLineConfig";
+
+	private static final String METRIC_CONFIG_NAME = "metricProductLine";
+
+	private static final String NETWORK_CONFIG_NAME = "networkProductLine";
+
+	private static final String WEB_CONFIG_NAME = "webProductLine";
+
+	private static final String APPLICATION_CONFIG_NAME = "applicationProductLine";
+
+	private static final String SYSTEM_CONFIG_NAME = "systemProductLine";
+
+	private static final String DATABASE_CONFIG_NAME = "databaseProductLine";
 
 	public static final String METRIC_MONITOR = "业务监控";
 
@@ -271,7 +283,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 		return productLines;
 	}
-	
+
 	public Map<String, ProductLine> queryDatabases() {
 		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
 
@@ -402,6 +414,10 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				return false;
 			}
 		}
+	}
+
+	private class ProductLineConfig {
+
 	}
 
 }

@@ -21,7 +21,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;

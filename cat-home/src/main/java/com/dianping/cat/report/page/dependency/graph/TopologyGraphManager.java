@@ -23,7 +23,7 @@ import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.TopologyGraphEntity;

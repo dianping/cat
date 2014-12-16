@@ -231,7 +231,6 @@ public class Handler implements PageHandler<Context> {
 			TransactionReport report = getHourlyReport(payload);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
 
-			calculateTps(payload, report);
 			if (report != null) {
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);

@@ -15,6 +15,7 @@ import org.unidal.dal.jdbc.Updateset;
 import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 
