@@ -5,9 +5,13 @@ public enum UrlNav {
 
 	ONE_DAY_BEFORE("-1d", -24),
 
+	TWO_HOURS_BEFORE("-2h", -2),
+
 	ONE_HOUR_BEFORE("-1h", -1),
 
 	ONE_HOUR_LATER("+1h", 1),
+
+	TWO_HOURS_LATER("+2h", 2),
 
 	ONE_DAY_LATER("+1d", 24),
 
