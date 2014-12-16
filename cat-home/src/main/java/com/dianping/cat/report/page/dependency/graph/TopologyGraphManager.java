@@ -235,6 +235,13 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 			}
+			Map<Long, TopologyGraph> graphs = builder.getGraphs();
+
+			for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
+				m_topologyGraphs.put(entry.getKey(), entry.getValue());
+
+				m_topologyGraphs.remove(entry.getKey() - TimeHelper.ONE_HOUR * 2);
+			}
 			m_currentBuilder = builder;
 		}
 

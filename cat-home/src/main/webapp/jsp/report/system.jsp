@@ -223,11 +223,11 @@
 			</tr>
 		</table>
 		<div >
-			<label class="btn btn-sm btn-info">
+			<label class="btn btn-xs btn-info">
 		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
 		  	</label>
 	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-info">
+      			<label class="btn btn-xs btn-info">
 		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
 		  		</label>
 			</c:forEach>
