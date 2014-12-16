@@ -75,10 +75,10 @@
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
-		<span class="text-danger title">【时段】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
+		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
 		<!-- #section:basics/content.searchbox -->
 		<div class="nav-search nav" id="nav-search">
-			<span class="text-danger">【<a href="?domain=${model.domain}" class="switch"><span class="text-danger">切到小时</span></a>】</span>
+			<span class="text-danger">【<a href="?domain=${model.domain}" class="switch"><span class="text-danger">切到小时模式</span></a>】</span>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">

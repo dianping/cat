@@ -22,7 +22,7 @@
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
-		<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+		<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 		<div class="nav-search nav" id="nav-search">
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&op=jar">${nav.title}</a> ]&nbsp;
