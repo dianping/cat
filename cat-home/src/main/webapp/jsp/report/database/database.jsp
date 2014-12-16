@@ -11,7 +11,7 @@
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <div class="report">
 	<div class="breadcrumbs" id="breadcrumbs">
-	<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+	<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 	<!-- #section:basics/content.searchbox -->
 	<div class="nav-search nav" id="nav-search">
 		<c:forEach var="nav" items="${model.navs}">

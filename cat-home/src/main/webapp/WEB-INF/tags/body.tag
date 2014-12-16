@@ -184,7 +184,7 @@
 					你确定要删除吗？(不可恢复)
 				</p>
 			</div>
-				<div style="padding-top:5px;padding-right:8px;">
+				<div style="padding-top:2px;padding-right:8px;">
 				<jsp:doBody/>
 				</div>
 		</div>
