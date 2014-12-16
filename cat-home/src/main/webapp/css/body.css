@@ -160,8 +160,8 @@ a.heartbeat {
 
 .pieChart {
 	text-align: left;
-	width: 500px;
-	height: 300px;
+	width: 1000px;
+	height: 400px;
 	margin: 4px auto;
 }
 
@@ -222,5 +222,8 @@ a{
 .checkbox input[type=checkbox], .checkbox-inline{
 	position:relative;
 	margin-left:0px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	z-index:0;
 }
 

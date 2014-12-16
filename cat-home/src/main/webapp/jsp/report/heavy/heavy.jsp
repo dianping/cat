@@ -20,9 +20,9 @@
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
-		<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.heavyReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.heavyReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+		<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.heavyReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.heavyReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 		<div class="nav-search nav" id="nav-search">
-			<a href="?op=historyHeavy&domain=${model.domain}" class="switch"><span class="text-danger">【切到历史模式】</span></a>
+			<a href="?op=historyHeavy&domain=${model.domain}" class="switch"><span class="text-danger">【切到历史】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?op=heavy&date=${model.date}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
 				</c:forEach>

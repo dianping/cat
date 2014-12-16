@@ -142,6 +142,9 @@
 							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>框架异常配置</a>
 								<b class="arrow"></b></li>
+							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>客户端路由配置</a>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					</ul>
@@ -163,7 +166,7 @@
 						你确定要删除吗？(不可恢复)
 					</p>
 				</div>
- 				<div style="padding-top:5px;padding-right:8px;">
+ 				<div style="padding-top:2px;padding-right:6px;">
  				<jsp:doBody/>
  				</div>
 			</div>

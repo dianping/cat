@@ -18,7 +18,7 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 
 	private Logger m_logger;
 
-	private Map<String, ReportTaskBuilder> m_reportBuilders = new HashMap<String, ReportTaskBuilder>();
+	private Map<String, TaskBuilder> m_reportBuilders = new HashMap<String, TaskBuilder>();
 
 	public boolean builderReport(Task task) {
 		try {
@@ -29,7 +29,7 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 			String reportName = task.getReportName();
 			String reportDomain = task.getReportDomain();
 			Date reportPeriod = task.getReportPeriod();
-			ReportTaskBuilder reportBuilder = getReportBuilder(reportName);
+			TaskBuilder reportBuilder = getReportBuilder(reportName);
 
 			if (reportBuilder == null) {
 				Cat.logError(new RuntimeException("no report builder for type:" + " " + reportName));
@@ -65,13 +65,13 @@ public class ReportFacade extends ContainerHolder implements LogEnabled, Initial
 		m_logger = logger;
 	}
 
-	private ReportTaskBuilder getReportBuilder(String reportName) {
+	private TaskBuilder getReportBuilder(String reportName) {
 		return m_reportBuilders.get(reportName);
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_reportBuilders = lookupMap(ReportTaskBuilder.class);
+		m_reportBuilders = lookupMap(TaskBuilder.class);
 	}
 
 }

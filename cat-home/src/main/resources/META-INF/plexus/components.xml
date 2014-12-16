@@ -52,8 +52,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
@@ -63,10 +63,9 @@
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -76,6 +75,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1016,7 +1018,7 @@
 			<implementation>com.dianping.cat.report.task.metric.BaselineConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</implementation>
 			<requirements>
@@ -1044,7 +1046,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -1066,7 +1068,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
@@ -1088,7 +1090,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
@@ -1110,7 +1112,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
@@ -1123,7 +1125,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.task.bug.BugReportBuilder</implementation>
 			<requirements>
@@ -1136,7 +1138,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>service</role-hint>
 			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
 			<requirements>
@@ -1149,7 +1151,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
@@ -1159,7 +1161,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
@@ -1169,7 +1171,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
@@ -1179,7 +1181,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>router</role-hint>
 			<implementation>com.dianping.cat.report.task.router.RouterConfigBuilder</implementation>
 			<requirements>
@@ -1192,7 +1194,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>alert</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</implementation>
 			<requirements>
@@ -1208,7 +1210,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>heavy</role-hint>
 			<implementation>com.dianping.cat.report.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
@@ -1221,7 +1223,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>utilization</role-hint>
 			<implementation>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</implementation>
 			<requirements>
@@ -1240,7 +1242,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
@@ -1256,7 +1258,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>NetTopology</role-hint>
 			<implementation>com.dianping.cat.report.task.network.NetTopologyReportBuilder</implementation>
 			<requirements>
@@ -1272,7 +1274,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>jar</role-hint>
 			<implementation>com.dianping.cat.report.task.jar.JarReportBuilder</implementation>
 			<requirements>
@@ -1281,6 +1283,16 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role-hint>cachedReport</role-hint>
+			<implementation>com.dianping.cat.report.task.cached.CachedReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.cached.CachedReportTask</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1394,7 +1406,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>databaseCapacity</role-hint>
 			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateTask</implementation>
 			<requirements>
@@ -1421,7 +1433,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>highLoad</role-hint>
 			<implementation>com.dianping.cat.report.task.highload.HighLoadReportBuilder</implementation>
 			<requirements>
@@ -1475,7 +1487,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>dailyNotify</role-hint>
 			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
 			<requirements>
@@ -1500,7 +1512,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportTaskBuilder</role>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
 			<role-hint>appDatabasePruner</role-hint>
 			<implementation>com.dianping.cat.report.task.database.AppDatabasePruner</implementation>
 			<requirements>
@@ -2010,8 +2022,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.CachedReportTask</role>
-			<implementation>com.dianping.cat.report.service.CachedReportTask</implementation>
+			<role>com.dianping.cat.report.task.cached.CachedReportTask</role>
+			<implementation>com.dianping.cat.report.task.cached.CachedReportTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -2735,7 +2747,7 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>heartbeat</role-hint>
-					<field-name>m_service</field-name>
+					<field-name>m_heartbeatService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -4003,7 +4015,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
@@ -4020,8 +4032,25 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
+			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -5086,18 +5115,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

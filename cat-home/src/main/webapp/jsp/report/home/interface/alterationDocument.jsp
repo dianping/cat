@@ -8,7 +8,7 @@
 	http://主机域名:端口/cat/r/alteration?
 </pre>
 <p>参数说明</p>
-<table style="width:50%" class="table table-striped table-condensed  ">
+<table style="width:50%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>执行操作<span class="text-danger">  必需[唯一值：insert]</span></td></tr>
 	<tr><td>type</td><td>变更类型<span class="text-danger">  必需[可能值：puppet, workflow, lazyman]</span></td></tr>

@@ -16,9 +16,9 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 
-public class HeartbeatReportBuilder implements ReportTaskBuilder {
+public class HeartbeatReportBuilder implements TaskBuilder {
 
 	public static final String ID = HeartbeatAnalyzer.ID;
 

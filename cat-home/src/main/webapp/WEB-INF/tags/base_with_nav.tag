@@ -1,6 +1,8 @@
 <%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page" />
 <res:bean id="res" />
 <html lang="en"><head>
@@ -51,8 +53,23 @@
 							（Central Application Tracking）
 						</small>
 					</a>
-					
 				</div>
+				<div class="navbar-header pull-left position" style="width:350px;padding-top:5px;">
+					<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<span class="input-group-btn ">
+								<button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button>
+							</span>
+							<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<span class="input-group-btn">
+								<button class="btn btn-sm btn-pink" type="button" id="search_go">
+									Go!
+								</button> 
+							</span>
+						</div>
+					</form>
+				</div>
+				
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
 				<ul class="nav ace-nav" style="height:auto;">
@@ -199,16 +216,6 @@
 			}
 			return "";
 		}
-		function showDomain() {
-			var b = $('#switch').html();
-			if (b == '切换') {
-				$('.domainNavbar').slideDown();
-				$('#switch').html("收起");
-			} else {
-				$('.domainNavbar').slideUp();
-				$('#switch').html("切换");
-			}
-		}
 		function showFrequent(){
 			var b = $('#frequent').html();
 			if (b == '常用') {
@@ -238,6 +245,52 @@
 			}
 			var page = '${model.page.title}';
 			$('#'+page+"_report").addClass("active open");
+			
+			
+			//custom autocomplete (category selection)
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [
+				{ label: "anders", category: "" },
+				{ label: "andreas", category: "" },
+				{ label: "antal", category: "" },
+				{ label: "annhhx10", category: "Products" },
+				{ label: "annk K12", category: "Products" },
+				{ label: "annttop C13", category: "Products" },
+				{ label: "anders andersson", category: "People" },
+				{ label: "andreas andersson", category: "People" },
+				{ label: "andreas johnson", category: "People" }
+			];
+			
+			var data = [];
+			<c:forEach var="item" items="${model.domainGroups}">
+				<c:set var="detail" value="${item.value}" />
+					<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+					<c:forEach var="domain" items="${productline.value.lineDomains}">
+							var item = {};
+							item['label'] = '${domain}';
+							item['category'] ='${productline.key}';
+							
+							data.push(item);
+					</c:forEach>
+			</c:forEach></c:forEach>
+			
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
 		});
 	</script>
 </body>

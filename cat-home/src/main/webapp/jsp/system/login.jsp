@@ -61,7 +61,9 @@
 														</span>
 													</label>
 
-													<div class="space"></div>
+													<div class="space">
+															<input type="hidden" id="rtnUrl" name="rtnUrl" value="" />
+													</div>
 
 													<div class="clearfix text-right">
 														<input type="submit" class="btn btn-primary" name="login" value="登录" />
@@ -187,6 +189,12 @@
 		</script>
 
 		<!-- inline scripts related to this page -->
+		<script>
+			$(document).ready(function() {
+				var url = window.location.href;
+				$('#rtnUrl').val(url);
+			});
+		</script>
 		<script type="text/javascript">
 			jQuery(function($) {
 			 $(document).on('click', '.toolbar a[data-target]', function(e) {
@@ -196,8 +204,6 @@
 				$(target).addClass('visible');//show target
 			 });
 			});
-			
-			
 			
 			//you don't need this, just used for changing background
 			jQuery(function($) {
@@ -222,7 +228,6 @@
 				
 				e.preventDefault();
 			 });
-			 
 			});
 		</script>
 	</body>

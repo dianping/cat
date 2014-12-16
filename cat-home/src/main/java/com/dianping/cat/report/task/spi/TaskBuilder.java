@@ -2,7 +2,7 @@ package com.dianping.cat.report.task.spi;
 
 import java.util.Date;
 
-public interface ReportTaskBuilder {
+public interface TaskBuilder {
 
 	public boolean buildDailyTask(String name, String domain, Date period);
 

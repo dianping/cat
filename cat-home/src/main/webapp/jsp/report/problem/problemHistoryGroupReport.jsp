@@ -9,7 +9,7 @@
 
 <a:historyReport title="History Report" navUrlPrefix="ip=${model.ipAddress}${payload.queryString}">
 
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
@@ -78,11 +78,11 @@
 
 <table class="table table-hover table-striped table-condensed" style="width:100%">
 	<tr>
-		<th width="12%">Type</th>
+		<th width="7%">Type</th>
 		<th width="4%">Total</th>
 		<th width="30%">Status</th>
 		<th width="4%">Count</th>
-		<th width="50%">SampleLinks</th>
+		<th width="55%">SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">

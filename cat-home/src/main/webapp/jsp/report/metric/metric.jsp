@@ -16,25 +16,6 @@
 		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-		<div class="opNav">
-		<table width="100%">
-			<tr style="text-align: left">
-				<th>&nbsp;&nbsp;时间段 
-					<c:forEach var="range" items="${model.allRange}">
-						<c:choose>
-							<c:when test="${payload.timeRange eq range.duration}">
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&tag=${payload.tag}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
-							</c:when>
-							<c:otherwise>
-								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&${navUrlPrefix}&tag=${payload.tag}&fullScreen=${payload.fullScreen}&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
-							</c:otherwise>
-							</c:choose>
-					</c:forEach>
-				</th><th><%@ include file="metricOpNav.jsp" %></th>
-			</tr>
-		</table>
-		</div>
       	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
    			<div style="float:left;">
    				<div id="${item.id}" class="metricGraph"></div>
@@ -46,7 +27,7 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<div class="report">
 			<div class="breadcrumbs" id="breadcrumbs">
-			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 			<!-- #section:basics/content.searchbox -->
 			<div class="nav-search nav" id="nav-search">
 				<c:forEach var="nav" items="${model.navs}">

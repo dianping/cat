@@ -102,6 +102,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		defaultMetric.setTimestamp(timestamp);
 		defaultMetric.setStatus("S,C");
 		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
+		defaultMetric.complete();
 	}
 
 	private void logMetricForCount(long timestamp, String group, String key, int count) {
@@ -112,6 +113,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 		defaultMetric.setStatus("C");
 		defaultMetric.addData(String.valueOf(count));
+		defaultMetric.complete();
 	}
 
 	public boolean offer(MonitorEntity entity) {

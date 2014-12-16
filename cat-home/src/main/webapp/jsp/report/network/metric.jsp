@@ -45,7 +45,7 @@
 		<div class="report">
 			
 			<div class="breadcrumbs" id="breadcrumbs">
-			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 			<div class="nav-search nav" id="nav-search">
 				<c:forEach var="nav" items="${model.navs}">
 							&nbsp;[ <a href="${model.baseUri}?op=metric&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
@@ -107,23 +107,6 @@
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
 			</c:forEach>
-
-			var hide =${payload.hideNav};
-			
-			if(hide){
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			}
 		});
-		function showOpNav() {
-			var b = $('#switch').html();
-			if (b == '隐藏') {
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			} else {
-				$('.opNav').slideDown();
-				$('#switch').html("隐藏");
-			}
-		}
 	</script>
 </script>

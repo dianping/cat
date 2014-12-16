@@ -1,7 +1,7 @@
 <%@ tag trimDirectiveWhitespaces="true" pageEncoding="UTF-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 
-<a:base>
+<a:base_with_nav>
 	<div class="main-container" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -189,7 +189,7 @@
 				</div>
 		</div>
 	</div>
-</a:base>
+</a:base_with_nav>
 <script  type="text/javascript">
 	$(document).ready(function() {
 		$("#tab_realtime").click(function(){

@@ -42,7 +42,7 @@ import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 public class HeartbeatAlert extends BaseAlert implements Task {
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
-	private ModelService<HeartbeatReport> m_service;
+	private ModelService<HeartbeatReport> m_heartbeatService;
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_transactionService;
@@ -208,8 +208,8 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 		ModelRequest request = new ModelRequest(domain, date)//
 		      .setProperty("ip", Constants.ALL);
 
-		if (m_service.isEligable(request)) {
-			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
+		if (m_heartbeatService.isEligable(request)) {
+			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
 
 			return response.getModel();
 		} else {
@@ -345,7 +345,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 						}
 					}
 				}
-
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);

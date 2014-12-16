@@ -158,16 +158,18 @@
 		}
 		
 		$(document).ready(function() {
-			$('#datetimepicker1').datetimepicker();
+			$('#datetimepicker1').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 			$('#datetimepicker2').datetimepicker({
-				pickDate: false
+				pickDate: false,
+				format: 'hh:mm'
 			});
 			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
-			$('#datetimepicker3').datetimepicker();
+			$('#datetimepicker3').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 			$('#datetimepicker4').datetimepicker({
-				pickDate: false
+				pickDate: false,
+				format: 'hh:mm'
 			});
 			
 			$('#group').on('change',groupChange);
@@ -262,8 +264,3 @@
 		</script>
 <%@include file="webDetail.jsp"%>
 </a:body>
-<style type="text/css">
-	.row-fluid .span6{
-		width:87%;
-	}
-</style>

@@ -42,7 +42,7 @@ import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
+import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
@@ -93,11 +93,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      req(ReportServiceManager.class, ServerConfigManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
-		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManager.class));
+		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
-		all.add(C(TopologyGraphBuilder.class).req(TopologyGraphItemBuilder.class).is(PER_LOOKUP));
+		all.add(C(TopologyGraphBuilder.class).req(DependencyItemBuilder.class));
 
-		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class) //
+		all.add(C(TopologyGraphManager.class)
+		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 

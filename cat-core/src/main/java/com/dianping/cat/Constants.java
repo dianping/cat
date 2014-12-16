@@ -32,7 +32,7 @@ public class Constants {
 	public static final String HIT_COUNT = "访问量分布";
 
 	public static final String ERROR_COUNT = "错误量分布";
-	
+
 	public static final String FRONT_END = "FrontEnd";
 
 	public static final String REPORT_BUG = "bug";
@@ -66,5 +66,7 @@ public class Constants {
 	public static final String REPORT_JAR = "jar";
 
 	public static final String APP_DATABASE_PRUNER = "appDatabasePruner";
+
+	public static final String CACHED_REPORT = "cachedReport";
 
 }

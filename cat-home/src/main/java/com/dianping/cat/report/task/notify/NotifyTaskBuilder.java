@@ -21,10 +21,10 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
-import com.dianping.cat.report.task.spi.ReportTaskBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
-public class NotifyTaskBuilder implements ReportTaskBuilder {
+public class NotifyTaskBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_NOTIFY;
 

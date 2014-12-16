@@ -7,18 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-	
-<style>
-	.tooltip-inner {
-		max-width:36555px;
-	 }
-	.tab-content	table {
-	  max-width: 100%;
-	  background-color: transparent;
-	  border-collapse: collapse;
-	  border-spacing: 0; 
-	}
-</style>
  <c:choose>
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
@@ -31,23 +19,18 @@
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-			<div class="opNav">
-				<div class="row-fluid">
-					<div class="span12 text-center">
-						<%@ include file="dependencyOpNav.jsp"%>
-				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div></div></div>
 			<div id="fullScreenData">
-				<%-- <div class="row-fluid">
-					<div class="span12">
-					   <c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-			   				<div style="float:left;">
-					   				<div id="${item.title}" class="metricGraph"></div>
-					   			</div>
-						</c:forEach>
-					</div>
-				</div> --%>
+				<style>
+					.ui-tooltip {
+						max-width:36555px;
+					 }
+					.tab-content	table {
+					  max-width: 100%;
+					  background-color: transparent;
+					  border-collapse: collapse;
+					  border-spacing: 0; 
+					}
+				</style>
 				<div class="row-fluid">
 					<div class="span12">
 						<%@ include file="../top/topMetric.jsp"%>
@@ -55,11 +38,25 @@
 				</div>
 			</div>
 	    </div>
+	    <script type="text/javascript">
+			$(document).ready(function() {
+				var id = '${payload.action.name}';
+				var frequency = ${payload.frequency};
+				var refresh = ${payload.refresh};
+				
+				if(refresh){
+					$('#refresh${payload.frequency}').addClass('btn-danger');
+					setInterval(function(){
+						location.reload();				
+					},frequency*1000);
+				};
+			});
+		</script>
 	</c:when>
 	<c:otherwise>
 		<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=metricDashboard">
-		<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
 		<div class="report">
 			<div class="text-center">
@@ -68,6 +65,17 @@
 			<div class="">
 				<%@ include file="../top/topMetric.jsp"%>
 			</div>
+			<style>
+			.ui-tooltip {
+				max-width:36555px;
+			 }
+			.tab-content	table {
+			  max-width: 100%;
+			  background-color: transparent;
+			  border-collapse: collapse;
+			  border-spacing: 0; 
+			}
+		</style>
 	</jsp:body>
 	</a:report>
 	</c:otherwise>
@@ -76,49 +84,27 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#minute'+${model.minute}).addClass('disabled');
-	$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+	$( ".hreftip" ).tooltip({
+		show: true,
+		delay:{show:10000, hide:100000}, 
+		position: {
+			my: "left top",
+			at: "left bottom"
+		},
+		content: function() {
+		  return $( this ).attr( "title" );
+		},
+		open: function( event, ui ) {
+			ui.tooltip.animate({ top: ui.tooltip.position().top + 10 }, "fast" );
+		}
+	});
+	
 	$('.position').hide();
 	$('.switch').hide();
-	
-	var hide =${payload.hideNav};
-	
-	if(hide){
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	}	
-	
 	$('#Dashboard_report').addClass("open active");
 	$('#dashbord_system').addClass("active");
 	$('#Dependency_report').removeClass("open active");
 });
 
-function showOpNav() {
-	var b = $('#switch').html();
-	if (b == '隐藏') {
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	} else {
-		$('.opNav').slideDown();
-		$('#switch').html("隐藏");
-	}
-}
 </script>
-<!-- <script type="text/javascript">
-	$(document).ready(function() {
-		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-			var data = ${item.jsonString};
-			graphMetricChart(document.getElementById('${item.title}'), data);
-		</c:forEach>
-	});
-</script> -->
-<style>
-.pagination{
-		margin:4px 0;
-	}
-	.pagination ul{
-		margin-top:0px;
-	}
-	.pagination ul > li > a, .pagination ul > li > span{
-		padding:3px 10px;
-	}
-</style>
+

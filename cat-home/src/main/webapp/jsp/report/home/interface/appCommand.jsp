@@ -6,7 +6,7 @@
 	http://主机域名:端口/cat/r/app?
 </pre>
 <p>参数说明</p>
-<table style="width:70%" class="table table-striped table-condensed  ">
+<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>执行操作<span class="text-danger">  必需[增加Command:appAdd 删除Command:appDelete]</span></td></tr>
 	<tr><td>name</td><td>命令字名称<span class="text-danger">  必需</span></td></tr>
@@ -33,7 +33,7 @@
 	http://主机域名:端口/cat/r/app?
 </pre>
 <p>参数说明</p>
-<table style="width:70%" class="table table-striped table-condensed  ">
+<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
 	<tr><td>op</td><td>执行操作<span class="text-danger">  必需[为appConfigFetch]</span></td></tr>
 	<tr><td>type</td><td>配置格式<span class="text-danger">  可选[默认为JSON]</span></td></tr>

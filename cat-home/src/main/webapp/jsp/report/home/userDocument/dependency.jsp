@@ -1,6 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-success">Dependency实时报表</h4>
-<table style="width:50%" class="table table-striped table-condensed   table-hover">
+<table style="width:50%" class="table table-striped table-bordered table-condensed   table-hover">
 	<tr><td>时间统计粒度</td><td class='text-danger'>分钟</td></tr>
 	<tr><td>形状：圆形</td><td class='text-danger'>SOA的一个服务或者一个Web</td ></tr>
 	<tr><td>形状：矩形</td><td class='text-danger'>数据库一个实例</td></tr>

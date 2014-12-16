@@ -20,11 +20,6 @@
 		<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
-		<div class="opNav">
-		<%@ include file="metricOpNav.jsp" %>
-		<%@ include file="TimeNavTab.jsp"%>
-		</div>
 		<div id="content">
 					<c:forEach var="topo" items="${model.netGraphData}" varStatus="idx">
 						<div class="topology">
@@ -49,7 +44,7 @@
 
 		<div class="report">
 						<div class="breadcrumbs" id="breadcrumbs">
-			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 			<div class="nav-search nav" id="nav-search">
 				<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a
@@ -92,27 +87,10 @@
 	$_netgraph.build("topo-${idx.index}",${topo.value});
 </c:forEach>
 
-function showOpNav() {
-	var b = $('#switch').html();
-	if (b == '隐藏') {
-		$('.opNav').slideUp();
-		$('#switch').html("显示");
-	} else {
-		$('.opNav').slideDown();
-		$('#switch').html("隐藏");
-	}
-}
-
 $(document).ready(function() {
 	$('#Dashboard_report').addClass("open active");
 	$('#dashbord_network').addClass("active");
 });
-
-<c:choose>
-<c:when test="${payload.fullScreen}">
-	showOpNav();
-</c:when>
-</c:choose>
 
 </script>
 
