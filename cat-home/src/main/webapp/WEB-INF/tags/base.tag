@@ -168,7 +168,6 @@
 					values: [ 75, 300 ]
 				});
 			
-			
 				//jquery accordion
 				$( "#accordion" ).accordion({
 					collapsible: true ,

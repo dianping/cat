@@ -120,7 +120,7 @@
 				
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
- 				<div style="padding-top:2px;padding-right:6px;">
+ 				<div style="padding-top:2px;padding-right:8px;">
  				<jsp:doBody/>
  				</div>
 			</div><!-- /.main-content -->
