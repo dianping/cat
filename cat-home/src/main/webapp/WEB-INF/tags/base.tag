@@ -198,26 +198,6 @@
 			}
 			return "";
 		}
-		function showDomain() {
-			var b = $('#switch').html();
-			if (b == '切换') {
-				$('.domainNavbar').slideDown();
-				$('#switch').html("收起");
-			} else {
-				$('.domainNavbar').slideUp();
-				$('#switch').html("切换");
-			}
-		}
-		function showFrequent(){
-			var b = $('#frequent').html();
-			if (b == '常用') {
-				$('.frequentNavbar').slideDown();
-				$('#frequent').html("收起");
-			} else {
-				$('.frequentNavbar').slideUp();
-				$('#frequent').html("常用");
-			}
-		}
 		$(document).ready(function() {
 			var ct = getcookie("ct");
 			if (ct != "") {
