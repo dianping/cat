@@ -38,9 +38,6 @@
          <page name="state" title="State" path="state" view="/jsp/report/state/state.jsp">
             <description>State</description>
          </page>
-         <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
-            <description>Top</description>
-         </page>
          <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>

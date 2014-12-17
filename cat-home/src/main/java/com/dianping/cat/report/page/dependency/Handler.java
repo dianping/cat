@@ -226,11 +226,11 @@ public class Handler implements PageHandler<Context> {
 		Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
 
 		switch (action) {
-		case TOPOLOGY:
-			buildProjectTopology(model, payload, reportTime);
-			break;
 		case LINE_CHART:
 			buildDependencyLineChart(model, payload, reportTime);
+			break;
+		case TOPOLOGY:
+			buildProjectTopology(model, payload, reportTime);
 			break;
 		case DEPENDENCY_DASHBOARD:
 			buildDependencyDashboard(model, payload, reportTime);

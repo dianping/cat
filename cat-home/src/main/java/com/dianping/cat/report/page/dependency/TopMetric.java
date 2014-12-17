@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.top;
+package com.dianping.cat.report.page.dependency;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

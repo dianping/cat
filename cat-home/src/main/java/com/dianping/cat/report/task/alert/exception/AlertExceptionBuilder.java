@@ -13,7 +13,7 @@ import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.page.top.TopMetric.Item;
+import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
