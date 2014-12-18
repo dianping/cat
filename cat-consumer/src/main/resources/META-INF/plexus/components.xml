@@ -525,8 +525,8 @@
 			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.productline.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -544,7 +544,7 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -567,7 +567,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>

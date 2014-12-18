@@ -15,6 +15,7 @@ import org.unidal.dal.jdbc.Updateset;
 import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -55,6 +56,10 @@ public class ProductLineConfigManagerTest {
 
 	@Test
 	public void testInitThrowException() throws Exception {
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			productLineConfig.getCompany().getProductLines().clear();
+		}
+
 		ProductLineConfigManager manager = new MockProductLineConfigManager();
 		((MockProductLineConfigManager) manager).setConfigDao(new MockConfigDao2());
 
@@ -63,8 +68,11 @@ public class ProductLineConfigManagerTest {
 		} catch (Exception e) {
 		}
 
-		Company config = manager.getCompany();
-		Assert.assertEquals(0, config.getProductLines().size());
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			Company config = productLineConfig.getCompany();
+
+			Assert.assertEquals(0, config.getProductLines().size());
+		}
 	}
 
 	public static class MockProductLineConfigManager extends ProductLineConfigManager {
@@ -78,7 +86,11 @@ public class ProductLineConfigManagerTest {
 	public static class MockConfigDao2 extends MockConfigDao1 {
 		@Override
 		public Config findByName(String name, Readset<Config> readset) throws DalNotFoundException {
-			throw new DalNotFoundException("this is a exception for test");
+			if (ProductLineConfigManager.CONFIG_NAME.equals(name)) {
+				return new Config();
+			} else {
+				throw new DalNotFoundException("this is a exception for test");
+			}
 		}
 	}
 

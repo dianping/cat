@@ -10,7 +10,7 @@
 		           </span>
 		        </div>
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="endTime" name="time2"  size="8" 
+		           结束<input id="endTime" name="time2"  size="8" 
 		              data-format="HH:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>

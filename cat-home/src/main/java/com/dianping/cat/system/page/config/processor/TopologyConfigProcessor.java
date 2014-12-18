@@ -87,7 +87,7 @@ public class TopologyConfigProcessor {
 		String name = payload.getProductLineName();
 
 		if (!StringUtils.isEmpty(name)) {
-			model.setProductLine(m_productLineConfigManger.getCompany().findProductLine(name));
+			model.setProductLine(m_productLineConfigManger.findProductLine(name));
 		}
 	}
 

@@ -38,7 +38,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
-	
+
 	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
@@ -171,13 +171,11 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
+				Map<String, ProductLine> productLines = m_productLineConfigManager.queryMetricProductLines();
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						if (productLine.isMetricDashboard()) {
-							processProductLine(productLine);
-						}
+						processProductLine(productLine);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

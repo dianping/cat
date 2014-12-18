@@ -12,7 +12,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
@@ -168,16 +168,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean isNetwork(String group) {
-		return group.startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX)
-		      || group.startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX);
+		return ProductLineConfig.NETWORK_PRODUCTLINE.isTypeOf(group);
 	}
 
 	private boolean isSystem(String group) {
-		return group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX);
+		return ProductLineConfig.SYSTEM_PRODUCTLINE.isTypeOf(group);
 	}
 
 	private boolean isDatabase(String group) {
-		return group.startsWith(ProductLineConfigManager.DATABASE_PREFIX);
+		return ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(group);
 	}
 
 }

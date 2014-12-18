@@ -93,13 +93,11 @@ public class DatabaseAlert extends BaseAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
+				Map<String, ProductLine> productLines = m_productLineConfigManager.queryDatabases();
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						if (productLine.isDatabaseMonitorDashboard()) {
-							processProductLine(productLine);
-						}
+						processProductLine(productLine);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

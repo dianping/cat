@@ -21,11 +21,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.Domain;
@@ -43,86 +43,93 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	@Inject
 	private ContentFetcher m_getter;
 
-	private int m_configId;
-
-	private Company m_company;
+	private Logger m_logger;
 
 	private Map<String, String> m_domainToProductLines = new HashMap<String, String>();
 
-	private long m_modifyTime;
+	public static final String CONFIG_NAME = "productLineConfig";
 
-	private Logger m_logger;
+	private Company buildDefaultConfig(ProductLineConfig productLine) throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		String content = config.getContent();
+		Company company = DefaultSaxParser.parse(content);
+		Company c = new Company();
 
-	private static final String CONFIG_NAME = "productLineConfig";
-
-	private static final String METRIC_CONFIG_NAME = "metricProductLine";
-
-	private static final String NETWORK_CONFIG_NAME = "networkProductLine";
-
-	private static final String WEB_CONFIG_NAME = "webProductLine";
-
-	private static final String APPLICATION_CONFIG_NAME = "applicationProductLine";
-
-	private static final String SYSTEM_CONFIG_NAME = "systemProductLine";
-
-	private static final String DATABASE_CONFIG_NAME = "databaseProductLine";
-
-	public static final String METRIC_MONITOR = "业务监控";
-
-	public static final String NETWORK_MONITOR = "网络监控";
-
-	public static final String USER_MONITOR = "外部监控";
-
-	public static final String APPLICATION_MONITOR = "应用监控";
-
-	public static final String SYSTEM_MONITOR = "系统监控";
-
-	public static final String DATABASE_MONITOR = "数据库监控";
-
-	public static final String NETWORK_SWITCH_PREFIX = "switch-";
-
-	public static final String NETWORK_F5_PREFIX = "f5-";
-
-	public static final String DATABASE_PREFIX = "db-";
-
-	public static final String SYSTEM_MONITOR_PREFIX = "system-";
-
-	public void buildDefaultDashboard(ProductLine productLine, String domain) {
-		String line = productLine.getId();
-		boolean userMonitor = false;
-		boolean networkMonitor = false;
-		boolean systemMonitor = false;
-		boolean databaseMonitor = false;
-		boolean metricMonitor = false;
-		String low = line.toLowerCase();
-
-		if (Constants.BROKER_SERVICE.equals(domain)) {
-			userMonitor = true;
-		} else if (low.startsWith(NETWORK_SWITCH_PREFIX) || low.startsWith(NETWORK_F5_PREFIX)) {
-			networkMonitor = true;
-		} else if (low.startsWith(SYSTEM_MONITOR_PREFIX)) {
-			systemMonitor = true;
-		} else if (low.startsWith(DATABASE_PREFIX)) {
-			databaseMonitor = true;
-		} else {
-			metricMonitor = true;
+		switch (productLine) {
+		case METRIC_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getMetricDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
+		case APPLICATION_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getApplicationDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
+		case NETWORK_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getNetworkDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
+		case SYSTEM_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getSystemMonitorDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
+		case USER_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getUserMonitorDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
+		case DATABASE_PRODUCTLINE:
+			for (ProductLine p : company.getProductLines().values()) {
+				if (p.getDatabaseMonitorDashboard()) {
+					c.addProductLine(p);
+				}
+			}
+			break;
 		}
+		return c;
+	}
 
-		productLine.setNetworkDashboard(networkMonitor);
-		productLine.setUserMonitorDashboard(userMonitor);
-		productLine.setSystemMonitorDashboard(systemMonitor);
-		productLine.setMetricDashboard(metricMonitor);
-		productLine.setDatabaseMonitorDashboard(databaseMonitor);
+	public void buildDefaultDashboard(ProductLine productLine, ProductLineConfig productLineConfig) {
+		switch (productLineConfig) {
+		case USER_PRODUCTLINE:
+			productLine.setUserMonitorDashboard(true);
+			break;
+		case NETWORK_PRODUCTLINE:
+			productLine.setNetworkDashboard(true);
+			break;
+		case SYSTEM_PRODUCTLINE:
+			productLine.setSystemMonitorDashboard(true);
+			break;
+		case DATABASE_PRODUCTLINE:
+			productLine.setDatabaseMonitorDashboard(true);
+			break;
+		default:
+			productLine.setMetricDashboard(true);
+		}
 	}
 
 	private Set<String> buildDomainIdSetWithoutProductline(String productlineId) {
-		Map<String, ProductLine> productLines = getCompany().getProductLines();
 		Set<String> domains = new HashSet<String>();
 
-		for (ProductLine product : productLines.values()) {
-			if (!product.getId().equals(productlineId)) {
-				for (Domain domain : product.getDomains().values()) {
-					domains.add(domain.getId());
+		for (ProductLineConfig config : ProductLineConfig.values()) {
+			for (ProductLine product : config.getCompany().getProductLines().values()) {
+				if (!product.getId().equals(productlineId)) {
+					for (Domain domain : product.getDomains().values()) {
+						domains.add(domain.getId());
+					}
 				}
 			}
 		}
@@ -130,20 +137,24 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	private Map<String, String> buildDomainToProductLines() {
-		Map<String, ProductLine> productLines = getCompany().getProductLines();
 		Map<String, String> domainToProductLines = new HashMap<String, String>();
 
-		for (ProductLine product : productLines.values()) {
-			for (Domain domain : product.getDomains().values()) {
-				domainToProductLines.put(domain.getId(), product.getId());
-			}
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			domainToProductLines.putAll(productLineConfig.getDomainToProductLines());
 		}
 		return domainToProductLines;
 	}
 
 	public boolean deleteProductLine(String line) {
-		getCompany().removeProductLine(line);
-		return storeConfig();
+		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line);
+		if (pair != null) {
+			ProductLineConfig productLineConfig = pair.getKey();
+
+			pair.getKey().getCompany().removeProductLine(line);
+			return storeConfig(productLineConfig);
+		}
+
+		return false;
 	}
 
 	@Override
@@ -151,59 +162,70 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public Company getCompany() {
-		synchronized (this) {
-			return m_company;
+	public ProductLine findProductLine(String line) {
+		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line);
+
+		if (pair != null) {
+			return pair.getValue();
 		}
+		return null;
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
+		for (ProductLineConfig productLine : ProductLineConfig.values()) {
+			initializeConfig(productLine);
+		}
+		m_domainToProductLines = buildDomainToProductLines();
+	}
+
+	private void initializeConfig(ProductLineConfig productLine) {
 		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			Config config = m_configDao.findByName(productLine.getConfigName(), ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
-			m_configId = config.getId();
-			m_company = DefaultSaxParser.parse(content);
-			m_modifyTime = config.getModifyDate().getTime();
+			productLine.setConfigId(config.getId());
+			productLine.setCompany(DefaultSaxParser.parse(content));
+			productLine.setModifyTime(config.getModifyDate().getTime());
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				Company company = buildDefaultConfig(productLine);
 				Config config = m_configDao.createLocal();
 
-				config.setName(CONFIG_NAME);
-				config.setContent(content);
+				config.setName(productLine.getConfigName());
+				config.setContent(company.toString());
 				m_configDao.insert(config);
-
-				m_configId = config.getId();
-				m_company = DefaultSaxParser.parse(content);
-				m_modifyTime = new Date().getTime();
+				productLine.setConfigId(config.getId());
+				productLine.setCompany(company);
+				productLine.setModifyTime(new Date().getTime());
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (m_company == null) {
-			m_company = new Company();
+		if (productLine.getCompany() == null) {
+			productLine.setCompany(new Company());
 		}
-		m_domainToProductLines = buildDomainToProductLines();
 	}
 
 	public boolean insertIfNotExsit(String product, String domain) {
-		Company company = getCompany();
+		ProductLineConfig productLineConfig = queryProductLineConfig(product, domain);
+		Company company = productLineConfig.getCompany();
 
 		if (company != null) {
 			ProductLine productLine = company.getProductLines().get(product);
 
 			if (productLine == null) {
 				productLine = new ProductLine();
+
 				productLine.setId(product);
 				productLine.setTitle(product);
-				buildDefaultDashboard(productLine, domain);
+				buildDefaultDashboard(productLine, productLineConfig);
 				productLine.addDomain(new Domain(domain));
 				company.addProductLine(productLine);
-				return storeConfig();
+
+				return storeConfig(productLineConfig);
 			} else {
 				Map<String, Domain> domains = productLine.getDomains();
 
@@ -212,7 +234,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				} else {
 					domains.put(domain, new Domain(domain));
 
-					return storeConfig();
+					return storeConfig(productLineConfig);
 				}
 			}
 		}
@@ -222,8 +244,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
 		Set<String> domainIds = buildDomainIdSetWithoutProductline(line.getId());
 		String duplicateDomains = "";
-		getCompany().removeProductLine(line.getId());
-		getCompany().addProductLine(line);
+		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line.getId());
+		ProductLineConfig productLineConfig = pair.getKey();
+
+		productLineConfig.getCompany().removeProductLine(line.getId());
+		productLineConfig.getCompany().addProductLine(line);
 
 		for (String domain : domains) {
 			if (domainIds.contains(domain)) {
@@ -232,24 +257,26 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				line.addDomain(new Domain(domain));
 			}
 		}
-		return new Pair<Boolean, String>(storeConfig(), duplicateDomains);
+		return new Pair<Boolean, String>(storeConfig(productLineConfig), duplicateDomains);
 	}
 
 	public Map<String, ProductLine> queryAllProductLines() {
 		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
 
-		for (ProductLine line : getCompany().getProductLines().values()) {
-			String id = line.getId();
-			if (id != null && id.length() > 0) {
-				productLines.put(id, line);
-			}
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			productLines.putAll(queryProductLines(productLineConfig));
 		}
 		return sortProductLineByOrder(productLines);
 	}
 
+	public Map<String, ProductLine> queryDatabases() {
+		return queryProductLines(ProductLineConfig.DATABASE_PRODUCTLINE);
+	}
+
 	public List<String> queryDomainsByProductLine(String productLine) {
 		List<String> domains = new ArrayList<String>();
-		ProductLine line = getCompany().findProductLine(productLine);
+		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(productLine);
+		ProductLine line = pair.getValue();
 
 		if (line != null) {
 			for (Domain domain : line.getDomains().values()) {
@@ -260,44 +287,17 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, ProductLine> queryMetricProductLines() {
-		Map<String, ProductLine> productLines = new TreeMap<String, ProductLine>();
-
-		for (ProductLine line : getCompany().getProductLines().values()) {
-			String id = line.getId();
-
-			if (id != null && id.length() > 0 && line.getMetricDashboard()) {
-				productLines.put(id, line);
-			}
-		}
-		return sortProductLineByOrder(productLines);
+		return queryProductLines(ProductLineConfig.METRIC_PRODUCTLINE);
 	}
 
 	public Map<String, ProductLine> queryNetworkProductLines() {
-		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
-
-		for (ProductLine line : getCompany().getProductLines().values()) {
-			String id = line.getId();
-			if (id != null && id.length() > 0 && line.getNetworkDashboard()) {
-				productLines.put(id, line);
-			}
-		}
-		return productLines;
-	}
-
-	public Map<String, ProductLine> queryDatabases() {
-		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
-
-		for (ProductLine line : getCompany().getProductLines().values()) {
-			String id = line.getId();
-			if (id != null && id.length() > 0 && line.getDatabaseMonitorDashboard()) {
-				productLines.put(id, line);
-			}
-		}
-		return productLines;
+		return queryProductLines(ProductLineConfig.NETWORK_PRODUCTLINE);
 	}
 
 	public ProductLine queryProductLine(String id) {
-		return getCompany().findProductLine(id);
+		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(id);
+
+		return pair.getValue();
 	}
 
 	public String queryProductLineByDomain(String domain) {
@@ -306,43 +306,65 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return productLine == null ? "Default" : productLine;
 	}
 
+	public Pair<ProductLineConfig, ProductLine> queryProductLineConfig(String name) {
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			ProductLine productLine = productLineConfig.getCompany().findProductLine(name);
+
+			if (productLine != null) {
+				return new Pair<ProductLineConfig, ProductLine>(productLineConfig, productLine);
+			}
+		}
+		return null;
+	}
+
+	private ProductLineConfig queryProductLineConfig(String line, String domain) {
+		if (ProductLineConfig.USER_PRODUCTLINE.isTypeOf(domain)) {
+			return ProductLineConfig.USER_PRODUCTLINE;
+		} else if (ProductLineConfig.NETWORK_PRODUCTLINE.isTypeOf(line)) {
+			return ProductLineConfig.NETWORK_PRODUCTLINE;
+		} else if (ProductLineConfig.SYSTEM_PRODUCTLINE.isTypeOf(line)) {
+			return ProductLineConfig.SYSTEM_PRODUCTLINE;
+		} else if (ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(line)) {
+			return ProductLineConfig.DATABASE_PRODUCTLINE;
+		} else {
+			return ProductLineConfig.METRIC_PRODUCTLINE;
+		}
+	}
+
+	private Map<String, ProductLine> queryProductLines(ProductLineConfig productLineConfig) {
+		Map<String, ProductLine> productLines = new LinkedHashMap<String, ProductLine>();
+
+		for (ProductLine line : productLineConfig.getCompany().getProductLines().values()) {
+			String id = line.getId();
+			if (id != null && id.length() > 0) {
+				productLines.put(id, line);
+			}
+		}
+		return productLines;
+	}
+
 	public String querySystemProductLine(String domain) {
-		return SYSTEM_MONITOR_PREFIX + domain;
+		return ProductLineConfig.SYSTEM_PRODUCTLINE.getPrefix().get(0) + domain;
+	}
+
+	public Map<String, ProductLine> querySystemProductLines() {
+		return queryProductLines(ProductLineConfig.SYSTEM_PRODUCTLINE);
 	}
 
 	public Map<String, List<ProductLine>> queryTypeProductLines() {
 		Map<String, List<ProductLine>> productLines = new LinkedHashMap<String, List<ProductLine>>();
 
-		productLines.put(METRIC_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(USER_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(APPLICATION_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(NETWORK_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(SYSTEM_MONITOR, new ArrayList<ProductLine>());
-		productLines.put(DATABASE_MONITOR, new ArrayList<ProductLine>());
+		for (ProductLineConfig e : ProductLineConfig.values()) {
+			List<ProductLine> lst = new ArrayList<ProductLine>();
 
-		for (ProductLine line : getCompany().getProductLines().values()) {
-			String id = line.getId();
+			for (ProductLine line : e.getCompany().getProductLines().values()) {
+				String id = line.getId();
 
-			if (id != null && id.length() > 0) {
-				if (line.getMetricDashboard()) {
-					productLines.get(METRIC_MONITOR).add(line);
-				}
-				if (line.getNetworkDashboard()) {
-					productLines.get(NETWORK_MONITOR).add(line);
-				}
-				if (line.getUserMonitorDashboard()) {
-					productLines.get(USER_MONITOR).add(line);
-				}
-				if (line.getApplicationDashboard()) {
-					productLines.get(APPLICATION_MONITOR).add(line);
-				}
-				if (line.getSystemMonitorDashboard()) {
-					productLines.get(SYSTEM_MONITOR).add(line);
-				}
-				if (line.getDatabaseMonitorDashboard()) {
-					productLines.get(DATABASE_MONITOR).add(line);
+				if (StringUtils.isNotEmpty(id)) {
+					lst.add(line);
 				}
 			}
+			productLines.put(e.getTitle(), lst);
 		}
 
 		for (Entry<String, List<ProductLine>> entry : productLines.entrySet()) {
@@ -360,18 +382,19 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		long modifyTime = config.getModifyDate().getTime();
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			Config config = m_configDao.findByName(productLineConfig.getConfigName(), ConfigEntity.READSET_FULL);
+			long modifyTime = config.getModifyDate().getTime();
 
-		synchronized (this) {
-			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				Company company = DefaultSaxParser.parse(content);
+			synchronized (productLineConfig) {
+				if (modifyTime > productLineConfig.getModifyTime()) {
+					String content = config.getContent();
+					Company company = DefaultSaxParser.parse(content);
 
-				m_company = company;
-				m_domainToProductLines = buildDomainToProductLines();
-				m_modifyTime = modifyTime;
-				m_logger.info("product line config refresh done!");
+					productLineConfig.setCompany(company);
+					productLineConfig.setModifyTime(modifyTime);
+					m_logger.info("product line [" + productLineConfig.getTitle() + "] config refresh done!");
+				}
 			}
 		}
 	}
@@ -397,15 +420,15 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		});
 	}
 
-	private boolean storeConfig() {
-		synchronized (this) {
+	private boolean storeConfig(ProductLineConfig productLineConfig) {
+		synchronized (productLineConfig) {
 			try {
 				Config config = m_configDao.createLocal();
 
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(getCompany().toString());
+				config.setId(productLineConfig.getConfigId());
+				config.setKeyId(productLineConfig.getConfigId());
+				config.setName(productLineConfig.getConfigName());
+				config.setContent(productLineConfig.getCompany().toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 				m_domainToProductLines = buildDomainToProductLines();
 				return true;
@@ -415,9 +438,4 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			}
 		}
 	}
-
-	private class ProductLineConfig {
-
-	}
-
 }

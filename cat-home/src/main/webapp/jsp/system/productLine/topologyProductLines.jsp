@@ -105,4 +105,4 @@
 			})
 		</script>
 	</c:if>
-</a:config>>
+</a:config>
