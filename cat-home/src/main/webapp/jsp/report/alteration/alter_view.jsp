@@ -34,7 +34,7 @@
 					<c:otherwise>
 						<a class="hreftip out_url" target="_blank" href="${item.url}" data-toggle="tooltip" data-placement="top" title="" data-original-title="${item.content}">${item.title}</a>
 					</c:otherwise>
-					</c:choose>
+				</c:choose>
 				</td>
 				<td>${item.domain}</td>
 				<td>${item.hostname}</td>			
@@ -45,8 +45,7 @@
 	$(document).ready(function() {
 		$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 		$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-		$('i[tips]').popover();
-		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
+		$('.hreftip').popover({trigger:"hover", html:true, delay:{show:0, hide:0}});
 		
 		$('#System_report').addClass('active open');
 		$('#system_alteration').addClass('active');
