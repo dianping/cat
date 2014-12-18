@@ -98,8 +98,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.product.ProjectUpdateTask</role>
-			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
+			<role>com.dianping.cat.report.task.project.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.project.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
