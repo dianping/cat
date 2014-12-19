@@ -5,25 +5,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.rule.entity.Condition;
+import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
-import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
@@ -38,10 +44,68 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
-	
+
+	@Inject
+	protected BaselineService m_baselineService;
+
 	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
+
+	protected List<AlertResultEntity> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
+		double[] value = null;
+		double[] baseline = null;
+		List<Config> configs = getRuleConfigManager().queryConfigs(product, metricKey, type);
+		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		int maxMinute = resultPair.getKey();
+		List<Condition> conditions = resultPair.getValue();
+
+		if (minute >= maxMinute - 1) {
+			MetricReport report = fetchMetricReport(product, ModelPeriod.CURRENT);
+
+			if (report != null) {
+				int start = minute + 1 - maxMinute;
+				int end = minute;
+
+				value = queryRealData(start, end, metricKey, report, type);
+				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+
+				return m_dataChecker.checkData(value, baseline, conditions);
+			}
+		} else if (minute < 0) {
+			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null) {
+				int start = 60 + minute + 1 - (maxMinute);
+				int end = 60 + minute;
+
+				value = queryRealData(start, end, metricKey, lastReport, type);
+				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
+				return m_dataChecker.checkData(value, baseline, conditions);
+			}
+		} else {
+			MetricReport currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+			MetricReport lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (currentReport != null && lastReport != null) {
+				int currentStart = 0, currentEnd = minute;
+				double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
+				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
+				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+
+				int lastStart = 60 + 1 - (maxMinute - minute);
+				int lastEnd = 59;
+				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
+				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+				      new Date(ModelPeriod.LAST.getStartTime()), type);
+
+				value = mergerArray(lastValue, currentValue);
+				baseline = mergerArray(lastBaseline, currentBaseline);
+				return m_dataChecker.checkData(value, baseline, conditions);
+			}
+		}
+		return new ArrayList<AlertResultEntity>();
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -126,19 +190,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 
-			for (AlertResultEntity alertResult : alertResults) {
-				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
-				String metricName = buildMetricName(metricKey);
-
-				AlertEntity entity = new AlertEntity();
-
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(metricName).setType(getName()).setGroup(product);
-				entity.getParas().put("domain", domain);
-
-				m_sendManager.addAlert(entity);
-			}
+			sendAlerts(product, metric, alertResults);
 		}
 	}
 
@@ -156,6 +208,41 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				Cat.logError(e);
 			}
 		}
+	}
+
+	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
+		double[] baseline = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
+		int length = end - start + 1;
+		double[] result = new double[length];
+
+		if (baseline != null) {
+			System.arraycopy(baseline, start, result, 0, length);
+		}
+
+		return result;
+	}
+
+	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
+		double[] all = new double[60];
+		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
+
+		for (Entry<Integer, Segment> entry : map.entrySet()) {
+			Integer minute = entry.getKey();
+			Segment seg = entry.getValue();
+
+			if (type == MetricType.AVG) {
+				all[minute] = seg.getAvg();
+			} else if (type == MetricType.COUNT) {
+				all[minute] = (double) seg.getCount();
+			} else if (type == MetricType.SUM) {
+				all[minute] = seg.getSum();
+			}
+		}
+		int length = end - start + 1;
+		double[] result = new double[length];
+		System.arraycopy(all, start, result, 0, length);
+
+		return result;
 	}
 
 	@Override

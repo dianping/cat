@@ -2606,6 +2606,15 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.alert.DataExtractor</role>
+			<implementation>com.dianping.cat.report.task.alert.DefaultDataExtractor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.BaselineService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.AlertManager</implementation>
 			<requirements>
@@ -2657,6 +2666,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2684,6 +2696,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2710,6 +2725,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2743,6 +2761,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2781,6 +2802,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2801,6 +2825,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2831,6 +2858,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2866,6 +2896,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2894,6 +2927,9 @@
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -2913,6 +2949,9 @@
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -2924,6 +2963,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.alert.DefaultDataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
