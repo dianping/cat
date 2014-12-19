@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
+import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 
 @ModelMeta(DependencyAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {
