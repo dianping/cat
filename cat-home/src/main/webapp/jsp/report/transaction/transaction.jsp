@@ -92,7 +92,7 @@
 					<td>${w:format(e.std,'###,##0.0')}</td>
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="12" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="13" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
 				<tr style="display:none"></tr>
 			</c:forEach>
 		</c:when>
@@ -114,7 +114,7 @@
 			<th>Std(ms)</th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
-			<tr class="graphs"><td colspan="12" style="display:none"><div id="-1" style="display:none"></div></td></tr>
+			<tr class="graphs"><td colspan="13" style="display:none"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -150,7 +150,7 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="	"><td colspan="12" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="	"><td colspan="13" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
 				<tr></tr>
 			</c:forEach>
 		</c:otherwise>

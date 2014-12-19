@@ -127,7 +127,7 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11" style="display: none"><div id="${status.index}"
+							<td colspan="13" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
 						</tr><tr></tr>
 			</c:forEach>
@@ -213,7 +213,7 @@
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11" style="display: none"><div id="${status.index}"
+							<td colspan="13" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
 						</tr><tr></tr>
 			</c:forEach>
