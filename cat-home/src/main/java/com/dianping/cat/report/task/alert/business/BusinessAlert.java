@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
@@ -144,7 +145,8 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Override
 	protected void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId());
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId(),
+		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;

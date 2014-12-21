@@ -44,7 +44,7 @@
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>
-<table class='table table-striped table-condensed  '>
+<table class='table table-striped table-condensed '>
 		
 		<c:choose>
 		<c:when test="${!empty model.methodInfo.callProjectsInfo}">

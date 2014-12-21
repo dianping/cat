@@ -51,7 +51,7 @@
 			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
-				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
+				<div class="text-center" id="container" style="width:100%;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
 			</div>
 	    </div>
@@ -71,59 +71,38 @@
 		$('#Dependency_report').removeClass("open active");
 
 		var data = ${model.dashboardGraph};
+		var format = ${model.format};
+		var option = {
+				typeMap:{
+					database:'circle',
+					project:'rect',
+					service:'lozenge'
+				},
+				colorMap:{
+					 "1":'#2fbf2f',
+					 "2":'#bfa22f',
+					 "3":'#b94a48',
+					 "4":'#772fbf'
+	                         },
+		            legendMap:{
+		            "1":"good",
+		            "2":"warning",
+		            "3":"error"
+		        },
+				paddingInside:10,
+				col:3,
+				colInside:5,
+				//模块距上沿距离
+				paddingUp: 10,
+				//小方块间的间隔比率
+				blockPaddingRatio: 0.2,
+	            leftTitlePaddingRatio: 0.05,
+				showLeft: true,
+				showUp: false
+			};
 		
-		new  StarTopoList('container', data ,{
-			typeMap:{
-				database:'circle',
-				project:'rect',
-				service:'lozenge'
-			},
-			colorMap:{
-				 "1":'#2fbf2f',
-				 "2":'#bfa22f',
-				 "3":'#b94a48',
-				 "4":'#772fbf'
-                         },
-	            legendMap:{
-	            "1":"good",
-	            "2":"warning",
-	            "3":"error"
-	        },
-	        format: {
-	            团购: {
-	                "colInside": '5'
-	            },支付: {
-	                "colInside": '3'
-	            },会员卡: {
-	                "colInside": '2'
-	            },预约预定: {
-	                "colInside": '4'
-	            },商户: {
-	                "colInside": '4'
-	            },广告: {
-	                "colInside": '5'
-	            },用户中心: {
-	                "colInside": '4'
-	            },移动: {
-	                "colInside": '4'
-	            },账号中心: {
-	                "colInside": '4'
-	            },社区: {
-	                "colInside": '4'
-	            }
-	        }, 
-	        
-			paddingInside:10,
-			col:3,
-			colInside:5,
-			//模块距上沿距离
-			paddingUp: 10,
-			//小方块间的间隔比率
-			blockPaddingRatio: 0.2,
-            leftTitlePaddingRatio: 0.05,
-			showLeft: true,
-			showUp: false
-		});
+		option['format'] = format;
+		new  StarTopoList('container', data, option);
 	});
 
 </script>

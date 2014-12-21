@@ -84,5 +84,5 @@ MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 t.complete();
 	</pre>	
 	<h5> <a href="/cat/r/app?op=crashLog">查看Log</a>，示例如下：</h5>
-	<img src="${model.webapp}/images/crashLog.jpg"/>
+	<img src="${model.webapp}/images/crashLog.jpg" width="100%"/>
 

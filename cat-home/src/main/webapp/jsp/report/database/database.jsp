@@ -22,13 +22,19 @@
 	<table>
 		<tr style="text-align: left">
 			<th>
-				&nbsp;&nbsp;数据库
-				<select id="database" onchange="databaseChange()">
-					<c:forEach var="item" items="${model.productLines}" varStatus="status">
-						<option value="${item.id}">${item.id}</option>
-					</c:forEach>
-				</select>
-				
+				<div class="navbar-header pull-left position" style="width:350px;">
+							<form id="wrap_search" style="margin-bottom:0px;">
+								<div class="input-group">
+									<input id="search" type="text" value="${payload.product}" class="search-input form-control ui-autocomplete-input" placeholder="input database for search" autocomplete="off"/>
+									<span class="input-group-btn">
+										<button class="btn btn-sm btn-pink" type="button" id="search_go">
+											Go!
+										</button> 
+									</span>
+								</div>
+							</form>
+						</div>
+						
 				&nbsp;&nbsp;时间段 
 				<c:forEach var="range" items="${model.allRange}">
 					<c:choose>
@@ -57,18 +63,53 @@
 		function databaseChange(){
 			var date='${model.date}';
 			var domain='${model.domain}';
-			var product=$('#database').val();
+			var product=$('#search').val();
 			var timeRange=${payload.timeRange};
 			var href = "?op=view&date="+date+"&domain="+domain+"&product="+product+"&timeRange="+timeRange;
 			window.location.href=href;
 		}
 	
 		$(document).ready(function() {
-			var product = '${payload.product}';
 			$('i[tips]').popover();
 			$('#System_report').addClass('active open');
 			$('#system_database').addClass('active');
-			$('#database').val(product);
+			
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [];
+			<c:forEach var="item" items="${model.productLines}">
+						var item = {};
+						item['label'] = '${item.id}';
+						item['category'] = '数据库';
+						data.push(item);
+			</c:forEach>
+					
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
+			
+			$("#search_go").bind("click",function(e){
+				databaseChange();
+			});
+			$('#wrap_search').submit(
+				function(){
+					databaseChange();
+					return false;
+				}		
+			);
 			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};

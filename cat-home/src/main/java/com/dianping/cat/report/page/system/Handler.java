@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -25,7 +24,6 @@ import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
@@ -47,30 +45,19 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProductLineConfigManager m_productLineManager;
 
-	public String buildProject2Domains() {
+	public List<Project> buildProjects() {
 		List<Project> projects = new ArrayList<Project>();
-		Map<String, Set<String>> project2Domains = new HashMap<String, Set<String>>();
+		Map<String, Project> map = new HashMap<String, Project>();
 
 		try {
 			projects = m_projectService.findAll();
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		for (Project project : projects) {
-			String projectLine = project.getProjectLine();
-			Set<String> set = project2Domains.get(projectLine);
-
-			if (set == null) {
-				set = new HashSet<String>();
-				project2Domains.put(projectLine, set);
-			}
-			String cmdbDomain = project.getCmdbDomain();
-
-			if (StringUtils.isNotEmpty(cmdbDomain)) {
-				set.add(cmdbDomain);
-			}
+		for (Project p : projects) {
+			map.put(p.getCmdbDomain(), p);
 		}
-		return new JsonBuilder().toJson(project2Domains);
+		return new ArrayList<Project>(map.values());
 	}
 
 	@Override
@@ -121,7 +108,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setProjectsInfo(buildProject2Domains());
+		model.setProjects(buildProjects());
 		model.setPage(ReportPage.SYSTEM);
 		m_normalizePayload.normalize(model, payload);
 	}

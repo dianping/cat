@@ -29,6 +29,7 @@ import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultMetric;
@@ -267,7 +268,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 	public static class MockProductLineManager extends ProductLineConfigManager {
 
 		@Override
-		public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
+		public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains, String title) {
 			return new Pair<Boolean, String>(true, null);
 		}
 
@@ -277,7 +278,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<String> queryDomainsByProductLine(String productLine) {
+		public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
 			return new ArrayList<String>();
 		}
 

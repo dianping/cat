@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="topoGraph-format-config" root="true">
+    <entity-ref name="productLine" type="list" names="productLines" />
+  </entity>
+  <entity name="productLine">
+    <attribute name="id" value-type="String" />
+    <attribute name="colInside" value-type="int" />
+  </entity>
+</model>
+

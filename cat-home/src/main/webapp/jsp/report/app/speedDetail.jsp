@@ -3,12 +3,12 @@
 			<tr>
 				<th align=left>
 					<div id="datetimepicker1" class="input-append  date" style="float:left;">
-			           时间<input id="time" name="time"  size="13" 
+			           &nbsp;时间<input id="time" name="time"  size="13" 
 			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 			              <i class="ace-icon fa fa-calendar"></i>
 			           </span>
 			        </div>
-						&nbsp;&nbsp;页面 <select id="page" style="width: 240px;">
+						&nbsp;页面 <select id="page" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>
 						</c:forEach>
@@ -24,7 +24,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th align=left>版本 <select id="version" style="width: 100px;">
+				<th align=left>&nbsp;版本 <select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
@@ -58,12 +58,12 @@
 			<tr>
 				<th align=left>
 					<div id="datetimepicker2" class="input-append  date" style="float:left;">
-			           时间<input id="time2" name="time2"  size="13" 
+			           &nbsp;时间<input id="time2" name="time2"  size="13" 
 			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 			              <i class="ace-icon fa fa-calendar"></i>
 			           </span>
 			        </div>
-					 &nbsp;&nbsp;页面 <select id="page2" style="width: 240px;">
+					 &nbsp;页面 <select id="page2" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>
 						</c:forEach>
@@ -79,7 +79,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th align=left>版本 <select id="version2" style="width: 100px;">
+				<th align=left>&nbsp;版本 <select id="version2" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>

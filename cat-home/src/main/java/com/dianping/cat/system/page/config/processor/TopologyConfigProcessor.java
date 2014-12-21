@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
+import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -24,6 +25,9 @@ public class TopologyConfigProcessor {
 
 	@Inject
 	private TopologyGraphConfigManager m_topologyConfigManager;
+
+	@Inject
+	private TopoGraphFormatConfigManager m_formatConfigManager;
 
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
 		String type = payload.getType();
@@ -79,15 +83,17 @@ public class TopologyConfigProcessor {
 	private Pair<Boolean, String> graphProductLineConfigAddOrUpdateSubmit(Payload payload, Model model) {
 		ProductLine line = payload.getProductLine();
 		String[] domains = payload.getDomains();
+		String type = payload.getType();
 
-		return m_productLineConfigManger.insertProductLine(line, domains);
+		return m_productLineConfigManger.insertProductLine(line, domains, type);
 	}
 
 	private void graphPruductLineAddOrUpdate(Payload payload, Model model) {
 		String name = payload.getProductLineName();
+		String type = payload.getType();
 
 		if (!StringUtils.isEmpty(name)) {
-			model.setProductLine(m_productLineConfigManger.findProductLine(name));
+			model.setProductLine(m_productLineConfigManger.findProductLine(name, type));
 		}
 	}
 
@@ -135,7 +141,7 @@ public class TopologyConfigProcessor {
 			model.setProjects(m_globalConfigManager.queryAllProjects());
 			break;
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
-			model.setOpState(m_productLineConfigManger.deleteProductLine(payload.getProductLineName()));
+			model.setOpState(m_productLineConfigManger.deleteProductLine(payload.getProductLineName(), payload.getType()));
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
@@ -150,7 +156,13 @@ public class TopologyConfigProcessor {
 			model.setProductLines(m_productLineConfigManger.queryAllProductLines());
 			model.setTypeToProductLines(m_productLineConfigManger.queryTypeProductLines());
 			break;
-
+		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
+			String topoGraphFormat = payload.getContent();
+			if (!StringUtils.isEmpty(topoGraphFormat)) {
+				model.setOpState(m_formatConfigManager.insert(topoGraphFormat));
+			}
+			model.setContent(m_formatConfigManager.getConfig().toString());
+			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}

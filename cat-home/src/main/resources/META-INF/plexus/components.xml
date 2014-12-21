@@ -327,6 +327,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.ConfigReloadTask</role>
 			<implementation>com.dianping.cat.system.config.ConfigReloadTask</implementation>
 			<requirements>
@@ -3992,6 +4004,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
@@ -4067,6 +4082,18 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4566,6 +4593,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5115,6 +5145,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -267,12 +267,3 @@
 	
 		<%@include file="linechartDetail.jsp"%>
 </a:body>
-
-<style type="text/css">
-	.row-fluid .span2{
-		width:10%;
-	}
-	.row-fluid .span10{
-		width:87%;
-	}
-</style>

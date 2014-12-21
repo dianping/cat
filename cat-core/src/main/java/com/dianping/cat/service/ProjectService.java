@@ -32,7 +32,7 @@ public class ProjectService implements Initializable {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+	private Map<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
 
 	private Set<String> m_domains = new HashSet<String>();
 
@@ -50,7 +50,7 @@ public class ProjectService implements Initializable {
 
 	public boolean deleteProject(Project project) {
 		int id = project.getId();
-		Iterator<Entry<String, Project>> iterator = m_projects.entrySet().iterator();
+		Iterator<Entry<String, Project>> iterator = m_domainToProjects.entrySet().iterator();
 		String domainName = null;
 
 		while (iterator.hasNext()) {
@@ -64,7 +64,7 @@ public class ProjectService implements Initializable {
 		}
 
 		try {
-			m_projects.remove(domainName);
+			m_domainToProjects.remove(domainName);
 			m_projectDao.deleteByPK(project);
 			return true;
 		} catch (Exception e) {
@@ -74,7 +74,7 @@ public class ProjectService implements Initializable {
 	}
 
 	public List<Project> findAll() throws DalException {
-		return new ArrayList<Project>(m_projects.values());
+		return new ArrayList<Project>(m_domainToProjects.values());
 	}
 
 	public Set<String> findAllDomain() {
@@ -82,7 +82,7 @@ public class ProjectService implements Initializable {
 	}
 
 	public Map<String, Project> findAllProjects() {
-		return m_projects;
+		return m_domainToProjects;
 	}
 
 	public Project findByCmdbDomain(String domainName) {
@@ -97,7 +97,7 @@ public class ProjectService implements Initializable {
 	}
 
 	public Project findByDomain(String domainName) {
-		Project project = m_projects.get(domainName);
+		Project project = m_domainToProjects.get(domainName);
 
 		if (project != null) {
 			return project;
@@ -105,7 +105,7 @@ public class ProjectService implements Initializable {
 			try {
 				Project pro = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
 
-				m_projects.put(pro.getDomain(), pro);
+				m_domainToProjects.put(pro.getDomain(), pro);
 				return project;
 			} catch (DalException e) {
 			} catch (Exception e) {
@@ -116,7 +116,7 @@ public class ProjectService implements Initializable {
 	}
 
 	public Project findProject(int id) {
-		Iterator<Entry<String, Project>> iterator = m_projects.entrySet().iterator();
+		Iterator<Entry<String, Project>> iterator = m_domainToProjects.entrySet().iterator();
 
 		while (iterator.hasNext()) {
 			Entry<String, Project> entry = iterator.next();
@@ -130,13 +130,21 @@ public class ProjectService implements Initializable {
 		try {
 			Project project = m_projectDao.findByPK(id, ProjectEntity.READSET_FULL);
 
-			m_projects.put(project.getDomain(), project);
+			m_domainToProjects.put(project.getDomain(), project);
 			return project;
 		} catch (DalNotFoundException e) {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return null;
+	}
+
+	public Set<String> getDomains() {
+		return m_domains;
+	}
+
+	public Map<String, Project> getProjects() {
+		return m_domainToProjects;
 	}
 
 	@Override
@@ -147,7 +155,7 @@ public class ProjectService implements Initializable {
 	}
 
 	public boolean insert(Project project) throws DalException {
-		m_projects.put(project.getDomain(), project);
+		m_domainToProjects.put(project.getDomain(), project);
 
 		int result = m_projectDao.insert(project);
 		if (result == 1) {
@@ -185,14 +193,14 @@ public class ProjectService implements Initializable {
 				tmpProjects.put(project.getDomain(), project);
 			}
 			m_domains = tmpDomains;
-			m_projects = tmpProjects;
+			m_domainToProjects = tmpProjects;
 		} catch (DalException e) {
 			Cat.logError("initialize ProjectService error", e);
 		}
 	}
 
 	public boolean updateProject(Project project) {
-		m_projects.put(project.getDomain(), project);
+		m_domainToProjects.put(project.getDomain(), project);
 
 		try {
 			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
@@ -233,5 +241,4 @@ public class ProjectService implements Initializable {
 		public void shutdown() {
 		}
 	}
-
 }

@@ -5,10 +5,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
@@ -52,18 +53,36 @@ public class GlobalConfigProcessor {
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
 		case PROJECT_ALL:
+			String domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = Constants.CAT;
+			}
 			model.setProjects(queryAllProjects());
+			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_UPDATE:
 			model.setProject(queryProjectById(payload.getProjectId()));
 			break;
 		case PROJECT_UPDATE_SUBMIT:
 			updateProject(payload);
+			domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = Constants.CAT;
+			}
 			model.setProjects(queryAllProjects());
+			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_DELETE:
 			deleteProject(payload);
+			domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = Constants.CAT;
+			}
 			model.setProjects(queryAllProjects());
+			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 			String domainGroupContent = payload.getContent();

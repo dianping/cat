@@ -18,6 +18,12 @@
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
+			$(code).empty();
+			
+			var opt = $('<option />');
+			opt.html("All");
+			opt.val("");
+			opt.appendTo(code);
 			
 			for ( var prop in value) {
 				var opt = $('<option />');
@@ -85,13 +91,14 @@
 			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var group = $("#group").val();
 			var split = ";";
 			var query1 = period + split + command + split + code + split
 					+ network + split + version + split + connectionType
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field;
+			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
  			window.location.href = href;
  		}
 		
@@ -105,6 +112,56 @@
 			document.getElementById("operator").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
 		}
+		
+		var domainToCommandsJson = ${model.domainToCommandsJson};
+
+		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
+			if(domainInitVal == ""){
+				domainInitVal = $("#"+domainId).val()
+			}
+			var commandSelect = $("#"+commandId);
+			var commands = domainToCommandsJson[domainInitVal];
+			
+			$("#"+domainId).val(domainInitVal);
+			commandSelect.empty();
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+			if(commandInitVal != ''){
+				commandSelect.val(commandInitVal);
+			}
+		}
+		
+		function changeCommandByDomain(){
+			var domain = $("#group").val();
+			var commandSelect = $("#command");
+			var commands = domainToCommandsJson[domain];
+			commandSelect.empty();
+			
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+		}
+		
+		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
+			var domainsSelect = $("#"+domainSelectId);
+			for(var domain in domainToCommandsJson){
+				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+			}
+			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
+			command1Change();
+			domainsSelect.on('change', changeCommandByDomain);
+		}
 
 		$(document).ready(
 				function() {
@@ -113,13 +170,13 @@
 					$('#datetimepicker2').datetimepicker({
 						pickDate: false
 						});
-
+					
 					var query1 = '${payload.query1}';
 					var command1 = $('#command');
 					var words = query1.split(";");
 
 					command1.on('change', command1Change);
-					$("#command").val(words[1]);
+					initDomain('group', 'command', '${payload.domains}', words[1]);
 					
 					$("#piechartSelect").on('change', refreshDisabled);
 					
@@ -135,7 +192,6 @@
 						$("#time2").val(words[10]);
 					}
 
-					command1Change();
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);
 					$("#app-version").val(words[4]);

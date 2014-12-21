@@ -121,19 +121,35 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private Set<String> buildDomainIdSetWithoutProductline(String productlineId) {
+	private String buildDomainInfo(ProductLineConfig productLineConfig, ProductLine productline, String[] domainIds) {
 		Set<String> domains = new HashSet<String>();
+		String id = productline.getId();
+		String duplicateDomains = "";
 
-		for (ProductLineConfig config : ProductLineConfig.values()) {
-			for (ProductLine product : config.getCompany().getProductLines().values()) {
-				if (!product.getId().equals(productlineId)) {
-					for (Domain domain : product.getDomains().values()) {
-						domains.add(domain.getId());
+		if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)
+		      || ProductLineConfig.APPLICATION_PRODUCTLINE.equals(productLineConfig)) {
+			for (ProductLineConfig config : ProductLineConfig.values()) {
+				for (ProductLine product : config.getCompany().getProductLines().values()) {
+					if (!product.getId().equals(id)) {
+						for (Domain domain : product.getDomains().values()) {
+							domains.add(domain.getId());
+						}
 					}
 				}
 			}
+			for (String domain : domainIds) {
+				if (domains.contains(domain)) {
+					duplicateDomains += domain + ", ";
+				} else {
+					productline.addDomain(new Domain(domain));
+				}
+			}
+		} else {
+			for (String domain : domainIds) {
+				productline.addDomain(new Domain(domain));
+			}
 		}
-		return domains;
+		return duplicateDomains;
 	}
 
 	private Map<String, String> buildDomainToProductLines() {
@@ -145,15 +161,15 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return domainToProductLines;
 	}
 
-	public boolean deleteProductLine(String line) {
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line);
-		if (pair != null) {
-			ProductLineConfig productLineConfig = pair.getKey();
+	public boolean deleteProductLine(String line, String title) {
+		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
-			pair.getKey().getCompany().removeProductLine(line);
+		if (productLineConfig != null) {
+			Company company = productLineConfig.getCompany();
+
+			company.removeProductLine(line);
 			return storeConfig(productLineConfig);
 		}
-
 		return false;
 	}
 
@@ -162,11 +178,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public ProductLine findProductLine(String line) {
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line);
+	public ProductLine findProductLine(String line, String title) {
+		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
-		if (pair != null) {
-			return pair.getValue();
+		if (productLineConfig != null) {
+			return productLineConfig.getCompany().findProductLine(line);
 		}
 		return null;
 	}
@@ -241,23 +257,44 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
-		Set<String> domainIds = buildDomainIdSetWithoutProductline(line.getId());
+	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains, String title) {
+		boolean flag = true;
 		String duplicateDomains = "";
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(line.getId());
-		ProductLineConfig productLineConfig = pair.getKey();
+		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
+		switch (productLineConfig) {
+		case METRIC_PRODUCTLINE:
+			if (line.getApplicationDashboard()) {
+				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().removeProductLine(line.getId());
+				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().addProductLine(line);
+				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
+			}
+			break;
+		case APPLICATION_PRODUCTLINE:
+			if (line.getMetricDashboard()) {
+				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().removeProductLine(line.getId());
+				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().addProductLine(line);
+				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
+			}
+			break;
+		case USER_PRODUCTLINE:
+			line.setUserMonitorDashboard(true);
+			break;
+		case DATABASE_PRODUCTLINE:
+			line.setDatabaseMonitorDashboard(true);
+			break;
+		case NETWORK_PRODUCTLINE:
+			line.setNetworkDashboard(true);
+			break;
+		case SYSTEM_PRODUCTLINE:
+			line.setSystemMonitorDashboard(true);
+			break;
+		}
+		duplicateDomains = buildDomainInfo(productLineConfig, line, domains);
 		productLineConfig.getCompany().removeProductLine(line.getId());
 		productLineConfig.getCompany().addProductLine(line);
 
-		for (String domain : domains) {
-			if (domainIds.contains(domain)) {
-				duplicateDomains += domain + ", ";
-			} else {
-				line.addDomain(new Domain(domain));
-			}
-		}
-		return new Pair<Boolean, String>(storeConfig(productLineConfig), duplicateDomains);
+		return new Pair<Boolean, String>(storeConfig(productLineConfig) && flag, duplicateDomains);
 	}
 
 	public Map<String, ProductLine> queryAllProductLines() {
@@ -273,10 +310,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return queryProductLines(ProductLineConfig.DATABASE_PRODUCTLINE);
 	}
 
-	public List<String> queryDomainsByProductLine(String productLine) {
+	public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
 		List<String> domains = new ArrayList<String>();
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(productLine);
-		ProductLine line = pair.getValue();
+		ProductLine line = productLineConfig.getCompany().findProductLine(productLine);
 
 		if (line != null) {
 			for (Domain domain : line.getDomains().values()) {
@@ -312,6 +348,15 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 			if (productLine != null) {
 				return new Pair<ProductLineConfig, ProductLine>(productLineConfig, productLine);
+			}
+		}
+		return null;
+	}
+
+	public ProductLineConfig queryProductLineByTitle(String title) {
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			if (productLineConfig.getTitle().equals(title)) {
+				return productLineConfig;
 			}
 		}
 		return null;

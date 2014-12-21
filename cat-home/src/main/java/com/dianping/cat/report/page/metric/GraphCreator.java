@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
@@ -186,7 +187,8 @@ public class GraphCreator extends AbstractGraphCreator {
 	}
 
 	private boolean isProductLineInTag(String productLine, List<MetricItemConfig> configs) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine,
+		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> metricConfig = m_metricConfigManager.queryMetricItemConfigs(domains);
 
 		for (MetricItemConfig metric : configs) {
@@ -234,7 +236,8 @@ public class GraphCreator extends AbstractGraphCreator {
 
 	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine);
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine,
+		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> metricConfigs = m_metricConfigManager.queryMetricItemConfigs(domains);
 
 		Collections.sort(metricConfigs, new Comparator<MetricItemConfig>() {

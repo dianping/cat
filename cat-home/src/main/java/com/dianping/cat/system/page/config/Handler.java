@@ -137,6 +137,7 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
+		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
 			m_topologyConfigProcessor.process(action, payload, model);
 			break;
 
