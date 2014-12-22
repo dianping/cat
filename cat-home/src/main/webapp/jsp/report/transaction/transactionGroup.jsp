@@ -127,7 +127,7 @@
 					<td>${w:format(e.tps,'###,##0.0')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11" style="display: none"><div id="${status.index}"
+							<td colspan="13" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
 						</tr><tr></tr>
 			</c:forEach>
@@ -182,7 +182,7 @@
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
 							<a
-										href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${e.id}"
+										href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.id}"
 										class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
@@ -213,7 +213,7 @@
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs">
-							<td colspan="11" style="display: none"><div id="${status.index}"
+							<td colspan="13" style="display: none"><div id="${status.index}"
 									style="display: none"></div></td>
 						</tr><tr></tr>
 			</c:forEach>

@@ -23,6 +23,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	public static final String ID = "event";
 
+	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
 
@@ -42,9 +44,16 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Override
 	public EventReport getReport(String domain) {
-		EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		long period = getStartTime();
+		long timestamp = System.currentTimeMillis();
+		long remainder = timestamp % 3600000;
+		long current = timestamp - remainder;
+		EventReport report = m_reportManager.getHourlyReport(period, domain, false);
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		if (period == current) {
+			report.accept(m_computer.setDuration(remainder / 1000));
+		}
 		return report;
 	}
 

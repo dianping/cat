@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -69,22 +68,6 @@ public class EventReportCountFilter extends com.dianping.cat.consumer.event.mode
 
 			for (int i = m_maxItems; i < size; i++) {
 				mergeName(other, all.get(i));
-			}
-
-			List<String> toRemove = new ArrayList<String>();
-
-			eventNames = type.getNames();
-			for (Entry<String, EventName> entry : type.getNames().entrySet()) {
-				EventName tansactionName = entry.getValue();
-
-				if (tansactionName.getTotalCount() == 1) {
-					toRemove.add(entry.getKey());
-					mergeName(other, tansactionName);
-				}
-			}
-
-			for (String name : toRemove) {
-				eventNames.remove(name);
 			}
 		}
 		super.visitType(type);

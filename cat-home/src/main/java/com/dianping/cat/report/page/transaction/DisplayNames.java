@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -165,6 +166,16 @@ public class DisplayNames {
 
 		public String getType() {
 			return m_type;
+		}
+		
+		public String getName() {
+			String id = m_detail.getId();
+
+			try {
+				return URLEncoder.encode(id, "utf-8");
+			} catch (Exception e) {
+				return id;
+			}
 		}
 	}
 }

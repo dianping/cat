@@ -23,7 +23,7 @@
     <div class="tab-pane" id="userDocoument7"><%@ include file="userDocument/heartbeat.jsp"%></div>
     <div class="tab-pane" id="userDocoument8"><%@ include file="userDocument/cross.jsp"%></div>
     <div class="tab-pane" id="userDocoument9"><%@ include file="userDocument/matrix.jsp"%></div>
-    <div class="tab-pane" id="userDocoument10"><%@ include file="userDocument/matric.jsp"%></div>
+    <div class="tab-pane" id="userDocoument10"><%@ include file="userDocument/metric.jsp"%></div>
     <div class="tab-pane" id="userDocoument11"><%@ include file="userDocument/dependency.jsp"%></div>
     </div>
 </div>

@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +17,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -110,28 +108,6 @@ public class Handler implements PageHandler<Context> {
 		model.setPieChart(new JsonBuilder().toJson(chart));
 	}
 
-	private void calculateTps(Payload payload, EventReport report) {
-		try {
-			if (report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds = 0;
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (startTime != null && endTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / (double) 1000;
-					}
-				}
-				new TpsStatistics(seconds).visitEventReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	private EventReport filterReportByGroup(EventReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 		List<String> removes = new ArrayList<String>();
@@ -217,9 +193,8 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			calculateTps(payload, report);
+
 			if (report != null) {
 				model.setReport(report);
 
@@ -228,7 +203,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-			calculateTps(payload, report);
 
 			if (report != null) {
 				model.setReport(report);
@@ -263,7 +237,7 @@ public class Handler implements PageHandler<Context> {
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			calculateTps(payload, report);
+			
 			if (report != null) {
 				model.setReport(report);
 
@@ -272,8 +246,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-
-			calculateTps(payload, report);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
 

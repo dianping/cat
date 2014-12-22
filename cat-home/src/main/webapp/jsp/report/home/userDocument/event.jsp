@@ -9,9 +9,9 @@
 <p>1. HitOverTime、Averager Duration Over Time,Failures Over Time 纵轴都是以5分钟为单位，HitOverTime表示5分钟内的访问次数。</p>
 <p>2. Failures Over Time表示5分钟内的Transaction失败次数。</p>
 <br/>
-<img  class="img-polaroid"  src="${model.webapp}/images/event05.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/event05.png" width="100%"/>
 <h4 class="text-success">Event历史报表</h4>
 <p class="text-danger">a）Transaction\Event月报表支持每天的趋势图，以天为单位,如下图</p>
-<img  class="img-polaroid"  src="${model.webapp}/images/event04.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/event04.png" width="100%"/>
 <p class="text-danger">b）Transaction\Event报表日报表、周报表支持同比、环比对比,时间精度为5分钟</p>
-<img  class="img-polaroid"  src="${model.webapp}/images/event03.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/event03.png" width="100%"/>

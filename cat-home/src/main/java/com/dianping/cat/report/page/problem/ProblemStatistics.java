@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.problem;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -135,6 +136,14 @@ public class ProblemStatistics extends BaseVisitor {
 
 		public int getCount() {
 			return m_count;
+		}
+
+		public String getEncodeStatus() {
+			try {
+				return URLEncoder.encode(m_status, "utf-8");
+			} catch (Exception e) {
+				return m_status;
+			}
 		}
 
 		public List<String> getLinks() {

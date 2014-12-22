@@ -12,13 +12,13 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.configuration.app.speed.entity.AppSpeedConfig;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.app.speed.transform.DefaultSaxParser;
@@ -30,6 +30,9 @@ public class AppSpeedConfigManager implements Initializable {
 
 	@Inject
 	protected ConfigDao m_configDao;
+
+	@Inject
+	private ContentFetcher m_fetcher;
 
 	private Map<String, Speed> m_speeds = new HashMap<String, Speed>();
 
@@ -53,8 +56,7 @@ public class AppSpeedConfigManager implements Initializable {
 			updateData();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = Files.forIO().readFrom(
-				      this.getClass().getResourceAsStream("/config/default-app-speed-config.xml"), "utf-8");
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

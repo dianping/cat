@@ -15,8 +15,7 @@
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query() {
-			var productLine = $("#productLine").val();
-			var domain = $("#domain").val();
+			var domain = $("#search").val();
 			var type = $("#type").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
@@ -40,7 +39,7 @@
 				curIpAddrs = "All";
 			}
 			
-			window.location.href = "?productLine=" + productLine + "&domain=" + domain + "&type=" + type 
+			window.location.href = "?domain=" + domain + "&type=" + type 
 					+ "&ipAddrs=" + curIpAddrs + "&startDate=" + start + "&endDate="
 					+ end; 
 		}
@@ -99,7 +98,6 @@
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
 					$('#domain').val('${payload.domain}');
-					$('#productLine').val('${payload.productLine}');
 					$('#System_report').addClass('active open');
 					$('#system_paas').addClass('active');
 					
@@ -119,66 +117,53 @@
 						document.getElementById("ip_" + curIpAddrs[i]).checked = true;
 					}
 					
-					var projectsInfo = ${model.projectsInfo};
-					var productSelect = $('#productLine');
-					function change() {
-						var productLine = $("#productLine").val();
-						var projects;
-						if(productLine == 'All') {
-							projects = new Array();
-							for(var key in projectsInfo) {
-								for(var subKey in projectsInfo[key]) {
-									projects.push(projectsInfo[key][subKey]);
+					$.widget( "custom.catcomplete", $.ui.autocomplete, {
+						_renderMenu: function( ul, items ) {
+							var that = this,
+							currentCategory = "";
+							$.each( items, function( index, item ) {
+								if ( item.category != currentCategory ) {
+									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+									currentCategory = item.category;
 								}
-							}
-						} else {
-							projects = projectsInfo[productLine];
+								that._renderItemData( ul, item );
+							});
 						}
-						select = document.getElementById("domain");
-						select.length = 0;
-
-						for ( var prop in projects) {
-							if (projects.hasOwnProperty(prop)) {
-								var opt = $('<option />');
-								var domain = projects[prop];
-								opt.html(domain);
-								opt.val(domain);
-								opt.appendTo(select);
-							}
-						}
-						$("#domain").select2();
-					}
-					productSelect.on('change', change);
-
-					for ( var prop in projectsInfo) {
-						if (projectsInfo.hasOwnProperty(prop)) {
-							var opt = $('<option />');
+					});
+					
+					var data = [];
+					<c:forEach var="item" items="${model.projects}">
+								var item = {};
+								item['label'] = '${item.cmdbDomain}';
+								item['category'] = '${item.department} - ${item.projectLine}';
+								data.push(item);
+					</c:forEach>
 							
-							opt.html(prop);
-							opt.val(prop);
-							opt.appendTo(productSelect);
-						}
-					}
-
-					var productLine = '${payload.productLine}';
-					if(productLine != ''){
-						$('#productLine').val(productLine);
-					}
-					change();
+					$( "#search" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					
+					$("#search_go").bind("click",function(e){
+						query();
+					});
+					$('#wrap_search').submit(
+						function(){
+							query();
+							return false;
+						}		
+					);
+					
 					
 					var domain = '${payload.domain}';
 					if(domain != ''){
-						$('#domain').val(domain);
+						$('#search').val(domain);
 					}
 					
 					var type = '${payload.type}';
 					if(type != ''){
 						$('#type').val(type);
 					}
-					
-					$("#productLine").select2();
-					$("#domain").select2();
-					$("#type").select2();
 					
 					<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 						var data = ${item.jsonString};
@@ -187,50 +172,48 @@
 				
 			});
 	</script>
-	<div class="report">
 		<table>
 			<tr>
 				<th class="left">
-					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" >
-					<option value="All">All</option>
-					</select>
-					项目
-					<select style="width: 200px;" name="domain" id="domain" ></select> 
-					查询类型
-					<select style="width: 100px;" name="type" id="type" >
+				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           &nbsp;开始<input id="startTime" name="startTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div><div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
+		           &nbsp;结束<input id="endTime" name="endTime"  size="16" 
+		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
+		              <i class="ace-icon fa fa-calendar"></i>
+		           </span>
+		        </div>
+		        &nbsp;查询类型<select style="width: 100px;" name="type" id="type" >
 							<option value="paasSystem">Paas系统</option>
 							<!-- option value="system">系统</option>
 							<option value="jvm">JVM</option>
 							<option value="nginx">Nginx</option> -->
 					</select>
-				</th>
-
-				<th class="right">
-					<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;开始时间<input id="startTime" name="startTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div><div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;结束时间<input id="endTime" name="endTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
-					&nbsp;&nbsp;<input class="btn btn-sm btn-primary " value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit">
+					</th>
+				<th>&nbsp;&nbsp;</th>
+		        <th>
+					<div class="navbar-header pull-left position" style="width:350px;">
+						<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+						<input id="search" type="text" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								Go!
+							</button> 
+						</span>
+						</div>
+						</form>
+					</div>
+					</th>
+					
 				</th>
 			</tr>
 		</table>
-		<div >
-			<label class="btn btn-xs btn-info">
-		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
-		  	</label>
-	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-xs btn-info">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
-		  		</label>
-			</c:forEach>
+		<div>
+	    	<label class="btn btn-sm btn-info"><input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All</label><c:forEach var="item" items="${model.ipAddrs}" varStatus="status"><label class="btn btn-sm btn-info"><input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}</label></c:forEach>
 		</div>
 		
 	 	<div>
@@ -240,5 +223,4 @@
        			</div>
 			</c:forEach>
 		</div>
-	</div>
 </a:body>

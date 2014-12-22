@@ -180,7 +180,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 				TransactionName name = type.findOrCreateName(t.getName());
 				String messageId = tree.getMessageId();
-				
+
 				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
 			}
 
@@ -253,10 +253,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private TransactionReport queryReport(String domain) {
-		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		long period = getStartTime();
+		long timestamp = System.currentTimeMillis();
+		long remainder = timestamp % 3600000;
+		long current = timestamp - remainder;
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		report.accept(m_computer);
+		TransactionReport report = m_reportManager.getHourlyReport(period, domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(period));
+
+		if (period < current) {
+			report.accept(m_computer.setDuration(3600));
+		} else {
+			report.accept(m_computer.setDuration(remainder / 1000));
+		}
 
 		return report;
 	}

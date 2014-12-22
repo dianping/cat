@@ -24,7 +24,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected NetworkRuleConfigManager m_ruleConfigManager;
-	
+
 	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
 
 	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
@@ -93,13 +93,11 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				Map<String, ProductLine> productLines = m_productLineConfigManager.getCompany().getProductLines();
+				Map<String, ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines();
 
 				for (ProductLine productLine : productLines.values()) {
 					try {
-						if (productLine.isNetworkDashboard()) {
-							processProductLine(productLine);
-						}
+						processProductLine(productLine);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -124,7 +122,7 @@ public class NetworkAlert extends BaseAlert implements Task, LogEnabled {
 			}
 		}
 	}
-	
+
 	@Override
 	public void shutdown() {
 	}

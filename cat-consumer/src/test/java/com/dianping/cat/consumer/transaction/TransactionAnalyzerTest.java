@@ -52,8 +52,6 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 		TransactionReport report = m_analyzer.getReport(m_domain);
 
-		report.accept(new TransactionStatisticsComputer());
-
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
