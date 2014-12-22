@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.network;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,14 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
@@ -59,8 +62,8 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case METRIC:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start,
-			      end);
+			System.out.println(payload.getProduct());
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
@@ -73,13 +76,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
+		Collection<ProductLine> productLines = m_productLineConfigManager.queryNetworkProductLines().values();
+
+		model.setProductLines(productLines);
 		model.setPage(ReportPage.NETWORK);
 
-		if(payload.getProduct() == null && payload.getGroup() == null) {
-			payload.setAction(Action.NETTOPOLOGY.getName());
+		if (StringUtils.isEmpty(payload.getProduct()) && StringUtils.isEmpty(payload.getGroup())
+		      && !productLines.isEmpty()) {
+			payload.setProduct(productLines.iterator().next().getId());
 		}
-
-		model.setProductLines(m_productLineConfigManager.queryNetworkProductLines().values());
 
 		m_normalizePayload.normalize(model, payload);
 
@@ -100,7 +105,7 @@ public class Handler implements PageHandler<Context> {
 			if (startTime == ModelPeriod.CURRENT.getStartTime()) {
 				maxMinute = curMinute;
 			}
-			
+
 			Date start = new Date(startTime);
 			Date end = new Date(startTime + TimeHelper.ONE_HOUR - 1);
 			List<Integer> minutes = new ArrayList<Integer>();
@@ -126,5 +131,4 @@ public class Handler implements PageHandler<Context> {
 			model.setEndTime(endTime);
 		}
 	}
-
 }

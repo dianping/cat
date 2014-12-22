@@ -67,3 +67,9 @@
 </br>
 </jsp:body>
 </a:report>
+<style>
+.dataTables_wrapper {
+	/* position: relative; */
+	clear: none;
+}
+</style>

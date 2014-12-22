@@ -9,6 +9,7 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.metric.Range;
@@ -19,7 +20,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
 
-	private String m_projectsInfo;
+	private List<Project> m_projects;
 
 	private Collection<ProductLine> m_productLines;
 
@@ -74,8 +75,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_productLines;
 	}
 
-	public String getProjectsInfo() {
-		return m_projectsInfo;
+	public List<Project> getProjects() {
+		return m_projects;
 	}
 
 	public Date getStartTime() {
@@ -102,8 +103,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_productLines = productLines;
 	}
 
-	public void setProjectsInfo(String projectsInfo) {
-		m_projectsInfo = projectsInfo;
+	public void setProjects(List<Project> projects) {
+		m_projects = projects;
 	}
 
 	public void setStartTime(Date startTime) {

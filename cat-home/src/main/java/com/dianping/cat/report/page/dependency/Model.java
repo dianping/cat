@@ -25,10 +25,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private DependencyReport m_report;
-	
+
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
-	
+
 	public String m_message;
 
 	private Segment m_segment;
@@ -60,6 +60,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private TopMetric m_topMetric;
 
 	private TopReport m_topReport;
+
+	private String m_format;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -101,21 +103,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public String getFormat() {
+		return m_format;
+	}
+
 	public List<String> getIndexGraph() {
 		return m_indexGraph;
 	}
 
 	public List<LineChart> getLineCharts() {
-   	return m_lineCharts;
-   }
+		return m_lineCharts;
+	}
 
 	public int getMaxMinute() {
 		return m_maxMinute;
 	}
 
 	public String getMessage() {
-   	return m_message;
-   }
+		return m_message;
+	}
 
 	public int getMinute() {
 		return m_minute;
@@ -173,21 +179,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_dependencyGraph = dependencyGraph;
 	}
 
+	public void setFormat(String format) {
+		m_format = format;
+	}
+
 	public void setIndexGraph(List<String> indexGraph) {
 		m_indexGraph = indexGraph;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {
-   	m_lineCharts = lineCharts;
-   }
+		m_lineCharts = lineCharts;
+	}
 
 	public void setMaxMinute(int maxMinute) {
 		m_maxMinute = maxMinute;
 	}
 
 	public void setMessage(String message) {
-   	m_message = message;
-   }
+		m_message = message;
+	}
 
 	public void setMinute(int minute) {
 		m_minute = minute;
@@ -232,5 +242,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTopReport(TopReport topReport) {
 		m_topReport = topReport;
 	}
-	
+
 }

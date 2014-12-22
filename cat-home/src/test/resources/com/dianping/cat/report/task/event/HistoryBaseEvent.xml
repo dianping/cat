@@ -6,12 +6,12 @@
 	<ip>10.1.77.193</ip>
 	<ip>10.1.77.191</ip>
 	<machine ip="10.1.77.191">
-		<type id="RemoteCall" totalCount="4" failCount="0" failPercent="0.00">
+		<type id="RemoteCall" totalCount="4" failCount="0" failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dbf-1340004471358-0
 			</successMessageUrl>
 		</type>
 		<type id="PigeonRespone" totalCount="2" failCount="0"
-			failPercent="0.00">
+			failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dbf-1340004471574-0
 			</successMessageUrl>
 		</type>

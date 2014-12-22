@@ -73,7 +73,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
-		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class));
+		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 

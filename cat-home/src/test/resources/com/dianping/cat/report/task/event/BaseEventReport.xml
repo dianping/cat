@@ -6,7 +6,7 @@
 	<ip>10.1.77.193</ip>
 	<ip>10.1.77.194</ip>
 	<machine ip="10.1.77.193">
-		<type id="URL" totalCount="690" failCount="0" failPercent="0.00">
+		<type id="URL" totalCount="690" failCount="0" failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
 			<name id="ClientInfo" totalCount="345" failCount="0"
@@ -26,7 +26,7 @@
 				<range value="50" count="15" fails="0" />
 				<range value="55" count="16" fails="0" />
 			</name>
-			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00">
+			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 				</successMessageUrl>
 				<range value="0" count="15" fails="0" />
@@ -43,10 +43,10 @@
 				<range value="55" count="16" fails="0" />
 			</name>
 		</type>
-		<type id="User" totalCount="341" failCount="0" failPercent="0.00">
+		<type id="User" totalCount="341" failCount="0" failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
-			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00">
+			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 				</successMessageUrl>
 				<range value="0" count="15" fails="0" />
@@ -62,7 +62,7 @@
 				<range value="50" count="15" fails="0" />
 				<range value="55" count="15" fails="0" />
 			</name>
-			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00">
+			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337231972930-0
 				</successMessageUrl>
 				<range value="15" count="13" fails="0" />
@@ -74,7 +74,7 @@
 		</type>
 	</machine>
 	<machine ip="10.1.77.194">
-		<type id="URL" totalCount="690" failCount="0" failPercent="0.00">
+		<type id="URL" totalCount="690" failCount="0" failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
 			<name id="ClientInfo" totalCount="345" failCount="0"
@@ -94,7 +94,7 @@
 				<range value="50" count="15" fails="0" />
 				<range value="55" count="16" fails="0" />
 			</name>
-			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00">
+			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 				</successMessageUrl>
 				<range value="0" count="15" fails="0" />
@@ -111,10 +111,10 @@
 				<range value="55" count="16" fails="0" />
 			</name>
 		</type>
-		<type id="User1" totalCount="341" failCount="0" failPercent="0.00">
+		<type id="User1" totalCount="341" failCount="0" failPercent="0.00" tps="0.00">
 			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
-			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00">
+			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 				</successMessageUrl>
 				<range value="0" count="15" fails="0" />
@@ -130,7 +130,7 @@
 				<range value="50" count="15" fails="0" />
 				<range value="55" count="15" fails="0" />
 			</name>
-			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00">
+			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00" tps="0.00">
 				<successMessageUrl>MobileApi-0a014dc1-1337231972930-0
 				</successMessageUrl>
 				<range value="15" count="13" fails="0" />

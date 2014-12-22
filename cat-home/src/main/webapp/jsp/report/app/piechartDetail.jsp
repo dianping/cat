@@ -4,29 +4,21 @@
 			<tr>
 				<th align=left>
 				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="time" name="time"  size="16" 
+		           &nbsp;开始<input id="time" name="time"  size="16" 
 		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="time2" name="time2"  size="8" 
-		              data-format="HH:mm" type="text"></input> <span class="add-on">
+		           &nbsp;结束<input id="time2" name="time2"  size="5" 
+		              data-format="hh:mm" type="text"></input> <span class="add-on">
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
-		         命令字 <select id="command" style="width: 350px;">
-						<c:forEach var="item" items="${model.commands}" varStatus="status">
-							<c:choose>
-								<c:when test="${empty item.title}">
-									<option value='${item.id}'>${item.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value='${item.id}'>${item.title}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
+		        &nbsp;项目<select id="group" style="width: 200px;"></select>
+		         命令字 <select id="command" style="width: 200px;">
+						
+				</select> 返回码 <select id="code" style="width: 100px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
@@ -36,7 +28,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th align=left>版本 <select id="app-version" style="width: 100px;">
+				<th align=left>&nbsp;版本 <select id="app-version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>

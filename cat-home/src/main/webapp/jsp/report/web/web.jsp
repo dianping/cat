@@ -158,18 +158,16 @@
 		}
 		
 		$(document).ready(function() {
-			$('#datetimepicker1').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+			$('#datetimepicker1').datetimepicker();
 			$('#datetimepicker2').datetimepicker({
-				pickDate: false,
-				format: 'hh:mm'
+				pickDate: false
 			});
 			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
 			$('#datetimepicker3').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
 			$('#datetimepicker4').datetimepicker({
-				pickDate: false,
-				format: 'hh:mm'
+				pickDate: false
 			});
 			
 			$('#group').on('change',groupChange);

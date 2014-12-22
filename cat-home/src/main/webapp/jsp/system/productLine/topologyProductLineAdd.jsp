@@ -33,6 +33,7 @@
 						<td><input name="productLine.order"
 							value="${model.productLine.order}" required /></td>
 					</tr>
+					<c:if test="${payload.type eq '业务监控' || payload.type eq '应用监控'}">
 					<tr>
 						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
 						<td><c:choose>
@@ -59,45 +60,19 @@
 							</c:otherwise>
 						</c:choose></td>
 					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到网络监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.networkDashboard}">
-								<input type="radio" name="productLine.networkDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.networkDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.networkDashboard" value="true" />是
-								<input type="radio" name="productLine.networkDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到系统监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.systemMonitorDashboard}">
-								<input type="radio" name="productLine.systemMonitorDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.systemMonitorDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.systemMonitorDashboard" value="true" />是
-								<input type="radio" name="productLine.systemMonitorDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到外部监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.userMonitorDashboard}">
-								<input type="radio" name="productLine.userMonitorDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.userMonitorDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.userMonitorDashboard" value="true" />是
-								<input type="radio" name="productLine.userMonitorDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
+					</c:if>
+					<c:if test="${payload.type eq '网络监控'}">
+						<input type="hidden" name="productLine.networkMonitorDashboard" value="true" />
+					</c:if>
+					<c:if test="${payload.type eq '系统监控'}">
+						<input type="hidden" name="productLine.systemMonitorDashboard" value="true" />
+					</c:if>
+					<c:if test="${payload.type eq '外部监控'}">
+						<input type="hidden" name="productLine.userkMonitorDashboard" value="true" />
+					</c:if>
+					<c:if test="${payload.type eq '数据库监控'}">
+						<input type="hidden" name="productLine.databaseMonitorDashboard" value="true" />
+					</c:if>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
 						<td>

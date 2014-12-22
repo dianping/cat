@@ -45,6 +45,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
@@ -56,6 +57,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TopologyGraphManager m_graphManager;
+
+	@Inject
+	private TopoGraphFormatConfigManager m_formatConfigManager;
 
 	@Inject
 	private ExternalInfoBuilder m_externalInfoBuilder;
@@ -135,10 +139,12 @@ public class Handler implements PageHandler<Context> {
 				node.setLink(link);
 			}
 		}
+
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
 		model.setDashboardGraphData(dashboardGraph);
+		model.setFormat(m_formatConfigManager.buildFormatJson());
 	}
 
 	private void buildDependencyLineChart(Model model, Payload payload, Date reportTime) {
