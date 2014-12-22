@@ -60,7 +60,7 @@
 								<div class="input-group">
 									<input id="search" type="text" value="${payload.product}" class="search-input form-control ui-autocomplete-input" placeholder="input device for search" autocomplete="off"/>
 									<span class="input-group-btn">
-										<button class="btn btn-sm btn-pink" type="button" id="search_go">
+										<button class="btn btn-sm btn-primary" type="button" id="search_go">
 											Go!
 										</button> 
 									</span>
@@ -153,4 +153,8 @@
 			</c:forEach>
 		});
 	</script>
-</script>
+	<style type="text/css">
+	.input-group .form-control {
+		position: static;
+	}
+	</style>
