@@ -103,7 +103,7 @@ $(document).ready(function() {
 					<td style="text-align: left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+						<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${item.name}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 						&nbsp;&nbsp;&nbsp;${e.id}</td>
 						</c:when>
 						<c:otherwise>

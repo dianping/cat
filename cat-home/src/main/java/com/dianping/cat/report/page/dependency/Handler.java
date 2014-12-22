@@ -39,8 +39,8 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.service.ModelRequest;
@@ -232,11 +232,11 @@ public class Handler implements PageHandler<Context> {
 		Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
 
 		switch (action) {
-		case TOPOLOGY:
-			buildProjectTopology(model, payload, reportTime);
-			break;
 		case LINE_CHART:
 			buildDependencyLineChart(model, payload, reportTime);
+			break;
+		case TOPOLOGY:
+			buildProjectTopology(model, payload, reportTime);
 			break;
 		case DEPENDENCY_DASHBOARD:
 			buildDependencyDashboard(model, payload, reportTime);

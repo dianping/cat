@@ -91,7 +91,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="12"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="13"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
 				<tr></tr>
 			</c:forEach>
 		</c:when>
@@ -134,7 +134,7 @@
 					<td class="longText" style="text-align:left;white-space:normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${item.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise></c:choose>
 					&nbsp;&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
@@ -151,7 +151,7 @@
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="12"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="13"  style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
 				<tr></tr>
 			</c:forEach>
 		</c:otherwise>

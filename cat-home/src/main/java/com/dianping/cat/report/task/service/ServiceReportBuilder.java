@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -38,6 +39,9 @@ public class ServiceReportBuilder implements TaskBuilder {
 	@Inject
 	private HostinfoService m_hostinfoService;
 
+	@Inject
+	private ServerConfigManager m_configManger;
+
 	Map<String, Domain> stat = new HashMap<String, Domain>();
 
 	@Override
@@ -64,17 +68,19 @@ public class ServiceReportBuilder implements TaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, CrossAnalyzer.ID);
 
 		for (String domainName : domains) {
-			CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
-			ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
+			if (m_configManger.validateDomain(domainName)) {
+				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
-			projectInfo.setHostinfoService(m_hostinfoService);
-			projectInfo.setClientIp(Constants.ALL);
-			projectInfo.visitCrossReport(crossReport);
-			Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
+				projectInfo.setHostinfoService(m_hostinfoService);
+				projectInfo.setClientIp(Constants.ALL);
+				projectInfo.visitCrossReport(crossReport);
+				Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
 
-			for (TypeDetailInfo typeInfo : callInfos) {
-				if (!validataService(typeInfo)) {
-					merge(serviceReport.findOrCreateDomain(typeInfo.getProjectName()), typeInfo);
+				for (TypeDetailInfo typeInfo : callInfos) {
+					if (!validataService(typeInfo)) {
+						merge(serviceReport.findOrCreateDomain(typeInfo.getProjectName()), typeInfo);
+					}
 				}
 			}
 		}

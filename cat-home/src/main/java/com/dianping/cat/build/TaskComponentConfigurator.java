@@ -135,7 +135,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(ReportServiceManager.class,
-		      HostinfoService.class));
+		      HostinfoService.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(ReportServiceManager.class));
 

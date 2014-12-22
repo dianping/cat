@@ -110,7 +110,7 @@
 					<td class="left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a	href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
+						<a	href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 					</c:when>
 					</c:choose>
 					&nbsp;&nbsp;${e.id}
