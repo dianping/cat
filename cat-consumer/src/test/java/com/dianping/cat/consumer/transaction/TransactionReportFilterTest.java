@@ -24,6 +24,8 @@ public class TransactionReportFilterTest {
 		for (int i = 0; i < 3500; i++) {
 			type.addName(new TransactionName("Test" + i));
 		}
+		
+		System.out.println(report);
 
 		TransactionReportCountFilter f1 = new TransactionReportCountFilter();
 		String filterReport = f1.buildXml(report);

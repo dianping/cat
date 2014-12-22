@@ -122,7 +122,7 @@
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space:normal">
-							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${item.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
 						<c:otherwise>
