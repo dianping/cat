@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.alert.business;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -31,7 +30,6 @@ import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
@@ -47,10 +45,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected BaselineService m_baselineService;
-
-	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
 	protected List<AlertResultEntity> computeAlertInfo(int minute, String product, String metricKey, MetricType type) {
 		double[] value = null;
@@ -112,42 +106,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
-		if (period == ModelPeriod.CURRENT) {
-			MetricReport report = m_currentReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime()).setProperty(
-				      "requireAll", "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_currentReports.put(product, report);
-				}
-				return report;
-			}
-		} else if (period == ModelPeriod.LAST) {
-			MetricReport report = m_lastReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime()).setProperty("requireAll",
-				      "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_lastReports.put(product, report);
-				}
-				return report;
-			}
-		} else {
-			throw new RuntimeException("internal error, this can't be reached.");
-		}
-	}
-
 	@Override
 	public String getName() {
 		return ID;
@@ -190,7 +148,7 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
 			}
 
-			sendAlerts(product, metric, alertResults);
+			sendAlerts(product, metricKey, metric, alertResults);
 		}
 	}
 
@@ -274,8 +232,6 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 			} catch (Exception e) {
 				t.setStatus(e);
 			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;

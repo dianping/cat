@@ -53,13 +53,23 @@ public abstract class BaseAlert {
 
 	protected Logger m_logger;
 
-	protected String buildMetricName(String metricKey) {
-		try {
-			return metricKey.split(":")[2];
-		} catch (Exception ex) {
-			Cat.logError("get metric name error:" + metricKey, ex);
-			return null;
+	private int calMaxMinute(Map<String, Map<MetricType, List<Config>>> configs) {
+		int maxMinute = 0;
+
+		for (Map<MetricType, List<Config>> subMap : configs.values()) {
+			for (List<Config> tmpConfigs : subMap.values()) {
+				for (Config config : tmpConfigs) {
+					for (Condition condition : config.getConditions()) {
+						int tmpMinute = condition.getMinute();
+
+						if (tmpMinute > maxMinute) {
+							maxMinute = tmpMinute;
+						}
+					}
+				}
+			}
 		}
+		return maxMinute;
 	}
 
 	protected String extractDomain(String metricKey) {
@@ -67,6 +77,15 @@ public abstract class BaseAlert {
 			return metricKey.split(":")[0];
 		} catch (Exception ex) {
 			Cat.logError("extract domain error:" + metricKey, ex);
+			return null;
+		}
+	}
+
+	protected String extractMetricName(String metricKey) {
+		try {
+			return metricKey.split(":")[2];
+		} catch (Exception ex) {
+			Cat.logError("extract metric name error:" + metricKey, ex);
 			return null;
 		}
 	}
@@ -130,11 +149,11 @@ public abstract class BaseAlert {
 		return true;
 	}
 
-	protected void sendAlerts(String productlineName, String metricKey, List<AlertResultEntity> alertResults) {
+	protected void sendAlerts(String productlineName, String metricKey, String metricName,
+	      List<AlertResultEntity> alertResults) {
 		for (AlertResultEntity alertResult : alertResults) {
 			m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 
-			String metricName = buildMetricName(metricKey);
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
@@ -147,24 +166,25 @@ public abstract class BaseAlert {
 
 	private void processMetricItem(int minute, String product, String metricKey,
 	      Map<String, Map<MetricType, List<Config>>> configs, MetricReport lastReport, MetricReport currentReport) {
+		String metricName = extractMetricName(metricKey);
+
 		for (Entry<String, Map<MetricType, List<Config>>> entry : configs.entrySet()) {
 			String metricPattern = entry.getKey();
 
-			if (getRuleConfigManager().validateRegex(metricPattern, metricKey) > 0) {
+			if (getRuleConfigManager().validateRegex(metricPattern, metricName) > 0) {
 				for (Entry<MetricType, List<Config>> configsByType : entry.getValue().entrySet()) {
-					MetricType type = configsByType.getKey();
-					List<Config> currentConfigs = configsByType.getValue();
-					Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(currentConfigs);
+					MetricType currentType = configsByType.getKey();
+					Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configsByType.getValue());
 					int maxMinute = resultPair.getKey();
 					Pair<double[], double[]> datas = m_dataExtractor.extractData(minute, maxMinute, lastReport,
-					      currentReport, metricKey, type);
+					      currentReport, metricKey, currentType);
 
 					double[] baseline = datas.getKey();
 					double[] value = datas.getValue();
 					List<Condition> conditions = resultPair.getValue();
 					List<AlertResultEntity> results = m_dataChecker.checkData(value, baseline, conditions);
 
-					sendAlerts(product, metricKey, results);
+					sendAlerts(product, metricKey, metricName, results);
 				}
 			}
 		}
@@ -177,19 +197,32 @@ public abstract class BaseAlert {
 		int maxMinute = calMaxMinute(configs);
 		MetricReport currentReport = null;
 		MetricReport lastReport = null;
+		boolean isDataReady = false;
 
 		if (minute >= maxMinute - 1) {
 			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+
+			if (currentReport != null) {
+				isDataReady = true;
+			}
 		} else if (minute < 0) {
 			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null) {
+				isDataReady = true;
+			}
 		} else {
 			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
 			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null && currentReport != null) {
+				isDataReady = true;
+			}
 		}
 
 		MetricReport report = currentReport == null ? lastReport : currentReport;
 
-		if (report != null) {
+		if (isDataReady) {
 			for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
 				try {
 					processMetricItem(minute, product, entry.getKey(), configs, lastReport, currentReport);
@@ -198,11 +231,6 @@ public abstract class BaseAlert {
 				}
 			}
 		}
-	}
-
-	private int calMaxMinute(Map<String, Map<MetricType, List<Config>>> configs) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 
 	protected int getAlreadyMinute() {

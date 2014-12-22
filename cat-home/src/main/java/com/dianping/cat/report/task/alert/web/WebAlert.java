@@ -45,10 +45,6 @@ public class WebAlert extends BaseAlert implements Task {
 	@Inject
 	protected WebRuleConfigManager m_ruleConfigManager;
 
-	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
-
 	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {
 		List<AlertResultEntity> results = new LinkedList<AlertResultEntity>();
@@ -169,39 +165,21 @@ public class WebAlert extends BaseAlert implements Task {
 	}
 
 	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
-		MetricReport report = null;
+		List<String> fields = Splitters.by(";").split(idPrefix);
+		String url = fields.get(0);
+		String city = fields.get(1);
+		String channel = fields.get(2);
 
-		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(idPrefix);
-		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(idPrefix);
-		} else {
-			throw new RuntimeException("Unknown ModelPeriod: " + period);
-		}
+		ModelRequest request = new ModelRequest(url, period.getStartTime());
+		Map<String, String> pars = new HashMap<String, String>();
 
-		if (report == null) {
-			List<String> fields = Splitters.by(";").split(idPrefix);
-			String url = fields.get(0);
-			String city = fields.get(1);
-			String channel = fields.get(2);
+		pars.put("metricType", Constants.METRIC_USER_MONITOR);
+		pars.put("type", Constants.TYPE_INFO);
+		pars.put("city", city);
+		pars.put("channel", channel);
+		request.getProperties().putAll(pars);
 
-			ModelRequest request = new ModelRequest(url, period.getStartTime());
-			Map<String, String> pars = new HashMap<String, String>();
-
-			pars.put("metricType", Constants.METRIC_USER_MONITOR);
-			pars.put("type", Constants.TYPE_INFO);
-			pars.put("city", city);
-			pars.put("channel", channel);
-			request.getProperties().putAll(pars);
-
-			report = m_service.invoke(request);
-
-			if (period == ModelPeriod.CURRENT) {
-				m_currentReports.put(idPrefix, report);
-			} else if (period == ModelPeriod.LAST) {
-				m_lastReports.put(idPrefix, report);
-			}
-		}
+		MetricReport report = m_service.invoke(request);
 
 		return report;
 	}
@@ -300,8 +278,6 @@ public class WebAlert extends BaseAlert implements Task {
 				t.setStatus(e);
 				Cat.logError(e);
 			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;

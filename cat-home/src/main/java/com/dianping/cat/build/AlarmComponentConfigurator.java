@@ -201,47 +201,47 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      BaselineService.class, AlertInfo.class).req(RemoteMetricReportService.class,
-		      BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class, DefaultDataExtractor.class));
+		      BusinessRuleConfigManager.class, DataChecker.class, AlertManager.class, DataExtractor.class));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      DefaultDataExtractor.class));
+		      DataExtractor.class));
 
 		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      DefaultDataExtractor.class));
+		      DataExtractor.class));
 
 		all.add(C(HeartbeatAlert.class)
 		      .req(ProductLineConfigManager.class, BaselineService.class, DisplayPolicyManager.class)
 		      .req(RemoteMetricReportService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
-		            ServerConfigManager.class, AlertManager.class, AlertInfo.class, DefaultDataExtractor.class)
+		            ServerConfigManager.class, AlertManager.class, AlertInfo.class, DataExtractor.class)
 		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class).req(
 		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      DefaultDataExtractor.class));
+		      DataExtractor.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
-		      DataChecker.class, AppConfigManager.class, DefaultDataExtractor.class));
+		      DataChecker.class, AppConfigManager.class, DataExtractor.class));
 
 		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
-		      .req(UrlPatternConfigManager.class, DefaultDataExtractor.class));
+		      .req(UrlPatternConfigManager.class, DataExtractor.class));
 
 		all.add(C(TransactionAlert.class).req(ProductLineConfigManager.class, BaselineService.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID)
-		      .req(TransactionRuleConfigManager.class, DefaultDataExtractor.class));
+		      .req(TransactionRuleConfigManager.class, DataExtractor.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
 		all.add(C(ExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
-		      AlertManager.class, DefaultDataExtractor.class).req(ModelService.class, TopAnalyzer.ID));
+		      AlertManager.class, DataExtractor.class).req(ModelService.class, TopAnalyzer.ID));
 		all.add(C(FrontEndExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
-		      AlertManager.class, DefaultDataExtractor.class).req(ModelService.class, TopAnalyzer.ID));
+		      AlertManager.class, DataExtractor.class).req(ModelService.class, TopAnalyzer.ID));
 
-		all.add(C(ThirdPartyAlert.class).req(AlertManager.class, DefaultDataExtractor.class));
+		all.add(C(ThirdPartyAlert.class).req(AlertManager.class, DataExtractor.class));
 
 		all.add(C(HttpConnector.class));
 
