@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -16,6 +15,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
@@ -39,7 +39,7 @@ import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.DisplayPolicyManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 
-public class HeartbeatAlert extends BaseAlert implements Task {
+public class HeartbeatAlert extends BaseAlert {
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_heartbeatService;
@@ -223,6 +223,11 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 	}
 
 	@Override
+   protected Map<String, ProductLine> getProductlines() {
+	   return null;
+   }
+
+	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
 	}
@@ -361,10 +366,6 @@ public class HeartbeatAlert extends BaseAlert implements Task {
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	public void shutdown() {
 	}
 
 }

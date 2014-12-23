@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -19,6 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -37,7 +37,7 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
-public class WebAlert extends BaseAlert implements Task {
+public class WebAlert extends BaseAlert {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
@@ -292,10 +292,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
-	@Override
-	public void shutdown() {
-	}
-
 	public boolean validateRegex(String regexText, String text) {
 		Pattern p = Pattern.compile(regexText);
 		Matcher m = p.matcher(text);
@@ -305,6 +301,11 @@ public class WebAlert extends BaseAlert implements Task {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	protected Map<String, ProductLine> getProductlines() {
+		return null;
 	}
 
 }

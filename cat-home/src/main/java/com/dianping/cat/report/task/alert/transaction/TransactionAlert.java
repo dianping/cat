@@ -7,12 +7,12 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -36,17 +36,17 @@ import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.TransactionRuleConfigManager;
 
-public class TransactionAlert extends BaseAlert implements Task {
+public class TransactionAlert extends BaseAlert {
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
 	@Inject
 	private TransactionMergeHelper m_mergeManager;
-	
+
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
-	
+
 	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
@@ -62,6 +62,7 @@ public class TransactionAlert extends BaseAlert implements Task {
 
 		return result;
 	}
+
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
@@ -129,6 +130,11 @@ public class TransactionAlert extends BaseAlert implements Task {
 	}
 
 	@Override
+	protected Map<String, ProductLine> getProductlines() {
+		return null;
+	}
+
+	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
 	}
@@ -192,10 +198,6 @@ public class TransactionAlert extends BaseAlert implements Task {
 				active = false;
 			}
 		}
-	}
-
-	@Override
-	public void shutdown() {
 	}
 
 }

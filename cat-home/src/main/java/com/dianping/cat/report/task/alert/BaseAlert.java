@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -21,13 +23,14 @@ import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 
-public abstract class BaseAlert {
+public abstract class BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected AlertInfo m_alertInfo;
@@ -72,6 +75,28 @@ public abstract class BaseAlert {
 		return maxMinute;
 	}
 
+	private boolean compareTime(String start, String end) {
+		String[] startTime = start.split(":");
+		int hourStart = Integer.parseInt(startTime[0]);
+		int minuteStart = Integer.parseInt(startTime[1]);
+		int startMinute = hourStart * 60 + minuteStart;
+
+		String[] endTime = end.split(":");
+		int hourEnd = Integer.parseInt(endTime[0]);
+		int minuteEnd = Integer.parseInt(endTime[1]);
+		int endMinute = hourEnd * 60 + minuteEnd;
+
+		Calendar cal = Calendar.getInstance();
+		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+		return current >= startMinute && current <= endMinute;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	protected String extractDomain(String metricKey) {
 		try {
 			return metricKey.split(":")[0];
@@ -90,14 +115,23 @@ public abstract class BaseAlert {
 		}
 	}
 
-	protected abstract BaseRuleConfigManager getRuleConfigManager();
-
 	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
 		MetricReport report = m_service.invoke(request);
 
 		return report;
 	}
+
+	protected int getAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		return minute;
+	}
+
+	protected abstract Map<String, ProductLine> getProductlines();
+
+	protected abstract BaseRuleConfigManager getRuleConfigManager();
 
 	private boolean judgeCurrentInConfigRange(Config config) {
 		try {
@@ -128,40 +162,8 @@ public abstract class BaseAlert {
 		return result;
 	}
 
-	private boolean compareTime(String start, String end) {
-		String[] startTime = start.split(":");
-		int hourStart = Integer.parseInt(startTime[0]);
-		int minuteStart = Integer.parseInt(startTime[1]);
-		int startMinute = hourStart * 60 + minuteStart;
-
-		String[] endTime = end.split(":");
-		int hourEnd = Integer.parseInt(endTime[0]);
-		int minuteEnd = Integer.parseInt(endTime[1]);
-		int endMinute = hourEnd * 60 + minuteEnd;
-
-		Calendar cal = Calendar.getInstance();
-		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-
-		return current >= startMinute && current <= endMinute;
-	}
-
 	protected boolean needAlert(MetricItemConfig config) {
 		return true;
-	}
-
-	protected void sendAlerts(String productlineName, String metricKey, String metricName,
-	      List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
-			m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
-
-			AlertEntity entity = new AlertEntity();
-
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
-
-			m_sendManager.addAlert(entity);
-		}
 	}
 
 	private void processMetricItem(int minute, String product, String metricKey,
@@ -233,13 +235,6 @@ public abstract class BaseAlert {
 		}
 	}
 
-	protected int getAlreadyMinute() {
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-
-		return minute;
-	}
-
 	protected Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
 		int maxMinute = 0;
 		List<Condition> conditions = new ArrayList<Condition>();
@@ -265,5 +260,63 @@ public abstract class BaseAlert {
 		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
 	}
 
-	protected abstract String getName();
+	@Override
+	public void run() {
+		boolean active = true;
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			active = false;
+		}
+		while (active) {
+			Transaction t = Cat.newTransaction("alert-" + getName(), TimeHelper.getMinuteStr());
+			long current = System.currentTimeMillis();
+
+			try {
+				Map<String, ProductLine> productLines = getProductlines();
+
+				for (ProductLine productLine : productLines.values()) {
+					try {
+						processProductLine(productLine);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
+			long duration = System.currentTimeMillis() - current;
+
+			try {
+				if (duration < DURATION) {
+					Thread.sleep(DURATION - duration);
+				}
+			} catch (InterruptedException e) {
+				active = false;
+			}
+		}
+	}
+
+	protected void sendAlerts(String productlineName, String metricKey, String metricName,
+	      List<AlertResultEntity> alertResults) {
+		for (AlertResultEntity alertResult : alertResults) {
+			m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
+
+			AlertEntity entity = new AlertEntity();
+
+			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+			      .setLevel(alertResult.getAlertLevel());
+			entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
+
+			m_sendManager.addAlert(entity);
+		}
+	}
+
+	@Override
+	public void shutdown() {
+	}
 }

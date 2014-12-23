@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -21,10 +18,8 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
@@ -34,7 +29,7 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
-public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
+public class BusinessAlert extends BaseAlert {
 
 	public static final String ID = AlertType.Business.getName();
 
@@ -103,13 +98,13 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
+	public String getName() {
+		return ID;
 	}
 
 	@Override
-	public String getName() {
-		return ID;
+	protected Map<String, ProductLine> getProductlines() {
+		return m_productLineConfigManager.queryMetricProductLines();
 	}
 
 	@Override
@@ -205,48 +200,4 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	@Override
-	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
-		while (active) {
-			Transaction t = Cat.newTransaction("AlertMetric", TimeHelper.getMinuteStr());
-			long current = System.currentTimeMillis();
-
-			try {
-				Map<String, ProductLine> productLines = m_productLineConfigManager.queryMetricProductLines();
-
-				for (ProductLine productLine : productLines.values()) {
-					try {
-						processProductLine(productLine);
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
-				}
-
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
-		}
-	}
-
-	@Override
-	public void shutdown() {
-	}
 }
