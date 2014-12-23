@@ -335,7 +335,7 @@ public class HeartbeatAlert extends BaseAlert {
 		}
 
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertHeartbeat", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("alert-heartbeat", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

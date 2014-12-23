@@ -89,8 +89,8 @@ public class BusinessAlert extends BaseAlert {
 				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
 				      new Date(ModelPeriod.LAST.getStartTime()), type);
 
-				value = mergerArray(lastValue, currentValue);
-				baseline = mergerArray(lastBaseline, currentBaseline);
+				value = m_dataExtractor.mergerArray(lastValue, currentValue);
+				baseline = m_dataExtractor.mergerArray(lastBaseline, currentBaseline);
 				return m_dataChecker.checkData(value, baseline, conditions);
 			}
 		}

@@ -102,7 +102,7 @@ public class WebAlert extends BaseAlert {
 					double[] last = lastValue.get(key);
 
 					if (current != null && last != null) {
-						datas.put(key, mergerArray(last, current));
+						datas.put(key, m_dataExtractor.mergerArray(last, current));
 					}
 				}
 				results.addAll(computeAlertForCondition(datas, conditions, type));
@@ -262,7 +262,7 @@ public class WebAlert extends BaseAlert {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("alert-web", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

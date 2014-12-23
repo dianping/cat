@@ -145,22 +145,6 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected double[] mergerArray(double[] from, double[] to) {
-		int fromLength = from.length;
-		int toLength = to.length;
-		double[] result = new double[fromLength + toLength];
-		int index = 0;
-
-		for (int i = 0; i < fromLength; i++) {
-			result[i] = from[i];
-			index++;
-		}
-		for (int i = 0; i < toLength; i++) {
-			result[i + index] = to[i];
-		}
-		return result;
-	}
-
 	private void processMetricItem(int minute, String product, String metricKey,
 	      Map<String, Map<MetricType, List<Config>>> configs, MetricReport lastReport, MetricReport currentReport) {
 		String metricName = extractMetricName(metricKey);

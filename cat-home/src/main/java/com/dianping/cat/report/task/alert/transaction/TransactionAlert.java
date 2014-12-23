@@ -106,7 +106,7 @@ public class TransactionAlert extends BaseAlert {
 				int lastEnd = 59;
 				double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, currentReport);
 
-				double[] data = mergerArray(lastValue, currentValue);
+				double[] data = m_dataExtractor.mergerArray(lastValue, currentValue);
 				results.addAll(m_dataChecker.checkData(data, conditions));
 			}
 		}
@@ -167,7 +167,7 @@ public class TransactionAlert extends BaseAlert {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("alert-transaction", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

@@ -64,7 +64,8 @@ public class DefaultDataExtractor implements DataExtractor {
 		return result;
 	}
 
-	private double[] mergerArray(double[] from, double[] to) {
+	@Override
+	public double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
 		double[] result = new double[fromLength + toLength];
@@ -95,7 +96,7 @@ public class DefaultDataExtractor implements DataExtractor {
 	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
 		if (report == null) {
 		}
-		
+
 		double[] all = new double[60];
 		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
 

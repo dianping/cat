@@ -8,4 +8,7 @@ public interface DataExtractor {
 
 	public Pair<double[], double[]> extractData(int currentMinute, int ruleMinute, MetricReport lastReport,
 	      MetricReport currentReport, String metricKey, MetricType type);
+
+	public double[] mergerArray(double[] lastValue, double[] currentValue);
+	
 }
