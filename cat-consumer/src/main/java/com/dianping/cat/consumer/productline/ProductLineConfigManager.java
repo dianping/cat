@@ -351,24 +351,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return queryProductLines(ProductLineConfig.NETWORK_PRODUCTLINE);
 	}
 
-	public ProductLine queryProductLine(String id) {
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(id);
-
-		return pair.getValue();
-	}
-
 	public String queryProductLineByDomain(String domain) {
 		String productLine = m_domainToProductLines.get(domain);
 
 		return productLine == null ? "Default" : productLine;
 	}
 
-	public Pair<ProductLineConfig, ProductLine> queryProductLineConfig(String name) {
+	public ProductLine queryProductLine(String name) {
 		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
 			ProductLine productLine = productLineConfig.getCompany().findProductLine(name);
 
 			if (productLine != null) {
-				return new Pair<ProductLineConfig, ProductLine>(productLineConfig, productLine);
+				return productLine;
 			}
 		}
 		return null;
