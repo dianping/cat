@@ -2841,9 +2841,6 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2942,9 +2939,6 @@
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -2964,9 +2958,6 @@
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>top</role-hint>
 				</requirement>
@@ -2978,9 +2969,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
