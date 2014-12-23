@@ -2694,9 +2694,6 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
@@ -2724,9 +2721,6 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
@@ -2752,9 +2746,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
@@ -2798,9 +2789,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -2851,9 +2839,6 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
@@ -2882,9 +2867,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
