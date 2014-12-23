@@ -34,7 +34,7 @@
 								</div>
 							</form>
 						</div>
-						
+				</th><th>		
 				&nbsp;&nbsp;时间段 
 				<c:forEach var="range" items="${model.allRange}">
 					<c:choose>
