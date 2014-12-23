@@ -66,7 +66,7 @@
 							<th width="7%">应用监控</th>
 						</c:if>
 						<!-- <th width="40%">项目列表</th> -->
-						<th width="8%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class="btn btn-primary btn-xs" >
+						<th width="5%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 					</tr></thead>
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">

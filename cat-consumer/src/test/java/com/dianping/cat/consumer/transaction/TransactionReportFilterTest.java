@@ -25,8 +25,6 @@ public class TransactionReportFilterTest {
 			type.addName(new TransactionName("Test" + i));
 		}
 		
-		System.out.println(report);
-
 		TransactionReportCountFilter f1 = new TransactionReportCountFilter();
 		String filterReport = f1.buildXml(report);
 		TransactionReport newReport = DefaultSaxParser.parse(filterReport);

@@ -162,13 +162,34 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean deleteProductLine(String line, String title) {
+		boolean flag = true;
 		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
 		if (productLineConfig != null) {
 			Company company = productLineConfig.getCompany();
 
+			switch (productLineConfig) {
+			case METRIC_PRODUCTLINE:
+				ProductLine product = ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().findProductLine(line);
+
+				if (product != null) {
+					product.setMetricDashboard(false);
+				}
+				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
+				break;
+			case APPLICATION_PRODUCTLINE:
+				product = ProductLineConfig.METRIC_PRODUCTLINE.getCompany().findProductLine(line);
+
+				if (product != null) {
+					product.setApplicationDashboard(false);
+				}
+				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
+				break;
+			default:
+				break;
+			}
 			company.removeProductLine(line);
-			return storeConfig(productLineConfig);
+			return storeConfig(productLineConfig) && flag;
 		}
 		return false;
 	}

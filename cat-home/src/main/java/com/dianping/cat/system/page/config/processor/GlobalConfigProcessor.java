@@ -69,7 +69,11 @@ public class GlobalConfigProcessor {
 			domain = payload.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {
-				domain = Constants.CAT;
+				domain = payload.getProject().getDomain();
+
+				if (StringUtils.isEmpty(domain)) {
+					domain = Constants.CAT;
+				}
 			}
 			model.setProjects(queryAllProjects());
 			model.setProject(m_projectService.findByDomain(domain));
