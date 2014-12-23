@@ -16,7 +16,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
@@ -162,10 +161,6 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	protected boolean needAlert(MetricItemConfig config) {
-		return true;
-	}
-
 	private void processMetricItem(int minute, String product, String metricKey,
 	      Map<String, Map<MetricType, List<Config>>> configs, MetricReport lastReport, MetricReport currentReport) {
 		String metricName = extractMetricName(metricKey);
@@ -222,9 +217,9 @@ public abstract class BaseAlert implements Task, LogEnabled {
 			}
 		}
 
-		MetricReport report = currentReport == null ? lastReport : currentReport;
-
 		if (isDataReady) {
+			MetricReport report = currentReport == null ? lastReport : currentReport;
+
 			for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
 				try {
 					processMetricItem(minute, product, entry.getKey(), configs, lastReport, currentReport);
