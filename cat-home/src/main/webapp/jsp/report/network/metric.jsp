@@ -130,10 +130,10 @@
 			
 			var data = [];
 			<c:forEach var="item" items="${model.productLines}">
-						var item = {};
-						item['label'] = '${item.id}';
-						item['category'] = '网络监控设备';
-						data.push(item);
+				var item = {};
+				item['label'] = '${item.id}';
+				item['category'] = '网络监控设备';
+				data.push(item);
 			</c:forEach>
 					
 			$( "#search" ).catcomplete({
