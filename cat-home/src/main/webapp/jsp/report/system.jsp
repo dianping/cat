@@ -201,15 +201,13 @@
 						<input id="search" type="text" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 						<span class="input-group-btn">
 							<button class="btn btn-sm btn-primary" type="button" id="search_go">
-								Go!
+								Go
 							</button> 
 						</span>
 						</div>
 						</form>
 					</div>
 					</th>
-					
-				</th>
 			</tr>
 		</table>
 		<div>

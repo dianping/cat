@@ -62,7 +62,7 @@
 							<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 							<span class="input-group-btn">
 								<button class="btn btn-sm btn-pink" type="button" id="search_go">
-									Go!
+									Go
 								</button> 
 							</span>
 						</div>

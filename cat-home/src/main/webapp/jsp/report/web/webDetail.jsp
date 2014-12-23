@@ -11,7 +11,7 @@
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
 		           &nbsp;结束<input id="endTime" name="time2"  size="8" 
 		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
+		              <i class="ace-icon fa fa-clock-o "></i>
 		           </span>
 		        </div>
 				&nbsp;组&nbsp;<select style="width: 100px;" name="group" id="group">
@@ -57,7 +57,7 @@
 		        <div id="datetimepicker4" class="input-append  date" style="margin-bottom: 0px;float:left;">
 		           &nbsp;结束<input id="endTime2" name="time2"  size="8" 
 		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
+		              <i class="ace-icon fa fa-clock-o"></i>
 		           </span>
 		        </div>
 				&nbsp;组&nbsp;<select style="width: 100px;" name="group2" id="group2">

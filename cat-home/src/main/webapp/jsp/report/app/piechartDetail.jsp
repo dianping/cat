@@ -12,7 +12,7 @@
 		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
 		           &nbsp;结束<input id="time2" name="time2"  size="5" 
 		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
+		              <i class="ace-icon fa fa-clock-o"></i>
 		           </span>
 		        </div>
 		        &nbsp;项目<select id="group" style="width: 200px;"></select>
