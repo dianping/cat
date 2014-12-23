@@ -83,7 +83,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -98,8 +98,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.product.ProjectUpdateTask</role>
-			<implementation>com.dianping.cat.report.task.product.ProjectUpdateTask</implementation>
+			<role>com.dianping.cat.report.task.project.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.project.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -327,6 +327,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.ConfigReloadTask</role>
 			<implementation>com.dianping.cat.system.config.ConfigReloadTask</implementation>
 			<requirements>
@@ -334,7 +346,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
@@ -1032,7 +1044,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.BaselineCreator</role>
@@ -1147,6 +1159,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.HostinfoService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2473,7 +2488,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
@@ -2646,7 +2661,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2676,7 +2691,7 @@
 			<implementation>com.dianping.cat.report.task.alert.network.NetworkAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2706,7 +2721,7 @@
 			<implementation>com.dianping.cat.report.task.alert.database.DatabaseAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2736,7 +2751,7 @@
 			<implementation>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2782,7 +2797,7 @@
 			<implementation>com.dianping.cat.report.task.alert.system.SystemAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2836,7 +2851,7 @@
 			<implementation>com.dianping.cat.report.task.alert.web.WebAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2869,7 +2884,7 @@
 			<implementation>com.dianping.cat.report.task.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -3856,50 +3871,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.top.Handler</role>
-			<implementation>com.dianping.cat.report.page.top.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.top.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>top</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.top.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.top.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.metric.Handler</role>
 			<implementation>com.dianping.cat.report.page.metric.Handler</implementation>
 			<requirements>
@@ -3910,7 +3881,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.GraphCreator</role>
@@ -3930,8 +3901,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.metric.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.productline.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3964,7 +3935,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -4000,7 +3971,7 @@
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -4034,6 +4005,9 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
@@ -4060,7 +4034,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4113,6 +4087,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
+			<implementation>com.dianping.cat.system.config.TopoGraphFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</implementation>
 			<requirements>
@@ -4134,6 +4120,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4269,7 +4267,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.GraphCreator</role>
@@ -4308,7 +4306,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -4433,7 +4431,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -4457,7 +4455,7 @@
 					<role>com.dianping.cat.report.page.system.graph.SystemGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4490,7 +4488,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -4541,7 +4539,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -4608,6 +4606,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4864,7 +4865,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.database.GraphCreator</role>
@@ -4900,7 +4901,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
@@ -5150,13 +5151,16 @@
 			<implementation>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.TopoGraphFormatConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5168,7 +5172,7 @@
 					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.metric.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>

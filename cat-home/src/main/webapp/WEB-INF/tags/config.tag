@@ -114,6 +114,9 @@
 							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
 								<b class="arrow"></b></li>
+							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>应用监控样式</a>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">
@@ -166,7 +169,7 @@
 						你确定要删除吗？(不可恢复)
 					</p>
 				</div>
- 				<div style="padding-top:2px;padding-right:6px;">
+ 				<div style="padding-top:2px;padding-right:8px;">
  				<jsp:doBody/>
  				</div>
 			</div>

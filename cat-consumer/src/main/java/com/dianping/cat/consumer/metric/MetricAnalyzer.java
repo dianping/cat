@@ -23,6 +23,7 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;

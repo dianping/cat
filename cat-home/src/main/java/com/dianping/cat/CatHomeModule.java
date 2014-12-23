@@ -25,7 +25,7 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.alert.web.WebAlert;
-import com.dianping.cat.report.task.product.ProjectUpdateTask;
+import com.dianping.cat.report.task.project.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 

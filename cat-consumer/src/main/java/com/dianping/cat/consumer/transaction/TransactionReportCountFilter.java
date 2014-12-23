@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -79,22 +78,6 @@ public class TransactionReportCountFilter extends
 
 			for (int i = m_maxItems; i < size; i++) {
 				mergeName(other, all.get(i));
-			}
-
-			List<String> toRemove = new ArrayList<String>();
-
-			transactionNames = type.getNames();
-			for (Entry<String, TransactionName> entry : type.getNames().entrySet()) {
-				TransactionName tansactionName = entry.getValue();
-
-				if (tansactionName.getTotalCount() == 1) {
-					toRemove.add(entry.getKey());
-					mergeName(other, tansactionName);
-				}
-			}
-
-			for (String name : toRemove) {
-				transactionNames.remove(name);
 			}
 		}
 		super.visitType(type);

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.product;
+package com.dianping.cat.report.task.project;
 
 import java.io.InputStream;
 import java.util.ArrayList;

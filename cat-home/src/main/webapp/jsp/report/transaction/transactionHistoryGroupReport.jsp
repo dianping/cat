@@ -185,7 +185,7 @@
 					<td class="longText" style="text-align: left; white-space: normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}"
+					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${item.id}${model.customDate}"
 											class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise>

@@ -61,6 +61,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.TOPOLOGY_GRAPH_PRODUCT_LINE.getPath();
+		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
+			return JspFile.TOPO_GRAPH_CONFIG_UPDATE.getPath();
 			// Metric
 		case METRIC_CONFIG_ADD_OR_UPDATE:
 			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE.getPath();

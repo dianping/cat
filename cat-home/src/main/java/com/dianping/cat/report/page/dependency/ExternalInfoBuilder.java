@@ -18,7 +18,6 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;

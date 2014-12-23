@@ -3,13 +3,12 @@
 			<tr>
 				<th>
 					<div id="datetimepicker1" class="input-append  date" style="float:left;">
-		           时间<input id="time" name="time"  size="13" 
+		           &nbsp;时间<input id="time" name="time"  size="13" 
 		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
-		         
-						&nbsp;&nbsp;项目<select id="domains" style="width: 200px;"></select>
+					&nbsp;项目<select id="domains" style="width: 200px;"></select>
 						命令字 <select id="command" style="width: 240px;">
 						</select> 
 				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
@@ -22,7 +21,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th align=left>版本 <select id="version" style="width: 100px;">
+				<th align=left>&nbsp;版本 <select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
@@ -52,7 +51,7 @@
 						</c:forEach>
 				</select> <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" /> <input class="btn btn-primary" id="checkbox"
+					type="submit" /> <input class="btn btn-primary btn-sm" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox"
 					style="display: -webkit-inline-box">选择对比</label>
 				</th>
@@ -62,15 +61,15 @@
 			<tr>
 				<th align=left>
 				<div id="datetimepicker2" class="input-append  date" style="float:left;">
-		           时间<input id="time2" name="time2"  size="13" 
+		           &nbsp;时间<input id="time2" name="time2"  size="13" 
 		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
 		              <i class="ace-icon fa fa-calendar"></i>
 		           </span>
 		        </div>
-						&nbsp;&nbsp;项目<select id="domains2" style="width: 200px;"></select>
+						&nbsp;项目<select id="domains2" style="width: 200px;"></select>
 						命令字 <select id="command2" style="width: 240px;">
 						</select> 
-						 返回码 <select id="code2" style="width: 120px;">
+						&nbsp; 返回码 <select id="code2" style="width: 120px;">
 						<option value=''>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
 						<option value=''>All</option>
@@ -114,12 +113,12 @@
 			</tr>
 		</table>
 
-		<div>
+		<div>&nbsp;
 			<label class="btn btn-info btn-sm"><input type="radio"
 				name="typeCheckbox" value="request">请求数
-			</label> <label class="btn btn-info btn-sm"> <input type="radio"
+			</label><label class="btn btn-info btn-sm"> <input type="radio"
 				name="typeCheckbox" value="success">成功率
-			</label> <label class="btn btn-info btn-sm">  <input type="radio"
+			</label><label class="btn btn-info btn-sm">  <input type="radio"
 				name="typeCheckbox" value="delay">成功延时
 			</label>
 		</div>
@@ -160,7 +159,7 @@
 		
 		<c:choose>
 			<c:when test="${empty network}">
-			<td><button class="btn btn-sm btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${network}</td>
@@ -169,7 +168,7 @@
 		
 		<c:choose>
 			<c:when test="${empty appVersion}">
-			<td><button class="btn btn-sm btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${appVersion}</td>
@@ -178,7 +177,7 @@
 		
 		<c:choose>
 			<c:when test="${empty channel}">
-			<td><button class="btn btn-sm btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${channel}</td>
@@ -188,7 +187,7 @@
 		<c:choose>
 			<c:when test="${empty platform}">
 			<td>
-			<button class="btn btn-sm btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<button class="btn btn-xs btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${platform}</td>
@@ -197,7 +196,7 @@
 		
 		<c:choose>
 			<c:when test="${empty city}">
-			<td><button class="btn btn-sm btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${city}</td>
@@ -206,7 +205,7 @@
 		
 		<c:choose>
 			<c:when test="${empty operator}">
-			<td><button class="btn btn-sm btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<td><button class="btn btn-xs btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
 			<td>${operator}</td>

@@ -12,6 +12,9 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class TransactionStatisticsComputer extends BaseVisitor {
+
+	public double m_duration = 3600;
+
 	private double computeLineValue(Map<Integer, AllDuration> durations, double percent) {
 		int totalCount = 0;
 		Map<Integer, AllDuration> sorted = new TreeMap<Integer, AllDuration>(TransactionComparator.DESC);
@@ -33,6 +36,11 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 		}
 
 		return 0.0;
+	}
+
+	public TransactionStatisticsComputer setDuration(double duration) {
+		m_duration = duration;
+		return this;
 	}
 
 	double std(long count, double avg, double sum2, double max) {
@@ -68,6 +76,9 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			name.setLine95Value(line95);
 			name.setLine99Value(line999);
 		}
+		if (m_duration > 0) {
+			name.setTps(name.getTotalCount() * 1.0 / m_duration);
+		}
 	}
 
 	@Override
@@ -97,6 +108,10 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 			double line999 = computeLineValue(type.getAllDurations(), 99.9);
 			type.setLine95Value(line95);
 			type.setLine99Value(line999);
+
+			if (m_duration > 0) {
+				type.setTps(type.getTotalCount() * 1.0 / m_duration);
+			}
 		}
 	}
 

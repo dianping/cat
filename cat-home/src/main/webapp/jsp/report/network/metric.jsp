@@ -45,7 +45,7 @@
 		<div class="report">
 			
 			<div class="breadcrumbs" id="breadcrumbs">
-			<span class="text-danger title">【时段】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 			<div class="nav-search nav" id="nav-search">
 				<c:forEach var="nav" items="${model.navs}">
 							&nbsp;[ <a href="${model.baseUri}?op=metric&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
@@ -55,12 +55,18 @@
 			<table>
 				<tr style="text-align: left">
 					<th>
-						&nbsp;&nbsp;网络设备
-						<select id="network" onchange="networkChange()">
-							<c:forEach var="item" items="${model.productLines}" varStatus="status">
-								<option value="${item.id}">${item.id}</option>
-							</c:forEach>
-						</select>
+						<div class="navbar-header pull-left position" style="width:350px;">
+							<form id="wrap_search" style="margin-bottom:0px;">
+								<div class="input-group">
+									<input id="search" type="text" value="${payload.product}" class="search-input form-control ui-autocomplete-input" placeholder="input device for search" autocomplete="off"/>
+									<span class="input-group-btn">
+										<button class="btn btn-sm btn-pink" type="button" id="search_go">
+											Go!
+										</button> 
+									</span>
+								</div>
+							</form>
+						</div>
 						&nbsp;&nbsp;时间段 
 						<c:forEach var="range" items="${model.allRange}">
 							<c:choose>
@@ -90,7 +96,8 @@
 		function networkChange(){
 			var date='${model.date}';
 			var domain='${model.domain}';
-			var network=$('#network').val();
+			var network=$("#search").val();
+			console.log(network);
 			var timeRange=${payload.timeRange};
 			var href = "?op=metric&date="+date+"&domain="+domain+"&product="+network+"&timeRange="+timeRange;
 			window.location.href=href;
@@ -102,6 +109,43 @@
 			$('i[tips]').popover();
 			$('#System_report').addClass("open active");
 			$('#system_network').addClass("active");
+			
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [];
+			<c:forEach var="item" items="${model.productLines}">
+						var item = {};
+						item['label'] = '${item.id}';
+						item['category'] = '网络监控设备';
+						data.push(item);
+			</c:forEach>
+					
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
+			
+			$("#search_go").bind("click",function(e){
+				networkChange();
+			});
+			$('#wrap_search').submit(
+				function(){
+					networkChange();
+					return false;
+				}		
+			);
 			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};
