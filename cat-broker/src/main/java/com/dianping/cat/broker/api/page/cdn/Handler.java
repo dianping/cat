@@ -90,7 +90,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							m_manager.offer(entity);
 							Cat.logEvent("Cdn.Hit", tabs[1], Event.SUCCESS, userIp);
 						} else {
-							Cat.logEvent("Cdn.InvalidRecord", line, Event.SUCCESS, null);
+							Cat.logEvent("InvalidRecord", "cdn", Event.SUCCESS, null);
 						}
 					}
 				}
@@ -99,7 +99,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("UnknownIp", "Cdn", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "cdn", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 		response.getWriter().write("OK");

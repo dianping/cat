@@ -114,7 +114,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				success = true;
 			}
 		} else {
-			Cat.logEvent("InvalidVersion", version, Event.SUCCESS, version);
+			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -176,9 +176,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setCommand(tooLong);
 							offerQueue(appData);
 						}
-						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					} else {
-						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
 					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
@@ -236,9 +236,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setCommand(tooLong);
 							offerQueue(appData);
 						}
-						Cat.logEvent("ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					} else {
-						Cat.logEvent("ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
 					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
