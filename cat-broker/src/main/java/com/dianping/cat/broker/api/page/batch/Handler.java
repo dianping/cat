@@ -168,7 +168,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					if (responseTime < 60 * 1000 && responseTime >= 0) {
 						offerQueue(appData);
 
-						Cat.logEvent("Command.version3", url, Event.SUCCESS, null);
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else if (responseTime > 0) {
 						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 
@@ -228,7 +228,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					if (responseTime < 60 * 1000 && responseTime >= 0) {
 						offerQueue(appData);
 
-						Cat.logEvent("Command.version2", url, Event.SUCCESS, null);
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else if (responseTime > 0) {
 						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 

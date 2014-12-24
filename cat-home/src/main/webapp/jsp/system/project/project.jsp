@@ -58,10 +58,19 @@
 		});
 	</script>
 	<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:20%;MARGIN-TOP:5px;">
-		<form class="wrap_search" style="margin-bottom:0px;">
+		<form id="wrap_search" style="margin-bottom:0px;">
 		<div class="input-group">
+			<c:if test="${not empty payload.project.domain}">
+				<c:set var="domain" value="${payload.project.domain}"/>
+			</c:if>
+			<c:if test="${not empty payload.domain}">
+				<c:set var="domain" value="${payload.domain}"/>
+			</c:if>
+			<c:if test="${empty domain}">
+				<c:set var="domain" value="cat"/>
+			</c:if>
 			<span class="input-icon" style="width:300px;">
-				<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+				<input type="text" placeholder="input domain for search" value="${domain}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
 				<i class="ace-icon fa fa-search nav-search-icon"></i>
 				</span>
 				<span class="input-group-btn" style="width:50px">

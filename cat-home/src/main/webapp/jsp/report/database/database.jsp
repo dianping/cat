@@ -23,10 +23,10 @@
 		<tr style="text-align: left">
 			<th>
 			<div class="navbar-header pull-left position" style="width:350px;">
-						<form class="wrap_search" style="margin-bottom:0px;">
+						<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
 							<span class="input-icon" style="width:300px;">
-								<input type="text" placeholder="input host for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+								<input type="text" placeholder="input host for search" value="${payload.product}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
 								<i class="ace-icon fa fa-search nav-search-icon"></i>
 								</span>
 								<span class="input-group-btn" style="width:50px">
