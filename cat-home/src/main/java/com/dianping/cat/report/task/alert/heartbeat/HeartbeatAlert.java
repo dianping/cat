@@ -56,10 +56,6 @@ public class HeartbeatAlert extends BaseAlert {
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
 
-	private HeartbeatReport m_lastReport;
-
-	private HeartbeatReport m_currentReport;
-
 	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
 		double[] array = map.get(name);
 		if (array == null) {
@@ -93,27 +89,18 @@ public class HeartbeatAlert extends BaseAlert {
 		}
 	}
 
-	private void checkAndGenerateCurrentReport(String domain) {
-		if (m_currentReport == null) {
-			long currentMill = System.currentTimeMillis();
-			long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
+	private HeartbeatReport generateCurrentReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
 
-			m_currentReport = generateReport(domain, currentHourMill);
-		}
+		return generateReport(domain, currentHourMill);
 	}
 
-	private void checkAndGenerateLastReport(String domain) {
-		if (m_lastReport == null) {
-			long currentMill = System.currentTimeMillis();
-			long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
+	private HeartbeatReport generateLastReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 
-			m_lastReport = generateReport(domain, lastHourMill);
-		}
-	}
-
-	private void clearCacheReport() {
-		m_lastReport = null;
-		m_currentReport = null;
+		return generateReport(domain, lastHourMill);
 	}
 
 	private void convertDeltaMetrics(Map<String, double[]> map) {
@@ -223,9 +210,9 @@ public class HeartbeatAlert extends BaseAlert {
 	}
 
 	@Override
-   protected Map<String, ProductLine> getProductlines() {
-	   return null;
-   }
+	protected Map<String, ProductLine> getProductlines() {
+		return null;
+	}
 
 	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
@@ -233,7 +220,6 @@ public class HeartbeatAlert extends BaseAlert {
 	}
 
 	private void processDomain(String domain) {
-		clearCacheReport();
 		int minute = getAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 
@@ -245,9 +231,9 @@ public class HeartbeatAlert extends BaseAlert {
 			List<Condition> conditions = resultPair.getValue();
 
 			if (minute >= maxMinute - 1) {
-				checkAndGenerateCurrentReport(domain);
+				HeartbeatReport report = generateCurrentReport(domain);
 
-				for (Machine machine : m_currentReport.getMachines().values()) {
+				for (Machine machine : report.getMachines().values()) {
 					String ip = machine.getIp();
 					double[] arguments = generateArgumentMap(machine).get(metric);
 
@@ -258,9 +244,9 @@ public class HeartbeatAlert extends BaseAlert {
 					}
 				}
 			} else if (minute < 0) {
-				checkAndGenerateLastReport(domain);
+				HeartbeatReport report = generateLastReport(domain);
 
-				for (Machine machine : m_lastReport.getMachines().values()) {
+				for (Machine machine : report.getMachines().values()) {
 					String ip = machine.getIp();
 					double[] arguments = generateArgumentMap(machine).get(metric);
 
@@ -271,12 +257,12 @@ public class HeartbeatAlert extends BaseAlert {
 					}
 				}
 			} else {
-				checkAndGenerateCurrentReport(domain);
-				checkAndGenerateLastReport(domain);
+				HeartbeatReport currentReport = generateCurrentReport(domain);
+				HeartbeatReport lastReport = generateLastReport(domain);
 
-				for (Machine lastMachine : m_lastReport.getMachines().values()) {
+				for (Machine lastMachine : lastReport.getMachines().values()) {
 					String ip = lastMachine.getIp();
-					Machine currentMachine = m_currentReport.getMachines().get(ip);
+					Machine currentMachine = currentReport.getMachines().get(ip);
 
 					if (currentMachine != null) {
 						Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
