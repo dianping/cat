@@ -75,7 +75,7 @@
 		<h5 class="text-center">请求量分布</h5>
 		<div id="piechart"></div>
 		<br/>
-	<table id="web_content" class="table table-striped table-condensed  ">
+	<table id="web_content" class="table table-striped table-condensed table-bordered">
 		<thead><tr class="text-success">
 		<c:if test="${payload.groupByField.name eq 'code'}">
 		<th>返回码</th>
