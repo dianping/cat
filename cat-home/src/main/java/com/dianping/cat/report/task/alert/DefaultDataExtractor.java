@@ -26,37 +26,31 @@ public class DefaultDataExtractor implements DataExtractor {
 		double[] baseline = new double[ruleMinute];
 
 		if (currentMinute >= ruleMinute - 1) {
-			if (currentReport != null) {
-				int start = currentMinute + 1 - ruleMinute;
-				int end = currentMinute;
+			int start = currentMinute + 1 - ruleMinute;
+			int end = currentMinute;
 
-				value = queryRealData(start, end, metricKey, currentReport, type);
-				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
-			}
+			value = queryRealData(start, end, metricKey, currentReport, type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
 		} else if (currentMinute < 0) {
-			if (lastReport != null) {
-				int start = 60 + currentMinute + 1 - (ruleMinute);
-				int end = 60 + currentMinute;
+			int start = 60 + currentMinute + 1 - (ruleMinute);
+			int end = 60 + currentMinute;
 
-				value = queryRealData(start, end, metricKey, lastReport, type);
-				baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
-			}
+			value = queryRealData(start, end, metricKey, lastReport, type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
 		} else {
-			if (currentReport != null && lastReport != null) {
-				int currentStart = 0, currentEnd = currentMinute;
-				double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
-				double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
-				      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			int currentStart = 0, currentEnd = currentMinute;
+			double[] currentValue = queryRealData(currentStart, currentEnd, metricKey, currentReport, type);
+			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
+			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
 
-				int lastStart = 60 + 1 - (ruleMinute - currentMinute);
-				int lastEnd = 59;
-				double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
-				double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
-				      new Date(ModelPeriod.LAST.getStartTime()), type);
+			int lastStart = 60 + 1 - (ruleMinute - currentMinute);
+			int lastEnd = 59;
+			double[] lastValue = queryRealData(lastStart, lastEnd, metricKey, lastReport, type);
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+			      new Date(ModelPeriod.LAST.getStartTime()), type);
 
-				value = mergerArray(lastValue, currentValue);
-				baseline = mergerArray(lastBaseline, currentBaseline);
-			}
+			value = mergerArray(lastValue, currentValue);
+			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
 
 		result.setKey(baseline);
@@ -94,9 +88,6 @@ public class DefaultDataExtractor implements DataExtractor {
 	}
 
 	private double[] queryRealData(int start, int end, String metricKey, MetricReport report, MetricType type) {
-		if (report == null) {
-		}
-
 		double[] all = new double[60];
 		Map<Integer, Segment> map = report.findOrCreateMetricItem(metricKey).getSegments();
 

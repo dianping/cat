@@ -55,7 +55,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 	protected Logger m_logger;
 
-	private int calMaxMinute(Map<String, Map<MetricType, List<Config>>> configs) {
+	protected int calMaxMinute(Map<String, Map<MetricType, List<Config>>> configs) {
 		int maxMinute = 0;
 
 		for (Map<MetricType, List<Config>> subMap : configs.values()) {
