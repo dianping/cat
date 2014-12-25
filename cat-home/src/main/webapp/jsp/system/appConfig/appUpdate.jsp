@@ -35,7 +35,6 @@
 				dataType: "json",
 				url: "/cat/s/config?op=appNameCheck&name="+name,
 				success : function(response, textStatus) {
-					alert(response['isNameUnique']);
 					if(response['isNameUnique']){
 						if(title==undefined){
 							title = "";
