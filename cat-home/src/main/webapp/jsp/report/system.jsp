@@ -79,12 +79,12 @@
 				function() {
 					$('#startTime').datetimepicker({
 						format:'Y-m-d H:i',
-						step:10,
+						step:30,
 						maxDate:0
 					});
 					$('#endTime').datetimepicker({
 						format:'Y-m-d H:i',
-						step:10,
+						step:30,
 						maxDate:0
 					});
 					

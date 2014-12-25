@@ -167,13 +167,13 @@
 					$('#accessPiechart').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
-						step:10,
+						step:30,
 						maxDate:0
 					});
 					$('#time2').datetimepicker({
 						datepicker:false,
 						format:'H:i',
-						step:10,
+						step:30,
 						maxDate:0
 					});
 					var query1 = '${payload.query1}';
