@@ -27,6 +27,7 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('.switch').hide();
 		$('#dependency_topo').addClass('active');
 		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');

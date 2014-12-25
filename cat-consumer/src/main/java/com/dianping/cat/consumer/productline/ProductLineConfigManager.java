@@ -41,7 +41,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	protected ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_getter;
+	protected ContentFetcher m_getter;
 
 	private Logger m_logger;
 
@@ -162,13 +162,34 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean deleteProductLine(String line, String title) {
+		boolean flag = true;
 		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
 		if (productLineConfig != null) {
 			Company company = productLineConfig.getCompany();
 
+			switch (productLineConfig) {
+			case METRIC_PRODUCTLINE:
+				ProductLine product = ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().findProductLine(line);
+
+				if (product != null) {
+					product.setMetricDashboard(false);
+				}
+				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
+				break;
+			case APPLICATION_PRODUCTLINE:
+				product = ProductLineConfig.METRIC_PRODUCTLINE.getCompany().findProductLine(line);
+
+				if (product != null) {
+					product.setApplicationDashboard(false);
+				}
+				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
+				break;
+			default:
+				break;
+			}
 			company.removeProductLine(line);
-			return storeConfig(productLineConfig);
+			return storeConfig(productLineConfig) && flag;
 		}
 		return false;
 	}
@@ -330,24 +351,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return queryProductLines(ProductLineConfig.NETWORK_PRODUCTLINE);
 	}
 
-	public ProductLine queryProductLine(String id) {
-		Pair<ProductLineConfig, ProductLine> pair = queryProductLineConfig(id);
-
-		return pair.getValue();
-	}
-
 	public String queryProductLineByDomain(String domain) {
 		String productLine = m_domainToProductLines.get(domain);
 
 		return productLine == null ? "Default" : productLine;
 	}
 
-	public Pair<ProductLineConfig, ProductLine> queryProductLineConfig(String name) {
+	public ProductLine queryProductLine(String name) {
 		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
 			ProductLine productLine = productLineConfig.getCompany().findProductLine(name);
 
 			if (productLine != null) {
-				return new Pair<ProductLineConfig, ProductLine>(productLineConfig, productLine);
+				return productLine;
 			}
 		}
 		return null;

@@ -89,7 +89,7 @@
 										<td>${item.title }</td>
 										<td><a href="?op=appUpdate&id=${item.id}&type=api" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="??op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
+						<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 									</tr>
 								</c:if>

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
@@ -165,7 +166,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getDomainToCommandsJson() {
 		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
-
+		
+		map.put(Constants.ALL, m_commands);
 		for (Command command : m_commands) {
 			String domain = command.getDomain();
 			if (StringUtils.isEmpty(domain)) {
@@ -179,6 +181,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			}
 			commands.add(command);
 		}
+
 		return new JsonBuilder().toJson(map);
 	}
 

@@ -73,9 +73,13 @@
   <p  class="detailContent text-danger"> 2、SQL调用依赖需要加载一个配置文件 /config/spring/common/appcontext-ds-monitor.xml，这个文件是在zebra-ds-monitor-client这个jar包下。
             web.xml 加载是需要加入classpath*:config/spring/common/appcontext-ds-monitor.xml</p>
   </dd>
-  <dt><h5 class="text-success">3.在资源文件中新建client.xml文件</h5></dt>
+  <dt><h5 class="text-success">3、配置domain (cat-core 1.1.3之后版本，优先读取A配置)</h5></dt>
+   <p class="text-danger">A) 在资源文件中新建app.propertities文件</p>
+   <dd><p class="detailContent">在resources资源文件META-INF下，注意是<span class="text-danger">src/main/resources/META-INF/</span>文件夹，
+  而不是<span class="text-danger">webapps下的那个META-INF</span>,添加<span class="text-danger">app.propertities</span>，加上domain配置，如：<span class="text-danger">app.name=tuangou-web</span></p>
+  <p class="text-danger"> B) 在资源文件中新建client.xml文件</p>
   <dd><p class="detailContent">在resources资源文件META-INF下，新建cat文件夹，注意是<span class="text-danger">src/main/resources/META-INF/cat/client.xml</span>文件，
-  而不是<span class="text-danger">webapps下的那个META-INF</span>,domain id表示项目名称<span class="text-danger">此处为CMDB申请的名字，比如shop-web</span></p>
+  而不是<span class="text-danger">webapps下的那个META-INF</span>,domain id表示项目名称<span class="text-danger">此处为CMDB申请的名字，比如</span></p>
   <xmp class="well">
      <config mode="client">
          <domain id="tuangou-web"/>

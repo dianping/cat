@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.dependency;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,6 +73,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_configManager;
+
+	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
 
 	public static final String TUAN_TOU = "TuanGou";
 
@@ -217,38 +220,48 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
 	}
 
 	@Override
 	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
-		Payload payload = ctx.getPayload();
+		if (validate(ctx)) {
+			Model model = new Model(ctx);
+			Payload payload = ctx.getPayload();
 
-		normalize(model, payload);
+			normalize(model, payload);
 
-		Action action = payload.getAction();
-		long date = payload.getDate();
-		Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
+			Action action = payload.getAction();
+			long date = payload.getDate();
+			Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
 
-		switch (action) {
-		case LINE_CHART:
-			buildDependencyLineChart(model, payload, reportTime);
-			break;
-		case TOPOLOGY:
-			buildProjectTopology(model, payload, reportTime);
-			break;
-		case DEPENDENCY_DASHBOARD:
-			buildDependencyDashboard(model, payload, reportTime);
-			break;
-		case EXCEPTION_DASHBOARD:
-			buildExceptionDashboard(model, payload, date);
+			switch (action) {
+			case LINE_CHART:
+				buildDependencyLineChart(model, payload, reportTime);
+				break;
+			case TOPOLOGY:
+				buildProjectTopology(model, payload, reportTime);
+				break;
+			case DEPENDENCY_DASHBOARD:
+				buildDependencyDashboard(model, payload, reportTime);
+				break;
+			case EXCEPTION_DASHBOARD:
+				buildExceptionDashboard(model, payload, date);
 
-			StateReport report = queryHourlyReport(payload);
-			model.setMessage(buildCatInfoMessage(report));
-			break;
+				StateReport report = queryHourlyReport(payload);
+				model.setMessage(buildCatInfoMessage(report));
+				break;
+			}
+			m_jspViewer.view(ctx, model);
 		}
-		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean validate(Context ctx) {
+		String url = ctx.getRequestContext().getActionUri();
+		String actionUrl = url.split("\\?")[0];
+
+		return NORMAL_URLS.contains(actionUrl);
 	}
 
 	private void normalize(Model model, Payload payload) {
