@@ -28,7 +28,7 @@
 		<td><a target="_blank" href="http://www.travelzen.com/flight/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/zhenlv.png"/></a></td>
 	</tr>
 	<tr>
-		<td><a href="#"><h3 class="text-success">......我们在这里等着你</h3></a></td>
+		<td></td>
 		<td></td>
 		<td></td>
 		</tr>
