@@ -61,7 +61,7 @@
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="submit" /></td>
+			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 		</tr>
 	</table>
 </form>

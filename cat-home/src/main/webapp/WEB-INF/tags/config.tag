@@ -85,7 +85,10 @@
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="metricConfigList"><a href="/cat/s/config?op=metricConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>业务监控规则</a>
+								<i class="menu-icon fa fa-caret-right"></i>业务监控</a>
+								<b class="arrow"></b></li>
+							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
 								<b class="arrow"></b></li>
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>响应时间告警</a>
@@ -108,14 +111,8 @@
 							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖</a>
 								<b class="arrow"></b></li>
-							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
-								<b class="arrow"></b></li>
-							<li id="metricRuleConfigUpdate" style="display:none"><a href="/cat/s/config?op=metricRuleConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
-								<b class="arrow"></b></li>
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>应用监控样式</a>
+								<i class="menu-icon fa fa-caret-right"></i>应用监控大盘</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
@@ -125,7 +122,7 @@
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
 							<li id="networkRuleConfigList"><a href="/cat/s/config?op=networkRuleConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>网络告警规则</a>
+								<i class="menu-icon fa fa-caret-right"></i>网络告警</a>
 								<b class="arrow"></b></li>
 							<li id="netGraphConfigUpdate"><a href="/cat/s/config?op=netGraphConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>网络拓扑</a>
@@ -143,10 +140,10 @@
 								<i class="menu-icon fa fa-caret-right"></i>默认告警人</a>
 								<b class="arrow"></b></li>
 							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>框架异常配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>框架异常</a>
 								<b class="arrow"></b></li>
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>客户端路由配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>

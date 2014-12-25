@@ -19,11 +19,11 @@
 		&nbsp;开始
 		<input type="text" id="startTime" style="width:150px;"/>
 		结束
-		<input type="text" id="endTime" style="width:150px;"/></div>
+		<input type="text" id="endTime" style="width:150px;"/>
 			&nbsp;&nbsp;项目
 			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
-			<div>
+			<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
+			<div style="float:left;">
 				<label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="business"> 业务告警
 				</label><label class="btn btn-info btn-sm">
