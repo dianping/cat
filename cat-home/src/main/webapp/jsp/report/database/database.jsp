@@ -22,19 +22,22 @@
 	<table>
 		<tr style="text-align: left">
 			<th>
-				<div class="navbar-header pull-left position" style="width:350px;">
-							<form id="wrap_search" style="margin-bottom:0px;">
-								<div class="input-group">
-									<input id="search" type="text" value="${payload.product}" class="search-input form-control ui-autocomplete-input" placeholder="input database for search" autocomplete="off"/>
-									<span class="input-group-btn">
-										<button class="btn btn-sm btn-pink" type="button" id="search_go">
-											Go!
-										</button> 
-									</span>
-								</div>
-							</form>
+			<div class="navbar-header pull-left position" style="width:350px;">
+						<form class="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<span class="input-icon" style="width:300px;">
+								<input type="text" placeholder="input host for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+								<span class="input-group-btn" style="width:50px">
+								<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								Go
+								</button>
+								</span>
+							</div>
+						</form>
 						</div>
-						
+				</th><th>		
 				&nbsp;&nbsp;时间段 
 				<c:forEach var="range" items="${model.allRange}">
 					<c:choose>
@@ -59,7 +62,7 @@
 </div>
 </a:body>
 	
-	<script type="text/javascript">
+<script type="text/javascript">
 		function databaseChange(){
 			var date='${model.date}';
 			var domain='${model.domain}';
@@ -134,5 +137,9 @@
 				$('#switch').html("隐藏");
 			}
 		}
-	</script>
 </script>
+<style type="text/css">
+	.input-group .form-control {
+		position: static;
+	}
+</style>

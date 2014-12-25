@@ -127,7 +127,7 @@
 			<div id="${model.lineChart.id}"></div>
 		</div>
 		<br/>
-<table id="web_content" class="table table-striped table-condensed   table-hover">
+<table id="web_content" class="table table-striped table-condensed table-bordered table-hover">
 	<thead><tr class="text-success">
 		<th>网络类型</th>
 		<th>版本</th>

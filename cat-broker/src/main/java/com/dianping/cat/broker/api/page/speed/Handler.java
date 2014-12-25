@@ -79,7 +79,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("UnknownIp", "Speed", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "speed", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -103,8 +103,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				processVersion1Content(cityId, operatorId, content, version);
 				success = true;
-			} else {
-				Cat.logEvent("InvalidIpInfo", "speed:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else {
 			Cat.logEvent("InvalidVersion", "speed:" + version, Event.SUCCESS, version);
@@ -155,7 +153,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("Speed.InvalidRecord", record, Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "speed", Event.SUCCESS, null);
 		}
 	}
 
@@ -199,8 +197,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
-			} else {
-				Cat.logEvent("UnknownCityOperator", "speed:" + province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;

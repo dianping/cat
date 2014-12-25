@@ -146,6 +146,7 @@
 			$(document).delegate("#ruleSubmitButton","click",function(){
 				var key = $('#ruleId').val();
 				var metrics = generateMetricsJsonString();
+				var configStr = generateConfigsJsonString();
 			    window.location.href = "?op=metricRuleAddSubmit&configs=" + configStr + "&ruleId=" + key +"&metrics="+metrics;
 			});
 			

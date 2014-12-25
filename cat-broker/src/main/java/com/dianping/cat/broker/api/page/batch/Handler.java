@@ -77,7 +77,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("UnknownIp", "Batch", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "batch", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
@@ -101,8 +101,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				processVersion2Content(cityId, operatorId, content, version);
 				success = true;
-			} else {
-				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else if (VERSION_THREE.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
@@ -114,8 +112,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				processVersion3Content(cityId, operatorId, content, version);
 				success = true;
-			} else {
-				Cat.logEvent("InvalidIpInfo", "batch:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else {
 			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
@@ -172,7 +168,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					if (responseTime < 60 * 1000 && responseTime >= 0) {
 						offerQueue(appData);
 
-						Cat.logEvent("Batch.Command", url, Event.SUCCESS, null);
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else if (responseTime > 0) {
 						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 
@@ -185,14 +181,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("Batch.UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("Batch.InvalidRecord", record, Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, null);
 		}
 	}
 
@@ -232,7 +228,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					if (responseTime < 60 * 1000 && responseTime >= 0) {
 						offerQueue(appData);
 
-						Cat.logEvent("Batch.Command", url, Event.SUCCESS, null);
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
 					} else if (responseTime > 0) {
 						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
 
@@ -245,14 +241,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("Batch.UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("Batch.InvalidRecord", record, Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, null);
 		}
 	}
 
@@ -267,8 +263,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
-			} else {
-				Cat.logEvent("UnknownCityOperator", "batch:" + province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;
