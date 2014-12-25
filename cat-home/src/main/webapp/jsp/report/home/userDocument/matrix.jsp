@@ -8,4 +8,4 @@
 <br/>
 <h4 class="text-success">调用链路排行</h4>
 <h5>包括远程调用、sql调用、缓存调用最多排行</h5>
-<img  class="img-polaroid"  src="${model.webapp}/images/matrix02.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/matrix02.png" width="100%"/>

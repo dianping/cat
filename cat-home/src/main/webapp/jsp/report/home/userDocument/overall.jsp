@@ -24,7 +24,7 @@
 <p class="text-danger">注：如果-1h、-1d超过了当前系统时间，直接跳转到最新的一个小时实时数据。</p>
 <h4 class="text-success">历史导航介绍</h4>
 <p>点击导航中间的<span class="text-danger"><strong>“History Mode”</strong></span>便可进入相应的历史报表界面。</p>
-<img  class="img-polaroid"  src="${model.webapp}/images/overall02.png"/>
+<img  class="img-polaroid"  src="${model.webapp}/images/overall02.png" style="width:520px;"/>
 <p>历史报表目前分为三类：日报表、周报表、月报表。当首次选择day、week、month时，默认为当前最近的一天、一周、一个月。以2012年6月28日14：50为例：</p>
 <p>①　当选择day时，出现的历史报表则为2012-06-28 00:00:00 to 2012-06-29 00:00:00。可以通过-1d和+1d增加一天或者减少一天。如以前实时报表一样，如果+1d时，超出了当前的最大日期，则默认为当前最近的一天。</p>
 <p>②　当选择week时，则出现的历史报表为：2012-06-25 00:00:00 to 2012-07-03 00:00:00。（周报表以七天为一周期，默认为上周六到本周星期五）可以通过-1w和+1w增加一天或者减少一周。如以前实时报表一样，如果+1w时，超出了当前的最大日期，则默认为当前最近的一周。</p>
