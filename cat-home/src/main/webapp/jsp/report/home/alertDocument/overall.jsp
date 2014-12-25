@@ -20,14 +20,14 @@
 <img class="img-polaroid" width='60%'
 	src="${model.webapp}/images/alert/alertConfig.png" />
 <h5>具体解释如下：</h5>
-<p>1).一个rule元素为规则的基本单位</p>
+<p>1).一个rule元素为规则的基本单位，由唯一的id标示</p>
 <p>2).rule元素由两个部分组成：监控对象与监控规则</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;a.监控对象：由metric－item元素匹配</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;b.监控条件配置：由config元素组成，每个config代表一个时间段的规则，由starttime和endtime两个属性确定。时间的配置格式为：“hh:mm”，请注意hh为24小时制。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;config元素由多个监控条件组成，条件由condition元素表示。一个config下的多个condition为并联关系，当一个condition被触发，conditon所在的整个rule就被触发。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;condition元素中的minute属性表示该条件的持续时间。设定时间单位为分钟。当指标在设定的时间长度内连续触发了该条规则，才会出发该condition。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;condition由subcondition组成。一个condition下的多个subcondition为串联关系，只有当一个condition下的全部subcondition被触发，该condition才被触发。</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;subcondition有八种类型，由type属性指定。subcondition的内容为对应的阈值，请注意阈值只能由数字组成，当阈值表达百分比时，不能在最后加上百分号。八种类型如下：</p>
+<p>&nbsp;&nbsp;a.监控对象：由metric－item元素匹配，与图中的匹配对象相对应。匹配对象是两级的，每一级都支持正则匹配</p>
+<p>&nbsp;&nbsp;b.监控条件配置：由config元素组成，与图中监控规则相对应。每个config代表一个时间段的规则，由starttime和endtime两个属性确定。时间的配置格式为：“hh:mm”，请注意hh为24小时制。</p>
+<p>&nbsp;&nbsp;config元素由多个监控条件组成，条件由condition元素表示。一个config下的多个condition为并联关系，当一个condition被触发，conditon所在的整个rule就被触发。</p>
+<p>&nbsp;&nbsp;condition元素中的minute属性表示该条件的持续时间。设定时间单位为分钟。当指标在设定的时间长度内连续触发了该条规则，才会触发该condition。</p>
+<p>&nbsp;&nbsp;condition由subcondition组成。subcondition与图中的子条件相对应。一个condition下的多个subcondition为串联关系，只有当一个condition下的全部subcondition被触发，该condition才被触发。</p>
+<p>&nbsp;&nbsp;subcondition有八种类型，由type属性指定。subcondition的内容为对应的阈值，请注意阈值只能由数字组成，当阈值表达百分比时，不能在最后加上百分号。八种类型如下：</p>
 <table style="width: 50%"
 	class="table table-bordered table-striped table-condensed  ">
 	<tr>
@@ -75,6 +75,7 @@
 		<td>总和最小值，请与告警分钟总和考虑</td>
 	</tr>
 </table>
+<p>&nbsp;&nbsp;点击"如何使用?"按钮，将会出现信息介绍设置规则的流程</p>
 <h4 class="text-success">2. 告警策略</h4>
 <h5>为了将告警信息更有效的发送给对应联系人，请考虑以下五个要素制定告警策略：</h5>
 <p>a).告警类型。Cat将告警分为六种类型：业务告警(项目指标的监控)、网络告警(网络设备监控)、系统告警(服务器状态监控)、异常告警(Exception数量监控)、第三方监控(对给定的网址，根据HTTP请求的返回码监控)、前端监控。由于告警策略是按照类型划分的，制定告警策略前首先请确定目前采用的是哪种类型的监控。</p>

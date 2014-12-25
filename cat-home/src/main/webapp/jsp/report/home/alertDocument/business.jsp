@@ -90,11 +90,9 @@
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
-<p><span class='text-danger'>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示，如果项目换名，必须重新修改。</span></p>
-<p><span class='text-danger'>2、告警邮件:当这个产品线下的业务指标出现异常时，会发送邮件到此邮箱</span></p>
-<p><span class='text-danger'>3、告警短信:当这个产品线下的业务指标出现异常时，会发送邮件到此号码</span></p>
+<p><span class=text-info>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示，如果项目换名，必须重新修改。</span></p>
+<p><span class='text-info'>2、告警邮件与短信:<span class="text-danger">目前cat不再支持配置告警邮件与短信。</span>cat会发送告警信息给该项目在cmdb中配置的联系人</span></p>
 <h4 class="text-danger">url : <a href="/cat/s/config?op=topologyProductLines" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business01.png"/>
 </br> 
 <h4 class="text-success">第四步:图形展示以及告警配置</h4>
 <p>当程序埋点好，后端的Metric指标的数据都是自动插入到CAT数据库中，不需要用户进行新建业务指标，用户直接修改即可。</p>
@@ -104,10 +102,8 @@
 </br> 
 <h4 class="text-success">第五步:配置公司级别业务大盘【运维配置】</h4>
 <p>业务大盘讲各个产品线重要的业务指标进行汇总，统一展示在一个监控大盘中。</p>
+<p>cat采用的时打tag的方式。如上图所示，在下拉框选择标签或者点击"添加其他标签"按钮，即可打上所需标签。在业务大盘中可以按照tag来查看。</p>
 <h4 class="text-danger">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business03.png"/>
-<br/>
-<br/>
 
 <h3 class="text-danger">2. 业务告警</h3>
 <h5>业务告警是对项目业务指标的监控。</h5>

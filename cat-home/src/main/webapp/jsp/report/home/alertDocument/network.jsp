@@ -32,7 +32,7 @@
 
 </xmp>
 <h5>(4) 对于需要在网络监控显示的指标，需对产品线做显示到<a href="/cat/s/config?op=topologyProductLines">网络大盘配置</a>，如下图</h5>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/network03.jpeg"/>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/network03.png"/>
 <br/><br/>
 
 <h3 class="text-danger">2. 网络告警</h3>
