@@ -46,6 +46,13 @@ public class AppConfigProcessor extends BaseProcesser {
 		int id;
 
 		switch (action) {
+		case APP_NAME_CHECK:
+			if (m_appConfigManager.isNameDuplicate(payload.getName())) {
+				model.setNameUniqueResult("{\"isNameUnique\" : false}");
+			} else {
+				model.setNameUniqueResult("{\"isNameUnique\" : true}");
+			}
+			break;
 		case APP_LIST:
 			buildListInfo(model, payload);
 			break;
