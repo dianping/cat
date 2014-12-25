@@ -24,7 +24,7 @@
 
 <div id="configs">
     <div class="config" id="configSample">
-        <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" id="configTip"></i> 
+        <p class="text-success text-center">监控规则配置&nbsp;<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left" data-content="监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警"></i>
             <button class="btn btn-success btn-xs" id="add-config-button" type="button">
                 添加监控规则<i class="icon-plus icon-white"></i>
             </button>
@@ -34,7 +34,7 @@
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         </div>
         <div class="condition">
-            <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="glyphicon glyphicon-question-sign" id="conditionTip"></i></p>
+            <p class="text-center text-success">监控条件 &nbsp;<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left" data-content="监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"></i></p>
             持续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
             告警级别：
             <select name="level" class="level span2">
@@ -129,15 +129,7 @@ function initRuleConfigs(filterList) {
 	newUserDefineCondition = $(".subCondition").last().clone();
 	newUserDefineCondition.css('display','block');
 
-    $("#configTip").tooltip({
-        "placement":"top",
-        "title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
-    });
-    
-    $("#conditionTip").tooltip({
-        "placement":"top",
-        "title":"监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"
-    });
+	$('i[tips]').popover();
     
     $("#configs").delegate(".add-subCondition-button", "click", function () {
         addSubCondition($(this), newSubCondition);
@@ -145,10 +137,12 @@ function initRuleConfigs(filterList) {
 
     $("#configs").delegate(".add-condition-button", "click", function () {
         addCondition($(this), newCondition);
+        $('i[tips]').popover();
     })
     
     $("#configs").delegate("#add-config-button","click", function () {
         addConfig(newConfig);
+        $('i[tips]').popover();
     })
     
     $("#configs").delegate(".define-button","click", function () {

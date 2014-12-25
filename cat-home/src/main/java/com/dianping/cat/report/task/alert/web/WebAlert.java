@@ -11,7 +11,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -19,6 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -37,17 +37,13 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
-public class WebAlert extends BaseAlert implements Task {
+public class WebAlert extends BaseAlert {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
 	@Inject
 	protected WebRuleConfigManager m_ruleConfigManager;
-
-	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
-
-	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
 
 	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
 	      String type) {
@@ -106,7 +102,7 @@ public class WebAlert extends BaseAlert implements Task {
 					double[] last = lastValue.get(key);
 
 					if (current != null && last != null) {
-						datas.put(key, mergerArray(last, current));
+						datas.put(key, m_dataExtractor.mergerArray(last, current));
 					}
 				}
 				results.addAll(computeAlertForCondition(datas, conditions, type));
@@ -169,39 +165,21 @@ public class WebAlert extends BaseAlert implements Task {
 	}
 
 	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
-		MetricReport report = null;
+		List<String> fields = Splitters.by(";").split(idPrefix);
+		String url = fields.get(0);
+		String city = fields.get(1);
+		String channel = fields.get(2);
 
-		if (period == ModelPeriod.CURRENT) {
-			report = m_currentReports.get(idPrefix);
-		} else if (period == ModelPeriod.LAST) {
-			report = m_lastReports.get(idPrefix);
-		} else {
-			throw new RuntimeException("Unknown ModelPeriod: " + period);
-		}
+		ModelRequest request = new ModelRequest(url, period.getStartTime());
+		Map<String, String> pars = new HashMap<String, String>();
 
-		if (report == null) {
-			List<String> fields = Splitters.by(";").split(idPrefix);
-			String url = fields.get(0);
-			String city = fields.get(1);
-			String channel = fields.get(2);
+		pars.put("metricType", Constants.METRIC_USER_MONITOR);
+		pars.put("type", Constants.TYPE_INFO);
+		pars.put("city", city);
+		pars.put("channel", channel);
+		request.getProperties().putAll(pars);
 
-			ModelRequest request = new ModelRequest(url, period.getStartTime());
-			Map<String, String> pars = new HashMap<String, String>();
-
-			pars.put("metricType", Constants.METRIC_USER_MONITOR);
-			pars.put("type", Constants.TYPE_INFO);
-			pars.put("city", city);
-			pars.put("channel", channel);
-			request.getProperties().putAll(pars);
-
-			report = m_service.invoke(request);
-
-			if (period == ModelPeriod.CURRENT) {
-				m_currentReports.put(idPrefix, report);
-			} else if (period == ModelPeriod.LAST) {
-				m_lastReports.put(idPrefix, report);
-			}
-		}
+		MetricReport report = m_service.invoke(request);
 
 		return report;
 	}
@@ -284,7 +262,7 @@ public class WebAlert extends BaseAlert implements Task {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("alert-web", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {
@@ -300,8 +278,6 @@ public class WebAlert extends BaseAlert implements Task {
 				t.setStatus(e);
 				Cat.logError(e);
 			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
 				t.complete();
 			}
 			long duration = System.currentTimeMillis() - current;
@@ -316,10 +292,6 @@ public class WebAlert extends BaseAlert implements Task {
 		}
 	}
 
-	@Override
-	public void shutdown() {
-	}
-
 	public boolean validateRegex(String regexText, String text) {
 		Pattern p = Pattern.compile(regexText);
 		Matcher m = p.matcher(text);
@@ -329,6 +301,11 @@ public class WebAlert extends BaseAlert implements Task {
 		} else {
 			return false;
 		}
+	}
+
+	@Override
+	protected Map<String, ProductLine> getProductlines() {
+		return null;
 	}
 
 }

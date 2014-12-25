@@ -12,7 +12,7 @@ import org.unidal.helper.Splitters;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 
 public class MessageIdFactory {
-	private long m_timestamp = getTimestamp();
+	private volatile long m_timestamp = getTimestamp();
 
 	private volatile int m_index;
 
@@ -64,15 +64,12 @@ public class MessageIdFactory {
 		long timestamp = getTimestamp();
 		int index;
 
-		synchronized (this) {
-			if (timestamp != m_timestamp) {
-				m_index = 0;
-				m_timestamp = timestamp;
-			}
-
-			index = m_index++;
-			saveMark();
+		if (timestamp != m_timestamp) {
+			m_index = 0;
+			m_timestamp = timestamp;
 		}
+
+		index = m_index++;
 
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
@@ -137,15 +134,11 @@ public class MessageIdFactory {
 		m_index = 0;
 	}
 
-	private void saveMark() {
+	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
 			m_byteBuffer.putInt(m_index);
 			m_byteBuffer.putLong(m_timestamp);
-
-			if (m_index % 100 == 0) {
-				m_byteBuffer.force();
-			}
 		} catch (Exception e) {
 			// ignore it
 		}
