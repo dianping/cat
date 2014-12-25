@@ -11,25 +11,18 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
 <a:offline>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
    <div class="row-fluid">
 		<div id="queryBar"">
-			<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-	           开始<input id="startTime" name="startTime"  size="16" 
-	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value='${payload.startTime}' pattern='yyyy-MM-dd HH:mm'/>"  type="text"></input> <span class="add-on">
-	              <i class="ace-icon fa fa-calendar"></i>
-	           </span>
-	        </div>
-	        <div id="endDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-	           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" 
-	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value='${payload.endTime}' pattern='yyyy-MM-dd HH:mm'/>"  type="text"></input> <span class="add-on">
-	              <i class="ace-icon fa fa-calendar"></i>
-	           </span>
-	        </div>
+	    <div style="float:left;">
+			&nbsp;开始
+			<input type="text" id="startTime" style="width:150px;" value="<fmt:formatDate value='${payload.startTime}' pattern='yyyy-MM-dd HH:mm'/>"/>
+			结束
+			<input type="text" id="endTime" style="width:150px;" value="<fmt:formatDate value='${payload.endTime}' pattern='yyyy-MM-dd HH:mm'/>"/></div>
 			&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
 		<div id="DatabaseReport" style="display:inline-flex;">
@@ -110,8 +103,16 @@
 	          toggleButton("monthly", true);
 	        </c:if>
 	        
-	        $('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-	        $('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+	    	$('#startTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:10,
+				maxDate:0
+			});
+			$('#endTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:10,
+				maxDate:0
+			});
 	        
 	        $("#fullScreen").click(clickFullScreen);
 	        

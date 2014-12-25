@@ -8,10 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.system.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query() {
@@ -79,19 +77,15 @@
 
 		$(document).ready(
 				function() {
-					$('#datetimepicker1').datetimepicker({format: 'yyyy-MM-dd hh:mm'}).on('hide', function(ev){
-						var timestamp = $("#datetimepicker2").data("datetimepicker").getDate().valueOf();
-						if (ev.date.valueOf() > timestamp){
-				        	alert("结束时间不能晚于结束时间！");
-				        	$("#startTime").val($("#endTime").val());
-				        	} 
+					$('#startTime').datetimepicker({
+						format:'Y-m-d H:i',
+						step:10,
+						maxDate:0
 					});
-					$('#datetimepicker2').datetimepicker({format: 'yyyy-MM-dd hh:mm'}).on('hide', function(ev){
-						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
-						if (ev.date.valueOf() < timestamp){
-				        	alert("结束时间不能早于开始时间！");
-				        	$("#endTime").val($("#startTime").val());
-				        	} 
+					$('#endTime').datetimepicker({
+						format:'Y-m-d H:i',
+						step:10,
+						maxDate:0
 					});
 					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
@@ -175,17 +169,11 @@
 		<table>
 			<tr>
 				<th class="left">
-				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;开始<input id="startTime" name="startTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div><div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;结束<input id="endTime" name="endTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
+				<div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+						结束
+						<input type="text" id="endTime" style="width:150px;"/></div>
 		        &nbsp;查询类型<select style="width: 100px;" name="type" id="type" >
 							<option value="paasSystem">Paas系统</option>
 							<!-- option value="system">系统</option>

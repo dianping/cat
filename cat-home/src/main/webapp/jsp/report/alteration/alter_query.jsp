@@ -2,18 +2,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html; charset=utf-8"%>
 	<div class="text-left"></div>
-	<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-        开始<input id="startTime" name="startTime"  value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>"  size="16" 
-           data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-           <i class="ace-icon fa fa-calendar"></i>
-        </span>
-     </div>
-     <div id="endDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-        &nbsp;&nbsp;结束<input id="endTime" name="endTime"  value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>"  size="16" 
-           data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-           <i class="ace-icon fa fa-calendar"></i>
-        </span>
-     </div>
+     <div style="float:left;">
+		&nbsp;开始
+		<input type="text" id="startTime" style="width:150px;"/>
+		结束
+		<input type="text" id="endTime" style="width:150px;"/></div>
 	应用名
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名

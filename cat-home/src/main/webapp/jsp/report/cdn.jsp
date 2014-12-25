@@ -9,11 +9,9 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.cdn.Model" scope="request"/>
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
 	
 	<script type="text/javascript">
 		function query(){
@@ -73,7 +71,16 @@
 		}
 
 		$(document).ready(function() {
-			$('.date').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+			$('#startTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:10,
+				maxDate:0
+			});
+			$('#endTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:10,
+				maxDate:0
+			});			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'yyyy-MM-dd HH:mm')}");
 			$('#System_report').addClass('active open');
@@ -103,7 +110,12 @@
 		<table>
 			<tr>
 				<th class="left">
-				cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
+				<div style="float:left;">
+					&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+					结束
+					<input type="text" id="endTime" style="width:150px;"/></div>
+				&nbsp;cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
 						<option value="ALL">ALL</option>
 						<option value="WangSu">网宿</option>
 						<option value="DiLian">帝联</option>
@@ -115,18 +127,7 @@
 				</th>
 				<th class="right">
 				
-				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           开始<input id="startTime" name="startTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
-		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
+				
 				 &nbsp;&nbsp;
 				 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"

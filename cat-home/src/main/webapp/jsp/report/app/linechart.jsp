@@ -193,11 +193,13 @@
 					}
 					$('#time').datetimepicker({
 						format:'Y-m-d',
-						timepicker:false
+						timepicker:false,
+						maxDate:0
 					});
 					$('#time2').datetimepicker({
 						format:'Y-m-d',
-						timepicker:false
+						timepicker:false,
+						maxDate:0
 					});
 
 					var query1 = '${payload.query1}';

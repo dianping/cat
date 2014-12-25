@@ -158,21 +158,25 @@
 		$(document).ready(function() {
 			$('#startTime').datetimepicker({
 					format:'Y-m-d H:i',
-					step:10
+					step:10,
+					maxDate:0
 			});
 			$('#endTime').datetimepicker({
 				datepicker:false,
 				format:'H:i',
-				step:10
+				step:10,
+				maxDate:0
 			});
 			$('#startTime2').datetimepicker({
 				format:'Y-m-d H:i',
-				step:10
+				step:10,
+				maxDate:0
 			});
 			$('#endTime2').datetimepicker({
 				datepicker:false,
 				format:'H:i',
-				step:10
+				step:10,
+				maxDate:0
 			});
 
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");

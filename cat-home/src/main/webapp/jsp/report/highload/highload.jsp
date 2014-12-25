@@ -11,15 +11,13 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.highload.Model" scope="request" />
 
 <a:offline>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 		<div id="queryBar">
-			<div id="datePicker" class="input-append date" style="margin-bottom: 0px;float:left;">
-	           日期
-	           <span>&nbsp;&nbsp;&nbsp;&nbsp;<input id="time" name="time"  size="16" 
-	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"  type="text"/>
-	            <span class="add-on"><i class="ace-icon fa fa-calendar"></i></span></span>
-	        </div>
+	        <div style="float:left;">
+				&nbsp;日期
+			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"/>
+			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
 		<div class="report">
@@ -28,7 +26,11 @@
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  $('#highload_report').addClass("active");
-	          $('#datePicker').datetimepicker({format: 'yyyy-MM-dd'});
+			  $('#time').datetimepicker({
+					format:'Y-m-d',
+					timepicker:false,
+					maxDate:0
+				});
 	      });
 	      
 	      function queryNew(){

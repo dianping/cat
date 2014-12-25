@@ -11,8 +11,8 @@
 
 <a:body>
 	<jsp:body>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<%@ include file="alter_query.jsp"%>
 	<table	class="problem table table-striped table-condensed   table-hover">
 		<tr class="text-success">
@@ -43,8 +43,18 @@
 	</table>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-		$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+		$('#startTime').datetimepicker({
+			format:'Y-m-d H:i',
+			step:10,
+			maxDate:0
+		});
+		$('#endTime').datetimepicker({
+			format:'Y-m-d H:i',
+			step:10,
+			maxDate:0
+		});
+		$('#startTime').val("${w:format(payload.startTime,'yyyy-MM-dd HH:mm')}");
+		$('#endTime').val("${w:format(payload.endTime,'yyyy-MM-dd HH:mm')}");
 		$('i[tips]').popover();
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		
