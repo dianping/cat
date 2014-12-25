@@ -12,9 +12,8 @@
 	scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command};
@@ -111,67 +110,72 @@
 			window.location.href = "?op=speed&query1=" + query1 + "&query2=" + query2;
 		}
 
-		$(document)
-				.ready(
-						function() {
-							$('#speed').addClass('active');
-							$('#datetimepicker1').datetimepicker();
-							$('#datetimepicker2').datetimepicker();
+		$(document).ready(
+			function() {
+				$('#speed').addClass('active');
+				$('#time').datetimepicker({
+					format:'Y-m-d',
+					timepicker:false
+				});
+				$('#time2').datetimepicker({
+					format:'Y-m-d',
+					timepicker:false
+				});
 
-							var query1 = '${payload.query1}';
-							var query2 = '${payload.query2}';
-							var words = query1.split(";");
+				var query1 = '${payload.query1}';
+				var query2 = '${payload.query2}';
+				var words = query1.split(";");
 
-							$("#page").on('change', changeStepByPage);
-							$("#page2").on('change', changeStepByPage);
+				$("#page").on('change', changeStepByPage);
+				$("#page2").on('change', changeStepByPage);
 
-							if (typeof (words[0]) != undefined
-									&& words[0].length == 0) {
-								$("#time").val(getDate());
-							} else {
-								$("#time").val(words[0]);
-							}
-							$("#page").val(words[1]);
-							$("#page").change();
-							$("#step").val(words[2]);
-							$("#network").val(words[3]);
-							$("#version").val(words[4]);
-							$("#platform").val(words[5]);
-							$("#city").val(words[6]);
-							$("#operator").val(words[7]);
-							
-							var datePair = {};
-							datePair["当前值"]=$("#time").val();
+				if (typeof (words[0]) != undefined
+						&& words[0].length == 0) {
+					$("#time").val(getDate());
+				} else {
+					$("#time").val(words[0]);
+				}
+				$("#page").val(words[1]);
+				$("#page").change();
+				$("#step").val(words[2]);
+				$("#network").val(words[3]);
+				$("#version").val(words[4]);
+				$("#platform").val(words[5]);
+				$("#city").val(words[6]);
+				$("#operator").val(words[7]);
+				
+				var datePair = {};
+				datePair["当前值"]=$("#time").val();
 
-							if (query2 != null && query2 != '') {
-								$('#history').slideDown();
-								document.getElementById("checkbox").checked = true;
-								var words = query2.split(";");
+				if (query2 != null && query2 != '') {
+					$('#history').slideDown();
+					document.getElementById("checkbox").checked = true;
+					var words = query2.split(";");
 
-								if (words[0] == null || words[0].length == 0) {
-									$("#time2").val(getDate());
-								} else {
-									$("#time2").val(words[0]);
-								}
-								
-								datePair["对比值"]=$("#time2").val();
-								$("#page2").val(words[1]);
-								$("#page2").change();
-								$("#step2").val(words[2]);
-								$("#network2").val(words[3]);
-								$("#version2").val(words[4]);
-								$("#platform2").val(words[5]);
-								$("#city2").val(words[6]);
-								$("#operator2").val(words[7]);
-							} else {
-								$("#time2").val(getDate());
-							}
+					if (words[0] == null || words[0].length == 0) {
+						$("#time2").val(getDate());
+					} else {
+						$("#time2").val(words[0]);
+					}
+					
+					datePair["对比值"]=$("#time2").val();
+					$("#page2").val(words[1]);
+					$("#page2").change();
+					$("#step2").val(words[2]);
+					$("#network2").val(words[3]);
+					$("#version2").val(words[4]);
+					$("#platform2").val(words[5]);
+					$("#city2").val(words[6]);
+					$("#operator2").val(words[7]);
+				} else {
+					$("#time2").val(getDate());
+				}
 
-							var data = ${model.appSpeedDisplayInfo.lineChart.jsonString};
-							
-							graphMetricChartForDay(document.getElementById('${model.appSpeedDisplayInfo.lineChart.id}'),
-									data, datePair); 
-						});
+				var data = ${model.appSpeedDisplayInfo.lineChart.jsonString};
+				
+				graphMetricChartForDay(document.getElementById('${model.appSpeedDisplayInfo.lineChart.id}'),
+						data, datePair); 
+			});
 	</script>
 
 			<%@include file="speedDetail.jsp"%>

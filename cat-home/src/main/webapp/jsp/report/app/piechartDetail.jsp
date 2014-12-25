@@ -2,19 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <table>
 			<tr>
-				<th align=left>
-				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;开始<input id="time" name="time"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
-		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;结束<input id="time2" name="time2"  size="5" 
-		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-clock-o"></i>
-		           </span>
-		        </div>
+				<th class="left">
+				<div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="time" style="width:150px;"/>
+						结束
+						<input type="text" id="time2" style="width:60px;"/></div>
 		        &nbsp;项目<select id="group" style="width: 200px;"></select>
 		         命令字 <select id="command" style="width: 200px;">
 						

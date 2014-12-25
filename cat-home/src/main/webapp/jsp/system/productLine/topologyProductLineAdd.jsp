@@ -10,7 +10,8 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
+	<link rel="stylesheet" href="${model.webapp}/assets/css/chosen.css" />
+	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
 			<form name="topologyGraphEdgeConfigAddSumbit" id="form" method="get"
 				action="${model.pageUri}?op=topologyProductLineAddSubmit">
 				<h4 class="text-center text-danger">修改产品线配置信息</h4>
@@ -75,35 +76,22 @@
 					</c:if>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
-						<td>
-							<table class="table table-striped table-condensed table-hover" >
-								<tr>
-								<c:forEach var="item" items="${model.projects}" varStatus="status">
-									<c:choose>
-										<c:when test="${status.index mod 3 ne 0}">
-											<td>
-												<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
-											</td>
-										</c:when>
-										<c:otherwise>
-											</tr>
-											<tr>
-												<td>
-													<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
-												</td>
-										</c:otherwise>
-									</c:choose>											
-								</c:forEach>
-								</tr>
-							</table>
-						</td>
-						
-						<!-- <td><select style="width: 500px;" name="domains" multiple=""
-							id="domainSelect">
+						<td style="width:50%;">
+							<select multiple class="chosen-select" id="domain_select" name="domains" 
+								data-placeholder="Choose a State...">
 								<c:forEach var="item" items="${model.projects}">
-									<option value="${item.domain}">${item.domain}</option>
+									<c:set var="domains" value="${model.productLine.domains}" />
+									<c:choose>
+									<c:when test="${not empty domains[item.domain]}">
+										<option value="${item.domain}" selected>${item.domain}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${item.domain}">${item.domain}</option>
+									</c:otherwise>
+									</c:choose>
 								</c:forEach>
-						</select></td> -->
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td colspan='2' style="text-align:center;"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
@@ -121,11 +109,32 @@
 				allowClear : true
 			});
 			
-			var initDomains = [];
+			$('.chosen-select').chosen({allow_single_deselect:true}); 
+			//resize the chosen on window resize
+		
+			$(window)
+			.off('resize.chosen')
+			.on('resize.chosen', function() {
+				$('.chosen-select').each(function() {
+					 var $this = $(this);
+					 $this.next().css({'width': $this.parent().width()});
+				})
+			}).trigger('resize.chosen');
+		
+			$('#chosen-multiple-style').on('click', function(e){
+				var target = $(e.target).find('input[type=radio]');
+				var which = parseInt(target.val());
+				if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
+				 else $('#form-field-select-4').removeClass('tag-input-style');
+			});
+			
+		/* 	var initDomains = [];
 			<c:forEach var="domain" items="${model.productLine.domains}">
 				initDomains.push("${domain.key}");
 				document.getElementById("${domain.key}").checked = true;
 			</c:forEach>
-			$("#domainSelect").val(initDomains).trigger("change");
+			
+			$("#domainSelect").val(initDomains).trigger("change"); */
+			
 		});
 	</script>

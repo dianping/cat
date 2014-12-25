@@ -2,12 +2,10 @@
 <table width="100%">
 			<tr>
 				<th>
-					<div id="datetimepicker1" class="input-append  date" style="float:left;">
-		           &nbsp;时间<input id="time" name="time"  size="13" 
-		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
+		        <div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="time" style="width:110px;"/>
+					</div>
 					&nbsp;项目<select id="domains" style="width: 200px;"></select>
 						命令字 <select id="command" style="width: 240px;">
 						</select> 

@@ -8,9 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />	
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var commandInfo = ${model.command};
@@ -166,11 +165,15 @@
 		$(document).ready(
 				function() {
 					$('#accessPiechart').addClass('active');
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker({
-						pickDate: false
-						});
-					
+					$('#time').datetimepicker({
+						format:'Y-m-d H:i',
+						step:10
+					});
+					$('#time2').datetimepicker({
+						datepicker:false,
+						format:'H:i',
+						step:10
+					});
 					var query1 = '${payload.query1}';
 					var command1 = $('#command');
 					var words = query1.split(";");
