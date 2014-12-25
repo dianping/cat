@@ -8,10 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var urlData = ${model.items};
@@ -158,17 +156,31 @@
 		}
 		
 		$(document).ready(function() {
-			$('#datetimepicker1').datetimepicker();
-			$('#datetimepicker2').datetimepicker({
-				pickDate: false
+			$('#startTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
 			});
-			
+			$('#endTime').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#startTime2').datetimepicker({
+				format:'Y-m-d H:i',
+				step:60,
+				maxDate:0
+			});
+			$('#endTime2').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:60,
+				maxDate:0
+			});
+
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
-			$('#datetimepicker3').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-			$('#datetimepicker4').datetimepicker({
-				pickDate: false
-			});
 			
 			$('#group').on('change',groupChange);
 			$('#group2').on('change',groupChange);

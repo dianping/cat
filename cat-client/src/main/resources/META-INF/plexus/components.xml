@@ -45,6 +45,9 @@
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStatistics</role>
 					<field-name>m_statistics</field-name>
 				</requirement>

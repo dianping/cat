@@ -20,6 +20,7 @@ import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.unidal.helper.Files;
+import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
@@ -27,8 +28,8 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageQueue;
-import org.unidal.helper.Splitters;
 
 public class ChannelManager implements Task {
 
@@ -48,11 +49,14 @@ public class ChannelManager implements Task {
 
 	private ChannelHolder m_activeChannelHolder;
 
+	private MessageIdFactory m_idfactory;
+
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
-	      ClientConfigManager configManager) {
+	      ClientConfigManager configManager, MessageIdFactory idFactory) {
 		m_logger = logger;
 		m_queue = queue;
 		m_configManager = configManager;
+		m_idfactory = idFactory;
 
 		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
 		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
@@ -87,6 +91,30 @@ public class ChannelManager implements Task {
 				m_activeChannelHolder = new ChannelHolder();
 				m_activeChannelHolder.setServerAddresses(serverAddresses);
 				m_logger.error("error when init cat module due to error config xml in /data/appdatas/cat/client.xml");
+			}
+		}
+	}
+
+	private void checkServerChanged() {
+		if (shouldCheckServerConfig(++m_count)) {
+			Pair<Boolean, String> pair = serverConfigChanged();
+
+			if (pair.getKey()) {
+				String servers = pair.getValue();
+				List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
+				ChannelHolder newHolder = initChannel(serverAddresses, servers);
+
+				if (newHolder != null) {
+					if (newHolder.isConnectChanged()) {
+						ChannelHolder last = m_activeChannelHolder;
+
+						m_activeChannelHolder = newHolder;
+						closeChannelHolder(last);
+						m_logger.info("switch active channel to " + m_activeChannelHolder);
+					} else {
+						m_activeChannelHolder = newHolder;
+					}
+				}
 			}
 		}
 	}
@@ -135,6 +163,16 @@ public class ChannelManager implements Task {
 			}
 		}
 		return null;
+	}
+
+	private void doubleCheckActiveServer(ChannelFuture activeFuture) {
+		try {
+			if (isChannelStalled(activeFuture) || isChannelDisabled(activeFuture)) {
+				closeChannelHolder(m_activeChannelHolder);
+			}
+		} catch (Throwable e) {
+			m_logger.error(e.getMessage(), e);
+		}
 	}
 
 	public ChannelFuture getChannel() {
@@ -243,63 +281,42 @@ public class ChannelManager implements Task {
 		return new ArrayList<InetSocketAddress>();
 	}
 
+	private void reconnectDefaultServer(ChannelFuture activeFuture, List<InetSocketAddress> serverAddresses) {
+		try {
+			int reconnectServers = m_activeChannelHolder.getActiveIndex();
+
+			if (reconnectServers == -1) {
+				reconnectServers = serverAddresses.size();
+			}
+			for (int i = 0; i < reconnectServers; i++) {
+				ChannelFuture future = createChannel(serverAddresses.get(i));
+
+				if (future != null) {
+					ChannelFuture lastFuture = activeFuture;
+
+					m_activeChannelHolder.setActiveFuture(future);
+					m_activeChannelHolder.setActiveIndex(i);
+					closeChannel(lastFuture);
+					break;
+				}
+			}
+		} catch (Throwable e) {
+			m_logger.error(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public void run() {
 		while (m_active) {
-			m_count++;
+			// make save message id index asyc
+			m_idfactory.saveMark();
+			checkServerChanged();
 
-			if (shouldCheckServerConfig(m_count)) {
-				Pair<Boolean, String> pair = serverConfigChanged();
-
-				if (pair.getKey()) {
-					String servers = pair.getValue();
-					List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
-					ChannelHolder newHolder = initChannel(serverAddresses, servers);
-
-					if (newHolder != null) {
-						if (newHolder.isConnectChanged()) {
-							ChannelHolder last = m_activeChannelHolder;
-
-							m_activeChannelHolder = newHolder;
-							closeChannelHolder(last);
-							m_logger.info("switch active channel to " + m_activeChannelHolder);
-						} else {
-							m_activeChannelHolder = newHolder;
-						}
-					}
-				}
-			}
 			ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
 			List<InetSocketAddress> serverAddresses = m_activeChannelHolder.getServerAddresses();
 
-			try {
-				if (isChannelStalled(activeFuture) || isChannelDisabled(activeFuture)) {
-					closeChannelHolder(m_activeChannelHolder);
-				}
-			} catch (Throwable e) {
-				m_logger.error(e.getMessage(), e);
-			}
-			try {
-				int reconnectServers = m_activeChannelHolder.getActiveIndex();
-
-				if (reconnectServers == -1) {
-					reconnectServers = serverAddresses.size();
-				}
-				for (int i = 0; i < reconnectServers; i++) {
-					ChannelFuture future = createChannel(serverAddresses.get(i));
-
-					if (future != null) {
-						ChannelFuture lastFuture = activeFuture;
-
-						m_activeChannelHolder.setActiveFuture(future);
-						m_activeChannelHolder.setActiveIndex(i);
-						closeChannel(lastFuture);
-						break;
-					}
-				}
-			} catch (Throwable e) {
-				m_logger.error(e.getMessage(), e);
-			}
+			doubleCheckActiveServer(activeFuture);
+			reconnectDefaultServer(activeFuture, serverAddresses);
 
 			try {
 				Thread.sleep(10 * 1000L); // check every 10 seconds

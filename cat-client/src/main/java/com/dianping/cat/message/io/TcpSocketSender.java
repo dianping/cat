@@ -14,6 +14,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -32,6 +33,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Inject
 	private ClientConfigManager m_configManager;
+
+	@Inject
+	private MessageIdFactory m_factory;
 
 	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
@@ -77,7 +81,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void initialize() {
-		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager);
+		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
 
 		Threads.forGroup("cat").start(this);
 		Threads.forGroup("cat").start(m_manager);

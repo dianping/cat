@@ -135,7 +135,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private void processVersion3Record(int cityId, int operatorId, String record) {
 		String[] items = record.split("\t");
 
-		if (items.length == 11) {
+		if (items.length >= 10) {
 			AppDataProto appData = new AppDataProto();
 
 			try {
@@ -188,7 +188,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "batch:version3:" + String.valueOf(items.length), Event.SUCCESS, null);
 		}
 	}
 
@@ -248,7 +248,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidRecord", "batch", Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "batch:version2:" + String.valueOf(items.length), Event.SUCCESS, null);
 		}
 	}
 
