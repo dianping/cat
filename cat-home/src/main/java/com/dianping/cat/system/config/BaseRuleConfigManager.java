@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.ConfigDao;
@@ -25,7 +27,6 @@ import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.RuleType;
-import org.unidal.lookup.util.StringUtils;
 
 public abstract class BaseRuleConfigManager {
 
@@ -38,6 +39,17 @@ public abstract class BaseRuleConfigManager {
 	protected int m_configId;
 
 	protected MonitorRules m_config;
+
+	private int calMaxNum(Set<Integer> nums) {
+		int max = 0;
+
+		for (int n : nums) {
+			if (n > max) {
+				max = n;
+			}
+		}
+		return max;
+	}
 
 	protected Rule copyRule(Rule rule) {
 		try {
@@ -87,6 +99,15 @@ public abstract class BaseRuleConfigManager {
 		return configs;
 	}
 
+	protected Map<MetricType, List<Config>> decorateConfigOnRead(Map<MetricType, List<Config>> originConfigs) {
+		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
+
+		for (Entry<MetricType, List<Config>> originConfig : originConfigs.entrySet()) {
+			configs.put(originConfig.getKey(), decorateConfigOnRead(originConfig.getValue()));
+		}
+		return configs;
+	}
+
 	private void decorateConfigOnStore(List<Config> configs) throws DalException {
 		for (Config config : configs) {
 			for (Condition condition : config.getConditions()) {
@@ -130,6 +151,58 @@ public abstract class BaseRuleConfigManager {
 		return m_config.toString();
 	}
 
+	private void extractConifgsByProduct(String product, Rule rule,
+	      Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
+		List<MetricItem> items = rule.getMetricItems();
+
+		for (MetricItem item : items) {
+			String configProduct = item.getProductText();
+			String configMetricKey = item.getMetricItemText();
+			int matchLevel = validateRegex(configProduct, product);
+
+			if (matchLevel > 0) {
+				Map<Integer, Map<MetricType, List<Config>>> configsByPriority = configs.get(configMetricKey);
+
+				if (configsByPriority == null) {
+					configsByPriority = new HashMap<Integer, Map<MetricType, List<Config>>>();
+
+					configs.put(configMetricKey, configsByPriority);
+				}
+
+				Map<MetricType, List<Config>> configsByType = new HashMap<MetricType, List<Config>>();
+
+				if (item.isMonitorAvg()) {
+					configsByType.put(MetricType.AVG, rule.getConfigs());
+				}
+				if (item.isMonitorCount()) {
+					configsByType.put(MetricType.COUNT, rule.getConfigs());
+				}
+				if (item.isMonitorSum()) {
+					configsByType.put(MetricType.SUM, rule.getConfigs());
+				}
+
+				configsByPriority.put(matchLevel, configsByType);
+			}
+		}
+	}
+
+	private Map<String, Map<MetricType, List<Config>>> extractMaxPriorityConfigs(
+	      Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
+		Map<String, Map<MetricType, List<Config>>> result = new HashMap<String, Map<MetricType, List<Config>>>();
+
+		for (Entry<String, Map<Integer, Map<MetricType, List<Config>>>> entry : configs.entrySet()) {
+			String metirc = entry.getKey();
+			Map<Integer, Map<MetricType, List<Config>>> priorityMap = entry.getValue();
+			int maxPriority = calMaxNum(priorityMap.keySet());
+			Map<MetricType, List<Config>> configsByType = priorityMap.get(maxPriority);
+
+			if (configsByType != null) {
+				result.put(metirc, decorateConfigOnRead(configsByType));
+			}
+		}
+		return result;
+	}
+
 	protected abstract String getConfigName();
 
 	protected List<Rule> getMaxPriorityRules(Map<Integer, List<Rule>> rules) {
@@ -163,6 +236,15 @@ public abstract class BaseRuleConfigManager {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public Map<String, Map<MetricType, List<Config>>> queryConfigs(String product) {
+		Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs = new HashMap<String, Map<Integer, Map<MetricType, List<Config>>>>();
+
+		for (Rule rule : m_config.getRules().values()) {
+			extractConifgsByProduct(product, rule, configs);
+		}
+		return extractMaxPriorityConfigs(configs);
 	}
 
 	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {

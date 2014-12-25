@@ -1,15 +1,12 @@
 package com.dianping.cat.report.task.alert.business;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -18,19 +15,17 @@ import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.message.Transaction;
+import com.dianping.cat.home.rule.entity.Condition;
+import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricType;
-import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
-public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
+public class BusinessAlert extends BaseAlert {
 
 	public static final String ID = AlertType.Business.getName();
 
@@ -40,54 +35,42 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
 
-	protected Map<String, MetricReport> m_currentReports = new HashMap<String, MetricReport>();
+	private Map<String, Map<MetricType, List<Config>>> buildMonitorConfigs(String productline,
+	      List<MetricItemConfig> configs) {
+		Map<String, Map<MetricType, List<Config>>> monitorConfigs = new HashMap<String, Map<MetricType, List<Config>>>();
 
-	protected Map<String, MetricReport> m_lastReports = new HashMap<String, MetricReport>();
+		for (MetricItemConfig config : configs) {
+			Map<MetricType, List<Config>> monitorConfigsByItem = new HashMap<MetricType, List<Config>>();
+			String metricKey = config.getId();
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
+			if (config.isShowAvg()) {
+				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.AVG);
 
-	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
-		if (period == ModelPeriod.CURRENT) {
-			MetricReport report = m_currentReports.get(product);
-
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.CURRENT.getStartTime()).setProperty(
-				      "requireAll", "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_currentReports.put(product, report);
-				}
-				return report;
+				monitorConfigsByItem.put(MetricType.AVG, tmpConfigs);
 			}
-		} else if (period == ModelPeriod.LAST) {
-			MetricReport report = m_lastReports.get(product);
+			if (config.isShowCount()) {
+				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.COUNT);
 
-			if (report != null) {
-				return report;
-			} else {
-				ModelRequest request = new ModelRequest(product, ModelPeriod.LAST.getStartTime()).setProperty("requireAll",
-				      "ture");
-
-				report = m_service.invoke(request);
-				if (report != null) {
-					m_lastReports.put(product, report);
-				}
-				return report;
+				monitorConfigsByItem.put(MetricType.COUNT, tmpConfigs);
 			}
-		} else {
-			throw new RuntimeException("internal error, this can't be reached.");
+			if (config.isShowSum()) {
+				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.SUM);
+
+				monitorConfigsByItem.put(MetricType.SUM, tmpConfigs);
+			}
+			monitorConfigs.put(metricKey, monitorConfigsByItem);
 		}
+		return monitorConfigs;
 	}
 
 	@Override
 	public String getName() {
 		return ID;
+	}
+
+	@Override
+	protected Map<String, ProductLine> getProductlines() {
+		return m_productLineConfigManager.queryMetricProductLines();
 	}
 
 	@Override
@@ -109,101 +92,98 @@ public class BusinessAlert extends BaseAlert implements Task, LogEnabled {
 		return false;
 	}
 
-	private void processMetricItemConfig(MetricItemConfig config, int minute, ProductLine productLine) {
+	private void processMetricItemConfig(MetricItemConfig config, int minute,
+	      Map<MetricType, List<Config>> monitorConfigs, ProductLine productLine, MetricReport lastReport,
+	      MetricReport currentReport) {
 		if (needAlert(config)) {
 			String product = productLine.getId();
 			String domain = config.getDomain();
 			String metric = config.getMetricKey();
 			String metricKey = m_metricConfigManager.buildMetricKey(domain, config.getType(), metric);
-			List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+			List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
 
 			if (config.isShowAvg()) {
-				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.AVG));
+				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.AVG),
+				      lastReport, currentReport, metricKey);
+
+				results.addAll(tmpResults);
 			}
 			if (config.isShowCount()) {
-				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.COUNT));
+				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.COUNT),
+				      lastReport, currentReport, metricKey);
+
+				results.addAll(tmpResults);
 			}
 			if (config.isShowSum()) {
-				alertResults.addAll(computeAlertInfo(minute, product, metricKey, MetricType.SUM));
+				List<AlertResultEntity> tmpResults = processMetricType(minute, monitorConfigs.get(MetricType.SUM),
+				      lastReport, currentReport, metricKey);
+
+				results.addAll(tmpResults);
 			}
 
-			for (AlertResultEntity alertResult : alertResults) {
-				m_alertInfo.addAlertInfo(product, metricKey, new Date().getTime());
-				String metricName = buildMetricName(metricKey);
-
-				AlertEntity entity = new AlertEntity();
-
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(metricName).setType(getName()).setGroup(product);
-				entity.getParas().put("domain", domain);
-
-				m_sendManager.addAlert(entity);
-			}
+			sendAlerts(product, metricKey, metric, results);
 		}
+	}
+
+	protected List<AlertResultEntity> processMetricType(int minute, List<Config> configs, MetricReport lastReport,
+	      MetricReport currentReport, String metricKey) {
+		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		int maxMinute = resultPair.getKey();
+		Pair<double[], double[]> datas = m_dataExtractor.extractData(minute, maxMinute, lastReport, currentReport,
+		      metricKey, MetricType.AVG);
+
+		double[] baseline = datas.getKey();
+		double[] value = datas.getValue();
+		List<Condition> conditions = resultPair.getValue();
+
+		return m_dataChecker.checkData(value, baseline, conditions);
 	}
 
 	@Override
 	protected void processProductLine(ProductLine productLine) {
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productLine.getId(),
+		String productId = productLine.getId();
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
 		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		Map<String, Map<MetricType, List<Config>>> monitorConfigs = buildMonitorConfigs(productId, configs);
+		int maxMinute = calMaxMinute(monitorConfigs);
+		MetricReport currentReport = null;
+		MetricReport lastReport = null;
+		boolean isDataReady = false;
 
-		for (MetricItemConfig config : configs) {
-			try {
-				processMetricItemConfig(config, minute, productLine);
-			} catch (Exception e) {
-				Cat.logError(e);
+		if (minute >= maxMinute - 1) {
+			currentReport = fetchMetricReport(productId, ModelPeriod.CURRENT);
+
+			if (currentReport != null) {
+				isDataReady = true;
+			}
+		} else if (minute < 0) {
+			lastReport = fetchMetricReport(productId, ModelPeriod.LAST);
+
+			if (lastReport != null) {
+				isDataReady = true;
+			}
+		} else {
+			currentReport = fetchMetricReport(productId, ModelPeriod.CURRENT);
+			lastReport = fetchMetricReport(productId, ModelPeriod.LAST);
+
+			if (lastReport != null && currentReport != null) {
+				isDataReady = true;
 			}
 		}
-	}
 
-	@Override
-	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
-		while (active) {
-			Transaction t = Cat.newTransaction("AlertMetric", TimeHelper.getMinuteStr());
-			long current = System.currentTimeMillis();
-
-			try {
-				Map<String, ProductLine> productLines = m_productLineConfigManager.queryMetricProductLines();
-
-				for (ProductLine productLine : productLines.values()) {
-					try {
-						processProductLine(productLine);
-					} catch (Exception e) {
-						Cat.logError(e);
-					}
+		if (isDataReady) {
+			for (MetricItemConfig config : configs) {
+				try {
+					processMetricItemConfig(config, minute, monitorConfigs.get(config.getId()), productLine, lastReport,
+					      currentReport);
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-
-				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				m_currentReports.clear();
-				m_lastReports.clear();
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
 			}
 		}
 	}
 
-	@Override
-	public void shutdown() {
-	}
 }
