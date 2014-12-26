@@ -11,7 +11,6 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.group.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
@@ -92,14 +91,16 @@ public class GlobalConfigProcessor {
 			break;
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 			String domainGroupContent = payload.getContent();
+
 			if (!StringUtils.isEmpty(domainGroupContent)) {
 				model.setOpState(m_domainGroupConfigManger.insertFromJson(domainGroupContent));
 			} else {
 				model.setOpState(true);
 			}
-			DomainGroup domainGroup = m_domainGroupConfigManger.getDomainGroup();
 
-			model.setContent(new DefaultJsonBuilder().build(domainGroup));
+			String content = new DefaultJsonBuilder().build(m_domainGroupConfigManger.getDomainGroup());
+
+			model.setContent(content);
 			break;
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();
