@@ -186,7 +186,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("alert-" + getName(), TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("Alert" + getName(), TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

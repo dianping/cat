@@ -2,27 +2,27 @@ package com.dianping.cat.report.task.alert;
 
 public enum AlertType {
 
-	Business("business"),
+	Business("Business"),
 
-	Network("network"),
+	Network("Network"),
 
-	DataBase("database"),
+	DataBase("Database"),
 
-	System("system"),
+	System("System"),
 
-	Exception("exception"),
+	Exception("Exception"),
 
-	HeartBeat("heartbeat"),
+	HeartBeat("Heartbeat"),
 
-	ThirdParty("thirdParty"),
+	ThirdParty("ThirdParty"),
 
-	FrontEndException("frontEnd"),
+	FrontEndException("FrontEnd"),
 
-	App("app"),
+	App("App"),
 
-	Web("web"),
+	Web("Web"),
 
-	Transaction("transaction");
+	Transaction("Transaction");
 
 	private String m_name;
 
