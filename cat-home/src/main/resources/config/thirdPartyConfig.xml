@@ -3,18 +3,18 @@
    <http url="http://180.153.86.71/stand/soap/standard.wsdl" type="get" domain="ShopHotelServer">
    </http>
    <http url="http://api.map.baidu.com/geocoder/v2/" type="get" domain="TakeawayMapiWeb">
-      <par id="ak" value="D596723a1485b344262c330e80511371"/>
-      <par id="location" value="31.222358208789,121.4270487196"/>
-      <par id="output" value="json"/>
-      <par id="pois" value="0"/>
-      <par id="coordtype" value="bd09ll"/>
+      <par id="ak=D596723a1485b344262c330e80511371"/>
+      <par id="location=31.222358208789,121.4270487196"/>
+      <par id="output=json"/>
+      <par id="pois=0"/>
+      <par id="coordtype=bd09ll"/>
    </http>
    <http url="http://10.1.6.128:8080/cat/r" type="get" domain="cat">
-      <par id="ak" value="D596723a1485b344262c330e80511371"/>
-      <par id="location" value="31.222358208789,121.4270487196"/>
-      <par id="output" value="json"/>
-      <par id="pois" value="0"/>
-      <par id="coordtype" value="bd09ll"/>
+      <par id="ak=D596723a1485b344262c330e80511371"/>
+      <par id="location=31.222358208789,121.4270487196"/>
+      <par id="output=json"/>
+      <par id="pois=0"/>
+      <par id="coordtype=bd09ll"/>
    </http>
    <http url="http://www.wandafilm.com/thirdparty/cinemahallseats.do" type="get" domain="MovieWeb">
    </http>

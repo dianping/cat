@@ -13,6 +13,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
 import com.dianping.cat.home.alert.thirdparty.transform.DefaultSaxParser;
@@ -76,12 +77,106 @@ public class ThirdPartyConfigManager implements Initializable {
 		}
 	}
 
+	public boolean insert(Http http) {
+		Http hp = null;
+		String url = http.getUrl();
+
+		for (Http h : m_thirdPartyConfig.getHttps()) {
+			if (h.getUrl().equals(url)) {
+				h.setType(http.getType());
+				h.setDomain(http.getDomain());
+				h.getPars().clear();
+
+				for (Par par : http.getPars()) {
+					h.addPar(par);
+				}
+				hp = h;
+			}
+		}
+		if (hp == null) {
+			m_thirdPartyConfig.addHttp(http);
+		}
+		return storeConfig();
+	}
+
+	public boolean insert(Socket socket) {
+		Socket sk = null;
+		String url = socket.getIp();
+		int port = socket.getPort();
+
+		for (Socket s : m_thirdPartyConfig.getSockets()) {
+			if (s.getIp().equals(url) && s.getPort() == port) {
+				sk = s;
+				s.setDomain(socket.getDomain());
+			}
+		}
+		if (sk == null) {
+			m_thirdPartyConfig.addSocket(socket);
+		}
+		return storeConfig();
+	}
+
+	public boolean remove(String id, String type) {
+		if ("http".equals(type)) {
+			Http hp = null;
+
+			for (Http h : m_thirdPartyConfig.getHttps()) {
+				if (h.getUrl().equals(id)) {
+					hp = h;
+				}
+			}
+			if (hp != null) {
+				m_thirdPartyConfig.getHttps().remove(hp);
+			}
+		} else if ("socket".equals(type)) {
+			Socket sk = null;
+			String[] info = id.split("-");
+			String ip = info[0];
+			int port = Integer.valueOf(info[1]);
+
+			for (Socket s : m_thirdPartyConfig.getSockets()) {
+				if (s.getIp().equals(ip) && s.getPort() == port) {
+					sk = s;
+				}
+			}
+			if (sk != null) {
+				m_thirdPartyConfig.getSockets().remove(sk);
+			}
+		}
+		return storeConfig();
+	}
+
 	public List<Socket> querSockets() {
 		return m_thirdPartyConfig.getSockets();
 	}
 
 	public List<Http> queryHttps() {
 		return m_thirdPartyConfig.getHttps();
+	}
+
+	public Http queryHttp(String url) {
+		List<Http> https = m_thirdPartyConfig.getHttps();
+
+		for (Http http : https) {
+			if (http.getUrl().equals(url)) {
+				return http;
+			}
+		}
+		return null;
+	}
+
+	public Socket querySocket(String id) {
+		String[] infos = id.split("-");
+		String ip = infos[0];
+		int port = Integer.parseInt(infos[1]);
+		List<Socket> sockets = m_thirdPartyConfig.getSockets();
+
+		for (Socket socket : sockets) {
+			if (socket.getIp().equals(ip) && socket.getPort() == port) {
+				return socket;
+			}
+		}
+		return null;
 	}
 
 	private boolean storeConfig() {

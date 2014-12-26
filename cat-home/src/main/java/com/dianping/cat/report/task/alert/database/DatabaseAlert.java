@@ -22,7 +22,7 @@ public class DatabaseAlert extends BaseAlert {
 
 	@Override
 	protected Map<String, ProductLine> getProductlines() {
-		return m_productLineConfigManager.queryDatabases();
+		return m_productLineConfigManager.queryDatabaseProductLines();
 	}
 
 	@Override

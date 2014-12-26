@@ -5,55 +5,61 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
 <a:config>
-<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-			<form name="thirdPartyConfigUpdate" id="form" method="post"
-				action="${model.pageUri}?op=thirdPartyConfigUpdate">
-				<table class="table table-striped table-condensed table-bordered  table-hover">
-					<tr>
-						<td style="width:60%">
-						<textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea>
-						</td>
-						<td style="width:40%">
-						<h4>1. HTTP </h4>
-						<p><span class="text-danger">[url]</span>：监控的对象</p>
-						<p><span class="text-danger">[type]</span>：<span class="text-danger">get</span> 或 <span class="text-danger">post</span></p>
-						<p><span class="text-danger">[domain]</span>：依赖于该第三方的项目名，会向该项目组联系人发第三方告警</p>
-						<p><span class="text-danger">[par]</span>：请求中包含的参数，<span class="text-danger">id</span>为参数名称，<span class="text-danger">value</span>为参数值</p>
-						<p>例如：
-<xmp style="width:auto"><http url="http://cat.dp:8080" type="get" domain="Cat">
-  <par id="domain" value="Cat"/>
-  <par id="date" value="2014073111"/>
-</http>
-</xmp>
-						</p>
-						<br/>所有标红部分均为小写。
-						
-						</td>
+	<script src="${model.webapp}/assets/js/bootstrap-tag.min.js"></script>
+
+			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents">
+			<thead>
+				<tr >
+					<th width="67%">url (http监控)</th>
+					<th width="5%">类型</th>
+					<th width="20%">项目组</th>
+					<th width="8%">操作 <a href="?op=thirdPartyRuleUpdate&type=http" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+				</tr></thead>
+				<tbody>
+
+				<c:forEach var="item" items="${model.thirdPartyConfig.https}" varStatus="status">
+					<tr class="">
+						<td>${item.url}</td>
+						<td>${item.type}</td>
+						<td>${item.domain}</td>
+						<td><a href="?op=thirdPartyRuleUpdate&ruleId=${item.url}&type=http" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=thirdPartyRuleDelete&ruleId=${item.url}&type=http" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
-					<tr>
-						<td style="text-align:center" colspan="2"><input class='btn btn-primary btn-sm' 
-							type="submit" name="submit" value="提交" /></td>
+				</c:forEach></tbody>
+			</table>
+			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents">
+			<thead>
+				<tr >
+					<th width="67%">Ip (socket监控)</th>
+					<th width="5%">端口</th>
+					<th width="20%">项目组</th>
+					<th width="8%">操作 <a href="?op=thirdPartyRuleUpdate&type=socket" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+				</tr></thead>
+				<tbody>
+
+				
+				<c:forEach var="item" items="${model.thirdPartyConfig.sockets}" varStatus="status">
+					<tr class="">
+						<td>${item.ip}</td>
+						<td>${item.port}</td>
+						<td>${item.domain}</td>
+						<td><a href="?op=thirdPartyRuleUpdate&ruleId=${item.ip}-${item.port}&type=socket" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=thirdPartyRuleDelete&ruleId=${item.ip}-${item.port}&type=socket" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
-				</table>
-			</form>
-			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+				</c:forEach>
+				</tbody>
+			</table>
+			
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#thirdPartyConfigUpdate').addClass('active');
-			var state = '${model.opState}';
-			if(state=='Success'){
-				$('#state').html('操作成功');
-			}else{
-				$('#state').html('操作失败');
-			}
-			setInterval(function(){
-				$('#state').html('&nbsp;');
-			},3000);
 		});
 </script>

@@ -8,8 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.lookup.util.StringUtils
-;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -22,6 +21,9 @@ import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Socket;
+import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
@@ -131,8 +133,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Speed> m_speeds;
 
 	private Speed m_speed;
-	
+
+	private ThirdPartyConfig m_thirdPartyConfig;
+
 	private List<String> m_heartbeatExtensionMetrics;
+
+	private Http m_http;
+
+	private Socket m_socket;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -346,6 +354,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_heartbeatExtensionMetrics;
 	}
 
+	public Http getHttp() {
+		return m_http;
+	}
+
 	public String getId() {
 		return m_id;
 	}
@@ -422,6 +434,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
+	public Socket getSocket() {
+		return m_socket;
+	}
+
 	public Speed getSpeed() {
 		return m_speed;
 	}
@@ -432,6 +448,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getTags() {
 		return m_tags;
+	}
+
+	public ThirdPartyConfig getThirdPartyConfig() {
+		return m_thirdPartyConfig;
 	}
 
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
@@ -542,6 +562,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_heartbeatExtensionMetrics = heartbeatExtensionMetrics;
 	}
 
+	public void setHttp(Http http) {
+		m_http = http;
+	}
+
 	public void setId(String id) {
 		m_id = id;
 	}
@@ -614,6 +638,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
+	public void setSocket(Socket socket) {
+		m_socket = socket;
+	}
+
 	public void setSpeed(Speed speed) {
 		m_speed = speed;
 	}
@@ -624,6 +652,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setTags(List<String> tags) {
 		m_tags = tags;
+	}
+
+	public void setThirdPartyConfig(ThirdPartyConfig thirdPartyConfig) {
+		m_thirdPartyConfig = thirdPartyConfig;
 	}
 
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {

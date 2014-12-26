@@ -70,22 +70,19 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			Map<String, ProductLine> groups = m_productLineConfigManger.queryAllProductLines();
+			Map<String, ProductLine> groups = m_productLineConfigManger.queryApplicationProductLines();
 
 			for (Entry<String, ProductLine> entry : groups.entrySet()) {
 				String realName = entry.getValue().getTitle();
-				boolean isDashboard = entry.getValue().getApplicationDashboard();
 
-				if (isDashboard) {
-					Map<String, Domain> domains = entry.getValue().getDomains();
-					for (Domain domain : domains.values()) {
-						String nodeName = domain.getId();
-						TopologyNode node = topologyGraph.findTopologyNode(nodeName);
+				Map<String, Domain> domains = entry.getValue().getDomains();
+				for (Domain domain : domains.values()) {
+					String nodeName = domain.getId();
+					TopologyNode node = topologyGraph.findTopologyNode(nodeName);
 
-						allDomains.add(nodeName);
-						if (node != null) {
-							dashboardGraph.addNode(realName, m_currentBuilder.cloneNode(node));
-						}
+					allDomains.add(nodeName);
+					if (node != null) {
+						dashboardGraph.addNode(realName, m_currentBuilder.cloneNode(node));
 					}
 				}
 			}
@@ -100,7 +97,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				}
 			}
 		}
-		return dashboardGraph;
+		return dashboardGraph.sortByNodeNumber();
 	}
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {

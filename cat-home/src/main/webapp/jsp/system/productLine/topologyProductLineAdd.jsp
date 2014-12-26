@@ -94,7 +94,7 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2' style="text-align:center;"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td colspan='2' style="text-align:center;"><input class='btn btn-primary btn-sm' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -127,14 +127,6 @@
 				if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
 				 else $('#form-field-select-4').removeClass('tag-input-style');
 			});
-			
-		/* 	var initDomains = [];
-			<c:forEach var="domain" items="${model.productLine.domains}">
-				initDomains.push("${domain.key}");
-				document.getElementById("${domain.key}").checked = true;
-			</c:forEach>
-			
-			$("#domainSelect").val(initDomains).trigger("change"); */
 			
 		});
 	</script>
