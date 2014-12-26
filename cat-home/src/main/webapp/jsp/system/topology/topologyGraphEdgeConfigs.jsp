@@ -47,8 +47,7 @@
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.edgeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>
-				    <li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> <h5 class="text-danger">${item.key}</h5></a></li>
-				    
+				    <li id="tab-${item.key}" class="text-right"><a href="#tabContent-${item.key}" data-toggle="tab"> ${item.key}</a></li>
 				</c:forEach>
 			  </ul>
 			  <div class="tab-content" >

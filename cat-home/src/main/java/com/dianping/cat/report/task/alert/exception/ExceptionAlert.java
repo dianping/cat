@@ -58,6 +58,28 @@ public class ExceptionAlert implements Task {
 		return AlertType.Exception.getName();
 	}
 
+	private void handleExceptions(List<Item> itemList) {
+		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
+
+		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
+			try {
+				String domain = entry.getKey();
+				List<AlertException> exceptions = entry.getValue();
+
+				for (AlertException exception : exceptions) {
+					String metricName = exception.getName();
+					AlertEntity entity = new AlertEntity();
+
+					entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+					entity.setMetric(metricName).setType(getName()).setGroup(domain);
+					m_sendManager.addAlert(entity);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	protected TopReport queryTopReport(Date start) {
 		String domain = Constants.CAT;
 		String date = String.valueOf(start.getTime());
@@ -116,28 +138,6 @@ public class ExceptionAlert implements Task {
 				}
 			} catch (InterruptedException e) {
 				active = false;
-			}
-		}
-	}
-
-	private void handleExceptions(List<Item> itemList) {
-		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
-
-		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
-			try {
-				String domain = entry.getKey();
-				List<AlertException> exceptions = entry.getValue();
-
-				for (AlertException exception : exceptions) {
-					String metricName = exception.getName();
-					AlertEntity entity = new AlertEntity();
-
-					entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-					entity.setMetric(metricName).setType(getName()).setGroup(domain);
-					m_sendManager.addAlert(entity);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 	}
