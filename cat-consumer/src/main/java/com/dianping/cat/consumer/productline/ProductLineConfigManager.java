@@ -249,8 +249,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return sortProductLineByOrder(productLines);
 	}
 
-	public Map<String, ProductLine> queryDatabases() {
+	public Map<String, ProductLine> queryDatabaseProductLines() {
 		return queryProductLines(ProductLineConfig.DATABASE_PRODUCTLINE);
+	}
+
+	public Map<String, ProductLine> queryApplicationProductLines() {
+		return queryProductLines(ProductLineConfig.APPLICATION_PRODUCTLINE);
 	}
 
 	public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {

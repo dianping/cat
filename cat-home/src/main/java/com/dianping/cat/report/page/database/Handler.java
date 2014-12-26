@@ -66,7 +66,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabases().values());
+		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabaseProductLines().values());
 
 		model.setPage(ReportPage.DATABASE);
 		model.setProductLines(databases);
