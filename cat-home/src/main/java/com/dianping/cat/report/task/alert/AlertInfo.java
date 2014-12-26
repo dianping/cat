@@ -53,6 +53,17 @@ public class AlertInfo implements Initializable {
 			m_metricId = metricId;
 		}
 
+		@Override
+		public boolean equals(Object obj) {
+			AlertMetric other = (AlertMetric) obj;
+
+			if (m_group.equals(other.getGroup()) && m_metricId.equals(other.getMetricId())) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
 		public String getGroup() {
 			return m_group;
 		}
@@ -68,17 +79,6 @@ public class AlertInfo implements Initializable {
 			result = prime * result + ((m_group == null) ? 0 : m_group.hashCode());
 			result = prime * result + ((m_metricId == null) ? 0 : m_metricId.hashCode());
 			return result;
-		}
-
-		@Override
-		public boolean equals(Object obj) {
-			AlertMetric other = (AlertMetric) obj;
-
-			if (m_group.equals(other.getGroup()) && m_metricId.equals(other.getMetricId())) {
-				return true;
-			} else {
-				return false;
-			}
 		}
 	}
 

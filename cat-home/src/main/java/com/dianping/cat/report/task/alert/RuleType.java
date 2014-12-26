@@ -518,6 +518,10 @@ public enum RuleType {
 
 	protected DecimalFormat m_df = new DecimalFormat("0.0");
 
+	public static RuleType getByTypeId(String typeId) {
+		return s_map.get(typeId);
+	}
+
 	protected abstract String buildRuleMessage(double[] values, double[] baselines, double ruleValue);
 
 	protected double calSum(double[] values) {
@@ -591,10 +595,6 @@ public enum RuleType {
 		}
 
 		return Double.parseDouble(text);
-	}
-
-	public static RuleType getByTypeId(String typeId) {
-		return s_map.get(typeId);
 	}
 
 	public interface MonitorRule {

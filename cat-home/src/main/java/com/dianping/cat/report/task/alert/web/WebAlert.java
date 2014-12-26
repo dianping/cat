@@ -59,7 +59,7 @@ public class WebAlert extends BaseAlert {
 	private List<AlertResultEntity> computeAlertForRule(String idPrefix, String type, List<Config> configs, String url,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
 
@@ -102,7 +102,7 @@ public class WebAlert extends BaseAlert {
 					double[] last = lastValue.get(key);
 
 					if (current != null && last != null) {
-						datas.put(key, m_dataExtractor.mergerArray(last, current));
+						datas.put(key, mergerArray(last, current));
 					}
 				}
 				results.addAll(computeAlertForCondition(datas, conditions, type));

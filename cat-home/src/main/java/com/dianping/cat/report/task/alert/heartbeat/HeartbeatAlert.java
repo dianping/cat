@@ -237,7 +237,7 @@ public class HeartbeatAlert extends BaseAlert {
 	}
 
 	private void processDomain(String domain) {
-		int minute = getAlreadyMinute();
+		int minute = calAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 		int domainMaxMinute = calMaxMinuteFromMap(configsMap);
 		HeartbeatReport currentReport = null;
@@ -269,7 +269,7 @@ public class HeartbeatAlert extends BaseAlert {
 			for (Entry<String, List<Config>> entry : configsMap.entrySet()) {
 				String metric = entry.getKey();
 				List<Config> configs = entry.getValue();
-				Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+				Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
 				int maxMinute = resultPair.getKey();
 				List<Condition> conditions = resultPair.getValue();
 

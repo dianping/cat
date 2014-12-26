@@ -1,9 +1,6 @@
 package com.dianping.cat.report.task.alert;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +20,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.service.BaselineService;
+import com.dianping.cat.report.task.alert.MetricReportGroup.State;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelPeriod;
@@ -47,7 +46,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	protected AlertManager m_sendManager;
 
 	@Inject
-	protected DataExtractor m_dataExtractor;
+	protected BaselineService m_baselineService;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -55,63 +54,16 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 	protected Logger m_logger;
 
-	protected int calMaxMinute(Map<String, Map<MetricType, List<Config>>> configs) {
-		int maxMinute = 0;
+	protected int calAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
-		for (Map<MetricType, List<Config>> subMap : configs.values()) {
-			for (List<Config> tmpConfigs : subMap.values()) {
-				for (Config config : tmpConfigs) {
-					for (Condition condition : config.getConditions()) {
-						int tmpMinute = condition.getMinute();
-
-						if (tmpMinute > maxMinute) {
-							maxMinute = tmpMinute;
-						}
-					}
-				}
-			}
-		}
-		return maxMinute;
-	}
-
-	private boolean compareTime(String start, String end) {
-		String[] startTime = start.split(":");
-		int hourStart = Integer.parseInt(startTime[0]);
-		int minuteStart = Integer.parseInt(startTime[1]);
-		int startMinute = hourStart * 60 + minuteStart;
-
-		String[] endTime = end.split(":");
-		int hourEnd = Integer.parseInt(endTime[0]);
-		int minuteEnd = Integer.parseInt(endTime[1]);
-		int endMinute = hourEnd * 60 + minuteEnd;
-
-		Calendar cal = Calendar.getInstance();
-		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
-
-		return current >= startMinute && current <= endMinute;
+		return minute;
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	protected String extractDomain(String metricKey) {
-		try {
-			return metricKey.split(":")[0];
-		} catch (Exception ex) {
-			Cat.logError("extract domain error:" + metricKey, ex);
-			return null;
-		}
-	}
-
-	protected String extractMetricName(String metricKey) {
-		try {
-			return metricKey.split(":")[2];
-		} catch (Exception ex) {
-			Cat.logError("extract metric name error:" + metricKey, ex);
-			return null;
-		}
 	}
 
 	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
@@ -121,122 +73,108 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		return report;
 	}
 
-	protected int getAlreadyMinute() {
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
-
-		return minute;
-	}
-
 	protected abstract Map<String, ProductLine> getProductlines();
 
 	protected abstract BaseRuleConfigManager getRuleConfigManager();
 
-	private boolean judgeCurrentInConfigRange(Config config) {
+	protected double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
+
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
+		}
+		return result;
+	}
+
+	protected String parseMetricId(String metricKey) {
 		try {
-			if (compareTime(config.getStarttime(), config.getEndtime())) {
-				return true;
-			} else {
-				return false;
-			}
+			return metricKey.split(":")[2];
 		} catch (Exception ex) {
-			Cat.logError("throw exception when judge time: " + config.toString(), ex);
-			return false;
+			Cat.logError("extract metric name error:" + metricKey, ex);
+			return null;
 		}
 	}
 
-	private void processMetricItem(int minute, String product, String metricKey,
-	      Map<String, Map<MetricType, List<Config>>> configs, MetricReport lastReport, MetricReport currentReport) {
-		String metricName = extractMetricName(metricKey);
-
-		for (Entry<String, Map<MetricType, List<Config>>> entry : configs.entrySet()) {
-			String metricPattern = entry.getKey();
-
-			if (getRuleConfigManager().validateRegex(metricPattern, metricName) > 0) {
-				for (Entry<MetricType, List<Config>> configsByType : entry.getValue().entrySet()) {
-					MetricType currentType = configsByType.getKey();
-					Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configsByType.getValue());
-					int maxMinute = resultPair.getKey();
-					Pair<double[], double[]> datas = m_dataExtractor.extractData(minute, maxMinute, lastReport,
-					      currentReport, metricKey, currentType);
-
-					double[] baseline = datas.getKey();
-					double[] value = datas.getValue();
-					List<Condition> conditions = resultPair.getValue();
-					List<AlertResultEntity> results = m_dataChecker.checkData(value, baseline, conditions);
-
-					sendAlerts(product, metricKey, metricName, results);
-				}
-			}
-		}
-	}
-
-	protected void processProductLine(ProductLine productLine) {
-		int minute = getAlreadyMinute();
-		String product = productLine.getId();
-		Map<String, Map<MetricType, List<Config>>> configs = getRuleConfigManager().queryConfigs(product);
-		int maxMinute = calMaxMinute(configs);
+	protected MetricReportGroup prepareDatas(String product, int duration) {
+		int minute = calAlreadyMinute();
 		MetricReport currentReport = null;
 		MetricReport lastReport = null;
-		boolean isDataReady = false;
+		boolean dataReady = false;
+		State type = null;
 
-		if (minute >= maxMinute - 1) {
+		if (minute >= duration - 1) {
+			type = State.CURRENT;
 			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
 
 			if (currentReport != null) {
-				isDataReady = true;
+				dataReady = true;
 			}
 		} else if (minute < 0) {
+			type = State.LAST;
 			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
 
 			if (lastReport != null) {
-				isDataReady = true;
+				dataReady = true;
 			}
 		} else {
+			type = State.CURRENT_LAST;
 			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
 			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
 
 			if (lastReport != null && currentReport != null) {
-				isDataReady = true;
+				dataReady = true;
 			}
 		}
+		MetricReportGroup reports = new MetricReportGroup();
 
-		if (isDataReady) {
-			MetricReport report = currentReport == null ? lastReport : currentReport;
+		reports.setType(type).setLast(lastReport).setCurrent(currentReport).setDataReady(dataReady);
+		return reports;
+	}
 
-			for (Entry<String, MetricItem> entry : report.getMetricItems().entrySet()) {
+	protected void processProductLine(ProductLine productLine) {
+		int minute = calAlreadyMinute();
+		String product = productLine.getId();
+		AlarmRule alarmRule = getRuleConfigManager().queryConfigs(product);
+		int maxMinute = alarmRule.calMaxMinute();
+		MetricReportGroup reports = prepareDatas(product, maxMinute);
+
+		if (reports.isDataReady()) {
+			for (Entry<String, MetricItem> metricItem : reports.getMetricItem().entrySet()) {
 				try {
-					processMetricItem(minute, product, entry.getKey(), configs, lastReport, currentReport);
+					String metricKey = metricItem.getKey();
+					String metricName = parseMetricId(metricKey);
+					List<Map<MetricType, List<Config>>> detailRules = alarmRule.findDetailRules(metricName);
+
+					for (Map<MetricType, List<Config>> rule : detailRules) {
+						for (Entry<MetricType, List<Config>> entry : rule.entrySet()) {
+							Pair<Integer, List<Condition>> resultPair = getRuleConfigManager().convertConditions(
+							      entry.getValue());
+							int ruleMinute = resultPair.getKey();
+							MetricType dateType = entry.getKey();
+							double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
+							double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, dateType);
+
+							List<Condition> conditions = resultPair.getValue();
+							List<AlertResultEntity> results = m_dataChecker.checkData(value, baseline, conditions);
+
+							if (results.size() > 0) {
+								updateAlertStatus(product, metricKey);
+								sendAlerts(product, metricName, results);
+							}
+						}
+					}
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
 		}
-	}
-
-	protected Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
-		int maxMinute = 0;
-		List<Condition> conditions = new ArrayList<Condition>();
-		Iterator<Config> iterator = configs.iterator();
-
-		while (iterator.hasNext()) {
-			Config config = iterator.next();
-
-			if (judgeCurrentInConfigRange(config)) {
-				List<Condition> tmpConditions = config.getConditions();
-				conditions.addAll(tmpConditions);
-
-				for (Condition con : tmpConditions) {
-					int tmpMinute = con.getMinute();
-
-					if (tmpMinute > maxMinute) {
-						maxMinute = tmpMinute;
-					}
-				}
-			}
-		}
-
-		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
 	}
 
 	@Override
@@ -280,11 +218,8 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected void sendAlerts(String productlineName, String metricKey, String metricName,
-	      List<AlertResultEntity> alertResults) {
+	protected void sendAlerts(String productlineName, String metricName, List<AlertResultEntity> alertResults) {
 		for (AlertResultEntity alertResult : alertResults) {
-			m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
-
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
@@ -297,5 +232,9 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
+	}
+
+	protected void updateAlertStatus(String productlineName, String metricKey) {
+		m_alertInfo.addAlertInfo(productlineName, metricKey, new Date().getTime());
 	}
 }
