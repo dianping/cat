@@ -104,7 +104,7 @@
 					<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
-				<td class=" right"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
+				<td class="right"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
 				<td ><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
