@@ -154,7 +154,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			productLine.setModifyTime(config.getModifyDate().getTime());
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(productLine.getConfigName());
+				String content = m_fetcher.getConfigContent(productLine.getConfigName());
 				Config config = m_configDao.createLocal();
 
 				config.setName(productLine.getConfigName());

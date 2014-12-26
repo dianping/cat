@@ -2642,6 +2642,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

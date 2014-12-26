@@ -342,6 +342,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean isOnline() {
+		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if (address.equals("10.1.6.128")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isOffline() {
 		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -379,7 +389,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public  boolean  validateDomain(String domain) {
+	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 

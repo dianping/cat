@@ -21,6 +21,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager;
@@ -50,6 +51,9 @@ public class AlertManager implements Initializable {
 	@Inject
 	protected AlertEntityService m_alertEntityService;
 
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	private static final int MILLIS1MINUTE = 1 * 60 * 1000;
 
 	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>(10000);
@@ -59,11 +63,15 @@ public class AlertManager implements Initializable {
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
 	public boolean addAlert(AlertEntity alert) {
-		String type = alert.getType();
-		String group = alert.getGroup();
-		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
+		if (m_configManager.isOnline()) {
+			String type = alert.getType();
+			String group = alert.getGroup();
+			Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
 
-		return m_alerts.offer(alert);
+			return m_alerts.offer(alert);
+		} else {
+			return true;
+		}
 	}
 
 	private String generateTypeStr(String type) {
@@ -258,6 +266,7 @@ public class AlertManager implements Initializable {
 			while (true) {
 				try {
 					AlertEntity alert = m_alerts.poll(5, TimeUnit.MILLISECONDS);
+
 					if (alert != null) {
 						send(alert);
 					}
