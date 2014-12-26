@@ -10,6 +10,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<script src="/cat/js/jquery.nestable.min.js"></script>
 
 			<form name="domainGroupConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=domainGroupConfigUpdate">
@@ -26,6 +27,64 @@
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 			
+			<div class="row">
+				<div class="col-xs-12">
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="dd" id="nestable">
+								<ol class="dd-list">
+									<li class="dd-item dd2-item" data-id="2">
+										<div class="dd-handle dd2-handle">
+											<i class="normal-icon ace-icon fa fa-check-square-o blue bigger-150"></i>
+											<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
+										</div>
+										<div class="dd2-content">
+											&nbsp;&nbsp;项目: &nbsp;&nbsp;<input value="default"></input>
+											<div class="pull-right action-buttons">
+												<a class="red" href="#">
+													<i class="ace-icon fa fa-trash-o bigger-130"></i>
+												</a>
+											</div>
+										</div>
+										<ol class="dd-list">
+											<li class="dd-item dd2-item" data-id="22">
+												<div class="dd-handle dd2-handle">
+													<i class="normal-icon ace-icon fa fa-users blue bigger-150"></i>
+													<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
+												</div>
+												<div class="dd2-content">
+													&nbsp;&nbsp;Group: &nbsp;&nbsp;<input value="default"></input>
+													<div class="pull-right action-buttons">
+														<a class="red" href="#">
+															<i class="ace-icon fa fa-trash-o bigger-130"></i>
+														</a>
+													</div>
+												</div>
+												<ol class="dd-list">
+													<li class="dd-item dd2-item" data-id="22">
+														<div class="dd-handle dd2-handle">
+															<i class="normal-icon ace-icon fa fa-desktop blue bigger-150"></i>
+															<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
+														</div>
+														<div class="dd2-content">
+															&nbsp;&nbsp;机器IP: &nbsp;&nbsp;<input value="default"></input>
+															<div class="pull-right action-buttons">
+																<a class="red" href="#">
+																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
+																</a>
+															</div>
+														</div>
+													</li>
+												</ol>
+											</li>
+										</ol>
+									</li>
+								</ol>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
@@ -40,5 +99,10 @@
 			setInterval(function(){
 				$('#state').html('&nbsp;');
 			},3000);
+			
+			$('.dd').nestable();
+			$('.dd-handle a').on('mousedown', function(e){
+			   e.stopPropagation();
+			});
 		});
 	</script>
