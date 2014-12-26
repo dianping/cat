@@ -183,7 +183,7 @@
 			window.location.href = "/cat/r/home?";
 		});
 		$("#tab_config").click(function(){
-			window.location.href = "/cat/s/config?op=topologyProductLines";
+			window.location.href = "/cat/s/config?op=projects";
 		});});
 		$("#tab_config").addClass("disabled");
 </script>

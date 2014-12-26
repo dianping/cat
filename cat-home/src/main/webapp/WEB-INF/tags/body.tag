@@ -202,7 +202,7 @@
 			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
 		$("#tab_config").click(function(){
-			window.location.href = "/cat/s/config?op=topologyProductLines";
+			window.location.href = "/cat/s/config?op=projects";
 		});});
 		$("#tab_realtime").addClass("disabled");
 
