@@ -275,7 +275,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
-		$('.position').hide();
 	});
 </script>
 
