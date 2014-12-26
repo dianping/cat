@@ -48,17 +48,17 @@ public class BusinessAlert extends BaseAlert {
 			String metricKey = config.getId();
 
 			if (config.isShowAvg()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.AVG);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.AVG);
 
 				monitorConfigsByItem.put(MetricType.AVG, tmpConfigs);
 			}
 			if (config.isShowCount()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.COUNT);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.COUNT);
 
 				monitorConfigsByItem.put(MetricType.COUNT, tmpConfigs);
 			}
 			if (config.isShowSum()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.SUM);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.SUM);
 
 				monitorConfigsByItem.put(MetricType.SUM, tmpConfigs);
 			}

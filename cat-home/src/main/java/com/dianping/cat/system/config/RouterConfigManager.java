@@ -31,7 +31,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	private ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_getter;
+	private ContentFetcher m_fetcher;
 
 	private int m_configId;
 
@@ -72,7 +72,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 				Date now = new Date();
 

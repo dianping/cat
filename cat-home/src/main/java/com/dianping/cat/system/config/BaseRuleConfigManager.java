@@ -184,7 +184,6 @@ public abstract class BaseRuleConfigManager {
 				if (item.isMonitorSum()) {
 					configsByType.put(MetricType.SUM, rule.getConfigs());
 				}
-
 				configsByPriority.put(matchLevel, configsByType);
 			}
 		}
@@ -200,9 +199,8 @@ public abstract class BaseRuleConfigManager {
 			int maxPriority = calMaxNum(priorityMap.keySet());
 			Map<MetricType, List<Config>> configsByType = priorityMap.get(maxPriority);
 
-			if (configsByType != null) {
-				result.put(metirc, decorateConfigOnRead(configsByType));
-			}
+			result.put(metirc, decorateConfigOnRead(configsByType));
+			Cat.logEvent("FindRule:" + getConfigName(), metirc, Event.SUCCESS, null);
 		}
 		return result;
 	}
@@ -248,59 +246,9 @@ public abstract class BaseRuleConfigManager {
 		for (Rule rule : m_config.getRules().values()) {
 			extractConifgsByProduct(product, rule, configs);
 		}
-		return new AlarmRule(extractMaxPriorityConfigs(configs));
-	}
-
-	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {
-		Map<Integer, List<Rule>> result = new HashMap<Integer, List<Rule>>();
-
-		for (Rule rule : m_config.getRules().values()) {
-			List<MetricItem> items = rule.getMetricItems();
-
-			for (MetricItem item : items) {
-				String configProduct = item.getProductText();
-				String configMetricKey = item.getMetricItemText();
-				int matchLevel = 0;
-
-				if (type == null) {
-					matchLevel = validate(configProduct, configMetricKey, product, metricKey);
-				} else {
-					if (type == MetricType.COUNT && item.isMonitorCount()) {
-						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
-					} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
-					} else if (type == MetricType.SUM && item.isMonitorSum()) {
-						matchLevel = validate(configProduct, configMetricKey, product, metricKey);
-					}
-				}
-
-				if (matchLevel > 0) {
-					List<Rule> rules = result.get(matchLevel);
-
-					if (rules == null) {
-						rules = new ArrayList<Rule>();
-						result.put(matchLevel, rules);
-					}
-					rules.add(rule);
-				}
-			}
-		}
-		List<Rule> rules = getMaxPriorityRules(result);
-		List<Config> configs = new ArrayList<Config>();
-
-		for (Rule rule : rules) {
-			configs.addAll(rule.getConfigs());
-
-			String nameValuePairs = "product=" + product + "&metricKey=" + metricKey;
-			if (type != null) {
-				nameValuePairs += "&type=" + type.getName();
-			}
-
-			Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, nameValuePairs);
-		}
-
-		List<Config> finalConfigs = decorateConfigOnRead(configs);
-		return finalConfigs;
+		Map<String, Map<MetricType, List<Config>>> maxPriority = extractMaxPriorityConfigs(configs);
+		
+		return new AlarmRule(maxPriority);
 	}
 
 	public Rule queryRule(String key) {
@@ -378,7 +326,7 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 	}
-	
+
 	public boolean compareTime(String start, String end) {
 		String[] startTime = start.split(":");
 		int hourStart = Integer.parseInt(startTime[0]);
@@ -395,7 +343,7 @@ public abstract class BaseRuleConfigManager {
 
 		return current >= startMinute && current <= endMinute;
 	}
-	
+
 	public Pair<Integer, List<Condition>> convertConditions(List<Config> configs) {
 		int maxMinute = 0;
 		List<Condition> conditions = new ArrayList<Condition>();
@@ -420,7 +368,7 @@ public abstract class BaseRuleConfigManager {
 
 		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
 	}
-	
+
 	private boolean judgeCurrentInConfigRange(Config config) {
 		try {
 			if (compareTime(config.getStarttime(), config.getEndtime())) {

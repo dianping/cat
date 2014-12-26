@@ -41,7 +41,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	protected ConfigDao m_configDao;
 
 	@Inject
-	protected ContentFetcher m_getter;
+	protected ContentFetcher m_fetcher;
 
 	private Logger m_logger;
 

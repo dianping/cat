@@ -20,7 +20,7 @@ import com.dianping.cat.report.task.alert.AlertLevel;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 	@Inject
-	private ContentFetcher m_getter;
+	private ContentFetcher m_fetcher;
 
 	private static final String CONFIG_NAME = "appRule";
 
@@ -83,7 +83,7 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

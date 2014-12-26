@@ -158,7 +158,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 							double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
 
 							List<Condition> conditions = resultPair.getValue();
-							List<AlertResultEntity> results = m_dataChecker.checkData(value, null, conditions);
+							List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
 
 							if (results.size() > 0) {
 								updateAlertStatus(product, metricKey);
