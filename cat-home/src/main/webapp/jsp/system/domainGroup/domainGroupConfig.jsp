@@ -26,20 +26,32 @@
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-			
-			<div class="row">
-				<div class="col-xs-12">
-					<div class="row">
-						<div class="col-sm-6">
-							<div class="dd" id="nestable">
+			<div class="page-content-area">
+				<div class="row">
+					<div class="col-xs-12">
+					<div class="dd" id="nestable">
+						<ol class="dd-list">
+							<li class="dd-item dd2-item" data-id="2">
+								<div class="dd-handle dd2-handle">
+									<i class="normal-icon ace-icon fa fa-check-square-o blue bigger-150"></i>
+									<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
+								</div>
+								<div class="dd2-content">
+									&nbsp;&nbsp;项目: &nbsp;&nbsp;<input value="default"></input>
+									<div class="pull-right action-buttons">
+										<a class="red" href="#">
+											<i class="ace-icon fa fa-trash-o bigger-130"></i>
+										</a>
+									</div>
+								</div>
 								<ol class="dd-list">
-									<li class="dd-item dd2-item" data-id="2">
+									<li class="dd-item dd2-item" data-id="22">
 										<div class="dd-handle dd2-handle">
-											<i class="normal-icon ace-icon fa fa-check-square-o blue bigger-150"></i>
+											<i class="normal-icon ace-icon fa fa-users blue bigger-150"></i>
 											<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
 										</div>
 										<div class="dd2-content">
-											&nbsp;&nbsp;项目: &nbsp;&nbsp;<input value="default"></input>
+											&nbsp;&nbsp;Group: &nbsp;&nbsp;<input value="default"></input>
 											<div class="pull-right action-buttons">
 												<a class="red" href="#">
 													<i class="ace-icon fa fa-trash-o bigger-130"></i>
@@ -49,39 +61,43 @@
 										<ol class="dd-list">
 											<li class="dd-item dd2-item" data-id="22">
 												<div class="dd-handle dd2-handle">
-													<i class="normal-icon ace-icon fa fa-users blue bigger-150"></i>
+													<i class="normal-icon ace-icon fa fa-desktop blue bigger-150"></i>
 													<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
 												</div>
 												<div class="dd2-content">
-													&nbsp;&nbsp;Group: &nbsp;&nbsp;<input value="default"></input>
+													&nbsp;&nbsp;机器IP: &nbsp;&nbsp;<input value="default"></input>
 													<div class="pull-right action-buttons">
 														<a class="red" href="#">
 															<i class="ace-icon fa fa-trash-o bigger-130"></i>
 														</a>
 													</div>
 												</div>
-												<ol class="dd-list">
-													<li class="dd-item dd2-item" data-id="22">
-														<div class="dd-handle dd2-handle">
-															<i class="normal-icon ace-icon fa fa-desktop blue bigger-150"></i>
-															<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
-														</div>
-														<div class="dd2-content">
-															&nbsp;&nbsp;机器IP: &nbsp;&nbsp;<input value="default"></input>
-															<div class="pull-right action-buttons">
-																<a class="red" href="#">
-																	<i class="ace-icon fa fa-trash-o bigger-130"></i>
-																</a>
-															</div>
-														</div>
-													</li>
-												</ol>
+											</li>
+											<li id="addNewGroupButton" class="dd-item dd2-item">
+												<div class="dd-handle">
+													<i class="ace-icon glyphicon glyphicon-plus"></i>
+													添加新的机器IP
+												</div>
 											</li>
 										</ol>
 									</li>
+									<li id="addNewGroupButton" class="dd-item dd2-item">
+										<div class="dd-handle">
+											<i class="ace-icon glyphicon glyphicon-plus"></i>
+											添加新的Group
+										</div>
+									</li>
 								</ol>
-							</div>
-						</div>
+							</li>
+							
+							<li id="addNewDomainButton" class="dd-item dd2-item">
+								<div class="dd-handle">
+									<i class="ace-icon glyphicon glyphicon-plus"></i>
+									添加新的项目
+								</div>
+							</li>
+						</ol>
+					</div>
 					</div>
 				</div>
 			</div>
@@ -104,5 +120,6 @@
 			$('.dd-handle a').on('mousedown', function(e){
 			   e.stopPropagation();
 			});
+			$('[data-action="collapse"]').click();
 		});
 	</script>
