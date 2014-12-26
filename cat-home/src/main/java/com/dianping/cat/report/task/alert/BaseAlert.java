@@ -20,7 +20,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.MetricReportGroup.State;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
@@ -44,9 +43,6 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 	@Inject
 	protected AlertManager m_sendManager;
-
-	@Inject
-	protected BaselineService m_baselineService;
 
 	protected static final int DATA_AREADY_MINUTE = 1;
 
@@ -159,10 +155,9 @@ public abstract class BaseAlert implements Task, LogEnabled {
 							int ruleMinute = resultPair.getKey();
 							MetricType dateType = entry.getKey();
 							double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
-							double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, dateType);
 
 							List<Condition> conditions = resultPair.getValue();
-							List<AlertResultEntity> results = m_dataChecker.checkData(value, baseline, conditions);
+							List<AlertResultEntity> results = m_dataChecker.checkData(value, null, conditions);
 
 							if (results.size() > 0) {
 								updateAlertStatus(product, metricKey);

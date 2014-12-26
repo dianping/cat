@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlarmRule;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
@@ -34,6 +35,9 @@ public class BusinessAlert extends BaseAlert {
 
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
+	
+	@Inject
+	protected BaselineService m_baselineService;
 
 	private AlarmRule buildMonitorConfigs(String productline, List<MetricItemConfig> configs) {
 		Map<String, Map<MetricType, List<Config>>> monitorConfigs = new HashMap<String, Map<MetricType, List<Config>>>();
