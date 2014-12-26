@@ -105,8 +105,6 @@ public class MetricConfigManager implements Initializable {
 					newMetric.addMetricItemConfig(cfg);
 				}
 			}
-			m_metricConfig = newMetric;
-
 			m_configId = config.getId();
 			// m_metricConfig = DefaultSaxParser.parse(content);
 			m_metricConfig = newMetric;
