@@ -12,8 +12,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		switch (action) {
 		case PROJECT_ALL:
 			return JspFile.PROJECT_ALL.getPath();
-		case PROJECT_UPDATE:
-			return JspFile.PROJECT_UPATE.getPath();
 		case PROJECT_UPDATE_SUBMIT:
 			return JspFile.PROJECT_ALL.getPath();
 		case PROJECT_DELETE:
@@ -174,12 +172,18 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TRANSACTION_RULE.getPath();
 		case TRANSACTION_RULE_ADD_OR_UPDATE:
 			return JspFile.TRANSACTION_RULE_UPDATE.getPath();
-		case THIRD_PARTY_CONFIG_UPDATE:
-			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
 		case ROUTER_CONFIG_UPDATE:
 			return JspFile.ROUTER_CONFIG_UPDATE.getPath();
 		case DISPLAY_POLICY:
 			return JspFile.DISPLAY_POLICY.getPath();
+		case THIRD_PARTY_RULE_CONFIGS:
+			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
+		case THIRD_PARTY_RULE_UPDATE:
+			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
+		case THIRD_PARTY_RULE_SUBMIT:
+			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
+		case THIRD_PARTY_RULE_DELETE:
+			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

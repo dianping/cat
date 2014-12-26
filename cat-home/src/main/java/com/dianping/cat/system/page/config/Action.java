@@ -3,8 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum Action implements org.unidal.web.mvc.Action {
 	PROJECT_ALL("projects"),
 
-	PROJECT_UPDATE("update"),
-
 	PROJECT_UPDATE_SUBMIT("updateSubmit"),
 
 	PROJECT_DELETE("projectDelete"),
@@ -179,7 +177,13 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
 
-	THIRD_PARTY_CONFIG_UPDATE("thirdPartyConfigUpdate"),
+	THIRD_PARTY_RULE_CONFIGS("thirdPartyRuleConfigs"),
+
+	THIRD_PARTY_RULE_UPDATE("thirdPartyRuleUpdate"),
+
+	THIRD_PARTY_RULE_SUBMIT("thirdPartyRuleSumbit"),
+
+	THIRD_PARTY_RULE_DELETE("thirdPartyRuleDelete"),
 
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate");
 

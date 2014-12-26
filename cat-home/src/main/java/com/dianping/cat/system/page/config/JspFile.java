@@ -3,8 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum JspFile {
 	PROJECT_ALL("/jsp/system/project/project.jsp"),
 
-	PROJECT_UPATE("/jsp/system/project/projectUpdate.jsp"),
-
 	AGGREGATION_ALL("/jsp/system/aggregation/aggregation.jsp"),
 
 	AGGREGATION_UPATE("/jsp/system/aggregation/aggregationUpdate.jsp"),
@@ -119,7 +117,9 @@ public enum JspFile {
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
 
-	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
+	THIRD_PARTY_CONFIG_LIST("/jsp/system/thirdParty/thirdPartyConfig.jsp"),
+	
+	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfigUpdate.jsp");
 
 	private String m_path;
 

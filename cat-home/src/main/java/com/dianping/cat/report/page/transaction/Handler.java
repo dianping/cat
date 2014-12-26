@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -119,31 +117,6 @@ public class Handler implements PageHandler<Context> {
 		model.setPieChart(new JsonBuilder().toJson(chart));
 	}
 
-	private void calculateTps(Payload payload, TransactionReport report) {
-		try {
-			if (payload != null && report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds;
-
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (endTime != null && startTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / (double) 1000;
-					} else {
-						seconds = 60;
-					}
-				}
-				new TpsStatistics(seconds).visitTransactionReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	private TransactionReport filterReportByGroup(TransactionReport report, String domain, String group) {
 		List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 		List<String> removes = new ArrayList<String>();
@@ -239,7 +212,6 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_REPORT:
 			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
-			calculateTps(payload, report);
 
 			if (report != null) {
 				model.setReport(report);
@@ -276,7 +248,6 @@ public class Handler implements PageHandler<Context> {
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
 
-			calculateTps(payload, report);
 			if (report != null) {
 				model.setReport(report);
 
@@ -287,7 +258,6 @@ public class Handler implements PageHandler<Context> {
 			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
 
-			calculateTps(payload, report);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
 			if (report != null) {

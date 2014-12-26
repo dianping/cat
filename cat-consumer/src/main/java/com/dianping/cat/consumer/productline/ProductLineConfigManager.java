@@ -49,78 +49,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	public static final String CONFIG_NAME = "productLineConfig";
 
-	private Company buildDefaultConfig(ProductLineConfig productLine) throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-		String content = config.getContent();
-		Company company = DefaultSaxParser.parse(content);
-		Company c = new Company();
-
-		switch (productLine) {
-		case METRIC_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getMetricDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		case APPLICATION_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getApplicationDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		case NETWORK_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getNetworkDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		case SYSTEM_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getSystemMonitorDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		case USER_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getUserMonitorDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		case DATABASE_PRODUCTLINE:
-			for (ProductLine p : company.getProductLines().values()) {
-				if (p.getDatabaseMonitorDashboard()) {
-					c.addProductLine(p);
-				}
-			}
-			break;
-		}
-		return c;
-	}
-
-	public void buildDefaultDashboard(ProductLine productLine, ProductLineConfig productLineConfig) {
-		switch (productLineConfig) {
-		case USER_PRODUCTLINE:
-			productLine.setUserMonitorDashboard(true);
-			break;
-		case NETWORK_PRODUCTLINE:
-			productLine.setNetworkDashboard(true);
-			break;
-		case SYSTEM_PRODUCTLINE:
-			productLine.setSystemMonitorDashboard(true);
-			break;
-		case DATABASE_PRODUCTLINE:
-			productLine.setDatabaseMonitorDashboard(true);
-			break;
-		default:
-			productLine.setMetricDashboard(true);
-		}
-	}
-
 	private String buildDomainInfo(ProductLineConfig productLineConfig, ProductLine productline, String[] domainIds) {
 		Set<String> domains = new HashSet<String>();
 		String id = productline.getId();
@@ -226,14 +154,14 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			productLine.setModifyTime(config.getModifyDate().getTime());
 		} catch (DalNotFoundException e) {
 			try {
-				Company company = buildDefaultConfig(productLine);
+				String content = m_getter.getConfigContent(productLine.getConfigName());
 				Config config = m_configDao.createLocal();
 
 				config.setName(productLine.getConfigName());
-				config.setContent(company.toString());
+				config.setContent(content);
 				m_configDao.insert(config);
 				productLine.setConfigId(config.getId());
-				productLine.setCompany(company);
+				productLine.setCompany(DefaultSaxParser.parse(content));
 				productLine.setModifyTime(new Date().getTime());
 			} catch (Exception ex) {
 				Cat.logError(ex);
@@ -258,10 +186,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 				productLine.setId(product);
 				productLine.setTitle(product);
-				buildDefaultDashboard(productLine, productLineConfig);
 				productLine.addDomain(new Domain(domain));
-				company.addProductLine(productLine);
 
+				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
+					productLine.setMetricDashboard(true);
+				}
+				company.addProductLine(productLine);
 				return storeConfig(productLineConfig);
 			} else {
 				Map<String, Domain> domains = productLine.getDomains();
@@ -288,6 +218,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			if (line.getApplicationDashboard()) {
 				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().removeProductLine(line.getId());
 				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().addProductLine(line);
+
 				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
 			}
 			break;
@@ -295,20 +226,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			if (line.getMetricDashboard()) {
 				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().removeProductLine(line.getId());
 				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().addProductLine(line);
+
 				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
 			}
 			break;
-		case USER_PRODUCTLINE:
-			line.setUserMonitorDashboard(true);
-			break;
-		case DATABASE_PRODUCTLINE:
-			line.setDatabaseMonitorDashboard(true);
-			break;
-		case NETWORK_PRODUCTLINE:
-			line.setNetworkDashboard(true);
-			break;
-		case SYSTEM_PRODUCTLINE:
-			line.setSystemMonitorDashboard(true);
+		default:
 			break;
 		}
 		duplicateDomains = buildDomainInfo(productLineConfig, line, domains);

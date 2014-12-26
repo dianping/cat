@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<company>
+   <product-line id="Platform" order="10.0" title="架构" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="Cat"/>
+      <domain id="PumaServer"/>
+      <domain id="SessionService"/>
+   </product-line>
+   <product-line id="rs" order="4.0" title="预约预订" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="rs-jobs"/>
+      <domain id="rs-m-web"/>
+      <domain id="rs-mq"/>
+      <domain id="rs-pad-web"/>
+      <domain id="rs-rt-service"/>
+      <domain id="MBookingCallCenter3rd"/>
+      <domain id="MBookingCallcenter"/>
+      <domain id="MBookingMainWeb"/>
+      <domain id="MBookingService"/>
+      <domain id="MBookingUserService"/>
+      <domain id="MBookingWeb"/>
+      <domain id="MBookingWebShop"/>
+      <domain id="menu-mapi-web"/>
+      <domain id="rs-cc-web"/>
+      <domain id="rs-mapi-web"/>
+      <domain id="rs-marketing-web"/>
+      <domain id="rs-open-service"/>
+      <domain id="rs-oss-web"/>
+      <domain id="rs-service"/>
+      <domain id="rs-shop-service"/>
+      <domain id="rs-shop-web"/>
+      <domain id="rs-user-service"/>
+      <domain id="rs-web"/>
+   </product-line>
+   <product-line id="mobile-locate" order="23.0" title="手机定位" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="geoinfo-server"/>
+      <domain id="GeoInfo"/>
+      <domain id="MLocationService"/>
+   </product-line>
+   <product-line id="webmagic" order="22.0" title="爬虫平台" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="WebMagic2sBroodWeb"/>
+      <domain id="WebMagic2sTaskCenterWeb"/>
+      <domain id="webmagic2s-brood-web"/>
+      <domain id="webmagic2s-taskcenter-web"/>
+   </product-line>
+   <product-line id="Account" order="18.0" title="帐号平台" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="account-mq"/>
+      <domain id="account-server"/>
+      <domain id="account-web"/>
+      <domain id="mobile-account-web"/>
+      <domain id="wap-account-web"/>
+      <domain id="AccountMQ"/>
+      <domain id="AccountServer"/>
+      <domain id="AccountWeb"/>
+      <domain id="MobileAccountWeb"/>
+      <domain id="WapAccountWeb"/>
+   </product-line>
+   <product-line id="TakeAway" order="3.0" title="外卖" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="takeaway-api"/>
+      <domain id="takeaway-shopbc-web"/>
+      <domain id="TakeawayAPI"/>
+      <domain id="TakeawayMWeb"/>
+      <domain id="TakeawayMapiWeb"/>
+      <domain id="TakeawayOperationWeb"/>
+      <domain id="TakeawayShopWeb"/>
+      <domain id="TakeawayWeb"/>
+   </product-line>
+   <product-line id="mcard" order="5.0" title="会员卡" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="mobile-membercard-bc-web"/>
+      <domain id="mobile-membercard-main-api-web"/>
+      <domain id="mobile-membercard-main-server"/>
+      <domain id="GiftCardService"/>
+      <domain id="GiftCardWeb"/>
+      <domain id="MobileMembercardBcWeb"/>
+      <domain id="MobileMembercardMainApiWeb"/>
+      <domain id="MobileMembercardMainServer"/>
+   </product-line>
+   <product-line id="wedding" order="12.0" title="结婚频道" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="shop-business-web"/>
+      <domain id="wedding-marketing-web"/>
+      <domain id="wedding-search-web"/>
+      <domain id="wedding-shop-web"/>
+      <domain id="ShopBusinessServer"/>
+      <domain id="ShopBusinessWeb"/>
+      <domain id="ShopOperationWeb"/>
+      <domain id="WeddingShopWeb"/>
+      <domain id="weddingMarketingWeb"/>
+      <domain id="weddingSearchWeb"/>
+   </product-line>
+   <product-line id="Merchant" order="27.0" title="商家平台" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="mpos-web"/>
+   </product-line>
+   <product-line id="Storm" order="26.0" title="Storm" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="AroundUV"/>
+      <domain id="ClusterMonitor"/>
+      <domain id="HippoUV_25"/>
+      <domain id="MobileUV_50"/>
+      <domain id="Monitor"/>
+      <domain id="MovileUV_50-24-1411373615"/>
+      <domain id="TuanUV"/>
+      <domain id="TuanUV-20-1411372206"/>
+      <domain id="WindowUV"/>
+      <domain id="credit-collectdata"/>
+      <domain id="recsys_hippo_c"/>
+      <domain id="recsys_mapi_c"/>
+      <domain id="recsys_searchapi_c"/>
+      <domain id="recsys_shopapi_c"/>
+      <domain id="recsys_tgorder_c"/>
+      <domain id="Spout"/>
+      <domain id="userdata"/>
+      <domain id="UserTgData"/>
+      <domain id="Userdata"/>
+      <domain id="UserOrderData"/>
+      <domain id="MobileTest"/>
+      <domain id="UserTGWishData"/>
+      <domain id="UserTGWish"/>
+      <domain id="wishTopoOrderData"/>
+      <domain id="WishShopData"/>
+      <domain id="TGWishData"/>
+      <domain id="TGWishUserData"/>
+      <domain id="UserWishShopData"/>
+      <domain id="WishShop"/>
+      <domain id="UserBuyData"/>
+      <domain id="UserTGOrderData"/>
+      <domain id="TestUV"/>
+      <domain id="MobileUV_8"/>
+      <domain id="TG_Wish_Data"/>
+      <domain id="User_WishShopData"/>
+      <domain id="recsys_"/>
+      <domain id="HippoUV_Test"/>
+      <domain id="recsys_usermap"/>
+      <domain id="MobileUV_test"/>
+      <domain id="UserMapiData"/>
+      <domain id="UserPosMapiData"/>
+      <domain id="recsys-tgtrace_c"/>
+      <domain id="UserLocationDealData"/>
+      <domain id="UserBuyData2"/>
+      <domain id="UserWishShop2"/>
+      <domain id="UserBuyData_224"/>
+      <domain id="credit-collectdat"/>
+      <domain id="UserDealData"/>
+      <domain id="cat"/>
+      <domain id="HippoUV_test"/>
+      <domain id="UserShopApiData"/>
+      <domain id="AroundUVTest"/>
+   </product-line>
+   <product-line id="mopay" order="13.0" title="代收费" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="MOPayService"/>
+      <domain id="mopay-service"/>
+   </product-line>
+   <product-line id="Activity" order="14.0" title="活动" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="activity-service"/>
+      <domain id="activity-web"/>
+      <domain id="ActivityService"/>
+      <domain id="ActivityWeb"/>
+   </product-line>
+   <product-line id="DPQzone" order="7.0" title="QQ空间" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="DPQzoneFeedCount"/>
+      <domain id="cat"/>
+   </product-line>
+   <product-line id="Mobile-Info" order="8.0" title="移动" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="MobileDpWeb"/>
+      <domain id="mapi-operating-web"/>
+      <domain id="mobile-api-web"/>
+      <domain id="mobile-dp-web"/>
+      <domain id="mobile-wap-m-web"/>
+      <domain id="mobile-wap-web"/>
+      <domain id="MobileWapMWeb"/>
+      <domain id="MobileWapWeb"/>
+      <domain id="MobileRecomStore"/>
+      <domain id="MMainApi"/>
+      <domain id="MShopApi"/>
+      <domain id="MobileApi"/>
+      <domain id="MobileConsumer"/>
+      <domain id="mobile-shoplus-service"/>
+   </product-line>
+   <product-line id="UGC" order="20.0" title="点评图片" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="PiccenterWeb"/>
+      <domain id="mobile-reviewapi-web"/>
+      <domain id="piccenter-service"/>
+      <domain id="piccenter-storage"/>
+      <domain id="piccenter-upload"/>
+      <domain id="piccenter-web"/>
+      <domain id="review-server"/>
+      <domain id="review-web"/>
+      <domain id="shop-event-web"/>
+      <domain id="shoppic-service"/>
+      <domain id="shoppic-web"/>
+      <domain id="PiccenterService"/>
+      <domain id="PiccenterUpload"/>
+      <domain id="ReviewProfessionServer"/>
+   </product-line>
+   <product-line id="SLB" order="28.0" title="SLB" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="phoenix-slb-admin"/>
+   </product-line>
+   <product-line id="openplatform-weixin" order="11.0" title="开放平台" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="open-premium-api"/>
+      <domain id="OpenPremiumAPI"/>
+   </product-line>
+   <product-line id="MobileOss" order="29.0" title="移动运营后台" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="mobile-oss-dppush-service"/>
+      <domain id="mobile-oss-iospush-service"/>
+      <domain id="mobile-oss-mp-service"/>
+      <domain id="mobile-oss-server"/>
+      <domain id="mobile-oss-token-service"/>
+      <domain id="mobile-oss-web"/>
+      <domain id="warp-connection-server"/>
+      <domain id="MobileDpPushServer"/>
+      <domain id="MobileOssTokenService"/>
+      <domain id="MobileOSSIosPushServer"/>
+      <domain id="MobileOSSMPServer"/>
+      <domain id="MobileOSSServer"/>
+      <domain id="MobileOSSWeb"/>
+   </product-line>
+   <product-line id="PAY" order="2.0" title="支付" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="pay-api-mobile"/>
+      <domain id="pay-order-mq"/>
+      <domain id="pay-order-process-service"/>
+      <domain id="pay-order-query-service"/>
+      <domain id="pay-unipay"/>
+      <domain id="tuangou-paygate"/>
+      <domain id="PayOrder"/>
+      <domain id="pay-engine-mq"/>
+      <domain id="pay-unipay-mq"/>
+      <domain id="PayChannel"/>
+      <domain id="PayEngine"/>
+      <domain id="Unipay"/>
+   </product-line>
+   <product-line id="midas" order="30.0" title="广告优惠" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="EmidasActivityVIP"/>
+      <domain id="MidasAnticheatWeb"/>
+      <domain id="MidasCountingService"/>
+      <domain id="MidasCountingWeb"/>
+      <domain id="MidasMerchant"/>
+      <domain id="MidasPromo"/>
+      <domain id="MidasPromoWap"/>
+      <domain id="MidasSellkeywordWorker"/>
+      <domain id="PromoServer"/>
+      <domain id="emidas-activity-server"/>
+      <domain id="emidas-activity-web"/>
+      <domain id="emidas-activityvip-web"/>
+      <domain id="emidas-admin-web"/>
+      <domain id="emidas-lottery-web"/>
+      <domain id="emidas-prize-web"/>
+      <domain id="event-remote-service"/>
+      <domain id="midasAlgorithm"/>
+      <domain id="midasLogServerWorker"/>
+      <domain id="midasMaterialBinlog"/>
+      <domain id="midasMaterialServer"/>
+      <domain id="midasMerchant"/>
+      <domain id="midasMerchantServerWorker"/>
+      <domain id="midasResourceManager"/>
+      <domain id="AdwordsMQ"/>
+      <domain id="AdwordsWeb"/>
+      <domain id="BaPCWeb"/>
+      <domain id="MidasAccount"/>
+      <domain id="MidasAdEngine"/>
+      <domain id="MidasAdwordsApp"/>
+      <domain id="MidasAdwordsWeb"/>
+      <domain id="MidasAlloc"/>
+      <domain id="MidasAssistant"/>
+      <domain id="MidasAuthority"/>
+      <domain id="MidasDVCCenter"/>
+      <domain id="MidasJob"/>
+      <domain id="MidasKeywordAnalyzer"/>
+      <domain id="MidasLaunch"/>
+      <domain id="MidasLogServer"/>
+      <domain id="MidasLogServerWorker"/>
+      <domain id="MidasMDashboard"/>
+      <domain id="MidasMaterialBinlog"/>
+      <domain id="MidasMaterialServer"/>
+      <domain id="MidasMicroPower"/>
+      <domain id="MidasPromoApp"/>
+      <domain id="MidasPromoM"/>
+      <domain id="MidasPvCounter"/>
+      <domain id="MidasResourceBooking"/>
+      <domain id="MidasSchedule"/>
+      <domain id="MidasShopDiyService"/>
+      <domain id="MidasShopDiyWeb"/>
+      <domain id="MidasShortPreferential"/>
+      <domain id="PromoWeb"/>
+   </product-line>
+   <product-line id="DPSearch" order="4.0" title="搜索" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="DPSearch"/>
+      <domain id="SearchAd"/>
+      <domain id="SearchDavinci"/>
+      <domain id="SearchNewGroup"/>
+      <domain id="SearchPicasso"/>
+      <domain id="SearchPromo"/>
+      <domain id="SearchShop"/>
+      <domain id="SearchShopRec"/>
+      <domain id="SearchShopwx"/>
+      <domain id="SearchTuanGou"/>
+      <domain id="SearchTuanGouRec"/>
+      <domain id="SearchTuanGouX"/>
+      <domain id="SearchVango"/>
+      <domain id="SearchWedding"/>
+      <domain id="search-bizer-tuangourec"/>
+      <domain id="SearchApollo"/>
+   </product-line>
+   <product-line id="TuanGou" order="1.0" title="团购" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="DealService"/>
+      <domain id="MovieThirdPartyApi"/>
+      <domain id="TuanGouHotelJob"/>
+      <domain id="TuanGouTracking"/>
+      <domain id="TuanGouWebSub"/>
+      <domain id="bc-tuangou-sub-web"/>
+      <domain id="deal-attribute-get-service"/>
+      <domain id="deal-base-service"/>
+      <domain id="deal-detail-service"/>
+      <domain id="deal-navi-service"/>
+      <domain id="deal-search-service"/>
+      <domain id="deal-service"/>
+      <domain id="deal-stock-query-service"/>
+      <domain id="receipt-verify-service"/>
+      <domain id="tuangou-hotel-web"/>
+      <domain id="tuangou-list-service"/>
+      <domain id="tuangou-mapi-web"/>
+      <domain id="tuangou-mm-web"/>
+      <domain id="tuangou-mt"/>
+      <domain id="tuangou-navi-service"/>
+      <domain id="tuangou-remote"/>
+      <domain id="tuangou-seo-web"/>
+      <domain id="tuangou-sub-web"/>
+      <domain id="tuangou-tracking-web"/>
+      <domain id="tuangou-web"/>
+      <domain id="tuangou-web-job"/>
+      <domain id="BCTuangouServer"/>
+      <domain id="BCTuangouSubWeb"/>
+      <domain id="BCTuangouWeb"/>
+      <domain id="TuanGouHotel"/>
+      <domain id="TuanGouList"/>
+      <domain id="MovieAdminWeb"/>
+      <domain id="MovieService"/>
+      <domain id="MovieWeb"/>
+      <domain id="TuanGouMovieJob"/>
+      <domain id="TuanGouJob"/>
+      <domain id="TuanGouMMWeb"/>
+      <domain id="TuanGouMobileJob"/>
+      <domain id="TuanGouNavi"/>
+      <domain id="TuanGouSeo"/>
+      <domain id="TuanGouTagJob"/>
+      <domain id="TuanGouWeb"/>
+      <domain id="TuanGouWebJob"/>
+      <domain id="ReceiptVerifyService"/>
+      <domain id="TuanGouHotelService"/>
+      <domain id="TuanGouHotelWeb"/>
+   </product-line>
+   <product-line id="cdn" order="0.0" title="cdn" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="piccenter-display"/>
+   </product-line>
+   <product-line id="Credit" order="24.0" title="诚信" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="credit-loginuser-service"/>
+      <domain id="credit-pay-service"/>
+      <domain id="credit-refund-service"/>
+      <domain id="credit-sockpuppet-server"/>
+      <domain id="credit_datacollect"/>
+      <domain id="loginuser"/>
+      <domain id="sockpuppet"/>
+      <domain id="credit_dealer"/>
+   </product-line>
+   <product-line id="trip" order="6.0" title="酒店旅游" metric-dashboard="true" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+      <domain id="DestnlServer"/>
+      <domain id="HotelSearchWeb"/>
+      <domain id="ShopHotelWeb"/>
+      <domain id="destn-index-web"/>
+      <domain id="destn-server"/>
+      <domain id="hotel-index-web"/>
+      <domain id="hotel-order-server"/>
+      <domain id="hotel-order-web"/>
+      <domain id="hotel-search-web"/>
+      <domain id="shop-hotel-server"/>
+      <domain id="shop-hotelapi-web"/>
+      <domain id="shop-otahotel-web"/>
+      <domain id="HotelOrderServer"/>
+   </product-line>
+</company>

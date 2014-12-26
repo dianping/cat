@@ -3,7 +3,7 @@
 			<tr>
 				<th>
 		        <div style="float:left;">
-						&nbsp;开始
+						&nbsp;日期
 					<input type="text" id="time" style="width:110px;"/>
 					</div>
 					&nbsp;项目<select id="domains" style="width: 200px;"></select>
@@ -58,16 +58,14 @@
 		<table id="history" style="display: none">
 			<tr>
 				<th align=left>
-				<div id="datetimepicker2" class="input-append  date" style="float:left;">
-		           &nbsp;时间<input id="time2" name="time2"  size="13" 
-		              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
+				<div style="float:left;">
+						&nbsp;日期
+					<input type="text" id="time2" style="width:110px;"/>
+					</div>
 						&nbsp;项目<select id="domains2" style="width: 200px;"></select>
 						命令字 <select id="command2" style="width: 240px;">
 						</select> 
-						&nbsp; 返回码 <select id="code2" style="width: 120px;">
+						返回码 <select id="code2" style="width: 120px;">
 						<option value=''>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
 						<option value=''>All</option>
@@ -78,7 +76,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th align=left>版本 <select id="version2" style="width: 100px;">
+				<th align=left>&nbsp;版本 <select id="version2" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>

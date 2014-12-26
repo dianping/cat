@@ -9,9 +9,16 @@
 
 <a:offline>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#summary_report').addClass('active');
+		$('#summarytime').datetimepicker({
+			format:'Y-m-d H:i',
+			step:30,
+			maxDate:0
+		});
 		
 		$(document).delegate('.detail', 'click', function(e){
 			var anchor = this,
