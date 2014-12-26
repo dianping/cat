@@ -97,10 +97,19 @@ public class MetricConfigManager implements Initializable {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
+			MetricConfig metric = DefaultSaxParser.parse(content);
+			MetricConfig newMetric = new MetricConfig();
 
+			for (MetricItemConfig cfg : metric.getMetricItemConfigs().values()) {
+				if (!"piccenter-display".equals(cfg.getDomain())) {
+					newMetric.addMetricItemConfig(cfg);
+				}
+			}
 			m_configId = config.getId();
-			m_metricConfig = DefaultSaxParser.parse(content);
+			// m_metricConfig = DefaultSaxParser.parse(content);
+			m_metricConfig = newMetric;
 			m_modifyTime = config.getModifyDate().getTime();
+			storeConfig();
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_getter.getConfigContent(CONFIG_NAME);

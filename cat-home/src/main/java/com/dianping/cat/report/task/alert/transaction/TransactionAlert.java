@@ -66,7 +66,7 @@ public class TransactionAlert extends BaseAlert {
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
+		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
 		int maxMinute = resultPair.getKey();
 		List<Condition> conditions = resultPair.getValue();
 
@@ -106,7 +106,7 @@ public class TransactionAlert extends BaseAlert {
 				int lastEnd = 59;
 				double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, currentReport);
 
-				double[] data = m_dataExtractor.mergerArray(lastValue, currentValue);
+				double[] data = mergerArray(lastValue, currentValue);
 				results.addAll(m_dataChecker.checkData(data, conditions));
 			}
 		}

@@ -1,8 +1,6 @@
 package com.dianping.cat.report.task.alert.thirdParty;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -47,20 +45,19 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 		ThirdPartyAlertEntity entity = new ThirdPartyAlertEntity();
 		String url = http.getUrl();
 		String type = http.getType();
-		Map<String, Par> pars = http.getPars();
+		List<Par> pars = http.getPars();
 		String details = "HTTP URL[" + url + "?" + buildPars(pars) + "] " + type.toUpperCase() + "访问出现异常";
 
 		entity.setDomain(http.getDomain()).setType(type).setDetails(details);
 		return entity;
 	}
 
-	private String buildPars(Map<String, Par> paras) {
+	private String buildPars(List<Par> paras) {
 		String[] s = new String[paras.size()];
 		int i = 0;
 
-		for (Entry<String, Par> entry : paras.entrySet()) {
-			Par par = entry.getValue();
-			s[i++] = par.getId() + "=" + entry.getValue().getValue();
+		for (Par entry : paras) {
+			s[i++] = entry.getId();
 		}
 		return StringUtils.join(s, "&");
 	}
@@ -69,7 +66,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 		boolean result = false;
 		String type = http.getType();
 		String url = http.getUrl();
-		Map<String, Par> paras = http.getPars();
+		List<Par> paras = http.getPars();
 		String joined = null;
 
 		if (paras != null) {

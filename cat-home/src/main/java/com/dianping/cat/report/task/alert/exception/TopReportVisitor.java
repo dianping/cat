@@ -28,15 +28,15 @@ public class TopReportVisitor extends BaseVisitor {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
-		m_exceptionConfigManager = exceptionConfigManager;
-		return this;
-	}
-	
 	public TopReportVisitor setConfigManager(ServerConfigManager configManager) {
 		m_configManager = configManager;
 		return this;
    }
+	
+	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
+		m_exceptionConfigManager = exceptionConfigManager;
+		return this;
+	}
 
 	public TopReportVisitor setReport(AlertReport report) {
 		m_report = report;

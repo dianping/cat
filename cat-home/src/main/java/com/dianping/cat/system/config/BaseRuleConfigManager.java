@@ -1,7 +1,9 @@
 package com.dianping.cat.system.config;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.ConfigDao;
@@ -25,6 +28,7 @@ import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultJsonParser;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.report.task.alert.AlarmRule;
 import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.RuleType;
 
@@ -238,13 +242,13 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	public Map<String, Map<MetricType, List<Config>>> queryConfigs(String product) {
+	public AlarmRule queryConfigs(String product) {
 		Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs = new HashMap<String, Map<Integer, Map<MetricType, List<Config>>>>();
 
 		for (Rule rule : m_config.getRules().values()) {
 			extractConifgsByProduct(product, rule, configs);
 		}
-		return extractMaxPriorityConfigs(configs);
+		return new AlarmRule(extractMaxPriorityConfigs(configs));
 	}
 
 	public List<Config> queryConfigs(String product, String metricKey, MetricType type) {
@@ -372,6 +376,61 @@ public abstract class BaseRuleConfigManager {
 			} else {
 				return 0;
 			}
+		}
+	}
+	
+	public boolean compareTime(String start, String end) {
+		String[] startTime = start.split(":");
+		int hourStart = Integer.parseInt(startTime[0]);
+		int minuteStart = Integer.parseInt(startTime[1]);
+		int startMinute = hourStart * 60 + minuteStart;
+
+		String[] endTime = end.split(":");
+		int hourEnd = Integer.parseInt(endTime[0]);
+		int minuteEnd = Integer.parseInt(endTime[1]);
+		int endMinute = hourEnd * 60 + minuteEnd;
+
+		Calendar cal = Calendar.getInstance();
+		int current = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+		return current >= startMinute && current <= endMinute;
+	}
+	
+	public Pair<Integer, List<Condition>> convertConditions(List<Config> configs) {
+		int maxMinute = 0;
+		List<Condition> conditions = new ArrayList<Condition>();
+		Iterator<Config> iterator = configs.iterator();
+
+		while (iterator.hasNext()) {
+			Config config = iterator.next();
+
+			if (judgeCurrentInConfigRange(config)) {
+				List<Condition> tmpConditions = config.getConditions();
+				conditions.addAll(tmpConditions);
+
+				for (Condition con : tmpConditions) {
+					int tmpMinute = con.getMinute();
+
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
+				}
+			}
+		}
+
+		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
+	}
+	
+	private boolean judgeCurrentInConfigRange(Config config) {
+		try {
+			if (compareTime(config.getStarttime(), config.getEndtime())) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception ex) {
+			Cat.logError("throw exception when judge time: " + config.toString(), ex);
+			return false;
 		}
 	}
 

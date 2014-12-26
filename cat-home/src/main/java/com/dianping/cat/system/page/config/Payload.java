@@ -2,20 +2,21 @@ package com.dianping.cat.system.page.config;
 
 import java.util.List;
 
-import org.unidal.lookup.util.StringUtils
-;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
@@ -54,6 +55,15 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("exceptionExclude")
 	private ExceptionExclude m_exceptionExclude = new ExceptionExclude();
+
+	@ObjectMeta("http")
+	private Http m_http = new Http();
+
+	@ObjectMeta("socket")
+	private Socket m_socket = new Socket();
+
+	@FieldMeta("pars")
+	private String m_pars;
 
 	@FieldMeta("projectId")
 	private int m_projectId;
@@ -126,7 +136,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("code")
 	private int m_code;
-	
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -193,6 +203,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getFrom() {
 		return m_from;
+	}
+
+	public Http getHttp() {
+		return m_http;
 	}
 
 	public int getId() {
@@ -265,6 +279,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_page;
 	}
 
+	public String getPars() {
+		return m_pars;
+	}
+
 	public String getPattern() {
 		return m_pattern;
 	}
@@ -299,6 +317,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public String getRuleId() {
 		return m_ruleId;
+	}
+
+	public Socket getSocket() {
+		return m_socket;
 	}
 
 	public String getSumTags() {
@@ -377,6 +399,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_from = from;
 	}
 
+	public void setHttp(Http http) {
+		m_http = http;
+	}
+
 	public void setId(int id) {
 		m_id = id;
 	}
@@ -404,6 +430,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
+	}
+
+	public void setPars(String pars) {
+		m_pars = pars;
 	}
 
 	public void setPattern(String pattern) {
@@ -436,6 +466,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRuleId(String ruleId) {
 		m_ruleId = ruleId;
+	}
+
+	public void setSocket(Socket socket) {
+		m_socket = socket;
 	}
 
 	public void setSumTags(String sumTags) {

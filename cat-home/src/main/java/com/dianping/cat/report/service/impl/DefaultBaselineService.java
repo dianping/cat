@@ -14,12 +14,15 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.service.ModelPeriod;
 
 public class DefaultBaselineService implements BaselineService {
 
@@ -124,6 +127,64 @@ public class DefaultBaselineService implements BaselineService {
 			for (int i = 0; i < 60; i++) {
 				result[i] = dayResult[hour * 60 + i];
 			}
+		}
+		return result;
+	}
+	
+	@Override
+	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, MetricType type) {
+		double[] baseline = new double[ruleMinute];
+
+		if (currentMinute >= ruleMinute - 1) {
+			int start = currentMinute + 1 - ruleMinute;
+			int end = currentMinute;
+
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+		} else if (currentMinute < 0) {
+			int start = 60 + currentMinute + 1 - (ruleMinute);
+			int end = 60 + currentMinute;
+
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
+		} else {
+			int currentStart = 0, currentEnd = currentMinute;
+			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
+			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+
+			int lastStart = 60 + 1 - (ruleMinute - currentMinute);
+			int lastEnd = 59;
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
+			      new Date(ModelPeriod.LAST.getStartTime()), type);
+
+			baseline = mergerArray(lastBaseline, currentBaseline);
+		}
+
+		return baseline;
+	}
+	
+	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
+		double[] baseline = queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
+		int length = end - start + 1;
+		double[] result = new double[length];
+
+		if (baseline != null) {
+			System.arraycopy(baseline, start, result, 0, length);
+		}
+
+		return result;
+	}
+	
+	public double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
+
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
 		}
 		return result;
 	}

@@ -134,9 +134,10 @@ public class ServiceReportBuilder implements TaskBuilder {
 		domain.setTotalCount(domain.getTotalCount() + info.getTotalCount());
 		domain.setFailureCount(domain.getFailureCount() + info.getFailureCount());
 		domain.setSum(domain.getSum() + info.getSum());
+
 		if (domain.getTotalCount() > 0) {
 			domain.setAvg(domain.getSum() / domain.getTotalCount());
-			domain.setFailurePercent((double) domain.getFailureCount() / domain.getTotalCount());
+			domain.setFailurePercent(domain.getFailureCount() * 1.0 / domain.getTotalCount());
 		}
 	}
 

@@ -3,7 +3,7 @@
 			<tr>
 				<th align=left>
 						<div style="float:left;">
-							&nbsp;开始
+							&nbsp;日期
 						<input type="text" id="time" style="width:110px;"/>
 						</div>
 						&nbsp;页面 <select id="page" style="width: 240px;">

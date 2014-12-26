@@ -63,24 +63,6 @@ public class DefaultDataChecker implements DataChecker {
 		return alertResults;
 	}
 
-	public List<AlertResultEntity> checkDataForApp(double[] value, List<Condition> conditions) {
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-
-		for (Condition condition : conditions) {
-			int conditionMinute = condition.getMinute() / 5;
-			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
-
-			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
-
-			if (condResult.getKey() == true) {
-				String alertType = condition.getAlertType();
-				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
-			}
-		}
-
-		return alertResults;
-	}
-
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		StringBuilder builder = new StringBuilder();
 
@@ -101,6 +83,24 @@ public class DefaultDataChecker implements DataChecker {
 		}
 
 		return new Pair<Boolean, String>(true, builder.toString());
+	}
+
+	public List<AlertResultEntity> checkDataForApp(double[] value, List<Condition> conditions) {
+		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
+
+		for (Condition condition : conditions) {
+			int conditionMinute = condition.getMinute() / 5;
+			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
+
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
+
+			if (condResult.getKey() == true) {
+				String alertType = condition.getAlertType();
+				alertResults.add(new AlertResultEntity(condResult.getKey(), condResult.getValue(), alertType));
+			}
+		}
+
+		return alertResults;
 	}
 
 }

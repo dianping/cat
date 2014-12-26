@@ -9,15 +9,15 @@
     <attribute name="url" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="domain" value-type="String" />
-    <entity-ref name="par" type="map" names="pars" />
+    <entity-ref name="par" type="list" names="pars" />
   </entity>
   <entity name="par">
-    <attribute name="id" value-type="String" key="true" />
-    <attribute name="value" value-type="String" />
+    <attribute name="id" value-type="String" />
   </entity>
   <entity name="socket">
     <attribute name="ip" value-type="String" />
-    <attribute name="port" value-type="int" />
+    <attribute name="port" value-type="int" primitive="true" />
+    <attribute name="domain" value-type="String" />
   </entity>
 </model>
 

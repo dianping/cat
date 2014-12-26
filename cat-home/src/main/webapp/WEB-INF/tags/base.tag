@@ -9,7 +9,7 @@
 	<title>CAT</title>
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+	<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
 	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
 	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
