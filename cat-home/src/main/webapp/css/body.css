@@ -226,4 +226,6 @@ a{
 .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
 	z-index:0;
 }
-
+.input-group .form-control{
+	z-index:0;
+}
