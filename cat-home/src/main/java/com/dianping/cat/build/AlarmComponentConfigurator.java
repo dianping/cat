@@ -200,35 +200,31 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		            AlertManager.class, BaselineService.class));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      BaselineService.class));
+		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      BaselineService.class));
+		      RemoteMetricReportService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(HeartbeatAlert.class)
 		      .req(ProductLineConfigManager.class, DisplayPolicyManager.class)
 		      .req(RemoteMetricReportService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
-		            ServerConfigManager.class, AlertManager.class, AlertInfo.class, BaselineService.class)
+		            ServerConfigManager.class, AlertManager.class, AlertInfo.class)
 		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class,
-		      BaselineService.class));
+		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
 		      DataChecker.class, AppConfigManager.class));
 
 		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
-		      .req(UrlPatternConfigManager.class, BaselineService.class));
+		      .req(UrlPatternConfigManager.class));
 
 		all.add(C(TransactionAlert.class).req(ProductLineConfigManager.class, AlertInfo.class)
 		      .req(RemoteMetricReportService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
-		      .req(ModelService.class, TransactionAnalyzer.ID)
-		      .req(TransactionRuleConfigManager.class, BaselineService.class));
+		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
 
