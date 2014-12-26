@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlarmRule;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
@@ -35,7 +36,7 @@ public class BusinessAlert extends BaseAlert {
 
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
-	
+
 	@Inject
 	protected BaselineService m_baselineService;
 
@@ -163,6 +164,8 @@ public class BusinessAlert extends BaseAlert {
 					Cat.logError(e);
 				}
 			}
+		} else {
+			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
 		}
 	}
 

@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.alert.MetricReportGroup.State;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
@@ -169,6 +170,8 @@ public abstract class BaseAlert implements Task, LogEnabled {
 					Cat.logError(e);
 				}
 			}
+		} else {
+			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
 		}
 	}
 
