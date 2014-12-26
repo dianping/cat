@@ -164,37 +164,32 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String queryCmdbName(List<String> ips) {
-		if (ips != null) {
-			Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
+		Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
 
-			for (String ip : ips) {
-				String cmdbDomain = queryDomainFromCMDB(ip);
+		for (String ip : ips) {
+			String cmdbDomain = queryDomainFromCMDB(ip);
 
-				if (checkIfValid(cmdbDomain)) {
-					Integer count = nameCountMap.get(cmdbDomain);
-					if (count == null) {
-						nameCountMap.put(cmdbDomain, 1);
-					} else {
-						nameCountMap.put(cmdbDomain, count + 1);
-					}
+			if (checkIfValid(cmdbDomain)) {
+				Integer count = nameCountMap.get(cmdbDomain);
+				if (count == null) {
+					nameCountMap.put(cmdbDomain, 1);
+				} else {
+					nameCountMap.put(cmdbDomain, count + 1);
 				}
 			}
-
-			String probableDomain = null;
-			int maxCount = 0;
-			for (Entry<String, Integer> entry : nameCountMap.entrySet()) {
-				int currentCount = entry.getValue();
-
-				if (currentCount > maxCount) {
-					maxCount = currentCount;
-					probableDomain = entry.getKey();
-				}
-			}
-
-			return probableDomain;
-		} else {
-			return null;
 		}
+
+		String probableDomain = null;
+		int maxCount = 0;
+		for (Entry<String, Integer> entry : nameCountMap.entrySet()) {
+			int currentCount = entry.getValue();
+
+			if (currentCount > maxCount) {
+				maxCount = currentCount;
+				probableDomain = entry.getKey();
+			}
+		}
+		return probableDomain;
 	}
 
 	private String queryDomainFromCMDB(String ip) {
@@ -308,7 +303,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				updateProjectInfo();
 				t2.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				t1.setStatus(e);
+				t2.setStatus(e);
 			} finally {
 				t2.complete();
 			}
@@ -414,12 +409,15 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 			for (Project pro : projects) {
 				try {
-					List<String> ips = queryIpsFromReport(pro.getDomain());
-					String originCmdbDomain = pro.getCmdbDomain();
-					String cmdbDomain = queryCmdbName(ips);
+					String cmdbDomain = pro.getCmdbDomain();
 
-					if (cmdbDomain != null) {
-						boolean isChange = !cmdbDomain.equals(originCmdbDomain);
+					if (StringUtils.isEmpty(cmdbDomain)) {
+						List<String> ips = queryIpsFromReport(pro.getDomain());
+						cmdbDomain = queryCmdbName(ips);
+					}
+
+					if (StringUtils.isNotEmpty(cmdbDomain)) {
+						boolean isChange = !cmdbDomain.equals(pro.getCmdbDomain());
 
 						pro.setCmdbDomain(cmdbDomain);
 						boolean isProjectInfoChange = updateProject(pro);
