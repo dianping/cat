@@ -20,25 +20,21 @@
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a
-								href="?op=history&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
+					<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a
-								href="?op=history&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}">All</a>
+					<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a
-									href="?op=history&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}"
+						<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a
-									href="?op=history&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+						<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -54,8 +50,7 @@
 	</tr>
 	</tr>
 	<tr>
-		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=total"
+		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=total"
 					data-status="total" class="state_graph_link">[:: show ::]</a></td>
 		<td>处理消息总量</td>
 		<td class="right">${w:format(model.state.total.total,'#,###,###,###,##0.#')}</td>
@@ -66,8 +61,7 @@
 				<td colspan="4" style="display: none"><div id="total" style="display: none"></div></td>
 			</tr>
 	<tr>
-		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=totalLoss"
+		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=totalLoss"
 					data-status="totalLoss" class="state_graph_link">[:: show ::]</a></td>
 		<td>丢失消息总量</td>
 		<c:choose>
@@ -85,8 +79,7 @@
 				<td colspan="4" style="display: none"><div id="totalLoss" style="display: none"></div></td>
 			</tr>
 	<tr>
-		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=avgTps"
+		<td><a	href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=avgTps"
 					data-status="avgTps" class="state_graph_link">[:: show ::]</a></td>
 		<td>每分钟平均处理数</td>
 		<td class="right">${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
@@ -226,6 +219,8 @@
 			</tr>
 </table>
 </br>
+<c:choose>
+<c:when test="${payload.show == true}">
 <table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
@@ -267,6 +262,8 @@
 				<td>${model.state.totalSize}</td>
 			</tr>
 </table>
+</c:when>
+</c:choose>
 <res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>

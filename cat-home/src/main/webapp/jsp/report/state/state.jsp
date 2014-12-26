@@ -19,21 +19,21 @@
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}"
+					<a href="?show=${payload.show}&domain=${model.domain}&date=${model.date}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?domain=${model.domain}&date=${model.date}">All</a>
+					<a href="?show=${payload.show}&domain=${model.domain}&date=${model.date}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
+						<a href="?show=${payload.show}&domain=${model.domain}&ip=${ip}&date=${model.date}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+						<a href="?show=${payload.show}&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -170,6 +170,8 @@
 	<tr class="graphs"><td colspan="4" style="display:none"><div id="delayAvg" style="display:none"></div></td></tr>
 </table>
 </br>
+<c:choose>
+<c:when test="${payload.show == true}">
 <table class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<td width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain">处理项目列表</a></td>
@@ -211,7 +213,7 @@
 		<td></td>
 		<td>${model.state.totalSize}</td>
 	</tr>
-</table>
+</table></c:when></c:choose>
 	<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
 </a:report>

@@ -38,25 +38,6 @@ public class AlertExceptionBuilder {
 		return alertExceptions;
 	}
 
-	public List<AlertException> buildFrontEndAlertExceptions(Item frontEndItem) {
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-
-		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
-			String exception = entry.getKey();
-			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
-			
-			if (rule != null) {
-				int warn = rule.getWarn();
-				double value = entry.getValue().doubleValue();
-
-				if (value >= warn) {
-					alertExceptions.add(new AlertException(exception, AlertLevel.WARNING, value));
-				}
-			}
-		}
-		return alertExceptions;
-	}
-
 	private List<AlertException> buildDomainAlertExceptions(Item item) {
 		String domain = item.getDomain();
 		List<AlertException> alertExceptions = new ArrayList<AlertException>();
@@ -93,6 +74,25 @@ public class AlertExceptionBuilder {
 			      totalException));
 		}
 
+		return alertExceptions;
+	}
+
+	public List<AlertException> buildFrontEndAlertExceptions(Item frontEndItem) {
+		List<AlertException> alertExceptions = new ArrayList<AlertException>();
+
+		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
+			String exception = entry.getKey();
+			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
+			
+			if (rule != null) {
+				int warn = rule.getWarn();
+				double value = entry.getValue().doubleValue();
+
+				if (value >= warn) {
+					alertExceptions.add(new AlertException(exception, AlertLevel.WARNING, value));
+				}
+			}
+		}
 		return alertExceptions;
 	}
 
@@ -172,16 +172,16 @@ public class AlertExceptionBuilder {
 			m_isTriggered = isTriggered;
 		}
 
-		public boolean isTriggered() {
-			return m_isTriggered;
-		}
-
 		public String getName() {
 			return m_name;
 		}
 
 		public String getType() {
 			return m_type;
+		}
+
+		public boolean isTriggered() {
+			return m_isTriggered;
 		}
 
 		@Override

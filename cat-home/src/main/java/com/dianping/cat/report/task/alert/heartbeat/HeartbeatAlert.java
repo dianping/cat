@@ -89,18 +89,21 @@ public class HeartbeatAlert extends BaseAlert {
 		}
 	}
 
-	private HeartbeatReport generateCurrentReport(String domain) {
-		long currentMill = System.currentTimeMillis();
-		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
+	private int calMaxMinuteFromMap(Map<String, List<Config>> configs) {
+		int maxMinute = 0;
 
-		return generateReport(domain, currentHourMill);
-	}
+		for (List<Config> tmpConfigs : configs.values()) {
+			for (Config config : tmpConfigs) {
+				for (Condition condition : config.getConditions()) {
+					int tmpMinute = condition.getMinute();
 
-	private HeartbeatReport generateLastReport(String domain) {
-		long currentMill = System.currentTimeMillis();
-		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
-
-		return generateReport(domain, lastHourMill);
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
+				}
+			}
+		}
+		return maxMinute;
 	}
 
 	private void convertDeltaMetrics(Map<String, double[]> map) {
@@ -191,6 +194,20 @@ public class HeartbeatAlert extends BaseAlert {
 		return map;
 	}
 
+	private HeartbeatReport generateCurrentReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
+
+		return generateReport(domain, currentHourMill);
+	}
+
+	private HeartbeatReport generateLastReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
+
+		return generateReport(domain, lastHourMill);
+	}
+
 	private HeartbeatReport generateReport(String domain, long date) {
 		ModelRequest request = new ModelRequest(domain, date)//
 		      .setProperty("ip", Constants.ALL);
@@ -217,23 +234,6 @@ public class HeartbeatAlert extends BaseAlert {
 	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
-	}
-
-	private int calMaxMinuteFromMap(Map<String, List<Config>> configs) {
-		int maxMinute = 0;
-
-		for (List<Config> tmpConfigs : configs.values()) {
-			for (Config config : tmpConfigs) {
-				for (Condition condition : config.getConditions()) {
-					int tmpMinute = condition.getMinute();
-
-					if (tmpMinute > maxMinute) {
-						maxMinute = tmpMinute;
-					}
-				}
-			}
-		}
-		return maxMinute;
 	}
 
 	private void processDomain(String domain) {
