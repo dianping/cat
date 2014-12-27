@@ -134,5 +134,9 @@
 	</table>
 </form>
 </div>
-	
 </a:config>
+<style>
+.input-icon>.ace-icon {
+	z-index: 0;
+}
+</style>
