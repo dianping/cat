@@ -152,10 +152,9 @@ public class BusinessAlert extends BaseAlert {
 		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
 		int maxMinute = monitorConfigs.calMaxMinute();
-		boolean isDataReady = false;
 		MetricReportGroup reportGroup = prepareDatas(productId, maxMinute);
 
-		if (isDataReady) {
+		if (reportGroup.isDataReady()) {
 			for (MetricItemConfig config : configs) {
 				try {
 					processMetricItemConfig(config, minute, monitorConfigs.getConfigs().get(config.getId()), productLine,
