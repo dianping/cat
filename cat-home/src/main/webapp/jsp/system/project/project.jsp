@@ -16,6 +16,18 @@
 			$('#projects_config').addClass('active open');
 			$('#projects').addClass('active');
 			
+			if("${payload.action.name}" == 'updateSubmit') {
+				var state = '${model.opState}';
+				if(state=='Success'){
+					$('#state').html('操作成功');
+				}else{
+					$('#state').html('操作失败');
+				}
+				setInterval(function(){
+					$('#state').html('&nbsp;');
+				},3000);
+			}
+			
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 				_renderMenu: function( ul, items ) {
 					var that = this,
@@ -129,10 +141,11 @@
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
+			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /><h4 class="text-center text-danger" id="state">&nbsp;</h4></td>
 		</tr>
 	</table>
 </form>
+
 </div>
 </a:config>
 <style>
