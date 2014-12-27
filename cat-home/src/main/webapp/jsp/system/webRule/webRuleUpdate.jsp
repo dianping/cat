@@ -79,10 +79,11 @@ function update() {
 		var cityStr = words[1];
 		var operatorStr = words[2];
 		
-		$('#metric').val(metric);
+		if(typeof metric != "undefined"  && metric.length > 0) {
+			$('#metric').val(metric);
+		}
 		$('#operator').val(operatorStr);
-		$('#url').val(urlStr);
-		
+
 		var cityData = ${model.cityInfo};
 		var select = $('#province');
 		
@@ -174,8 +175,9 @@ function update() {
 			}
 		}
 		groupChange();
-		$("#url").val(urlStr);
-		
-		$('#webRule').addClass('active');
-	});
+		if(typeof urlStr != "undefined" && urlStr.length > 0){
+			$('#url').val(urlStr);
+		}
+		$('#userMonitor_config').addClass('active open');
+		$('#webRule').addClass('active');	});
 </script>

@@ -131,7 +131,7 @@
 					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
 				}
 			}
-			if(commandInitVal != ''){
+			if(typeof commandInitVal != 'undefined' && commandInitVal.length > 0){
 				commandSelect.val(commandInitVal);
 			}
 		}

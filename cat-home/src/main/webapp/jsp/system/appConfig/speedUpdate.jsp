@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -52,14 +52,6 @@
 		}) 
 	</script>
 	
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		</br>
-
 	<table class="table table-striped table-condensed  ">
 		<c:choose>
 		<c:when test="${payload.action.name eq 'appSpeedAdd' }">
@@ -68,7 +60,6 @@
 		<c:otherwise>
 		<tr>
 			<tr><td>页面URL</td><td><input name="page" value="${model.speed.page}" id="page" readonly required/></td><td>支持数字、字符，例如：index.bin<br/></td></tr>
-		</tr>
 		</c:otherwise>
 		</c:choose>
 		<tr>
@@ -84,6 +75,5 @@
 			<td colspan="3" style="text-align:center;"><button class="btn btn-primary" id="updateSubmit">提交</button></td>
 		</tr>
 	</table>
-</div></div></div>
 
-</a:body>
+</a:config>
