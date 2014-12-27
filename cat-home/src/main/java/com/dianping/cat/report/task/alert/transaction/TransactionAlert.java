@@ -167,7 +167,7 @@ public class TransactionAlert extends BaseAlert {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("alert-transaction", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

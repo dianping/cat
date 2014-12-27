@@ -262,7 +262,7 @@ public class WebAlert extends BaseAlert {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("alert-web", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {
