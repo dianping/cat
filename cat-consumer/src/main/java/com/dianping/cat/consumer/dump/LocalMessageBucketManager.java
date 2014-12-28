@@ -263,18 +263,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	protected void moveFileOld(String path) throws IOException {
-		File outbox = new File(m_baseDir, "outbox");
-		File from = new File(m_baseDir, path);
-		File parent = from.getParentFile();
-		File to = new File(outbox, path);
-
-		to.getParentFile().mkdirs();
-		from.renameTo(to);
-		parent.delete(); // delete it if empty
-		parent.getParentFile().delete(); // delete it if empty
-	}
-
 	private void moveOldMessages() {
 		final List<String> paths = new ArrayList<String>();
 
@@ -282,7 +270,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == -1 && shouldMove(path)) {
+					if (path.indexOf(".idx") == -1 && shouldUpload(path)) {
 						paths.add(path);
 					}
 				}
@@ -304,9 +292,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				if (bucket != null) {
 					try {
 						bucket.close();
-						bucket.archive();
-
-						Cat.getProducer().logEvent("Move", "Outbox.Normal", Message.SUCCESS, loginfo);
+						Cat.getProducer().logEvent("Upload", "Outbox.Normal", Message.SUCCESS, loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -315,17 +301,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_buckets.remove(path);
 						release(bucket);
 					}
-				} else {
-					try {
-						moveFile(path);
-						moveFile(path + ".idx");
+				}
+				try {
+					moveFile(path);
+					moveFile(path + ".idx");
 
-						Cat.getProducer().logEvent("Move", "Outbox.Abnormal", Message.SUCCESS, loginfo);
-					} catch (Exception e) {
-						t.setStatus(e);
-						Cat.logError(e);
-						m_logger.error(e.getMessage(), e);
-					}
+					Cat.getProducer().logEvent("Upload", "Outbox.Abnormal", Message.SUCCESS, loginfo);
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
+					m_logger.error(e.getMessage(), e);
 				}
 			}
 			t.complete();
@@ -340,7 +325,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_localIp = localIp;
 	}
 
-	private boolean shouldMove(String path) {
+	private boolean shouldUpload(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}

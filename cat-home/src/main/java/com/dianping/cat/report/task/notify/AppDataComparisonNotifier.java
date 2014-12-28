@@ -84,7 +84,6 @@ public class AppDataComparisonNotifier {
 		Map<String, String> user2Id = new HashMap<String, String>();
 
 		for (String user : allUsers) {
-
 			for (Entry<String, AppDataComparisonResult> entry : results.entrySet()) {
 				AppDataComparisonResult result = entry.getValue();
 				String id = result.getId();

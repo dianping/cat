@@ -44,23 +44,6 @@ public class LocalMessageBucket implements MessageBucket {
 
 	private int m_blockSize;
 
-	public void archive() throws IOException {
-		File from = new File(m_baseDir, m_dataFile);
-		File outbox = new File(m_baseDir, "outbox");
-		File to = new File(outbox, m_dataFile);
-		File fromIndex = new File(m_baseDir, m_dataFile + ".idx");
-		File toIndex = new File(outbox, m_dataFile + ".idx");
-		File parentFile = from.getParentFile();
-
-		to.getParentFile().mkdirs();
-		toIndex.getParentFile().mkdirs();
-		from.renameTo(to);
-		fromIndex.renameTo(toIndex);
-
-		parentFile.delete(); // delete it if empty
-		parentFile.getParentFile().delete(); // delete it if empty
-	}
-
 	@Override
 	public void close() throws IOException {
 		if (m_reader != null) {
