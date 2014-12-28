@@ -21,7 +21,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
@@ -73,15 +72,7 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 	public boolean send(AlertMessageEntity message) {
 		boolean result = sendEmail(message);
 
-		if (!result) {
-			Cat.logEvent("MailSender", "Gmail", Event.SUCCESS, null);
-
-			boolean gmail = sendEmailByGmail(message);
-			if (gmail == false) {
-				return false;
-			}
-		}
-		return true;
+		return result;
 	}
 
 	private boolean sendEmail(AlertMessageEntity message) {
@@ -136,7 +127,7 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 		}
 	}
 
-	private boolean sendEmailByGmail(AlertMessageEntity message) {
+	protected boolean sendEmailByGmail(AlertMessageEntity message) {
 		try {
 			String title = message.getTitle();
 			String content = message.getContent();
