@@ -147,9 +147,9 @@ public class NetGraphManager implements Initializable, LogEnabled {
 			boolean active = true;
 
 			while (active) {
-				Transaction t = Cat.newTransaction("NetGraph", TimeHelper.getMinuteStr());
+				Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
 				long current = System.currentTimeMillis();
-				
+
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 					Set<String> groups = queryAllGroups(netGraphTemplate);

@@ -49,7 +49,7 @@ public class FrontEndExceptionAlert extends ExceptionAlert {
 		}
 		while (active) {
 			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("FrontEndException", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertFrontEnd", TimeHelper.getMinuteStr());
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));

@@ -74,7 +74,7 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 		boolean result = sendEmail(message);
 
 		if (!result) {
-			Cat.logEvent("InternalMailSender", "error", Event.SUCCESS, null);
+			Cat.logEvent("MailSender", "Gmail", Event.SUCCESS, null);
 
 			boolean gmail = sendEmailByGmail(message);
 			if (gmail == false) {

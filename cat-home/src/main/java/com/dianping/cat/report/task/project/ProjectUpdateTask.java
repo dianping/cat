@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.project;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
@@ -29,7 +29,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import org.unidal.lookup.util.StringUtils;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
 
@@ -281,14 +280,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 		while (active) {
 			long startMill = System.currentTimeMillis();
-			int hour = Calendar.getInstance().get(Calendar.HOUR);
-			String hourStr = String.valueOf(hour);
-
-			if (hour < 10) {
-				hourStr = "0" + hourStr;
-			}
-
-			Transaction t1 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+			Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
 			try {
 				updateHostNameInfo();
 				t1.setStatus(Transaction.SUCCESS);
@@ -298,7 +290,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				t1.complete();
 			}
 
-			Transaction t2 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
 			try {
 				updateProjectInfo();
 				t2.setStatus(Transaction.SUCCESS);
