@@ -46,6 +46,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
+	public static final String DUMP_DIR = "dump";
+
 	public boolean discardTransaction(Transaction t) {
 		String type = t.getType();
 		String name = t.getName();

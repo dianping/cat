@@ -60,7 +60,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
+		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR);
 	}
 
 	private boolean isActive() {
@@ -71,7 +71,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
 		StringBuilder baseDir = new StringBuilder(32);
-		FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
+		FileSystem fs = m_fileSystemManager.getFileSystem(ServerConfigManager.DUMP_DIR, baseDir);
 		Path file = new Path(baseDir.toString(), path);
 		FSDataOutputStream out;
 

@@ -119,7 +119,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_baseDir == null) {
-			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir("dump"));
+			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 		}
 
 		Threads.forGroup("cat").start(new BlockDumper());
@@ -256,7 +256,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		if (success) {
 			File parent = file.getParentFile();
-			
+
 			file.delete();
 			parent.delete(); // delete it if empty
 			parent.getParentFile().delete(); // delete it if empty
