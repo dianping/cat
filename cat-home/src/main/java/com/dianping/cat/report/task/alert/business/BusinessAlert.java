@@ -135,7 +135,7 @@ public class BusinessAlert extends BaseAlert {
 	      String metricKey, MetricType type) {
 		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
 		int ruleMinute = resultPair.getKey();
-		Cat.logEvent("RecordMetric", metricKey + "," + type.getName(), Event.SUCCESS, "minute=" + minute + "&ruleMinute="
+		Cat.logEvent("BussinessMetric", metricKey + "," + type.getName(), Event.SUCCESS, "minute=" + minute + "&ruleMinute="
 		      + ruleMinute);
 		double[] value = reportGroup.extractData(minute, ruleMinute, metricKey, type);
 		double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, type);
