@@ -66,48 +66,51 @@ public class TransactionAlert extends BaseAlert {
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
-		int maxMinute = resultPair.getKey();
-		List<Condition> conditions = resultPair.getValue();
+		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
-		if (StringUtils.isEmpty(name)) {
-			name = Constants.ALL;
-		}
-		if (minute >= maxMinute - 1) {
-			TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
-			report = m_mergeManager.mergerAllName(report, Constants.ALL, name);
+		if (conditionPair != null) {
+			int maxMinute = conditionPair.getKey();
+			List<Condition> conditions = conditionPair.getValue();
 
-			if (report != null) {
-				int start = minute + 1 - maxMinute;
-				int end = minute;
-				double[] data = buildArrayData(start, end, type, name, report);
-
-				results.addAll(m_dataChecker.checkData(data, conditions));
+			if (StringUtils.isEmpty(name)) {
+				name = Constants.ALL;
 			}
-		} else if (minute < 0) {
-			TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
+			if (minute >= maxMinute - 1) {
+				TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
+				report = m_mergeManager.mergerAllName(report, Constants.ALL, name);
 
-			if (report != null) {
-				int start = 60 + minute + 1 - (maxMinute);
-				int end = 60 + minute;
-				double[] data = buildArrayData(start, end, type, name, report);
+				if (report != null) {
+					int start = minute + 1 - maxMinute;
+					int end = minute;
+					double[] data = buildArrayData(start, end, type, name, report);
 
-				results.addAll(m_dataChecker.checkData(data, conditions));
-			}
-		} else {
-			TransactionReport currentReport = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
-			TransactionReport lastReport = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
+					results.addAll(m_dataChecker.checkData(data, conditions));
+				}
+			} else if (minute < 0) {
+				TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
 
-			if (currentReport != null && lastReport != null) {
-				int currentStart = 0, currentEnd = minute;
-				double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, currentReport);
+				if (report != null) {
+					int start = 60 + minute + 1 - (maxMinute);
+					int end = 60 + minute;
+					double[] data = buildArrayData(start, end, type, name, report);
 
-				int lastStart = 60 + 1 - (maxMinute - minute);
-				int lastEnd = 59;
-				double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, currentReport);
+					results.addAll(m_dataChecker.checkData(data, conditions));
+				}
+			} else {
+				TransactionReport currentReport = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
+				TransactionReport lastReport = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
 
-				double[] data = mergerArray(lastValue, currentValue);
-				results.addAll(m_dataChecker.checkData(data, conditions));
+				if (currentReport != null && lastReport != null) {
+					int currentStart = 0, currentEnd = minute;
+					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, currentReport);
+
+					int lastStart = 60 + 1 - (maxMinute - minute);
+					int lastEnd = 59;
+					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, currentReport);
+
+					double[] data = mergerArray(lastValue, currentValue);
+					results.addAll(m_dataChecker.checkData(data, conditions));
+				}
 			}
 		}
 		return results;

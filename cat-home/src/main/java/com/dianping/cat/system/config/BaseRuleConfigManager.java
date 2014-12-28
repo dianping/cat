@@ -247,7 +247,7 @@ public abstract class BaseRuleConfigManager {
 			extractConifgsByProduct(product, rule, configs);
 		}
 		Map<String, Map<MetricType, List<Config>>> maxPriority = extractMaxPriorityConfigs(configs);
-		
+
 		return new AlarmRule(maxPriority);
 	}
 
@@ -366,7 +366,11 @@ public abstract class BaseRuleConfigManager {
 			}
 		}
 
-		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
+		if (maxMinute > 0) {
+			return new Pair<Integer, List<Condition>>(maxMinute, conditions);
+		} else {
+			return null;
+		}
 	}
 
 	private boolean judgeCurrentInConfigRange(Config config) {

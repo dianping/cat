@@ -269,46 +269,49 @@ public class HeartbeatAlert extends BaseAlert {
 			for (Entry<String, List<Config>> entry : configsMap.entrySet()) {
 				String metric = entry.getKey();
 				List<Config> configs = entry.getValue();
-				Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
-				int maxMinute = resultPair.getKey();
-				List<Condition> conditions = resultPair.getValue();
+				Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
-				if (minute >= maxMinute - 1) {
-					for (Machine machine : currentReport.getMachines().values()) {
-						String ip = machine.getIp();
-						double[] arguments = generateArgumentMap(machine).get(metric);
+				if (conditionPair != null) {
+					int maxMinute = conditionPair.getKey();
+					List<Condition> conditions = conditionPair.getValue();
 
-						if (arguments != null) {
-							double[] values = extract(arguments, maxMinute, minute);
+					if (minute >= maxMinute - 1) {
+						for (Machine machine : currentReport.getMachines().values()) {
+							String ip = machine.getIp();
+							double[] arguments = generateArgumentMap(machine).get(metric);
 
-							processMeitrc(domain, ip, metric, conditions, maxMinute, values);
-						}
-					}
-				} else if (minute < 0) {
-					for (Machine machine : lastReport.getMachines().values()) {
-						String ip = machine.getIp();
-						double[] arguments = generateArgumentMap(machine).get(metric);
-
-						if (arguments != null) {
-							double[] values = extract(arguments, maxMinute, 59);
-
-							processMeitrc(domain, ip, metric, conditions, maxMinute, values);
-						}
-					}
-				} else {
-					for (Machine lastMachine : lastReport.getMachines().values()) {
-						String ip = lastMachine.getIp();
-						Machine currentMachine = currentReport.getMachines().get(ip);
-
-						if (currentMachine != null) {
-							Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
-							Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
-
-							if (lastHourArguments != null && currentHourArguments != null) {
-								double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
-								      maxMinute, minute);
+							if (arguments != null) {
+								double[] values = extract(arguments, maxMinute, minute);
 
 								processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+							}
+						}
+					} else if (minute < 0) {
+						for (Machine machine : lastReport.getMachines().values()) {
+							String ip = machine.getIp();
+							double[] arguments = generateArgumentMap(machine).get(metric);
+
+							if (arguments != null) {
+								double[] values = extract(arguments, maxMinute, 59);
+
+								processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+							}
+						}
+					} else {
+						for (Machine lastMachine : lastReport.getMachines().values()) {
+							String ip = lastMachine.getIp();
+							Machine currentMachine = currentReport.getMachines().get(ip);
+
+							if (currentMachine != null) {
+								Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
+								Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
+
+								if (lastHourArguments != null && currentHourArguments != null) {
+									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
+									      maxMinute, minute);
+
+									processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+								}
 							}
 						}
 					}

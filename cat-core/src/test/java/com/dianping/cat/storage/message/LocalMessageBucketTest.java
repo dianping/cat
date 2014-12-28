@@ -76,26 +76,6 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		}
 
 		bucket.close();
-
-		testArchive(bucket);
-	}
-
-	private void testArchive(LocalMessageBucket bucket) throws IOException {
-		File from = new File(m_baseDir, "dump");
-		File fromIdx = new File(m_baseDir, "dump.idx");
-
-		Assert.assertEquals(true, from.exists());
-		Assert.assertEquals(true, fromIdx.exists());
-
-		Assert.assertEquals(false, from.exists());
-		Assert.assertEquals(false, fromIdx.exists());
-
-		File outbox = new File(m_baseDir, "outbox" + File.separator + "dump");
-		File oubboxIdx = new File(m_baseDir, "outbox" + File.separator + "dump.idx");
-
-		Assert.assertEquals(true, outbox.exists());
-		Assert.assertEquals(true, oubboxIdx.exists());
-
 	}
 
 	private MessageId buildChannelBuffer(MessageIdFactory factory, MessageCodec codec, MessageTree tree,

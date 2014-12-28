@@ -151,18 +151,21 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 					for (Map<MetricType, List<Config>> rule : detailRules) {
 						for (Entry<MetricType, List<Config>> entry : rule.entrySet()) {
-							Pair<Integer, List<Condition>> resultPair = getRuleConfigManager().convertConditions(
+							Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(
 							      entry.getValue());
-							int ruleMinute = resultPair.getKey();
-							MetricType dateType = entry.getKey();
-							double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
 
-							List<Condition> conditions = resultPair.getValue();
-							List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
+							if (conditionPair != null) {
+								int ruleMinute = conditionPair.getKey();
+								MetricType dateType = entry.getKey();
+								double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
 
-							if (results.size() > 0) {
-								updateAlertStatus(product, metricKey);
-								sendAlerts(product, metricName, results);
+								List<Condition> conditions = conditionPair.getValue();
+								List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
+
+								if (results.size() > 0) {
+									updateAlertStatus(product, metricKey);
+									sendAlerts(product, metricName, results);
+								}
 							}
 						}
 					}
