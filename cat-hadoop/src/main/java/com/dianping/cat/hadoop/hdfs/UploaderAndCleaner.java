@@ -3,11 +3,9 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -31,7 +29,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -44,57 +41,12 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 	private String m_dumpBaseDir;
 
-	private String m_reportBaseDir;
-
 	private Logger m_logger;
 
 	private long m_sleepPeriod = 1000L * 60;
 
 	private volatile boolean m_active = true;
 
-	public void deleteOldReports() {
-		Transaction t = Cat.newTransaction("System", "DeleteReport");
-		try {
-			File reportDir = new File(m_reportBaseDir);
-			final List<String> toRemovePaths = new ArrayList<String>();
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			final String today = sdf.format(date);
-			final String yesterday = sdf.format(new Date(date.getTime() - 24 * 60 * 60 * 1000L));
-
-			Scanners.forDir().scan(reportDir, new FileMatcher() {
-				@Override
-				public Direction matches(File base, String path) {
-					File file = new File(base, path);
-					if (file.isFile() && shouldDeleteReport(path)) {
-						toRemovePaths.add(path);
-					}
-					return Direction.DOWN;
-				}
-
-				private boolean shouldDeleteReport(String path) {
-					if (path.indexOf(today) > -1 || path.indexOf(yesterday) > -1) {
-						return false;
-					} else {
-						return true;
-					}
-				}
-			});
-			for (String path : toRemovePaths) {
-				File file = new File(m_reportBaseDir, path);
-
-				file.delete();
-				Cat.logEvent("System", "DeleteReport", Event.SUCCESS, file.getAbsolutePath());
-			}
-			removeEmptyDir(reportDir);
-			t.setStatus(Transaction.SUCCESS);
-		} catch (Exception e) {
-			Cat.logError(e);
-			t.setStatus(e);
-		} finally {
-			t.complete();
-		}
-	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -109,7 +61,6 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		m_dumpBaseDir = m_configManager.getHdfsLocalBaseDir("dump");
-		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("report");
 	}
 
 	private boolean isActive() {
@@ -173,7 +124,6 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 					if (cal.get(Calendar.MINUTE) >= 10) {
 						uploadLogviewFiles();
-						deleteOldReports();
 					}
 				}
 			} catch (Exception e) {

@@ -379,6 +379,9 @@
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
