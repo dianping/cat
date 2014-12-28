@@ -42,15 +42,23 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	protected abstract boolean processTask(Task doing);
 
+	public boolean checkTime() {
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+
+		if (minute > 15) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {
 			try {
-				Calendar cal = Calendar.getInstance();
-				int minute = cal.get(Calendar.MINUTE);
-
-				if (minute > 15) {
+				if (checkTime()) {
 					Task task = findDoingTask(localIp);
 					if (task == null) {
 						task = findTodoTask();

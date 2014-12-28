@@ -23,6 +23,7 @@ import com.dianping.cat.consumer.dependency.DatabaseParser;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventDelegate;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -47,14 +48,15 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.hadoop.hdfs.LogviewUploader;
 import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.service.DefaultReportManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.LocalMessageBucketManager;
 import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
@@ -93,6 +95,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerStatisticManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
+		
+		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
+		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class)//
+		      .req(LogviewUploader.class));
+
 		return all;
 	}
 

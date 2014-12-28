@@ -127,6 +127,10 @@ public class DefaultReportManagerTest {
 			return new MockStringBucket();
 		}
 
+		@Override
+      public void clearOldReports() {
+      }
+
 	}
 
 	public class MockHourlyReportDao extends HourlyReportDao {

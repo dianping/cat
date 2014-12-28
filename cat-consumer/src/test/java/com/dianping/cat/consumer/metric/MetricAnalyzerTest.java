@@ -199,6 +199,10 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			return new MockStringBucket();
 		}
 
+		@Override
+      public void clearOldReports() {
+      }
+
 	}
 
 	public class MockBusinessReportDao extends BusinessReportDao {

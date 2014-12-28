@@ -100,7 +100,7 @@ public class LocalMessageBucket implements MessageBucket {
 		}
 	}
 
-	protected MessageBlock flushBlock() throws IOException {
+	public MessageBlock flushBlock() throws IOException {
 		if (m_dirty.get()) {
 			synchronized (this) {
 				m_out.close();
@@ -132,6 +132,7 @@ public class LocalMessageBucket implements MessageBucket {
 		return m_writer;
 	}
 
+
 	@Override
 	public void initialize(String dataFile) throws IOException {
 		m_dataFile = dataFile;
@@ -153,7 +154,7 @@ public class LocalMessageBucket implements MessageBucket {
 		m_codec = codec;
 	}
 
-	protected synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
+	public synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
 		int size = buf.readableBytes();
 
 		m_dirty.set(true);

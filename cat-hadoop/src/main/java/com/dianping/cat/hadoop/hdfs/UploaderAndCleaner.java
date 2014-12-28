@@ -33,7 +33,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
@@ -173,7 +172,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 					Calendar cal = Calendar.getInstance();
 
 					if (cal.get(Calendar.MINUTE) >= 10) {
-						uploadLogviewFile();
+						uploadLogviewFiles();
 						deleteOldReports();
 					}
 				}
@@ -199,7 +198,7 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		}
 	}
 
-	private void uploadLogviewFile() {
+	private void uploadLogviewFiles() {
 		File baseDir = new File(m_dumpBaseDir, "outbox");
 		final List<String> paths = new ArrayList<String>();
 
@@ -219,9 +218,8 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		if (len > 0) {
 			Cat.setup("DumpUploader");
 
-			MessageProducer cat = Cat.getProducer();
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			Transaction root = cat.newTransaction("System", "Dump-" + ip);
+			Transaction root = Cat.newTransaction("System", "Dump-" + ip);
 
 			Collections.sort(paths);
 
@@ -230,55 +228,9 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 
 			for (int i = 0; i < len; i++) {
 				String path = paths.get(i);
-				Transaction t = cat.newTransaction("System", "UploadDump");
 				File file = new File(baseDir, path);
 
-				t.addData("file", path);
-
-				FSDataOutputStream fdos = null;
-				FileInputStream fis = null;
-				try {
-					fdos = makeHdfsOutputStream(path);
-					fis = new FileInputStream(file);
-
-					long start = System.currentTimeMillis();
-
-					Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-
-					double sec = (System.currentTimeMillis() - start) / 1000d;
-					String size = Formats.forNumber().format(file.length(), "0.#", "B");
-					String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
-
-					t.addData("size", size);
-					t.addData("speed", speed);
-					t.setStatus(Message.SUCCESS);
-
-					if (!file.delete()) {
-						m_logger.warn("Can't delete file: " + file);
-					}
-				} catch (AlreadyBeingCreatedException e) {
-					Cat.logError(e);
-					t.setStatus(e);
-
-					m_logger.error(String.format("Already being created (%s)!", path), e);
-				} catch (AccessControlException e) {
-					cat.logError(e);
-					t.setStatus(e);
-					m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-				} catch (Exception e) {
-					cat.logError(e);
-					t.setStatus(e);
-					m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
-				} finally {
-					try {
-						if (fdos != null) {
-							fdos.close();
-						}
-					} catch (IOException e) {
-						Cat.logError(e);
-					}
-					t.complete();
-				}
+				uploadLogviewFile( path, file);
 
 				try {
 					Thread.sleep(100);
@@ -291,4 +243,54 @@ public class UploaderAndCleaner implements Initializable, Task, LogEnabled {
 		}
 		removeEmptyDir(baseDir);
 	}
+
+	private void uploadLogviewFile( String path, File file) {
+	   Transaction t = Cat.newTransaction("System", "UploadDump");
+	   t.addData("file", path);
+
+	   FSDataOutputStream fdos = null;
+	   FileInputStream fis = null;
+	   try {
+	   	fdos = makeHdfsOutputStream(path);
+	   	fis = new FileInputStream(file);
+
+	   	long start = System.currentTimeMillis();
+
+	   	Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+
+	   	double sec = (System.currentTimeMillis() - start) / 1000d;
+	   	String size = Formats.forNumber().format(file.length(), "0.#", "B");
+	   	String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
+
+	   	t.addData("size", size);
+	   	t.addData("speed", speed);
+	   	t.setStatus(Message.SUCCESS);
+
+	   	if (!file.delete()) {
+	   		m_logger.warn("Can't delete file: " + file);
+	   	}
+	   } catch (AlreadyBeingCreatedException e) {
+	   	Cat.logError(e);
+	   	t.setStatus(e);
+
+	   	m_logger.error(String.format("Already being created (%s)!", path), e);
+	   } catch (AccessControlException e) {
+	   	Cat.logError(e);
+	   	t.setStatus(e);
+	   	m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
+	   } catch (Exception e) {
+	   	Cat.logError(e);
+	   	t.setStatus(e);
+	   	m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+	   } finally {
+	   	try {
+	   		if (fdos != null) {
+	   			fdos.close();
+	   		}
+	   	} catch (IOException e) {
+	   		Cat.logError(e);
+	   	}
+	   	t.complete();
+	   }
+   }
 }

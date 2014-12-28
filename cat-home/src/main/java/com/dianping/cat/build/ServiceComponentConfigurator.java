@@ -9,6 +9,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
@@ -56,7 +57,6 @@ import com.dianping.cat.report.page.model.transaction.HistoricalTransactionServi
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.cached.CachedReportTask;
-import com.dianping.cat.storage.message.LocalMessageBucketManager;
 import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.storage.report.ReportBucketManager;
 

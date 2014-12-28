@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.message;
+package com.dianping.cat.consumer.dump;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +21,6 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.message.LocalMessageBucketManager;
 import com.dianping.cat.storage.message.MessageBucketManager;
 
 @RunWith(JUnit4.class)

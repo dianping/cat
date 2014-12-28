@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.message;
+package com.dianping.cat.consumer.dump;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +28,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.hadoop.hdfs.LogviewUploader;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -37,6 +38,10 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import com.dianping.cat.storage.message.LocalMessageBucket;
+import com.dianping.cat.storage.message.MessageBlock;
+import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
@@ -56,6 +61,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
+
+	@Inject
+	private LogviewUploader m_logviewUploader;
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -242,7 +250,20 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	private void moveFile(String path) throws IOException {
+	private void moveFile(String path) {
+		File file = new File(m_baseDir, path);
+		boolean success = m_logviewUploader.uploadLogviewFile(path, file);
+
+		if (success) {
+			File parent = file.getParentFile();
+			
+			file.delete();
+			parent.delete(); // delete it if empty
+			parent.getParentFile().delete(); // delete it if empty
+		}
+	}
+
+	protected void moveFileOld(String path) throws IOException {
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
 		File parent = from.getParentFile();

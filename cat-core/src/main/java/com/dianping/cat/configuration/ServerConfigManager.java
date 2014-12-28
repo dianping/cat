@@ -319,7 +319,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isHdfsOn() {
-		return !m_config.getStorage().isHdfsDisabled();
+		if (m_config != null) {
+			return !m_config.getStorage().isHdfsDisabled();
+		} else {
+			return false;
+		}
 	}
 
 	public boolean isInitialized() {

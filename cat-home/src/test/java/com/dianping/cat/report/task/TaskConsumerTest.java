@@ -15,6 +15,11 @@ public class TaskConsumerTest {
 	public static class TaskConsumerWrap extends TaskConsumer {
 
 		final List<Integer> replayer = new ArrayList<Integer>();
+		
+		@Override
+      public boolean checkTime() {
+			return true;
+      }
 
 		@Override
 		protected Task findDoingTask(String ip) {
@@ -97,6 +102,12 @@ public class TaskConsumerTest {
 		taskList.add(t);
 
 		TaskConsumerWrap consumer = new TaskConsumerWrap() {
+			
+			@Override
+	      public boolean checkTime() {
+				return true;
+	      }
+
 			@Override
 			protected Task findDoingTask(String ip) {
 				super.findDoingTask(ip);
@@ -145,6 +156,12 @@ public class TaskConsumerTest {
 		taskList.add(t);
 
 		TaskConsumerWrap consumer = new TaskConsumerWrap() {
+			
+			@Override
+	      public boolean checkTime() {
+				return true;
+	      }
+
 			@Override
 			protected Task findDoingTask(String ip) {
 				super.findDoingTask(ip);
@@ -176,6 +193,11 @@ public class TaskConsumerTest {
 		taskList.add(t);
 
 		final TaskConsumerWrap consumer = new TaskConsumerWrap() {
+			
+			@Override
+	      public boolean checkTime() {
+				return true;
+	      }
 
 			@Override
 			protected boolean updateTodoToDoing(Task todo) {
@@ -227,6 +249,11 @@ public class TaskConsumerTest {
 		taskList.add(t);
 
 		final TaskConsumerWrap consumer = new TaskConsumerWrap() {
+			
+			@Override
+	      public boolean checkTime() {
+				return true;
+	      }
 
 			@Override
 			protected boolean updateTodoToDoing(Task todo) {
