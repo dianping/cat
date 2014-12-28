@@ -104,7 +104,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 		while (active) {
 			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("AlertThirdPartyBuilder", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("ReloadTask", "AlertThirdPartyBuilder");
 
 			try {
 				buildAlertEntities(current);
