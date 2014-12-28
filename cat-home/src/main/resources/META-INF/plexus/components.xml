@@ -2022,13 +2022,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
-					<role-hint>local</role-hint>
-					<field-name>m_localBucketManager</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
 					<role-hint>hdfs</role-hint>
-					<field-name>m_hdfsBucketManager</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>

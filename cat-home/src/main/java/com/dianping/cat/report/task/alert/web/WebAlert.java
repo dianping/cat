@@ -199,8 +199,7 @@ public class WebAlert extends BaseAlert {
 		String group = item.getGroup();
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 		List<Rule> rules = queryRuelsForUrl(url);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = calAlreadyMinute();
 
 		for (Rule rule : rules) {
 			String id = rule.getId();

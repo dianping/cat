@@ -314,6 +314,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
 			m_length = 1;
+			m_knownExceptions = new HashSet<Throwable>();
 		}
 
 		public void add(Message message) {

@@ -164,8 +164,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
-		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
+		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(MessageCodec.class, "html"));
 
 		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class));

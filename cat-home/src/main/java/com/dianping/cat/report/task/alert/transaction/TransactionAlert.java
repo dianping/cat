@@ -144,8 +144,7 @@ public class TransactionAlert extends BaseAlert {
 		String domain = fields.get(0);
 		String type = fields.get(1);
 		String name = fields.get(2);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = calAlreadyMinute();
 
 		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, rule.getConfigs(), minute);
 		for (AlertResultEntity alertResult : alertResults) {

@@ -135,7 +135,8 @@ public class BusinessAlert extends BaseAlert {
 	      String metricKey, MetricType type) {
 		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
 		int ruleMinute = resultPair.getKey();
-		Cat.logEvent("RecordMetric", metricKey + "," + type.getName(), Event.SUCCESS, minute + "," + ruleMinute);
+		Cat.logEvent("RecordMetric", metricKey + "," + type.getName(), Event.SUCCESS, "minute=" + minute + "&ruleMinute"
+		      + ruleMinute);
 		double[] value = reportGroup.extractData(minute, ruleMinute, metricKey, type);
 		double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, type);
 		List<Condition> conditions = resultPair.getValue();
@@ -149,8 +150,7 @@ public class BusinessAlert extends BaseAlert {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
 		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
 		int maxMinute = monitorConfigs.calMaxMinute();
 		MetricReportGroup reportGroup = prepareDatas(productId, maxMinute);
