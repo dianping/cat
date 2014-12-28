@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -19,6 +20,9 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ReportBucketManager m_bucketManager;
 
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
@@ -65,6 +69,8 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 			m_taskManager.createTask(startTime, domain, Constants.HIGH_LOAD_REPORT, TaskProlicy.DAILY);
 			m_taskManager.createTask(startTime, domain, Constants.CACHED_REPORT, TaskProlicy.DAILY);
 		}
+		// clear local report 
+		m_bucketManager.clearOldReports();
 		return true;
 	}
 

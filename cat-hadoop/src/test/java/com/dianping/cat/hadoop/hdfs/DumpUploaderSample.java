@@ -11,7 +11,6 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
@@ -43,9 +42,6 @@ public class DumpUploaderSample extends ComponentTestCase {
 		analyzer.analyze(queue);
 		analyzer.doCheckpoint(true);
 
-		UploaderAndCleaner uploader = lookup(UploaderAndCleaner.class);
-
-		uploader.setSleepPeriod(0);
 		Thread.sleep(30 * 100 * 1000);
 	}
 

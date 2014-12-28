@@ -95,7 +95,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerStatisticManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
-		
+
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class)//
 		      .req(LogviewUploader.class));
@@ -168,7 +168,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, StateDelegate.class).req(TaskManager.class));
+		all.add(C(ReportDelegate.class, ID, StateDelegate.class).req(TaskManager.class, ReportBucketManager.class));
 
 		return all;
 	}

@@ -35,7 +35,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 			Date date = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			final String today = sdf.format(date);
-			final String yesterday = sdf.format(new Date(date.getTime() - 24 * 60 * 60 * 1000L));
+			final String week = sdf.format(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000L));
 
 			Scanners.forDir().scan(reportDir, new FileMatcher() {
 				@Override
@@ -48,7 +48,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 				}
 
 				private boolean shouldDeleteReport(String path) {
-					if (path.indexOf(today) > -1 || path.indexOf(yesterday) > -1) {
+					if (path.indexOf(today) > -1 || path.indexOf(week) > -1) {
 						return false;
 					} else {
 						return true;
