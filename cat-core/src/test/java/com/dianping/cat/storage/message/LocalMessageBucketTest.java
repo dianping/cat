@@ -87,8 +87,6 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		Assert.assertEquals(true, from.exists());
 		Assert.assertEquals(true, fromIdx.exists());
 
-		bucket.archive();
-
 		Assert.assertEquals(false, from.exists());
 		Assert.assertEquals(false, fromIdx.exists());
 
