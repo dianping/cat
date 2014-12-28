@@ -134,9 +134,10 @@ public class BusinessAlert extends BaseAlert {
 	protected List<AlertResultEntity> processMetricType(int minute, List<Config> configs, MetricReportGroup reportGroup,
 	      String metricKey, MetricType type) {
 		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
-		int maxMinute = resultPair.getKey();
-		double[] value = reportGroup.extractData(minute, maxMinute, metricKey, type);
-		double[] baseline = m_baselineService.queryBaseline(minute, maxMinute, metricKey, type);
+		int ruleMinute = resultPair.getKey();
+		Cat.logEvent("RecordMetric", metricKey + "," + type.getName(), Event.SUCCESS, minute + "," + ruleMinute);
+		double[] value = reportGroup.extractData(minute, ruleMinute, metricKey, type);
+		double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, type);
 		List<Condition> conditions = resultPair.getValue();
 
 		return m_dataChecker.checkData(value, baseline, conditions);
@@ -157,8 +158,9 @@ public class BusinessAlert extends BaseAlert {
 		if (reportGroup.isDataReady()) {
 			for (MetricItemConfig config : configs) {
 				try {
-					processMetricItemConfig(config, minute, monitorConfigs.getConfigs().get(config.getId()), productLine,
-					      reportGroup);
+					Map<MetricType, List<Config>> itemConfig = monitorConfigs.getConfigs().get(config.getId());
+
+					processMetricItemConfig(config, minute, itemConfig, productLine, reportGroup);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

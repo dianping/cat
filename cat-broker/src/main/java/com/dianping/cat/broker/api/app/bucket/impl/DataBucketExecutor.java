@@ -120,9 +120,10 @@ public class DataBucketExecutor implements BucketExecutor {
 					}
 				}
 				batchInsert(commands, datas);
-				m_flushCountDownLatch.countDown();
 			} catch (Exception e) {
 				Cat.logError(e);
+			} finally {
+				m_flushCountDownLatch.countDown();
 			}
 		}
 		m_datas.clear();
