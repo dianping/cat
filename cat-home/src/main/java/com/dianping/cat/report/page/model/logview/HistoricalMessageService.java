@@ -45,7 +45,7 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		boolean eligibale = !request.getPeriod().isCurrent();
+		boolean eligibale = request.getPeriod().isHistorical();
 
 		if (eligibale) {
 			String messageId = request.getProperty("messageId");

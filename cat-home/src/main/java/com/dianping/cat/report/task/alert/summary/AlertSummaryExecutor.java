@@ -60,7 +60,7 @@ public class AlertSummaryExecutor {
 		}
 		date = normalizeDate(date);
 
-		Transaction t = Cat.newTransaction("AlertSummary", domain);
+		Transaction t = Cat.newTransaction("Summary", domain);
 
 		try {
 			StringBuilder builder = new StringBuilder();

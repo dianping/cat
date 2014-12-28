@@ -33,11 +33,6 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 	@Override
 	protected String getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		String messageId = request.getProperty("messageId");
-
-		if (messageId == null) {
-			return null;
-		}
-
 		MessageTree tree = m_bucketManager.loadMessage(messageId);
 
 		if (tree != null) {
