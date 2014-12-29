@@ -74,8 +74,8 @@
 							<li id="appRule"><a href="/cat/s/config?op=appRule">
 								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
 								<b class="arrow"></b></li>
-							<li id="appComparisonConfigUpdate"><a href="/cat/s/config?op=appComparisonConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>美团对比</a>
+							<li id="appComparisonConfigUpdate" style="display:none"><a href="/cat/s/config?op=appComparisonConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>对比美团</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
