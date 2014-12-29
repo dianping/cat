@@ -73,6 +73,7 @@ public class AppAlert implements Task {
 		if (startMinute < 0 && endMinute < 0) {
 			String period = m_sdf.format(queryDayPeriod(-1).getTime());
 			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
+			
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		} else if (startMinute < 0 && endMinute >= 0) {
 			String last = m_sdf.format(queryDayPeriod(-1).getTime());
@@ -81,10 +82,12 @@ public class AppAlert implements Task {
 			CommandQueryEntity currentQueryEntity = new CommandQueryEntity(current + ";" + conditions + ";;");
 			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
 			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
+			
 			datas = mergerArray(lastDatas, currentDatas);
 		} else if (startMinute >= 0) {
 			String period = m_sdf.format(queryDayPeriod(0).getTime());
 			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
+			
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		}
 		return datas;

@@ -29,8 +29,8 @@ import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
 
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
- * for a couple of hours.
+ * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
+ * one machine for a couple of hours.
  */
 public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	@Inject
@@ -52,13 +52,11 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 	private Logger m_logger;
 
 	@Override
-	public void cleanup() {
-		long currentStartTime = ModelPeriod.CURRENT.getStartTime();
-		long threshold = currentStartTime - 2 * Constants.HOUR;
+	public void cleanup(long time) {
 		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
 		for (long startTime : startTimes) {
-			if (startTime <= threshold) {
+			if (startTime <= time) {
 				m_reports.remove(startTime);
 			}
 		}
@@ -98,7 +96,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		if (reports == null) {
 			reports = new LinkedHashMap<String, T>();
 		}
-		
+
 		T report = reports.get(domain);
 
 		if (report == null && createIfNotExist) {
@@ -261,7 +259,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
 		} finally {
-			cleanup();
+			cleanup(startTime);
 			t.complete();
 
 			if (bucket != null) {

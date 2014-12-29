@@ -63,10 +63,10 @@ public class DefaultReportManagerTest {
 		m_manager.getHourlyReport(m_start-3*hour, DOMAIN1, true);
 		m_manager.getHourlyReport(m_start-4*hour, DOMAIN2, true);
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
-		m_manager.cleanup();
+		m_manager.cleanup(m_start);
 
 		Map<String, String> reports = m_manager.getHourlyReports(m_start);
-		Assert.assertEquals(1, reports.size());
+		Assert.assertEquals(0, reports.size());
 	}
 
 	@Test
