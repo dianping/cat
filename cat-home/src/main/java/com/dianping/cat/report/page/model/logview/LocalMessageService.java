@@ -26,6 +26,9 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 	@Inject("html")
 	private MessageCodec m_codec;
 
+	@Inject("waterfull")
+	private MessageCodec m_waterfull;
+
 	public LocalMessageService() {
 		super("logview");
 	}
@@ -39,10 +42,7 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
-				// to work around a plexus injection bug
-				MessageCodec codec = lookup(MessageCodec.class, "waterfall");
-
-				codec.encode(tree, buf);
+				m_waterfull.encode(tree, buf);
 			} else {
 				m_codec.encode(tree, buf);
 			}

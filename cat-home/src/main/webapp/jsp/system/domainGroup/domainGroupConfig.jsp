@@ -12,18 +12,19 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script src="/cat/js/jquery.nestable.min.js"></script>
 	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+	<style>
+		.dd-handle, .dd2-content{
+			margin:0px 0px 0px 0px;
+		}
+	</style>
 	<div class="page-content-area">
-		<button id="add-domain" type="button" class="btn btn-success btn-sm">添加新项目</button>
+		&nbsp;&nbsp;&nbsp;&nbsp;<button id="add-domain" type="button" class="btn btn-success btn-sm">添加新项目</button>
 		<button id="submit" type="button" class="btn btn-primary btn-sm">提交</button>
 		<div class="row">
 			<div class="col-xs-12 col-md-8">
 			<div class="dd" id="nestable">
 				<ol class="dd-list" id="domain-list">
 					<li class="dd-item dd2-item delete-item domain-item">
-						<div class="dd-handle dd2-handle">
-							<i class="normal-icon ace-icon fa fa-check-square-o blue bigger-150"></i>
-							<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
-						</div>
 						<div class="dd2-content">
 							&nbsp;&nbsp;项目: &nbsp;&nbsp;<input class="domain-id" value="default"></input>
 							<div class="pull-right action-buttons">
@@ -39,10 +40,6 @@
 						</div>
 						<ol class="dd-list group-list">
 							<li class="dd-item dd2-item delete-item group-item" data-id="22">
-								<div class="dd-handle dd2-handle">
-									<i class="normal-icon ace-icon fa fa-users blue bigger-150"></i>
-									<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
-								</div>
 								<div class="dd2-content">
 									&nbsp;&nbsp;Group: &nbsp;&nbsp;<input value="default" class="group-id"></input>
 									<div class="pull-right action-buttons">
@@ -58,10 +55,6 @@
 								</div>
 								<ol class="dd-list ip-list">
 									<li class="dd-item dd2-item delete-item ip-item" data-id="22">
-										<div class="dd-handle dd2-handle">
-											<i class="normal-icon ace-icon fa fa-desktop blue bigger-150"></i>
-											<i class="drag-icon ace-icon fa fa-arrows bigger-125"></i>
-										</div>
 										<div class="dd2-content">
 											&nbsp;&nbsp;机器IP: &nbsp;&nbsp;<input value="default" class="ip-id"></input>
 											<div class="pull-right action-buttons">
@@ -81,9 +74,6 @@
 			</div>
 		</div>
 	</div>
-	<form name="form" id="form" method="post" action="${model.pageUri}?op=domainGroupConfigUpdate" style="display:none">
-		<input name="content" id="content" value=""/>
-	</form>
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {

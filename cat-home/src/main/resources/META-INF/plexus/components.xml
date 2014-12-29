@@ -2011,7 +2011,13 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
+					<role-hint>plain-text</role-hint>
+					<field-name>m_codec</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>waterfall</role-hint>
+					<field-name>m_waterfull</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -3532,6 +3538,10 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>waterfull</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>

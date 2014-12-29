@@ -20,7 +20,9 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 import com.dianping.cat.report.page.model.cross.CompositeCrossService;
 import com.dianping.cat.report.page.model.cross.HistoricalCrossService;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
@@ -162,7 +164,8 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
 		      .req(MessageConsumer.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
-		      .req(MessageCodec.class, "html"));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfull"));
 		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
 		      .req(MessageCodec.class, "html"));
