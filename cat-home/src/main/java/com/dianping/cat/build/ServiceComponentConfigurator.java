@@ -165,10 +165,11 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageConsumer.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
-		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfull"));
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
 		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
-		      .req(MessageCodec.class, "html"));
+		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
 
 		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class));
 		return all;

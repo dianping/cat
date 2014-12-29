@@ -12,6 +12,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.core.HtmlMessageCodec;
+import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -23,11 +25,11 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 	@Inject(LocalMessageBucketManager.ID)
 	private MessageBucketManager m_bucketManager;
 
-	@Inject("html")
+	@Inject(HtmlMessageCodec.ID)
 	private MessageCodec m_html;
 
-	@Inject("waterfull")
-	private MessageCodec m_waterfull;
+	@Inject(WaterfallMessageCodec.ID)
+	private MessageCodec m_waterfall;
 
 	public LocalMessageService() {
 		super("logview");
@@ -42,7 +44,7 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
-				m_waterfull.encode(tree, buf);
+				m_waterfall.encode(tree, buf);
 			} else {
 				m_html.encode(tree, buf);
 			}
