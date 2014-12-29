@@ -15,6 +15,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
+import com.dianping.cat.home.group.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -91,12 +92,19 @@ public class GlobalConfigProcessor {
 			break;
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 			String domainGroupContent = payload.getContent();
+
 			if (!StringUtils.isEmpty(domainGroupContent)) {
-				model.setOpState(m_domainGroupConfigManger.insert(domainGroupContent));
+				model.setOpState(m_domainGroupConfigManger.insertFromJson(domainGroupContent));
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_domainGroupConfigManger.getDomainGroup().toString());
+
+			String content = new DefaultJsonBuilder().build(m_domainGroupConfigManger.getDomainGroup());
+			if (content != null) {
+				content = content.replaceAll("\\r\\n", "");
+			}
+
+			model.setContent(content);
 			break;
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();

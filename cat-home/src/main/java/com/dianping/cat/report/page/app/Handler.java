@@ -66,7 +66,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private CrashLogProcessor m_crashLogProcessor;
-	
+
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
@@ -191,17 +191,21 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
-				try {
-					Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name);
+				if (m_manager.isNameDuplicate(name)) {
+					setUpdateResult(model, 3);
+				} else {
+					try {
+						Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name);
 
-					if (addCommandResult.getKey()) {
-						setUpdateResult(model, 1);
-						m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
-					} else {
+						if (addCommandResult.getKey()) {
+							setUpdateResult(model, 1);
+							m_appRuleConfigManager.addDefultRule(name, addCommandResult.getValue());
+						} else {
+							setUpdateResult(model, 2);
+						}
+					} catch (Exception e) {
 						setUpdateResult(model, 2);
 					}
-				} catch (Exception e) {
-					setUpdateResult(model, 2);
 				}
 			}
 			break;
@@ -317,7 +321,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_manager.queryCommands());
-		
+
 		m_normalizePayload.normalize(model, payload);
 	}
 
@@ -331,6 +335,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case 2:
 			model.setContent("{\"status\":500}");
+			break;
+		case 3:
+			model.setContent("{\"status\":500, \"info\":\"name is duplicated.\"}");
 			break;
 		}
 	}

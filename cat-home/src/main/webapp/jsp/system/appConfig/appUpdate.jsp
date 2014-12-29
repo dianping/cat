@@ -28,17 +28,30 @@
 				}
 				return;
 			}
-			if(title==undefined){
-				title = "";
-			}
-			if(domain==undefined){
-				domain="";
-			}
-			if(id==undefined){
-				id="";
-			}
 			
-			window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id;
+			$.ajax({
+				async: false,
+				type: "get",
+				dataType: "json",
+				url: "/cat/s/config?op=appNameCheck&name="+name,
+				success : function(response, textStatus) {
+					if(response['isNameUnique']){
+						if(title==undefined){
+							title = "";
+						}
+						if(domain==undefined){
+							domain="";
+						}
+						if(id==undefined){
+							id="";
+						}
+						
+						window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id;
+					}else{
+						alert("该名称已存在，请修改名称！");
+					}
+				}
+			});
 		})
 	</script>
 	

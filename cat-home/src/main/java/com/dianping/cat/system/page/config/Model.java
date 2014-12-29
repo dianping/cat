@@ -11,7 +11,6 @@ import java.util.Map;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -20,6 +19,7 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
@@ -133,6 +133,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<Integer, Speed> m_speeds;
 
 	private Speed m_speed;
+
+	private String m_nameUniqueResult;
 
 	private ThirdPartyConfig m_thirdPartyConfig;
 
@@ -374,6 +376,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_metricItemConfigRule;
 	}
 
+	public String getNameUniqueResult() {
+		return m_nameUniqueResult;
+	}
+
 	public Map<Integer, Item> getNetworks() {
 		return m_networks;
 	}
@@ -576,6 +582,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setMetricItemConfigRule(String metricItemConfigRule) {
 		m_metricItemConfigRule = metricItemConfigRule;
+	}
+
+	public void setNameUniqueResult(String nameUniqueResult) {
+		m_nameUniqueResult = nameUniqueResult;
 	}
 
 	public void setNetworks(Map<Integer, Item> networks) {
