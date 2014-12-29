@@ -99,6 +99,9 @@ public class GlobalConfigProcessor {
 			}
 
 			String content = new DefaultJsonBuilder().build(m_domainGroupConfigManger.getDomainGroup());
+			if (content != null) {
+				content = content.replaceAll("\\r\\n", "");
+			}
 
 			model.setContent(content);
 			break;
