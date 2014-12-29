@@ -280,7 +280,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	public String queryProductLineByDomain(String domain) {
 		String productLine = m_domainToProductLines.get(domain);
 
-		return productLine == null ? "Default" : productLine;
+		return productLine;
 	}
 
 	public ProductLine queryProductLine(String name) {

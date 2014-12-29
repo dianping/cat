@@ -152,7 +152,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		String group = m_productLineConfigManager.queryProductLineByDomain(domain);
-		MetricReport report = findOrCreateReport(group);
+		MetricReport report = null;
+
+		if (group != null) {
+			report = findOrCreateReport(group);
+		}
 
 		Message message = tree.getMessage();
 
@@ -181,7 +185,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			report = findOrCreateReport(group);
 		}
-		if (config != null) {
+		if (config != null && report != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			String key = m_configManager.buildMetricKey(domain, METRIC, metricName);
