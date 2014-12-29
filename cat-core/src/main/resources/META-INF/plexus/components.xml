@@ -67,11 +67,6 @@
 		<component>
 			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
 			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.aggregation.AggregationHandler</role>

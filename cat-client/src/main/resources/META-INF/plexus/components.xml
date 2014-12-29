@@ -39,10 +39,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>tcp-socket-sender</role-hint>
+			<role>com.dianping.cat.message.io.TcpSocketSender</role>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
@@ -67,6 +65,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.io.TcpSocketSender</role>
 				</requirement>
 			</requirements>
 		</component>

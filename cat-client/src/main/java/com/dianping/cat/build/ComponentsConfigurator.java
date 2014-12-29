@@ -51,9 +51,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StatusUpdateTask.class) //
 		      .req(MessageStatistics.class, ClientConfigManager.class));
 
-		// all.add(C(MmapConsumerTask.class) //
-		// .req(ClientConfigManager.class, MessageManager.class));
-
 		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
