@@ -194,6 +194,7 @@ public class Handler implements PageHandler<Context> {
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
+		case APP_NAME_CHECK:
 		case APP_LIST:
 		case APP_UPDATE:
 		case APP_SUBMIT:

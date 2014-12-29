@@ -68,43 +68,27 @@ public class AppConfigManager implements Initializable {
 	public static final String ACTIVITY_PREFIX = "http://tgapp.dianping.com/activity/";
 
 	public Pair<Boolean, Integer> addCommand(String domain, String title, String name) throws Exception {
-		Command command = new Command();
-
-		command.setDomain(domain);
-		command.setTitle(title);
-		command.setName(name);
-
-		boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
-		int commandId;
-		if (isActivityCommand) {
-			commandId = findAvailableId(1000, 1200);
+		if (isNameDuplicate(name)) {
+			return new Pair<Boolean, Integer>(false, -1);
 		} else {
-			commandId = findAvailableId(1, 999);
-		}
-		command.setId(commandId);
+			Command command = new Command();
 
-		m_config.addCommand(command);
-		return new Pair<Boolean, Integer>(storeConfig(), commandId);
-	}
+			command.setDomain(domain);
+			command.setTitle(title);
+			command.setName(name);
 
-	public boolean updateCommand(int id, String domain, String name, String title) {
-		Command command = m_config.findCommand(id);
-
-		command.setDomain(domain);
-		command.setName(name);
-		command.setTitle(title);
-		return storeConfig();
-	}
-
-	public boolean isSuccessCode(int commandId, int code) {
-		Map<Integer, Code> codes = queryCodeByCommand(commandId);
-
-		for (Code c : codes.values()) {
-			if (c.getId() == code) {
-				return (c.getStatus() == 0);
+			boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
+			int commandId;
+			if (isActivityCommand) {
+				commandId = findAvailableId(1000, 1200);
+			} else {
+				commandId = findAvailableId(1, 999);
 			}
+			command.setId(commandId);
+
+			m_config.addCommand(command);
+			return new Pair<Boolean, Integer>(storeConfig(), commandId);
 		}
-		return false;
 	}
 
 	public boolean containCommand(int id) {
@@ -115,6 +99,20 @@ public class AppConfigManager implements Initializable {
 		} else {
 			return false;
 		}
+	}
+
+	public boolean deleteCode(int id, int codeId) {
+		Command command = m_config.getCommands().get(id);
+
+		if (command != null) {
+			command.getCodes().remove(codeId);
+		}
+		return storeConfig();
+	}
+
+	public boolean deleteCommand(int id) {
+		m_config.removeCommand(id);
+		return storeConfig();
 	}
 
 	public Pair<Boolean, List<Integer>> deleteCommand(String domain, String name) {
@@ -132,37 +130,6 @@ public class AppConfigManager implements Initializable {
 			m_config.removeCommand(id);
 		}
 		return new Pair<Boolean, List<Integer>>(storeConfig(), needDeleteIds);
-	}
-
-	public boolean deleteCommand(int id) {
-		m_config.removeCommand(id);
-		return storeConfig();
-	}
-
-	public boolean updateCode(int id, Code code) {
-		Command command = m_config.findCommand(id);
-
-		if (command != null) {
-			command.getCodes().put(code.getId(), code);
-
-			return storeConfig();
-		}
-		return false;
-	}
-
-	public Code queryCode(int commandId, int codeId) {
-		Command command = m_config.findCommand(commandId);
-
-		if (command != null) {
-			Code code = command.findCode(codeId);
-
-			if (code == null) {
-				code = m_config.findCode(codeId);
-			}
-			return code;
-		} else {
-			return null;
-		}
 	}
 
 	private int findAvailableId(int startIndex, int endIndex) throws Exception {
@@ -193,6 +160,10 @@ public class AppConfigManager implements Initializable {
 		return m_cities;
 	}
 
+	public Map<Integer, Code> getCodes() {
+		return m_config.getCodes();
+	}
+
 	public Map<String, Integer> getCommands() {
 		return m_commands;
 	}
@@ -207,19 +178,6 @@ public class AppConfigManager implements Initializable {
 
 	public Map<Integer, Command> getRawCommands() {
 		return m_config.getCommands();
-	}
-
-	public Map<Integer, Code> getCodes() {
-		return m_config.getCodes();
-	}
-
-	public boolean deleteCode(int id, int codeId) {
-		Command command = m_config.getCommands().get(id);
-
-		if (command != null) {
-			command.getCodes().remove(codeId);
-		}
-		return storeConfig();
 	}
 
 	@Override
@@ -262,6 +220,41 @@ public class AppConfigManager implements Initializable {
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
+		}
+	}
+
+	public boolean isNameDuplicate(String name) {
+		for (Command command : m_config.getCommands().values()) {
+			if (command.getName().equals(name)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public boolean isSuccessCode(int commandId, int code) {
+		Map<Integer, Code> codes = queryCodeByCommand(commandId);
+
+		for (Code c : codes.values()) {
+			if (c.getId() == code) {
+				return (c.getStatus() == 0);
+			}
+		}
+		return false;
+	}
+
+	public Code queryCode(int commandId, int codeId) {
+		Command command = m_config.findCommand(commandId);
+
+		if (command != null) {
+			Code code = command.findCode(codeId);
+
+			if (code == null) {
+				code = m_config.findCode(codeId);
+			}
+			return code;
+		} else {
+			return null;
 		}
 	}
 
@@ -369,6 +362,26 @@ public class AppConfigManager implements Initializable {
 			return false;
 		}
 		return true;
+	}
+
+	public boolean updateCode(int id, Code code) {
+		Command command = m_config.findCommand(id);
+
+		if (command != null) {
+			command.getCodes().put(code.getId(), code);
+
+			return storeConfig();
+		}
+		return false;
+	}
+
+	public boolean updateCommand(int id, String domain, String name, String title) {
+		Command command = m_config.findCommand(id);
+
+		command.setDomain(domain);
+		command.setName(name);
+		command.setTitle(title);
+		return storeConfig();
 	}
 
 	public class ConfigReloadTask implements Task {

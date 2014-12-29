@@ -9,9 +9,9 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.Condition;
@@ -41,10 +41,12 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		Condition condition = new Condition();
 		SubCondition descPerSubcon = new SubCondition();
 		SubCondition descValSubcon = new SubCondition();
+		SubCondition flucPerSubcon = new SubCondition();
 
 		descPerSubcon.setType("DescPer").setText("50");
 		descValSubcon.setType("DescVal").setText("100");
-		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon);
+		flucPerSubcon.setType("FluDescPer").setText("20");
+		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon).addSubCondition(flucPerSubcon);
 		config.addCondition(condition);
 
 		return config;

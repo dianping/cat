@@ -17,6 +17,7 @@ import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.group.entity.Group;
 import com.dianping.cat.home.group.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.JsonBuilder;
 
 public class DomainGroupConfigManager implements Initializable {
 
@@ -69,6 +70,17 @@ public class DomainGroupConfigManager implements Initializable {
 	public boolean insert(String xml) {
 		try {
 			m_domainGroup = DefaultSaxParser.parse(xml);
+
+			return storeConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	public boolean insertFromJson(String json) {
+		try {
+			m_domainGroup = (DomainGroup) new JsonBuilder().parse(json, DomainGroup.class);
 
 			return storeConfig();
 		} catch (Exception e) {

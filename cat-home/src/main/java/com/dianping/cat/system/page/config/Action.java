@@ -133,6 +133,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	WEB_RULE_DELETE("webRuleDelete"),
 
+	APP_NAME_CHECK("appNameCheck"),
+
 	APP_LIST("appList"),
 
 	APP_UPDATE("appUpdate"),

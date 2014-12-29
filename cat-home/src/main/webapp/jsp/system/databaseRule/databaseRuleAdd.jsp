@@ -139,7 +139,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
-			initRuleConfigs();
+			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			$('#alert_config').addClass('active open');
 			$('#databaseRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();

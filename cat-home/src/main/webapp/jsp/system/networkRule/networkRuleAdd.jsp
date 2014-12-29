@@ -141,7 +141,7 @@
 		        }
 		    }
 		 $(document).ready(function() {
-			initRuleConfigs();
+			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			$('#alert_config').addClass('active open');
 			$('#networkRuleConfigList').addClass('active');
 			var newMetric = $('#metricItem').clone();
