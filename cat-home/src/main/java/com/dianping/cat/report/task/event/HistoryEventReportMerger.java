@@ -18,7 +18,7 @@ public class HistoryEventReportMerger extends EventReportMerger {
 		old.getRanges().clear();
 		other.getRanges().clear();
 		super.mergeName(old, other);
-		old.setTps(old.getTps() / (m_duration * 24));
+		old.setTps(old.getTotalCount() / (m_duration * 24 * 3600));
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class HistoryEventReportMerger extends EventReportMerger {
 	@Override
 	public void mergeType(EventType old, EventType other) {
 		super.mergeType(old, other);
-		old.setTps(old.getTps() / (m_duration * 24));
+		old.setTps(old.getTotalCount() / (m_duration * 24 * 3600));
 	}
 
 	public HistoryEventReportMerger setDuration(double duration) {

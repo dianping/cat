@@ -21,7 +21,7 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
 		other.getDurations().clear();
 		other.getRanges().clear();
 		super.mergeName(old, other);
-		old.setTps(old.getTps() / (m_duration * 24));
+		old.setTps(old.getTotalCount() / (m_duration * 24 * 3600));
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
 	@Override
 	public void mergeType(TransactionType old, TransactionType other) {
 		super.mergeType(old, other);
-		old.setTps(old.getTps() / (m_duration * 24));
+		old.setTps(old.getTotalCount() / (m_duration * 24 * 3600));
 	}
 
 	public HistoryTransactionReportMerger setDuration(double duration) {
