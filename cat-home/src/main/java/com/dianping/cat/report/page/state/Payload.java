@@ -19,6 +19,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("sort")
 	private String m_sort;
 
+	@FieldMeta("show")
+	private boolean m_show = false;
+
 	public Payload() {
 		super(ReportPage.STATE);
 	}
@@ -41,6 +44,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sort;
 	}
 
+	public boolean isShow() {
+		return m_show;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY);
 	}
@@ -52,6 +59,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
+	}
+
+	public void setShow(boolean show) {
+		m_show = show;
 	}
 
 	public void setSort(String sort) {

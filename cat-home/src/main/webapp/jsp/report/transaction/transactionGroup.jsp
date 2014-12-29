@@ -17,7 +17,7 @@
 	title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&group=${payload.group}&domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
 	navUrlPrefix="op=groupReport&group=${payload.group}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
@@ -182,7 +182,7 @@
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
 							<a
-										href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.id}"
+										href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.name}"
 										class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>

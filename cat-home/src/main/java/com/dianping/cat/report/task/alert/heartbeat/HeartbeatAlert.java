@@ -89,18 +89,21 @@ public class HeartbeatAlert extends BaseAlert {
 		}
 	}
 
-	private HeartbeatReport generateCurrentReport(String domain) {
-		long currentMill = System.currentTimeMillis();
-		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
+	private int calMaxMinuteFromMap(Map<String, List<Config>> configs) {
+		int maxMinute = 0;
 
-		return generateReport(domain, currentHourMill);
-	}
+		for (List<Config> tmpConfigs : configs.values()) {
+			for (Config config : tmpConfigs) {
+				for (Condition condition : config.getConditions()) {
+					int tmpMinute = condition.getMinute();
 
-	private HeartbeatReport generateLastReport(String domain) {
-		long currentMill = System.currentTimeMillis();
-		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
-
-		return generateReport(domain, lastHourMill);
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
+				}
+			}
+		}
+		return maxMinute;
 	}
 
 	private void convertDeltaMetrics(Map<String, double[]> map) {
@@ -191,6 +194,20 @@ public class HeartbeatAlert extends BaseAlert {
 		return map;
 	}
 
+	private HeartbeatReport generateCurrentReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
+
+		return generateReport(domain, currentHourMill);
+	}
+
+	private HeartbeatReport generateLastReport(String domain) {
+		long currentMill = System.currentTimeMillis();
+		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
+
+		return generateReport(domain, lastHourMill);
+	}
+
 	private HeartbeatReport generateReport(String domain, long date) {
 		ModelRequest request = new ModelRequest(domain, date)//
 		      .setProperty("ip", Constants.ALL);
@@ -219,25 +236,8 @@ public class HeartbeatAlert extends BaseAlert {
 		return m_ruleConfigManager;
 	}
 
-	private int calMaxMinuteFromMap(Map<String, List<Config>> configs) {
-		int maxMinute = 0;
-
-		for (List<Config> tmpConfigs : configs.values()) {
-			for (Config config : tmpConfigs) {
-				for (Condition condition : config.getConditions()) {
-					int tmpMinute = condition.getMinute();
-
-					if (tmpMinute > maxMinute) {
-						maxMinute = tmpMinute;
-					}
-				}
-			}
-		}
-		return maxMinute;
-	}
-
 	private void processDomain(String domain) {
-		int minute = getAlreadyMinute();
+		int minute = calAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 		int domainMaxMinute = calMaxMinuteFromMap(configsMap);
 		HeartbeatReport currentReport = null;
@@ -269,46 +269,49 @@ public class HeartbeatAlert extends BaseAlert {
 			for (Entry<String, List<Config>> entry : configsMap.entrySet()) {
 				String metric = entry.getKey();
 				List<Config> configs = entry.getValue();
-				Pair<Integer, List<Condition>> resultPair = queryCheckMinuteAndConditions(configs);
-				int maxMinute = resultPair.getKey();
-				List<Condition> conditions = resultPair.getValue();
+				Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
-				if (minute >= maxMinute - 1) {
-					for (Machine machine : currentReport.getMachines().values()) {
-						String ip = machine.getIp();
-						double[] arguments = generateArgumentMap(machine).get(metric);
+				if (conditionPair != null) {
+					int maxMinute = conditionPair.getKey();
+					List<Condition> conditions = conditionPair.getValue();
 
-						if (arguments != null) {
-							double[] values = extract(arguments, maxMinute, minute);
+					if (minute >= maxMinute - 1) {
+						for (Machine machine : currentReport.getMachines().values()) {
+							String ip = machine.getIp();
+							double[] arguments = generateArgumentMap(machine).get(metric);
 
-							processMeitrc(domain, ip, metric, conditions, maxMinute, values);
-						}
-					}
-				} else if (minute < 0) {
-					for (Machine machine : lastReport.getMachines().values()) {
-						String ip = machine.getIp();
-						double[] arguments = generateArgumentMap(machine).get(metric);
-
-						if (arguments != null) {
-							double[] values = extract(arguments, maxMinute, 59);
-
-							processMeitrc(domain, ip, metric, conditions, maxMinute, values);
-						}
-					}
-				} else {
-					for (Machine lastMachine : lastReport.getMachines().values()) {
-						String ip = lastMachine.getIp();
-						Machine currentMachine = currentReport.getMachines().get(ip);
-
-						if (currentMachine != null) {
-							Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
-							Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
-
-							if (lastHourArguments != null && currentHourArguments != null) {
-								double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
-								      maxMinute, minute);
+							if (arguments != null) {
+								double[] values = extract(arguments, maxMinute, minute);
 
 								processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+							}
+						}
+					} else if (minute < 0) {
+						for (Machine machine : lastReport.getMachines().values()) {
+							String ip = machine.getIp();
+							double[] arguments = generateArgumentMap(machine).get(metric);
+
+							if (arguments != null) {
+								double[] values = extract(arguments, maxMinute, 59);
+
+								processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+							}
+						}
+					} else {
+						for (Machine lastMachine : lastReport.getMachines().values()) {
+							String ip = lastMachine.getIp();
+							Machine currentMachine = currentReport.getMachines().get(ip);
+
+							if (currentMachine != null) {
+								Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
+								Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
+
+								if (lastHourArguments != null && currentHourArguments != null) {
+									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
+									      maxMinute, minute);
+
+									processMeitrc(domain, ip, metric, conditions, maxMinute, values);
+								}
 							}
 						}
 					}
@@ -358,7 +361,7 @@ public class HeartbeatAlert extends BaseAlert {
 		}
 
 		while (active) {
-			Transaction t = Cat.newTransaction("alert-heartbeat", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertHeartbeat", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

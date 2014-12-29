@@ -162,8 +162,8 @@ public class Handler implements PageHandler<Context> {
 		String[] str = url.split("\\/");
 		StringBuilder sb = new StringBuilder();
 
-		if (str.length > 4) {
-			for (int i = 0; i <= 4; i++) {
+		if (str.length > 3) {
+			for (int i = 0; i <= 3; i++) {
 				sb.append(str[i]).append("/");
 			}
 

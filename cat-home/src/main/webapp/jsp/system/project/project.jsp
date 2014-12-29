@@ -16,6 +16,18 @@
 			$('#projects_config').addClass('active open');
 			$('#projects').addClass('active');
 			
+			if("${payload.action.name}" == 'updateSubmit') {
+				var state = '${model.opState}';
+				if(state=='Success'){
+					$('#state').html('操作成功');
+				}else{
+					$('#state').html('操作失败');
+				}
+				setInterval(function(){
+					$('#state').html('&nbsp;');
+				},3000);
+			}
+			
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 				_renderMenu: function( ul, items ) {
 					var that = this,
@@ -57,11 +69,20 @@
 			);
 		});
 	</script>
-	<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:20%;MARGIN-TOP:5px;">
-		<form class="wrap_search" style="margin-bottom:0px;">
+	<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:10%;MARGIN-TOP:5px;padding:5px;">
+		<form id="wrap_search" style="margin-bottom:0px;">
 		<div class="input-group">
+			<c:if test="${not empty payload.project.domain}">
+				<c:set var="domain" value="${payload.project.domain}"/>
+			</c:if>
+			<c:if test="${not empty payload.domain}">
+				<c:set var="domain" value="${payload.domain}"/>
+			</c:if>
+			<c:if test="${empty domain}">
+				<c:set var="domain" value="cat"/>
+			</c:if>
 			<span class="input-icon" style="width:300px;">
-				<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+				<input type="text" placeholder="input domain for search" value="${domain}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
 				<i class="ace-icon fa fa-search nav-search-icon"></i>
 				</span>
 				<span class="input-group-btn" style="width:50px">
@@ -75,44 +96,60 @@
 	<br/>
 	<br/>
 	<br/>
-	
-	<div>
-	<table class="table table-striped table-condensed table-bordered">
+	<div style="padding:5px;">
+	<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
+	<table class="table table-striped table-condensed ">
+		<input type="hidden" name="project.id" value="${model.project.id}" />
+		<input type="hidden" name="project.domain" value="${model.project.domain}" />
+		<input type="hidden" name="project.bu" value="${model.project.bu}" />
+		<input type="hidden" name="project.cmdbProductline" value="${model.project.cmdbProductline}" />
+		<input type="hidden" name="project.level" value="${model.project.level}" />
+		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
-			<td width="20%">项目名称</td>
+			<td style="width:10%;">项目名称</td>
 			<td>${model.project.domain}</td>
+			<td style="color:red">注意：如果CMDB中存在该项目信息，信息修改会被CMDB同步更新覆盖掉。</td>
 		</tr>
 		<tr>
-			<td width="20%">CMDB项目名称</td>
-			<td>${model.project.cmdbDomain}</td>
+			<td style="width:10%;">CMDB项目名称</td>
+			<td><input type="name" name="project.cmdbDomain" value="${model.project.cmdbDomain}" required/></td>
+			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
-			<td width="20%">所属部门</td>
-			<td>${model.project.department}</td>
+			<td style="width:10%;">所属部门</td>
+			<td><input type="name" name="project.department" value="${model.project.department}" required/></td>
+			<td style='color:red'>（一级分类）建议填写，主站、手机、团购、搜索、架构</td>
 		</tr>
 		<tr>
-			<td width="20%">产品线</td>
-			<td>${model.project.projectLine}</td>
+			<td style="width:10%;">产品线</td>
+			<td><input type="name" name="project.projectLine" value="${model.project.projectLine}" required/></td>
+			<td style='color:red'>（二级分类）由各自业务线决定,建议字数小于4</td>
 		</tr>
 		<tr>
-			<td width="20%">负责人</td>
-			<td>${model.project.owner}</td>
+			<td style="width:10%;">负责人</td>
+			<td><input type="name" name="project.owner" value="${model.project.owner}"/></td>
+			<td>可选字段</td>
 		</tr>
 		<tr>
-			<td width="20%">项目组邮件</td>
-			<td>${model.project.email}</td>
+			<td style="width:10%;">项目组邮件</td>
+			<td><input type="name" name="project.email" size="50" value="${model.project.email}"/></td>
+			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td width="20%">项目组号码</td>
-			<td>${model.project.phone}</td>
+			<td>项目组号码</td>
+			<td><input type="name" name="project.phone" size="50" value="${model.project.phone}"/></td>
+			<td>可选字段(多个，逗号分割)</td>
 		</tr>
-		<tr><td width="20%">操作</td>
-		<td><a href="?op=update&projectId=${model.project.id}" class="btn btn-primary btn-xs">
-						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=projectDelete&projectId=${model.project.id}" class="btn btn-danger btn-xs delete" >
-						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
+		<tr>
+			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /><h4 class="text-center text-danger" id="state">&nbsp;</h4></td>
 		</tr>
 	</table>
-						
-		</div>
+</form>
+
+</div>
 </a:config>
+<style>
+.input-icon>.ace-icon {
+	z-index: 0;
+}
+</style>

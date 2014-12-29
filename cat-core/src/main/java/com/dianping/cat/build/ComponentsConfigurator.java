@@ -35,10 +35,6 @@ import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.LocalMessageBucket;
-import com.dianping.cat.storage.message.LocalMessageBucketManager;
-import com.dianping.cat.storage.message.MessageBucket;
-import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -80,12 +76,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
 
 		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
-
-		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
-		      .is(PER_LOOKUP) //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
-		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 

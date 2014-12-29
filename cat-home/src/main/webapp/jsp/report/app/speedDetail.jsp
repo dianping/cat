@@ -2,12 +2,10 @@
 <table >
 			<tr>
 				<th align=left>
-					<div id="datetimepicker1" class="input-append  date" style="float:left;">
-			           &nbsp;时间<input id="time" name="time"  size="13" 
-			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
-			              <i class="ace-icon fa fa-calendar"></i>
-			           </span>
-			        </div>
+						<div style="float:left;">
+							&nbsp;日期
+						<input type="text" id="time" style="width:110px;"/>
+						</div>
 						&nbsp;页面 <select id="page" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>
@@ -57,12 +55,10 @@
 		<table id="history" style="display: none">
 			<tr>
 				<th align=left>
-					<div id="datetimepicker2" class="input-append  date" style="float:left;">
-			           &nbsp;时间<input id="time2" name="time2"  size="13" 
-			              data-format="yyyy-MM-dd" type="text"></input> <span class="add-on"  >
-			              <i class="ace-icon fa fa-calendar"></i>
-			           </span>
-			        </div>
+					<div style="float:left;">
+							&nbsp;开始
+						<input type="text" id="time2" style="width:110px;"/>
+						</div>
 					 &nbsp;页面 <select id="page2" style="width: 240px;">
 						<c:forEach var="item" items="${model.pages}" varStatus="status">
 								<option value='${item}'>${item}</option>

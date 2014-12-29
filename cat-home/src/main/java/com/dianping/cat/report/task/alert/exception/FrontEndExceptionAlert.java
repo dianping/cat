@@ -21,6 +21,24 @@ public class FrontEndExceptionAlert extends ExceptionAlert {
 		return AlertType.FrontEndException.getName();
 	}
 
+	private void handleFrontEndException(Item frontEndItem) {
+		List<AlertException> alertExceptions = m_alertBuilder.buildFrontEndAlertExceptions(frontEndItem);
+
+		for (AlertException exception : alertExceptions) {
+			try {
+				String metricName = exception.getName();
+				AlertEntity entity = new AlertEntity();
+
+				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
+				entity.setMetric(metricName).setType(getName()).setGroup(metricName);
+				m_sendManager.addAlert(entity);
+				System.out.println(entity);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		boolean active = true;
@@ -31,7 +49,7 @@ public class FrontEndExceptionAlert extends ExceptionAlert {
 		}
 		while (active) {
 			long current = System.currentTimeMillis();
-			Transaction t = Cat.newTransaction("FrontEndException", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertFrontEnd", TimeHelper.getMinuteStr());
 
 			try {
 				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));
@@ -61,24 +79,6 @@ public class FrontEndExceptionAlert extends ExceptionAlert {
 				}
 			} catch (InterruptedException e) {
 				active = false;
-			}
-		}
-	}
-
-	private void handleFrontEndException(Item frontEndItem) {
-		List<AlertException> alertExceptions = m_alertBuilder.buildFrontEndAlertExceptions(frontEndItem);
-
-		for (AlertException exception : alertExceptions) {
-			try {
-				String metricName = exception.getName();
-				AlertEntity entity = new AlertEntity();
-
-				entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-				entity.setMetric(metricName).setType(getName()).setGroup(metricName);
-				m_sendManager.addAlert(entity);
-				System.out.println(entity);
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 	}

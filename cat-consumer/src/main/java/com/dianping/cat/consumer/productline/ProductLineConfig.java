@@ -23,7 +23,9 @@ public enum ProductLineConfig {
 
 	SYSTEM_PRODUCTLINE("systemProductLine", "系统监控", "system-"),
 
-	DATABASE_PRODUCTLINE("databaseProductline", "数据库监控", "db-");
+	DATABASE_PRODUCTLINE("databaseProductline", "数据库监控", "db-"),
+
+	CDN_PRODUCTLINE("cdnProductLine", "CDN监控", "cdn");
 
 	private String m_configName;
 
@@ -96,6 +98,8 @@ public enum ProductLineConfig {
 			if (m_prefixs.isEmpty()) {
 				return true;
 			} else if (m_prefixs.contains(Constants.BROKER_SERVICE) && Constants.BROKER_SERVICE.equals(productline)) {
+				return true;
+			} else if (m_prefixs.contains("cdn") && "cdn".equals(productline)) {
 				return true;
 			} else {
 				for (String prefix : m_prefixs) {

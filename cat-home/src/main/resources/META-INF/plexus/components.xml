@@ -2022,13 +2022,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
-					<role-hint>local</role-hint>
-					<field-name>m_localBucketManager</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
 					<role-hint>hdfs</role-hint>
-					<field-name>m_hdfsBucketManager</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -2331,7 +2325,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>business</role-hint>
+			<role-hint>Business</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2344,7 +2338,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>network</role-hint>
+			<role-hint>Network</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2357,7 +2351,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>database</role-hint>
+			<role-hint>Database</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.DatabaseContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2370,7 +2364,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>system</role-hint>
+			<role-hint>System</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.SystemContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2383,7 +2377,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>exception</role-hint>
+			<role-hint>Exception</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2396,7 +2390,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>heartbeat</role-hint>
+			<role-hint>Heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.HeartbeatContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2409,7 +2403,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>thirdParty</role-hint>
+			<role-hint>ThirdParty</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2422,7 +2416,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>frontEnd</role-hint>
+			<role-hint>FrontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2435,7 +2429,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>app</role-hint>
+			<role-hint>App</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.AppContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2451,7 +2445,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>web</role-hint>
+			<role-hint>Web</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.WebContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2467,7 +2461,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
-			<role-hint>transaction</role-hint>
+			<role-hint>Transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.receiver.TransactionContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2484,7 +2478,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>business</role-hint>
+			<role-hint>Business</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
@@ -2500,22 +2494,22 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>network</role-hint>
+			<role-hint>Network</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>database</role-hint>
+			<role-hint>Database</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DatabaseDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>heartbeat</role-hint>
+			<role-hint>Heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.HeartbeatDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>exception</role-hint>
+			<role-hint>Exception</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator</implementation>
 			<requirements>
 				<requirement>
@@ -2528,12 +2522,12 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>system</role-hint>
+			<role-hint>System</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>thirdParty</role-hint>
+			<role-hint>ThirdParty</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator</implementation>
 			<requirements>
 				<requirement>
@@ -2543,22 +2537,22 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>frontEnd</role-hint>
+			<role-hint>FrontEnd</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>app</role-hint>
+			<role-hint>App</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.AppDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>web</role-hint>
+			<role-hint>Web</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.WebDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
-			<role-hint>transaction</role-hint>
+			<role-hint>Transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.decorator.TransactionDecorator</implementation>
 		</component>
 		<component>
@@ -2621,15 +2615,6 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-			<implementation>com.dianping.cat.report.task.alert.DefaultDataExtractor</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.BaselineService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 			<implementation>com.dianping.cat.report.task.alert.sender.AlertManager</implementation>
 			<requirements>
@@ -2650,6 +2635,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2679,7 +2667,7 @@
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
+					<role>com.dianping.cat.report.service.BaselineService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2705,9 +2693,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2731,9 +2716,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2764,9 +2746,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2801,9 +2780,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2853,9 +2829,6 @@
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2886,9 +2859,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataExtractor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3936,9 +3906,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

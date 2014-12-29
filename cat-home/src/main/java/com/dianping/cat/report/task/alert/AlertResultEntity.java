@@ -18,24 +18,24 @@ public class AlertResultEntity {
 		this.m_alertTime = new Date();
 	}
 
-	public Date getAlertTime() {
-		return m_alertTime;
-	}
-
 	public String getAlertLevel() {
 		return m_alertLevel;
+	}
+
+	public Date getAlertTime() {
+		return m_alertTime;
 	}
 
 	public String getContent() {
 		return m_content;
 	}
 
-	public void setContent(String content) {
-		this.m_content = content;
-	}
-
 	public boolean isTriggered() {
 		return m_isTriggered;
+	}
+
+	public void setContent(String content) {
+		this.m_content = content;
 	}
 
 }

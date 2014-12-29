@@ -7,10 +7,14 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Par;
+import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.group.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
@@ -62,11 +66,8 @@ public class GlobalConfigProcessor {
 			model.setProjects(queryAllProjects());
 			model.setProject(m_projectService.findByDomain(domain));
 			break;
-		case PROJECT_UPDATE:
-			model.setProject(queryProjectById(payload.getProjectId()));
-			break;
 		case PROJECT_UPDATE_SUBMIT:
-			updateProject(payload);
+			model.setOpState(updateProject(payload));
 			domain = payload.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {
@@ -114,12 +115,34 @@ public class GlobalConfigProcessor {
 			}
 			model.setBug(m_bugConfigManager.getBugConfig().toString());
 			break;
-		case THIRD_PARTY_CONFIG_UPDATE:
-			String thirdPartyConfig = payload.getContent();
-			if (!StringUtils.isEmpty(thirdPartyConfig)) {
-				model.setOpState(m_thirdPartyConfigManager.insert(thirdPartyConfig));
+		case THIRD_PARTY_RULE_CONFIGS:
+			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
+			break;
+		case THIRD_PARTY_RULE_UPDATE:
+			Pair<Http, Socket> pair = queryThirdPartyConfigInfo(payload);
+
+			if (pair != null) {
+				model.setHttp(pair.getKey());
+				model.setSocket(pair.getValue());
 			}
-			model.setContent(m_thirdPartyConfigManager.getConfig().toString());
+			break;
+		case THIRD_PARTY_RULE_SUBMIT:
+			String type = payload.getType();
+
+			if ("http".equals(type)) {
+				m_thirdPartyConfigManager.insert(buildHttp(payload));
+			}
+			if ("socket".equals(type)) {
+				m_thirdPartyConfigManager.insert(payload.getSocket());
+			}
+			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
+			break;
+		case THIRD_PARTY_RULE_DELETE:
+			type = payload.getType();
+			String ruleId = payload.getRuleId();
+
+			m_thirdPartyConfigManager.remove(ruleId, type);
+			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
 			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
@@ -131,6 +154,37 @@ public class GlobalConfigProcessor {
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
+	}
+
+	private Http buildHttp(Payload payload) {
+		Http http = payload.getHttp();
+		String[] pars = payload.getPars().split(",");
+
+		for (int i = 0; i < pars.length; i++) {
+			if (StringUtils.isNotEmpty(pars[i])) {
+				Par par = new Par();
+				par.setId(pars[i].trim());
+				http.addPar(par);
+			}
+		}
+		return http;
+	}
+
+	private Pair<Http, Socket> queryThirdPartyConfigInfo(Payload payload) {
+		String ruleId = payload.getRuleId();
+		String type = payload.getType();
+		Http http = null;
+		Socket socket = null;
+
+		if (StringUtils.isNotEmpty(ruleId)) {
+			if ("http".equals(type)) {
+				http = m_thirdPartyConfigManager.queryHttp(ruleId);
+			} else if ("socket".equals(type)) {
+				socket = m_thirdPartyConfigManager.querySocket(ruleId);
+			}
+			return new Pair<Http, Socket>(http, socket);
+		}
+		return null;
 	}
 
 	public List<Project> queryAllProjects() {
@@ -156,22 +210,15 @@ public class GlobalConfigProcessor {
 		return result;
 	}
 
-	private Project queryProjectById(int projectId) {
-		Project project = null;
-		try {
-			project = m_projectService.findProject(projectId);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return project;
-	}
-
-	private void updateProject(Payload payload) {
+	private boolean updateProject(Payload payload) {
 		Project project = payload.getProject();
 		project.setKeyId(project.getId());
 
-		m_projectService.updateProject(project);
-		m_manager.getProjects().put(project.getDomain(), project);
+		boolean success = m_projectService.updateProject(project);
+		if (success) {
+			m_manager.getProjects().put(project.getDomain(), project);
+		}
+		return success;
 	}
 
 	public static class ProjectCompartor implements Comparator<Project> {

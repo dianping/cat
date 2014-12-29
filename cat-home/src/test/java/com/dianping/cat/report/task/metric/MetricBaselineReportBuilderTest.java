@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.service.BaselineService;
+import com.dianping.cat.report.task.alert.MetricType;
 
 public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 
@@ -61,6 +62,12 @@ public class MetricBaselineReportBuilderTest extends ComponentTestCase {
 				Assert.assertEquals(235669.78113, baseline.getDataInDoubleArray()[0], 0.001);
 			}
 		}
+
+		@Override
+      public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, MetricType type) {
+	      // TODO Auto-generated method stub
+	      return null;
+      }
 	}
 
 	@Test

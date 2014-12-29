@@ -90,7 +90,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
 			final StringBuilder sb = new StringBuilder();
-			FileSystem fs = m_manager.getFileSystem("dump", sb);
+			FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 
 			sb.append('/').append(path);
 

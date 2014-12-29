@@ -65,7 +65,7 @@
 						<td><input type="text" class="input-xlarge" placeholder="被聚合对象的示例" name="aggregation.sample" required value="${model.aggregationRule.sample}"/></td>
 					</tr> --%>
 					<tr>
-						<td style='text-align:center' colspan='2'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="submit" /></td>
+						<td style='text-align:center' colspan='2'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form> 

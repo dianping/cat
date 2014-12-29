@@ -11,25 +11,19 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alert.Model" scope="request" />
 
 <a:body>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap-datetimepicker.css">
-	<script src="${model.webapp}/assets/js/bootstrap.datetimepicker.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 		<div id="queryBar">
-			<div id="startDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-	           开始<input id="startTime" name="startTime"  size="16" 
-	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>"  type="text"></input> <span class="add-on">
-	              <i class="ace-icon fa fa-calendar"></i>
-	           </span>
-	        </div>
-	        <div id="endDatePicker" class="input-append  date" style="margin-bottom: 0px;float:left;">
-	           &nbsp;&nbsp;结束<input id="endTime" name="endTime"  size="16" 
-	              data-format="yyyy-MM-dd hh:mm" value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>"  type="text"></input> <span class="add-on">
-	              <i class="ace-icon fa fa-calendar"></i>
-	           </span>
-	        </div>
+			 <div style="float:left;">
+		&nbsp;开始
+		<input type="text" id="startTime" style="width:150px;"/>
+		结束
+		<input type="text" id="endTime" style="width:150px;"/>
 			&nbsp;&nbsp;项目
 			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
-			<div>
+			<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
+			<div style="float:left;">
 				<label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="business"> 业务告警
 				</label><label class="btn btn-info btn-sm">
@@ -85,8 +79,18 @@
 			$(document).ready(function(){
 				initType("${payload.alertType}");
 				
-				$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-				$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+				$('#startTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
+				});
+				$('#endTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
+				});
+				$('#startTime').val("${w:format(payload.startTime,'yyyy-MM-dd HH:mm')}");
+				$('#endTime').val("${w:format(payload.endTime,'yyyy-MM-dd HH:mm')}");
 				
 				$('#System_report').addClass('active open');
 				$('#system_alert').addClass('active');

@@ -29,7 +29,7 @@ public class UrlPatternConfigManager implements Initializable {
 	private UrlPatternHandler m_handler;
 
 	@Inject
-	private ContentFetcher m_getter;
+	private ContentFetcher m_fetcher;
 
 	private int m_configId;
 
@@ -59,7 +59,7 @@ public class UrlPatternConfigManager implements Initializable {
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

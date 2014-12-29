@@ -1,5 +1,6 @@
 package com.dianping.cat.report.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -26,6 +27,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
+import com.dianping.cat.message.Event;
 
 public abstract class AbstractReportService<T> implements LogEnabled, ReportService<T> {
 
@@ -131,6 +133,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 						domains.add(report.getDomain());
 					}
 				}
+				Cat.logEvent("FindDomain", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(date) + " " + domains.size(),
+				      Event.SUCCESS, domains.toString());
 				m_domains.put(date, domains);
 			} catch (DalException e) {
 				Cat.logError(e);

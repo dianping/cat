@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.zip.GZIPInputStream;
 
-class MessageBlockReader {
+public class MessageBlockReader {
 	private RandomAccessFile m_indexFile;
 
 	private RandomAccessFile m_dataFile;

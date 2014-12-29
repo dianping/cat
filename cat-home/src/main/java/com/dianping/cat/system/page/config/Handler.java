@@ -100,13 +100,15 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		switch (action) {
 		case PROJECT_ALL:
-		case PROJECT_UPDATE:
 		case PROJECT_UPDATE_SUBMIT:
 		case PROJECT_DELETE:
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 		case BUG_CONFIG_UPDATE:
-		case THIRD_PARTY_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
+		case THIRD_PARTY_RULE_CONFIGS:
+		case THIRD_PARTY_RULE_UPDATE:
+		case THIRD_PARTY_RULE_SUBMIT:
+		case THIRD_PARTY_RULE_DELETE:
 			m_globalConfigProcessor.process(action, payload, model);
 			break;
 

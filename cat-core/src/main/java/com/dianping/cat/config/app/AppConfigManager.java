@@ -37,7 +37,7 @@ public class AppConfigManager implements Initializable {
 	protected ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_getter;
+	private ContentFetcher m_fetcher;
 
 	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
 
@@ -192,7 +192,7 @@ public class AppConfigManager implements Initializable {
 			refreshData();
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

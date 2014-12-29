@@ -2,6 +2,7 @@
 <model model-package="com.dianping.cat.home.alert.config"
 	enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true">
 	<entity name="alert-config" root="true">
+		<attribute name="enable" value-type="boolean" />
 		<entity-ref name="receiver" type="map" names="receivers"
 			method-find-or-create='true' />
 	</entity>

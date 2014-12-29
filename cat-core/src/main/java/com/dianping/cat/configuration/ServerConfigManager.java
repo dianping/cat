@@ -46,6 +46,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
+	public static final String DUMP_DIR = "dump";
+
 	public boolean discardTransaction(Transaction t) {
 		String type = t.getType();
 		String name = t.getName();
@@ -319,7 +321,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isHdfsOn() {
-		return !m_config.getStorage().isHdfsDisabled();
+		if (m_config != null) {
+			return !m_config.getStorage().isHdfsDisabled();
+		} else {
+			return false;
+		}
 	}
 
 	public boolean isInitialized() {
@@ -339,6 +345,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return m_config.isLocalMode();
 		} else {
 			return true;
+		}
+	}
+
+	public boolean isOnline() {
+		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if (address.equals("10.1.6.128")) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -379,7 +395,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public  boolean  validateDomain(String domain) {
+	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 

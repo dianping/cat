@@ -9,7 +9,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
@@ -95,23 +94,15 @@ public class WeixinSender implements Sender {
 				String responseText = builder.toString();
 
 				if (responseText.equals(SUCCESS_TEXT)) {
-					Cat.logEvent("WeiXinSend", "send_success", Event.SUCCESS, "send success:" + domain + " " + title + " "
-					      + content + " " + weixins + " " + responseText);
 					return true;
 				} else {
-					Cat.logEvent("WeiXinSend", "send_fail", Event.SUCCESS, "send fail:" + domain + " " + title + " "
-					      + content + " " + weixins + " " + responseText);
 					return false;
 				}
 			} else {
-				Cat.logEvent("WeiXinSend", "network_fail", Event.SUCCESS, "network fail:" + domain + " " + title + " "
-				      + content + " " + weixins);
 				return false;
 			}
-		} catch (Exception ex) {
-			Cat.logEvent("WeiXinSend", "error", Event.SUCCESS, "error:" + domain + " " + title + " " + content + " "
-			      + weixins);
-			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, ex);
+		} catch (Exception e) {
+			Cat.logError("send weixin error:" + domain + " " + title + " " + content + " " + weixins, e);
 			return false;
 		}
 	}

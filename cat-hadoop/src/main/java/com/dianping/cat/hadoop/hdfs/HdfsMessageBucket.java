@@ -14,6 +14,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -83,7 +84,7 @@ public class HdfsMessageBucket implements MessageBucket {
 
 		public MessageBlockReader(FileSystemManager manager, String dataFile) throws IOException {
 			StringBuilder sb = new StringBuilder();
-			FileSystem fs = manager.getFileSystem("dump", sb);
+			FileSystem fs = manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 			Path basePath = new Path(sb.toString());
 
 			m_indexFile = fs.open(new Path(basePath, dataFile + ".idx"));

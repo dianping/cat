@@ -2,20 +2,13 @@
 		<table width="100%">
 			<tr>
 				<th class="left">
-				<div id="datetimepicker1" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;开始<input id="startTime" name="time"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
-		        <div id="datetimepicker2" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;结束<input id="endTime" name="time2"  size="8" 
-		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-clock-o "></i>
-		           </span>
-		        </div>
+					<div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+						结束
+						<input type="text" id="endTime" style="width:60px;"/></div>
 				&nbsp;组&nbsp;<select style="width: 100px;" name="group" id="group">
-				</select> URL <select style="width: 500px;" name="url" id="url"></select>
+				</select> URL <select style="width: 600px;" name="url" id="url"></select>
 				</th>
 				</tr>
 				<tr>
@@ -48,20 +41,14 @@
 		<table id="history" style="display: none">
 			<tr>
 				<th class="left">
-					<div id="datetimepicker3" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		          &nbsp;开始<input id="startTime2" name="time"  size="16" 
-		              data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-calendar"></i>
-		           </span>
-		        </div>
-		        <div id="datetimepicker4" class="input-append  date" style="margin-bottom: 0px;float:left;">
-		           &nbsp;结束<input id="endTime2" name="time2"  size="8" 
-		              data-format="hh:mm" type="text"></input> <span class="add-on">
-		              <i class="ace-icon fa fa-clock-o"></i>
-		           </span>
-		        </div>
+				<div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="startTime2" style="width:150px;"/>
+						结束
+						<input type="text" id="endTime2" style="width:60px;"/>
+				</div>
 				&nbsp;组&nbsp;<select style="width: 100px;" name="group2" id="group2">
-				</select> URL <select style="width: 500px;" name="url2" id="url2"></select>
+				</select> URL <select style="width: 600px;" name="url2" id="url2"></select>
 				</th></tr> 
 				<tr>
 				<th class="left">

@@ -12,7 +12,7 @@
 
 <a:historyReport title="History Report"
 	navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
-	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
@@ -185,7 +185,7 @@
 					<td class="longText" style="text-align: left; white-space: normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${item.id}${model.customDate}"
+					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.type}&name=${item.name}${model.customDate}"
 											class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise>
