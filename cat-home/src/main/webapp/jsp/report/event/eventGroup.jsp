@@ -115,7 +115,7 @@ $(document).ready(function() {
 					<td class="left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a	href="?op=groupGraphs&domain=${report.domain}&op=groupReport&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
+						<a	href="?op=groupGraphs&domain=${report.domain}&op=groupReport&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 					</c:when>
 					</c:choose>
 					&nbsp;&nbsp;${e.id}

@@ -22,8 +22,8 @@ import com.dianping.cat.report.task.alert.AlarmRule;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.MetricReportGroup;
+import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
@@ -155,17 +155,17 @@ public class BusinessAlert extends BaseAlert {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
 		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
-		int minute = calAlreadyMinute();
+		int nowMinute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
-		int maxMinute = monitorConfigs.calMaxMinute();
-		MetricReportGroup reportGroup = prepareDatas(productId, maxMinute);
+		int maxMinute = monitorConfigs.calMaxRuleMinute();
+		MetricReportGroup reportGroup = m_service.prepareDatas(productId, nowMinute, maxMinute);
 
 		if (reportGroup.isDataReady()) {
 			for (MetricItemConfig config : configs) {
 				try {
 					Map<MetricType, List<Config>> itemConfig = monitorConfigs.getConfigs().get(config.getId());
 
-					processMetricItemConfig(config, minute, itemConfig, productLine, reportGroup);
+					processMetricItemConfig(config, nowMinute, itemConfig, productLine, reportGroup);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

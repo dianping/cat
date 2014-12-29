@@ -14,18 +14,14 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
-import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.alert.MetricReportGroup.State;
 import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 
 public abstract class BaseAlert implements Task, LogEnabled {
@@ -63,13 +59,6 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	protected MetricReport fetchMetricReport(String product, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
-		MetricReport report = m_service.invoke(request);
-
-		return report;
-	}
-
 	protected abstract Map<String, ProductLine> getProductlines();
 
 	protected abstract BaseRuleConfigManager getRuleConfigManager();
@@ -99,82 +88,52 @@ public abstract class BaseAlert implements Task, LogEnabled {
 		}
 	}
 
-	protected MetricReportGroup prepareDatas(String product, int duration) {
-		int minute = calAlreadyMinute();
-		MetricReport currentReport = null;
-		MetricReport lastReport = null;
-		boolean dataReady = false;
-		State type = null;
-
-		if (minute >= duration - 1) {
-			type = State.CURRENT;
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
-
-			if (currentReport != null) {
-				dataReady = true;
-			}
-		} else if (minute < 0) {
-			type = State.LAST;
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
-
-			if (lastReport != null) {
-				dataReady = true;
-			}
-		} else {
-			type = State.CURRENT_LAST;
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
-
-			if (lastReport != null && currentReport != null) {
-				dataReady = true;
-			}
-		}
-		MetricReportGroup reports = new MetricReportGroup();
-
-		reports.setType(type).setLast(lastReport).setCurrent(currentReport).setDataReady(dataReady);
-		return reports;
-	}
-
 	protected void processProductLine(ProductLine productLine) {
 		int minute = calAlreadyMinute();
 		String product = productLine.getId();
 		AlarmRule alarmRule = getRuleConfigManager().queryConfigs(product);
-		int maxMinute = alarmRule.calMaxMinute();
-		MetricReportGroup reports = prepareDatas(product, maxMinute);
+		int nowMinute = calAlreadyMinute();
+		int maxRuleMinute = alarmRule.calMaxRuleMinute();
 
-		if (reports.isDataReady()) {
-			for (Entry<String, MetricItem> metricItem : reports.getMetricItem().entrySet()) {
-				try {
-					String metricKey = metricItem.getKey();
-					String metricName = parseMetricId(metricKey);
-					List<Map<MetricType, List<Config>>> detailRules = alarmRule.findDetailRules(metricName);
+		if (maxRuleMinute > 0) {
+			MetricReportGroup reports = m_service.prepareDatas(product, nowMinute, maxRuleMinute);
 
-					for (Map<MetricType, List<Config>> rule : detailRules) {
-						for (Entry<MetricType, List<Config>> entry : rule.entrySet()) {
-							Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(
-							      entry.getValue());
+			if (reports.isDataReady()) {
+				for (Entry<String, MetricItem> metricItem : reports.getMetricItem().entrySet()) {
+					try {
+						String metricKey = metricItem.getKey();
+						String metricName = parseMetricId(metricKey);
+						List<Map<MetricType, List<Config>>> detailRules = alarmRule.findDetailRules(metricName);
 
-							if (conditionPair != null) {
-								int ruleMinute = conditionPair.getKey();
-								MetricType dateType = entry.getKey();
-								double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
+						for (Map<MetricType, List<Config>> rule : detailRules) {
+							for (Entry<MetricType, List<Config>> entry : rule.entrySet()) {
+								Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(
+								      entry.getValue());
 
-								List<Condition> conditions = conditionPair.getValue();
-								List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
+								if (conditionPair != null) {
+									int ruleMinute = conditionPair.getKey();
+									MetricType dateType = entry.getKey();
+									double[] value = reports.extractData(minute, ruleMinute, metricKey, dateType);
 
-								if (results.size() > 0) {
-									updateAlertStatus(product, metricKey);
-									sendAlerts(product, metricName, results);
+									List<Condition> conditions = conditionPair.getValue();
+									List<AlertResultEntity> results = m_dataChecker.checkData(value, conditions);
+
+									if (results.size() > 0) {
+										updateAlertStatus(product, metricKey);
+										sendAlerts(product, metricName, results);
+									}
 								}
 							}
 						}
+					} catch (Exception e) {
+						Cat.logError(e);
 					}
-				} catch (Exception e) {
-					Cat.logError(e);
 				}
+			} else {
+				Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
 			}
 		} else {
-			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
+			Cat.logEvent("NoAlarmRule:" + getName(), product, Event.SUCCESS, null);
 		}
 	}
 
