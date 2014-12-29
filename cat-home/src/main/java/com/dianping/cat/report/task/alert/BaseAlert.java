@@ -81,7 +81,14 @@ public abstract class BaseAlert implements Task, LogEnabled {
 
 	protected String parseMetricId(String metricKey) {
 		try {
-			return metricKey.split(":")[2];
+			String[] items = metricKey.split(":");
+
+			if (items.length >= 3) {
+				return items[2];
+			} else {
+				Cat.logEvent("ErrorMetricName", metricKey, Event.SUCCESS, null);
+				return null;
+			}
 		} catch (Exception ex) {
 			Cat.logError("extract metric name error:" + metricKey, ex);
 			return null;
