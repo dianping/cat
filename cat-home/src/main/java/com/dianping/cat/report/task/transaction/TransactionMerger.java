@@ -7,20 +7,16 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.task.TaskHelper;
 
 public class TransactionMerger {
 
-	private TransactionReport merge(String reportDomain, List<TransactionReport> reports, boolean isDaily) {
-		TransactionReportMerger merger = null;
-		if (isDaily) {
-			merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
-		} else {
-			merger = new TransactionReportMerger(new TransactionReport(reportDomain));
-		}
+	private TransactionReport merge(String reportDomain, List<TransactionReport> reports, double duration) {
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain))
+		      .setDuration(duration);
+
 		for (TransactionReport report : reports) {
 			report.accept(merger);
 		}
@@ -28,12 +24,15 @@ public class TransactionMerger {
 		return merger.getTransactionReport();
 	}
 
-	public TransactionReport mergeForDaily(String reportDomain, List<TransactionReport> reports, Set<String> domainSet) {
-		TransactionReport transactionReport = merge(reportDomain, reports, true);
-		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
-		TransactionReport transactionReport2 = merge(reportDomain, reports, true);
+	public TransactionReport mergeForDaily(String reportDomain, List<TransactionReport> reports, Set<String> domainSet,
+	      double duration) {
+		TransactionReport transactionReport = merge(reportDomain, reports, duration);
+		TransactionReport transactionReport2 = merge(reportDomain, reports, duration);
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain))
+		      .setDuration(duration);
 		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
 		      .mergesForAllMachine(transactionReport2);
+
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
 		transactionReport.getDomainNames().addAll(domainSet);

@@ -34,7 +34,7 @@ public class TransactionDailyGraphMergerTest {
 
 	@Test
 	public void testForMergerDaily() throws Exception {
-		TransactionReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
+		TransactionReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains, 1);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerDaily.xml"), "utf-8");
 
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
