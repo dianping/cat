@@ -2011,8 +2011,8 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
+					<role-hint>html</role-hint>
+					<field-name>m_html</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>

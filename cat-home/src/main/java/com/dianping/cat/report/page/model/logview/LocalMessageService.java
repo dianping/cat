@@ -24,7 +24,7 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 	private MessageBucketManager m_bucketManager;
 
 	@Inject("html")
-	private MessageCodec m_codec;
+	private MessageCodec m_html;
 
 	@Inject("waterfull")
 	private MessageCodec m_waterfull;
@@ -44,7 +44,7 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
 				m_waterfull.encode(tree, buf);
 			} else {
-				m_codec.encode(tree, buf);
+				m_html.encode(tree, buf);
 			}
 
 			try {
