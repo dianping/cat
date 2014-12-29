@@ -77,6 +77,9 @@
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>event</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -145,6 +148,9 @@
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
 					<role-hints>
 						<role-hint>default-problem</role-hint>
@@ -199,6 +205,9 @@
 				<requirement>
 					<role>com.dianping.cat.service.ReportManager</role>
 					<role-hint>heartbeat</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -286,6 +295,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
@@ -590,6 +602,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

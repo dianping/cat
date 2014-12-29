@@ -1560,6 +1560,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1572,6 +1575,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1603,6 +1609,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1615,6 +1624,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1646,6 +1658,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1658,6 +1673,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1689,6 +1707,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1701,6 +1722,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1732,6 +1756,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1744,6 +1771,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1775,6 +1805,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1787,6 +1820,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1818,6 +1854,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1830,6 +1869,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1861,6 +1903,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1873,6 +1918,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1904,6 +1952,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1916,6 +1967,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1947,6 +2001,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1959,6 +2016,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2006,6 +2066,9 @@
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
@@ -2039,6 +2102,9 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>waterfall</role-hint>
 					<field-name>m_waterfall</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3483,6 +3549,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3494,6 +3563,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3507,6 +3579,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3519,6 +3594,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3530,6 +3608,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3552,6 +3633,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3563,6 +3647,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3576,6 +3663,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3587,6 +3677,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3600,6 +3693,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3611,6 +3707,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

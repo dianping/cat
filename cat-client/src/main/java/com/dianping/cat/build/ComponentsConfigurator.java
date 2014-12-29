@@ -14,7 +14,6 @@ import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TcpSocketSender;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -34,20 +33,19 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(ClientConfigManager.class));
-
-		all.add(C(MessageManager.class, DefaultMessageManager.class) //
-		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class));
-		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
-		      .req(MessageManager.class, MessageIdFactory.class));
 		all.add(C(MessageIdFactory.class));
 
-		all.add(C(MessageSender.class, TcpSocketSender.ID, TcpSocketSender.class) //
-		      .is(PER_LOOKUP) //
+		all.add(C(MessageManager.class, DefaultMessageManager.class) //
+		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class, MessageIdFactory.class));
+		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
+		      .req(MessageManager.class, MessageIdFactory.class));
+
+		all.add(C(TcpSocketSender.class) //
 		      .req(ClientConfigManager.class, MessageIdFactory.class) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //
-		      .req(ClientConfigManager.class));
+		      .req(ClientConfigManager.class, TcpSocketSender.class));
 
 		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
 		all.add(C(StatusUpdateTask.class) //

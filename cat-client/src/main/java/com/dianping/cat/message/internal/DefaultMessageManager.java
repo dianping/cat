@@ -40,10 +40,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageStatistics m_statistics;
 
+	@Inject
+	private MessageIdFactory m_factory;
+	
 	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
-
-	private MessageIdFactory m_factory;
 
 	private long m_throttleTimes;
 
@@ -179,7 +180,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		// initialize domain and IP address
 		try {
-			m_factory = lookup(MessageIdFactory.class);
 			m_factory.initialize(m_domain.getId());
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);

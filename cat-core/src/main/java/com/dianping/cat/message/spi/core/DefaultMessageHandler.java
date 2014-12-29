@@ -2,12 +2,11 @@ package com.dianping.cat.message.spi.core;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.spi.MessageTree;
 
-public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, LogEnabled {
+public class DefaultMessageHandler implements MessageHandler, LogEnabled {
 	@Inject
 	private MessageConsumer m_consumer;
 
@@ -20,9 +19,6 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 	@Override
 	public void handle(MessageTree tree) {
-		if (m_consumer == null) {
-			m_consumer = lookup(MessageConsumer.class);
-		}
 
 		try {
 			m_consumer.consume(tree);

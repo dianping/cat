@@ -22,6 +22,9 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
       Initializable {
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_consumer;
+	
+	@Inject
+	private ServerConfigManager m_manager;
 
 	private String m_defaultDomain = Constants.CAT;
 
@@ -63,9 +66,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 
 	@Override
 	public void initialize() throws InitializationException {
-		ServerConfigManager manager = lookup(ServerConfigManager.class);
-
-		m_defaultDomain = manager.getConsoleDefaultDomain();
+		m_defaultDomain = m_manager.getConsoleDefaultDomain();
 	}
 
 	@Override

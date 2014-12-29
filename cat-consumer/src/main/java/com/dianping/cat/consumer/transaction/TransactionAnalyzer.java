@@ -13,7 +13,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -35,9 +34,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
 
 	public static final String ID = "transaction";
 
