@@ -83,7 +83,7 @@
 		<tr>
 		
 		<c:if test="${payload.groupByField.name eq 'code'}">
-			<td>${item.id}&nbsp;&nbsp;<a  class="btn btn-sm" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
+			<td>${item.id}&nbsp;&nbsp;<a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
 		</c:if>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>

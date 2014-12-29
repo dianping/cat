@@ -27,7 +27,7 @@ public class BugConfigManager implements Initializable, LogEnabled {
 	private ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_getter;
+	private ContentFetcher m_fetcher;
 
 	private int m_configId;
 
@@ -58,7 +58,7 @@ public class BugConfigManager implements Initializable, LogEnabled {
 			m_bugConfig = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
-				String content = m_getter.getConfigContent(CONFIG_NAME);
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
 				Config config = m_configDao.createLocal();
 
 				config.setName(CONFIG_NAME);

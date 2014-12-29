@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-class MessageBlockWriter {
+public class MessageBlockWriter {
 	private RandomAccessFile m_indexFile;
 
 	private RandomAccessFile m_dataFile;

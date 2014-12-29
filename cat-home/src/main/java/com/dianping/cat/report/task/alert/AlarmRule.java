@@ -19,7 +19,7 @@ public class AlarmRule {
 		m_configs = configs;
 	}
 
-	public int calMaxMinute() {
+	public int calMaxRuleMinute() {
 		int maxMinute = 0;
 
 		for (Map<MetricType, List<Config>> subMap : m_configs.values()) {

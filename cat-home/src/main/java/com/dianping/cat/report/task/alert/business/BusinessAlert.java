@@ -16,12 +16,14 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlarmRule;
 import com.dianping.cat.report.task.alert.AlertResultEntity;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
-import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.report.task.alert.MetricReportGroup;
+import com.dianping.cat.report.task.alert.MetricType;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
@@ -35,6 +37,9 @@ public class BusinessAlert extends BaseAlert {
 	@Inject
 	protected BusinessRuleConfigManager m_ruleConfigManager;
 
+	@Inject
+	protected BaselineService m_baselineService;
+
 	private AlarmRule buildMonitorConfigs(String productline, List<MetricItemConfig> configs) {
 		Map<String, Map<MetricType, List<Config>>> monitorConfigs = new HashMap<String, Map<MetricType, List<Config>>>();
 
@@ -43,17 +48,17 @@ public class BusinessAlert extends BaseAlert {
 			String metricKey = config.getId();
 
 			if (config.isShowAvg()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.AVG);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.AVG);
 
 				monitorConfigsByItem.put(MetricType.AVG, tmpConfigs);
 			}
 			if (config.isShowCount()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.COUNT);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.COUNT);
 
 				monitorConfigsByItem.put(MetricType.COUNT, tmpConfigs);
 			}
 			if (config.isShowSum()) {
-				List<Config> tmpConfigs = getRuleConfigManager().queryConfigs(productline, metricKey, MetricType.SUM);
+				List<Config> tmpConfigs = m_ruleConfigManager.queryConfigs(productline, metricKey, MetricType.SUM);
 
 				monitorConfigsByItem.put(MetricType.SUM, tmpConfigs);
 			}
@@ -128,13 +133,20 @@ public class BusinessAlert extends BaseAlert {
 
 	protected List<AlertResultEntity> processMetricType(int minute, List<Config> configs, MetricReportGroup reportGroup,
 	      String metricKey, MetricType type) {
-		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
-		int maxMinute = resultPair.getKey();
-		double[] value = reportGroup.extractData(minute, maxMinute, metricKey, type);
-		double[] baseline = m_baselineService.queryBaseline(minute, maxMinute, metricKey, type);
-		List<Condition> conditions = resultPair.getValue();
+		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
-		return m_dataChecker.checkData(value, baseline, conditions);
+		if (conditionPair != null) {
+			int ruleMinute = conditionPair.getKey();
+			Cat.logEvent("BussinessMetric", metricKey + "," + type.getName(), Event.SUCCESS, "minute=" + minute
+			      + "&ruleMinute=" + ruleMinute);
+			double[] value = reportGroup.extractData(minute, ruleMinute, metricKey, type);
+			double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, type);
+			List<Condition> conditions = conditionPair.getValue();
+
+			return m_dataChecker.checkData(value, baseline, conditions);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -143,22 +155,23 @@ public class BusinessAlert extends BaseAlert {
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
 		      ProductLineConfig.METRIC_PRODUCTLINE);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int nowMinute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
-		int maxMinute = monitorConfigs.calMaxMinute();
-		boolean isDataReady = false;
-		MetricReportGroup reportGroup = prepareDatas(productId, maxMinute);
+		int maxMinute = monitorConfigs.calMaxRuleMinute();
+		MetricReportGroup reportGroup = m_service.prepareDatas(productId, nowMinute, maxMinute);
 
-		if (isDataReady) {
+		if (reportGroup.isDataReady()) {
 			for (MetricItemConfig config : configs) {
 				try {
-					processMetricItemConfig(config, minute, monitorConfigs.getConfigs().get(config.getId()), productLine,
-					      reportGroup);
+					Map<MetricType, List<Config>> itemConfig = monitorConfigs.getConfigs().get(config.getId());
+
+					processMetricItemConfig(config, nowMinute, itemConfig, productLine, reportGroup);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 			}
+		} else {
+			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
 		}
 	}
 

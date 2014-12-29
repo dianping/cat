@@ -105,11 +105,14 @@
 			$('#crashLog').addClass('active');
 			
 			var fields = "${payload.query1}".split(";");
-			$("#platformType").val(fields[0]);
+			if("${payload.query1}".length > 0) {
+				$("#platformType").val(fields[0]);
+			}
 			docReady(fields[1], '${model.fieldsInfo.appVersions}','appVersion');
 			docReady(fields[2], '${model.fieldsInfo.platVersions}','platformVersion');
 			docReady(fields[3], '${model.fieldsInfo.modules}','module');
 			docReady(fields[4], '${model.fieldsInfo.levels}','level');
+			
 		});
 </script>
 

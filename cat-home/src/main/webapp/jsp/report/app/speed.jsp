@@ -131,15 +131,19 @@
 				$("#page").on('change', changeStepByPage);
 				$("#page2").on('change', changeStepByPage);
 
-				if (typeof (words[0]) != undefined
+				if (typeof (words[0]) != "undefined"
 						&& words[0].length == 0) {
 					$("#time").val(getDate());
 				} else {
 					$("#time").val(words[0]);
 				}
-				$("#page").val(words[1]);
+				if(typeof words[1] != "undefined"  && words[1].length > 0) {
+					$("#page").val(words[1]);
+				}
 				$("#page").change();
-				$("#step").val(words[2]);
+				if(typeof words[2] != "undefined"  && words[2].length > 0) {
+					$("#step").val(words[2]);
+				}
 				$("#network").val(words[3]);
 				$("#version").val(words[4]);
 				$("#platform").val(words[5]);
@@ -154,16 +158,21 @@
 					document.getElementById("checkbox").checked = true;
 					var words = query2.split(";");
 
-					if (words[0] == null || words[0].length == 0) {
+					if (typeof (words[0]) != "undefined"
+						&& words[0].length == 0) {
 						$("#time2").val(getDate());
 					} else {
 						$("#time2").val(words[0]);
 					}
 					
 					datePair["对比值"]=$("#time2").val();
-					$("#page2").val(words[1]);
+					if(typeof words[1] != "undefined"  && words[1].length > 0) {
+						$("#page2").val(words[1]);
+					}
 					$("#page2").change();
-					$("#step2").val(words[2]);
+					if(typeof words[2] != "undefined" && words[2].length > 0) {
+						$("#step2").val(words[2]);
+					}
 					$("#network2").val(words[3]);
 					$("#version2").val(words[4]);
 					$("#platform2").val(words[5]);

@@ -256,7 +256,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			boolean active = true;
 
 			while (active) {
-				Transaction t = Cat.newTransaction("Dependency", "ReloadTask");
+				Transaction t = Cat.newTransaction("ReloadTask", "Dependency");
 				long current = System.currentTimeMillis();
 				try {
 					Collection<String> domains = queryAllDomains();

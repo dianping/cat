@@ -140,34 +140,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.message.MessageBucket</role>
-			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.storage.message.LocalMessageBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.message.MessageBucketManager</role>
-			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.storage.message.LocalMessageBucketManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-core</role-hint>
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
@@ -411,6 +383,11 @@
 		<component>
 			<role>com.dianping.cat.storage.report.ReportBucketManager</role>
 			<implementation>com.dianping.cat.storage.report.DefaultReportBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.report.ReportBucket</role>
@@ -423,6 +400,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.message.MessageBucket</role>
+			<role-hint>local</role-hint>
+			<implementation>com.dianping.cat.storage.message.LocalMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
 				</requirement>
 			</requirements>
 		</component>

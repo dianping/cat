@@ -12,7 +12,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportCountFilter;
-import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -143,7 +142,8 @@ public class EventReportBuilder implements TaskBuilder {
 	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
+		double duration = (startTime - endTime) / TimeHelper.ONE_DAY;
+		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(domain)).setDuration(duration);
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
@@ -158,7 +158,7 @@ public class EventReportBuilder implements TaskBuilder {
 
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
-		
+
 		new EventReportCountFilter().visitEventReport(eventReport);
 		return eventReport;
 	}
@@ -169,6 +169,7 @@ public class EventReportBuilder implements TaskBuilder {
 		List<EventReport> reports = new ArrayList<EventReport>();
 		long startTime = start.getTime();
 		long endTime = end.getTime();
+		double duration = (endTime - startTime) / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
@@ -176,7 +177,7 @@ public class EventReportBuilder implements TaskBuilder {
 
 			reports.add(report);
 		}
-		return m_eventMerger.mergeForDaily(domain, reports, domainSet);
+		return m_eventMerger.mergeForDaily(domain, reports, domainSet, duration);
 	}
 
 }

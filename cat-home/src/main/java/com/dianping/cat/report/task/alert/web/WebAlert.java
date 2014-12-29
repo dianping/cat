@@ -59,53 +59,56 @@ public class WebAlert extends BaseAlert {
 	private List<AlertResultEntity> computeAlertForRule(String idPrefix, String type, List<Config> configs, String url,
 	      int minute) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> resultPair = m_ruleConfigManager.convertConditions(configs);
-		int maxMinute = resultPair.getKey();
-		List<Condition> conditions = resultPair.getValue();
+		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 
-		if (minute >= maxMinute - 1) {
-			MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
+		if (conditionPair != null) {
+			int maxMinute = conditionPair.getKey();
+			List<Condition> conditions = conditionPair.getValue();
 
-			if (report != null) {
-				int start = minute + 1 - maxMinute;
-				int end = minute;
-				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
+			if (minute >= maxMinute - 1) {
+				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
 
-				results.addAll(computeAlertForCondition(datas, conditions, type));
-			}
-		} else if (minute < 0) {
-			MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST);
+				if (report != null) {
+					int start = minute + 1 - maxMinute;
+					int end = minute;
+					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
-			if (report != null) {
-				int start = 60 + minute + 1 - (maxMinute);
-				int end = 60 + minute;
-				Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
-
-				results.addAll(computeAlertForCondition(datas, conditions, type));
-			}
-		} else {
-			MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
-			MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST);
-
-			if (currentReport != null && lastReport != null) {
-				int currentStart = 0, currentEnd = minute;
-				Map<String, double[]> currentValue = fetchMetricInfoData(currentStart, currentEnd, currentReport);
-
-				int lastStart = 60 + 1 - (maxMinute - minute);
-				int lastEnd = 59;
-				Map<String, double[]> lastValue = fetchMetricInfoData(lastStart, lastEnd, currentReport);
-				Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
-
-				for (Entry<String, double[]> entry : currentValue.entrySet()) {
-					String key = entry.getKey();
-					double[] current = currentValue.get(key);
-					double[] last = lastValue.get(key);
-
-					if (current != null && last != null) {
-						datas.put(key, mergerArray(last, current));
-					}
+					results.addAll(computeAlertForCondition(datas, conditions, type));
 				}
-				results.addAll(computeAlertForCondition(datas, conditions, type));
+			} else if (minute < 0) {
+				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST);
+
+				if (report != null) {
+					int start = 60 + minute + 1 - (maxMinute);
+					int end = 60 + minute;
+					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
+
+					results.addAll(computeAlertForCondition(datas, conditions, type));
+				}
+			} else {
+				MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
+				MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST);
+
+				if (currentReport != null && lastReport != null) {
+					int currentStart = 0, currentEnd = minute;
+					Map<String, double[]> currentValue = fetchMetricInfoData(currentStart, currentEnd, currentReport);
+
+					int lastStart = 60 + 1 - (maxMinute - minute);
+					int lastEnd = 59;
+					Map<String, double[]> lastValue = fetchMetricInfoData(lastStart, lastEnd, currentReport);
+					Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
+
+					for (Entry<String, double[]> entry : currentValue.entrySet()) {
+						String key = entry.getKey();
+						double[] current = currentValue.get(key);
+						double[] last = lastValue.get(key);
+
+						if (current != null && last != null) {
+							datas.put(key, mergerArray(last, current));
+						}
+					}
+					results.addAll(computeAlertForCondition(datas, conditions, type));
+				}
 			}
 		}
 		return results;
@@ -199,8 +202,7 @@ public class WebAlert extends BaseAlert {
 		String group = item.getGroup();
 		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
 		List<Rule> rules = queryRuelsForUrl(url);
-		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = calAlreadyMinute();
 
 		for (Rule rule : rules) {
 			String id = rule.getId();
@@ -262,7 +264,7 @@ public class WebAlert extends BaseAlert {
 			active = false;
 		}
 		while (active) {
-			Transaction t = Cat.newTransaction("alert-web", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

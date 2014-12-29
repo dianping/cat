@@ -13,7 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
@@ -30,7 +29,7 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
-	
+
 	public static final String ID = TransactionAnalyzer.ID;
 
 	@Inject
@@ -93,7 +92,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		long startTime = period.getTime();
 		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
-		
+
 		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
 	}
 
@@ -157,7 +156,9 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+		double duration = (end.getTime() - start.getTime()) / TimeHelper.ONE_DAY;
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(domain))
+		      .setDuration(duration);
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
@@ -183,6 +184,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
+		double duration = (endTime - startTime) / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
@@ -190,6 +192,6 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 			reports.add(report);
 		}
-		return m_transactionMerger.mergeForDaily(domain, reports, domainSet);
+		return m_transactionMerger.mergeForDaily(domain, reports, domainSet, duration);
 	}
 }

@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.project;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
@@ -29,7 +29,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import org.unidal.lookup.util.StringUtils;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
 
@@ -164,37 +163,32 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	}
 
 	private String queryCmdbName(List<String> ips) {
-		if (ips != null) {
-			Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
+		Map<String, Integer> nameCountMap = new HashMap<String, Integer>();
 
-			for (String ip : ips) {
-				String cmdbDomain = queryDomainFromCMDB(ip);
+		for (String ip : ips) {
+			String cmdbDomain = queryDomainFromCMDB(ip);
 
-				if (checkIfValid(cmdbDomain)) {
-					Integer count = nameCountMap.get(cmdbDomain);
-					if (count == null) {
-						nameCountMap.put(cmdbDomain, 1);
-					} else {
-						nameCountMap.put(cmdbDomain, count + 1);
-					}
+			if (checkIfValid(cmdbDomain)) {
+				Integer count = nameCountMap.get(cmdbDomain);
+				if (count == null) {
+					nameCountMap.put(cmdbDomain, 1);
+				} else {
+					nameCountMap.put(cmdbDomain, count + 1);
 				}
 			}
-
-			String probableDomain = null;
-			int maxCount = 0;
-			for (Entry<String, Integer> entry : nameCountMap.entrySet()) {
-				int currentCount = entry.getValue();
-
-				if (currentCount > maxCount) {
-					maxCount = currentCount;
-					probableDomain = entry.getKey();
-				}
-			}
-
-			return probableDomain;
-		} else {
-			return null;
 		}
+
+		String probableDomain = null;
+		int maxCount = 0;
+		for (Entry<String, Integer> entry : nameCountMap.entrySet()) {
+			int currentCount = entry.getValue();
+
+			if (currentCount > maxCount) {
+				maxCount = currentCount;
+				probableDomain = entry.getKey();
+			}
+		}
+		return probableDomain;
 	}
 
 	private String queryDomainFromCMDB(String ip) {
@@ -286,14 +280,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 		while (active) {
 			long startMill = System.currentTimeMillis();
-			int hour = Calendar.getInstance().get(Calendar.HOUR);
-			String hourStr = String.valueOf(hour);
-
-			if (hour < 10) {
-				hourStr = "0" + hourStr;
-			}
-
-			Transaction t1 = Cat.newTransaction("UpdateHostname", "H" + hourStr);
+			Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
 			try {
 				updateHostNameInfo();
 				t1.setStatus(Transaction.SUCCESS);
@@ -303,12 +290,12 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 				t1.complete();
 			}
 
-			Transaction t2 = Cat.newTransaction("UpdateProjectInfo", "H" + hourStr);
+			Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
 			try {
 				updateProjectInfo();
 				t2.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
-				t1.setStatus(e);
+				t2.setStatus(e);
 			} finally {
 				t2.complete();
 			}
@@ -414,12 +401,15 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 			for (Project pro : projects) {
 				try {
-					List<String> ips = queryIpsFromReport(pro.getDomain());
-					String originCmdbDomain = pro.getCmdbDomain();
-					String cmdbDomain = queryCmdbName(ips);
+					String cmdbDomain = pro.getCmdbDomain();
 
-					if (cmdbDomain != null) {
-						boolean isChange = !cmdbDomain.equals(originCmdbDomain);
+					if (StringUtils.isEmpty(cmdbDomain)) {
+						List<String> ips = queryIpsFromReport(pro.getDomain());
+						cmdbDomain = queryCmdbName(ips);
+					}
+
+					if (StringUtils.isNotEmpty(cmdbDomain)) {
+						boolean isChange = !cmdbDomain.equals(pro.getCmdbDomain());
 
 						pro.setCmdbDomain(cmdbDomain);
 						boolean isProjectInfoChange = updateProject(pro);
