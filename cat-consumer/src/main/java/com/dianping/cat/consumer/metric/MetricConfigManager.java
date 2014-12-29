@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
@@ -31,7 +33,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class MetricConfigManager implements Initializable {
+public class MetricConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	protected ConfigDao m_configDao;
@@ -45,6 +47,8 @@ public class MetricConfigManager implements Initializable {
 
 	private long m_modifyTime;
 
+	private Logger m_logger;
+
 	private static final String CONFIG_NAME = "metricConfig";
 
 	public static final String DEFAULT_TAG = "业务大盘";
@@ -56,6 +60,11 @@ public class MetricConfigManager implements Initializable {
 	public boolean deleteDomainConfig(String key) {
 		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	public MetricConfig getMetricConfig() {
@@ -112,6 +121,7 @@ public class MetricConfigManager implements Initializable {
 			config.setShowAvg(item.isShowAvg());
 			config.setShowCount(item.isShowCount());
 			config.setShowSum(item.isShowSum());
+			m_logger.info("insert metric config info " + config.toString());
 			return insertMetricItemConfig(config);
 		}
 	}

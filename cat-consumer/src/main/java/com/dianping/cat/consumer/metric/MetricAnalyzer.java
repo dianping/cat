@@ -197,8 +197,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (productline != null && productline.getMetricDashboard()) {
 				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 
-				m_logger.info(String.format("%s when insert metric config info, domain %s, metricName %s",
-				      String.valueOf(result), domain, metricName));
+				if (!result) {
+					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,
+					      metricName));
+				}
 			}
 		}
 		return 0;
