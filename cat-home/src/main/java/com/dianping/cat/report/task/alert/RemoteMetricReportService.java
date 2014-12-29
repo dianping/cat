@@ -32,6 +32,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 import com.dianping.cat.report.page.model.spi.internal.ModelServiceWithCalSupport;
+import com.dianping.cat.report.task.alert.MetricReportGroup.State;
+import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 
 public class RemoteMetricReportService extends ModelServiceWithCalSupport implements Initializable {
@@ -64,6 +66,13 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 		      request.getDomain(), request.getPeriod(), sb.toString());
 
 		return new URL(url);
+	}
+
+	private MetricReport fetchMetricReport(String product, ModelPeriod period) {
+		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
+		MetricReport report = invoke(request);
+
+		return report;
 	}
 
 	@Override
@@ -169,5 +178,40 @@ public class RemoteMetricReportService extends ModelServiceWithCalSupport implem
 			t.complete();
 		}
 		return null;
+	}
+
+	public MetricReportGroup prepareDatas(String product, int minute, int duration) {
+		MetricReport currentReport = null;
+		MetricReport lastReport = null;
+		boolean dataReady = false;
+		State type = null;
+
+		if (minute >= duration - 1) {
+			type = State.CURRENT;
+			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+
+			if (currentReport != null) {
+				dataReady = true;
+			}
+		} else if (minute < 0) {
+			type = State.LAST;
+			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null) {
+				dataReady = true;
+			}
+		} else {
+			type = State.CURRENT_LAST;
+			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+
+			if (lastReport != null && currentReport != null) {
+				dataReady = true;
+			}
+		}
+		MetricReportGroup reports = new MetricReportGroup();
+
+		reports.setType(type).setLast(lastReport).setCurrent(currentReport).setDataReady(dataReady);
+		return reports;
 	}
 }
