@@ -34,7 +34,7 @@ public class EventDailyGraphMergerTest {
 
 	@Test
 	public void testForMergerDaily() throws Exception {
-		EventReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
+		EventReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains, 1);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("EventMergerDaily.xml"), "utf-8");
 
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
@@ -44,7 +44,7 @@ public class EventDailyGraphMergerTest {
 		EventReport result = new EventReport();
 		try {
 			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventReport.xml"), "utf-8");
-			
+
 			return DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();

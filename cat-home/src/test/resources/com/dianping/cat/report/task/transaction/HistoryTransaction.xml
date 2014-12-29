@@ -11,7 +11,7 @@
 			<successMessageUrl>MobileApi-0a014dc1-1340006403188-1
 			</successMessageUrl>
 			<name id="ClientInfo" totalCount="3664668" failCount="0"
-				failPercent="0.00">
+				failPercent="0.00" tps="42.42">
 				<successMessageUrl>MobileApi-0a01017e-1340121600084-0
 				</successMessageUrl>
 				<range value="0" count="10453" fails="0" />
@@ -35,7 +35,7 @@
 
 			</name>
 			<name id="Payload" totalCount="3664668" failCount="0"
-				failPercent="0.00">
+				failPercent="0.00" tps="42.42">
 				<successMessageUrl>MobileApi-0a01017e-1340121600084-0
 				</successMessageUrl>
 				<range value="0" count="10453" fails="0" />
