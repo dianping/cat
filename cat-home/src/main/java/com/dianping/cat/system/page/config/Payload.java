@@ -21,6 +21,7 @@ import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -61,6 +62,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("socket")
 	private Socket m_socket = new Socket();
+	
+	@ObjectMeta("groupDomain")
+	private Domain m_groupDomain = new Domain();
 
 	@FieldMeta("pars")
 	private String m_pars;

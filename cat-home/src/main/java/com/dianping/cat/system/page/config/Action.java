@@ -121,8 +121,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	BUG_CONFIG_UPDATE("bugConfigUpdate"),
 
-	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
-
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
 	WEB_RULE("webRule"),
@@ -183,9 +181,17 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	THIRD_PARTY_RULE_UPDATE("thirdPartyRuleUpdate"),
 
-	THIRD_PARTY_RULE_SUBMIT("thirdPartyRuleSumbit"),
+	THIRD_PARTY_RULE_SUBMIT("thirdPartyRuleSubmit"),
 
 	THIRD_PARTY_RULE_DELETE("thirdPartyRuleDelete"),
+
+	DOMAIN_GROUP_CONFIGS("domainGroupConfigs"),
+
+	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
+
+	DOMAIN_GROUP_CONFIG_SUBMIT("domainGroupConfigSubmit"),
+
+	DOMAIN_GROUP_CONFIG_DELETE("domainGroupConfigDelete"),
 
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate");
 
