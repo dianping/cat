@@ -11,7 +11,6 @@
 
 <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
 
-
 <res:useJs value="${res.js.local.logview_js}" target="head-js"/>
 
 <br>

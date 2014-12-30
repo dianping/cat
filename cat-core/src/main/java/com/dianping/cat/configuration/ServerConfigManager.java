@@ -159,6 +159,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public int getHdfsMaxStorageTime() {
+		return 15;
+	}
+
 	public Map<String, String> getHdfsProperties() {
 		if (m_config != null) {
 			Map<String, String> properties = new HashMap<String, String>();
@@ -231,6 +235,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return m_config;
 	}
 
+	public Set<String> getUnusedDomains() {
+		return m_invalidateDomains;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_unusedTypes.add("Service");
@@ -293,10 +301,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public Set<String> getUnusedDomains() {
-		return m_invalidateDomains;
-	}
-
 	public boolean isAlertMachine() {
 		if (m_config != null) {
 			boolean alert = m_config.isAlertMachine();
@@ -348,20 +352,20 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOnline() {
+	public boolean isOffline() {
 		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		if (address.equals("10.1.6.128")) {
+		if (address.startsWith("192.168")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean isOffline() {
+	public boolean isOnline() {
 		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		if (address.startsWith("192.168")) {
+		if (address.equals("10.1.6.128")) {
 			return true;
 		} else {
 			return false;
@@ -398,5 +402,4 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
-
 }
