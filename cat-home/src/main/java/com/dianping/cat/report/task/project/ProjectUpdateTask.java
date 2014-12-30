@@ -41,7 +41,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	@Inject(type = ReportService.class, value = TransactionAnalyzer.ID)
 	private ReportService<TransactionReport> m_reportService;
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	private static final long DURATION = 60 * 60 * 1000L;
 
@@ -333,8 +333,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 					if (StringUtils.isEmpty(hostname) || !hostname.equals(cmdbHostname)) {
 						info.setHostname(cmdbHostname);
 						m_hostInfoService.updateHostinfo(info);
-					} else {
-						m_logger.error("can't find hostname for ip: " + ip);
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
