@@ -19,7 +19,6 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
@@ -61,14 +60,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public String getBindHost() {
-		return null; // any IP address
-	}
-
-	public int getBindPort() {
-		return 2280;
 	}
 
 	public String getConsoleDefaultDomain() {
@@ -160,7 +151,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public int getHdfsMaxStorageTime() {
-		return 15;
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getMaxStorageTime();
+		} else {
+			return 15;
+		}
 	}
 
 	public Map<String, String> getHdfsProperties() {

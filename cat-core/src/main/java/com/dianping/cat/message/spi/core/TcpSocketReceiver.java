@@ -49,9 +49,6 @@ public class TcpSocketReceiver implements LogEnabled {
 	private ChannelFactory m_factory;
 
 	@Inject
-	private String m_host;
-
-	@Inject
 	private MessageCodec m_codec;
 
 	@Inject
@@ -89,18 +86,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		startEncoderThreads(m_decodeThreads);
 
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
-
-		InetSocketAddress address;
-
-		m_host = m_serverConfigManager.getBindHost();
-		m_port = m_serverConfigManager.getBindPort();
-
-		if (m_host == null) {
-			address = new InetSocketAddress(m_port);
-		} else {
-			address = new InetSocketAddress(m_host, m_port);
-		}
-
+		InetSocketAddress address = new InetSocketAddress(m_port);
 		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Boss-" + address);
 		ExecutorService workerExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Worker");
 		ChannelFactory factory = new NioServerSocketChannelFactory(bossExecutor, workerExecutor);
