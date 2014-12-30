@@ -57,9 +57,7 @@
 					<c:set var="keys" value="异常阈值,异常过滤" />
 					<c:forEach var="key" items="${keys}" varStatus="status">
 						<li id="tab-${key}" class="text-right"><a
-							href="#tabContent-${key}" data-toggle="tab">
-								<h5 class="text-danger">${key}</h5>
-						</a></li>
+							href="#tabContent-${key}" data-toggle="tab">${key}</a></li>
 					</c:forEach>
 				</ul>
 				<div class="tab-content">

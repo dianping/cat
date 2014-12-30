@@ -97,12 +97,8 @@ public class ExceptionAlert implements Task {
 
 	@Override
 	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
+		boolean active = TimeHelper.sleepToNextMinute();
+
 		while (active) {
 			long current = System.currentTimeMillis();
 			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());

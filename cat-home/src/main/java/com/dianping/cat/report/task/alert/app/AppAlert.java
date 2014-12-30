@@ -225,12 +225,8 @@ public class AppAlert implements Task {
 
 	@Override
 	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
+		boolean active = TimeHelper.sleepToNextMinute();
+
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertApp", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();

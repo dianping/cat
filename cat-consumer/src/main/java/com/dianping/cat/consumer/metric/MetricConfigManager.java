@@ -116,20 +116,20 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 		if (config != null) {
 			return true;
-		} else {
-			config = new MetricItemConfig();
-
-			config.setId(key);
-			config.setDomain(domain);
-			config.setType(type);
-			config.setMetricKey(metricKey);
-			config.setTitle(item.getTitle());
-			config.setShowAvg(item.isShowAvg());
-			config.setShowCount(item.isShowCount());
-			config.setShowSum(item.isShowSum());
-			m_logger.info("insert metric config info " + config.toString());
-			return insertMetricItemConfig(config);
-		}
+			} else {
+				config = new MetricItemConfig();
+	
+				config.setId(key);
+				config.setDomain(domain);
+				config.setType(type);
+				config.setMetricKey(metricKey);
+				config.setTitle(item.getTitle());
+				config.setShowAvg(item.isShowAvg());
+				config.setShowCount(item.isShowCount());
+				config.setShowSum(item.isShowSum());
+				m_logger.info("insert metric config info " + config.toString());
+				return insertMetricItemConfig(config);
+			}
 	}
 
 	public boolean insertMetricItemConfig(MetricItemConfig config) {
