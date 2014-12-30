@@ -76,7 +76,7 @@
 					     		<td style="text-align:right">${value.nodeConfig.defaultWarningResponseTime}</td>
 					     		<td style="text-align:right">${value.nodeConfig.defaultErrorResponseTime}</td>
 						     	<td></td>
-					     		</tr>
+					     	</tr>
 					     	<c:forEach var="temp" items="${value.edgeConfigs}">
 					     		<tr>
 					     		<td>${temp.type}</td>

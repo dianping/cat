@@ -275,7 +275,7 @@ public class Handler implements PageHandler<Context> {
 		List<Integer> minutes = new ArrayList<Integer>();
 
 		if (payload.getPeriod().isCurrent()) {
-			long current = System.currentTimeMillis() / 1000 / 60;
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
 			maxMinute = (int) (current % (60));
 		}
 		for (int i = 0; i < 60; i++) {
@@ -291,7 +291,7 @@ public class Handler implements PageHandler<Context> {
 		String min = payload.getMinute();
 
 		if (StringUtils.isEmpty(min)) {
-			long current = System.currentTimeMillis() / 1000 / 60;
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
 			minute = (int) (current % (60));
 		} else {
 			minute = Integer.parseInt(min);

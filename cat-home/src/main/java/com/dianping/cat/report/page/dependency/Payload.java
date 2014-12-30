@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.dependency;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
@@ -41,7 +42,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-	
+
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
 
@@ -96,8 +97,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public boolean isHideNav() {
-   	return m_hideNav;
-   }
+		return m_hideNav;
+	}
 
 	public boolean isRefresh() {
 		return m_refresh;
@@ -120,8 +121,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setHideNav(boolean hideNav) {
-   	m_hideNav = hideNav;
-   }
+		m_hideNav = hideNav;
+	}
 
 	public void setMinute(String minute) {
 		this.m_minute = minute;
@@ -154,6 +155,32 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTopCounts(int topCounts) {
 		m_topCounts = topCounts;
+	}
+
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
+	}
+
+	public long getCurrentDate() {
+		long timestamp = getCurrentTimeMillis();
+
+		return timestamp - timestamp % TimeHelper.ONE_HOUR;
+	}
+
+	public long getDate() {
+		long current = getCurrentDate();
+		long extra = m_step * TimeHelper.ONE_HOUR;
+
+		if (m_date <= 0) {
+			return current + extra;
+		} else {
+			long result = m_date + extra;
+
+			if (result > current) {
+				return current;
+			}
+			return result;
+		}
 	}
 
 	@Override
