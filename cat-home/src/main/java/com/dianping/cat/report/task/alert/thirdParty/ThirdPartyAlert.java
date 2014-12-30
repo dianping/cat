@@ -70,12 +70,8 @@ public class ThirdPartyAlert implements Task {
 
 	@Override
 	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
+		boolean active = TimeHelper.sleepToNextMinute();
+
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertThirdParty", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();

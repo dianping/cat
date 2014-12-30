@@ -257,12 +257,8 @@ public class WebAlert extends BaseAlert {
 
 	@Override
 	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
+		boolean active = TimeHelper.sleepToNextMinute();
+
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertWeb", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();

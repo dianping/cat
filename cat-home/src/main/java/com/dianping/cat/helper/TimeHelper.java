@@ -156,4 +156,16 @@ public class TimeHelper {
 		return cal.getTime();
 	}
 
+	public static boolean sleepToNextMinute() {
+		try {
+			Calendar cal = Calendar.getInstance();
+			int seconds = cal.get(Calendar.SECOND);
+
+			Thread.sleep(60 - seconds);
+			return true;
+		} catch (InterruptedException e) {
+			return false;
+		}
+	}
+
 }
