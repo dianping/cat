@@ -158,10 +158,9 @@ public class TimeHelper {
 
 	public static boolean sleepToNextMinute() {
 		try {
-			Calendar cal = Calendar.getInstance();
-			int seconds = cal.get(Calendar.SECOND);
-
-			Thread.sleep(60 - seconds);
+			long current = System.currentTimeMillis();
+			
+			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE);
 			return true;
 		} catch (InterruptedException e) {
 			return false;
