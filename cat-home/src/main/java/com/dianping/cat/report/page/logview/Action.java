@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view"), DETAIL("detail");
+	VIEW("view");
 
 	private String m_name;
 

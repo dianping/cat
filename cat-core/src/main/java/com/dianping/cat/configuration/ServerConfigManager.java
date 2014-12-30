@@ -19,7 +19,6 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
@@ -61,14 +60,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public String getBindHost() {
-		return null; // any IP address
-	}
-
-	public int getBindPort() {
-		return 2280;
 	}
 
 	public String getConsoleDefaultDomain() {
@@ -159,6 +150,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public int getHdfsMaxStorageTime() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getMaxStorageTime();
+		} else {
+			return 15;
+		}
+	}
+
 	public Map<String, String> getHdfsProperties() {
 		if (m_config != null) {
 			Map<String, String> properties = new HashMap<String, String>();
@@ -231,6 +232,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return m_config;
 	}
 
+	public Set<String> getUnusedDomains() {
+		return m_invalidateDomains;
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_unusedTypes.add("Service");
@@ -293,10 +298,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public Set<String> getUnusedDomains() {
-		return m_invalidateDomains;
-	}
-
 	public boolean isAlertMachine() {
 		if (m_config != null) {
 			boolean alert = m_config.isAlertMachine();
@@ -348,20 +349,20 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOnline() {
+	public boolean isOffline() {
 		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		if (address.equals("10.1.6.128")) {
+		if (address.startsWith("192.168")) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	public boolean isOffline() {
+	public boolean isOnline() {
 		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		if (address.startsWith("192.168")) {
+		if (address.equals("10.1.6.128")) {
 			return true;
 		} else {
 			return false;
@@ -398,5 +399,4 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
-
 }

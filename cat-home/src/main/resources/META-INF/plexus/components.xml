@@ -3462,7 +3462,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
