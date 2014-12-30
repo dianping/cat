@@ -132,8 +132,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			// Bug
 		case BUG_CONFIG_UPDATE:
 			return JspFile.BUG_CONFIG_UPDATE.getPath();
-		case DOMAIN_GROUP_CONFIG_UPDATE:
-			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		case WEB_RULE:
 		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
 		case WEB_RULE_DELETE:
@@ -179,13 +177,17 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case DISPLAY_POLICY:
 			return JspFile.DISPLAY_POLICY.getPath();
 		case THIRD_PARTY_RULE_CONFIGS:
+		case THIRD_PARTY_RULE_SUBMIT:
+		case THIRD_PARTY_RULE_DELETE:
 			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
 		case THIRD_PARTY_RULE_UPDATE:
 			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
-		case THIRD_PARTY_RULE_SUBMIT:
-			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
-		case THIRD_PARTY_RULE_DELETE:
-			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
+		case DOMAIN_GROUP_CONFIGS:
+		case DOMAIN_GROUP_CONFIG_DELETE:
+		case DOMAIN_GROUP_CONFIG_SUBMIT:
+			return JspFile.DOMAIN_GROUP_CONFIG_LIST.getPath();
+		case DOMAIN_GROUP_CONFIG_UPDATE:
+			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

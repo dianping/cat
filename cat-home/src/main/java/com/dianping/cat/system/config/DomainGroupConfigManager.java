@@ -80,13 +80,20 @@ public class DomainGroupConfigManager implements Initializable {
 
 	public boolean insertFromJson(String json) {
 		try {
-			m_domainGroup = (DomainGroup) new JsonBuilder().parse(json, DomainGroup.class);
+			Domain domain = (Domain) new JsonBuilder().parse(json, Domain.class);
 
+			m_domainGroup.addDomain(domain);
 			return storeConfig();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
+	}
+
+	public boolean deleteGroup(String domain) {
+		m_domainGroup.removeDomain(domain);
+
+		return storeConfig();
 	}
 
 	public String queryDefaultGroup(String domain) {
@@ -97,6 +104,12 @@ public class DomainGroupConfigManager implements Initializable {
 		} else {
 			return "";
 		}
+	}
+
+	public Domain queryGroupDomain(String domain) {
+		Domain domainGroup = m_domainGroup.findDomain(domain);
+
+		return domainGroup;
 	}
 
 	public List<String> queryDomainGroup(String domain) {
