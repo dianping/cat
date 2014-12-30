@@ -46,7 +46,7 @@
 							<li id="topologyProductLines"><a href="/cat/s/config?op=topologyProductLines">
 								<i class="menu-icon fa fa-caret-right"></i>监控分组配置</a>
 								<b class="arrow"></b></li>
-							<li id="domainGroupConfigUpdate"><a href="/cat/s/config?op=domainGroupConfigs">
+							<li id="domainGroupConfigUpdate"><a href="/cat/s/config?op=domainGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>机器分组配置</a>
 								<b class="arrow"></b></li>
 						</ul>

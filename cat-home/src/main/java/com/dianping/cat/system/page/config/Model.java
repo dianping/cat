@@ -30,7 +30,6 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.web.CityManager.City;
@@ -144,10 +143,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Http m_http;
 
 	private Socket m_socket;
-
-	private DomainGroup m_domainGroup;
-
-	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -287,10 +282,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_domainConfig;
 	}
 
-	public DomainGroup getDomainGroup() {
-		return m_domainGroup;
-	}
-
 	public List<String> getDomainList() {
 		return m_domainList;
 	}
@@ -359,10 +350,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			items.add(item);
 		}
 		return maps;
-	}
-
-	public com.dianping.cat.home.group.entity.Domain getGroupDomain() {
-		return m_groupDomain;
 	}
 
 	public List<String> getHeartbeatExtensionMetrics() {
@@ -541,10 +528,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_domainConfig = domainConfig;
 	}
 
-	public void setDomainGroup(DomainGroup domainGroup) {
-		m_domainGroup = domainGroup;
-	}
-
 	public void setDomainList(List<String> domainList) {
 		m_domainList = domainList;
 	}
@@ -579,10 +562,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setGraphConfig(TopologyGraphConfig config) {
 		m_config = config;
-	}
-
-	public void setGroupDomain(com.dianping.cat.home.group.entity.Domain groupDomain) {
-		m_groupDomain = groupDomain;
 	}
 
 	public void setHeartbeatExtensionMetrics(List<String> heartbeatExtensionMetrics) {
@@ -719,5 +698,4 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-
 }

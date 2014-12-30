@@ -15,7 +15,7 @@
 	<form name="thirdPartyRuleSubmit" id="form" method="get" action="${model.pageUri}">
 	<table class="table table-striped table-condensed ">
 		<input type="hidden" name="type" value="${payload.type}" />
-		<input type="hidden" name="op" value="thirdPartyRuleSubmit" />
+		<input type="hidden" name="op" value="thirdPartyRuleSumbit" />
 		<c:if test="${payload.type eq 'http'}">
 		<tr>
 			<td width="10%">url</td>

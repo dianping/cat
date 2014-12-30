@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
-import com.dianping.cat.home.group.entity.Domain;
+import com.dianping.cat.home.group.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -90,22 +90,21 @@ public class GlobalConfigProcessor {
 			model.setProjects(queryAllProjects());
 			model.setProject(m_projectService.findByDomain(domain));
 			break;
-		case DOMAIN_GROUP_CONFIGS:
-			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
-			break;
 		case DOMAIN_GROUP_CONFIG_UPDATE:
-			domain = payload.getDomain();
-			Domain groupDomain = m_domainGroupConfigManger.queryGroupDomain(domain);
+			String domainGroupContent = payload.getContent();
 
-			model.setGroupDomain(groupDomain);
-			break;
-		case DOMAIN_GROUP_CONFIG_DELETE:
-			m_domainGroupConfigManger.deleteGroup(payload.getDomain());
-			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
-			break;
-		case DOMAIN_GROUP_CONFIG_SUBMIT:
-			m_domainGroupConfigManger.insertFromJson(payload.getContent());
-			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
+			if (!StringUtils.isEmpty(domainGroupContent)) {
+				model.setOpState(m_domainGroupConfigManger.insertFromJson(domainGroupContent));
+			} else {
+				model.setOpState(true);
+			}
+
+			String content = new DefaultJsonBuilder().build(m_domainGroupConfigManger.getDomainGroup());
+			if (content != null) {
+				content = content.replaceAll("\\r\\n", "");
+			}
+
+			model.setContent(content);
 			break;
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();
