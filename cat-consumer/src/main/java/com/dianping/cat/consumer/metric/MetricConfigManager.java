@@ -24,11 +24,13 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -40,6 +42,9 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ContentFetcher m_fetcher;
+
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManager;
 
 	private int m_configId;
 
@@ -102,6 +107,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		if (m_metricConfig == null) {
 			m_metricConfig = new MetricConfig();
 		}
+		deleteUnusedConfig();
 	}
 
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
@@ -225,6 +231,30 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
+		}
+	}
+
+	protected void deleteUnusedConfig() {
+		try {
+			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
+			List<String> unused = new ArrayList<String>();
+
+			for (MetricItemConfig config : configs.values()) {
+				String domain = config.getDomain();
+				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLine product = m_productLineConfigManager.queryProductLine(productLine);
+
+				if (product == null || !product.isMetricDashboard()) {
+					unused.add(config.getId());
+				}
+			}
+			for (String id : unused) {
+				m_logger.info("delete metric item " + id);
+				m_metricConfig.removeMetricItemConfig(id);
+			}
+			storeConfig();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
