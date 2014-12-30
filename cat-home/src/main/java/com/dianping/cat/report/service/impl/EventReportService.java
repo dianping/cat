@@ -1,5 +1,6 @@
 package com.dianping.cat.report.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,10 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
+import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
@@ -32,6 +36,8 @@ import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class EventReportService extends AbstractReportService<EventReport> {
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	public EventReport makeReport(String domain, Date start, Date end) {
@@ -64,7 +70,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 					reportModel.accept(merger);
 				}
 			} catch (DalNotFoundException e) {
-				//ignore
+				// ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -73,7 +79,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
-		return eventReport;
+		return convert(eventReport);
 	}
 
 	private EventReport queryFromDailyBinary(int id, String domain) throws DalException {
@@ -146,7 +152,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 							reportModel.accept(merger);
 						}
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -160,47 +166,90 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 		Set<String> domains = queryAllDomainNames(start, end, EventAnalyzer.ID);
 		eventReport.getDomainNames().addAll(domains);
-		return eventReport;
+		return convert(eventReport);
 	}
 
 	@Override
 	public EventReport queryMonthlyReport(String domain, Date start) {
+		EventReport eventReport = new EventReport(domain);
+
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(content);
+				eventReport = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromMonthlyBinary(entity.getId(), domain);
+				eventReport = queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new EventReport(domain);
+		return convert(eventReport);
 	}
 
 	@Override
 	public EventReport queryWeeklyReport(String domain, Date start) {
+		EventReport eventReport = new EventReport(domain);
+
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(content);
+				eventReport = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromWeeklyBinary(entity.getId(), domain);
+				eventReport = queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new EventReport(domain);
+		return convert(eventReport);
 	}
 
+	private EventReport convert(EventReport report) {
+		Date start = report.getStartTime();
+		Date end = report.getEndTime();
+
+		try {
+			if (start != null && end != null && end.before(m_sdf.parse("2015-1-1"))) {
+				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000);
+
+				report.accept(statistics);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return report;
+	}
+
+	public class TpsStatistics extends BaseVisitor {
+
+		public double m_duration;
+
+		public TpsStatistics(double duration) {
+			m_duration = duration;
+		}
+
+		@Override
+		public void visitName(EventName name) {
+			if (m_duration > 0) {
+				name.setTps(name.getTotalCount() * 1.0 / m_duration);
+			}
+		}
+
+		@Override
+		public void visitType(EventType type) {
+			if (m_duration > 0) {
+				type.setTps(type.getTotalCount() * 1.0 / m_duration);
+				super.visitType(type);
+			}
+		}
+	}
 }
