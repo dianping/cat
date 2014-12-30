@@ -77,7 +77,7 @@
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
 						<td style="width:50%;">
-							<select multiple class="chosen-select" id="domain_select" name="domains" 
+							<select multiple class="chosen-select tag-input-style" id="domain_select" name="domains" 
 								data-placeholder="Choose a State...">
 								<c:forEach var="item" items="${model.projects}">
 									<c:set var="domains" value="${model.productLine.domains}" />
@@ -120,13 +120,5 @@
 					 $this.next().css({'width': $this.parent().width()});
 				})
 			}).trigger('resize.chosen');
-		
-			$('#chosen-multiple-style').on('click', function(e){
-				var target = $(e.target).find('input[type=radio]');
-				var which = parseInt(target.val());
-				if(which == 2) $('#form-field-select-4').addClass('tag-input-style');
-				 else $('#form-field-select-4').removeClass('tag-input-style');
-			});
-			
 		});
 	</script>
