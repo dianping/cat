@@ -159,13 +159,25 @@ public class GlobalConfigProcessor {
 	private Http buildHttp(Payload payload) {
 		Http http = payload.getHttp();
 		String[] pars = payload.getPars().split(",");
+		List<Par> lst = new ArrayList<Par>();
 
 		for (int i = 0; i < pars.length; i++) {
 			if (StringUtils.isNotEmpty(pars[i])) {
 				Par par = new Par();
-				par.setId(pars[i].trim());
-				http.addPar(par);
+				String id = pars[i].trim();
+
+				if (!id.contains("=")) {
+					Par p = lst.get(lst.size() - 1);
+
+					p.setId(p.getId() + "," + id);
+				} else {
+					par.setId(id);
+					lst.add(par);
+				}
 			}
+		}
+		for (Par p : lst) {
+			http.addPar(p);
 		}
 		return http;
 	}

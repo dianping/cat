@@ -312,6 +312,8 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 			return ProductLineConfig.SYSTEM_PRODUCTLINE;
 		} else if (ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(line)) {
 			return ProductLineConfig.DATABASE_PRODUCTLINE;
+		} else if (ProductLineConfig.CDN_PRODUCTLINE.isTypeOf(line)) {
+			return ProductLineConfig.CDN_PRODUCTLINE;
 		} else {
 			return ProductLineConfig.METRIC_PRODUCTLINE;
 		}

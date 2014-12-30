@@ -1,5 +1,6 @@
 package com.dianping.cat.report.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,10 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
@@ -32,6 +36,8 @@ import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class TransactionReportService extends AbstractReportService<TransactionReport> {
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	@Override
 	public TransactionReport makeReport(String domain, Date start, Date end) {
@@ -74,7 +80,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
-		return transactionReport;
+		return convert(transactionReport);
 	}
 
 	private TransactionReport queryFromDailyBinary(int id, String domain) throws DalException {
@@ -161,47 +167,90 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 		Set<String> domains = queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 		transactionReport.getDomainNames().addAll(domains);
-		return transactionReport;
+		return convert(transactionReport);
 	}
 
 	@Override
 	public TransactionReport queryMonthlyReport(String domain, Date start) {
+		TransactionReport transactionReport = new TransactionReport(domain);
+
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+				transactionReport = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromMonthlyBinary(entity.getId(), domain);
+				transactionReport = queryFromMonthlyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new TransactionReport(domain);
+		return convert(transactionReport);
 	}
 
 	@Override
 	public TransactionReport queryWeeklyReport(String domain, Date start) {
+		TransactionReport transactionReport = new TransactionReport(domain);
+
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 			String content = entity.getContent();
 
 			if (content != null && content.length() > 0) {
-				return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+				transactionReport = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
 			} else {
-				return queryFromWeeklyBinary(entity.getId(), domain);
+				transactionReport = queryFromWeeklyBinary(entity.getId(), domain);
 			}
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new TransactionReport(domain);
+		return convert(transactionReport);
 	}
 
+	private TransactionReport convert(TransactionReport report) {
+		Date start = report.getStartTime();
+		Date end = report.getEndTime();
+
+		try {
+			if (start != null && end != null && end.before(m_sdf.parse("2015-1-1"))) {
+				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000);
+
+				report.accept(statistics);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return report;
+	}
+
+	public class TpsStatistics extends BaseVisitor {
+
+		public double m_duration;
+
+		public TpsStatistics(double duration) {
+			m_duration = duration;
+		}
+
+		@Override
+		public void visitName(TransactionName name) {
+			if (m_duration > 0) {
+				name.setTps(name.getTotalCount() * 1.0 / m_duration);
+			}
+		}
+
+		@Override
+		public void visitType(TransactionType type) {
+			if (m_duration > 0) {
+				type.setTps(type.getTotalCount() * 1.0 / m_duration);
+				super.visitType(type);
+			}
+		}
+	}
 }
