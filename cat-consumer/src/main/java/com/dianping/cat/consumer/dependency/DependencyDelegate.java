@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -45,7 +46,7 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 
 	@Override
 	public boolean createHourlyTask(DependencyReport report) {
-		return m_taskManager.createTask(report.getStartTime(), "cat", DependencyAnalyzer.ID, TaskProlicy.HOULY);
+		return m_taskManager.createTask(report.getStartTime(), Constants.CAT, DependencyAnalyzer.ID, TaskProlicy.HOULY);
 	}
 
 	@Override

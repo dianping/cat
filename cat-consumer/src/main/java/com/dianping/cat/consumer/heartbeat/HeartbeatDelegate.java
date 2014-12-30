@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
@@ -18,6 +19,9 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	@Override
 	public void afterLoad(Map<String, HeartbeatReport> reports) {
@@ -45,8 +49,13 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public boolean createHourlyTask(HeartbeatReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), HeartbeatAnalyzer.ID,
-		      TaskProlicy.DAILY);
+		String domain = report.getDomain();
+
+		if (m_configManager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, HeartbeatAnalyzer.ID, TaskProlicy.DAILY);
+		} else {
+			return true;
+		}
 	}
 
 	@Override
