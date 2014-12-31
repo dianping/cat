@@ -90,34 +90,13 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean deleteProductLine(String line, String title) {
-		boolean flag = true;
 		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
 		if (productLineConfig != null) {
 			Company company = productLineConfig.getCompany();
 
-			switch (productLineConfig) {
-			case METRIC_PRODUCTLINE:
-				ProductLine product = ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().findProductLine(line);
-
-				if (product != null) {
-					product.setMetricDashboard(false);
-				}
-				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
-				break;
-			case APPLICATION_PRODUCTLINE:
-				product = ProductLineConfig.METRIC_PRODUCTLINE.getCompany().findProductLine(line);
-
-				if (product != null) {
-					product.setApplicationDashboard(false);
-				}
-				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
-				break;
-			default:
-				break;
-			}
 			company.removeProductLine(line);
-			return storeConfig(productLineConfig) && flag;
+			return storeConfig(productLineConfig);
 		}
 		return false;
 	}
@@ -187,10 +166,6 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				productLine.setId(product);
 				productLine.setTitle(product);
 				productLine.addDomain(new Domain(domain));
-
-				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
-					productLine.setMetricDashboard(true);
-				}
 				company.addProductLine(productLine);
 				return storeConfig(productLineConfig);
 			} else {
@@ -209,35 +184,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains, String title) {
-		boolean flag = true;
+		boolean flag = false;
 		String duplicateDomains = "";
 		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
 
-		switch (productLineConfig) {
-		case METRIC_PRODUCTLINE:
-			if (line.getApplicationDashboard()) {
-				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().removeProductLine(line.getId());
-				ProductLineConfig.APPLICATION_PRODUCTLINE.getCompany().addProductLine(line);
+		if (productLineConfig != null) {
+			duplicateDomains = buildDomainInfo(productLineConfig, line, domains);
 
-				flag = storeConfig(ProductLineConfig.APPLICATION_PRODUCTLINE);
-			}
-			break;
-		case APPLICATION_PRODUCTLINE:
-			if (line.getMetricDashboard()) {
-				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().removeProductLine(line.getId());
-				ProductLineConfig.METRIC_PRODUCTLINE.getCompany().addProductLine(line);
-
-				flag = storeConfig(ProductLineConfig.METRIC_PRODUCTLINE);
-			}
-			break;
-		default:
-			break;
+			productLineConfig.getCompany().addProductLine(line);
+			flag = storeConfig(productLineConfig);
 		}
-		duplicateDomains = buildDomainInfo(productLineConfig, line, domains);
-		productLineConfig.getCompany().removeProductLine(line.getId());
-		productLineConfig.getCompany().addProductLine(line);
 
-		return new Pair<Boolean, String>(storeConfig(productLineConfig) && flag, duplicateDomains);
+		return new Pair<Boolean, String>(flag, duplicateDomains);
 	}
 
 	public Map<String, ProductLine> queryAllProductLines() {
@@ -283,12 +241,12 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return productLine;
 	}
 
-	public ProductLine queryProductLine(String name) {
+	public ProductLineConfig queryProductLine(String name) {
 		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
 			ProductLine productLine = productLineConfig.getCompany().findProductLine(name);
 
 			if (productLine != null) {
-				return productLine;
+				return productLineConfig;
 			}
 		}
 		return null;

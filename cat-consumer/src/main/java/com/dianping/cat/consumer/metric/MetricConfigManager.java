@@ -24,12 +24,12 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
@@ -115,20 +115,20 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 		if (config != null) {
 			return true;
-			} else {
-				config = new MetricItemConfig();
-	
-				config.setId(key);
-				config.setDomain(domain);
-				config.setType(type);
-				config.setMetricKey(metricKey);
-				config.setTitle(item.getTitle());
-				config.setShowAvg(item.isShowAvg());
-				config.setShowCount(item.isShowCount());
-				config.setShowSum(item.isShowSum());
-				m_logger.info("insert metric config info " + config.toString());
-				return insertMetricItemConfig(config);
-			}
+		} else {
+			config = new MetricItemConfig();
+
+			config.setId(key);
+			config.setDomain(domain);
+			config.setType(type);
+			config.setMetricKey(metricKey);
+			config.setTitle(item.getTitle());
+			config.setShowAvg(item.isShowAvg());
+			config.setShowCount(item.isShowCount());
+			config.setShowSum(item.isShowSum());
+			m_logger.info("insert metric config info " + config.toString());
+			return insertMetricItemConfig(config);
+		}
 	}
 
 	public boolean insertMetricItemConfig(MetricItemConfig config) {
@@ -241,9 +241,9 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 			for (MetricItemConfig config : configs.values()) {
 				String domain = config.getDomain();
 				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
-				ProductLine product = m_productLineConfigManager.queryProductLine(productLine);
+				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
 
-				if (product == null || !product.isMetricDashboard()) {
+				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
 					unused.add(config.getId());
 				}
 			}
