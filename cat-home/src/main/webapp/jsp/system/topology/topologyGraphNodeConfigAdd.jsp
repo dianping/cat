@@ -57,6 +57,10 @@
 			</td>
 		</tr>
 		<tr>
+			<td style="text-align:right" class="text-success">最少访问次数</td>
+			<td><input id="warningThreshold" name="domainConfig.minCountThreshold" value="${model.domainConfig.minCountThreshold}" required/></td>
+		</tr>
+		<tr>
 			<td style="text-align:right" class="text-success">一分钟异常数warning阈值</td>
 			<td><input id="warningThreshold" name="domainConfig.warningThreshold" value="${model.domainConfig.warningThreshold}" required/></td>
 		</tr>

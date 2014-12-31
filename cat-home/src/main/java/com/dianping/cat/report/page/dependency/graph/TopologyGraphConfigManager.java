@@ -182,6 +182,7 @@ public class TopologyGraphConfigManager implements Initializable {
 	private EdgeConfig convertNodeConfig(DomainConfig config) {
 		EdgeConfig edgeConfig = new EdgeConfig();
 
+		edgeConfig.setMinCountThreshold(config.getMinCountThreshold());
 		edgeConfig.setWarningResponseTime(config.getWarningResponseTime());
 		edgeConfig.setErrorResponseTime(config.getErrorResponseTime());
 		edgeConfig.setWarningThreshold(config.getWarningThreshold());
@@ -264,6 +265,7 @@ public class TopologyGraphConfigManager implements Initializable {
 	public boolean insertDomainDefaultConfig(String type, DomainConfig config) {
 		NodeConfig node = m_config.findOrCreateNodeConfig(type);
 
+		node.setDefaultMinCountThreshold(config.getMinCountThreshold());
 		node.setDefaultErrorResponseTime(config.getErrorResponseTime());
 		node.setDefaultErrorThreshold(config.getErrorThreshold());
 		node.setDefaultWarningResponseTime(config.getWarningResponseTime());
@@ -305,6 +307,7 @@ public class TopologyGraphConfigManager implements Initializable {
 				config = new DomainConfig();
 
 				config.setId(domain);
+				config.setMinCountThreshold(typesConfig.getDefaultMinCountThreshold());
 				config.setErrorResponseTime(typesConfig.getDefaultErrorResponseTime());
 				config.setErrorThreshold(typesConfig.getDefaultErrorThreshold());
 				config.setWarningResponseTime(typesConfig.getDefaultWarningResponseTime());

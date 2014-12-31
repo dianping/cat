@@ -77,6 +77,11 @@
 			</td>
 		</tr>
 		<tr>
+			<td style="text-align: right" class="text-success">最少调用次数</td>
+			<td><input id="minCountThreshold" name="edgeConfig.minCountThreshold"
+				value="${model.edgeConfig.minCountThreshold}" required /></td>
+		</tr>
+		<tr>
 			<td style="text-align: right" class="text-success">一分钟异常数warning阈值</td>
 			<td><input id="warningThreshold" name="edgeConfig.warningThreshold"
 				value="${model.edgeConfig.warningThreshold}" required /></td>
