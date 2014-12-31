@@ -200,8 +200,8 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public void clearOldReports() {
-      }
+		public void clearOldReports() {
+		}
 
 	}
 
@@ -292,7 +292,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public ProductLine queryProductLine(String id) {
+		public ProductLineConfig queryProductLine(String id) {
 			return null;
 		}
 
