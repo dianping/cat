@@ -1,39 +1,50 @@
 package com.dianping.cat.report.page.state;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.RouterConfigManager;
 
 public class StateBuilder {
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	private RouterConfigManager m_routerManager;
 
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
 
+	private List<String> queryAllServers() {
+		List<String> strs = new ArrayList<String>();
+		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
+		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
+
+		for (DefaultServer server : servers) {
+			strs.add(server.getId());
+		}
+		strs.add(backUpServer);
+		return strs;
+	}
+
 	private String buildCatInfoMessage(StateReport report) {
 		int realSize = report.getMachines().size();
-		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
+		List<String> servers = queryAllServers();
 		int excepeted = servers.size();
 		Set<String> errorServers = new HashSet<String>();
 
 		if (realSize != excepeted) {
-			for (Pair<String, Integer> server : servers) {
-				String serverIp = server.getKey();
-
+			for (String serverIp : servers) {
 				if (report.getMachines().get(serverIp) == null) {
 					errorServers.add(serverIp);
 				}
