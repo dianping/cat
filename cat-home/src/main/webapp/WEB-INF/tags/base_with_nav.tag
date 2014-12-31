@@ -59,7 +59,10 @@
 						<div class="input-group">
 							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
 							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-							<input id="search" type="text" value="${model.domain}" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<span class="input-icon" style="width:300px;">
+							<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+							</span>
 							<span class="input-group-btn">
 								<button class="btn btn-sm btn-pink" type="button" id="search_go">
 									Go
