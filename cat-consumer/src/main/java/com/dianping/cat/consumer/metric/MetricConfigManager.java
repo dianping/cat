@@ -253,7 +253,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 			}
 			storeConfig();
 		} catch (Exception e) {
-			e.printStackTrace();
+			m_logger.error(e.getMessage(), e);
 		}
 	}
 
