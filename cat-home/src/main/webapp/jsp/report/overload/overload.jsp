@@ -25,7 +25,7 @@
 			<input type="text" id="endTime" style="width:150px;" value="<fmt:formatDate value='${payload.endTime}' pattern='yyyy-MM-dd HH:mm'/>"/></div>
 			&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
-		<div id="DatabaseReport" style="display:inline-flex;">
+		<div id="DatabaseReport" style="display:inline-flex;padding-top:3px;">
 			<table class="table table-striped table-condensed  table-hover" style="width:100%" id="contents">
 				<thead>
 				<tr class="text-success">
