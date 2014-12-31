@@ -30,8 +30,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private boolean checkStorageTime(String messageId) {
-		MessageId msg = MessageId.parse(messageId);
+	private boolean checkStorageTime(MessageId msg) {
 		long time = msg.getTimestamp();
 		long current = TimeHelper.getCurrentDay().getTime();
 
@@ -99,12 +98,13 @@ public class Handler implements PageHandler<Context> {
 
 		String messageId = getMessageId(payload);
 		String logView = null;
+		MessageId msgId = MessageId.parse(messageId);
 
-		if (checkStorageTime(messageId)) {
+		if (checkStorageTime(msgId)) {
 			logView = getLogView(messageId, payload.isWaterfall());
 
 			if (logView == null || logView.length() == 0) {
-				Cat.logEvent("Logview", "Fail", Event.SUCCESS, messageId);
+				Cat.logEvent("Logview", msgId.getDomain() + ":Fail", Event.SUCCESS, messageId);
 			} else {
 				Cat.logEvent("Logview", "Success", Event.SUCCESS, messageId);
 			}
