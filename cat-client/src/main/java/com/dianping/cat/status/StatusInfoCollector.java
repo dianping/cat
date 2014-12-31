@@ -45,15 +45,10 @@ public class StatusInfoCollector extends BaseVisitor {
 		status.addExtension(heapUsage);
 
 		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
-			if (mpBean.getName().contains("Eden")) {
-				long count = mpBean.getUsage().getUsed();
+			long count = mpBean.getUsage().getUsed();
+			String name = mpBean.getName().replace(" ", "");
 
-				heapUsage.setDynamicAttribute("EdenUsage", Long.toString(count));
-			} else if (mpBean.getName().contains("Survivor")) {
-				long count = mpBean.getUsage().getUsed();
-				
-				heapUsage.setDynamicAttribute("SurvivorUsage", Long.toString(count));
-			}
+			heapUsage.setDynamicAttribute(name, Long.toString(count));
 		}
 	}
 
