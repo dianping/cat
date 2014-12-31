@@ -184,12 +184,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains, String title) {
+		boolean flag = false;
 		String duplicateDomains = "";
 		ProductLineConfig productLineConfig = queryProductLineByTitle(title);
-		duplicateDomains = buildDomainInfo(productLineConfig, line, domains);
 
-		productLineConfig.getCompany().addProductLine(line);
-		return new Pair<Boolean, String>(storeConfig(productLineConfig), duplicateDomains);
+		if (productLineConfig != null) {
+			duplicateDomains = buildDomainInfo(productLineConfig, line, domains);
+
+			productLineConfig.getCompany().addProductLine(line);
+			flag = storeConfig(productLineConfig);
+		}
+
+		return new Pair<Boolean, String>(flag, duplicateDomains);
 	}
 
 	public Map<String, ProductLine> queryAllProductLines() {
