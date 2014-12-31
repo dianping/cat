@@ -10,8 +10,8 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
-import com.dianping.cat.home.nettopo.transform.DefaultSaxParser;
+import com.dianping.cat.home.network.entity.NetGraphSet;
+import com.dianping.cat.home.network.transform.DefaultSaxParser;
 
 public class NetGraphConfigManager implements Initializable {
 

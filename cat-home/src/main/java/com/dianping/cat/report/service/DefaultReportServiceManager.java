@@ -55,7 +55,7 @@ import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.jar.entity.JarReport;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
+import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;

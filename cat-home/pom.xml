@@ -154,7 +154,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/netgraph-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/network-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
