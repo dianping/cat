@@ -165,7 +165,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/highload-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/topoGraph-format-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

@@ -17,10 +17,10 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.heartbeat.config.entity.DisplayPolicy;
-import com.dianping.cat.home.heartbeat.config.entity.Group;
-import com.dianping.cat.home.heartbeat.config.entity.Metric;
-import com.dianping.cat.home.heartbeat.config.transform.DefaultSaxParser;
+import com.dianping.cat.home.heartbeat.entity.DisplayPolicy;
+import com.dianping.cat.home.heartbeat.entity.Group;
+import com.dianping.cat.home.heartbeat.entity.Metric;
+import com.dianping.cat.home.heartbeat.transform.DefaultSaxParser;
 
 public class DisplayPolicyManager implements Initializable {
 
