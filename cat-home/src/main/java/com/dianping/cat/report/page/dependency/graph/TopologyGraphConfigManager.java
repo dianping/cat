@@ -85,21 +85,24 @@ public class TopologyGraphConfigManager implements Initializable {
 
 		if (config != null) {
 			double avg = dependency.getAvg();
+			long totalCount = dependency.getTotalCount();
+			int minCount = config.getMinCountThreshold();
+
 			sb.append(buildDes(type, TOTAL_STR, String.valueOf(dependency.getTotalCount()))).append(GraphConstrant.ENTER);
 
-			if (avg >= config.getErrorResponseTime()) {
+			if (avg >= config.getErrorResponseTime() && totalCount > minCount) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
-			} else if (avg >= config.getWarningResponseTime()) {
+			} else if (avg >= config.getWarningResponseTime() && totalCount > minCount) {
 				errorCode = WARN;
 				sb.append(buildWarningDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			} else {
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND)).append(GraphConstrant.ENTER);
 			}
-			if (error >= config.getErrorThreshold()) {
+			if (error >= config.getErrorThreshold() && totalCount > minCount) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
-			} else if (error >= config.getWarningThreshold()) {
+			} else if (error >= config.getWarningThreshold() && totalCount > minCount) {
 				errorCode = WARN;
 				sb.append(buildWarningDes(type, ERROR_STR, String.valueOf(error))).append(GraphConstrant.ENTER);
 			} else if (error > 0) {
@@ -131,17 +134,18 @@ public class TopologyGraphConfigManager implements Initializable {
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
+			long totalCount = index.getTotalCount();
+			int minCount = config.getMinCountThreshold();
 
 			sb.append(type).append(GraphConstrant.DELIMITER);
 
 			if (index.getTotalCount() > 0 && !type.equalsIgnoreCase("Exception")) {
 				sb.append(buildDes(TOTAL_STR, String.valueOf(index.getTotalCount())));
 			}
-
-			if (avg >= config.getErrorResponseTime()) {
+			if (avg >= config.getErrorResponseTime() && totalCount > minCount) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(AVG_STR, m_df.format(avg), MILLISECOND));
-			} else if (avg >= config.getWarningResponseTime()) {
+			} else if (avg >= config.getWarningResponseTime() && totalCount > minCount) {
 				errorCode = WARN;
 				sb.append(buildWarningDes(AVG_STR, m_df.format(avg), MILLISECOND));
 			} else {
@@ -149,10 +153,10 @@ public class TopologyGraphConfigManager implements Initializable {
 					sb.append(buildDes(AVG_STR, m_df.format(avg), MILLISECOND));
 				}
 			}
-			if (error >= config.getErrorThreshold()) {
+			if (error >= config.getErrorThreshold() && totalCount > minCount) {
 				errorCode = ERROR;
 				sb.append(buildErrorDes(ERROR_STR, String.valueOf(error)));
-			} else if (error >= config.getWarningThreshold()) {
+			} else if (error >= config.getWarningThreshold() && totalCount > minCount) {
 				errorCode = WARN;
 				sb.append(buildWarningDes(ERROR_STR, String.valueOf(error)));
 			} else if (error > 0) {
