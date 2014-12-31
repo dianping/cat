@@ -55,7 +55,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DisplayPolicyManager m_manager;
 
-	private void buildHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
+	private void buildHeartbeatGraphInfo(Model model, HeartbeatSvg displayHeartbeat) {
 		if (displayHeartbeat == null) {
 			return;
 		}
@@ -147,7 +147,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		DisplayHeartbeat heartbeat = null;
+		HeartbeatSvg heartbeat = null;
 
 		normalize(model, payload);
 		switch (payload.getAction()) {
@@ -189,7 +189,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private DisplayHeartbeat showReport(Model model, Payload payload) {
+	private HeartbeatSvg showReport(Model model, Payload payload) {
 		try {
 			HeartbeatReport report = getReport(payload.getDomain(), payload.getIpAddress(), payload.getDate(),
 			      payload.getPeriod());
@@ -198,7 +198,7 @@ public class Handler implements PageHandler<Context> {
 				String displayIp = getIpAddress(report, payload);
 
 				payload.setRealIp(displayIp);
-				return new DisplayHeartbeat(m_builder, m_manager).display(report, displayIp);
+				return new HeartbeatSvg(m_builder, m_manager).display(report, displayIp);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);
