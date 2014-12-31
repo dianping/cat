@@ -1,11 +1,10 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<br/>
 <style>
 	.tableHeader:hover {
 		cursor:hand;
 	}
 </style>
-<div class="tabbable "  > <!-- Only required for left/right tabs -->
+<div class="tabbable "  style="padding-top:3px;"> <!-- Only required for left/right tabs -->
 	<ul class="nav nav-tabs" style="height:50px">
 		<c:forEach var="type" items="${model.report.types}" varStatus="status">
 			<li class="text-right navTabs" id="${type.id}"><a href="#${type.id}Content" data-toggle="tab"><strong>${type.id}</strong></a></li>

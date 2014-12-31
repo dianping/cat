@@ -20,7 +20,7 @@
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
-		<div class="report">
+		<div class="report" >
 			<%@ include file="detail.jsp"%>
 		</div>
 		<script type="text/javascript">
