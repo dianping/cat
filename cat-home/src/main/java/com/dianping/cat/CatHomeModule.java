@@ -9,7 +9,6 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.hadoop.hdfs.UploaderAndCleaner;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -39,10 +38,8 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(MessageConsumer.class);
 		if (!serverConfigManager.isLocalMode()) {
 			ConfigReloadTask configReloadTask = ctx.lookup(ConfigReloadTask.class);
-			UploaderAndCleaner uploader = ctx.lookup(UploaderAndCleaner.class);
 
 			Threads.forGroup("cat").start(configReloadTask);
-			Threads.forGroup("cat").start(uploader);
 		}
 
 		if (serverConfigManager.isJobMachine()) {
