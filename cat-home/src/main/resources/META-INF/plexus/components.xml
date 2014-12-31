@@ -3889,6 +3889,9 @@
 					<role>com.dianping.cat.report.page.state.StateGraphs</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.state.StateBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>state</role-hint>
 					<field-name>m_service</field-name>
@@ -3919,6 +3922,20 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.StateBuilder</role>
+			<implementation>com.dianping.cat.report.page.state.StateBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>state</role-hint>
+					<field-name>m_stateService</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4049,11 +4066,6 @@
 					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>state</role-hint>
-					<field-name>m_stateService</field-name>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 				</requirement>
 				<requirement>
@@ -4063,13 +4075,13 @@
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.state.StateBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
