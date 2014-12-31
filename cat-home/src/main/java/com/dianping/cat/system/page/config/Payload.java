@@ -19,8 +19,8 @@ import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionExclude;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {

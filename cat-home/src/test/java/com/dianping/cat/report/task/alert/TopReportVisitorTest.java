@@ -12,8 +12,8 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionExclude;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.task.alert.exception.TopReportVisitor;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 

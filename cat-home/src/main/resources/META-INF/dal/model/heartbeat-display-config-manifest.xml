@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="heartbeat-display-config-codegen.xml" />
+  <file path="heartbeat-display-config-model.xml" />
+</manifest>
+

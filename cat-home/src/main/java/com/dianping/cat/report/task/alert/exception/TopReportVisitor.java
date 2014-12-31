@@ -9,8 +9,8 @@ import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionExclude;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopReportVisitor extends BaseVisitor {

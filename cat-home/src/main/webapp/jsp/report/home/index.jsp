@@ -24,6 +24,7 @@
 		<td><a target="_blank" href="http://www.ly.com/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/ly.png"/></a></td>
 	</tr>
 	<tr>
+		<td><a target="_blank" href="http://www.liepin.com/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/liepin.png"/></a></td>
 		<td><a target="_blank" href="http://www.qipeipu.com/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/qipeipu.jpg"/></a></td>
 		<td><a target="_blank" href="http://www.shangpin.com/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/shangping.jpg"/></a></td>
 		<td><a target="_blank" href="http://www.travelzen.com/flight/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/zhenlv.png"/></a></td>

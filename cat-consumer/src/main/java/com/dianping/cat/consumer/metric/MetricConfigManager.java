@@ -107,7 +107,6 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		if (m_metricConfig == null) {
 			m_metricConfig = new MetricConfig();
 		}
-		deleteUnusedConfig();
 	}
 
 	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
