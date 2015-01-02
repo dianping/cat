@@ -341,7 +341,7 @@ public class TopMetric extends BaseVisitor {
 			Map<String, Item> temp = m_items.get(minute);
 
 			if (temp == null) {
-				temp = new HashMap<String, Item>();
+				temp = new LinkedHashMap<String, Item>();
 				m_items.put(minute, temp);
 			}
 			Item item = temp.get(domain);
@@ -367,7 +367,7 @@ public class TopMetric extends BaseVisitor {
 			String hour2 = o2.substring(0, 2);
 
 			if (!hour1.equals(hour2)) {
-				return Integer.parseInt(hour2) - Integer.parseInt(hour1);
+				return (Integer.parseInt(hour2) + 24) % 25 - (Integer.parseInt(hour1) + 24) % 25;
 			} else {
 				String first = o1.substring(3, 5);
 				String end = o2.substring(3, 5);
