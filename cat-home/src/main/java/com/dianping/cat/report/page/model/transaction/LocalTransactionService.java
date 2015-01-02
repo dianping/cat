@@ -26,7 +26,7 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 	protected TransactionReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		TransactionReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}

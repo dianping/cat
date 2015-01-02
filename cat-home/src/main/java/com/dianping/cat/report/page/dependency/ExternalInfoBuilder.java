@@ -127,6 +127,7 @@ public class ExternalInfoBuilder {
 		if (m_topService.isEligable(request)) {
 			ModelResponse<TopReport> response = m_topService.invoke(request);
 			TopReport report = response.getModel();
+			
 			if (report == null || report.getDomains().size() == 0) {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
 				      + TimeHelper.ONE_HOUR));

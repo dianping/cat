@@ -26,7 +26,7 @@ public class LocalStateService extends BaseLocalModelService<StateReport> {
 	protected StateReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		StateReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getMachines().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 

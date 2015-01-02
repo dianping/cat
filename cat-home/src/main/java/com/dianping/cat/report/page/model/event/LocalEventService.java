@@ -27,7 +27,7 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 	protected EventReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		EventReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}

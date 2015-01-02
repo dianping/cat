@@ -26,7 +26,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 	protected HeartbeatReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		HeartbeatReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}

@@ -26,7 +26,7 @@ public class LocalMetricService extends BaseLocalModelService<MetricReport> {
 	protected MetricReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		MetricReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getMetricItems().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 

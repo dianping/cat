@@ -7,6 +7,7 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
@@ -146,6 +147,7 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 				m_monthlyReportDao.deleteReportByDomainNamePeriod(report);
 				m_monthlyReportContentDao.deleteByPK(reportContent);
 			}
+		} catch (DalNotFoundException e) {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -181,6 +183,7 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 				m_weeklyReportContentDao.deleteByPK(reportContent);
 				m_weeklyReportDao.deleteReportByDomainNamePeriod(report);
 			}
+		} catch (DalNotFoundException e) {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -319,7 +322,7 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 
 		return reportService.queryReport(domain, start, end);
 	}
-	
+
 	@Override
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		ReportService<UtilizationReport> reportService = m_reportServices.get(Constants.REPORT_UTILIZATION);
