@@ -1,7 +1,22 @@
-<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-
+<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<a:config>
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
+	<res:useCss value="${res.css.local['jqx.base.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['jqxcore.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxbuttons.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxscrollbar.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jqxlistbox.js']}" target="head-js" />
+    <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
 <script type="text/javascript">
 		$(document).ready(function() {
 
@@ -48,7 +63,7 @@
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.id" value="${model.exceptionExclude.id}"/>
+				<input name="exceptionExclude.id" size="35" value="${model.exceptionExclude.id}"/>
 			</c:when>
 			<c:otherwise>
 				<div id="jqxcombobox" name='exceptionExclude.id' >
@@ -63,3 +78,4 @@
 		</tr>
 	</table>
 </form>
+</a:config>
