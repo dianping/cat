@@ -272,8 +272,6 @@ public class Handler implements PageHandler<Context> {
 			} catch (Exception ex) {
 				Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
 			}
-		} else {
-			Cat.logError("cannot get cookie info", new RuntimeException());
 		}
 	}
 
