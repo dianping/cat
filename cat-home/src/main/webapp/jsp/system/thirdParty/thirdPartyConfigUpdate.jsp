@@ -136,5 +136,4 @@ $(document).ready(function() {
 .tags {
 	width:auto;
 }
-.tags 
 </style>

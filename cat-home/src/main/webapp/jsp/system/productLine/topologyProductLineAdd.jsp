@@ -81,4 +81,9 @@
 				})
 			}).trigger('resize.chosen');
 		});
-	</script>
+</script>
+<style>
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+background:inherit;
+}
+</style>
