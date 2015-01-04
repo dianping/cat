@@ -220,7 +220,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 		try {
 			if (start != null && end != null && end.before(m_sdf.parse("2015-01-02"))) {
-				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000);
+				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000.0);
 
 				report.accept(statistics);
 			}

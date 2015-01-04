@@ -93,8 +93,8 @@ function submit(){
 	window.location.href = "?op=domainGroupConfigSubmit&domain="+domainstr+"&content="+content;
 }
 $(document).ready(function() {
-	$('#application_config').addClass('active open');
-	$('#thirdPartyConfigUpdate').addClass('active');
+	$('#projects_config').addClass('active open');
+	$('#domainGroupConfigUpdate').addClass('active');
 	<c:if test="${not empty model.http.type}">
 	$('#typeSelect').val("${model.http.type}");
 	</c:if>

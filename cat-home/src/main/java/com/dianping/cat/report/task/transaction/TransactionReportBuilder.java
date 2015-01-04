@@ -156,7 +156,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 	private TransactionReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		double duration = (end.getTime() - start.getTime()) / TimeHelper.ONE_DAY;
+		double duration = (end.getTime() - start.getTime()) * 1.0 / TimeHelper.ONE_DAY;
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(domain))
 		      .setDuration(duration);
 
@@ -184,7 +184,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		List<TransactionReport> reports = new ArrayList<TransactionReport>();
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
-		double duration = (endTime - startTime) / TimeHelper.ONE_DAY;
+		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(

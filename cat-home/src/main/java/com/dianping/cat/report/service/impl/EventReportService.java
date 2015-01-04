@@ -218,8 +218,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		Date end = report.getEndTime();
 
 		try {
-			if (start != null && end != null && end.before(m_sdf.parse("2015-1-1"))) {
-				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000);
+			if (start != null && end != null && end.before(m_sdf.parse("2015-01-05"))) {
+				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000.0);
 
 				report.accept(statistics);
 			}
@@ -240,14 +240,14 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		@Override
 		public void visitName(EventName name) {
 			if (m_duration > 0) {
-				name.setTps(name.getTotalCount() * 1.0 / m_duration);
+				name.setTps(Math.abs(name.getTotalCount() * 1.0 / m_duration));
 			}
 		}
 
 		@Override
 		public void visitType(EventType type) {
 			if (m_duration > 0) {
-				type.setTps(type.getTotalCount() * 1.0 / m_duration);
+				type.setTps(Math.abs(type.getTotalCount() * 1.0 / m_duration));
 				super.visitType(type);
 			}
 		}

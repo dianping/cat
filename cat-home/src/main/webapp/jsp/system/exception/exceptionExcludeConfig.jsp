@@ -19,6 +19,8 @@
     <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
 <script type="text/javascript">
 		$(document).ready(function() {
+		$('#application_config').addClass('active open');
+		$('#exception').addClass('active');
 
 		var source = new Array();  
 		source = "${model.exceptionList}".replace(/[\[\]]/g,'').split(', '); 
