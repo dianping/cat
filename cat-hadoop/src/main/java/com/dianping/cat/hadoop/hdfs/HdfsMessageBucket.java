@@ -1,5 +1,8 @@
 package com.dianping.cat.hadoop.hdfs;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -9,8 +12,6 @@ import java.util.zip.GZIPInputStream;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -50,7 +51,7 @@ public class HdfsMessageBucket implements MessageBucket {
 	public MessageTree findByIndex(int index) throws IOException {
 		try {
 			byte[] data = m_reader.readMessage(index);
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(data.length);
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 			MessageTree tree = new DefaultMessageTree();
 
 			buf.writeBytes(data);
@@ -135,4 +136,5 @@ public class HdfsMessageBucket implements MessageBucket {
 			}
 		}
 	}
+	
 }

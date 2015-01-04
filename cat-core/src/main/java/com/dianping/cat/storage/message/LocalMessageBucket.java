@@ -1,5 +1,8 @@
 package com.dianping.cat.storage.message;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -7,8 +10,6 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.internal.MessageId;
@@ -71,7 +72,7 @@ public class LocalMessageBucket implements MessageBucket {
 			m_lastAccessTime = System.currentTimeMillis();
 
 			byte[] data = m_reader.readMessage(index);
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(data.length);
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 			MessageTree tree = new DefaultMessageTree();
 
 			buf.writeBytes(data);
@@ -137,7 +138,7 @@ public class LocalMessageBucket implements MessageBucket {
 		m_codec = codec;
 	}
 
-	public synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
+	public synchronized MessageBlock storeMessage(final ByteBuf buf, final MessageId id) throws IOException {
 		int size = buf.readableBytes();
 
 		m_dirty.set(true);

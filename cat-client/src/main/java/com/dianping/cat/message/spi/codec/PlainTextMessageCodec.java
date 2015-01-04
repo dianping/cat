@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.codec;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.text.ParseException;
@@ -15,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -57,7 +58,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	private Logger m_logger;
 
 	@Override
-	public MessageTree decode(ChannelBuffer buf) {
+	public MessageTree decode(ByteBuf buf) {
 		MessageTree tree = new DefaultMessageTree();
 
 		decode(buf, tree);
@@ -65,7 +66,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	@Override
-	public void decode(ChannelBuffer buf, MessageTree tree) {
+	public void decode(ByteBuf buf, MessageTree tree) {
 		Context ctx = m_ctx.get().setBuffer(buf);
 
 		decodeHeader(ctx, tree);
@@ -254,7 +255,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	@Override
-	public void encode(MessageTree tree, ChannelBuffer buf) {
+	public void encode(MessageTree tree, ByteBuf buf) {
 		int count = 0;
 		int index = buf.writerIndex();
 
@@ -268,7 +269,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		buf.setInt(index, count);
 	}
 
-	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
+	protected int encodeHeader(MessageTree tree, ByteBuf buf) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -298,7 +299,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		return count;
 	}
 
-	protected int encodeLine(Message message, ChannelBuffer buf, char type, Policy policy) {
+	protected int encodeLine(Message message, ByteBuf buf, char type, Policy policy) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -341,7 +342,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		return count;
 	}
 
-	public int encodeMessage(Message message, ChannelBuffer buf) {
+	public int encodeMessage(Message message, ByteBuf buf) {
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
@@ -394,7 +395,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public String read(Context ctx, byte separator) {
-			ChannelBuffer buf = ctx.getBuffer();
+			ByteBuf buf = ctx.getBuffer();
 			char[] data = ctx.getData();
 			int from = buf.readerIndex();
 			int to = buf.writerIndex();
@@ -463,12 +464,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		}
 
-		public int write(ChannelBuffer buf, byte b) {
+		public int write(ByteBuf buf, byte b) {
 			buf.writeByte(b);
 			return 1;
 		}
 
-		public int write(ChannelBuffer buf, String str) {
+		public int write(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}
@@ -479,7 +480,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return data.length;
 		}
 
-		public int writeRaw(ChannelBuffer buf, String str) {
+		public int writeRaw(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}
@@ -497,7 +498,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	public static class Context {
-		private ChannelBuffer m_buffer;
+		private ByteBuf m_buffer;
 
 		private char[] m_data;
 
@@ -505,7 +506,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			m_data = new char[4 * 1024 * 1024];
 		}
 
-		public ChannelBuffer getBuffer() {
+		public ByteBuf getBuffer() {
 			return m_buffer;
 		}
 
@@ -513,7 +514,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return m_data;
 		}
 
-		public Context setBuffer(ChannelBuffer buffer) {
+		public Context setBuffer(ByteBuf buffer) {
 			m_buffer = buffer;
 			return this;
 		}

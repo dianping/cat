@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.core;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,6 @@ import java.util.Stack;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
@@ -50,17 +51,17 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-	public MessageTree decode(ChannelBuffer buf) {
+	public MessageTree decode(ByteBuf buf) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
 
 	@Override
-	public void decode(ChannelBuffer buf, MessageTree tree) {
+	public void decode(ByteBuf buf, MessageTree tree) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
 
 	@Override
-	public void encode(MessageTree tree, ChannelBuffer buf) {
+	public void encode(MessageTree tree, ByteBuf buf) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -91,7 +92,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		}
 	}
 
-	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
+	protected int encodeFooter(MessageTree tree, ByteBuf buf) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
@@ -103,7 +104,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return helper.write(buf, sb.toString());
 	}
 
-	protected int encodeHeader(MessageTree tree, ChannelBuffer buf, Ruler ruler) {
+	protected int encodeHeader(MessageTree tree, ByteBuf buf, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
@@ -129,7 +130,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return helper.write(buf, sb.toString());
 	}
 
-	protected int encodeRemoteCall(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeRemoteCall(MessageTree tree, Event event, ByteBuf buf, Locator locator, Ruler ruler) {
 		int count = 0;
 
 		locator.downLevel(true);
@@ -140,7 +141,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 	
-	protected int encodeRemoteCallLine(MessageTree tree, Event event, ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeRemoteCallLine(MessageTree tree, Event event, ByteBuf buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
@@ -158,7 +159,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return helper.write(buf, sb.toString());
 	}
 
-	protected int encodeRuler(ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeRuler(ByteBuf buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
@@ -194,7 +195,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return helper.write(buf, sb.toString());
 	}
 
-	protected int encodeTransaction(MessageTree tree, Transaction transaction, ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeTransaction(MessageTree tree, Transaction transaction, ByteBuf buf, Locator locator, Ruler ruler) {
 		List<Message> children = getVisibleChildren(transaction);
 		int count = 0;
 
@@ -220,7 +221,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeTransactionLine(MessageTree tree, Transaction t, ChannelBuffer buf, Locator locator, Ruler ruler) {
+	protected int encodeTransactionLine(MessageTree tree, Transaction t, ByteBuf buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
 		int width = 6;
@@ -379,12 +380,12 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			m_writer = writer;
 		}
 
-		public int crlf(ChannelBuffer buf) {
+		public int crlf(ByteBuf buf) {
 			buf.writeBytes(CRLF);
 			return CRLF.length;
 		}
 
-		public int nbsp(ChannelBuffer buf, int count) {
+		public int nbsp(ByteBuf buf, int count) {
 			for (int i = 0; i < count; i++) {
 				buf.writeBytes(NBSP);
 			}
@@ -392,21 +393,21 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return count * NBSP.length;
 		}
 
-		public int table1(ChannelBuffer buf) {
+		public int table1(ByteBuf buf) {
 			buf.writeBytes(TABLE1);
 			return TABLE1.length;
 		}
 
-		public int table2(ChannelBuffer buf) {
+		public int table2(ByteBuf buf) {
 			buf.writeBytes(TABLE2);
 			return TABLE2.length;
 		}
 
-		public int td(ChannelBuffer buf, String str) {
+		public int td(ByteBuf buf, String str) {
 			return td(buf, str, null);
 		}
 
-		public int td(ChannelBuffer buf, String str, String attributes) {
+		public int td(ByteBuf buf, String str, String attributes) {
 			if (str == null) {
 				str = "null";
 			}
@@ -434,12 +435,12 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return count;
 		}
 
-		public int td1(ChannelBuffer buf) {
+		public int td1(ByteBuf buf) {
 			buf.writeBytes(TD1);
 			return TD1.length;
 		}
 
-		public int td1(ChannelBuffer buf, String attributes) {
+		public int td1(ByteBuf buf, String attributes) {
 			if (attributes == null) {
 				buf.writeBytes(TD1);
 				return TD1.length;
@@ -452,12 +453,12 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int td2(ChannelBuffer buf) {
+		public int td2(ByteBuf buf) {
 			buf.writeBytes(TD2);
 			return TD2.length;
 		}
 
-		public int tr1(ChannelBuffer buf, String styleClass) {
+		public int tr1(ByteBuf buf, String styleClass) {
 			if (styleClass == null) {
 				buf.writeBytes(TR1);
 				return TR1.length;
@@ -470,17 +471,17 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int tr2(ChannelBuffer buf) {
+		public int tr2(ByteBuf buf) {
 			buf.writeBytes(TR2);
 			return TR2.length;
 		}
 
-		public int write(ChannelBuffer buf, byte b) {
+		public int write(ByteBuf buf, byte b) {
 			buf.writeByte(b);
 			return 1;
 		}
 
-		public int write(ChannelBuffer buf, String str) {
+		public int write(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}
@@ -491,7 +492,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return data.length;
 		}
 
-		public int writeRaw(ChannelBuffer buf, String str) {
+		public int writeRaw(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}

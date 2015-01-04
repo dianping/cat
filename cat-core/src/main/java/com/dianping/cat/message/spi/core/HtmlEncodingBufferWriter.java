@@ -1,6 +1,6 @@
 package com.dianping.cat.message.spi.core;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 import com.dianping.cat.message.spi.codec.BufferWriter;
 
@@ -16,7 +16,7 @@ public class HtmlEncodingBufferWriter implements BufferWriter {
 	private static byte[] BR = "<br>".getBytes();
 
 	@Override
-	public int writeTo(ChannelBuffer buffer, byte[] data) {
+	public int writeTo(ByteBuf buffer, byte[] data) {
 		int len = data.length;
 		int count = len;
 		int offset = 0;
