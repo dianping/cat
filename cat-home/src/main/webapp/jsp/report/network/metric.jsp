@@ -11,7 +11,7 @@
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
 		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+		<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
