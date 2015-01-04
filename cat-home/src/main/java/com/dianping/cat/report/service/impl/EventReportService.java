@@ -240,14 +240,14 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		@Override
 		public void visitName(EventName name) {
 			if (m_duration > 0) {
-				name.setTps(Math.abs(name.getTotalCount() * 1.0 / m_duration));
+				name.setTps(name.getTotalCount() * 1.0 / m_duration);
 			}
 		}
 
 		@Override
 		public void visitType(EventType type) {
 			if (m_duration > 0) {
-				type.setTps(Math.abs(type.getTotalCount() * 1.0 / m_duration));
+				type.setTps(type.getTotalCount() * 1.0 / m_duration);
 				super.visitType(type);
 			}
 		}
