@@ -257,19 +257,12 @@ public class Cat {
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
-		s_instance.m_manager.reset();
+		// remove me
 	}
 
-	// this should be called when a thread starts to create some thread local
-	// data
+	// this should be called when a thread starts to create some thread local data
 	public static void setup(String sessionToken) {
-		MessageManager manager = s_instance.m_manager;
-
-		if (manager == null) {
-			checkAndInitialize();
-		}
-		manager.setup();
-		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
+		// remove me
 	}
 
 	private Cat() {
