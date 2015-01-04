@@ -267,7 +267,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseInfo(content, jsonName, attrName);
 		} catch (Exception e) {
-			t.setStatus(e);
+			//ignore
 		} finally {
 			t.complete();
 		}
