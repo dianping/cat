@@ -79,7 +79,9 @@ public class AppConfigProcessor extends BaseProcesser {
 				}
 			} else {
 				try {
-					if (m_appConfigManager.addCommand(domain, title, name).getKey()) {
+					String type = payload.getType();
+
+					if (m_appConfigManager.addCommand(domain, title, name, type).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
@@ -223,12 +225,17 @@ public class AppConfigProcessor extends BaseProcesser {
 		List<Command> commands = m_appConfigManager.queryCommands();
 		model.setCommands(commands);
 		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCodes(m_appConfigManager.getCodes());
 
-		int id = 1;
+		int id = 0;
+
 		if ("code".equals(payload.getType()) && payload.getId() > 0) {
 			id = payload.getId();
+		} else {
+			if (!m_appConfigManager.getRawCommands().isEmpty()) {
+				id = m_appConfigManager.getRawCommands().keySet().iterator().next();
+			}
 		}
-		model.setCodes(m_appConfigManager.getCodes());
 		Command cmd = m_appConfigManager.getRawCommands().get(id);
 
 		if (cmd != null) {

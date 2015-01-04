@@ -28,30 +28,42 @@
 				}
 				return;
 			}
-			
-			$.ajax({
-				async: false,
-				type: "get",
-				dataType: "json",
-				url: "/cat/s/config?op=appNameCheck&name="+name,
-				success : function(response, textStatus) {
-					if(response['isNameUnique']){
-						if(title==undefined){
-							title = "";
+			if(${payload.id} == 0) {
+				$.ajax({
+					async: false,
+					type: "get",
+					dataType: "json",
+					url: "/cat/s/config?op=appNameCheck&name="+name,
+					success : function(response, textStatus) {
+						if(response['isNameUnique']){
+							if(title==undefined){
+								title = "";
+							}
+							if(domain==undefined){
+								domain="";
+							}
+							if(id==undefined){
+								id="";
+							}
+							
+							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}";
+						}else{
+							alert("该名称已存在，请修改名称！");
 						}
-						if(domain==undefined){
-							domain="";
-						}
-						if(id==undefined){
-							id="";
-						}
-						
-						window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id;
-					}else{
-						alert("该名称已存在，请修改名称！");
 					}
+				});
+			}else{
+				if(title==undefined){
+					title = "";
 				}
-			});
+				if(domain==undefined){
+					domain="";
+				}
+				if(id==undefined){
+					id="";
+				}
+				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id;
+			}
 		})
 	</script>
 	
@@ -61,10 +73,10 @@
 		</td>
 		<tr>
 		<tr>
-			<td>项目</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">（* 支持数字、字符）</span><br/>
+			<td>项目</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">（支持数字、字符）</span><br/>
 </td>
 </tr>
-		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（* 支持数字、字符）</span><br/>
+		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
 			</td>
 		</tr>
 		<c:if test="${not empty payload.id}">
