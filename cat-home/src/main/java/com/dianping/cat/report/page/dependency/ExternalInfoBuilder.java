@@ -96,7 +96,6 @@ public class ExternalInfoBuilder {
 
 			topMetric.visitTopReport(queryTopReport(lastPayload));
 		}
-		report.accept(new TopExceptionExclude(m_configManager));
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);
 		model.setTopMetric(topMetric);
@@ -134,6 +133,7 @@ public class ExternalInfoBuilder {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
 				      + TimeHelper.ONE_HOUR));
 			}
+			report.accept(new TopExceptionExclude(m_configManager));
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");

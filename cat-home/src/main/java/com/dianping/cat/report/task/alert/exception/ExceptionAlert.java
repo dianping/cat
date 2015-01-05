@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -89,6 +90,7 @@ public class ExceptionAlert implements Task {
 			ModelResponse<TopReport> response = m_topService.invoke(request);
 			TopReport report = response.getModel();
 
+			report.accept(new TopExceptionExclude(m_exceptionConfigManager));
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
