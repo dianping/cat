@@ -399,4 +399,22 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
+	
+	public String getSmsChannelUrl(){
+		return null;
+	}
+	
+	public String getWeiXinChannelUrl(){
+		return null;
+	}
+	
+	public String getEmailChannelUrl(){
+		return null;
+	}
+	
+	public int getLogviewStorageDay(){
+		return 0;
+	}
+	
 }
+
