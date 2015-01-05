@@ -29,7 +29,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	protected ServerConfigManager m_configManager;
 
 	private String m_name;
 

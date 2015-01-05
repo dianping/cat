@@ -323,7 +323,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean isHdfsOn() {
 		if (m_config != null) {
-			return !m_config.getStorage().isHdfsDisabled();
+			return m_config.getHdfsMachine();
 		} else {
 			return false;
 		}

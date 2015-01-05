@@ -87,15 +87,20 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		boolean eligibale = request.getPeriod().isCurrent();
+		if (m_manager.isHdfsOn()) {
+			boolean eligibale = request.getPeriod().isCurrent();
 
-		if (eligibale) {
-			String messageId = request.getProperty("messageId");
-			MessageId id = MessageId.parse(messageId);
+			if (eligibale) {
+				String messageId = request.getProperty("messageId");
+				MessageId id = MessageId.parse(messageId);
 
-			return id.getVersion() == 2;
+				return id.getVersion() == 2;
+			}
+
+			return eligibale;
+		} else {
+			return true;
 		}
-
-		return eligibale;
 	}
+	
 }

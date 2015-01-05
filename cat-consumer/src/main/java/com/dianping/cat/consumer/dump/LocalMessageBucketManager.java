@@ -124,7 +124,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		Threads.forGroup("cat").start(new BlockDumper());
-		Threads.forGroup("cat").start(new OldMessageMover());
+
+		if (m_configManager.isHdfsOn()) {
+			Threads.forGroup("cat").start(new OldMessageMover());
+		} else {
+			m_logger.info("no need hdfs upload thread!");
+		}
 
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
@@ -558,12 +563,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			while (active) {
 				try {
-					long current = System.currentTimeMillis() / 1000 / 60;
-					int min = (int) (current % (60));
+					if (m_configManager.isHdfsOn()) {
+						long current = System.currentTimeMillis() / 1000 / 60;
+						int min = (int) (current % (60));
 
-					// make system 0-10 min is not busy
-					if (min > 10) {
-						moveOldMessages();
+						// make system 0-10 min is not busy
+						if (min > 10) {
+							moveOldMessages();
+						}
 					}
 				} catch (Throwable e) {
 					m_logger.error(e.getMessage(), e);
