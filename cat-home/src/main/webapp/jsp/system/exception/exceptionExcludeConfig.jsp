@@ -21,15 +21,49 @@
 		$(document).ready(function() {
 		$('#application_config').addClass('active open');
 		$('#exception').addClass('active');
-
-		var source = new Array();  
-		source = "${model.exceptionList}".replace(/[\[\]]/g,'').split(', '); 
-
-		if(document.getElementById("jqxcombobox")) {
-       		$("#jqxcombobox").jqxComboBox({ source: source, selectedIndex: 0, width: '200px', height: '25px' });
-		}
+		
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+				var that = this,
+				currentCategory = "";
+				$.each( items, function( index, item ) {
+					if ( item.category != currentCategory ) {
+						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+						currentCategory = item.category;
+					}
+					that._renderItemData( ul, item );
+				});
+			}
 		});
 		
+		var data = [];
+		<c:forEach var="item" items="${model.exceptionList}">
+					var item = {};
+					item['label'] = '${item}';
+					item['category'] = '异常名';
+					data.push(item);
+		</c:forEach>
+				
+		$("#search_exception").catcomplete({
+			delay: 0,
+			source: data
+		});
+		
+		data = [];
+		<c:forEach var="item" items="${model.domainList}">
+					var item = {};
+					item['label'] = '${item}';
+					item['category'] = '项目名';
+					data.push(item);
+		</c:forEach>
+				
+		$("#search_domain").catcomplete({
+			delay: 0,
+			source: data
+		});
+		
+		});
+
 		function setWidth(){
 			var sel =  document.getElementById("domainId");
 			sel.style.width = ((sel.offsetWidth < 200) ? '200' : 'auto');
@@ -50,11 +84,11 @@
 				<input name="exceptionExclude.domain" value="${model.exceptionExclude.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<select name="exceptionExclude.domain" id="domainId" style="width:200px;">
-					<c:forEach var="item" items="${model.domainList}">
-                        <option value="${item}">${item}</option> 							
-					</c:forEach>
-                </select>
+				<div class="navbar-header pull-left position" style="width:350px;">
+					<div class="input-group">
+					<input name="exceptionExclude.domain" id="search_domain" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
+					</div>
+				</div>
 			</c:otherwise>
 			</c:choose>
 			</td>
@@ -68,8 +102,11 @@
 				<input name="exceptionExclude.id" size="35" value="${model.exceptionExclude.id}"/>
 			</c:when>
 			<c:otherwise>
-				<div id="jqxcombobox" name='exceptionExclude.id' >
-		        </div>
+				<div class="navbar-header pull-left position" style="width:350px;">
+					<div class="input-group">
+					<input name="exceptionExclude.id" id="search_exception" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
+					</div>
+				</div>
 			</c:otherwise>
 			</c:choose>
 			</td>

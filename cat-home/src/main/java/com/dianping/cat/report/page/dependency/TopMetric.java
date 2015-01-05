@@ -145,8 +145,8 @@ public class TopMetric extends BaseVisitor {
 			m_call.addIndex(minuteStr, m_currentDomain, segment.getCallDuration());
 			m_sql.addIndex(minuteStr, m_currentDomain, segment.getSqlDuration());
 			m_cache.addIndex(minuteStr, m_currentDomain, segment.getCacheDuration());
+			super.visitSegment(segment);
 		}
-		super.visitSegment(segment);
 	}
 
 	@Override
@@ -208,6 +208,7 @@ public class TopMetric extends BaseVisitor {
 				double value = entry.getValue().doubleValue();
 				double warnLimit = -1;
 				double errorLimit = -1;
+
 				if (m_configManager != null) {
 					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_domain, entry.getKey());
 					if (exceptionLimit != null) {

@@ -82,6 +82,16 @@ public class ExceptionConfigManager implements Initializable {
 		}
 	}
 
+	public boolean isExcludedException(String domain, String exceptionName) {
+		boolean excluded = false;
+		ExceptionExclude result = queryDomainExceptionExclude(domain, exceptionName);
+
+		if (result != null) {
+			excluded = true;
+		}
+		return excluded;
+	}
+
 	public boolean insertExceptionExclude(ExceptionExclude exception) {
 		DomainConfig domainConfig = m_exceptionConfig.findOrCreateDomainConfig(exception.getDomain());
 
