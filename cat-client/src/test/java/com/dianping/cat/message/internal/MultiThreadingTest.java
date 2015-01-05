@@ -16,13 +16,11 @@ import com.dianping.cat.message.Transaction;
 public class MultiThreadingTest {
 	@After
 	public void after() {
-		Cat.reset();
 	}
 
 	@Before
 	public void before() {
 		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
-		Cat.setup(null);
 	}
 
 	@Test

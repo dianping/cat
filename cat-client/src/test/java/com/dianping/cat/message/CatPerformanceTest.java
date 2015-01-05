@@ -99,13 +99,11 @@ public class CatPerformanceTest {
 			@Override
 			public void run() {
 				try {
-					Cat.setup("");
 					while (true) {
 						creatOneTransaction();
 						LockSupport.parkNanos(10);
 					}
 				} finally {
-					Cat.reset();
 				}
 			}
 		}).start();
@@ -115,13 +113,11 @@ public class CatPerformanceTest {
 			@Override
 			public void run() {
 				try {
-					Cat.setup("");
 					while (true) {
 						creatOneTransaction();
 						LockSupport.parkNanos(10);
 					}
 				} finally {
-					Cat.reset();
 				}
 			}
 		}).start();
@@ -134,7 +130,6 @@ public class CatPerformanceTest {
 	@Ignore
 	public void justloop2() throws InterruptedException {
 		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
-		Cat.setup("");
 
 		new Thread(new Runnable() {
 
@@ -156,7 +151,6 @@ public class CatPerformanceTest {
 			}
 		}).start();
 
-		Cat.reset();
 		Thread.sleep(1000000);
 
 	}
@@ -165,7 +159,6 @@ public class CatPerformanceTest {
 	@Test
 	public void test() throws InterruptedException {
 		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
-		Cat.setup("");
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			creatOneTransaction();
@@ -174,14 +167,12 @@ public class CatPerformanceTest {
 
 		System.out.println("avg:" + (double) (endtime - time) / (double) count + "ms");
 		Thread.sleep(1000000);
-		Cat.reset();
 	}
 
 	@Test
 	@Ignore
 	public void testManyThread() throws IOException, InterruptedException {
 		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
-		Cat.setup("");
 		System.out.println("press any key to continue...");
 		System.in.read();
 
@@ -200,7 +191,6 @@ public class CatPerformanceTest {
 
 		System.out.println("Done with errors: " + error);
 		Thread.sleep(10000);
-		Cat.reset();
 	}
 
 	class TestThread extends Thread {
