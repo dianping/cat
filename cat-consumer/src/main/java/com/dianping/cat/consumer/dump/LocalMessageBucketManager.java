@@ -124,12 +124,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		Threads.forGroup("cat").start(new BlockDumper());
-
-		if (m_configManager.isHdfsOn()) {
-			Threads.forGroup("cat").start(new OldMessageMover());
-		} else {
-			m_logger.info("no need hdfs upload thread!");
-		}
+		Threads.forGroup("cat").start(new OldMessageMover());
 
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;
@@ -571,6 +566,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						if (min > 10) {
 							moveOldMessages();
 						}
+					}else{
+						// TODO delete file from local disk
 					}
 				} catch (Throwable e) {
 					m_logger.error(e.getMessage(), e);
