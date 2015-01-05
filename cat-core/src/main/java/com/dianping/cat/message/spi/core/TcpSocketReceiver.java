@@ -53,7 +53,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		m_logger = logger;
 	}
 
-	private boolean getOSMatches(String osNamePrefix) {
+	protected boolean getOSMatches(String osNamePrefix) {
 		String os = System.getProperty("os.name");
 
 		if (os == null) {
@@ -71,8 +71,8 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public synchronized void startServer(int port) throws InterruptedException {
-		boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
-
+		// boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
+		boolean linux = false;
 		EventLoopGroup bossGroup = linux ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		EventLoopGroup workerGroup = linux ? new EpollEventLoopGroup() : new NioEventLoopGroup();
 		ServerBootstrap bootstrap = new ServerBootstrap();
