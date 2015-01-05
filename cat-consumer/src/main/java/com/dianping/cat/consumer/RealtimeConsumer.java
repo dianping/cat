@@ -47,12 +47,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void consume(MessageTree tree) {
-		try {
-			m_periodManager.waitUntilStarted();
-		} catch (InterruptedException e) {
-			// ignore it
-		}
-
 		long timestamp = tree.getMessage().getTimestamp();
 		Period period = m_periodManager.findPeriod(timestamp);
 
@@ -127,6 +121,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Override
 	public void initialize() throws InitializationException {
 		m_periodManager = new PeriodManager(DURATION, m_analyzerManager, m_serverStateManager, m_logger);
+		m_periodManager.init();
 
 		Threads.forGroup("cat").start(m_periodManager);
 	}

@@ -71,10 +71,10 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public synchronized void startServer(int port) throws InterruptedException {
-		// boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
-		boolean linux = false;
-		EventLoopGroup bossGroup = linux ? new EpollEventLoopGroup() : new NioEventLoopGroup();
-		EventLoopGroup workerGroup = linux ? new EpollEventLoopGroup() : new NioEventLoopGroup();
+		boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
+		int threads = 24;
+		EventLoopGroup bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		EventLoopGroup workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 		ServerBootstrap bootstrap = new ServerBootstrap();
 		bootstrap.group(bossGroup, workerGroup);
 		bootstrap.channel(linux ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
@@ -102,6 +102,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {
+		
 		@Override
 		protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
 			if (buffer.readableBytes() < 4) {

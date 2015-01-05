@@ -2,7 +2,6 @@ package com.dianping.cat.consumer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
@@ -21,24 +20,21 @@ public class PeriodManager implements Task {
 
 	private boolean m_active;
 
-	private CountDownLatch m_latch;
-
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
-	
+
 	@Inject
 	private Logger m_logger;
-	
+
 	public static long EXTRATIME = 3 * 60 * 1000L;
 
-	public PeriodManager(long duration,  MessageAnalyzerManager analyzerManager,
+	public PeriodManager(long duration, MessageAnalyzerManager analyzerManager,
 	      ServerStatisticManager serverStateManager, Logger logger) {
 		m_strategy = new PeriodStrategy(duration, EXTRATIME, EXTRATIME);
 		m_active = true;
-		m_latch = new CountDownLatch(1);
 		m_analyzerManager = analyzerManager;
 		m_serverStateManager = serverStateManager;
 		m_logger = logger;
@@ -73,38 +69,34 @@ public class PeriodManager implements Task {
 		return "RealtimeConsumer-PeriodManager";
 	}
 
-	@Override
-	public void run() {
+	public void init() {
 		long startTime = m_strategy.next(System.currentTimeMillis());
 
-		// for current period
-		try {
-			startPeriod(startTime);
-			m_latch.countDown();
+		startPeriod(startTime);
+	}
 
-			while (m_active) {
-				try {
-					long now = System.currentTimeMillis();
-					long value = m_strategy.next(now);
+	@Override
+	public void run() {
+		while (m_active) {
+			try {
+				long now = System.currentTimeMillis();
+				long value = m_strategy.next(now);
 
-					if (value > 0) {
-						startPeriod(value);
-					} else if (value < 0) {
-						// last period is over,make it asynchronous
-						Threads.forGroup("cat").start(new EndTaskThread(-value));
-					}
-				} catch (Throwable e) {
-					Cat.logError(e);
+				if (value > 0) {
+					startPeriod(value);
+				} else if (value < 0) {
+					// last period is over,make it asynchronous
+					Threads.forGroup("cat").start(new EndTaskThread(-value));
 				}
-
-				try {
-					Thread.sleep(1000L);
-				} catch (InterruptedException e) {
-					break;
-				}
+			} catch (Throwable e) {
+				Cat.logError(e);
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
+
+			try {
+				Thread.sleep(1000L);
+			} catch (InterruptedException e) {
+				break;
+			}
 		}
 	}
 
@@ -119,10 +111,6 @@ public class PeriodManager implements Task {
 
 		m_periods.add(period);
 		period.start();
-	}
-
-	public void waitUntilStarted() throws InterruptedException {
-		m_latch.await();
 	}
 
 	private class EndTaskThread implements Task {

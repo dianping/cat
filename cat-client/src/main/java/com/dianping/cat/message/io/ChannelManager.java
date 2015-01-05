@@ -56,7 +56,7 @@ public class ChannelManager implements Task {
 		m_configManager = configManager;
 		m_idfactory = idFactory;
 
-		EventLoopGroup group = new NioEventLoopGroup();
+		EventLoopGroup group = new NioEventLoopGroup(1);
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(group).channel(NioSocketChannel.class);
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
