@@ -27,13 +27,14 @@ import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	@Inject
 	private TransactionDelegate m_delegate;
 
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
+
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	public static final String ID = "transaction";
 
@@ -258,9 +259,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(period));
 
-		if (period < current) {
-			report.accept(m_computer.setDuration(3600));
-		} else {
+		if (period == current) {
 			report.accept(m_computer.setDuration(remainder / 1000));
 		}
 
