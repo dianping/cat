@@ -90,6 +90,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		MessageId messageId = MessageId.parse(tree.getMessageId());
 		String domain = tree.getDomain();
 
+		if ("PhoenixAgent".equals(domain)) {
+			return;
+		}
 		if (messageId.getVersion() == 2) {
 			try {
 				long time = tree.getMessage().getTimestamp();
