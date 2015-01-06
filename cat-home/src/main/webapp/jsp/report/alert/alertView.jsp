@@ -20,9 +20,11 @@
 		<input type="text" id="startTime" style="width:150px;"/>
 		结束
 		<input type="text" id="endTime" style="width:150px;"/>
-			&nbsp;&nbsp;项目
-			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
+		&nbsp;&nbsp;项目
+		<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
+		&nbsp;&nbsp;每分钟显示个数
+		<input type="text" id="count" value="${payload.count}" style="width:100px;" style="height:auto" class="input-small"/>
+		<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
 			<div style="float:left;">
 				<label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="business"> 业务告警
@@ -47,37 +49,77 @@
 				</label>
 			</div>
 		</div>
-		<div id="alertReport">
-			<table	class="table table-striped table-condensed   table-hover">
-				<tr class="text-success">
-					<th width="10%">时间</th>
-					<th width="5%">类型</th>
-					<th width="5%">级别</th>
-					<th width="10%">项目</th>
-					<th width="10%">指标</th>
-					<th width="60%">内容</th>
-				</tr>
-				<c:forEach var="entry" items="${model.alerts}" varStatus="status">
-					<tr class="noter">
-						<td rowspan="${fn:length(entry.value)+1}">${entry.key}</td>
-						<td style="display:none" colspan="5"></td>
-					</tr>
-					<c:forEach var="alert" items="${entry.value}" varStatus="status">
-						<c:set var="category" value="${alert.category}"/>
-						<tr class="${category}">
-							<td>${category}</td>
-							<td>${alert.type}</td>
-							<td>${alert.domain}</td>
-							<td>${alert.metric}</td>
-							<td>${alert.content}</td>
-						</tr>
-					</c:forEach>
-				</c:forEach>
-			</table>
-		</div>
+		<br/><br/>
+		<div id="alert-minutes">
+		  <br/><br/>
+		  <span class="text-info">点击项目名可查看该项目下的具体告警信息</span>
+		  <br/>
+		  <c:set var="count" value="${payload.count}" />
+		  <c:set var="modalId" value="0" />
+	      <c:forEach var="minuteEntry" items="${model.alertMinutes}"  varStatus="itemStatus">
+		      <table class="smallTable" style="float:left" border=1>  
+		           <tr><th colspan="2" class="text-danger">${minuteEntry.key}</th></tr>
+		           <tr><th>项目名</th><th>个</th></tr>
+		           <c:set var="length" value="${fn:length(minuteEntry.value.alertDomains)}" />
+		           <c:forEach var="alertDomain" items="${minuteEntry.value.alertDomains}" end="${count-1}">
+			              <tr>
+							 <td>
+							 	<c:set var="id" value="modal${modalId}" />
+							 	<c:set var="modalId" value="${modalId+1}" />
+							 	<span data-id="${id}" class="alert-modal">
+							 		${w:shorten(alertDomain.name, 18)}
+							 	</span>
+							 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								  <div class="modal-dialog" style="width:1000px">
+								    <div class="modal-content">
+								      <div class="modal-body">
+								      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
+								 			告警类型：${alertCategory.key}
+								 			<table	class="table table-striped table-condensed table-hover">
+												<tr class="text-success">
+													<th width="5%">类型</th>
+													<th width="5%">级别</th>
+													<th width="10%">项目</th>
+													<th width="10%">指标</th>
+													<th width="60%">内容</th>
+												</tr>
+												<c:forEach var="alert" items="${alertCategory.value}">
+													<tr>
+														<td>${alert.category}</td>
+														<td>${alert.type}</td>
+														<td>${alert.domain}</td>
+														<td>${alert.metric}</td>
+														<td>${alert.content}</td>
+													</tr>
+												</c:forEach>
+											</table>
+								 		</c:forEach>
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>
+							 </td>
+	                		 <td style="text-align:right">${w:format(alertDomain.count,'0')}</td>
+			              </tr>
+		           </c:forEach>
+		           <c:if test="${length lt count}">
+		           		<c:forEach begin="1" end="${count-length}">
+		           			<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+		           		</c:forEach>
+				   </c:if>
+		      </table>
+	      </c:forEach>
+	    </div>
 		<script type="text/javascript">
 			$(document).ready(function(){
 				initType("${payload.alertType}");
+				$(".alert-modal").click(function(){
+					var targetId = $(this).data("id");
+					$("#"+targetId).modal();
+				});
 				
 				$('#startTime').datetimepicker({
 					format:'Y-m-d H:i',
@@ -125,7 +167,8 @@
 				var startTime=$("#startTime").val();
 				var endTime=$("#endTime").val();
 				var domain=$("#domain").val();
-				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen=${payload.fullScreen}&alertType="+getType();
+				var count=$("#count").val();
+				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen=${payload.fullScreen}&alertType="+getType()+"&count="+count;
 			}
 		</script>
 </a:body>
