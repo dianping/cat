@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.LockSupport;
 
-import org.jboss.netty.util.ThreadNameDeterminer;
-import org.jboss.netty.util.ThreadRenamingRunnable;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.AbstractThreadListener;
 import org.unidal.initialization.AbstractModule;
@@ -27,9 +25,6 @@ public class CatClientModule extends AbstractModule {
 
 		// initialize milli-second resolution level timer
 		MilliSecondTimer.initialize();
-
-		// disable thread renaming of Netty
-		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
 		// tracking thread start/stop
 		Threads.addListener(new CatThreadListener(ctx));

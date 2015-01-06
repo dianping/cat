@@ -1,14 +1,15 @@
 package com.dianping.cat.message.io;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
+
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.channel.ChannelFuture;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -51,11 +52,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
-	private boolean checkWritable(ChannelFuture future) {
+	private boolean checkWritable(ChannelFuture channel) {
 		boolean isWriteable = false;
 
-		if (future != null && future.getChannel().isOpen()) {
-			if (future.getChannel().isWritable()) {
+		if (channel != null && channel.channel().isOpen()) {
+			if (channel.channel().isActive()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();
@@ -92,9 +93,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_active = true;
 
 		while (m_active) {
-			ChannelFuture future = m_manager.getChannel();
+			ChannelFuture channel = m_manager.channel();
 
-			if (checkWritable(future)) {
+			if (checkWritable(channel)) {
 				try {
 					MessageTree tree = m_queue.poll();
 
@@ -135,14 +136,14 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private void sendInternal(MessageTree tree) {
-		ChannelFuture future = m_manager.getChannel();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
+		ChannelFuture future = m_manager.channel();
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
 
 		m_codec.encode(tree, buf);
 
 		int size = buf.readableBytes();
 
-		future.getChannel().write(buf);
+		future.channel().writeAndFlush(buf);
 
 		if (m_statistics != null) {
 			m_statistics.onBytes(size);

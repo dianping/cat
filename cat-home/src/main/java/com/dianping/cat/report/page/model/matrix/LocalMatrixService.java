@@ -27,7 +27,7 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 	protected MatrixReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		MatrixReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}

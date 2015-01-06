@@ -1,11 +1,12 @@
 package com.dianping.cat.consumer.dump;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,8 +134,8 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			String messageId = factory.getNextId();
 			DefaultMessageTree tree = newMessageTree(messageId, i, m_now + i * 10L);
 			MessageId id = MessageId.parse(tree.getMessageId());
-
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(512); // 8K
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(512);
+			
 			m_codec.encode(tree, buf);
 
 			tree.setBuffer(buf);

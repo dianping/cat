@@ -1,11 +1,12 @@
 package com.dianping.cat.message.spi.core;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
 import junit.framework.Assert;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -61,8 +62,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 	private void check(MessageTree tree, Message message, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
 		codec.encodeMessage(tree, message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -71,8 +71,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 	private void checkTree(MessageTree tree, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 		String actual = buf.toString(Charset.forName("utf-8"));
@@ -148,7 +147,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	public void testEncode() throws Exception {
 		MessageTree tree = buildMessageTree();
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
 		codec.encode(tree, buf);
 
 		String content = Files.forIO().readFrom(HtmlMessageCodecTest.class.getResourceAsStream("MessageTree.txt"),

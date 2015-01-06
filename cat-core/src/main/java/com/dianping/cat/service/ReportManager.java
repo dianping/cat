@@ -6,7 +6,7 @@ import java.util.Set;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 
 public interface ReportManager<T> {
-	public void cleanup();
+	public void cleanup(long startTime);
 
 	public void initialize();
 	

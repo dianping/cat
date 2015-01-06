@@ -9,15 +9,23 @@
 
  <c:choose>
 	<c:when test="${payload.fullScreen}">
-		<res:bean id="res" />
-		<res:useCss value='${res.css.local.table_css}' target="head-css" />
-		<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
+	<res:bean id="res" />
+	<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
+	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-skins.min.css">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-rtl.min.css">
+	<script src="${model.webapp}/assets/js/ace-extra.min.js"></script>
+	<script src="${model.webapp}/assets/js/bootstrap.min.js"></script>
+	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
+	<res:useCss value='${res.css.local.body_css}' target="head-css" />
+	<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
+	<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
+	<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
+	<script src="${model.webapp}/assets/js/ace.min.js"></script>
 		<div class="report">
 			<div id="fullScreenData">
 				<style>

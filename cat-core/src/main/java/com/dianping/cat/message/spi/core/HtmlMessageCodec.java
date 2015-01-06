@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi.core;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,7 +15,6 @@ import java.util.concurrent.BlockingQueue;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Event;
@@ -45,17 +46,17 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	private DateHelper m_dateHelper = new DateHelper();
 
 	@Override
-	public MessageTree decode(ChannelBuffer buf) {
+	public MessageTree decode(ByteBuf buf) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
 
 	@Override
-	public void decode(ChannelBuffer buf, MessageTree tree) {
+	public void decode(ByteBuf buf, MessageTree tree) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
 
 	@Override
-	public void encode(MessageTree tree, ChannelBuffer buf) {
+	public void encode(MessageTree tree, ByteBuf buf) {
 		int count = 0;
 		int index = buf.writerIndex();
 		BufferHelper helper = m_bufferHelper;
@@ -74,11 +75,11 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		buf.setInt(index, count);
 	}
 
-	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
+	protected int encodeFooter(MessageTree tree, ByteBuf buf) {
 		return 0;
 	}
 
-	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
+	protected int encodeHeader(MessageTree tree, ByteBuf buf) {
 		BufferHelper helper = m_bufferHelper;
 		StringBuilder sb = new StringBuilder(1024);
 		String parentMessageId = tree.getParentMessageId();
@@ -104,7 +105,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return helper.write(buf, sb.toString());
 	}
 
-	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, char type, Policy policy, int level,
+	protected int encodeLine(MessageTree tree, Message message, ByteBuf buf, char type, Policy policy, int level,
 	      LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
@@ -174,7 +175,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeLogViewLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeLogViewLink(MessageTree tree, Message message, ByteBuf buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		Map<String, String> links = parseLinks(message.getData().toString());
 		int count = 0;
@@ -209,7 +210,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeMessage(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeMessage(MessageTree tree, Message message, ByteBuf buf, int level, LineCounter counter) {
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
@@ -254,7 +255,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		}
 	}
 
-	protected int encodeRemoteLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeRemoteLink(MessageTree tree, Message message, ByteBuf buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -363,12 +364,12 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			m_writer = writer;
 		}
 
-		public int crlf(ChannelBuffer buf) {
+		public int crlf(ByteBuf buf) {
 			buf.writeBytes(CRLF);
 			return CRLF.length;
 		}
 
-		public int nbsp(ChannelBuffer buf, int count) {
+		public int nbsp(ByteBuf buf, int count) {
 			for (int i = 0; i < count; i++) {
 				buf.writeBytes(NBSP);
 			}
@@ -376,21 +377,21 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			return count * NBSP.length;
 		}
 
-		public int table1(ChannelBuffer buf) {
+		public int table1(ByteBuf buf) {
 			buf.writeBytes(TABLE1);
 			return TABLE1.length;
 		}
 
-		public int table2(ChannelBuffer buf) {
+		public int table2(ByteBuf buf) {
 			buf.writeBytes(TABLE2);
 			return TABLE2.length;
 		}
 
-		public int td(ChannelBuffer buf, String str) {
+		public int td(ByteBuf buf, String str) {
 			return td(buf, str, null);
 		}
 
-		public int td(ChannelBuffer buf, String str, String attributes) {
+		public int td(ByteBuf buf, String str, String attributes) {
 			if (str == null) {
 				str = "null";
 			}
@@ -418,12 +419,12 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			return count;
 		}
 
-		public int td1(ChannelBuffer buf) {
+		public int td1(ByteBuf buf) {
 			buf.writeBytes(TD1);
 			return TD1.length;
 		}
 
-		public int td1(ChannelBuffer buf, String attributes) {
+		public int td1(ByteBuf buf, String attributes) {
 			if (attributes == null) {
 				buf.writeBytes(TD1);
 				return TD1.length;
@@ -436,12 +437,12 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int td2(ChannelBuffer buf) {
+		public int td2(ByteBuf buf) {
 			buf.writeBytes(TD2);
 			return TD2.length;
 		}
 
-		public int tr1(ChannelBuffer buf, String styleClass) {
+		public int tr1(ByteBuf buf, String styleClass) {
 			if (styleClass == null) {
 				buf.writeBytes(TR1);
 				return TR1.length;
@@ -454,17 +455,17 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		public int tr2(ChannelBuffer buf) {
+		public int tr2(ByteBuf buf) {
 			buf.writeBytes(TR2);
 			return TR2.length;
 		}
 
-		public int write(ChannelBuffer buf, byte b) {
+		public int write(ByteBuf buf, byte b) {
 			buf.writeByte(b);
 			return 1;
 		}
 
-		public int write(ChannelBuffer buf, String str) {
+		public int write(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}
@@ -475,7 +476,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			return data.length;
 		}
 
-		public int writeRaw(ChannelBuffer buf, String str) {
+		public int writeRaw(ByteBuf buf, String str) {
 			if (str == null) {
 				str = "null";
 			}

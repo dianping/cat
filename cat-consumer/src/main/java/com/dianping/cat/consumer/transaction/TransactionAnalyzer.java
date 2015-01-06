@@ -13,7 +13,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -28,7 +27,6 @@ import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	@Inject
 	private TransactionDelegate m_delegate;
@@ -36,8 +34,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
 
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	public static final String ID = "transaction";
 
@@ -262,9 +259,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(period));
 
-		if (period < current) {
-			report.accept(m_computer.setDuration(3600));
-		} else {
+		if (period == current) {
 			report.accept(m_computer.setDuration(remainder / 1000));
 		}
 

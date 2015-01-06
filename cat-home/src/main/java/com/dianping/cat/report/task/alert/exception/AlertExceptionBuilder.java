@@ -11,8 +11,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.task.alert.AlertLevel;
 import com.dianping.cat.system.config.ExceptionConfigManager;
@@ -48,30 +47,26 @@ public class AlertExceptionBuilder {
 
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
+			double value = entry.getValue().doubleValue();
+			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
+			double warnLimit = limitPair.getKey();
+			double errorLimit = limitPair.getValue();
+			totalException += value;
 
-			if (!isExcludedException(domain, exceptionName)) {
-				double value = entry.getValue().doubleValue();
-				Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
-				double warnLimit = limitPair.getKey();
-				double errorLimit = limitPair.getValue();
-
-				totalException += value;
-
-				if (errorLimit > 0 && value >= errorLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value,
-					      needSendSms(domain, exceptionName)));
-				} else if (warnLimit > 0 && value >= warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
-				}
+			if (errorLimit > 0 && value >= errorLimit) {
+				alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value, needSendSms(domain,
+				      exceptionName)));
+			} else if (warnLimit > 0 && value >= warnLimit) {
+				alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
 			}
 		}
 
 		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.ERROR,
-			      totalException, needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
+			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException,
+			      needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.WARNING,
-			      totalException));
+			alertExceptions
+			      .add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
 		}
 
 		return alertExceptions;
@@ -83,7 +78,7 @@ public class AlertExceptionBuilder {
 		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
 			String exception = entry.getKey();
 			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
-			
+
 			if (rule != null) {
 				int warn = rule.getWarn();
 				double value = entry.getValue().doubleValue();
@@ -94,16 +89,6 @@ public class AlertExceptionBuilder {
 			}
 		}
 		return alertExceptions;
-	}
-
-	private boolean isExcludedException(String domain, String exceptionName) {
-		boolean excluded = false;
-		ExceptionExclude result = m_exceptionConfigManager.queryDomainExceptionExclude(domain, exceptionName);
-
-		if (result != null) {
-			excluded = true;
-		}
-		return excluded;
 	}
 
 	private boolean needSendSms(String domain, String exception) {

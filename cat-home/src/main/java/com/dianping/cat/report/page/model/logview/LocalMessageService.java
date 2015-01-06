@@ -1,30 +1,36 @@
 package com.dianping.cat.report.page.model.logview;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.core.HtmlMessageCodec;
+import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.storage.message.MessageBucketManager;
-import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 
 public class LocalMessageService extends BaseLocalModelService<String> {
 	@Inject(LocalMessageBucketManager.ID)
 	private MessageBucketManager m_bucketManager;
 
-	@Inject("html")
-	private MessageCodec m_codec;
+	@Inject(HtmlMessageCodec.ID)
+	private MessageCodec m_html;
+
+	@Inject(WaterfallMessageCodec.ID)
+	private MessageCodec m_waterfall;
 
 	public LocalMessageService() {
 		super("logview");
@@ -36,15 +42,12 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 		MessageTree tree = m_bucketManager.loadMessage(messageId);
 
 		if (tree != null) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
 			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
-				// to work around a plexus injection bug
-				MessageCodec codec = lookup(MessageCodec.class, "waterfall");
-
-				codec.encode(tree, buf);
+				m_waterfall.encode(tree, buf);
 			} else {
-				m_codec.encode(tree, buf);
+				m_html.encode(tree, buf);
 			}
 
 			try {

@@ -87,8 +87,6 @@ public class CatFilter implements Filter {
 				String source = req.getHeader("X-CAT-SOURCE");
 				String id = req.getHeader("X-CAT-ID");
 
-				Cat.setup(null);
-
 				if ("container".equals(source)) {
 					return 2;
 				} else if (id != null && id.length() > 0) {
@@ -114,13 +112,7 @@ public class CatFilter implements Filter {
 					ctx.setType(CatConstants.TYPE_URL_FORWARD);
 				}
 
-				try {
-					ctx.handle();
-				} finally {
-					if (top) {
-						Cat.reset();
-					}
-				}
+				ctx.handle();
 			}
 
 			protected void setTraceMode(HttpServletRequest req) {

@@ -12,7 +12,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
@@ -41,9 +40,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private HostinfoService m_hostinfoService;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();

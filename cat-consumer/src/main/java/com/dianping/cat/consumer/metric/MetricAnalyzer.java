@@ -16,13 +16,13 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.dal.BusinessReport;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
@@ -152,7 +152,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		String group = m_productLineConfigManager.queryProductLineByDomain(domain);
-		MetricReport report = findOrCreateReport(group);
+		MetricReport report = null;
+
+		if (group != null) {
+			report = findOrCreateReport(group);
+		}
 
 		Message message = tree.getMessage();
 
@@ -181,7 +185,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			report = findOrCreateReport(group);
 		}
-		if (config != null) {
+		if (config != null && report != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			String key = m_configManager.buildMetricKey(domain, METRIC, metricName);
@@ -192,13 +196,15 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setTitle(metricName);
 
-			ProductLine productline = m_productLineConfigManager.queryProductLine(report.getProduct());
+			ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(report.getProduct());
 
-			if (productline != null && productline.getMetricDashboard()) {
+			if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
 				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
 
-				m_logger.info(String.format("%s when insert metric config info, domain %s, metricName %s",
-				      String.valueOf(result), domain, metricName));
+				if (!result) {
+					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,
+					      metricName));
+				}
 			}
 		}
 		return 0;

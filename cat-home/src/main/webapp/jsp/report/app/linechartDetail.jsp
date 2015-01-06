@@ -140,12 +140,12 @@
 	<tbody>
 	<c:forEach var="item" items="${model.appDataDetailInfos}" varStatus="status">
 		<tr class="right">
-		<c:set var="networkCode" value="${item.network}"/>
-		<c:set var="appVersionCode" value="${item.appVersion}"/>
-		<c:set var="channelCode" value="${item.connectType}"/>
-		<c:set var="platformCode" value="${item.platform}"/>
-		<c:set var="cityCode" value="${item.city}"/>
-		<c:set var="operatorCode" value="${item.operator}"/>
+		<c:set var="networkCode" value="${item.network eq '-1' ? '' : item.network}"/>
+		<c:set var="appVersionCode" value="${item.appVersion eq '-1' ? '' : item.appVersion}"/>
+		<c:set var="channelCode" value="${item.connectType eq '-1' ? '' : item.connectType}"/>
+		<c:set var="platformCode" value="${item.platform eq '-1' ? '' : item.platform}"/>
+		<c:set var="cityCode" value="${item.city eq '-1' ? '' : item.city}"/>
+		<c:set var="operatorCode" value="${item.operator eq '-1' ? '' : item.operator}"/>
 		<c:set var="network" value="${model.networks[networkCode].name}"/>
 		<c:set var="appVersion" value="${model.versions[appVersionCode].name}"/>
 		<c:set var="channel" value="${model.connectionTypes[channelCode].name}"/>
@@ -154,57 +154,98 @@
 		<c:set var="operator" value="${model.operators[operatorCode].name}"/>
 		
 		<c:choose>
-			<c:when test="${empty network}">
-			<td><button class="btn btn-xs btn-info" onclick="query('network', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<c:when test="${empty networkCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('network', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
-			<td>${network}</td>
+				<c:choose>
+				<c:when test="${empty network}">
+					<td class="text-danger">Unknown [${networkCode}]</td>				
+				</c:when>
+				<c:otherwise>
+				<td>${network}</td>
+				</c:otherwise>
+				</c:choose>
 			</c:otherwise>
 		</c:choose>
 		
 		<c:choose>
-			<c:when test="${empty appVersion}">
-			<td><button class="btn btn-xs btn-info" onclick="query('app-version', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+			<c:when test="${empty appVersionCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('app-version', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
 			</c:when>
 			<c:otherwise>
-			<td>${appVersion}</td>
+				<c:choose>
+				<c:when test="${empty appVersion}">
+					<td class="text-danger">Unknown [${appVersionCode}]</td>
+				</c:when>
+				<c:otherwise>
+				<td>${appVersion}</td>
+				</c:otherwise>
+				</c:choose>
 			</c:otherwise>
 		</c:choose>
 		
 		<c:choose>
+		<c:when test="${empty channelCode}">
+			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			</c:when>
+			<c:otherwise>
+			<c:choose>
 			<c:when test="${empty channel}">
-			<td><button class="btn btn-xs btn-info" onclick="query('connnect-type', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+				<td class="text-danger">Unknown [${channelCode}]</td>
 			</c:when>
 			<c:otherwise>
 			<td>${channel}</td>
 			</c:otherwise>
+			</c:choose>
+			</c:otherwise>
 		</c:choose>
 		
 		<c:choose>
+		<c:when test="${empty platformCode}">
+			<td><button class="btn btn-xs btn-info" onclick="query('platform', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			</c:when>
+			<c:otherwise>
+			<c:choose>
 			<c:when test="${empty platform}">
-			<td>
-			<button class="btn btn-xs btn-info" onclick="query('platform', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+				<td class="text-danger">Unknown [${platformCode}]</td>
 			</c:when>
 			<c:otherwise>
 			<td>${platform}</td>
 			</c:otherwise>
-		</c:choose>
-		
-		<c:choose>
-			<c:when test="${empty city}">
-			<td><button class="btn btn-xs btn-info" onclick="query('city', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
-			</c:when>
-			<c:otherwise>
-			<td>${city}</td>
+			</c:choose>
 			</c:otherwise>
 		</c:choose>
 		
 		<c:choose>
+		<c:when test="${empty cityCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('city', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			</c:when>
+			<c:otherwise>
+			<c:choose>
+			<c:when test="${empty city}">
+				<td class="text-danger">Unknown [${cityCode}]</td>
+			</c:when>
+			<c:otherwise>
+			<td>${city}</td>
+			</c:otherwise>
+			</c:choose>
+			</c:otherwise>
+		</c:choose>
+		
+		<c:choose>
+		<c:when test="${empty operatorCode}">
+				<td><button class="btn btn-xs btn-info" onclick="query('operator', '${networkCode}','${appVersionCode}','${channelCode}','${platformCode}','${cityCode}','${operatorCode}');">展开⬇</button></td>
+			</c:when>
+			<c:otherwise>
+			<c:choose>
 			<c:when test="${empty operator}">
-			<td><button class="btn btn-xs btn-info" onclick="query('operator', ${networkCode},${appVersionCode},${channelCode},${platformCode},${cityCode},${operatorCode});">展开⬇</button></td>
+				<td class="text-danger">Unknown [${operatorCode}]</td>
 			</c:when>
 			<c:otherwise>
 			<td>${operator}</td>
+			</c:otherwise>
+			</c:choose>
 			</c:otherwise>
 		</c:choose>
  		<td>${w:format(item.successRatio,'#0.000')}%</td>

@@ -65,30 +65,24 @@ public class AppConfigManager implements Initializable {
 
 	public static String CONNECT_TYPE = "连接类型";
 
-	public static final String ACTIVITY_PREFIX = "http://tgapp.dianping.com/activity/";
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
+		Command command = new Command();
 
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name) throws Exception {
-		if (isNameDuplicate(name)) {
-			return new Pair<Boolean, Integer>(false, -1);
+		command.setDomain(domain);
+		command.setTitle(title);
+		command.setName(name);
+
+		int commandId = 0;
+
+		if ("activity".equals(type)) {
+			commandId = findAvailableId(1000, 1200);
 		} else {
-			Command command = new Command();
-
-			command.setDomain(domain);
-			command.setTitle(title);
-			command.setName(name);
-
-			boolean isActivityCommand = name.startsWith(ACTIVITY_PREFIX);
-			int commandId;
-			if (isActivityCommand) {
-				commandId = findAvailableId(1000, 1200);
-			} else {
-				commandId = findAvailableId(1, 999);
-			}
-			command.setId(commandId);
-
-			m_config.addCommand(command);
-			return new Pair<Boolean, Integer>(storeConfig(), commandId);
+			commandId = findAvailableId(1, 999);
 		}
+		command.setId(commandId);
+
+		m_config.addCommand(command);
+		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
 
 	public boolean containCommand(int id) {

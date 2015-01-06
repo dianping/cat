@@ -58,7 +58,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@EntityMeta
 	private HeartbeatReport m_report;
 
-	private DisplayHeartbeat m_result;
+	private HeartbeatSvg m_result;
 
 	private String m_startedThreadGraph;
 
@@ -229,7 +229,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_report;
 	}
 
-	public DisplayHeartbeat getResult() {
+	public HeartbeatSvg getResult() {
 		return m_result;
 	}
 
@@ -342,7 +342,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_report = report;
 	}
 
-	public void setResult(DisplayHeartbeat result) {
+	public void setResult(HeartbeatSvg result) {
 		m_result = result;
 	}
 

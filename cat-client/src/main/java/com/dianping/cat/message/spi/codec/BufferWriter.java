@@ -1,7 +1,7 @@
 package com.dianping.cat.message.spi.codec;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 public interface BufferWriter {
-	public int writeTo(ChannelBuffer buf, byte[] data);
+	public int writeTo(ByteBuf buf, byte[] data);
 }

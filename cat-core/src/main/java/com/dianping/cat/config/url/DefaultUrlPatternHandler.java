@@ -171,8 +171,6 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 
 	@Override
 	public void register(Collection<PatternItem> rules) {
-		m_logger.info("register url pattern start");
-
 		TrieTreeNode formats = new TrieTreeNode();
 		Set<String> orignals = new HashSet<String>();
 		Map<String, String> urlToId = new HashMap<String, String>();
@@ -206,9 +204,6 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 		m_formats = formats;
 		m_orignals = orignals;
 		m_urlToId = urlToId;
-
-		m_logger.info(m_orignals.toString());
-		m_logger.info(m_urlToId.toString());
-		m_logger.info("register url pattern end");
 	}
+	
 }

@@ -83,7 +83,7 @@
 		<th width="20%">返回码</th>
 		<th width="50%">局部设置</th>
 		<th width="20%">局部状态</th>
-		<th width="10%">操作 <a href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code" class="btn btn-primary btn-xs" >
+		<th width="10%">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	</tr></thead>
 	

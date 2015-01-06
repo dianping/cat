@@ -90,10 +90,42 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		return all;
 	}
 
+	private Collection<Component> defineCrossComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = CrossAnalyzer.ID;
+
+		all.add(C(IpConvertManager.class));
+		all.add(C(MessageAnalyzer.class, ID, CrossAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class, IpConvertManager.class));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, CrossDelegate.class).req(TaskManager.class, ServerConfigManager.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineDependencyComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = DependencyAnalyzer.ID;
+
+		all.add(C(DatabaseParser.class));
+		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
+		      .req(ServerConfigManager.class, DatabaseParser.class));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, DependencyDelegate.class).req(TaskManager.class));
+
+		return all;
+	}
+
 	private Collection<Component> defineDumpComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerStatisticManager.class) //
+		      .req(ServerStatisticManager.class, ServerConfigManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
@@ -108,7 +140,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = EventAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
@@ -123,12 +155,40 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = HeartbeatAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class));
+		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class, ServerConfigManager.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineMatrixComponents() {
+		final List<Component> all = new ArrayList<Component>();
+		final String ID = MatrixAnalyzer.ID;
+
+		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		      .req(ReportDelegate.class, ID) //
+		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
+		      .config(E("name").value(ID)));
+		all.add(C(ReportDelegate.class, ID, MatrixDelegate.class).req(TaskManager.class, ServerConfigManager.class));
+
+		return all;
+	}
+
+	private Collection<Component> defineMetricComponents() {
+		final List<Component> all = new ArrayList<Component>();
+
+		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
+		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class, ProductLineConfigManager.class));
+		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ReportBucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
+		      .req(ProductLineConfigManager.class, TaskManager.class, ServerConfigManager.class));
 
 		return all;
 	}
@@ -145,7 +205,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ProblemHandler.class, //
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class).req(ProblemHandler.class, //
 		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
@@ -199,66 +259,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class, ServerConfigManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineMetricComponents() {
-		final List<Component> all = new ArrayList<Component>();
-
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
-		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportBucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
-		      .req(ProductLineConfigManager.class, TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineMatrixComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = MatrixAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, MatrixDelegate.class).req(TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineDependencyComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = DependencyAnalyzer.ID;
-
-		all.add(C(DatabaseParser.class));
-		all.add(C(MessageAnalyzer.class, ID, DependencyAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ServerConfigManager.class, DatabaseParser.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, DependencyDelegate.class).req(TaskManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineCrossComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = CrossAnalyzer.ID;
-
-		all.add(C(IpConvertManager.class));
-		all.add(C(MessageAnalyzer.class, ID, CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class, IpConvertManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, CrossDelegate.class).req(TaskManager.class));
 
 		return all;
 	}

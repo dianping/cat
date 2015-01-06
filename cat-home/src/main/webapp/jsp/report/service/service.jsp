@@ -32,7 +32,6 @@
 </div>
 <div class="row-fluid">
 		<div class="report">
-			</br>
 			<table class="table table-striped table-condensed   table-hover">
 				<tr>
 					<th class="left">Server(Domain)</th>

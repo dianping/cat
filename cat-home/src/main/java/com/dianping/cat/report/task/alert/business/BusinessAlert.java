@@ -145,7 +145,7 @@ public class BusinessAlert extends BaseAlert {
 
 			return m_dataChecker.checkData(value, baseline, conditions);
 		} else {
-			return null;
+			return new ArrayList<AlertResultEntity>();
 		}
 	}
 

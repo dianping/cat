@@ -16,7 +16,6 @@
 	});
 </script>
 <div class="row-fluid">
-	 <br/>
 	<table  class='table table-hover table-bordered table-striped table-condensed ' >
 	<tr>
 		

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.2</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -87,9 +87,9 @@
 				<version>5.1.20</version>
 			</dependency>
 			<dependency>
-				<groupId>org.jboss.netty</groupId>
-				<artifactId>netty</artifactId>
-				<version>3.2.7.Final</version>
+				<groupId>io.netty</groupId>
+				<artifactId>netty-all</artifactId>
+				<version>4.0.24.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -178,7 +178,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			<plugin>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-maven-plugin</artifactId>
-				<version>1.2.0</version>
+				<version>1.2.2</version>
 			</plugin>
 		</plugins>
 	</build>

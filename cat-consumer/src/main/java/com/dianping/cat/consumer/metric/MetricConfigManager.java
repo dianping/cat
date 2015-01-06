@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
@@ -27,11 +29,13 @@ import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class MetricConfigManager implements Initializable {
+public class MetricConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	protected ConfigDao m_configDao;
@@ -39,11 +43,16 @@ public class MetricConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManager;
+
 	private int m_configId;
 
 	private MetricConfig m_metricConfig;
 
 	private long m_modifyTime;
+
+	private Logger m_logger;
 
 	private static final String CONFIG_NAME = "metricConfig";
 
@@ -56,6 +65,11 @@ public class MetricConfigManager implements Initializable {
 	public boolean deleteDomainConfig(String key) {
 		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	public MetricConfig getMetricConfig() {
@@ -112,6 +126,7 @@ public class MetricConfigManager implements Initializable {
 			config.setShowAvg(item.isShowAvg());
 			config.setShowCount(item.isShowCount());
 			config.setShowSum(item.isShowSum());
+			m_logger.info("insert metric config info " + config.toString());
 			return insertMetricItemConfig(config);
 		}
 	}
@@ -215,6 +230,30 @@ public class MetricConfigManager implements Initializable {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
+		}
+	}
+
+	protected void deleteUnusedConfig() {
+		try {
+			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
+			List<String> unused = new ArrayList<String>();
+
+			for (MetricItemConfig config : configs.values()) {
+				String domain = config.getDomain();
+				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
+
+				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
+					unused.add(config.getId());
+				}
+			}
+			for (String id : unused) {
+				m_logger.info("delete metric item " + id);
+				m_metricConfig.removeMetricItemConfig(id);
+			}
+			storeConfig();
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 		}
 	}
 

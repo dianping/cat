@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -33,7 +34,11 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 			m_children = new ArrayList<Message>();
 		}
 
-		m_children.add(message);
+		if (message != null) {
+			m_children.add(message);
+		} else {
+			Cat.logError(new Exception("null child message"));
+		}
 		return this;
 	}
 

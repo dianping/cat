@@ -10,18 +10,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.hdfs.UploaderAndCleaner</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.UploaderAndCleaner</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.hadoop.hdfs.LogviewUploader</role>
 			<implementation>com.dianping.cat.hadoop.hdfs.LogviewUploader</implementation>
 			<requirements>

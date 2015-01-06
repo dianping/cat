@@ -8,17 +8,7 @@
     padding: 15px;
 }
     </style>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-      </div>
-    </div>
-  </div>
-</div>
 
-	<br>
 		<table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
 			<thead>
 				<tr >
@@ -40,5 +30,3 @@
 			</c:forEach>
 			</tbody>
 		</table>
-</div>
-</div>

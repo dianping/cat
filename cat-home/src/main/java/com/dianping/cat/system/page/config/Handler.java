@@ -80,7 +80,6 @@ public class Handler implements PageHandler<Context> {
 	private ConfigModificationDao m_configModificationDao;
 
 	@Override
-	@PreInboundActionMeta("login")
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "config")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
@@ -88,6 +87,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@Override
+	@PreInboundActionMeta("login")
 	@OutboundActionMeta(name = "config")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -102,7 +102,10 @@ public class Handler implements PageHandler<Context> {
 		case PROJECT_ALL:
 		case PROJECT_UPDATE_SUBMIT:
 		case PROJECT_DELETE:
+		case DOMAIN_GROUP_CONFIGS:
 		case DOMAIN_GROUP_CONFIG_UPDATE:
+		case DOMAIN_GROUP_CONFIG_DELETE:
+		case DOMAIN_GROUP_CONFIG_SUBMIT:
 		case BUG_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
 		case THIRD_PARTY_RULE_CONFIGS:
@@ -271,8 +274,6 @@ public class Handler implements PageHandler<Context> {
 			} catch (Exception ex) {
 				Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
 			}
-		} else {
-			Cat.logError("cannot get cookie info", new RuntimeException());
 		}
 	}
 

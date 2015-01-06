@@ -69,7 +69,7 @@ public class TopologyConfigProcessor {
 		String domain = config.getId();
 		model.setDomainConfig(config);
 
-		if (domain.equalsIgnoreCase(Constants.ALL)) {
+		if (Constants.ALL.equalsIgnoreCase(domain)) {
 			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
 		} else {
 			return m_topologyConfigManager.insertDomainConfig(type, config);

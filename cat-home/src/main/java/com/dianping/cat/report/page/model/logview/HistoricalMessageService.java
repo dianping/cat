@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.model.logview;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -14,6 +15,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
+import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -24,7 +26,10 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 	private MessageBucketManager m_hdfsBucketManager;
 
 	@Inject(HtmlMessageCodec.ID)
-	private MessageCodec m_codec;
+	private MessageCodec m_html;
+
+	@Inject(WaterfallMessageCodec.ID)
+	private MessageCodec m_waterfall;
 
 	public HistoricalMessageService() {
 		super("logview");
@@ -58,15 +63,12 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 	}
 
 	protected String toString(ModelRequest request, MessageTree tree) {
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
+		
 		if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
-			// to work around a plexus injection bug
-			MessageCodec codec = lookup(MessageCodec.class, "waterfall");
-
-			codec.encode(tree, buf);
+			m_waterfall.encode(tree, buf);
 		} else {
-			m_codec.encode(tree, buf);
+			m_html.encode(tree, buf);
 		}
 
 		try {

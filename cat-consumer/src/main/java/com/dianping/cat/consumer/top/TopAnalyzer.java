@@ -13,7 +13,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -34,9 +33,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
 
 	private TransactionAnalyzer m_transactionAnalyzer;
 

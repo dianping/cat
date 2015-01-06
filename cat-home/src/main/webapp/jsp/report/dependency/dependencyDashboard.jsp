@@ -89,7 +89,7 @@
 		            "2":"warning",
 		            "3":"error"
 		        },
-				paddingInside:10,
+				paddingInside:5,
 				col:3,
 				colInside:5,
 				//模块距上沿距离
@@ -97,8 +97,8 @@
 				//小方块间的间隔比率
 				blockPaddingRatio: 0.2,
 	            leftTitlePaddingRatio: 0.05,
-				showLeft: true,
-				showUp: false
+				showLeft: false,
+				showUp: true
 			};
 		
 		option['format'] = format;

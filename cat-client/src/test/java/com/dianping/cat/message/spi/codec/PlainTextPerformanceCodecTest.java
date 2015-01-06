@@ -1,18 +1,17 @@
 package com.dianping.cat.message.spi.codec;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec1;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class PlainTextPerformanceCodecTest {
@@ -24,8 +23,7 @@ public class PlainTextPerformanceCodecTest {
 		MessageTree tree = buildMessages();
 
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 		codec.encode(tree, buf);
 
 		buf.readInt();
@@ -40,8 +38,7 @@ public class PlainTextPerformanceCodecTest {
 		MessageTree tree = buildMessages();
 
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 		codec.encode(tree, buf);
 
 		buf.readInt();
@@ -61,8 +58,8 @@ public class PlainTextPerformanceCodecTest {
 	@Test
 	public void testManyOld() throws InterruptedException {
 		MessageTree tree = buildMessages();
-		PlainTextMessageCodec1 codec = new PlainTextMessageCodec1();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
 		codec.encode(tree, buf);
 

@@ -253,7 +253,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			boolean active = true;
+			boolean active = TimeHelper.sleepToNextMinute();
 
 			while (active) {
 				Transaction t = Cat.newTransaction("ReloadTask", "Dependency");

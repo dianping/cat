@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 
 public class TopMetric extends BaseVisitor {
@@ -145,8 +145,8 @@ public class TopMetric extends BaseVisitor {
 			m_call.addIndex(minuteStr, m_currentDomain, segment.getCallDuration());
 			m_sql.addIndex(minuteStr, m_currentDomain, segment.getSqlDuration());
 			m_cache.addIndex(minuteStr, m_currentDomain, segment.getCacheDuration());
+			super.visitSegment(segment);
 		}
-		super.visitSegment(segment);
 	}
 
 	@Override
@@ -208,6 +208,7 @@ public class TopMetric extends BaseVisitor {
 				double value = entry.getValue().doubleValue();
 				double warnLimit = -1;
 				double errorLimit = -1;
+
 				if (m_configManager != null) {
 					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_domain, entry.getKey());
 					if (exceptionLimit != null) {
@@ -266,8 +267,20 @@ public class TopMetric extends BaseVisitor {
 
 		@Override
 		public int compare(Item o1, Item o2) {
-			int alert = o2.getAlert() - o1.getAlert();
-			int value = (int) (o2.getValue() - o1.getValue());
+			int alert = 0;
+
+			if (o2.getAlert() > o1.getAlert()) {
+				alert = 1;
+			} else if (o2.getAlert() < o1.getAlert()) {
+				alert = -1;
+			}
+			int value = 0;
+
+			if (o2.getValue() > o1.getValue()) {
+				value = 1;
+			} else if (o2.getValue() < o2.getValue()) {
+				value = -1;
+			}
 
 			return alert == 0 ? value : alert;
 		}
@@ -341,7 +354,7 @@ public class TopMetric extends BaseVisitor {
 			Map<String, Item> temp = m_items.get(minute);
 
 			if (temp == null) {
-				temp = new HashMap<String, Item>();
+				temp = new LinkedHashMap<String, Item>();
 				m_items.put(minute, temp);
 			}
 			Item item = temp.get(domain);
@@ -367,7 +380,16 @@ public class TopMetric extends BaseVisitor {
 			String hour2 = o2.substring(0, 2);
 
 			if (!hour1.equals(hour2)) {
-				return Integer.parseInt(hour2) - Integer.parseInt(hour1);
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
 			} else {
 				String first = o1.substring(3, 5);
 				String end = o2.substring(3, 5);

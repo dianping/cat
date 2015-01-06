@@ -5,6 +5,10 @@
 			<implementation>com.dianping.cat.configuration.ClientConfigManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.internal.MessageIdFactory</role>
+			<implementation>com.dianping.cat.message.internal.MessageIdFactory</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageManager</role>
 			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
 			<requirements>
@@ -16,6 +20,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStatistics</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -32,14 +39,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.internal.MessageIdFactory</role>
-			<implementation>com.dianping.cat.message.internal.MessageIdFactory</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>tcp-socket-sender</role-hint>
+			<role>com.dianping.cat.message.io.TcpSocketSender</role>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
@@ -64,6 +65,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.io.TcpSocketSender</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -28,9 +28,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	protected ReportManager<CrossReport> m_reportManager;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
-	@Inject
 	private IpConvertManager m_ipConvertManager;
 
 	private static final String UNKNOWN = "Unknown";

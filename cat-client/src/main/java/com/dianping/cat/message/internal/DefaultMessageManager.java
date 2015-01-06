@@ -40,10 +40,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageStatistics m_statistics;
 
+	@Inject
+	private MessageIdFactory m_factory;
+
 	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
-
-	private MessageIdFactory m_factory;
 
 	private long m_throttleTimes;
 
@@ -107,6 +108,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_statistics != null) {
 				m_statistics.onSending(tree);
 			}
+			reset();
 		} else {
 			m_throttleTimes++;
 
@@ -120,11 +122,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_configManager;
 	}
 
-	Context getContext() {
+	private Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
 
 			if (ctx != null) {
+				return ctx;
+			} else {
+				if (m_domain != null) {
+					ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+				} else {
+					ctx = new Context("Unknown", m_hostName, "");
+				}
+
+				m_context.set(ctx);
 				return ctx;
 			}
 		}
@@ -179,7 +190,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		// initialize domain and IP address
 		try {
-			m_factory = lookup(MessageIdFactory.class);
 			m_factory.initialize(m_domain.getId());
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);
@@ -228,10 +238,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx != null) {
-			ctx.m_stack.clear();
+			if (ctx.m_totalDurationInMicros == 0) {
+				ctx.m_stack.clear();
+				ctx.m_knownExceptions.clear();
+				m_context.remove();
+			} else {
+				ctx.m_knownExceptions.clear();
+			}
 		}
-
-		m_context.remove();
 	}
 
 	public void setMetricType(String metricType) {

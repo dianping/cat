@@ -1,5 +1,8 @@
 package com.dianping.cat.message.internal;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Queue;
@@ -8,8 +11,6 @@ import java.util.Stack;
 import junit.framework.Assert;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -134,7 +135,7 @@ public class MessageProducerTest extends CatTestCase {
 		MessageTree tree = m_queue.poll();
 
 		MessageCodec codec = Cat.lookup(MessageCodec.class, "plain-text");
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(4 * 1024);
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(4 * 1024);
 
 		codec.encode(tree, buf);
 

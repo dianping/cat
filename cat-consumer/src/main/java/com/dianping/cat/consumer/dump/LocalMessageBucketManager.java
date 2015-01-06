@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer.dump;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -16,7 +18,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
@@ -469,7 +470,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-				ChannelBuffer buf = tree.getBuffer();
+				ByteBuf buf = tree.getBuffer();
 				MessageBlock bolck = bucket.storeMessage(buf, id);
 
 				if (bolck != null) {
