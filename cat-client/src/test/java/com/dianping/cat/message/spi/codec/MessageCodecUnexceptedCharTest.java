@@ -1,9 +1,9 @@
 package com.dianping.cat.message.spi.codec;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import junit.framework.Assert;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.junit.Test;
 
 import com.dianping.cat.message.CatTestCase;
@@ -20,7 +20,8 @@ public class MessageCodecUnexceptedCharTest extends CatTestCase {
 	public void testCodePerformance() throws Exception {
 		MessageCodec codec = lookup(MessageCodec.class, ID);
 		MessageTree tree = buildMessage();
-		ChannelBuffer buf = new DynamicChannelBuffer(10240);
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(10240);
+		
 		codec.encode(tree, buf);
 		MessageTree result = new DefaultMessageTree();
 		codec.decode(buf, result);
@@ -31,10 +32,11 @@ public class MessageCodecUnexceptedCharTest extends CatTestCase {
 		Message message = new MockMessageBuilder() {
 			@Override
 			public MessageHolder define() {
-				TransactionHolder t = t("\n\nWEBC$$$$LUSTER\t\n", "GET\t\n","This&123123&1231&3&\n\n\n\n&\t\t\t&&&&\n\n\n\n\n\n is test data\t\t\n\n", 112819) //
+				TransactionHolder t = t("\n\nWEBC$$$$LUSTER\t\n", "GET\t\n",
+				      "This&123123&1231&3&\n\n\n\n&\t\t\t&&&&\n\n\n\n\n\n is test data\t\t\n\n", 112819) //
 				      .at(1348374838231L) //
 				      .after(1300).child(t("QUICKIESERVICE", "gimme_stuff", 1571)) //
-				      .after(100).child(e("SERVICE", "event1","This\n\n\n\n\n\n is test data\t\t\n\n")) //
+				      .after(100).child(e("SERVICE", "event1", "This\n\n\n\n\n\n is test data\t\t\n\n")) //
 				      .after(100).child(h("SERVICE", "heartbeat1")) //
 				      .after(100).child(t("WEB SERVER", "GET", 109358) //
 				            .after(1000).child(t("SOME SERVICE", "get", 4345) //

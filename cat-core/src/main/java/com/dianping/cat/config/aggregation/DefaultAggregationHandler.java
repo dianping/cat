@@ -195,7 +195,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 	@Override
 	public void register(List<AggregationRule> rules) {
-		m_logger.info("aggregation rule start!");
 		m_formats.clear();
 
 		for (AggregationRule rule : rules) {
@@ -227,7 +226,5 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 				buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
 			}
 		}
-
-		m_logger.info("aggregation rule end!");
 	}
 }

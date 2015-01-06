@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.model.logview;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -62,8 +63,8 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 	}
 
 	protected String toString(ModelRequest request, MessageTree tree) {
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
+		
 		if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
 			m_waterfall.encode(tree, buf);
 		} else {

@@ -34,46 +34,6 @@
 						<td><input name="productLine.order"
 							value="${model.productLine.order}" required /></td>
 					</tr>
-					<c:if test="${payload.type eq '业务监控' || payload.type eq '应用监控'}">
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
-						<td><c:choose>
-								<c:when test="${model.productLine.applicationDashboard}">
-									<input type="radio" name="productLine.applicationDashboard" value="true" checked />是	
-									<input type="radio" name="productLine.applicationDashboard" value="false" />否
-							</c:when>
-								<c:otherwise>
-									<input type="radio" name="productLine.applicationDashboard" value="true" />是
-									<input type="radio" name="productLine.applicationDashboard" value="false" checked />否
-						</c:otherwise>
-							</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到业务监控大盘</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.metricDashboard}">
-								<input type="radio" name="productLine.metricDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.metricDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.metricDashboard" value="true" />是
-								<input type="radio" name="productLine.metricDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					</c:if>
-					<c:if test="${payload.type eq '网络监控'}">
-						<input type="hidden" name="productLine.networkMonitorDashboard" value="true" />
-					</c:if>
-					<c:if test="${payload.type eq '系统监控'}">
-						<input type="hidden" name="productLine.systemMonitorDashboard" value="true" />
-					</c:if>
-					<c:if test="${payload.type eq '外部监控'}">
-						<input type="hidden" name="productLine.userkMonitorDashboard" value="true" />
-					</c:if>
-					<c:if test="${payload.type eq '数据库监控'}">
-						<input type="hidden" name="productLine.databaseMonitorDashboard" value="true" />
-					</c:if>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
 						<td style="width:50%;">
@@ -121,4 +81,9 @@
 				})
 			}).trigger('resize.chosen');
 		});
-	</script>
+</script>
+<style>
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+background:inherit;
+}
+</style>

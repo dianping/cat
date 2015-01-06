@@ -61,10 +61,6 @@
 						<th width="15%">产品线</th>
 						<th width="20%">标题</th>
 						<th width="5%">顺序</th>
-						<c:if test="${type eq '业务监控' || type eq '应用监控'}">
-							<th width="7%">业务监控</th>
-							<th width="7%">应用监控</th>
-						</c:if>
 						<!-- <th width="40%">项目列表</th> -->
 						<th width="5%">操作 <a href="?op=topologyProductLineAdd&type=${type}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
@@ -72,12 +68,6 @@
 					<c:forEach var="item" items="${listItem.value}" varStatus="status">
 						<tr><td>${item.id}</td><td>${item.title}</td>
 						<td>${item.order}</td>
-						<c:if test="${type eq '业务监控' || type eq '应用监控'}">
-							<td><c:if test="${item.metricDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
-								<c:if test="${!item.metricDashboard}"><span><strong>否</strong></span></c:if>  </td>
-							<td><c:if test="${item.applicationDashboard}"><span class="text-danger"><strong>是</strong></span></c:if>
-								<c:if test="${!item.applicationDashboard}"><span><strong>否</strong></span></c:if>  </td>
-						</c:if>
 						<%-- <td>
 							<c:forEach var="domain" items="${item.domains}"> 
 								${domain.key},

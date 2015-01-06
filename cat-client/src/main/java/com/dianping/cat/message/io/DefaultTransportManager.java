@@ -38,12 +38,7 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 
 		if (!m_configManager.isCatEnabled()) {
 			m_tcpSocketSender = null;
-
-			if (m_configManager.isInitialized()) {
-				m_logger.warn("CAT was DISABLED explicitly!");
-			} else {
-				m_logger.warn("CAT was DISABLED due to not initialized yet!");
-			}
+			m_logger.warn("CAT was DISABLED due to not initialized yet!");
 		} else {
 			List<InetSocketAddress> addresses = new ArrayList<InetSocketAddress>();
 

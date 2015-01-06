@@ -92,6 +92,11 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				} else if ("state".equals(str2)) {
 					return -1;
 				}
+				if ("top".equals(str1)) {
+					return -1;
+				} else if ("top".equals(str2)) {
+					return 1;
+				}
 				return str1.compareTo(str2);
 			}
 		});

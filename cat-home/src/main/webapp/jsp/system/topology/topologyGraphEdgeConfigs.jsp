@@ -61,6 +61,7 @@
 				     			<th>类型</th>
 				     			<th>调用者</th>
 				     			<th>被调用者</th>
+				     			<th>最少调用次数</th>
 				     			<th>异常Warning阀值</th>
 				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
 				     			<th>响应时间Error阀值</th>
@@ -71,17 +72,19 @@
 				     			<td>默认值</td>
 				     			<th>ALL</th>
 				     			<th>ALL</th>
+				     			<td style="text-align:right">${value.nodeConfig.defaultMinCountThreshold}</td>
 				     			<td style="text-align:right">${value.nodeConfig.defaultWarningThreshold}</td>
 				     			<td style="text-align:right">${value.nodeConfig.defaultErrorThreshold}</td>
 					     		<td style="text-align:right">${value.nodeConfig.defaultWarningResponseTime}</td>
 					     		<td style="text-align:right">${value.nodeConfig.defaultErrorResponseTime}</td>
 						     	<td></td>
-					     		</tr>
+					     	</tr>
 					     	<c:forEach var="temp" items="${value.edgeConfigs}">
 					     		<tr>
 					     		<td>${temp.type}</td>
 				     			<td>${temp.from}</td>
 				     			<td>${temp.to}</td>
+				     			<td style="text-align:right">${temp.minCountThreshold}</td>
 				     			<td style="text-align:right">${temp.warningThreshold}</td>
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
 					     		<td style="text-align:right">${temp.warningResponseTime}</td>

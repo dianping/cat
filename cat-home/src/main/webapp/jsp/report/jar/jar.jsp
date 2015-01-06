@@ -30,8 +30,8 @@
 				&nbsp;[ <a href="${model.baseUri}?op=jar">now</a> ]&nbsp;
 		</div>
 	</div>
-<div style="display:inline-flex;">
-	<table id="contents" class="table table-striped table-condensed   table-hover">
+	<div style="display:inline-flex;padding-top:3px;">
+		<table id="contents" class="table table-striped table-condensed   table-hover">
 		<thead>
 		<tr>
 			<th>domain</th>

@@ -1,13 +1,14 @@
 package com.dianping.cat.message.spi.core;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import junit.framework.Assert;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -20,7 +21,7 @@ import com.dianping.cat.message.spi.core.WaterfallMessageCodec.Ruler;
 public class WaterfallMessageCodecTest extends ComponentTestCase {
 	private WaterfallMessageCodec m_codec;
 
-	private ChannelBuffer m_buf;
+	private ByteBuf m_buf;
 
 	private MessageTree m_tree;
 
@@ -30,7 +31,7 @@ public class WaterfallMessageCodecTest extends ComponentTestCase {
 	public void setupTest() throws Exception {
 		setupMockWaterfallMessageCodec();
 
-		m_buf = ChannelBuffers.dynamicBuffer();
+		m_buf = ByteBufAllocator.DEFAULT.buffer();
 		m_messageTreeBuilder = new MockMessageTreeBuilder();
 		m_tree = m_messageTreeBuilder.build();
 	}
@@ -77,11 +78,11 @@ public class WaterfallMessageCodecTest extends ComponentTestCase {
 		Assert.assertEquals(size, getLengthFromBuffer(m_buf));
 	}
 
-	private String extractActualFromBuffer(ChannelBuffer buf) {
+	private String extractActualFromBuffer(ByteBuf buf) {
 		return removeExcapeCharacters(buf.toString(Charset.forName("utf-8")));
 	}
 
-	private int getLengthFromBuffer(ChannelBuffer buf) {
+	private int getLengthFromBuffer(ByteBuf buf) {
 		return buf.toString(Charset.forName("utf-8")).getBytes().length;
 	}
 

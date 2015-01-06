@@ -82,6 +82,7 @@ public class ExternalInfoBuilder {
 		int minuteCount = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		TopReport report = queryTopReport(payload);
+
 		List<String> excludeDomains = Arrays.asList(Constants.FRONT_END);
 		TopMetric topMetric = new TopMetric(minuteCount, payload.getTopCounts(), m_configManager, excludeDomains);
 		Date end = new Date(payload.getDate() + TimeHelper.ONE_MINUTE * minute);
@@ -127,10 +128,12 @@ public class ExternalInfoBuilder {
 		if (m_topService.isEligable(request)) {
 			ModelResponse<TopReport> response = m_topService.invoke(request);
 			TopReport report = response.getModel();
+
 			if (report == null || report.getDomains().size() == 0) {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
 				      + TimeHelper.ONE_HOUR));
 			}
+			report.accept(new TopExceptionExclude(m_configManager));
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");

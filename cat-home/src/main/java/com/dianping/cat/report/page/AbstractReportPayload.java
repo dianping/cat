@@ -22,7 +22,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	protected String m_customStart;
 
 	@FieldMeta("date")
-	private long m_date;
+	protected long m_date;
 
 	@FieldMeta("domain")
 	private String m_domain;
@@ -36,7 +36,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	private String m_reportType;
 
 	@FieldMeta("step")
-	private int m_step;
+	protected int m_step;
 
 	@FieldMeta("today")
 	private boolean m_today;

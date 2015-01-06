@@ -29,6 +29,8 @@ import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
+import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -40,6 +42,9 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ContentFetcher m_fetcher;
+
+	@Inject
+	private ProductLineConfigManager m_productLineConfigManager;
 
 	private int m_configId;
 
@@ -225,6 +230,30 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
+		}
+	}
+
+	protected void deleteUnusedConfig() {
+		try {
+			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
+			List<String> unused = new ArrayList<String>();
+
+			for (MetricItemConfig config : configs.values()) {
+				String domain = config.getDomain();
+				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
+
+				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
+					unused.add(config.getId());
+				}
+			}
+			for (String id : unused) {
+				m_logger.info("delete metric item " + id);
+				m_metricConfig.removeMetricItemConfig(id);
+			}
+			storeConfig();
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 		}
 	}
 

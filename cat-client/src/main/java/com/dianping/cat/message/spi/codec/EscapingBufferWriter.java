@@ -1,12 +1,12 @@
 package com.dianping.cat.message.spi.codec;
 
-import org.jboss.netty.buffer.ChannelBuffer;
+import io.netty.buffer.ByteBuf;
 
 public class EscapingBufferWriter implements BufferWriter {
 	public static final String ID = "escape";
 
 	@Override
-	public int writeTo(ChannelBuffer buf, byte[] data) {
+	public int writeTo(ByteBuf buf, byte[] data) {
 		int len = data.length;
 		int count = len;
 		int offset = 0;

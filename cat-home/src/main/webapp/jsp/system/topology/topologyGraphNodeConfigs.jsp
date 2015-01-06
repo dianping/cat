@@ -59,13 +59,17 @@
 					    <h4 class="text-center text-danger">拓扑图节点配置信息：${item.key}</h4>
 				     	<table class="table table-striped table-condensed  table-bordered table-hover">
 				     		<thead><tr>
-				     			<th>项目</th><th>异常Warning阀值</th>
+				     			<th>项目</th>
+				     			<th>最小的个数</th>
+				     			<th>异常Warning阀值</th>
 				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
 				     			<th>响应时间Error阀值</th>
 				     			<th width="8%">操作 <a href="?op=topologyGraphNodeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				     		</tr></thead>
-				     		<tr class="text-danger"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
+				     		<tr class="text-danger"><td><h5>默认值</h5></td>
+				     			<td><h5 class="text-right">${value.defaultMinCountThreshold}</h5></td>
+				     			<td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
 					     		<td><h5 class="text-right">${value.defaultErrorThreshold}</h5></td>
 						     	<c:if test="${item.key eq 'Exception'}">
 						     		<td><h5 class="text-right">——</h5></td>
@@ -81,6 +85,7 @@
 					     	<c:forEach var="domainConfig" items="${value.domainConfigs}">
 					     		<c:set var="temp" value="${domainConfig.value}"/>
 				     			<tr><td>${temp.id}</td>
+				     			<td style="text-align:right">${temp.minCountThreshold}</td>
 				     			<td style="text-align:right">${temp.warningThreshold}</td>
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
 				     			<c:if test="${item.key eq 'Exception'}">

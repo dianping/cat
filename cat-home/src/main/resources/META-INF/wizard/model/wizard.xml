@@ -64,7 +64,7 @@
       <sample-model>src/test/resources/config/router-config.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.OverloadReport" name="overload-report">
-      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/overload-report.xml</sample-model>
+      <sample-model>src/test/resources/config/overload-report.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.highload" name="highload">
       <sample-model>/Users/leon/Desktop/highload.xml</sample-model>
@@ -72,10 +72,10 @@
    <model package="com.dianping.cat.home.jar" name="jar-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/jar/jar.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.display/policy" name="display-policy">
-      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/display-policy.xml</sample-model>
+   <model package="com.dianping.cat.home.heartbeat" name="heartbeat-display-config">
+      <sample-model>src/test/resources/config/heartbeat-display-config.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.topoGraph-format-config" name="topoGraph-format-config">
-      <sample-model>src/main/resources/config/default-topoGraph-config.xml</sample-model>
+   <model package="com.dianping.cat.home.dependency.format" name="topology-format-config">
+      <sample-model>src/main/resources/config/default-topology-config.xml</sample-model>
    </model>
 </wizard>

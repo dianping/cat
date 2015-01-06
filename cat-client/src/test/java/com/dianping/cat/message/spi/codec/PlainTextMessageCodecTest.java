@@ -1,11 +1,12 @@
 package com.dianping.cat.message.spi.codec;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
 import junit.framework.Assert;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 
 import com.dianping.cat.message.Event;
@@ -26,7 +27,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class PlainTextMessageCodecTest {
 	private void check(Message message, String expected) {
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(10240);
 		Context ctx = new Context().setBuffer(buf);
 
 		codec.setBufferWriter(new EscapingBufferWriter());
@@ -44,8 +45,7 @@ public class PlainTextMessageCodecTest {
 
 	private void checkTree(MessageTree tree, String expected) {
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
-
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(10240);
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 

@@ -27,7 +27,7 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 	protected CrossReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		CrossReport report = super.getReport(request, period, domain);
 
-		if (report == null && period.isLast()) {
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 

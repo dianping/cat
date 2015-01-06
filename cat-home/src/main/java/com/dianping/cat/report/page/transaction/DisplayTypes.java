@@ -86,6 +86,15 @@ public class DisplayTypes {
 			if (m_sorted.equals("99line")) {
 				return (int) (m2.getDetail().getLine99Value() * 100 - m1.getDetail().getLine99Value() * 100);
 			}
+			if (m_sorted.equals("min")) {
+				return (int) (m2.getDetail().getMin() * 100 - m1.getDetail().getMin() * 100);
+			}
+			if (m_sorted.equals("max")) {
+				return (int) (m2.getDetail().getMax() * 100 - m1.getDetail().getMax() * 100);
+			}
+			if (m_sorted.equals("std")) {
+				return (int) (m2.getDetail().getStd() * 100 - m1.getDetail().getStd() * 100);
+			}
 			return 0;
 		}
 	}

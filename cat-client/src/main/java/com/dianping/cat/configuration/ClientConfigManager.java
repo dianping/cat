@@ -14,7 +14,6 @@ import org.unidal.helper.Files;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.configuration.client.entity.Property;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
@@ -30,18 +29,6 @@ public class ClientConfigManager implements LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public String getBaseLogDir() {
-		if (m_config == null) {
-			return "target/catlog";
-		} else {
-			return m_config.getBaseLogDir();
-		}
-	}
-
-	public ClientConfig getClientConfig() {
-		return m_config;
 	}
 
 	public Domain getDomain() {
@@ -72,24 +59,6 @@ public class ClientConfigManager implements LogEnabled {
 		} else {
 			return getDomain().getMaxMessageSize();
 		}
-	}
-
-	public String getMmapName() {
-		return getPropertyValue("mmap-name", "/data/appdatas/cat/mmap");
-	}
-
-	private String getPropertyValue(String name, String defaultValue) {
-		String value = defaultValue;
-
-		if (m_config != null) {
-			Property property = m_config.getProperties().get(name);
-
-			if (property != null) {
-				value = property.getText();
-			}
-		}
-
-		return value;
 	}
 
 	public String getServerConfigUrl() {
@@ -159,6 +128,7 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+		m_logger.info(m_config.toString());
 	}
 
 	public boolean isCatEnabled() {
@@ -175,10 +145,6 @@ public class ClientConfigManager implements LogEnabled {
 		} else {
 			return m_config.isDumpLocked();
 		}
-	}
-
-	public boolean isInitialized() {
-		return m_config != null;
 	}
 
 	private ClientConfig loadConfigFromEnviroment() {

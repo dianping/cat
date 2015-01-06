@@ -40,7 +40,7 @@ public class ProductLineConfigManagerTest {
 		manager.insertProductLine(line2, domains2, ProductLineConfig.METRIC_PRODUCTLINE.getTitle());
 
 		Assert.assertEquals(2, s_storeCount);
-		Assert.assertEquals("Default", manager.queryProductLineByDomain("domain"));
+		Assert.assertEquals(null, manager.queryProductLineByDomain("domain"));
 		Assert.assertEquals("Test1", manager.queryProductLineByDomain("domain1"));
 		List<String> pDomains = manager.queryDomainsByProductLine("Test1", ProductLineConfig.METRIC_PRODUCTLINE);
 		Assert.assertEquals(2, pDomains.size());

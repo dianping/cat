@@ -229,3 +229,6 @@ a{
 .input-group .form-control{
 	z-index:0;
 }
+table{
+	margin-top:3px;
+}

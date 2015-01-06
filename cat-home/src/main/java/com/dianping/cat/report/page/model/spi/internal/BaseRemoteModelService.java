@@ -22,12 +22,11 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
-	@Inject
-	private String m_host;
 
+	private String m_host;
+	
 	private String m_name;
 
-	@Inject
 	private int m_port = 2281; // default admin port
 
 	@Inject

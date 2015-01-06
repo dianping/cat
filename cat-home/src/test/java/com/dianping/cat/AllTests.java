@@ -12,7 +12,6 @@ import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
-import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
@@ -112,8 +111,6 @@ MetricReportMergerTest.class,
 
 /* Dependency */
 DependencyReportMergerTest.class,
-
-GraphConfigManagerTest.class,
 
 MetricReportParseTest.class,
 

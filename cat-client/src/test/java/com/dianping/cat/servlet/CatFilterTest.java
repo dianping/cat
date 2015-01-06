@@ -28,7 +28,6 @@ import org.unidal.test.jetty.JettyServer;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilterTest extends JettyServer {
 	@After
@@ -121,19 +120,7 @@ public class CatFilterTest extends JettyServer {
 		Assert.assertNotNull(id);
 		Assert.assertNotNull(parentId);
 		Assert.assertNotNull(rootId);
-
 		Assert.assertFalse(id.equals(rootId));
-
-		Cat.setup(null);
-
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-
-		tree.setMessageId(rootId);
-
-		Transaction t = Cat.newTransaction("Mock", "testMode2");
-		Cat.logEvent("RemoteCall", url, Message.SUCCESS, id);
-		t.setStatus(Message.SUCCESS);
-		t.complete();
 
 		TimeUnit.MILLISECONDS.sleep(100);
 	}

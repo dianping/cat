@@ -185,7 +185,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
 		all.add(C(ProductLineConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(MetricConfigManager.class).req(ConfigDao.class, ContentFetcher.class, ProductLineConfigManager.class));
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportBucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, TaskManager.class, ServerConfigManager.class));

@@ -156,4 +156,15 @@ public class TimeHelper {
 		return cal.getTime();
 	}
 
+	public static boolean sleepToNextMinute() {
+		try {
+			long current = System.currentTimeMillis();
+
+			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE + 500);
+			return true;
+		} catch (InterruptedException e) {
+			return false;
+		}
+	}
+
 }

@@ -22,7 +22,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Inject
 	private ServerConfigManager m_manager;
-	
+
+	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+
 	@Override
 	public void afterLoad(Map<String, EventReport> reports) {
 	}
@@ -44,6 +46,8 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public String buildXml(EventReport report) {
+		report.accept(m_computer);
+
 		String xml = new EventReportCountFilter().buildXml(report);
 
 		return xml;
@@ -52,10 +56,10 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Override
 	public boolean createHourlyTask(EventReport report) {
 		String domain = report.getDomain();
-		
+
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), EventAnalyzer.ID, TaskProlicy.ALL);
-		}else{
+		} else {
 			return true;
 		}
 	}

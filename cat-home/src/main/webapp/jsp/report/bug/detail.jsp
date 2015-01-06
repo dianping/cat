@@ -1,4 +1,4 @@
-	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
+<%@ page session="false" language="java" pageEncoding="UTF-8" %>
 	<table class="table table-striped table-condensed   table-hover">
 	<tr>
 			<th width="10%">部门</th>

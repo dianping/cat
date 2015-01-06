@@ -1,27 +1,25 @@
 package com.dianping.cat.message.io;
 
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
+
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.Logger;
-import org.jboss.netty.bootstrap.ClientBootstrap;
-import org.jboss.netty.channel.ChannelFactory;
-import org.jboss.netty.channel.ChannelFuture;
-import org.jboss.netty.channel.ChannelHandlerContext;
-import org.jboss.netty.channel.ChannelPipeline;
-import org.jboss.netty.channel.ChannelPipelineFactory;
-import org.jboss.netty.channel.ChannelStateEvent;
-import org.jboss.netty.channel.Channels;
-import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.SimpleChannelHandler;
-import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.util.StringUtils;
@@ -35,7 +33,7 @@ public class ChannelManager implements Task {
 
 	private ClientConfigManager m_configManager;
 
-	private ClientBootstrap m_bootstrap;
+	private Bootstrap m_bootstrap;
 
 	private Logger m_logger;
 
@@ -58,21 +56,15 @@ public class ChannelManager implements Task {
 		m_configManager = configManager;
 		m_idfactory = idFactory;
 
-		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
-		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
-		ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
-		ClientBootstrap bootstrap = new ClientBootstrap(factory);
-
-		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+		EventLoopGroup group = new NioEventLoopGroup(1);
+		Bootstrap bootstrap = new Bootstrap();
+		bootstrap.group(group).channel(NioSocketChannel.class);
+		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+		bootstrap.handler(new ChannelInitializer<Channel>() {
 			@Override
-			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(new ExceptionHandler());
+			protected void initChannel(Channel ch) throws Exception {
 			}
 		});
-
-		bootstrap.setOption("tcpNoDelay", true);
-		bootstrap.setOption("keepAlive", true);
-
 		m_bootstrap = bootstrap;
 
 		String serverConfig = loadServerConfig();
@@ -122,8 +114,8 @@ public class ChannelManager implements Task {
 	private void closeChannel(ChannelFuture channel) {
 		try {
 			if (channel != null) {
-				m_logger.info("close channel " + channel.getChannel().getRemoteAddress());
-				channel.getChannel().close();
+				m_logger.info("close channel " + channel.channel().remoteAddress());
+				channel.channel().close();
 			}
 		} catch (Exception e) {
 			// ignore
@@ -175,7 +167,7 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	public ChannelFuture getChannel() {
+	public ChannelFuture channel() {
 		return m_activeChannelHolder.getActiveFuture();
 	}
 
@@ -230,7 +222,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean isChannelDisabled(ChannelFuture activeFuture) {
-		return activeFuture != null && !activeFuture.getChannel().isOpen();
+		return activeFuture != null && !activeFuture.channel().isOpen();
 	}
 
 	private boolean isChannelStalled(ChannelFuture activeFuture) {
@@ -421,25 +413,19 @@ public class ChannelManager implements Task {
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
-			sb.append("active future :").append(m_activeFuture.getChannel().getRemoteAddress());
+			sb.append("active future :").append(m_activeFuture.channel().remoteAddress());
 			sb.append(" index:").append(m_activeIndex);
 			sb.append(" ip:").append(m_ip);
 			sb.append(" server config:").append(m_activeServerConfig);
 			return sb.toString();
 		}
-
 	}
 
-	private class ExceptionHandler extends SimpleChannelHandler {
+	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
 
 		@Override
-		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			m_logger.warn("Channel disconnected by remote address: " + e.getChannel().getRemoteAddress());
-		}
-
-		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-			m_logger.warn("Channel disconnected due to " + e.getCause());
+		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+			m_logger.info("receiver msg from server:" + msg);
 		}
 	}
 

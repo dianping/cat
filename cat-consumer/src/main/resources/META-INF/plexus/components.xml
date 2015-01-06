@@ -589,6 +589,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

@@ -353,12 +353,7 @@ public class HeartbeatAlert extends BaseAlert {
 
 	@Override
 	public void run() {
-		boolean active = true;
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			active = false;
-		}
+		boolean active = TimeHelper.sleepToNextMinute();
 
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertHeartbeat", TimeHelper.getMinuteStr());

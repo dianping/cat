@@ -47,24 +47,18 @@
 			}
 		});
 	</script>
-	
-			<!-- Modal -->
-			<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"></div>
-			<h4 id="state" class="text-center text-danger">&nbsp;</h4>
 			<div class="tabbable tabs-left" id="content">
 				<!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs">
 					<c:set var="keys" value="异常阈值,异常过滤" />
 					<c:forEach var="key" items="${keys}" varStatus="status">
 						<li id="tab-${key}" class="text-right"><a
-							href="#tabContent-${key}" data-toggle="tab">
-								<h5 class="text-danger">${key}</h5>
-						</a></li>
+							href="#tabContent-${key}" data-toggle="tab">${key}</a></li>
 					</c:forEach>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-异常阈值">
-						<h4 class="text-center text-danger">异常阈值配置</h4>
+						<h5 class="text-center text-danger">异常阈值配置</h5>
 						<table
 							class="table table-striped table-condensed table-bordered  table-hover"
 							id="content-异常阈值" width="100%">
@@ -103,7 +97,7 @@
 					</div>
 
 					<div class="tab-pane" id="tabContent-异常过滤">
-						<h4 class="text-center text-danger">异常过滤配置</h4>
+						<h5 class="text-center text-danger">异常过滤配置</h5>
 						<table
 							class="table table-striped table-condensed  table-bordered table-hover"
 							id="contents-异常过滤" width="100%">

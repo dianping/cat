@@ -9,6 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -18,6 +19,9 @@ import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
 public class RemoteLogViewService extends BaseRemoteModelService<String> {
+	
+	private ServerConfigManager m_manager;
+	
 	public RemoteLogViewService() {
 		super("logview");
 	}
@@ -29,20 +33,24 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		ModelPeriod period = request.getPeriod();
+		if (m_manager.isHdfsOn()) {
+			ModelPeriod period = request.getPeriod();
 
-		if (period.isHistorical()) {
-			long time = Long.parseLong(request.getProperty("timestamp"));
-			long current = System.currentTimeMillis();
-			long currentHour = current - current % TimeHelper.ONE_HOUR;
+			if (period.isHistorical()) {
+				long time = Long.parseLong(request.getProperty("timestamp"));
+				long current = System.currentTimeMillis();
+				long currentHour = current - current % TimeHelper.ONE_HOUR;
 
-			if (time == currentHour - 2 * TimeHelper.ONE_HOUR) {
+				if (time == currentHour - 2 * TimeHelper.ONE_HOUR) {
+					return true;
+				}
+			} else {
 				return true;
 			}
+			return false;
 		} else {
 			return true;
 		}
-		return false;
 	}
 
 	@Override
@@ -78,4 +86,8 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 		return response;
 	}
 
+	public void setManager(ServerConfigManager manager) {
+   	m_manager = manager;
+   }
+	
 }

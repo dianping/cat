@@ -1,12 +1,14 @@
 package com.dianping.cat.report.page.model.logview;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.nio.charset.Charset;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
@@ -19,7 +21,6 @@ import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.storage.message.MessageBucketManager;
-import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 
 public class LocalMessageService extends BaseLocalModelService<String> {
 	@Inject(LocalMessageBucketManager.ID)
@@ -41,7 +42,7 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 		MessageTree tree = m_bucketManager.loadMessage(messageId);
 
 		if (tree != null) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
 			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
 				m_waterfall.encode(tree, buf);
@@ -86,15 +87,20 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		boolean eligibale = request.getPeriod().isCurrent();
+		if (m_manager.isHdfsOn()) {
+			boolean eligibale = request.getPeriod().isCurrent();
 
-		if (eligibale) {
-			String messageId = request.getProperty("messageId");
-			MessageId id = MessageId.parse(messageId);
+			if (eligibale) {
+				String messageId = request.getProperty("messageId");
+				MessageId id = MessageId.parse(messageId);
 
-			return id.getVersion() == 2;
+				return id.getVersion() == 2;
+			}
+
+			return eligibale;
+		} else {
+			return true;
 		}
-
-		return eligibale;
 	}
+	
 }

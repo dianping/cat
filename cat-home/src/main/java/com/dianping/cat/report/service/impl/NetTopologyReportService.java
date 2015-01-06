@@ -11,8 +11,8 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
-import com.dianping.cat.home.nettopo.transform.DefaultNativeParser;
+import com.dianping.cat.home.network.entity.NetGraphSet;
+import com.dianping.cat.home.network.transform.DefaultNativeParser;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class NetTopologyReportService extends AbstractReportService<NetGraphSet> {
@@ -58,7 +58,7 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 
 			if (xml != null && xml.length() > 0) {
 				try {
-					netGraphSet = com.dianping.cat.home.nettopo.transform.DefaultSaxParser.parse(xml);
+					netGraphSet = com.dianping.cat.home.network.transform.DefaultSaxParser.parse(xml);
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

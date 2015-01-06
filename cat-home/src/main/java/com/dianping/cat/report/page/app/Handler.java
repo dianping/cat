@@ -187,6 +187,7 @@ public class Handler implements PageHandler<Context> {
 			String domain = payload.getDomain();
 			String name = payload.getName();
 			String title = payload.getTitle();
+			String type = payload.getType();
 
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
@@ -195,7 +196,7 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name);
+						Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name, type);
 
 						if (addCommandResult.getKey()) {
 							setUpdateResult(model, 1);
@@ -226,7 +227,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case APP_CONFIG_FETCH:
-			String type = payload.getType();
+			type = payload.getType();
 
 			try {
 				if ("xml".equalsIgnoreCase(type)) {
