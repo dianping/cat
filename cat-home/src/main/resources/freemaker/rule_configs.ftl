@@ -49,16 +49,16 @@
                 <div class="subCondition">
                     &nbsp;&nbsp;&nbsp;规则类型：
                     <select name="ruleType" class="ruleType">
-                        <option value="DescVal">下降值</option>
-                        <option value="DescPer">下降百分比</option>
-                        <option value="AscVal">上升值</option>
-                        <option value="AscPer">上升百分比</option>
-                        <option value="MaxVal">最大值</option>
-                        <option value="MinVal">最小值</option>
-                        <option value="FluAscPer">波动上升百分比</option>
-                        <option value="FluDescPer">波动下降百分比</option>
-                        <option value="SumMaxVal">总和最大值</option>
-                        <option value="SumMinVal">总和最小值</option>
+                        <option value="DescVal">下降值(比基线)</option>
+                        <option value="DescPer">下降百分比(比基线)</option>
+                        <option value="AscVal">上升值(比基线)</option>
+                        <option value="AscPer">上升百分比(比基线)</option>
+                        <option value="MaxVal">最大值(当前值)</option>
+                        <option value="MinVal">最小值(当前值)</option>
+                        <option value="FluAscPer">波动上升百分比(当前值)</option>
+                        <option value="FluDescPer">波动下降百分比(当前值)</option>
+                        <option value="SumMaxVal">总和最大值(当前值)</option>
+                        <option value="SumMinVal">总和最小值(当前值)</option>
                     </select>
                     阈值：<input name="value" class="value input-mini" type="text"/>
                     <button class="btn btn-danger btn-xs delete-subcondition-button" type="button">
