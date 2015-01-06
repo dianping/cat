@@ -69,7 +69,9 @@ public enum NetworkInterfaceManager {
 										}
 									}
 								} else {
-									local = address;
+									if (local == null) {
+										local = address;
+									}
 								}
 							}
 						}
