@@ -74,6 +74,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("metric")
 	private String m_metric;
 
+	@FieldMeta("count")
+	private int m_count;
+
 	private DateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Override
@@ -120,6 +123,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			return "";
 		} else {
 			return m_content;
+		}
+	}
+
+	public int getCount() {
+		if (m_count == 0) {
+			return 5;
+		} else {
+			return m_count;
 		}
 	}
 
@@ -187,7 +198,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		try {
 			return m_format.parse(m_startTime);
 		} catch (Exception e) {
-			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - 15 * TimeHelper.ONE_MINUTE);
 		}
 	}
 
@@ -237,6 +248,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	public void setDomain(String domain) {
