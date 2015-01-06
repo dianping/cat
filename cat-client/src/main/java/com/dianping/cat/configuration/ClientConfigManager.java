@@ -128,6 +128,7 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+		m_logger.info(m_config.toString());
 	}
 
 	public boolean isCatEnabled() {

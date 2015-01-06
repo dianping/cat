@@ -296,6 +296,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		if (m_config.isLocalMode()) {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
+		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
+		m_logger.info("CAT server is running with alert," + isAlertMachine());
+		m_logger.info("CAT server is running with job," + isJobMachine());
+		m_logger.info(m_config.toString());
 	}
 
 	public boolean isAlertMachine() {
@@ -399,22 +403,21 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
-	
-	public String getSmsChannelUrl(){
+
+	public String getSmsChannelUrl() {
 		return null;
 	}
-	
-	public String getWeiXinChannelUrl(){
+
+	public String getWeiXinChannelUrl() {
 		return null;
 	}
-	
-	public String getEmailChannelUrl(){
+
+	public String getEmailChannelUrl() {
 		return null;
 	}
-	
-	public int getLogviewStorageDay(){
+
+	public int getLogviewStorageDay() {
 		return 0;
 	}
-	
-}
 
+}
