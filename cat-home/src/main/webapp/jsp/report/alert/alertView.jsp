@@ -52,7 +52,7 @@
 		<br/><br/>
 		<div id="alert-minutes">
 		  <br/><br/>
-		  <span class="text-info">点击项目名可查看该项目下的具体告警</span>
+		  <span class="text-info">点击项目名可查看该项目下的具体告警信息</span>
 		  <br/>
 		  <c:set var="count" value="${payload.count}" />
 		  <c:set var="modalId" value="0" />
@@ -70,15 +70,12 @@
 							 		${w:shorten(alertDomain.name, 18)}
 							 	</span>
 							 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								  <div class="modal-dialog modal-lg">
+								  <div class="modal-dialog" style="width:1000px">
 								    <div class="modal-content">
-								      <div class="modal-header">
-								        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-								      </div>
 								      <div class="modal-body">
 								      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
 								 			告警类型：${alertCategory.key}
-								 			<table	class="table table-striped table-condensed   table-hover">
+								 			<table	class="table table-striped table-condensed table-hover">
 												<tr class="text-success">
 													<th width="5%">类型</th>
 													<th width="5%">级别</th>
