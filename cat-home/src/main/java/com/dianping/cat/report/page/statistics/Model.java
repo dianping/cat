@@ -18,8 +18,10 @@ import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.page.JsonBuilder;
 
 @ModelMeta("statistics")
 public class Model extends AbstractReportModel<Action, Context> {
@@ -27,7 +29,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_browserChart;
 
 	private String m_osChart;
-	
+
 	private String m_summaryContent;
 
 	@EntityMeta
@@ -46,10 +48,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private JarReport m_jarReport;
 
 	@EntityMeta
+	private SystemReport m_systemReport;
+
+	@EntityMeta
 	private UtilizationReport m_utilizationReport;
-	
+
 	private List<String> m_jars;
-	
+
+	private List<String> m_keys;
+
 	private List<Domain> m_serviceList;
 
 	private List<Url> m_callUrls;
@@ -73,11 +80,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<com.dianping.cat.home.alert.report.entity.Domain> m_alertDomains;
 
 	private List<com.dianping.cat.home.alert.report.entity.Exception> m_alertExceptions;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
-	
+
 	public List<com.dianping.cat.home.alert.report.entity.Domain> getAlertDomains() {
 		return m_alertDomains;
 	}
@@ -132,13 +139,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
 	}
-	
+
 	public Map<String, ErrorStatis> getErrorStatis() {
 		return m_errorStatis;
 	}
-	
+
 	public HeavyReport getHeavyReport() {
 		return m_heavyReport;
+	}
+
+	public JarReport getJarReport() {
+		return m_jarReport;
+	}
+
+	public List<String> getJars() {
+		return m_jars;
+	}
+
+	public List<String> getKeys() {
+		return m_keys;
 	}
 
 	public String getOsChart() {
@@ -163,6 +182,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getSummaryContent() {
 		return m_summaryContent;
+	}
+
+	public SystemReport getSystemReport() {
+		return m_systemReport;
+	}
+
+	public String getSystemReportJson() {
+		return new JsonBuilder().toJson(m_systemReport);
 	}
 
 	public UtilizationReport getUtilizationReport() {
@@ -204,7 +231,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setCacheUrls(List<Url> cacheUrls) {
 		m_cacheUrls = cacheUrls;
 	}
-	
+
 	public void setCallServices(List<Service> callServices) {
 		m_callServices = callServices;
 	}
@@ -219,6 +246,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setHeavyReport(HeavyReport heavyReport) {
 		m_heavyReport = heavyReport;
+	}
+
+	public void setJarReport(JarReport jarReport) {
+		m_jarReport = jarReport;
+	}
+
+	public void setJars(List<String> jars) {
+		m_jars = jars;
+	}
+
+	public void setKeys(List<String> keys) {
+		m_keys = keys;
 	}
 
 	public void setOsChart(String osChart) {
@@ -245,6 +284,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_summaryContent = summaryContent;
 	}
 
+	public void setSystemReport(SystemReport systemReport) {
+		m_systemReport = systemReport;
+	}
+
 	public void setUtilizationReport(UtilizationReport utilizationReport) {
 		m_utilizationReport = utilizationReport;
 	}
@@ -257,20 +300,4 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_utilizationWebList = utilizationWebList;
 	}
 
-	public JarReport getJarReport() {
-   	return m_jarReport;
-   }
-
-	public void setJarReport(JarReport jarReport) {
-   	m_jarReport = jarReport;
-   }
-
-	public List<String> getJars() {
-   	return m_jars;
-   }
-
-	public void setJars(List<String> jars) {
-   	m_jars = jars;
-   }
-	
 }

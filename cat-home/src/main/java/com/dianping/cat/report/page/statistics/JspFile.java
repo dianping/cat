@@ -31,7 +31,9 @@ public enum JspFile {
 	
 	ALERT_SUMMARY("/jsp/report/summary/summary.jsp"), 
 	
-	JAR_REPORT("/jsp/report/jar/jar.jsp");
+	JAR_REPORT("/jsp/report/jar/jar.jsp"),
+	
+	SYSTEM_REPORT("/jsp/report/statistics/system.jsp");
 
 	private String m_path;
 
