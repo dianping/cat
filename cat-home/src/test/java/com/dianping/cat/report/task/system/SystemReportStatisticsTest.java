@@ -18,8 +18,8 @@ public class SystemReportStatisticsTest {
 	@Test
 	public void test() throws Exception {
 		SystemReport systemReport = new SystemReport();
-		systemReport.setStartTime(m_sdf.parse("2012-07-05 00:00:00"));
-		systemReport.setEndTime(m_sdf.parse("2012-07-06 00:00:00"));
+		systemReport.setStartTime(m_sdf.parse("2014-07-05 00:00:00"));
+		systemReport.setEndTime(m_sdf.parse("2014-07-06 00:00:00"));
 
 		List<String> keys = Arrays.asList("sysCpu", "userCpu", "cpuUsage");
 		SystemReportStatistics day = new SystemReportStatistics(systemReport, true, keys);
