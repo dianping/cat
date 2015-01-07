@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,20 +45,19 @@ public enum NetworkInterfaceManager {
 
 		try {
 			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
+			List<InetAddress> addresses = new ArrayList<InetAddress>();
 			InetAddress local = null;
-
-			for (NetworkInterface ni : nis) {
-				try {
+			
+			try {
+				for (NetworkInterface ni : nis) {
 					if (ni.isUp()) {
-						List<InetAddress> addresses = Collections.list(ni.getInetAddresses());
-
-						local = findValidateIp(addresses);
+						addresses.addAll(Collections.list(ni.getInetAddresses()));
 					}
-				} catch (Exception e) {
-					// ignore
 				}
+				local = findValidateIp(addresses);
+			} catch (Exception e) {
+				// ignore
 			}
-
 			m_local = local;
 		} catch (SocketException e) {
 			// ignore it

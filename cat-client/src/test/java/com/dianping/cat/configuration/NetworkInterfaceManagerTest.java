@@ -33,9 +33,9 @@ public class NetworkInterfaceManagerTest {
 		adress = NetworkInterfaceManager.INSTANCE.findValidateIp(buildAllIps(str5));
 		Assert.assertEquals("10.1.1.1", adress.getHostAddress());
 
-		String[] str6 = { "127.0.0.1", "192.168.1.1" };
+		String[] str6 = { "127.0.0.1", "10.128.120.122" };
 		adress = NetworkInterfaceManager.INSTANCE.findValidateIp(buildAllIps(str6));
-		Assert.assertEquals("192.168.1.1", adress.getHostAddress());
+		Assert.assertEquals("10.128.120.122", adress.getHostAddress());
 	}
 
 	public List<InetAddress> buildAllIps(String[] strs) {
