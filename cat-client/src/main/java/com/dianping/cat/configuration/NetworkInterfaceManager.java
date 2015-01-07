@@ -51,30 +51,7 @@ public enum NetworkInterfaceManager {
 					if (ni.isUp()) {
 						List<InetAddress> addresses = Collections.list(ni.getInetAddresses());
 
-						for (InetAddress address : addresses) {
-							if (address instanceof Inet4Address) {
-								if (address.isLoopbackAddress() || address.isSiteLocalAddress()) {
-									if (local == null) {
-										local = address;
-									} else if (local.isLoopbackAddress() && address.isSiteLocalAddress()) {
-										// site local address has higher priority than
-										// loopback address
-										local = address;
-									} else if (local.isSiteLocalAddress() && address.isSiteLocalAddress()) {
-										// site local address with a host name has higher
-										// priority than one without host name
-										if (local.getHostName().equals(local.getHostAddress())
-										      && !address.getHostName().equals(address.getHostAddress())) {
-											local = address;
-										}
-									}
-								} else {
-									if (local == null) {
-										local = address;
-									}
-								}
-							}
-						}
+						local = findValidateIp(addresses);
 					}
 				} catch (Exception e) {
 					// ignore
@@ -85,5 +62,33 @@ public enum NetworkInterfaceManager {
 		} catch (SocketException e) {
 			// ignore it
 		}
+	}
+
+	public InetAddress findValidateIp(List<InetAddress> addresses) {
+		InetAddress local = null;
+		for (InetAddress address : addresses) {
+			if (address instanceof Inet4Address) {
+				if (address.isLoopbackAddress() || address.isSiteLocalAddress()) {
+					if (local == null) {
+						local = address;
+					} else if (address.isSiteLocalAddress() && !address.isLoopbackAddress()) {
+						// site local address has higher priority than other address
+						local = address;
+					} else if (local.isSiteLocalAddress() && address.isSiteLocalAddress()) {
+						// site local address with a host name has higher
+						// priority than one without host name
+						if (local.getHostName().equals(local.getHostAddress())
+						      && !address.getHostName().equals(address.getHostAddress())) {
+							local = address;
+						}
+					}
+				} else {
+					if (local == null) {
+						local = address;
+					}
+				}
+			}
+		}
+		return local;
 	}
 }
