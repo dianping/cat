@@ -126,10 +126,10 @@
 					});
 					
 					var data = [];
-					<c:forEach var="item" items="${model.projects}">
+					<c:forEach var="item" items="${model.productLines}">
 								var item = {};
-								item['label'] = '${item.cmdbDomain}';
-								item['category'] = '${item.department} - ${item.projectLine}';
+								item['label'] = '${item}';
+								item['category'] = '产品线';
 								data.push(item);
 					</c:forEach>
 							

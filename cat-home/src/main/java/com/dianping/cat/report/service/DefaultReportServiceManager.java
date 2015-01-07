@@ -59,6 +59,7 @@ import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -319,6 +320,13 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
 		ReportService<TransactionReport> reportService = m_reportServices.get(TransactionAnalyzer.ID);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	@Override
+	public SystemReport querySystemReport(String domain, Date start, Date end) {
+		ReportService<SystemReport> reportService = m_reportServices.get(Constants.REPORT_SYSTEM);
 
 		return reportService.queryReport(domain, start, end);
 	}
