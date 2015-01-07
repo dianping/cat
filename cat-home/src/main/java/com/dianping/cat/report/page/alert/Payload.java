@@ -128,7 +128,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public int getCount() {
 		if (m_count == 0) {
-			return 5;
+			return 10;
 		} else {
 			return m_count;
 		}

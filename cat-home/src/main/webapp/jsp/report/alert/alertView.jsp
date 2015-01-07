@@ -25,8 +25,10 @@
 		&nbsp;&nbsp;每分钟显示个数
 		<input type="text" id="count" value="${payload.count}" style="width:100px;" style="height:auto" class="input-small"/>
 		<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
-			<div style="float:left;">
+			<div style="float:left;" id="type-group">
 				<label class="btn btn-info btn-sm">
+				  <input id="select-all" type="checkbox"> All
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="business"> 业务告警
 				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="network"> 网络告警
@@ -46,14 +48,14 @@
 				  <input class="type" type="checkbox" value="web"> Web告警
 				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="zabbix"> Zabbix告警
+				</label><label class="btn btn-info btn-sm">
+				  <input class="type" type="checkbox" value="database"> DB告警
 				</label>
 			</div>
 		</div>
 		<br/><br/>
 		<div id="alert-minutes">
 		  <br/><br/>
-		  <span class="text-info">点击项目名可查看该项目下的具体告警信息</span>
-		  <br/>
 		  <c:set var="count" value="${payload.count}" />
 		  <c:set var="modalId" value="0" />
 	      <c:forEach var="minuteEntry" items="${model.alertMinutes}"  varStatus="itemStatus">
@@ -70,26 +72,21 @@
 							 		${w:shorten(alertDomain.name, 18)}
 							 	</span>
 							 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								  <div class="modal-dialog" style="width:1000px">
+								  <div class="modal-dialog" style="width:1100px">
 								    <div class="modal-content">
 								      <div class="modal-body">
+								      	<h4 class="text-danger text-center">${alertDomain.name}</h4>
 								      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
-								 			告警类型：${alertCategory.key}
+								 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h5>
 								 			<table	class="table table-striped table-condensed table-hover">
 												<tr class="text-success">
-													<th width="5%">类型</th>
-													<th width="5%">级别</th>
-													<th width="10%">项目</th>
-													<th width="10%">指标</th>
-													<th width="60%">内容</th>
+													<th width="8%">级别</th>
+													<th width="72%">内容</th>
 												</tr>
 												<c:forEach var="alert" items="${alertCategory.value}">
 													<tr>
-														<td>${alert.category}</td>
 														<td>${alert.type}</td>
-														<td>${alert.domain}</td>
-														<td>${alert.metric}</td>
-														<td>${alert.content}</td>
+														<td><span class="text-primary">${alert.metric}</span><br/>${alert.content}</td>
 													</tr>
 												</c:forEach>
 											</table>
@@ -120,6 +117,15 @@
 					var targetId = $(this).data("id");
 					$("#"+targetId).modal();
 				});
+				checkIfAllChecked();
+				$('#type-group').click(checkIfAllChecked);
+				$("#select-all").click(function(){
+					var originVal = $(this).prop("checked");
+					
+					$(".type").each(function(){
+						$(this).prop("checked", originVal);
+					});
+				})
 				
 				$('#startTime').datetimepicker({
 					format:'Y-m-d H:i',
@@ -137,6 +143,16 @@
 				$('#System_report').addClass('active open');
 				$('#system_alert').addClass('active');
 			});
+			function checkIfAllChecked(){
+				var isAllChecked = true;
+				
+				$('.type').each(function(){
+					if($(this).prop('checked')==false){
+						isAllChecked = false;
+					}
+				});
+				$('#select-all').prop("checked", isAllChecked);
+			}
 			function initType(rawStr){
 				if(rawStr == null || rawStr == ""){
 					$(".type").each(function(){
