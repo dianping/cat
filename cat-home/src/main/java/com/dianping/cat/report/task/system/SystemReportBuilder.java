@@ -83,6 +83,7 @@ public class SystemReportBuilder implements TaskBuilder {
 				r.accept(merger);
 			}
 			productReport.accept(statistics);
+			
 		}
 	}
 

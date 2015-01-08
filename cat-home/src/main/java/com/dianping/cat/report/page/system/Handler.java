@@ -25,14 +25,10 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ProjectService m_projectService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
