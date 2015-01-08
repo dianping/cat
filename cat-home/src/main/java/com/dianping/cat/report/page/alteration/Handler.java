@@ -3,8 +3,16 @@ package com.dianping.cat.report.page.alteration;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -53,12 +61,32 @@ public class Handler implements PageHandler<Context> {
 		alt.setDate(date);
 		try {
 			alt.setUrl(URLDecoder.decode(url, "UTF-8"));
-      } catch (UnsupportedEncodingException e) {
-      	Cat.logError(e);
-	      alt.setUrl("");
-      }
+		} catch (UnsupportedEncodingException e) {
+			Cat.logError(e);
+			alt.setUrl("");
+		}
 
 		return alt;
+	}
+
+	private Map<String, AlterationMinute> generateAlterationMinutes(List<Alteration> alts) {
+		Map<String, AlterationMinute> alterationMinutes = new LinkedHashMap<String, AlterationMinute>();
+		DateFormat df = new SimpleDateFormat("MM-dd HH:mm");
+
+		for (Alteration alt : alts) {
+			Date date = alt.getDate();
+			String dateStr = df.format(date);
+			AlterationMinute alterationMinute = alterationMinutes.get(dateStr);
+
+			if (alterationMinute == null) {
+				alterationMinute = new AlterationMinute(dateStr);
+
+				alterationMinutes.put(dateStr, alterationMinute);
+			}
+			alterationMinute.add(alt);
+		}
+
+		return alterationMinutes;
 	}
 
 	@Override
@@ -100,16 +128,24 @@ public class Handler implements PageHandler<Context> {
 			List<Alteration> alts;
 			Date startTime = payload.getStartTime();
 			Date endTime = payload.getEndTime();
+			String[] altTypes = payload.getAltTypeArray();
+			String type = payload.getType();
+			String domain = payload.getDomain();
+			String hostname = payload.getHostname();
 
 			try {
-				alts = m_alterationDao.findByDtdh(startTime, endTime, payload.getType(), payload.getDomain(),
-				      payload.getHostname(), AlterationEntity.READSET_FULL);
+				if (altTypes == null) {
+					alts = m_alterationDao.findByDtdh(startTime, endTime, type, domain, hostname,
+					      AlterationEntity.READSET_FULL);
+				} else {
+					alts = m_alterationDao.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,
+					      AlterationEntity.READSET_FULL);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
 				break;
 			}
-
-			model.setAlterations(alts);
+			model.setAlterationMinuites(generateAlterationMinutes(alts));
 			break;
 		}
 
@@ -120,7 +156,6 @@ public class Handler implements PageHandler<Context> {
 			m_jspViewer.view(ctx, model);
 		}
 	}
-
 
 	public boolean isArguComplete(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {
@@ -162,5 +197,86 @@ public class Handler implements PageHandler<Context> {
 			model.setInsertResult("{\"status\":500, \"errorMessage\":\"lack args\"}");
 		}
 	}
-	
+
+	public class AlterationDomain {
+
+		private String m_name;
+
+		private Map<String, List<Alteration>> m_alterationsByType = new HashMap<String, List<Alteration>>();
+
+		public AlterationDomain(String domain) {
+			m_name = domain;
+		}
+
+		public void add(Alteration alt) {
+			String type = alt.getType();
+			List<Alteration> alts = m_alterationsByType.get(type);
+
+			if (alts == null) {
+				alts = new ArrayList<Alteration>();
+
+				m_alterationsByType.put(type, alts);
+			}
+			alts.add(alt);
+		}
+
+		public Map<String, List<Alteration>> getAlterationTypes() {
+			return m_alterationsByType;
+		}
+
+		public int getCount() {
+			int count = 0;
+
+			for (List<Alteration> alts : m_alterationsByType.values()) {
+				count += alts.size();
+			}
+			return count;
+		}
+
+		public String getName() {
+			return m_name;
+		}
+
+	}
+
+	public class AlterationMinute {
+
+		private String m_date;
+
+		private Map<String, AlterationDomain> m_domains = new HashMap<String, AlterationDomain>();
+
+		public AlterationMinute(String dateStr) {
+			m_date = dateStr;
+		}
+
+		public void add(Alteration alt) {
+			String domain = alt.getDomain();
+			AlterationDomain alterationDomain = m_domains.get(domain);
+
+			if (alterationDomain == null) {
+				alterationDomain = new AlterationDomain(domain);
+
+				m_domains.put(domain, alterationDomain);
+			}
+			alterationDomain.add(alt);
+		}
+
+		public List<AlterationDomain> getAlterationDomains() {
+			List<AlterationDomain> domains = new ArrayList<AlterationDomain>(m_domains.values());
+
+			Collections.sort(domains, new Comparator<AlterationDomain>() {
+				@Override
+				public int compare(AlterationDomain o1, AlterationDomain o2) {
+					return o2.getCount() - o1.getCount();
+				}
+			});
+			return domains;
+		}
+
+		public String getDate() {
+			return m_date;
+		}
+
+	}
+
 }

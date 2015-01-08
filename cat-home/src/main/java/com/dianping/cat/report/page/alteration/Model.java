@@ -2,24 +2,24 @@ package com.dianping.cat.report.page.alteration;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.page.alteration.Handler.AlterationMinute;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_insertResult;
 
-	private List<Alteration> m_alterations;
-	
+	private Map<String, AlterationMinute> m_alterationMinuites;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
-	public List<Alteration> getAlterations() {
-		return m_alterations;
+	public Map<String, AlterationMinute> getAlterationMinuites() {
+		return m_alterationMinuites;
 	}
 
 	@Override
@@ -28,9 +28,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-   public String getDomain() {
-	   return Constants.CAT;
-   }
+	public String getDomain() {
+		return Constants.CAT;
+	}
 
 	@Override
 	public Collection<String> getDomains() {
@@ -41,8 +41,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_insertResult;
 	}
 
-	public void setAlterations(List<Alteration> alterations) {
-		m_alterations = alterations;
+	public void setAlterationMinuites(Map<String, AlterationMinute> alterationMinuites) {
+		m_alterationMinuites = alterationMinuites;
 	}
 
 	public void setInsertResult(String insertResult) {
