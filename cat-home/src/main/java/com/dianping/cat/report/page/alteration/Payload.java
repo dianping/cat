@@ -151,7 +151,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
-			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 2);
+			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 4);
 		} else {
 			try {
 				return m_minSdf.parse(m_startTime);
