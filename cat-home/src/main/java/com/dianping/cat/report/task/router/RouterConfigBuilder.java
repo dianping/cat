@@ -224,7 +224,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 		@Override
 		public void visitProcessDomain(ProcessDomain processDomain) {
 			String domain = processDomain.getName();
-			long total = (int) processDomain.getSize();
+			long total = (int) processDomain.getTotal();
 			Long count = m_numbers.get(domain);
 
 			if (count == null) {
