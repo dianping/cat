@@ -41,7 +41,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 
-			m_logger.info("discard server logview count " + m_discardLogs+", errorAppName " + m_errorAppName);
+			m_logger.info("discard server logview count " + m_discardLogs + ", errorAppName " + m_errorAppName);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
@@ -73,7 +73,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 			if (m_serverConfigManager.isClientCall(type)) {
 				return parsePigeonClientTransaction(t, tree);
-			} else if (m_serverConfigManager.isServerService(type)) {
+			} else if (m_serverConfigManager.isServer(type)) {
 				return parsePigeonServerTransaction(t, tree);
 			}
 			return null;
@@ -87,10 +87,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonCall.server")) {
+				String type = message.getType();
+
+				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app")) {
+				if (type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -106,7 +108,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String localIp = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
 		int index = remoteAddress.indexOf(":");
-		
+
 		if (index > 0) {
 			remoteAddress = remoteAddress.substring(0, index);
 		}
@@ -188,7 +190,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				updateServerCrossReport(t, domain, info);
-			}else{
+			} else {
 				m_errorAppName++;
 			}
 		}
@@ -244,7 +246,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		double duration = t.getDurationInMicros() / 1000d;
-		
+
 		type.setSum(type.getSum() + duration);
 		name.setSum(name.getSum() + duration);
 	}

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Event;
@@ -18,6 +19,9 @@ import com.dianping.cat.message.spi.MessageTree;
 public class DefaultProblemHandler extends ProblemHandler {
 	public static final String ID = "default-problem";
 
+	@Inject
+	private ServerConfigManager m_configManager;
+	
 	@Inject
 	private Set<String> m_errorTypes;
 
@@ -73,7 +77,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 			if (m_failureTypes.contains(type)) {
 				type = transaction.getType();
 				// make it march for alarm
-				if (type.equals("PigeonCall") || type.equals("Call")) {
+				if (m_configManager.isClient(type)) {
 					type = "call";
 				}
 				status = transaction.getName();
