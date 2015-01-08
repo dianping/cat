@@ -9,7 +9,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestBusinessMessage {
-	private static final String TuanGou = "TuanGouWeb";
+	private static final String Puma = "PumaServer";
 
 	private static final String PayOrder = "PayOrder";
 
@@ -31,9 +31,11 @@ public class TestBusinessMessage {
 				t.addData("channel=channel" + i % 5);
 				
 				Cat.logMetricForCount("Receipt Verify Success");
+				Cat.logMetricForDuration("Receipt Verify Druation",10);
+				Cat.logMetricForSum("sum Value", 20);
 
 				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
-				tree.setDomain(TuanGou);
+				tree.setDomain(Puma);
 				t.complete();
 			}
 
@@ -41,7 +43,7 @@ public class TestBusinessMessage {
 				Transaction t = Cat.newTransaction("URL", "/detail");
 				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
 
-				tree.setDomain(TuanGou);
+				tree.setDomain(Puma);
 				t.addData("channel=channel" + i % 5);
 				t.complete();
 			}
