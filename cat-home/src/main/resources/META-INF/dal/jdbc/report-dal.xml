@@ -86,6 +86,7 @@
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-time" value-type="Date" />
 		<var name="end-time" value-type="Date" />
+		<var name="types" value-type="String[]" />
 		<param name="type" />
 		<param name="domain" />
 		<param name="hostname" />
@@ -111,6 +112,31 @@
 						AND <FIELD name='hostname'/> = ${hostname} 
 					</IF>
 					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+			<query name="find-by-dtdh-types" type="SELECT"	multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<param name="types" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>
+					AND <FIELD name='type'/> in <IN>${types}</IN>
+					ORDER BY <FIELD name='date'/> desc	
 					]]></statement>
 			</query>
 			<query name="find-by-domain-and-time" type="SELECT" multiple="true">

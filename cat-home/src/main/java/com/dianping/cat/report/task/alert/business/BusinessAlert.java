@@ -153,7 +153,7 @@ public class BusinessAlert extends BaseAlert {
 	protected void processProductLine(ProductLine productLine) {
 		String productId = productLine.getId();
 		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
-		      ProductLineConfig.METRIC_PRODUCTLINE);
+		      ProductLineConfig.METRIC);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		int nowMinute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);

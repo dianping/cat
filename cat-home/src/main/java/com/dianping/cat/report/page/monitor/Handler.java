@@ -168,15 +168,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean isNetwork(String group) {
-		return ProductLineConfig.NETWORK_PRODUCTLINE.isTypeOf(group);
+		return ProductLineConfig.NETWORK.isTypeOf(group);
 	}
 
 	private boolean isSystem(String group) {
-		return ProductLineConfig.SYSTEM_PRODUCTLINE.isTypeOf(group);
+		return ProductLineConfig.SYSTEM.isTypeOf(group);
 	}
 
 	private boolean isDatabase(String group) {
-		return ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(group);
+		return ProductLineConfig.DATABASE.isTypeOf(group);
 	}
 
 }

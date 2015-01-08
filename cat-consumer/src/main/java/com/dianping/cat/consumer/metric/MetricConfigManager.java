@@ -109,7 +109,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
+	public boolean insertMetricIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
 		String key = buildMetricKey(domain, type, metricKey);
 		MetricItemConfig config = m_metricConfig.findMetricItemConfig(key);
 
@@ -243,7 +243,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
 				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
 
-				if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
+				if (ProductLineConfig.METRIC.equals(productLineConfig)) {
 					unused.add(config.getId());
 				}
 			}

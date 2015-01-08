@@ -84,7 +84,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	private Map<String, String> buildMetricProductLines() {
 		Map<String, String> domainToProductLines = new HashMap<String, String>();
 
-		for (ProductLine product : ProductLineConfig.METRIC_PRODUCTLINE.getCompany().getProductLines().values()) {
+		for (ProductLine product : ProductLineConfig.METRIC.getCompany().getProductLines().values()) {
 			for (Domain domain : product.getDomains().values()) {
 				domainToProductLines.put(domain.getId(), product.getId());
 			}
@@ -211,11 +211,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, ProductLine> queryDatabaseProductLines() {
-		return queryProductLines(ProductLineConfig.DATABASE_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.DATABASE);
 	}
 
 	public Map<String, ProductLine> queryApplicationProductLines() {
-		return queryProductLines(ProductLineConfig.APPLICATION_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.APPLICATION);
 	}
 
 	public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
@@ -231,11 +231,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, ProductLine> queryMetricProductLines() {
-		return queryProductLines(ProductLineConfig.METRIC_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.METRIC);
 	}
 
 	public Map<String, ProductLine> queryNetworkProductLines() {
-		return queryProductLines(ProductLineConfig.NETWORK_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.NETWORK);
 	}
 
 	public String queryProductLineByDomain(String domain) {
@@ -265,18 +265,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	private ProductLineConfig queryProductLineConfig(String line, String domain) {
-		if (ProductLineConfig.USER_PRODUCTLINE.isTypeOf(domain)) {
-			return ProductLineConfig.USER_PRODUCTLINE;
-		} else if (ProductLineConfig.NETWORK_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.NETWORK_PRODUCTLINE;
-		} else if (ProductLineConfig.SYSTEM_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.SYSTEM_PRODUCTLINE;
-		} else if (ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.DATABASE_PRODUCTLINE;
-		} else if (ProductLineConfig.CDN_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.CDN_PRODUCTLINE;
+		if (ProductLineConfig.USER.isTypeOf(domain)) {
+			return ProductLineConfig.USER;
+		} else if (ProductLineConfig.NETWORK.isTypeOf(line)) {
+			return ProductLineConfig.NETWORK;
+		} else if (ProductLineConfig.SYSTEM.isTypeOf(line)) {
+			return ProductLineConfig.SYSTEM;
+		} else if (ProductLineConfig.DATABASE.isTypeOf(line)) {
+			return ProductLineConfig.DATABASE;
+		} else if (ProductLineConfig.CDN.isTypeOf(line)) {
+			return ProductLineConfig.CDN;
 		} else {
-			return ProductLineConfig.METRIC_PRODUCTLINE;
+			return ProductLineConfig.METRIC;
 		}
 	}
 
@@ -293,11 +293,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public String querySystemProductLine(String domain) {
-		return ProductLineConfig.SYSTEM_PRODUCTLINE.getPrefix().get(0) + domain;
+		return ProductLineConfig.SYSTEM.getPrefix().get(0) + domain;
 	}
 
 	public Map<String, ProductLine> querySystemProductLines() {
-		return queryProductLines(ProductLineConfig.SYSTEM_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.SYSTEM);
 	}
 
 	public Map<String, List<ProductLine>> queryTypeProductLines() {
@@ -350,7 +350,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+	private <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
 		Map<K, V> result = new LinkedHashMap<K, V>();
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
 		Collections.sort(entries, compator);

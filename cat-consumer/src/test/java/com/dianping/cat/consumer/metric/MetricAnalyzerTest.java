@@ -170,7 +170,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
+		public boolean insertMetricIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
 			return true;
 		}
 

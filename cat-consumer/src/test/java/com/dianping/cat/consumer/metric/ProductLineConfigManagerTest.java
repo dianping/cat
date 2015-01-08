@@ -36,13 +36,13 @@ public class ProductLineConfigManagerTest {
 		String[] domains1 = { "domain1", "domain2" };
 		String[] domains2 = { "domain3", "domain4" };
 
-		manager.insertProductLine(line1, domains1, ProductLineConfig.METRIC_PRODUCTLINE.getTitle());
-		manager.insertProductLine(line2, domains2, ProductLineConfig.METRIC_PRODUCTLINE.getTitle());
+		manager.insertProductLine(line1, domains1, ProductLineConfig.METRIC.getTitle());
+		manager.insertProductLine(line2, domains2, ProductLineConfig.METRIC.getTitle());
 
 		Assert.assertEquals(2, s_storeCount);
 		Assert.assertEquals(null, manager.queryProductLineByDomain("domain"));
 		Assert.assertEquals("Test1", manager.queryProductLineByDomain("domain1"));
-		List<String> pDomains = manager.queryDomainsByProductLine("Test1", ProductLineConfig.METRIC_PRODUCTLINE);
+		List<String> pDomains = manager.queryDomainsByProductLine("Test1", ProductLineConfig.METRIC);
 		Assert.assertEquals(2, pDomains.size());
 		Map<String, ProductLine> productLines = manager.queryAllProductLines();
 

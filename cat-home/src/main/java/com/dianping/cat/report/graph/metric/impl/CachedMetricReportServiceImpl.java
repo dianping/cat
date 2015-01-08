@@ -42,7 +42,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 
 		@Override
 		protected boolean removeEldestEntry(Entry<String, MetricReport> eldest) {
-			return size() > 500;
+			return size() > 1000;
 		}
 	};
 

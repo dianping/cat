@@ -198,8 +198,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(report.getProduct());
 
-			if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)) {
-				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+			if (ProductLineConfig.METRIC.equals(productLineConfig)) {
+				boolean result = m_configManager.insertMetricIfNotExist(domain, METRIC, metricName, config);
 
 				if (!result) {
 					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,

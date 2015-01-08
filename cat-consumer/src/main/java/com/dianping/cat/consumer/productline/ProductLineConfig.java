@@ -10,19 +10,19 @@ import com.dianping.cat.consumer.company.model.entity.Company;
 
 public enum ProductLineConfig {
 
-	METRIC_PRODUCTLINE("metricProductLine", "业务监控", ""),
+	METRIC("metricProductLine", "业务监控", ""),
 
-	USER_PRODUCTLINE("userProductline", "外部监控", Constants.BROKER_SERVICE),
+	USER("userProductline", "外部监控", Constants.BROKER_SERVICE),
 
-	APPLICATION_PRODUCTLINE("applicationProductLine", "应用监控", ""),
+	APPLICATION("applicationProductLine", "应用监控", ""),
 
-	NETWORK_PRODUCTLINE("networkProductLine", "网络监控", "switch-|f5-"),
+	NETWORK("networkProductLine", "网络监控", "switch-|f5-"),
 
-	SYSTEM_PRODUCTLINE("systemProductLine", "系统监控", "system-"),
+	SYSTEM("systemProductLine", "系统监控", "system-"),
 
-	DATABASE_PRODUCTLINE("databaseProductline", "数据库监控", "db-"),
+	DATABASE("databaseProductline", "数据库监控", "db-"),
 
-	CDN_PRODUCTLINE("cdnProductLine", "CDN监控", "cdn");
+	CDN("cdnProductLine", "CDN监控", "cdn");
 
 	private String m_configName;
 
@@ -99,8 +99,7 @@ public enum ProductLineConfig {
 	}
 
 	public boolean needCheckDuplicate() {
-		return ProductLineConfig.METRIC_PRODUCTLINE.equals(this)
-		      || ProductLineConfig.APPLICATION_PRODUCTLINE.equals(this);
+		return ProductLineConfig.METRIC.equals(this) || ProductLineConfig.APPLICATION.equals(this);
 	}
 
 	public void setCompany(Company company) {
