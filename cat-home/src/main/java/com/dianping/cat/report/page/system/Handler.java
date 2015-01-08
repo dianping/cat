@@ -43,7 +43,7 @@ public class Handler implements PageHandler<Context> {
 		List<String> productlines = new ArrayList<String>();
 
 		Set<String> keys = m_productLineManager.querySystemProductLines().keySet();
-		String prefix = ProductLineConfig.SYSTEM_PRODUCTLINE.getPrefix().get(0);
+		String prefix = ProductLineConfig.SYSTEM.getPrefix().get(0);
 		int index = prefix.length();
 
 		for (String productline : keys) {

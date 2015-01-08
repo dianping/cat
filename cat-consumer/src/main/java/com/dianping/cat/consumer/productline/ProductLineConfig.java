@@ -13,19 +13,19 @@ import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 
 public enum ProductLineConfig {
-	METRIC_PRODUCTLINE("metricProductLine", "业务监控", ""),
+	METRIC("metricProductLine", "业务监控", ""),
 
-	USER_PRODUCTLINE("userProductline", "外部监控", Constants.BROKER_SERVICE),
+	USER("userProductline", "外部监控", Constants.BROKER_SERVICE),
 
-	APPLICATION_PRODUCTLINE("applicationProductLine", "应用监控", ""),
+	APPLICATION("applicationProductLine", "应用监控", ""),
 
-	NETWORK_PRODUCTLINE("networkProductLine", "网络监控", "switch-|f5-"),
+	NETWORK("networkProductLine", "网络监控", "switch-|f5-"),
 
-	SYSTEM_PRODUCTLINE("systemProductLine", "系统监控", "system-"),
+	SYSTEM("systemProductLine", "系统监控", "system-"),
 
-	DATABASE_PRODUCTLINE("databaseProductline", "数据库监控", "db-"),
+	DATABASE("databaseProductline", "数据库监控", "db-"),
 
-	CDN_PRODUCTLINE("cdnProductLine", "CDN监控", "cdn");
+	CDN("cdnProductLine", "CDN监控", "cdn");
 
 	private String m_configName;
 
