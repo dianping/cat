@@ -115,7 +115,6 @@ public class Handler implements PageHandler<Context> {
 				Alert alertEntity = buildAlertEntity(payload);
 
 				try {
-					System.out.println(alertEntity);
 					int count = m_alertDao.insert(alertEntity);
 
 					if (count == 0) {

@@ -75,9 +75,9 @@
 								  <div class="modal-dialog" style="width:1100px">
 								    <div class="modal-content">
 								      <div class="modal-body">
-								      	<h4 class="text-danger text-center">${alertDomain.name}</h4>
+								      	<h4 class="text-danger text-center">项目：${alertDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h4>
 								      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
-								 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h5>
+								 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}</h5>
 								 			<table	class="table table-striped table-condensed table-hover">
 												<tr class="text-success">
 													<th width="8%">级别</th>
