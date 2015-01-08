@@ -347,7 +347,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+	private <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
 		Map<K, V> result = new LinkedHashMap<K, V>();
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
 		Collections.sort(entries, compator);
