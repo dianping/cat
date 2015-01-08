@@ -25,6 +25,7 @@ import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 public interface ReportServiceManager {
@@ -76,4 +77,6 @@ public interface ReportServiceManager {
 	public RouterConfig queryRouterConfigReport(String domain, Date start, Date end);
 
 	public JarReport queryJarReport(String domain, Date start, Date end);
+
+	public SystemReport querySystemReport(String domain, Date start, Date end);
 }

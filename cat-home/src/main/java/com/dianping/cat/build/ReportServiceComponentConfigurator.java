@@ -45,6 +45,7 @@ import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.service.impl.RouterConfigService;
 import com.dianping.cat.report.service.impl.ServiceReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.service.impl.SystemReportService;
 import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.service.impl.UtilizationReportService;
@@ -101,6 +102,9 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      HourlyReportContentDao.class, DailyReportContentDao.class, WeeklyReportContentDao.class,
 		      MonthlyReportContentDao.class));
 		all.add(C(ReportService.class, Constants.REPORT_JAR, JarReportService.class).req(HourlyReportDao.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(C(ReportService.class, Constants.REPORT_SYSTEM, SystemReportService.class).req(HourlyReportDao.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
 		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 

@@ -77,16 +77,16 @@
 	<table class="table table-striped table-condensed   table-hover">
 	<c:set  var="action" value="exceptionExcludeUpdate"/>
 		<tr>
-			<td style="text-align:right" class="text-success">项目名称</td>
+			<td style="text-align:right" class="text-success" width="20%">项目名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.domain" value="${model.exceptionExclude.domain}" readonly required/>
+				<input name="exceptionExclude.domain" size="50" value="${model.exceptionExclude.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<div class="navbar-header pull-left position" style="width:350px;">
+				<div class="navbar-header pull-left position" >
 					<div class="input-group">
-					<input name="exceptionExclude.domain" id="search_domain" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
+					<input name="exceptionExclude.domain" id="search_domain" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
 					</div>
 				</div>
 			</c:otherwise>
@@ -95,16 +95,16 @@
 		</tr>
 
 		<tr>
-			<td style="text-align:right" class="text-success">异常名称</td>
-			<td>
+			<td style="text-align:right" class="text-success" width="20%">异常名称</td>
+			<td width="80%">
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.id" size="35" value="${model.exceptionExclude.id}"/>
+				<input name="exceptionExclude.id" size="50" value="${model.exceptionExclude.id}"/>
 			</c:when>
 			<c:otherwise>
-				<div class="navbar-header pull-left position" style="width:350px;">
+				<div class="navbar-header pull-left position">
 					<div class="input-group">
-					<input name="exceptionExclude.id" id="search_exception" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
+					<input name="exceptionExclude.id" id="search_exception" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
 					</div>
 				</div>
 			</c:otherwise>
@@ -112,7 +112,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
+			<td colspan='2' ><input class='btn btn-primary' style="margin-left:30%" id="addOrUpdateExceptionConfigSubmit" type="submit"
 				name="submit" value="提交"/></td>
 		</tr>
 	</table>

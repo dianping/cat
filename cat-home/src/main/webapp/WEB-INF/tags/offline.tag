@@ -43,6 +43,14 @@
 					</li>
 				</ul>
 				<ul class="nav  nav-list" style="top: 0px;">
+					<li id="system_report" >
+						<a href="/cat/r/statistics?domain=${model.domain}&op=system">
+							<i class="menu-icon  fa  fa-tachometer"></i>
+							<span class="menu-text">Paas系统消耗</span>
+						</a>
+					</li>
+				</ul>
+				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="overload_report" >
 						<a href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">
 							<i class="menu-icon  fa  fa-flask"></i>
@@ -84,7 +92,7 @@
 				</ul>
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="jar_report" >
-						<a href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">
+						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=jar">
 							<i class="menu-icon  fa fa-briefcase"></i>
 							<span class="menu-text">线上JAR版本</span>
 						</a>

@@ -166,6 +166,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/system-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

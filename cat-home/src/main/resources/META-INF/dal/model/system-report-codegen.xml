@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="system-report" root="true">
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="entity" type="list" names="entities" />
+  </entity>
+  <entity name="entity">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="rush" />
+    <entity-ref name="day" />
+  </entity>
+  <entity name="rush">
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="int" />
+    <attribute name="avg" value-type="int" />
+  </entity>
+  <entity name="day">
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="int" />
+    <attribute name="avg" value-type="int" />
+  </entity>
+</model>
+

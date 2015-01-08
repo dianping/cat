@@ -39,6 +39,7 @@ import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
+import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
@@ -132,6 +133,8 @@ AlertConfigTest.class,
 SystemReportConvertorTest.class,
 
 WebReportConvertorTest.class,
+
+SystemReportStatisticsTest.class,
 
 MetricIdAndRuleMappingTest.class })
 public class AllTests {
