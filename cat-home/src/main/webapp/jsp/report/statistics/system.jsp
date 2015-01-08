@@ -12,18 +12,23 @@
 <a:offline>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 		<div id="queryBar">
 	        <div style="float:left;">
 				&nbsp;日期
 			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.day}' pattern='yyyy-MM-dd'/>"/>
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<strong class="text-success" style="font-size:large;margin-right:10%">高峰期：16 : 00 - 18 : 00</strong>
 		</div>
-		<div class="report" >
-			<%@ include file="detail.jsp"%>
-		</div>
+		<br>
+		<%@ include file="detail.jsp"%>
 		<script type="text/javascript">
 		  $(document).ready(function(){
+			  init();
 			  $('#system_report').addClass("active");
 			  $('#time').datetimepicker({
 					format:'Y-m-d',

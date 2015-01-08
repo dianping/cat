@@ -2165,6 +2165,31 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>cross</role-hint>
+					<field-name>m_crossReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>matrix</role-hint>
+					<field-name>m_matrixReportBuilder</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

@@ -1,4 +1,4 @@
-<metric-report product="system-user-common-service-2">
+<metric-report product="system-user-common-service-2" startTime="2014-07-05 16:00:00" endTime="2014-07-05 18:00:00">
 	<metric-item id="cpuUsage_10.101.6.30" type="T">
 		<segment id="0" count="10" sum="100" avg="10" />
 		<segment id="1" count="10" sum="100" avg="10" />

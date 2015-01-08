@@ -59,6 +59,12 @@ import com.dianping.cat.report.page.model.transaction.HistoricalTransactionServi
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.cached.CachedReportTask;
+import com.dianping.cat.report.task.cross.CrossReportBuilder;
+import com.dianping.cat.report.task.event.EventReportBuilder;
+import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.storage.report.ReportBucketManager;
 
@@ -161,7 +167,12 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
 		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall").req(ServerConfigManager.class));
 
-		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class));
+		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class)
+		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
+		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
+		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")
+		      .req(TaskBuilder.class, CrossReportBuilder.ID, "m_crossReportBuilder")
+		      .req(TaskBuilder.class, MatrixReportBuilder.ID, "m_matrixReportBuilder"));
 		return all;
 	}
 }
