@@ -34,7 +34,7 @@
 								  <div class="modal-dialog" style="width:1100px">
 								    <div class="modal-content">
 								      <div class="modal-body">
-								      	<h4 class="text-danger text-center">${alterDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;变更时间：${minuteEntry.key}</h4>
+								      	<h4 class="text-danger text-center">项目名：${alterDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;变更时间：${minuteEntry.key}</h4>
 								      	<c:forEach var="alterType" items="${alterDomain.alterationTypes}">
 								 			<h5 class="text-warning text-center">变更类型：${alterType.key}</h5>
 								 			<table	class="table table-striped table-condensed table-hover">
