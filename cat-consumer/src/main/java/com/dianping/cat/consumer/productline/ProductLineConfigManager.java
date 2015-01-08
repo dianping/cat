@@ -58,7 +58,9 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		      || ProductLineConfig.APPLICATION_PRODUCTLINE.equals(productLineConfig)) {
 			for (ProductLineConfig config : ProductLineConfig.values()) {
 				for (ProductLine product : config.getCompany().getProductLines().values()) {
-					if (!product.getId().equals(id)) {
+					String productId = product.getId();
+
+					if (productId != null && !productId.equals(id)) {
 						for (Domain domain : product.getDomains().values()) {
 							domains.add(domain.getId());
 						}

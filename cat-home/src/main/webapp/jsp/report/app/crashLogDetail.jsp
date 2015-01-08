@@ -90,11 +90,11 @@
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td >
+				<td>
 					${status.value.status}
 				</td>
 				<td class="right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
-				<td >
+				<td>
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
@@ -102,7 +102,6 @@
 				<c:if test="${index.index != 0}">
 				</tr>
 				</c:if>
-				<tr><td colspan="3"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</tr>
 		<tr class="graphs"><td colspan="5"><div id="${typeIndex.index}" style="display:none"></div></td></tr>

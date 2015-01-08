@@ -31,7 +31,7 @@ public class SystemReportBuilder implements TaskBuilder {
 	@Inject
 	protected CachedMetricReportService m_metricReportService;
 
-	public static final String ID = Constants.HIGH_LOAD_REPORT;
+	public static final String ID = Constants.REPORT_SYSTEM;
 
 	public static List<String> KEYS = Arrays.asList("sysCpu", "userCpu", "cpuUsage");
 

@@ -1334,7 +1334,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-			<role-hint>highLoad</role-hint>
+			<role-hint>system</role-hint>
 			<implementation>com.dianping.cat.report.task.system.SystemReportBuilder</implementation>
 			<requirements>
 				<requirement>

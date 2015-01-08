@@ -77,16 +77,16 @@
 	<table class="table table-striped table-condensed   table-hover">
 	<c:set  var="action" value="exceptionThresholdUpdate"/>
 		<tr>
-			<td style="text-align:right" class="text-success">项目名称</td>
+			<td style="text-align:right" class="text-success" width="20%">项目名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
 				<input name="exceptionLimit.domain" value="${model.exceptionLimit.domain}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<div class="navbar-header pull-left position" style="width:350px;">
+				<div class="navbar-header pull-left position" >
 					<div class="input-group">
-					<input name="exceptionLimit.domain" id="search_domain" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
+					<input name="exceptionLimit.domain" id="search_domain" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
 					</div>
 				</div>
 			</c:otherwise>
@@ -94,16 +94,16 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">异常名称</td>
+			<td style="text-align:right" class="text-success" width="20%">异常名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
 				<input name="exceptionLimit.id" value="${model.exceptionLimit.id}" readonly required/>
 			</c:when>
 			<c:otherwise>
-				<div class="navbar-header pull-left position" style="width:350px;">
+				<div class="navbar-header pull-left position">
 					<div class="input-group">
-					<input name="exceptionLimit.id" id="search_exception" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
+					<input name="exceptionLimit.id" id="search_exception" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
 					</div>
 				</div>
 			</c:otherwise>
@@ -113,7 +113,7 @@
 		</tr>
 		
 		<tr>
-			<td style="text-align:right" class="text-success">短信告警</td>
+			<td style="text-align:right" class="text-success" width="20%">短信告警</td>
 			<td>
 				<select name="exceptionLimit.smsSending" id="smsSending" style="width:200px;">
                 	<option value="true">是</option>
@@ -123,13 +123,13 @@
 		</tr>
 		
 		<tr>
-			<td style="text-align: right" class="text-success">warning阈值</td>
+			<td style="text-align: right" class="text-success" width="20%">warning阈值</td>
 			<td><input id="warningThreshold" name="exceptionLimit.warning"
 				value="${model.exceptionLimit.warning}" required /></td>
 		</tr>
 		
 		<tr>
-			<td style="text-align: right" class="text-success">error阈值</td>
+			<td style="text-align: right" class="text-success" width="20%">error阈值</td>
 			<td><input id="errorThreshold" name="exceptionLimit.error"
 				value="${model.exceptionLimit.error}" required /></td>
 		</tr>
