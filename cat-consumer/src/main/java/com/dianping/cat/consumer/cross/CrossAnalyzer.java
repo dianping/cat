@@ -2,17 +2,14 @@ package com.dianping.cat.consumer.cross;
 
 import java.util.List;
 
+import com.dianping.cat.consumer.cross.model.entity.*;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.entity.Local;
-import com.dianping.cat.consumer.cross.model.entity.Name;
-import com.dianping.cat.consumer.cross.model.entity.Remote;
-import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -65,7 +62,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
-	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
+	public CrossInfo parseCrossTransaction(Transaction t, MessageTree tree) {
 		if (m_serverConfigManager.discardTransaction(t)) {
 			return null;
 		} else {
@@ -87,18 +84,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonCall.server")) {
+                if (CatConstants.TYPE_ESB_CALL_SERVER.equals(message.getType()) || CatConstants.TYPE_SOA_CALL_SERVER.equals(message.getType())) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app")) {
+                if (CatConstants.TYPE_ESB_CALL_APP.equals(message.getType()) || CatConstants.TYPE_SOA_CALL_APP.equals(message.getType())) {
 					crossInfo.setApp(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localIp);
-		crossInfo.setRemoteRole("Pigeon.Server");
-		crossInfo.setDetailType("PigeonCall");
+        crossInfo.setRemoteRole(t.getType() + ".Server");
+        crossInfo.setDetailType(t.getType());
 		return crossInfo;
 	}
 
@@ -114,15 +111,15 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo info = new CrossInfo();
 		info.setLocalAddress(remoteAddress);
 		info.setRemoteAddress(localIp + ":Caller");
-		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCall");
+        info.setRemoteRole(crossInfo.getDetailType() + ".Caller");
+        info.setDetailType(crossInfo.getDetailType());
 		info.setApp(client);
 
 		return info;
 	}
 
-	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+	private void updateServerCrossReport(Transaction t, String remoteDomain, CrossInfo info) {
+		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), remoteDomain, true);
 
 		updateCrossReport(report, t, info);
 	}
@@ -134,7 +131,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonService.client")) {
+                if (CatConstants.TYPE_ESB_SERVICE_CLIENT.equals(message.getType()) || CatConstants.TYPE_SOA_SERVICE_CLIENT.equals(message.getType())) {
 					String name = message.getName();
 					int index = name.indexOf(":");
 
@@ -147,7 +144,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						crossInfo.setRemoteAddress(formatIp);
 					}
 				}
-				if (message.getType().equals("PigeonService.app")) {
+                if (CatConstants.TYPE_ESB_SERVICE_APP.equals(message.getType()) || CatConstants.TYPE_SOA_SERVICE_APP.equals(message.getType())) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -159,8 +156,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		crossInfo.setLocalAddress(localIp);
-		crossInfo.setRemoteRole("Pigeon.Client");
-		crossInfo.setDetailType("PigeonService");
+        crossInfo.setRemoteRole(t.getType() + ".Client");
+        crossInfo.setDetailType(t.getType());
 		return crossInfo;
 	}
 
@@ -178,16 +175,16 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
-		CrossInfo crossInfo = parseCorssTransaction(t, tree);
+		CrossInfo crossInfo = parseCrossTransaction(t, tree);
 
 		if (crossInfo != null) {
 			updateCrossReport(report, t, crossInfo);
 
-			String domain = crossInfo.getApp();
-			if (m_serverConfigManager.isClientCall(t.getType()) && StringUtils.isNotEmpty(domain)) {
+			String remoteDomain = crossInfo.getApp();
+			if (m_serverConfigManager.isClientCall(t.getType()) && StringUtils.isNotEmpty(remoteDomain)) {
 				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
 
-				updateServerCrossReport(t, domain, info);
+				updateServerCrossReport(t, remoteDomain, info);
 			}else{
 				m_errorAppName++;
 			}

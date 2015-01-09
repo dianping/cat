@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianping.cat.CatConstants;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -314,7 +315,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isClientCall(String type) {
-		return "PigeonCall".equals(type);
+        return CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type);
 	}
 
 	public boolean isCrashLog(String domain) {
@@ -370,7 +371,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isServerService(String type) {
-		return "PigeonService".equals(type);
+        return CatConstants.TYPE_ESB_SERVICE.equals(type) || CatConstants.TYPE_SOA_SERVICE.equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {

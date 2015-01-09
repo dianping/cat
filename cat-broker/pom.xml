@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<parent>
 		<groupId>com.dianping.cat</groupId>
-		<artifactId>parent</artifactId>
+		<artifactId>cat</artifactId>
 		<version>1.2.2</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
@@ -153,7 +153,7 @@
 				<configuration>
 					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<contextPath>/cat</contextPath>
-					<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
+					<!--<defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>-->
 					<connectors>
 						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
 							<port>2281</port>

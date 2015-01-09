@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.CatConstants;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
@@ -64,7 +65,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			if (m_serverConfigManager.discardTransaction((Transaction) message)) {
 				return;
 			}
-			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {
+            if (CatConstants.TYPE_URL.equals(messageType) || CatConstants.TYPE_ESB_SERVICE.equals(messageType) || CatConstants.TYPE_SOA_SERVICE.equals(messageType)) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
 				matrix.setName(message.getName());
@@ -108,7 +109,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		String type = t.getType();
 		Ratio ratio = null;
 
-		if (type.equals("Call") || type.equals("PigeonCall")) {
+        if (CatConstants.TYPE_ESB_CALL.equals(type) ||  CatConstants.TYPE_SOA_CALL.equals(type)) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
 			ratio = ratios.get("SQL");

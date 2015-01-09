@@ -3,9 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
-	<artifactId>parent</artifactId>
+	<artifactId>cat</artifactId>
 	<version>1.2.1</version>
-	<name>parent</name>
+	<name>cat</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
 	<modules>
