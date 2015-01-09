@@ -16,7 +16,7 @@
 			$('#projects_config').addClass('active open');
 			$('#projects').addClass('active');
 			
-			if("${payload.action.name}" == 'updateSubmit') {
+			if("${payload.action.name}" != 'projects') {
 				var state = '${model.opState}';
 				if(state=='Success'){
 					$('#state').html('操作成功');
@@ -141,7 +141,10 @@
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /><h4 class="text-center text-danger" id="state">&nbsp;</h4></td>
+			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" />&nbsp;
+			<a href="?op=projectDelete&projectId=${model.project.id}" class="btn btn-danger btn-sm delete" >
+						<i class="ace-icon fa fa-trash-o bigger-140"></i></a>
+						<h4 class="text-center text-danger" id="state">&nbsp;</h4></td>
 		</tr>
 	</table>
 </form>

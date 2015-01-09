@@ -46,13 +46,13 @@ public class GlobalConfigProcessor {
 	@Inject
 	private DomainGroupConfigManager m_domainGroupConfigManger;
 
-	private void deleteProject(Payload payload) {
+	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
 		int id = payload.getProjectId();
 
 		proto.setId(id);
 		proto.setKeyId(id);
-		m_projectService.deleteProject(proto);
+		return m_projectService.deleteProject(proto);
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -81,7 +81,7 @@ public class GlobalConfigProcessor {
 			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_DELETE:
-			deleteProject(payload);
+			model.setOpState(deleteProject(payload));
 			domain = payload.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {

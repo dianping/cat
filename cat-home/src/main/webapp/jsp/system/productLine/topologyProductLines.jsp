@@ -16,6 +16,31 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
+			<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
+				$.widget("ui.dialog", $.extend({}, $.ui.dialog.prototype, {
+					_title: function(title) {
+						var $title = this.options.title || '&nbsp;'
+						if( ("title_html" in this.options) && this.options.title_html == true )
+							title.html($title);
+						else title.text($title);
+					}
+				}));
+				var dialog = $( "#duplicateDomainMessage" ).removeClass('hide').dialog({
+					modal: true,
+					title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CAT提示</h4></div>",
+					title_html: true,
+					buttons: [ 
+						{
+							text: "OK",
+							"class" : "btn btn-primary btn-xs",
+							click: function() {
+								$( this ).dialog( "close" ); 
+							} 
+						}
+					]
+				});
+			</c:if>
+
 			var type = '${payload.type}';
 			if(type ==''){
 				type = '业务监控';
@@ -80,11 +105,15 @@
 					</tr>
 				</c:forEach>
 			</table></div></c:forEach></div></div>
-	<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
-		<script>
-			$(document).ready(function(){
-				alert("无法添加项目：${model.duplicateDomains} 原因：以上项目属于其它产品线");
-			})
-		</script>
-	</c:if>
+			<c:if test="${model.opState == 'Success' && model.duplicateDomains != null}">
+				<div id="duplicateDomainMessage" class="hide">
+					<p>
+						以下项目属于其它产品线，故无法添加：
+					</p>
+					<p>
+						${model.duplicateDomains}
+					</p>
+				</div><!-- #dialog-message -->
+			</c:if>
+			
 </a:config>

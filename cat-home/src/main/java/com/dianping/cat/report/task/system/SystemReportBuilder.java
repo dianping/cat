@@ -3,8 +3,10 @@ package com.dianping.cat.report.task.system;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -16,7 +18,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
-import com.dianping.cat.report.page.model.metric.MetricReportMerger;
+import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.TaskBuilder;
 
@@ -33,7 +35,7 @@ public class SystemReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_SYSTEM;
 
-	public static List<String> KEYS = Arrays.asList("sysCpu", "userCpu", "cpuUsage");
+	public static List<String> KEYS = Arrays.asList("cpuUsage");
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -53,38 +55,47 @@ public class SystemReportBuilder implements TaskBuilder {
 	}
 
 	private SystemReport buildSystemReport(Date startTime) {
-		Date endTime = TimeHelper.addDays(startTime, 1);
 		long start = startTime.getTime();
+		Date endTime = TimeHelper.addDays(startTime, 1);
 		long end = endTime.getTime();
 		SystemReport report = new SystemReport();
 
 		report.setStartTime(startTime);
 		report.setEndTime(endTime);
 
-		buildReport(start, end, report, true);
-		buildReport(start + TimeHelper.ONE_HOUR * 16, start + TimeHelper.ONE_HOUR * 18, report, false);
-		return report;
-	}
-
-	private void buildReport(long start, long end, SystemReport report, boolean dayReport) {
-		SystemReportStatistics statistics = new SystemReportStatistics(report, dayReport, KEYS);
+		SystemReportStatistics statistics = new SystemReportStatistics(start, report, KEYS);
 		Map<String, String> properties = new HashMap<String, String>();
 
 		properties.put("type", "system");
 		properties.put("ip", Constants.ALL);
-		properties.put("metricType", Constants.METRIC_SYSTEM_MONITOR);
 
 		for (String productLine : m_configManager.querySystemProductLines().keySet()) {
-			MetricReport productReport = new MetricReport(productLine);
-			MetricReportMerger merger = new MetricReportMerger(productReport);
-
 			for (long s = start; s < end; s += TimeHelper.ONE_HOUR) {
-				MetricReport r = m_metricReportService.querySystemReport(productLine, properties, new Date(s));
-				r.accept(merger);
+				MetricReport r = querySystemReport(productLine, properties, new Date(s));
+
+				r.accept(statistics);
 			}
-			productReport.accept(statistics);
-			
 		}
+		return report;
+	}
+
+	public MetricReport querySystemReport(String product, Map<String, String> properties, Date start) {
+		long time = start.getTime();
+		Date end = new Date(time + TimeHelper.ONE_HOUR);
+		MetricReport report = m_reportService.queryMetricReport(product, start, end);
+
+		String type = properties.get("type");
+		String ipAddrsStr = properties.get("ip");
+		Set<String> ipAddrs = null;
+
+		if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
+			String[] ipAddrsArray = ipAddrsStr.split("_");
+			ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
+		}
+		SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
+
+		convert.visitMetricReport(report);
+		return convert.getReport();
 	}
 
 	@Override
