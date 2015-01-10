@@ -38,7 +38,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(true, manager.isInitialized());
 		Assert.assertEquals(false, manager.isJobMachine());
 		Assert.assertEquals(false, manager.isLocalMode());
-		Assert.assertEquals(true, manager.isServerService("PigeonService"));
+		Assert.assertEquals(true, manager.isServer("PigeonService"));
 		Assert.assertEquals(false, manager.validateDomain("All"));
 		
 		Transaction t = new DefaultTransaction("Service", "piegonService:heartTaskService:heartBeat", null);
