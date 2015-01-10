@@ -82,13 +82,10 @@
 										<td>${item.warning}</td>
 										<td>${item.error}</td>
 										<td>
-										<c:if test="${item.domain ne 'Default'}">
-											
 							<a href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 						<a href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}&type=异常阈值" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
-										</c:if>
 										</td>
 									</tr>
 								</c:forEach>
@@ -116,12 +113,10 @@
 										<td>${item.domain}</td>
 										<td>${item.id}</td>
 										<td>
-										<c:if test="${item.domain ne 'Default'}">
 											<a href="?op=exceptionExcludeUpdate&domain=${item.domain}&exception=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 						<a href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.id}&type=异常过滤" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
-										</c:if>
 										</td>
 									</tr>
 								</c:forEach>
