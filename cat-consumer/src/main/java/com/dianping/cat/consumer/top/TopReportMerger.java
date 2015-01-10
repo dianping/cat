@@ -63,6 +63,7 @@ public class TopReportMerger extends DefaultMerger {
 		if (old.getService() > 0) {
 			old.setServiceDuration(old.getServiceSum() / old.getService());
 		}
+		super.mergeSegment(old, segment);
 	}
 
 	@Override

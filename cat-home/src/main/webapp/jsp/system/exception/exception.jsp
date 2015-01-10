@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8"%>
+<%@ page contentType="text/html;charset=utf-8"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
@@ -23,7 +23,7 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#exception').addClass('active');
-			var type = '${payload.type}';
+			var type = "${payload.type}";
 			if (type == '') {
 				type = '异常阈值';
 			}
