@@ -100,7 +100,7 @@ public class TopAnalyzerTest extends ComponentTestCase {
 	public void testProcess() throws Exception {
 		TopReport report = m_analyzer.getReport(m_domain);
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer.xml"), "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer_test.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}
 
