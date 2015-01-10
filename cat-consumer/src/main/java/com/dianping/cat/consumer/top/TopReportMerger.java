@@ -20,7 +20,6 @@ public class TopReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeError(Error old, Error error) {
 		old.setCount(old.getCount() + error.getCount());
-		super.mergeError(old, error);
 	}
 
 	@Override
@@ -63,7 +62,6 @@ public class TopReportMerger extends DefaultMerger {
 		if (old.getService() > 0) {
 			old.setServiceDuration(old.getServiceSum() / old.getService());
 		}
-		super.mergeSegment(old, segment);
 	}
 
 	@Override
