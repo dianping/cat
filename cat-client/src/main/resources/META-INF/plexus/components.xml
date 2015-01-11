@@ -2,7 +2,7 @@
 	<components>
 		<component>
 			<role>com.dianping.cat.configuration.ClientConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ClientConfigManager</implementation>
+			<implementation>com.dianping.cat.configuration.DefaultClientConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.internal.MessageIdFactory</role>
