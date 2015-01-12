@@ -215,10 +215,8 @@ public class InstallMojo extends AbstractMojo {
 		m_user=System.getenv("mysql_username");
 		m_password=System.getenv("mysql_password");
 		
-		//getLog().info("see sth yapu" + m_jdbcUrl + "  "+m_user+"  "+m_password);
-		
 		if(m_jdbcUrl!=null&&m_jdbcUrl.startsWith("jdbc:mysql://")&&m_user!=null&&m_password!=null){
-			//getLog().info("auto input" + m_jdbcUrl + "  "+m_user+"  "+m_password);
+
 		}
 		else{
 			m_jdbcUrl = PropertyProviders.fromConsole().forString("jdbc.url", "Please input jdbc url:", null,
@@ -234,7 +232,11 @@ public class InstallMojo extends AbstractMojo {
 				      });
 			m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
 			m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "", null);
-			//getLog().info("person input" + m_jdbcUrl + "  "+m_user+"  "+m_password);
+			
 		}
+		
+		getLog().info("jdbc.url" + m_jdbcUrl);
+		getLog().info("jdbc.user" + m_user);
+		getLog().info("jdbc.password" + m_password);
 	}
 }
