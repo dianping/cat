@@ -141,7 +141,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		Date end = null;
 
 		if (period.equals(TimeHelper.getCurrentWeek())) {
-			end = TimeHelper.getYesterday();
+			end = TimeHelper.getCurrentDay();
 		} else {
 			end = new Date(period.getTime() + TimeHelper.ONE_WEEK);
 		}

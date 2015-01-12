@@ -4,17 +4,23 @@
       <entity id="cpuUsage">
          <rush count="300" sum="3000.0" avg="10.0"/>
          <day count="600" sum="6000.0" avg="10.0"/>
+         <machine ip="10.101.6.30"/>
+         <machine ip="10.101.4.22"/>
       </entity>
    </domain>
    <domain id="system-user-common-service-1">
       <entity id="cpuUsage">
          <day count="300" sum="3000.0" avg="10.0"/>
+         <machine ip="10.101.6.30"/>
+         <machine ip="10.101.4.22"/>
       </entity>
    </domain>
    <domain id="system-user-common-service-2">
       <entity id="cpuUsage">
          <rush count="300" sum="3000.0" avg="10.0"/>
          <day count="300" sum="3000.0" avg="10.0"/>
+         <machine ip="10.101.6.30"/>
+         <machine ip="10.101.4.22"/>
       </entity>
    </domain>
 </system-report>

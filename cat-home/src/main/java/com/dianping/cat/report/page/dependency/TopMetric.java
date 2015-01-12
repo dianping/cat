@@ -274,13 +274,7 @@ public class TopMetric extends BaseVisitor {
 			} else if (o2.getAlert() < o1.getAlert()) {
 				alert = -1;
 			}
-			int value = 0;
-
-			if (o2.getValue() > o1.getValue()) {
-				value = 1;
-			} else if (o2.getValue() < o2.getValue()) {
-				value = -1;
-			}
+			int value = Double.compare(o2.getValue(), o1.getValue());
 
 			return alert == 0 ? value : alert;
 		}

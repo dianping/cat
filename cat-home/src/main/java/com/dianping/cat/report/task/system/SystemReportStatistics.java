@@ -23,6 +23,8 @@ public class SystemReportStatistics extends BaseVisitor {
 
 	private String m_key;
 
+	private String m_ip;
+
 	private String m_productLine;
 
 	private boolean m_rushHour;
@@ -41,22 +43,33 @@ public class SystemReportStatistics extends BaseVisitor {
 
 	@Override
 	public void visitMetricItem(MetricItem metricItem) {
-		m_key = metricItem.getId().split("_")[0];
+		String suffix = metricItem.getId().split(":")[2];
+		String[] fields = suffix.split("_");
+		m_key = fields[1];
+		m_ip = fields[2];
 
 		if (m_keys == null || m_keys.isEmpty() || m_keys.contains(m_key)) {
+			updateMachine(Constants.ALL);
+			updateMachine(m_productLine);
 			super.visitMetricItem(metricItem);
 		}
 	}
 
+	private void updateMachine(String product) {
+		Entity entity = m_systemReport.findOrCreateDomain(product).findOrCreateEntity(m_key);
+
+		entity.findOrCreateMachine(m_ip);
+	}
+
 	@Override
 	public void visitSegment(Segment segment) {
-		updateReport(segment, Constants.ALL);
-		updateReport(segment, m_productLine);
+		updateEntity(segment, Constants.ALL);
+		updateEntity(segment, m_productLine);
 
 		super.visitSegment(segment);
 	}
 
-	private void updateReport(Segment segment, String product) {
+	private void updateEntity(Segment segment, String product) {
 		Domain domain = m_systemReport.findOrCreateDomain(product);
 		Entity entity = domain.findOrCreateEntity(m_key);
 
