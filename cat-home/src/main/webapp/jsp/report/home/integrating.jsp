@@ -41,12 +41,12 @@
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-core</artifactId>   
-             <version>1.1.8</version>
+             <version>1.2.2</version>
              </dependency>
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-client</artifactId>   
-             <version>1.1.8</version>
+             <version>1.2.2</version>
              </dependency>
        <dependency>
               <groupId>com.dianping</groupId>
