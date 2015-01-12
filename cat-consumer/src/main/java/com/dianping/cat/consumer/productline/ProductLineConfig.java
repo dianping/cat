@@ -12,7 +12,7 @@ public enum ProductLineConfig {
 
 	METRIC("metricProductLine", "业务监控", ""),
 
-	USER("userProductline", "外部监控", Constants.BROKER_SERVICE),
+	USER("userProductLine", "外部监控", Constants.BROKER_SERVICE),
 
 	APPLICATION("applicationProductLine", "应用监控", ""),
 

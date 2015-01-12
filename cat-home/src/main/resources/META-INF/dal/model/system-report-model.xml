@@ -14,6 +14,7 @@
     <attribute name="id" value-type="String" key="true" />
     <entity-ref name="rush" />
     <entity-ref name="day" />
+    <entity-ref name="machine" type="map" names="machines"  method-find-or-create="true"/>
   </entity>
   <entity name="rush">
     <attribute name="count" value-type="long" method-inc="true" primitive="true" />
@@ -24,6 +25,9 @@
     <attribute name="count" value-type="long" method-inc="true" primitive="true" />
     <attribute name="sum" value-type="double" method-inc="true" primitive="true" />
     <attribute name="avg" value-type="double" primitive="true" />
+  </entity>
+  <entity name="machine">
+    <attribute name="ip" value-type="String" key="true" />
   </entity>
 </model>
 

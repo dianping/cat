@@ -2,14 +2,12 @@ package com.dianping.cat.report.task.system;
 
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
@@ -18,7 +16,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
-import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.spi.TaskBuilder;
 
@@ -64,16 +61,19 @@ public class SystemReportBuilder implements TaskBuilder {
 		report.setEndTime(endTime);
 
 		SystemReportStatistics statistics = new SystemReportStatistics(start, report, KEYS);
-		Map<String, String> properties = new HashMap<String, String>();
-
-		properties.put("type", "system");
-		properties.put("ip", Constants.ALL);
 
 		for (String productLine : m_configManager.querySystemProductLines().keySet()) {
 			for (long s = start; s < end; s += TimeHelper.ONE_HOUR) {
-				MetricReport r = querySystemReport(productLine, properties, new Date(s));
+				Date sDate = new Date(s);
+				Date eDate = new Date(s + TimeHelper.ONE_HOUR);
 
-				r.accept(statistics);
+				try {
+					MetricReport r = m_reportService.queryMetricReport(productLine, sDate, eDate);
+
+					r.accept(statistics);
+				} catch (Exception e) {
+					Cat.logError(productLine + " system report visitor error", e);
+				}
 			}
 		}
 		return report;
@@ -84,18 +84,7 @@ public class SystemReportBuilder implements TaskBuilder {
 		Date end = new Date(time + TimeHelper.ONE_HOUR);
 		MetricReport report = m_reportService.queryMetricReport(product, start, end);
 
-		String type = properties.get("type");
-		String ipAddrsStr = properties.get("ip");
-		Set<String> ipAddrs = null;
-
-		if (!Constants.ALL.equalsIgnoreCase(ipAddrsStr)) {
-			String[] ipAddrsArray = ipAddrsStr.split("_");
-			ipAddrs = new HashSet<String>(Arrays.asList(ipAddrsArray));
-		}
-		SystemReportConvertor convert = new SystemReportConvertor(type, ipAddrs);
-
-		convert.visitMetricReport(report);
-		return convert.getReport();
+		return report;
 	}
 
 	@Override

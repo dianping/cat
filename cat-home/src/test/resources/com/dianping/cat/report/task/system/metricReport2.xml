@@ -1,5 +1,5 @@
 <metric-report product="system-user-common-service-2" startTime="2014-07-05 16:00:00" endTime="2014-07-05 18:00:00">
-	<metric-item id="cpuUsage_10.101.6.30" type="T">
+	<metric-item id="cat:Metric:system_cpuUsage_10.101.6.30" type="T">
 		<segment id="0" count="10" sum="100" avg="10" />
 		<segment id="1" count="10" sum="100" avg="10" />
 		<segment id="2" count="10" sum="100" avg="10" />
@@ -16,7 +16,7 @@
 		<segment id="13" count="10" sum="100" avg="10" />
 		<segment id="14" count="10" sum="100" avg="10" />
 	</metric-item>
-	<metric-item id="cachedMem_10.101.6.30" type="T">
+	<metric-item id="cat:Metric:system_cachedMem_10.101.6.30" type="T">
 		<segment id="0" count="10" sum="100" avg="10" />
 		<segment id="1" count="10" sum="100" avg="10" />
 		<segment id="2" count="10" sum="100" avg="10" />
@@ -33,7 +33,7 @@
 		<segment id="13" count="10" sum="100" avg="10" />
 		<segment id="14" count="10" sum="100" avg="10" />
 	</metric-item>
-	<metric-item id="cpuUsage_10.101.4.22" type="T">
+	<metric-item id="cat:Metric:system_cpuUsage_10.101.4.22" type="T">
 		<segment id="0" count="10" sum="100" avg="10" />
 		<segment id="1" count="10" sum="100" avg="10" />
 		<segment id="2" count="10" sum="100" avg="10" />
@@ -50,7 +50,7 @@
 		<segment id="13" count="10" sum="100" avg="10" />
 		<segment id="14" count="10" sum="100" avg="10" />
 	</metric-item>
-	<metric-item id="cachedMem_10.101.4.22" type="T">
+	<metric-item id="cat:Metric:system_cachedMem_10.101.4.22" type="T">
 		<segment id="0" count="10" sum="100" avg="10" />
 		<segment id="1" count="10" sum="100" avg="10" />
 		<segment id="2" count="10" sum="100" avg="10" />
@@ -67,8 +67,4 @@
 		<segment id="13" count="10" sum="100" avg="10" />
 		<segment id="14" count="10" sum="100" avg="10" />
 	</metric-item>
-	<statistic id="ipList">
-		<statistics-item id="10.101.6.30" count="0" />
-		<statistics-item id="10.101.4.22" count="0" />
-	</statistic>
 </metric-report>
