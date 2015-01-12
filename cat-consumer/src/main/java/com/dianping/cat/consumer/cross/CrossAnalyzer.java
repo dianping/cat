@@ -136,7 +136,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonService.client")) {
+				String type = message.getType();
+
+				if (type.equals("PigeonService.client") || type.equals("Service.client")) {
 					String name = message.getName();
 					int index = name.indexOf(":");
 
@@ -149,7 +151,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 						crossInfo.setRemoteAddress(formatIp);
 					}
 				}
-				if (message.getType().equals("PigeonService.app")) {
+				if (type.equals("PigeonService.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
