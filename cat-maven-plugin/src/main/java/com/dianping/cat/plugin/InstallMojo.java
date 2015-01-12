@@ -215,7 +215,7 @@ public class InstallMojo extends AbstractMojo {
 		m_user=System.getenv("mysql_username");
 		m_password=System.getenv("mysql_password");
 		
-		if(m_jdbcUrl!=null&&m_jdbcUrl.startsWith("jdbc:mysql://")&&m_user!=null&&m_password!=null){
+		if(m_jdbcUrl!=null&&m_user!=null&&m_password!=null){
 
 		}
 		else{
