@@ -57,7 +57,7 @@ public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 	      Date reportPeriod) {
 		MetricItemConfig metricConfig = m_configManager.getMetricConfig().getMetricItemConfigs().get(metricId);
 		String metricDomain = metricConfig.getDomain();
-		String productLine = String.valueOf(m_productLineConfigManager.queryProductLineByDomain(metricDomain));
+		String productLine = m_productLineConfigManager.queryProductLineByDomain(metricDomain);
 
 		for (MetricType type : MetricType.values()) {
 			String key = metricId + ":" + type;
