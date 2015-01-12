@@ -39,16 +39,6 @@ public class DefaultBaselineService implements BaselineService {
 		}
 	};
 
-	private Map<String, String> m_empties = new LinkedHashMap<String, String>() {
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected boolean removeEldestEntry(Entry<String, String> eldest) {
-			return size() > 50000;
-		}
-	};
-
 	private double[] decodeBaselines(byte[] datas) throws IOException {
 		double[] result;
 		ByteArrayInputStream input = new ByteArrayInputStream(datas);
@@ -90,18 +80,11 @@ public class DefaultBaselineService implements BaselineService {
 
 		if (baseline == null) {
 			try {
-				String str = m_empties.get(baselineKey);
+				baseline = m_baselineDao
+				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 
-				if (str == null) {
-					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
-					      BaselineEntity.READSET_FULL);
-					m_baselines.put(baselineKey, baseline);
-				} else {
-					return null;
-				}
+				m_baselines.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
-				m_empties.put(baselineKey, baselineKey);
-				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
 				return null;
@@ -130,7 +113,7 @@ public class DefaultBaselineService implements BaselineService {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, MetricType type) {
 		double[] baseline = new double[ruleMinute];
@@ -160,7 +143,7 @@ public class DefaultBaselineService implements BaselineService {
 
 		return baseline;
 	}
-	
+
 	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
 		double[] baseline = queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
 		int length = end - start + 1;
@@ -172,7 +155,7 @@ public class DefaultBaselineService implements BaselineService {
 
 		return result;
 	}
-	
+
 	public double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
