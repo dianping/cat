@@ -211,18 +211,32 @@ public class InstallMojo extends AbstractMojo {
 	}
 
 	private void validate() {
-		m_jdbcUrl = PropertyProviders.fromConsole().forString("jdbc.url", "Please input jdbc url:", null,
-		      "jdbc:mysql://127.0.0.1:3306", new IValidator<String>() {
-			      @Override
-			      public boolean validate(String url) {
-				      if (url.startsWith("jdbc:mysql://")) {
-					      return true;
-				      } else {
-					      return false;
+		m_jdbcUrl = System.getenv("mysql_jdbcUrl");
+		m_user = System.getenv("mysql_username");
+		m_password = System.getenv("mysql_password");
+
+		if (m_jdbcUrl != null && m_user != null && m_password != null) {
+			// ignore it
+		} else {
+			m_jdbcUrl = PropertyProviders.fromConsole().forString("jdbc.url", "Please input jdbc url:", null,
+			      "jdbc:mysql://127.0.0.1:3306", new IValidator<String>() {
+				      @Override
+				      public boolean validate(String url) {
+					      if (url.startsWith("jdbc:mysql://")) {
+						      return true;
+					      } else {
+						      return false;
+					      }
 				      }
-			      }
-		      });
-		m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
-		m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "", null);
+			      });
+			m_user = PropertyProviders.fromConsole().forString("jdbc.user", "Please input username:", null, null, null);
+			m_password = PropertyProviders.fromConsole().forString("jdbc.password", "Please input password:", null, "",
+			      null);
+
+		}
+
+		getLog().info("jdbc.url: " + m_jdbcUrl);
+		getLog().info("jdbc.user: " + m_user);
+		getLog().info("jdbc.password: " + m_password);
 	}
 }
