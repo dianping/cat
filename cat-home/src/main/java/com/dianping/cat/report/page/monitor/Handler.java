@@ -28,27 +28,29 @@ public class Handler implements PageHandler<Context> {
 	private JsonBuilder m_builder;
 
 	private void buildBatchMetric(String content) {
-		String[] lines = content.split("\n");
+		if (content != null) {
+			String[] lines = content.split("\n");
 
-		// group, domain, key, type, time, value
-		for (String line : lines) {
-			if (StringUtils.isNotEmpty(line)) {
-				String[] tabs = line.split("\t");
+			// group, domain, key, type, time, value
+			for (String line : lines) {
+				if (StringUtils.isNotEmpty(line)) {
+					String[] tabs = line.split("\t");
 
-				if (tabs.length == 6) {
-					try {
-						String group = tabs[0];
-						String domain = tabs[1];
-						String key = tabs[2];
-						String type = tabs[3];
-						long time = Long.parseLong(tabs[4]);
-						double value = Double.parseDouble(tabs[5]);
-						buildMetric(group, domain, key, type, time, value);
-					} catch (Exception e) {
-						Cat.logError("Unrecognized batch data: " + line, e);
+					if (tabs.length == 6) {
+						try {
+							String group = tabs[0];
+							String domain = tabs[1];
+							String key = tabs[2];
+							String type = tabs[3];
+							long time = Long.parseLong(tabs[4]);
+							double value = Double.parseDouble(tabs[5]);
+							buildMetric(group, domain, key, type, time, value);
+						} catch (Exception e) {
+							Cat.logError("Unrecognized batch data: " + line, e);
+						}
+					} else {
+						Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 					}
-				} else {
-					Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 				}
 			}
 		}
