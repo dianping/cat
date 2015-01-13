@@ -19,15 +19,13 @@ import com.dianping.cat.report.page.web.CityManager;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private CityManager m_cityManager;
-	
+
 	@Inject
 	private CdnGraphCreator m_cdnGraphCreator;
-	
-	private static final String ALL = "ALL";
-	
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "cdn")
@@ -43,7 +41,6 @@ public class Handler implements PageHandler<Context> {
 
 		long start = payload.getHistoryStartDate().getTime();
 		long end = payload.getHistoryEndDate().getTime();
-
 		start = start - start % TimeHelper.ONE_HOUR;
 		end = end - end % TimeHelper.ONE_HOUR;
 
@@ -52,14 +49,7 @@ public class Handler implements PageHandler<Context> {
 		String province = payload.getProvince();
 		String city = payload.getCity();
 		String cdn = payload.getCdn();
-		if (province == ALL) {
-			city = ALL;
-		}
-		if (cdn == ALL) {
-			province = ALL;
-			city = ALL;
-		}
-		
+
 		model.setLineCharts(m_cdnGraphCreator.queryBaseInfo(startDate, endDate, cdn, province, city));
 		model.setStart(startDate);
 		model.setEnd(endDate);
@@ -68,8 +58,8 @@ public class Handler implements PageHandler<Context> {
 		model.setCityInfo(m_cityManager.getCityInfo());
 
 		if (!ctx.isProcessStopped()) {
-		   m_jspViewer.view(ctx, model);
+			m_jspViewer.view(ctx, model);
 		}
 	}
-	
+
 }

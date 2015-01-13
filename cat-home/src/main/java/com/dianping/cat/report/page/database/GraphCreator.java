@@ -33,13 +33,11 @@ public class GraphCreator extends AbstractGraphCreator {
 			lineChart.setUnit("Value/秒");
 			lineChart.setMinYlable(lineChart.queryMinYlable(value));
 			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-			double[] baselines = queryBaseline(key, startDate, endDate);
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 			addLastMinuteData(current, all, m_lastMinute, endDate);
 			lineChart.add(Chinese.CURRENT_VALUE, current);
-			lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), startDate, step));
 			charts.put(key, lineChart);
 		}
 		return charts;

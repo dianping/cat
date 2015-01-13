@@ -9,6 +9,7 @@
 	<tr>
 		<th width="20%">项目</th>
 		<c:forEach var="key" items="${model.keys}" varStatus="status">
+			<th>${key}[机器数]</th>
 			<th>${key}[高峰]</th>
 			<th>${key}[全天]</th>
 		</c:forEach>
@@ -19,9 +20,9 @@
 		<tr>
 			<td>${entry.key}</td>
 			<c:forEach var="key" items="${model.keys}">
+				<td>${fn:length(model.systemReport.domains[entry.key].entities[key].machines)}</td>
 				<td>${w:format(model.systemReport.domains[entry.key].entities[key].rush.avg,'###,##0.00')}</td>
 				<td>${w:format(model.systemReport.domains[entry.key].entities[key].day.avg,'###,##0.00')}</td>
-				
 			</c:forEach>
 		</tr>
 	</c:forEach>
