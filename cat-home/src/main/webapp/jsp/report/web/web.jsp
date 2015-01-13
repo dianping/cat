@@ -156,6 +156,7 @@
 		}
 		
 		$(document).ready(function() {
+			$('#web_trend').addClass('active');
 			$('#startTime').datetimepicker({
 					format:'Y-m-d H:i',
 					step:30,

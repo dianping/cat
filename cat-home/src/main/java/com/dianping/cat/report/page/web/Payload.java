@@ -40,23 +40,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.WEB);
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public String getCity() {
-		return m_city;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
 	private Date generateDate(String time, long start) {
 		Date date = null;
 		String[] times = time.split(":");
@@ -84,6 +67,23 @@ public class Payload extends AbstractReportPayload<Action> {
 			date = new Date(date.getTime() - TimeHelper.ONE_MINUTE);
 		}
 		return date;
+	}
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public String getCity() {
+		return m_city;
+	}
+
+	public String getGroup() {
+		return m_group;
 	}
 
 	public Pair<Date, Date> getHistoryEndDatePair() {

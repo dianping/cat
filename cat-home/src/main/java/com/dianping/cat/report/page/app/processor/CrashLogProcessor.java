@@ -113,9 +113,9 @@ public class CrashLogProcessor {
 		}
 	}
 
-	private ProblemReport getHourlyReport(Payload payload, String queryType, String domain) {
+	private ProblemReport getHourlyReport(Payload payload, String domain) {
 		ModelRequest request = new ModelRequest(domain, payload.getDate()).//
-		      setProperty("queryType", queryType);
+		      setProperty("queryType", "view");
 
 		if (!StringUtils.isEmpty(payload.getType())) {
 			request.setProperty("type", "error");
@@ -139,7 +139,7 @@ public class CrashLogProcessor {
 
 		switch (action) {
 		case HOURLY_CRASH_LOG:
-			report = getHourlyReport(payload, "view", queryDomain(payload));
+			report = getHourlyReport(payload, queryDomain(payload));
 			break;
 		case HISTORY_CRASH_LOG:
 			report = showSummarizeReport(model, payload, queryDomain(payload));
