@@ -80,6 +80,33 @@ public class TestBusinessMessage {
 	}
 
 	@Test
+	public void testCross() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			Transaction t = Cat.newTransaction("Call", "CallServiceMethod");
+
+			Cat.logEvent("Call.server", "1.1.1.1");
+			Cat.logEvent("Call.app", "catserver2");
+
+			
+			t.setStatus(Transaction.SUCCESS);
+			t.complete();
+		}
+		
+		for (int i = 0; i < 1000; i++) {
+			Transaction t = Cat.newTransaction("Service", "CallServiceMethod");
+
+			Cat.logEvent("Service.client", "10.128.120.122");
+			Cat.logEvent("Service.app", "cat");
+
+			Cat.getManager().getThreadLocalMessageTree().setDomain("catserver2");
+			t.setStatus(Transaction.SUCCESS);
+			t.complete();
+		}
+
+		Thread.sleep(10000);
+	}
+
+	@Test
 	public void test() throws Exception {
 		while (true) {
 			for (int i = 0; i < 1000; i++) {
