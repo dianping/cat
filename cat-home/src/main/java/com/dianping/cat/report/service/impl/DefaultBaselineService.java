@@ -80,11 +80,11 @@ public class DefaultBaselineService implements BaselineService {
 
 		if (baseline == null) {
 			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 
 				m_baselines.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
+				return null;
 			} catch (Exception e) {
 				Cat.logError(e);
 				return null;
