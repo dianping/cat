@@ -16,7 +16,6 @@
 	<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit">
 	
 	<br/>
-	类型
 	<div id="label-group">
 		<label class="btn btn-info btn-sm">
 		<input type="checkbox" style="margin-bottom:0px;" id="select-all-type" />All 

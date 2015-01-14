@@ -69,7 +69,7 @@
 							 	<c:set var="id" value="modal${modalId}" />
 							 	<c:set var="modalId" value="${modalId+1}" />
 							 	<span data-id="${id}" class="alert-modal">
-							 		${w:shorten(alertDomain.name, 18)}
+							 		${w:shorten(alertDomain.name, 30)}
 							 	</span>
 							 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 								  <div class="modal-dialog" style="width:1100px">
