@@ -14,4 +14,7 @@ public interface BaselineService {
 	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod);
 
 	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod);
+
+	public boolean hasDailyBaseline(String reportName, String key, Date reportPeriod);
+
 }
