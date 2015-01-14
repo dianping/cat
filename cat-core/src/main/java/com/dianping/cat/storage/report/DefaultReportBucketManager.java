@@ -36,8 +36,6 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 			final List<String> toRemovePaths = new ArrayList<String>();
 			final Set<String> validPaths = queryValidPath(7);
 			
-			System.err.println(validPaths);
-
 			Scanners.forDir().scan(reportDir, new FileMatcher() {
 				@Override
 				public Direction matches(File base, String path) {
