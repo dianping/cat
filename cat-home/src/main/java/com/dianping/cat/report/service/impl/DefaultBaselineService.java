@@ -92,7 +92,7 @@ public class DefaultBaselineService implements BaselineService {
 				baseline = m_baselineDao
 				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				has = true;
-
+				
 				m_baselines.put(baselineKey, baseline);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
