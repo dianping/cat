@@ -64,43 +64,43 @@
 		           <tr><th>项目名</th><th>个</th></tr>
 		           <c:set var="length" value="${fn:length(minuteEntry.value.alertDomains)}" />
 		           <c:forEach var="alertDomain" items="${minuteEntry.value.alertDomains}" end="${count-1}">
-			              <tr>
-							 <td>
-							 	<c:set var="id" value="modal${modalId}" />
-							 	<c:set var="modalId" value="${modalId+1}" />
-							 	<span data-id="${id}" class="alert-modal">
-							 		${w:shorten(alertDomain.name, 30)}
-							 	</span>
-							 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-								  <div class="modal-dialog" style="width:1100px">
-								    <div class="modal-content">
-								      <div class="modal-body">
-								      	<h4 class="text-danger text-center">项目：${alertDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h4>
-								      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
-								 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}</h5>
-								 			<table	class="table table-striped table-condensed table-hover">
-												<tr class="text-success">
-													<th width="8%">级别</th>
-													<th width="72%">内容</th>
+		              <tr>
+						 <td style="background-color:red;color:white;">
+						 	<c:set var="id" value="modal${modalId}" />
+						 	<c:set var="modalId" value="${modalId+1}" />
+						 	<span data-id="${id}" class="alert-modal">
+						 		${w:shorten(alertDomain.name, 30)}
+						 	</span>
+						 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-dialog" style="width:1100px">
+							    <div class="modal-content">
+							      <div class="modal-body">
+							      	<h4 class="text-danger text-center">项目：${alertDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h4>
+							      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
+							 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}</h5>
+							 			<table	class="table table-striped table-condensed table-hover">
+											<tr class="text-success">
+												<th width="8%">级别</th>
+												<th width="72%">内容</th>
+											</tr>
+											<c:forEach var="alert" items="${alertCategory.value}">
+												<tr>
+													<td>${alert.type}</td>
+													<td><span class="text-primary">${alert.metric}</span><br/>${alert.content}</td>
 												</tr>
-												<c:forEach var="alert" items="${alertCategory.value}">
-													<tr>
-														<td>${alert.type}</td>
-														<td><span class="text-primary">${alert.metric}</span><br/>${alert.content}</td>
-													</tr>
-												</c:forEach>
-											</table>
-								 		</c:forEach>
-								      </div>
-								      <div class="modal-footer">
-								        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								      </div>
-								    </div>
-								  </div>
-								</div>
-							 </td>
-	                		 <td style="text-align:right">${w:format(alertDomain.count,'0')}</td>
-			              </tr>
+											</c:forEach>
+										</table>
+							 		</c:forEach>
+							      </div>
+							      <div class="modal-footer">
+							        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+							      </div>
+							    </div>
+							  </div>
+							</div>
+						 </td>
+                		 <td style="background-color:red;color:white;text-align:right">${w:format(alertDomain.count,'0')}</td>
+		              </tr>
 		           </c:forEach>
 		           <c:if test="${length lt count}">
 		           		<c:forEach begin="1" end="${count-length}">
