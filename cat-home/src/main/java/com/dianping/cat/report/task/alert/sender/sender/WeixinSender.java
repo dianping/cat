@@ -37,7 +37,7 @@ public class WeixinSender extends AbstractSender {
 		return result;
 	}
 
-	private boolean sendWeixin(AlertMessageEntity message, String weixins,
+	private boolean sendWeixin(AlertMessageEntity message, String receiver,
 	      com.dianping.cat.home.sender.entity.Sender sender) {
 		String domain = message.getGroup();
 		String title = message.getTitle().replaceAll(",", " ");
@@ -47,7 +47,7 @@ public class WeixinSender extends AbstractSender {
 
 		try {
 			urlPars = urlPars.replace("${domain}", URLEncoder.encode(domain, "utf-8"))
-			      .replace("${email}", URLEncoder.encode(weixins, "utf-8"))
+			      .replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
 			      .replace("${title}", URLEncoder.encode(title, "utf-8"))
 			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
 			      .replace("${type}", URLEncoder.encode(message.getType(), "utf-8"));

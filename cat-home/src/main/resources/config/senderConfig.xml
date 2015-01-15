@@ -3,17 +3,17 @@
 		<par id="type=1500"/>
 		<par id="key=title,body" />
 		<par id="re=yong.you@dianping.com" />
-		<par id="to=${email}" />
+		<par id="to=${receiver}" />
 		<par id="value=${title},${content}" />
 	</sender>
 	<sender id="weixin" url="http://dpoa.api.dianping.com/app/monitor/cat/push" type="post" successCode="200" batchSend="true">
 		<par id="domain=${domain}"/>
-		<par id="email=${email}" />
+		<par id="email=${receiver}" />
 		<par id="title=${title}" />
 		<par id="content=${content}" />
 		<par id="type=${type}" />
 	</sender>
 	<sender id="sms" url="http://10.1.1.84/sms/send/json" type="get" successCode="200" batchSend="false">
-		<par id="jsonm={type:808,mobile:'${phone}',pair:{body='${content}'}"/>
+		<par id="jsonm={type:808,mobile:'${receiver}',pair:{body='${content}'}"/>
 	</sender>
 </sender-config>

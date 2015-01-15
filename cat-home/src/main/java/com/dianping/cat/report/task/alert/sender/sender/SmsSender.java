@@ -37,14 +37,14 @@ public class SmsSender extends AbstractSender {
 		return result;
 	}
 
-	private boolean sendSms(AlertMessageEntity message, String phone, com.dianping.cat.home.sender.entity.Sender sender) {
+	private boolean sendSms(AlertMessageEntity message, String receiver, com.dianping.cat.home.sender.entity.Sender sender) {
 		String filterContent = message.getContent().replaceAll("(<a href.*(?=</a>)</a>)|(\n)", "");
 		String content = message.getTitle() + " " + filterContent;
 		String urlPrefix = sender.getUrl();
 		String urlPars = m_senderConfigManager.queryParString(sender);
 
 		try {
-			urlPars = urlPars.replace("${phone}", URLEncoder.encode(phone, "utf-8")).replace("${content}",
+			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8")).replace("${content}",
 			      URLEncoder.encode(content, "utf-8"));
 		} catch (Exception e) {
 			Cat.logError(e);
