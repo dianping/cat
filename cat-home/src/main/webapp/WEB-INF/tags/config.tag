@@ -139,6 +139,9 @@
 							<li id="alertDefaultReceivers"><a href="/cat/s/config?op=alertDefaultReceivers">
 								<i class="menu-icon fa fa-caret-right"></i>默认告警人</a>
 								<b class="arrow"></b></li>
+							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
+								<b class="arrow"></b></li>
 							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>框架异常</a>
 								<b class="arrow"></b></li>

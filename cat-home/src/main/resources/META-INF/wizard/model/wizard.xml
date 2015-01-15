@@ -81,4 +81,7 @@
    <model package="com.dianpng.cat.home" name="system-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/system/systemReport.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.sender-config" name="sender-config">
+      <sample-model>src/main/resources/config/senderConfig.xml</sample-model>
+   </model>
 </wizard>

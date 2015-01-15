@@ -193,7 +193,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	DOMAIN_GROUP_CONFIG_DELETE("domainGroupConfigDelete"),
 
-	ROUTER_CONFIG_UPDATE("routerConfigUpdate");
+	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
+
+	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate");
 
 	private String m_name;
 
