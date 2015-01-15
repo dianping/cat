@@ -1,29 +1,15 @@
 package com.dianping.cat.report.task.alert.sender.sender;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class SmsSender implements Sender, LogEnabled {
+public class SmsSender extends AbstractSender {
 
 	public static final String ID = AlertChannel.SMS.getName();
-
-	private Logger m_logger;
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 
 	@Override
 	public String getId() {
@@ -32,46 +18,38 @@ public class SmsSender implements Sender, LogEnabled {
 
 	@Override
 	public boolean send(AlertMessageEntity message) {
-		if (!sendSms(message)) {
-			return false;
+		com.dianping.cat.home.sender.entity.Sender sender = querySender();
+		boolean batchSend = sender.getBatchSend();
+		boolean result = false;
+
+		if (batchSend) {
+			String phones = message.getReceiverString();
+
+			result = sendSms(message, phones, sender);
 		} else {
-			return true;
-		}
-	}
+			List<String> phones = message.getReceivers();
 
-	private boolean sendSms(AlertMessageEntity message) {
-		String content = message.getTitle() + " " + message.getContent();
-		List<String> phones = message.getReceivers();
-		StringBuilder sb = new StringBuilder();
-
-		for (String phone : phones) {
-			InputStream in = null;
-			try {
-				String format = "http://10.1.1.84/sms/send/json?jsonm={type:808,mobile:\"%s\",pair:{body=\"%s\"}}";
-				String urlAddress = String.format(format, phone, URLEncoder.encode(content, "utf-8"));
-				URL url = new URL(urlAddress);
-				URLConnection conn = url.openConnection();
-
-				conn.setConnectTimeout(2000);
-				conn.setReadTimeout(3000);
-				in = conn.getInputStream();
-				sb.append(Files.forIO().readFrom(in, "utf-8")).append("");
-			} catch (Exception e) {
-				m_logger.error(e.getMessage(), e);
-			} finally {
-				try {
-					if (in != null) {
-						in.close();
-					}
-				} catch (IOException e) {
-				}
+			for (String phone : phones) {
+				boolean success = sendSms(message, phone, sender);
+				result = result || success;
 			}
 		}
-		if (sb.indexOf("200") > -1) {
-			return true;
-		} else {
-			return false;
-		}
+		return result;
 	}
 
+	private boolean sendSms(AlertMessageEntity message, String phone, com.dianping.cat.home.sender.entity.Sender sender) {
+		String filterContent = message.getContent().replaceAll("(<a href.*(?=</a>)</a>)|(\n)", "");
+		String content = message.getTitle() + " " + filterContent;
+		String urlPrefix = sender.getUrl();
+		String urlPars = m_senderConfigManager.queryParString(sender);
+
+		try {
+			urlPars = urlPars.replace("${phone}", URLEncoder.encode(phone, "utf-8")).replace("${content}",
+			      URLEncoder.encode(content, "utf-8"));
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return httpGetSend(sender.getSuccessCode(), urlPrefix, urlPars);
+	}
 }

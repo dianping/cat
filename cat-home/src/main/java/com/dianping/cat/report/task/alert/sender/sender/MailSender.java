@@ -1,10 +1,5 @@
 package com.dianping.cat.report.task.alert.sender.sender;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.List;
 
@@ -13,10 +8,7 @@ import javax.mail.Authenticator;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.EmailException;
 import org.apache.commons.mail.HtmlEmail;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -24,7 +16,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
-public class MailSender implements Initializable, Sender, LogEnabled {
+public class MailSender extends AbstractSender implements Initializable {
 
 	public static final String ID = AlertChannel.MAIL.getName();
 
@@ -37,8 +29,6 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 
 	private Authenticator m_authenticator;
 
-	private Logger m_logger;
-
 	private HtmlEmail createHtmlEmail() throws EmailException {
 		HtmlEmail email = new HtmlEmail();
 
@@ -49,11 +39,6 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 		email.setFrom(m_name);
 		email.setCharset("utf-8");
 		return email;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override
@@ -70,61 +55,42 @@ public class MailSender implements Initializable, Sender, LogEnabled {
 
 	@Override
 	public boolean send(AlertMessageEntity message) {
-		boolean result = sendEmail(message);
+		com.dianping.cat.home.sender.entity.Sender sender = querySender();
+		boolean batchSend = sender.isBatchSend();
+		boolean result = false;
 
+		if (batchSend) {
+			String emails = message.getReceiverString();
+
+			result = sendEmail(message, emails, sender);
+		} else {
+			List<String> emails = message.getReceivers();
+
+			for (String email : emails) {
+				boolean success = sendEmail(message, email, sender);
+				result = result || success;
+			}
+		}
 		return result;
 	}
 
-	private boolean sendEmail(AlertMessageEntity message) {
-		String title = message.getTitle();
-		String content = message.getContent();
-		List<String> emails = message.getReceivers();
-		StringBuilder sb = new StringBuilder();
+	private boolean sendEmail(AlertMessageEntity message, String emails,
+	      com.dianping.cat.home.sender.entity.Sender sender) {
+		String title = message.getTitle().replaceAll(",", " ");
+		String content = message.getContent().replaceAll(",", " ");
+		String urlPrefix = sender.getUrl();
+		String urlPars = m_senderConfigManager.queryParString(sender);
 
-		for (String email : emails) {
-			InputStream in = null;
-			OutputStreamWriter writer = null;
-			try {
-				title = title.replaceAll(",", " ");
-				content = content.replaceAll(",", " ");
+		try {
+			urlPars = urlPars.replace("${email}", URLEncoder.encode(emails, "utf-8"))
+			      .replace("${title}", URLEncoder.encode(title, "utf-8"))
+			      .replace("${content}", URLEncoder.encode(content, "utf-8"));
 
-				String value = title + "," + content;
-				URL url = new URL("http://10.1.1.51/mail.v?type=1500&key=title,body&re=yong.you@dianping.com&to=" + email);
-				URLConnection conn = url.openConnection();
-
-				conn.setConnectTimeout(2000);
-				conn.setReadTimeout(3000);
-				conn.setDoOutput(true);
-				conn.setDoInput(true);
-				writer = new OutputStreamWriter(conn.getOutputStream());
-				String encode = "&value=" + URLEncoder.encode(value, "utf-8");
-
-				writer.write(encode);
-				writer.flush();
-
-				in = conn.getInputStream();
-				String result = Files.forIO().readFrom(in, "utf-8");
-
-				sb.append(result).append("");
-			} catch (Exception e) {
-				m_logger.error(e.getMessage(), e);
-			} finally {
-				try {
-					if (in != null) {
-						in.close();
-					}
-					if (writer != null) {
-						writer.close();
-					}
-				} catch (IOException e) {
-				}
-			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		if (sb.indexOf("200") > -1) {
-			return true;
-		} else {
-			return false;
-		}
+
+		return httpGetSend(sender.getSuccessCode(), urlPrefix, urlPars);
 	}
 
 	protected boolean sendEmailByGmail(AlertMessageEntity message) {

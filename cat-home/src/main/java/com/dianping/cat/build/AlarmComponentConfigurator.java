@@ -99,6 +99,7 @@ import com.dianping.cat.system.config.DisplayPolicyManager;
 import com.dianping.cat.system.config.ExceptionConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TransactionRuleConfigManager;
@@ -184,11 +185,12 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SpliterManager.class));
 
-		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(ServerConfigManager.class));
+		all.add(C(Sender.class, MailSender.ID, MailSender.class)
+		      .req(ServerConfigManager.class, SenderConfigManager.class));
 
-		all.add(C(Sender.class, SmsSender.ID, SmsSender.class));
+		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
 
-		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class));
+		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
 
 		all.add(C(SenderManager.class));
 

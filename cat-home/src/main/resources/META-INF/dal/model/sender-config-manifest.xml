@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="sender-config-codegen.xml" />
+  <file path="sender-config-model.xml" />
+</manifest>
+

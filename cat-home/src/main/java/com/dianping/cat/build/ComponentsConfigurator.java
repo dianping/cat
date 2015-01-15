@@ -67,6 +67,7 @@ import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
@@ -177,6 +178,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class));
 

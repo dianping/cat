@@ -174,6 +174,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TRANSACTION_RULE_UPDATE.getPath();
 		case ROUTER_CONFIG_UPDATE:
 			return JspFile.ROUTER_CONFIG_UPDATE.getPath();
+		case ALERT_SENDER_CONFIG_UPDATE:
+			return JspFile.SENDER_CONFIG_UPDATE.getPath();
 		case DISPLAY_POLICY:
 			return JspFile.DISPLAY_POLICY.getPath();
 		case THIRD_PARTY_RULE_CONFIGS:
