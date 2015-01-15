@@ -46,17 +46,17 @@
 		<th>项目</th>
 		<th>IP</th>
 		<th>方法名</th>
-		<th>Total</th>
-		<th>Failure</th>
-		<th>Failure%</th>
-		<th>Avg(ms)</th>
+		<th class="right">Total</th>
+		<th class="right">Failure</th>
+		<th class="right">Failure%</th>
+		<th class="right">Avg(ms)</th>
 	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">
 		<tr class=" right">
 			<td class="left">${item.type}</td>
-			<td>${item.domain}</td>
-			<td>${item.ip}</td>
-			<td>${item.method}</td>
+			<td class="left">${item.domain}</td>
+			<td class="left">${item.ip}</td>
+			<td class="left">${item.method}</td>
 			 <td>${item.totalCount}</td>
 		     <td>${w:format(item.failureCount,'#,###,###,###,##0')}</td>
 		     <td>${w:format(item.failurePercent,'0.0000%')}</td>
