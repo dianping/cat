@@ -50,11 +50,11 @@
 		<tr>
 			<th class="left">Type</th>
 			<th class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=name${model.customDate}">RemoteIp</a></th>
-			<th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=total${model.customDate}">Total</a></th>
-			<th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failure${model.customDate}">Failure</a></th>
-			<th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failurePercent${model.customDate}">Failure%</a></th>
-			<th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=avg${model.customDate}">Avg(ms)</a></th>
-			<th>QPS</th>
+			<th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=total${model.customDate}">Total</a></th>
+			<th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failure${model.customDate}">Failure</a></th>
+			<th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failurePercent${model.customDate}">Failure%</a></th>
+			<th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=avg${model.customDate}">Avg(ms)</a></th>
+			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.hostInfo.callProjectsInfo}" varStatus="status">
 			<tr class=" right">
@@ -78,20 +78,20 @@
 		      <tr>
 		         <th class="left">Type</th>
 		         <th class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name${model.customDate}">RemoteIp</a></th>
-		         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total${model.customDate}">Total</a></th>
-		         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">Failure</a></th>
-		         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">Failure%</a></th>
-		         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">Avg(ms)</a></th>
-		         <th>QPS</th>
+		         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total${model.customDate}">Total</a></th>
+		         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">Failure</a></th>
+		         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">Failure%</a></th>
+		         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">Avg(ms)</a></th>
+		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.hostInfo.callerProjectsInfo}">
 		         	 <th></th>
 			         <th class="left">Type</th>
 			         <th class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name${model.customDate}">RemoteIp</a></th>
-			         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total${model.customDate}">Total</a></th>
-			         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">Failure</a></th>
-			         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">Failure%</a></th>
-			         <th><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">Avg(ms)</a></th>
-			         <th>QPS</th>
+			         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total${model.customDate}">Total</a></th>
+			         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">Failure</a></th>
+			         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">Failure%</a></th>
+			         <th class="right"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">Avg(ms)</a></th>
+			         <th class="right">QPS</th>
 		         </c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.hostInfo.serviceProjectsInfo}" varStatus="status">
