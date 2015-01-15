@@ -24,7 +24,7 @@ public class SenderTest extends ComponentTestCase {
 		AlertMessageEntity entity = new AlertMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
 		      content, Arrays.asList("jialin.sun@dianping.com"));
 		AlertMessageEntity entity2 = new AlertMessageEntity("CAT", "[CAT第三方告警] [项目: ]", AlertType.ThirdParty.getName(),
-		      content, Arrays.asList("15201789489"));
+		      content, Arrays.asList("152***"));
 
 		Assert.assertEquals(true, mailSender.get(MailSender.ID).send(entity));
 		Assert.assertEquals(true, mailSender.get(WeixinSender.ID).send(entity));
