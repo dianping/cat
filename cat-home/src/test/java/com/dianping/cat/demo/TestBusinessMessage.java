@@ -80,62 +80,78 @@ public class TestBusinessMessage {
 	}
 
 	@Test
-	public void test() throws Exception {
-		while (true) {
-			for (int i = 0; i < 1000; i++) {
-				Transaction t = Cat.newTransaction("URL", "/index");
-				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
-				t.addData("channel=channel" + i % 5);
+	public void testMetric() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			Transaction t = Cat.newTransaction("URL", "/index");
+			Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
+			t.addData("channel=channel" + i % 5);
 
-				Cat.logMetricForCount("Receipt Verify Success");
-				Cat.logMetricForDuration("Receipt Verify Druation", 10);
-				Cat.logMetricForSum("sum Value", 20);
+			Cat.logMetricForCount("Receipt Verify Success");
+			Cat.logMetricForCount("Receipt Verify Success 2", 2);
+			Cat.logMetricForDuration("Receipt Verify Druation", 10);
+			Cat.logMetricForSum("sum Value", 20);
+			Cat.logMetricForSum("sum Value2", 20, 2);
 
-				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
-				tree.setDomain(Puma);
-				t.complete();
-			}
-
-			for (int i = 0; i < 900; i++) {
-				Transaction t = Cat.newTransaction("URL", "/detail");
-				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
-
-				tree.setDomain(Puma);
-				t.addData("channel=channel" + i % 5);
-				t.complete();
-			}
-
-			for (int i = 0; i < 500; i++) {
-				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
-				MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
-
-				tree.setDomain(PayOrder);
-				Cat.logMetric("order", "quantity", 1, "channel", "channel" + i % 5);
-				Cat.logMetric("payment.pending", "amount", i, "channel", "channel" + i % 5);
-				Cat.logMetric("payment.success", "amount", i, "channel", "channel" + i % 5);
-				t.addData("channel=channel" + i % 5);
-				t.complete();
-			}
-
-			for (int i = 0; i < 1000; i++) {
-				Transaction t = Cat.newTransaction("URL", "t");
-				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
-				t.complete();
-			}
-			for (int i = 0; i < 900; i++) {
-				Transaction t = Cat.newTransaction("URL", "e");
-				t.complete();
-			}
-			for (int i = 0; i < 500; i++) {
-				Transaction t = Cat.newTransaction("URL", "home");
-				Cat.logMetric("order", "quantity", 1, "channel", "channel" + i % 5);
-				Cat.logMetric("payment.pending", "amount", i, "channel", "channel" + i % 5);
-				Cat.logMetric("payment.success", "amount", i, "channel", "channel" + i % 5);
-				t.complete();
-			}
-
-			Thread.sleep(1000);
+			t.complete();
 		}
+		Thread.sleep(1000);
+	}
+
+	@Test
+	public void test() throws Exception {
+		for (int i = 0; i < 1000; i++) {
+			Transaction t = Cat.newTransaction("URL", "/index");
+			Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
+			t.addData("channel=channel" + i % 5);
+
+			Cat.logMetricForCount("Receipt Verify Success");
+			Cat.logMetricForCount("Receipt Verify Success 2", 2);
+			Cat.logMetricForDuration("Receipt Verify Druation", 10);
+			Cat.logMetricForSum("sum Value", 20);
+			Cat.logMetricForSum("sum Value2", 20, 2);
+
+			t.complete();
+		}
+
+		for (int i = 0; i < 900; i++) {
+			Transaction t = Cat.newTransaction("URL", "/detail");
+			MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
+
+			tree.setDomain(Puma);
+			t.addData("channel=channel" + i % 5);
+			t.complete();
+		}
+
+		for (int i = 0; i < 500; i++) {
+			Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
+			MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
+
+			tree.setDomain(PayOrder);
+			Cat.logMetric("order", "quantity", 1, "channel", "channel" + i % 5);
+			Cat.logMetric("payment.pending", "amount", i, "channel", "channel" + i % 5);
+			Cat.logMetric("payment.success", "amount", i, "channel", "channel" + i % 5);
+			t.addData("channel=channel" + i % 5);
+			t.complete();
+		}
+
+		for (int i = 0; i < 1000; i++) {
+			Transaction t = Cat.newTransaction("URL", "t");
+			Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
+			t.complete();
+		}
+		for (int i = 0; i < 900; i++) {
+			Transaction t = Cat.newTransaction("URL", "e");
+			t.complete();
+		}
+		for (int i = 0; i < 500; i++) {
+			Transaction t = Cat.newTransaction("URL", "home");
+			Cat.logMetric("order", "quantity", 1, "channel", "channel" + i % 5);
+			Cat.logMetric("payment.pending", "amount", i, "channel", "channel" + i % 5);
+			Cat.logMetric("payment.success", "amount", i, "channel", "channel" + i % 5);
+			t.complete();
+		}
+
+		Thread.sleep(1000);
 	}
 
 	@Test

@@ -116,6 +116,8 @@ public enum JspFile {
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
+	
+	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),
 
 	THIRD_PARTY_CONFIG_LIST("/jsp/system/thirdParty/thirdPartyConfig.jsp"),
 

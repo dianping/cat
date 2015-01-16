@@ -109,7 +109,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		info = analyzer.parseCorssTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
-		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71");
+		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71:29987");
 		Assert.assertEquals(info.getDetailType(), "PigeonService");
 		Assert.assertEquals(info.getRemoteRole(), "Pigeon.Client");
 		Assert.assertEquals(info.getApp(), "myDomain");

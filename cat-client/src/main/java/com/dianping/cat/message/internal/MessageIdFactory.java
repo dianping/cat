@@ -6,6 +6,7 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
 
@@ -14,7 +15,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 public class MessageIdFactory {
 	private volatile long m_timestamp = getTimestamp();
 
-	private volatile int m_index;
+	private volatile AtomicInteger m_index;
 
 	private String m_domain;
 
@@ -62,14 +63,13 @@ public class MessageIdFactory {
 
 	public String getNextId() {
 		long timestamp = getTimestamp();
-		int index;
 
 		if (timestamp != m_timestamp) {
-			m_index = 0;
+			m_index = new AtomicInteger(0);
 			m_timestamp = timestamp;
 		}
 
-		index = m_index++;
+		int index = m_index.getAndIncrement();
 
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
@@ -80,7 +80,7 @@ public class MessageIdFactory {
 		sb.append(timestamp);
 		sb.append('-');
 		sb.append(index);
-
+		
 		return sb.toString();
 	}
 
@@ -121,9 +121,9 @@ public class MessageIdFactory {
 			long lastTimestamp = m_byteBuffer.getLong();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
-				m_index = index + 10000;
+				m_index = new AtomicInteger(index + 10000);
 			} else {
-				m_index = 0;
+				m_index = new AtomicInteger(0);
 			}
 		}
 
@@ -131,13 +131,13 @@ public class MessageIdFactory {
 	}
 
 	protected void resetIndex() {
-		m_index = 0;
+		m_index.set(0);
 	}
 
 	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index);
+			m_byteBuffer.putInt(m_index.get());
 			m_byteBuffer.putLong(m_timestamp);
 		} catch (Exception e) {
 			// ignore it

@@ -124,8 +124,8 @@
 		<th>Minute</th>
 		<th>ActiveThread</th>
 		<th>PigeonThead</th>
-		<th>NewGcCount</th>
-		<th>OldGcCount</th>
+		<th>TotalNewGc</th>
+		<th>TotalOldGc</th>
 		<th>SystemLoad</th>
 		<th>HeapUsage</th>
 		<th>NoneHeapUsage</th>
@@ -135,15 +135,15 @@
 	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
 		<tr class="right">
 		<td class="center">${item.minute}</td>
-		<td>${item.threadCount}</td>
-		<td>${item.pigeonThreadCount}</td>
-		<td>${item.newGcCount}</td>
-		<td>${item.oldGcCount}</td>
-		<td>${w:format(item.systemLoadAverage,'0.00')}</td>
-		<td>${w:format(item.heapUsage,'0.0MB')}</td>
-		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
-		<td>${w:format(item.memoryFree,'0.0MB')}</td>
-		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
+		<td class="center">${item.threadCount}</td>
+		<td class="center">${item.pigeonThreadCount}</td>
+		<td class="center">${item.newGcCount}</td>
+		<td class="center">${item.oldGcCount}</td>
+		<td class="center">${w:format(item.systemLoadAverage,'0.00')}</td>
+		<td class="center">${w:format(item.heapUsage,'0.0MB')}</td>
+		<td class="center">${w:format(item.noneHeapUsage,'0.0MB')}</td>
+		<td class="center">${w:format(item.memoryFree,'0.0MB')}</td>
+		<td class="center"><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
 		</tr>
 	</c:forEach>
 </table>

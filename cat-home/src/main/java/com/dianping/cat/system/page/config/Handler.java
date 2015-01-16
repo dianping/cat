@@ -108,6 +108,7 @@ public class Handler implements PageHandler<Context> {
 		case DOMAIN_GROUP_CONFIG_SUBMIT:
 		case BUG_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
+		case ALERT_SENDER_CONFIG_UPDATE:
 		case THIRD_PARTY_RULE_CONFIGS:
 		case THIRD_PARTY_RULE_UPDATE:
 		case THIRD_PARTY_RULE_SUBMIT:
