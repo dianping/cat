@@ -210,7 +210,7 @@ public class Cat {
 	 *           the quantity to be accumulated
 	 */
 	public static void logMetricForSum(String name, double sum, int quantity) {
-		logMetricInternal(name, "S,C", String.format("%.2f,%s", sum, quantity));
+		logMetricInternal(name, "S,C", String.format("%s,%.2f", sum, quantity));
 	}
 
 	private static void logMetricInternal(String name, String status, String keyValuePairs) {
