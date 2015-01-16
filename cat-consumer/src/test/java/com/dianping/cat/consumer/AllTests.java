@@ -51,6 +51,8 @@ GsonTest.class,
 
 NumberFormatTest.class,
 
+MetricAnalyzerTest.class,
+
 /* transaction */
 
 TransactionAnalyzerTest.class,
@@ -99,7 +101,9 @@ DumpAnalyzerTest.class,
 
 TransactionReportTypeAggergatorTest.class,
 
-ProblemFilterTest.class, MetricAnalyzerTest.class,
+ProblemFilterTest.class,
+
+//MetricAnalyzerTest.class,
 
 ProblemReportConvertorTest.class,
 

@@ -20,7 +20,6 @@ public class TopReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeError(Error old, Error error) {
 		old.setCount(old.getCount() + error.getCount());
-		super.mergeError(old, error);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -14,23 +15,8 @@ import com.dianping.cat.report.page.AbstractReportPayload;
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
 
-	@FieldMeta("frequency")
-	private int m_frequency = 10;
-
-	@FieldMeta("refresh")
-	private boolean m_refresh = false;
-
-	@FieldMeta("fullScreen")
-	private boolean fullScreen = false;
-	
-	@FieldMeta("showPuppet")
-	private boolean m_isShowPuppet = true;
-	
-	@FieldMeta("showWorkflow")
-	private boolean m_isShowWorkflow = true;
-
-	@FieldMeta("showLazyman")
-	private boolean m_isShowLazyman = true;
+	@FieldMeta("altType")
+	private String m_altType;
 
 	@FieldMeta("group")
 	private String m_group;
@@ -46,7 +32,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
-	
+
 	@FieldMeta("ip")
 	private String m_ip;
 
@@ -67,9 +53,12 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("endTime")
 	private String m_endTime;
-	
+
 	@FieldMeta("hostname")
 	private String m_hostname;
+
+	@FieldMeta("count")
+	private int m_count;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -96,8 +85,28 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
+	public String getAltType() {
+		return m_altType;
+	}
+
+	public String[] getAltTypeArray() {
+		if (StringUtils.isEmpty(m_altType)) {
+			return null;
+		} else {
+			return m_altType.split(",");
+		}
+	}
+
 	public String getContent() {
 		return m_content;
+	}
+
+	public int getCount() {
+		if (m_count == 0) {
+			return 10;
+		} else {
+			return m_count;
+		}
 	}
 
 	public String getDomain() {
@@ -120,10 +129,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
-	public int getFrequency() {
-		return m_frequency;
-	}
-
 	public String getGroup() {
 		return m_group;
 	}
@@ -135,19 +140,18 @@ public class Payload extends AbstractReportPayload<Action> {
 			return m_hostname;
 		}
 	}
-	
+
 	public String getIp() {
 		return m_ip;
 	}
-	
+
 	public ReportPage getPage() {
 		return m_page;
 	}
-	
 
 	public Date getStartTime() {
 		if (m_startTime == null || m_startTime.length() == 0) {
-			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 2);
+			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 4);
 		} else {
 			try {
 				return m_minSdf.parse(m_startTime);
@@ -177,26 +181,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_user;
 	}
 
-	public boolean isFullScreen() {
-		return fullScreen;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public boolean isShowLazyman() {
-		return m_isShowLazyman;
-	}
-
-	public boolean isShowPuppet() {
-		return m_isShowPuppet;
-	}
-
-	public boolean isShowWorkflow() {
-		return m_isShowWorkflow;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
@@ -205,8 +189,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_alterationDate = alterationDate;
 	}
 
+	public void setAltType(String altType) {
+		m_altType = altType;
+	}
+
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	public void setDomain(String domain) {
@@ -215,14 +207,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setEndTime(String endTime) {
 		m_endTime = endTime;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
-	}
-
-	public void setFullScreen(boolean fullScreen) {
-		this.fullScreen = fullScreen;
 	}
 
 	public void setGroup(String group) {
@@ -244,22 +228,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.ALTERATION);
-	}
-
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
-	}
-
-	public void setShowLazyman(boolean isShowLazyman) {
-		m_isShowLazyman = isShowLazyman;
-	}
-
-	public void setShowPuppet(boolean isShowPuppet) {
-		m_isShowPuppet = isShowPuppet;
-	}
-
-	public void setShowWorkflow(boolean isShowWorkflow) {
-		m_isShowWorkflow = isShowWorkflow;
 	}
 
 	public void setStartTime(String startTime) {

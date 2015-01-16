@@ -69,4 +69,6 @@ public class Constants {
 
 	public static final String CACHED_REPORT = "cachedReport";
 
+	public static final String REPORT_SYSTEM = "system";
+
 }

@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>cat</artifactId>
-		<version>1.2.2</version>
+		<version>1.2.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-home</artifactId>
@@ -166,6 +166,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/system-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

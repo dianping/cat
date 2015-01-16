@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.message.Transaction;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -29,7 +30,6 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
-import com.dianping.cat.message.Transaction;
 
 public class ServerConfigManager implements Initializable, LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
@@ -297,6 +297,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		if (m_config.isLocalMode()) {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
+		m_logger.info("CAT server is running with hdfs," + isHdfsOn());
+		m_logger.info("CAT server is running with alert," + isAlertMachine());
+		m_logger.info("CAT server is running with job," + isJobMachine());
+		m_logger.info(m_config.toString());
 	}
 
 	public boolean isAlertMachine() {
@@ -324,7 +328,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean isHdfsOn() {
 		if (m_config != null) {
-			return !m_config.getStorage().isHdfsDisabled();
+			return m_config.getHdfsMachine();
 		} else {
 			return false;
 		}
@@ -370,7 +374,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isServerService(String type) {
+	public boolean isClient(String type) {
+		return CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type);
+	}
+
+	public boolean isServer(String type) {
         return CatConstants.TYPE_ESB_SERVICE.equals(type) || CatConstants.TYPE_SOA_SERVICE.equals(type);
 	}
 
@@ -400,4 +408,5 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
+
 }

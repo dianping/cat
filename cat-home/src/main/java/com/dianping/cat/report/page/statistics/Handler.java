@@ -40,6 +40,7 @@ import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -48,6 +49,7 @@ import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.report.task.jar.JarReportBuilder;
+import com.dianping.cat.report.task.system.SystemReportBuilder;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 
@@ -267,9 +269,21 @@ public class Handler implements PageHandler<Context> {
 		case JAR_REPORT:
 			buildJarInfo(model, payload);
 			break;
+		case SYSTREM_REPORT:
+			buildSystemReport(model, payload);
+			break;
 		}
 		model.setPage(ReportPage.STATISTICS);
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildSystemReport(Model model, Payload payload) {
+		Date startDate = payload.getDay();
+		Date endDate = TimeHelper.addDays(startDate, 1);
+		SystemReport systemReport = m_reportService.querySystemReport(Constants.CAT, startDate, endDate);
+
+		model.setSystemReport(systemReport);
+		model.setKeys(SystemReportBuilder.KEYS);
 	}
 
 	private boolean isBug(String domain, String exception) {

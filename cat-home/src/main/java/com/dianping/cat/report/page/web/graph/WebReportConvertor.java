@@ -165,6 +165,9 @@ public class WebReportConvertor extends BaseVisitor {
 	@Override
 	public void visitMetricReport(MetricReport metricReport) {
 		m_report = new MetricReport(metricReport.getProduct());
+
+		m_report.setStartTime(metricReport.getStartTime());
+		m_report.setEndTime(metricReport.getEndTime());
 		super.visitMetricReport(metricReport);
 	}
 

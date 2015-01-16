@@ -11,30 +11,24 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
-import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ProjectService m_projectService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -45,19 +39,17 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProductLineConfigManager m_productLineManager;
 
-	public List<Project> buildProjects() {
-		List<Project> projects = new ArrayList<Project>();
-		Map<String, Project> map = new HashMap<String, Project>();
+	public List<String> buildProductlines() {
+		List<String> productlines = new ArrayList<String>();
 
-		try {
-			projects = m_projectService.findAll();
-		} catch (DalException e) {
-			Cat.logError(e);
+		Set<String> keys = m_productLineManager.querySystemProductLines().keySet();
+		String prefix = ProductLineConfig.SYSTEM.getPrefix().get(0);
+		int index = prefix.length();
+
+		for (String productline : keys) {
+			productlines.add(productline.substring(index, productline.length()));
 		}
-		for (Project p : projects) {
-			map.put(p.getCmdbDomain(), p);
-		}
-		return new ArrayList<Project>(map.values());
+		return productlines;
 	}
 
 	@Override
@@ -108,7 +100,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setProjects(buildProjects());
+		model.setProductLines(buildProductlines());
 		model.setPage(ReportPage.SYSTEM);
 		m_normalizePayload.normalize(model, payload);
 	}

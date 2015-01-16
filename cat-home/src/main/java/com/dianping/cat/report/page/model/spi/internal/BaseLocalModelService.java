@@ -24,7 +24,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	private RealtimeConsumer m_consumer;
 	
 	@Inject
-	private ServerConfigManager m_manager;
+	protected ServerConfigManager m_manager;
 
 	private String m_defaultDomain = Constants.CAT;
 

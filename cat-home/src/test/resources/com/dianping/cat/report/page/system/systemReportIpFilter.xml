@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<metric-report product="system-Cat">
+<metric-report product="system-Cat" startTime="2014-06-08 18:00:00" endTime="2014-06-08 18:59:59">
    <metric-item id="cpu_10.254.251.60" type="T">
       <segment id="0" count="12" sum="0.97" avg="0.08"/>
       <segment id="1" count="12" sum="0.85" avg="0.07"/>

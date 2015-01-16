@@ -6,12 +6,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -45,29 +43,32 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Map<String, String> m_domainToProductLines = new HashMap<String, String>();
+	private Map<String, String> m_metricProductLines = new HashMap<String, String>();
 
 	public static final String CONFIG_NAME = "productLineConfig";
 
 	private String buildDomainInfo(ProductLineConfig productLineConfig, ProductLine productline, String[] domainIds) {
-		Set<String> domains = new HashSet<String>();
+		Map<String, String> domains = new HashMap<String, String>();
 		String id = productline.getId();
 		String duplicateDomains = "";
 
-		if (ProductLineConfig.METRIC_PRODUCTLINE.equals(productLineConfig)
-		      || ProductLineConfig.APPLICATION_PRODUCTLINE.equals(productLineConfig)) {
+		if (productLineConfig.needCheckDuplicate()) {
 			for (ProductLineConfig config : ProductLineConfig.values()) {
-				for (ProductLine product : config.getCompany().getProductLines().values()) {
-					if (!product.getId().equals(id)) {
-						for (Domain domain : product.getDomains().values()) {
-							domains.add(domain.getId());
+				if (config.needCheckDuplicate()) {
+					for (ProductLine product : config.getCompany().getProductLines().values()) {
+						String productId = product.getId();
+
+						if (productId != null && !productId.equals(id)) {
+							for (Domain domain : product.getDomains().values()) {
+								domains.put(domain.getId(), productId);
+							}
 						}
 					}
 				}
 			}
 			for (String domain : domainIds) {
-				if (domains.contains(domain)) {
-					duplicateDomains += domain + ", ";
+				if (domains.containsKey(domain)) {
+					duplicateDomains += domain + "[" + domains.get(domain) + "], ";
 				} else {
 					productline.addDomain(new Domain(domain));
 				}
@@ -80,11 +81,13 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return duplicateDomains;
 	}
 
-	private Map<String, String> buildDomainToProductLines() {
+	private Map<String, String> buildMetricProductLines() {
 		Map<String, String> domainToProductLines = new HashMap<String, String>();
 
-		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
-			domainToProductLines.putAll(productLineConfig.getDomainToProductLines());
+		for (ProductLine product : ProductLineConfig.METRIC.getCompany().getProductLines().values()) {
+			for (Domain domain : product.getDomains().values()) {
+				domainToProductLines.put(domain.getId(), product.getId());
+			}
 		}
 		return domainToProductLines;
 	}
@@ -120,7 +123,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		for (ProductLineConfig productLine : ProductLineConfig.values()) {
 			initializeConfig(productLine);
 		}
-		m_domainToProductLines = buildDomainToProductLines();
+		m_metricProductLines = buildMetricProductLines();
 	}
 
 	private void initializeConfig(ProductLineConfig productLine) {
@@ -208,11 +211,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, ProductLine> queryDatabaseProductLines() {
-		return queryProductLines(ProductLineConfig.DATABASE_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.DATABASE);
 	}
 
 	public Map<String, ProductLine> queryApplicationProductLines() {
-		return queryProductLines(ProductLineConfig.APPLICATION_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.APPLICATION);
 	}
 
 	public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
@@ -228,15 +231,15 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Map<String, ProductLine> queryMetricProductLines() {
-		return queryProductLines(ProductLineConfig.METRIC_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.METRIC);
 	}
 
 	public Map<String, ProductLine> queryNetworkProductLines() {
-		return queryProductLines(ProductLineConfig.NETWORK_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.NETWORK);
 	}
 
 	public String queryProductLineByDomain(String domain) {
-		String productLine = m_domainToProductLines.get(domain);
+		String productLine = m_metricProductLines.get(domain);
 
 		return productLine;
 	}
@@ -262,18 +265,18 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	private ProductLineConfig queryProductLineConfig(String line, String domain) {
-		if (ProductLineConfig.USER_PRODUCTLINE.isTypeOf(domain)) {
-			return ProductLineConfig.USER_PRODUCTLINE;
-		} else if (ProductLineConfig.NETWORK_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.NETWORK_PRODUCTLINE;
-		} else if (ProductLineConfig.SYSTEM_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.SYSTEM_PRODUCTLINE;
-		} else if (ProductLineConfig.DATABASE_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.DATABASE_PRODUCTLINE;
-		} else if (ProductLineConfig.CDN_PRODUCTLINE.isTypeOf(line)) {
-			return ProductLineConfig.CDN_PRODUCTLINE;
+		if (ProductLineConfig.USER.isTypeOf(domain)) {
+			return ProductLineConfig.USER;
+		} else if (ProductLineConfig.NETWORK.isTypeOf(line)) {
+			return ProductLineConfig.NETWORK;
+		} else if (ProductLineConfig.SYSTEM.isTypeOf(line)) {
+			return ProductLineConfig.SYSTEM;
+		} else if (ProductLineConfig.DATABASE.isTypeOf(line)) {
+			return ProductLineConfig.DATABASE;
+		} else if (ProductLineConfig.CDN.isTypeOf(line)) {
+			return ProductLineConfig.CDN;
 		} else {
-			return ProductLineConfig.METRIC_PRODUCTLINE;
+			return ProductLineConfig.METRIC;
 		}
 	}
 
@@ -290,11 +293,11 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 	}
 
 	public String querySystemProductLine(String domain) {
-		return ProductLineConfig.SYSTEM_PRODUCTLINE.getPrefix().get(0) + domain;
+		return ProductLineConfig.SYSTEM.getPrefix().get(0) + domain;
 	}
 
 	public Map<String, ProductLine> querySystemProductLines() {
-		return queryProductLines(ProductLineConfig.SYSTEM_PRODUCTLINE);
+		return queryProductLines(ProductLineConfig.SYSTEM);
 	}
 
 	public Map<String, List<ProductLine>> queryTypeProductLines() {
@@ -339,13 +342,15 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 					productLineConfig.setCompany(company);
 					productLineConfig.setModifyTime(modifyTime);
+
+					m_metricProductLines = buildMetricProductLines();
 					m_logger.info("product line [" + productLineConfig.getTitle() + "] config refresh done!");
 				}
 			}
 		}
 	}
 
-	public <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
+	private <K, V> Map<K, V> sortMap(Map<K, V> map, Comparator<Entry<K, V>> compator) {
 		Map<K, V> result = new LinkedHashMap<K, V>();
 		List<Entry<K, V>> entries = new ArrayList<Entry<K, V>>(map.entrySet());
 		Collections.sort(entries, compator);
@@ -376,7 +381,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 				config.setName(productLineConfig.getConfigName());
 				config.setContent(productLineConfig.getCompany().toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-				m_domainToProductLines = buildDomainToProductLines();
+				m_metricProductLines = buildMetricProductLines();
 				return true;
 			} catch (Exception e) {
 				Cat.logError(e);

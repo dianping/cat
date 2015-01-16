@@ -886,6 +886,37 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.ReportService</role>
+			<role-hint>system</role-hint>
+			<implementation>com.dianping.cat.report.service.impl.SystemReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.ReportService</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.report.service.impl.TopReportService</implementation>
 			<requirements>
@@ -1298,6 +1329,22 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role-hint>system</role-hint>
+			<implementation>com.dianping.cat.report.task.system.SystemReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2117,6 +2164,31 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>cross</role-hint>
+					<field-name>m_crossReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>matrix</role-hint>
+					<field-name>m_matrixReportBuilder</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4520,9 +4592,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.system.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>

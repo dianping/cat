@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Configuration for development environment-->
-<config local-mode="true" job-machine="false" alert-machine="false">
+<config local-mode="true" hdfs-machine="false" job-machine="false" alert-machine="false">
 	<consumer>
 		<long-config default-url-threshold="1000" default-sql-threshold="100">
 			<domain name="Cat" url-threshold="500" sql-threshold="40"/>

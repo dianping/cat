@@ -39,6 +39,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.ALERT_SUMMARY.getPath();
 		case JAR_REPORT:
 			return JspFile.JAR_REPORT.getPath();
+		case SYSTREM_REPORT:
+			return JspFile.SYSTEM_REPORT.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

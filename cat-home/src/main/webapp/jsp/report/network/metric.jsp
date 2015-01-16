@@ -157,8 +157,11 @@
 			</c:forEach>
 		});
 	</script>
-	<style type="text/css">
-	.input-group .form-control {
-		position: static;
-	}
-	</style>
+<style type="text/css">
+.input-group .form-control {
+	position: static;
+}
+.input-icon>.ace-icon {
+	z-index: 0;
+}
+</style>

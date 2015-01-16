@@ -12,42 +12,43 @@ public class CdnReportConvertor extends BaseVisitor {
 
 	private MetricReport m_report;
 
-	private String m_cdn; 
- 
-	private String m_province; 
- 
-	private String m_city; 
-	
+	private String m_cdn;
+
+	private String m_province;
+
+	private String m_city;
+
 	private static final String ALL = "ALL";
-	
+
 	public CdnReportConvertor(IpService ipService) {
 		m_ipService = ipService;
 	}
 
 	private String filterAndConvert(String cdn, String sip) {
-		if (m_cdn.equals(ALL)) {
-			return cdn;
-		} else if (!m_cdn.equals(cdn)) {
-			return null;
-		}
+		boolean isAllCdn = m_cdn.equals(ALL);
 
-		IpInfo ipInfo = m_ipService.findIpInfoByString(sip);
-		String province = ipInfo.getProvince();
-		String city = ipInfo.getCity();
+		if (isAllCdn || m_cdn.equals(cdn)) {
+			IpInfo ipInfo = m_ipService.findIpInfoByString(sip);
+			String province = ipInfo.getProvince();
+			String city = ipInfo.getCity();
 
-		if (m_province.equals(ALL)) {
-			return province;
-		} else if (!m_province.equals(province)) {
-			return null;
+			if (m_province.equals(ALL)) {
+				if (isAllCdn) {
+					return cdn;
+				} else {
+					return province;
+				}
+			} else if (m_province.equals(province)) {
+				if (m_city.equals(ALL) || m_city.equals(city)) {
+					if (isAllCdn) {
+						return cdn;
+					} else {
+						return city;
+					}
+				}
+			}
 		}
-		
-		if (m_city.equals(ALL)) {
-			return city;
-		} else if (!m_city.equals(city)) {
-			return null;
-		}
-
-		return sip;
+		return null;
 	}
 
 	public MetricReport getReport() {
@@ -91,7 +92,7 @@ public class CdnReportConvertor extends BaseVisitor {
 			String id = metricItem.getId();
 			String[] temp = id.split(":");
 			String cdn = temp[2];
-			String sip = temp[3];
+			String sip = temp[3].trim();
 			String key = filterAndConvert(cdn, sip);
 
 			if (key != null) {

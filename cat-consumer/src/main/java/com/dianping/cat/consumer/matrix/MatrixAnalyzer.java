@@ -109,7 +109,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		String type = t.getType();
 		Ratio ratio = null;
 
-        if (CatConstants.TYPE_ESB_CALL.equals(type) ||  CatConstants.TYPE_SOA_CALL.equals(type)) {
+		if (m_serverConfigManager.isClient(type)) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
 			ratio = ratios.get("SQL");

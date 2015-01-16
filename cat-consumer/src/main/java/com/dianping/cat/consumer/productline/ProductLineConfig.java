@@ -1,31 +1,28 @@
 package com.dianping.cat.consumer.productline;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.Company;
-import com.dianping.cat.consumer.company.model.entity.Domain;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 
 public enum ProductLineConfig {
-	METRIC_PRODUCTLINE("metricProductLine", "业务监控", ""),
 
-	USER_PRODUCTLINE("userProductline", "外部监控", Constants.BROKER_SERVICE),
+	METRIC("metricProductLine", "业务监控", ""),
 
-	APPLICATION_PRODUCTLINE("applicationProductLine", "应用监控", ""),
+	USER("userProductLine", "外部监控", Constants.BROKER_SERVICE),
 
-	NETWORK_PRODUCTLINE("networkProductLine", "网络监控", "switch-|f5-"),
+	APPLICATION("applicationProductLine", "应用监控", ""),
 
-	SYSTEM_PRODUCTLINE("systemProductLine", "系统监控", "system-"),
+	NETWORK("networkProductLine", "网络监控", "switch-|f5-"),
 
-	DATABASE_PRODUCTLINE("databaseProductline", "数据库监控", "db-"),
+	SYSTEM("systemProductLine", "系统监控", "system-"),
 
-	CDN_PRODUCTLINE("cdnProductLine", "CDN监控", "cdn");
+	DATABASE("databaseProductline", "数据库监控", "db-"),
+
+	CDN("cdnProductLine", "CDN监控", "cdn");
 
 	private String m_configName;
 
@@ -60,17 +57,6 @@ public enum ProductLineConfig {
 		synchronized (this) {
 			return m_company;
 		}
-	}
-
-	public Map<String, String> getDomainToProductLines() {
-		Map<String, String> domainToProductLines = new HashMap<String, String>();
-
-		for (ProductLine product : getCompany().getProductLines().values()) {
-			for (Domain domain : product.getDomains().values()) {
-				domainToProductLines.put(domain.getId(), product.getId());
-			}
-		}
-		return domainToProductLines;
 	}
 
 	public int getConfigId() {
@@ -112,6 +98,10 @@ public enum ProductLineConfig {
 		return false;
 	}
 
+	public boolean needCheckDuplicate() {
+		return ProductLineConfig.METRIC.equals(this) || ProductLineConfig.APPLICATION.equals(this);
+	}
+
 	public void setCompany(Company company) {
 		m_company = company;
 	}
@@ -123,4 +113,5 @@ public enum ProductLineConfig {
 	public void setModifyTime(long modifyTime) {
 		m_modifyTime = modifyTime;
 	}
+
 }

@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -32,10 +34,9 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 		try {
 			File reportDir = new File(m_reportBaseDir);
 			final List<String> toRemovePaths = new ArrayList<String>();
-			Date date = new Date();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-			final String today = sdf.format(date);
-			final String week = sdf.format(new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000L));
+			final Set<String> validPaths = queryValidPath(7);
+			
+			System.err.println(validPaths);
 
 			Scanners.forDir().scan(reportDir, new FileMatcher() {
 				@Override
@@ -48,11 +49,12 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 				}
 
 				private boolean shouldDeleteReport(String path) {
-					if (path.indexOf(today) > -1 || path.indexOf(week) > -1) {
-						return false;
-					} else {
-						return true;
+					for (String str : validPaths) {
+						if (path.contains(str)) {
+							return false;
+						}
 					}
+					return true;
 				}
 			});
 			for (String path : toRemovePaths) {
@@ -107,6 +109,19 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 	@Override
 	public void initialize() throws InitializationException {
 		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("report");
+	}
+
+	private Set<String> queryValidPath(int day) {
+		Set<String> strs = new HashSet<String>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (int i = 0; i < day; i++) {
+			Date date = new Date(currentTimeMillis - i * 24 * 60 * 60 * 1000L);
+
+			strs.add(sdf.format(date));
+		}
+		return strs;
 	}
 
 	private void removeEmptyDir(File baseFile) {

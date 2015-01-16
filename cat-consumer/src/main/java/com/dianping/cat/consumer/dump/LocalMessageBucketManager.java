@@ -558,12 +558,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			while (active) {
 				try {
-					long current = System.currentTimeMillis() / 1000 / 60;
-					int min = (int) (current % (60));
+					if (m_configManager.isHdfsOn()) {
+						long current = System.currentTimeMillis() / 1000 / 60;
+						int min = (int) (current % (60));
 
-					// make system 0-10 min is not busy
-					if (min > 10) {
-						moveOldMessages();
+						// make system 0-10 min is not busy
+						if (min > 10) {
+							moveOldMessages();
+						}
+					}else{
+						// TODO delete file from local disk
 					}
 				} catch (Throwable e) {
 					m_logger.error(e.getMessage(), e);

@@ -44,6 +44,7 @@ public enum RuleType {
 			sb.append("[下降比:").append(convertPercentsToString(buildDescPers(values, baselines))).append("]");
 			sb.append("[下降百分比阈值: " + m_df.format(ruleValue) + "% ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[下降比为实际值与基线值相比下降的百分比]");
 
 			return sb.toString();
 		}
@@ -91,6 +92,7 @@ public enum RuleType {
 			sb.append("[下降值:").append(convertDoublesToString(buildDescVals(values, baselines))).append("]");
 			sb.append("[下降阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[下降值为实际值与基线值相比下降的值]");
 
 			return sb.toString();
 		}
@@ -137,6 +139,7 @@ public enum RuleType {
 			sb.append("[上升比:").append(convertPercentsToString(buildAscPers(values, baselines))).append("]");
 			sb.append("[上升百分比阈值: " + m_df.format(ruleValue) + "% ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[上升比为实际值与基线值相比上升的百分比]");
 
 			return sb.toString();
 		}
@@ -183,6 +186,7 @@ public enum RuleType {
 			sb.append("[上升值:").append(convertDoublesToString(buildAscVals(values, baselines))).append("]");
 			sb.append("[上升阈值: " + convertDoubleToString(ruleValue) + " ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[上升值为实际值与基线值相比上升的值]");
 
 			return sb.toString();
 		}
@@ -295,6 +299,7 @@ public enum RuleType {
 			sb.append("[波动上升百分比:").append(convertPercentsToString(buildFlucAscPers(values))).append("] ");
 			sb.append("[波动上升百分比阈值: " + m_df.format(ruleValue) + "% ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[波动上升百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值上升的百分比]");
 
 			return sb.toString();
 		}
@@ -347,6 +352,7 @@ public enum RuleType {
 			sb.append("[波动下降百分比:").append(convertPercentsToString(buildFlucDescPers(values))).append("] ");
 			sb.append("[波动下降百分比阈值: " + m_df.format(ruleValue) + "% ]");
 			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[波动下降百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值下降的百分比]");
 
 			return sb.toString();
 		}
