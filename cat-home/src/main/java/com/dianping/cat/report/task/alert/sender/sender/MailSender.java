@@ -56,6 +56,6 @@ public class MailSender extends AbstractSender {
 			Cat.logError(e);
 		}
 
-		return httpGetSend(sender.getSuccessCode(), urlPrefix, urlPars);
+		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 	}
 }
