@@ -3,19 +3,13 @@ package com.dianping.cat.report.task.alert.sender.sender;
 import java.net.URLEncoder;
 import java.util.List;
 
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.report.task.alert.sender.AlertChannel;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 
 public class MailSender extends AbstractSender {
 
 	public static final String ID = AlertChannel.MAIL.getName();
-
-	@Inject
-	private ServerConfigManager m_manager;
 
 	@Override
 	public String getId() {

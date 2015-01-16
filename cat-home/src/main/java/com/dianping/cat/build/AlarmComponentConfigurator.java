@@ -185,8 +185,7 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SpliterManager.class));
 
-		all.add(C(Sender.class, MailSender.ID, MailSender.class)
-		      .req(ServerConfigManager.class, SenderConfigManager.class));
+		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
 
 		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
 

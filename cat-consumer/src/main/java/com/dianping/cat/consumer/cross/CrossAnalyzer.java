@@ -84,7 +84,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
-
+		
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
@@ -94,6 +94,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				}
 				if (type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
+				}
+				if (type.equals("PigeonCall.port") || type.equals("Call.port")) {
+					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
@@ -115,7 +118,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		CrossInfo info = new CrossInfo();
 		info.setLocalAddress(remoteAddress);
-		info.setRemoteAddress(localIp + ":Caller");
+
+		String clientPort = crossInfo.getClientPort();
+		if (clientPort == null) {
+			info.setRemoteAddress(localIp + ":Caller");
+		} else {
+			info.setRemoteAddress(localIp + ":" + clientPort + ":Caller");
+		}
 		info.setRemoteRole("Pigeon.Caller");
 		info.setDetailType("PigeonCall");
 		info.setApp(client);
@@ -254,6 +263,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		private String m_app = "";
 
+		private String m_clientPort;
+
 		public String getDetailType() {
 			return m_detailType;
 		}
@@ -293,5 +304,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		public void setApp(String app) {
 			m_app = app;
 		}
+
+		public String getClientPort() {
+			return m_clientPort;
+		}
+
+		public void setClientPort(String clientPort) {
+			m_clientPort = clientPort;
+		}
 	}
+
 }
