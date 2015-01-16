@@ -51,12 +51,12 @@ public class MailSender extends AbstractSender {
 			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
 			      .replace("${title}", URLEncoder.encode(title, "utf-8"))
 			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
-	      		.replace("${time}", URLEncoder.encode(time, "utf-8"));
+			      .replace("${time}", URLEncoder.encode(time, "utf-8"));
 
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		return httpGetSend(sender.getSuccessCode(), urlPrefix, urlPars);
+		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 	}
 }
