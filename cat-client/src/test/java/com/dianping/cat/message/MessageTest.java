@@ -67,16 +67,20 @@ public class MessageTest extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-
-		ClientConfigManager configManager = lookup(ClientConfigManager.class);
-		configManager.initialize(getConfigurationFile());
-
-		m_queue.clear();
+		
 		defineComponent(TransportManager.class, null, MockTransportManager.class);
 
 		MockTransportManager transportManager = (MockTransportManager) lookup(TransportManager.class);
 		transportManager.setQueue(m_queue);
 
+		File configurationFile = getConfigurationFile();
+		Cat.initialize(configurationFile);
+
+		ClientConfigManager configManager = lookup(ClientConfigManager.class);
+		configManager.initialize(configurationFile);
+
+		m_queue.clear();
+		
 		Reflects.forMethod().invokeDeclaredMethod(Cat.getInstance(), "setContainer", PlexusContainer.class, getContainer());
 	}
 
