@@ -153,7 +153,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			globalConfig.accept(new ClientConfigMerger(clientConfig));
 		}
 
-		System.out.println(clientConfig);
 		if (clientConfig != null) {
 			clientConfig.accept(new ClientConfigValidator());
 		}
