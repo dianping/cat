@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -109,6 +111,79 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	private void deleteFile(String path) {
+		File file = new File(m_baseDir, path);
+		File parent = file.getParentFile();
+
+		file.delete();
+		parent.delete(); // delete it if empty
+		parent.getParentFile().delete(); // delete it if empty
+	}
+
+	private void deleteOldMessages() {
+		final List<String> paths = new ArrayList<String>();
+		final Set<String> validPaths = queryValidPath(30);
+
+		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (path.indexOf(".idx") == -1 && shouldDelete(path)) {
+						paths.add(path);
+					}
+				}
+				return Direction.DOWN;
+			}
+
+			private boolean shouldDelete(String path) {
+				for (String str : validPaths) {
+					if (path.contains(str)) {
+						return false;
+					}
+				}
+				return true;
+			}
+		});
+
+		if (paths.size() > 0) {
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			Transaction t = Cat.newTransaction("System", "Delete" + "-" + ip);
+
+			t.setStatus(Message.SUCCESS);
+
+			for (String path : paths) {
+				File file = new File(m_baseDir, path);
+				String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
+				LocalMessageBucket bucket = m_buckets.get(path);
+
+				if (bucket != null) {
+					try {
+						bucket.close();
+						Cat.getProducer().logEvent("Upload", "Outbox.Normal", Message.SUCCESS, loginfo);
+					} catch (Exception e) {
+						t.setStatus(e);
+						Cat.logError(e);
+						m_logger.error(e.getMessage(), e);
+					} finally {
+						m_buckets.remove(path);
+						release(bucket);
+					}
+				}
+				try {
+					deleteFile(path);
+					deleteFile(path + ".idx");
+
+					Cat.getProducer().logEvent("Upload", "Outbox.Abnormal", Message.SUCCESS, loginfo);
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
+					m_logger.error(e.getMessage(), e);
+				}
+			}
+			t.complete();
 		}
 	}
 
@@ -318,6 +393,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
+	private Set<String> queryValidPath(int day) {
+		Set<String> strs = new HashSet<String>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (int i = 0; i < day; i++) {
+			Date date = new Date(currentTimeMillis - i * 24 * 60 * 60 * 1000L);
+
+			strs.add(sdf.format(date));
+		}
+		return strs;
+	}
+
 	public void setBaseDir(File baseDir) {
 		m_baseDir = baseDir;
 	}
@@ -518,34 +606,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class MessageItem {
-		private MessageTree m_tree;
-
-		private MessageId m_messageId;
-
-		public MessageItem(MessageTree tree, MessageId messageId) {
-			m_tree = tree;
-			m_messageId = messageId;
-		}
-
-		public MessageId getMessageId() {
-			return m_messageId;
-		}
-
-		public MessageTree getTree() {
-			return m_tree;
-		}
-
-		public void setMessageId(MessageId messageId) {
-			m_messageId = messageId;
-		}
-
-		public void setTree(MessageTree tree) {
-			m_tree = tree;
-		}
-
-	}
-
 	class OldMessageMover implements Task {
 		@Override
 		public String getName() {
@@ -566,8 +626,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						if (min > 10) {
 							moveOldMessages();
 						}
-					}else{
-						// TODO delete file from local disk
+					} else {
+						deleteOldMessages();
 					}
 				} catch (Throwable e) {
 					m_logger.error(e.getMessage(), e);
