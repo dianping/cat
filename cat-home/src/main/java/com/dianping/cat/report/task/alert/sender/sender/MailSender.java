@@ -48,8 +48,7 @@ public class MailSender extends AbstractSender {
 		String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 
 		try {
-			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
-			      .replace("${title}", URLEncoder.encode(title, "utf-8"))
+			urlPars = urlPars.replace("${receiver}", receiver).replace("${title}", URLEncoder.encode(title, "utf-8"))
 			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
 			      .replace("${time}", URLEncoder.encode(time, "utf-8"));
 
