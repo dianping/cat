@@ -99,7 +99,7 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		m_codec = lookup(MessageCodec.class, PlainTextMessageCodec.ID);
 
 		m_manager = (LocalMessageBucketManager) lookup(MessageBucketManager.class, LocalMessageBucketManager.ID);
-		m_manager.setLocalIp(m_ip);
+		//m_manager.setLocalIp(m_ip);
 
 		clear("source", m_ip);
 		

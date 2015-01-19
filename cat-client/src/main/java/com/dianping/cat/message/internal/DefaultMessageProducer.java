@@ -36,6 +36,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public void logError(String message, Throwable cause) {
+		cause.printStackTrace();
 		if (Cat.getManager().isCatEnabled()) {
 			if (shouldLog(cause)) {
 				StringWriter writer = new StringWriter(2048);

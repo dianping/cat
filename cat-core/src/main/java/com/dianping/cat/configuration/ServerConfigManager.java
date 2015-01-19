@@ -398,4 +398,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 
+	public int getLogViewMaxStroageTime() {
+		return 30;
+	}
+
 }
