@@ -126,7 +126,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
 		case EXCEPTION_EXCLUDE_DELETE:
 			return JspFile.EXCEPTION.getPath();
-		case EXCEPTION_EXCLUDE_UPDATE:
 		case EXCEPTION_EXCLUDE_ADD:
 			return JspFile.EXCEPTION_EXCLUDE_CONFIG.getPath();
 			// Bug

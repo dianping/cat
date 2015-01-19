@@ -7,11 +7,11 @@ import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class TopExceptionExclude extends BaseVisitor {
 
-	private ExceptionConfigManager m_configManager;
+	private ExceptionRuleConfigManager m_configManager;
 
 	private String m_domain;
 
@@ -19,7 +19,7 @@ public class TopExceptionExclude extends BaseVisitor {
 
 	private List<String> m_exceptions = new ArrayList<String>();
 
-	public TopExceptionExclude(ExceptionConfigManager configManager) {
+	public TopExceptionExclude(ExceptionRuleConfigManager configManager) {
 		m_configManager = configManager;
 	}
 
@@ -33,7 +33,7 @@ public class TopExceptionExclude extends BaseVisitor {
 	@Override
 	public void visitError(Error error) {
 		String exception = error.getId();
-		boolean isExcluded = m_configManager.isExcludedException(m_domain, exception);
+		boolean isExcluded = m_configManager.isExcluded(m_domain, exception);
 
 		if (isExcluded) {
 			m_segment.setError(m_segment.getError() - error.getCount());

@@ -111,8 +111,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
 
-	EXCEPTION_EXCLUDE_UPDATE("exceptionExcludeUpdate"),
-
 	EXCEPTION_EXCLUDE_ADD("exceptionExcludeAdd"),
 
 	EXCEPTION_EXCLUDE_UPDATE_SUBMIT("exceptionExcludeUpdateSubmit"),

@@ -21,7 +21,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class ExternalInfoBuilder {
 
@@ -35,7 +35,7 @@ public class ExternalInfoBuilder {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private ExceptionConfigManager m_configManager;
+	private ExceptionRuleConfigManager m_configManager;
 
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="exception-rule-config-codegen.xml" />
+  <file path="exception-rule-config-model.xml" />
+</manifest>
+
