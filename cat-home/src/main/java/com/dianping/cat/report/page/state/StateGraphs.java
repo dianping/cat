@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
+import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -67,7 +68,7 @@ public class StateGraphs {
 		for (int i = 0; i < size; i++) {
 			result[i] = 0.0;
 		}
-		StateShow show = new StateShow(ip, m_configManager);
+		StateDisplay show = new StateDisplay(ip, m_configManager);
 		show.visitStateReport(report);
 		Map<Long, Detail> datas = null;
 		String domain = "";
@@ -142,42 +143,49 @@ public class StateGraphs {
 
 		for (StateReport report : reports) {
 			Date startTime = report.getStartTime();
-			StateShow show = new StateShow(ip, m_configManager);
+			StateDisplay show = new StateDisplay(ip, m_configManager);
 
 			show.visitStateReport(report);
 			int i = (int) ((startTime.getTime() - start) / TimeHelper.ONE_HOUR);
+			Machine machine = show.getTotal();
 
-			if (key.equalsIgnoreCase("total")) {
-				result[i] = show.getTotal().getTotal();
-			} else if (key.equalsIgnoreCase("totalLoss")) {
-				result[i] = show.getTotal().getTotalLoss();
-			} else if (key.equalsIgnoreCase("avgTps")) {
-				result[i] = show.getTotal().getAvgTps();
-			} else if (key.equalsIgnoreCase("maxTps")) {
-				result[i] = show.getTotal().getMaxTps();
-			} else if (key.equalsIgnoreCase("dump")) {
-				result[i] = show.getTotal().getDump();
-			} else if (key.equalsIgnoreCase("dumpLoss")) {
-				result[i] = show.getTotal().getDumpLoss();
-			} else if (key.equalsIgnoreCase("pigeonTimeError")) {
-				result[i] = show.getTotal().getPigeonTimeError();
-			} else if (key.equalsIgnoreCase("networkTimeError")) {
-				result[i] = show.getTotal().getNetworkTimeError();
-			} else if (key.equalsIgnoreCase("blockTotal")) {
-				result[i] = show.getTotal().getBlockTotal();
-			} else if (key.equalsIgnoreCase("blockLoss")) {
-				result[i] = show.getTotal().getBlockLoss();
-			} else if (key.equalsIgnoreCase("blockTime")) {
-				result[i] = show.getTotal().getBlockTime() * 1.0 / 60 / 1000;
-			} else if (key.equalsIgnoreCase("size")) {
-				result[i] = show.getTotal().getSize() / 1024 / 1024;
-			} else if (key.equalsIgnoreCase("delayAvg")) {
-				if (show.getTotal().getDelayCount() > 0) {
-					result[i] = show.getTotal().getDelaySum() / show.getTotal().getDelayCount();
-				}
-			}
+			result[i] = queryValue(key, machine);
 		}
 		return result;
+	}
+
+	private double queryValue(String key, Machine machine) {
+		double value = 0;
+		if (key.equalsIgnoreCase("total")) {
+			value = machine.getTotal();
+		} else if (key.equalsIgnoreCase("totalLoss")) {
+			value = machine.getTotalLoss();
+		} else if (key.equalsIgnoreCase("avgTps")) {
+			value = machine.getAvgTps();
+		} else if (key.equalsIgnoreCase("maxTps")) {
+			value = machine.getMaxTps();
+		} else if (key.equalsIgnoreCase("dump")) {
+			value = machine.getDump();
+		} else if (key.equalsIgnoreCase("dumpLoss")) {
+			value = machine.getDumpLoss();
+		} else if (key.equalsIgnoreCase("pigeonTimeError")) {
+			value = machine.getPigeonTimeError();
+		} else if (key.equalsIgnoreCase("networkTimeError")) {
+			value = machine.getNetworkTimeError();
+		} else if (key.equalsIgnoreCase("blockTotal")) {
+			value = machine.getBlockTotal();
+		} else if (key.equalsIgnoreCase("blockLoss")) {
+			value = machine.getBlockLoss();
+		} else if (key.equalsIgnoreCase("blockTime")) {
+			value = machine.getBlockTime() * 1.0 / 60 / 1000;
+		} else if (key.equalsIgnoreCase("size")) {
+			value = machine.getSize() / 1024 / 1024;
+		} else if (key.equalsIgnoreCase("delayAvg")) {
+			if (machine.getDelayCount() > 0) {
+				value = machine.getDelaySum() / machine.getDelayCount();
+			}
+		}
+		return value;
 	}
 
 	private LineChart getHourlyGraph(StateReport report, String domain, Date start, Date end, String key, String ip) {
@@ -191,4 +199,5 @@ public class StateGraphs {
 	private StateReport getHourlyReport(long date, String domain, String ip) {
 		return m_reportService.queryStateReport(domain, new Date(date), new Date(date + TimeHelper.ONE_HOUR));
 	}
+
 }

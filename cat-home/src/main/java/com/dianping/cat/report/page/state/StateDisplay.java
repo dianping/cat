@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 
-public class StateShow extends BaseVisitor {
+public class StateDisplay extends BaseVisitor {
 
 	private Machine m_total = new Machine();
 
@@ -36,7 +36,7 @@ public class StateShow extends BaseVisitor {
 
 	private ServerConfigManager m_configManager;
 
-	public StateShow(String ip,ServerConfigManager configManager) {
+	public StateDisplay(String ip,ServerConfigManager configManager) {
 		m_ip = ip;
 		m_configManager= configManager;
 	}
