@@ -88,7 +88,7 @@ import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 
@@ -149,7 +149,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      RouterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(ReportServiceManager.class,
-		      ExceptionConfigManager.class, ServerConfigManager.class));
+		      ExceptionRuleConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(ReportServiceManager.class,
 		      ServerConfigManager.class));

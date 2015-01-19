@@ -96,7 +96,7 @@ import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.DatabaseRuleConfigManager;
 import com.dianping.cat.system.config.DisplayPolicyManager;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
@@ -227,13 +227,12 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(RemoteMetricReportService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
 
-		all.add(C(AlertExceptionBuilder.class).req(ExceptionConfigManager.class, AggregationConfigManager.class));
+		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 
-		all.add(C(ExceptionAlert.class)
-		      .req(ExceptionConfigManager.class, AlertExceptionBuilder.class, AlertManager.class).req(ModelService.class,
-		            TopAnalyzer.ID));
+		all.add(C(ExceptionAlert.class).req(ExceptionRuleConfigManager.class, AlertExceptionBuilder.class,
+		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
-		all.add(C(FrontEndExceptionAlert.class).req(ExceptionConfigManager.class, AlertExceptionBuilder.class,
+		all.add(C(FrontEndExceptionAlert.class).req(ExceptionRuleConfigManager.class, AlertExceptionBuilder.class,
 		      AlertManager.class).req(ModelService.class, TopAnalyzer.ID));
 
 		all.add(C(ThirdPartyAlert.class).req(AlertManager.class));

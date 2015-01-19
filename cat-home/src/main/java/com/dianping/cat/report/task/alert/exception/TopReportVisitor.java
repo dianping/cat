@@ -11,11 +11,11 @@ import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class TopReportVisitor extends BaseVisitor {
 
-	private ExceptionConfigManager m_exceptionConfigManager;
+	private ExceptionRuleConfigManager m_exceptionConfigManager;
 
 	private AlertReport m_report;
 
@@ -31,9 +31,9 @@ public class TopReportVisitor extends BaseVisitor {
 	public TopReportVisitor setConfigManager(ServerConfigManager configManager) {
 		m_configManager = configManager;
 		return this;
-   }
-	
-	public TopReportVisitor setExceptionConfigManager(ExceptionConfigManager exceptionConfigManager) {
+	}
+
+	public TopReportVisitor setExceptionRuleConfigManager(ExceptionRuleConfigManager exceptionConfigManager) {
 		m_exceptionConfigManager = exceptionConfigManager;
 		return this;
 	}
@@ -53,8 +53,7 @@ public class TopReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitError(Error error) {
-		ExceptionExclude exceptionExclude = m_exceptionConfigManager.queryDomainExceptionExclude(m_currentDomain,
-		      error.getId());
+		ExceptionExclude exceptionExclude = m_exceptionConfigManager.queryExceptionExclude(m_currentDomain, error.getId());
 
 		if (exceptionExclude != null) {
 			return;
@@ -63,8 +62,7 @@ public class TopReportVisitor extends BaseVisitor {
 		int warnLimit = -1;
 		int errorLimit = -1;
 		int count = error.getCount();
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager
-		      .queryDomainExceptionLimit(m_currentDomain, error.getId());
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryExceptionLimit(m_currentDomain, error.getId());
 
 		m_totalSegmentException += count;
 
@@ -96,7 +94,7 @@ public class TopReportVisitor extends BaseVisitor {
 
 		super.visitSegment(segment);
 
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(m_currentDomain);
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryTotalLimitByDomain(m_currentDomain);
 		int warnLimit = -1;
 		int errorLimit = -1;
 

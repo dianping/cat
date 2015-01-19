@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="exception-rule-config" root="true">
+    <entity-ref name="exception-limit" type="list" names="exception-limits" />
+    <entity-ref name="exception-exclude" type="list" names="exception-excludes" />
+  </entity>
+  <entity name="exception-limit">
+    <attribute name="id" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <attribute name="warning" value-type="int" />
+    <attribute name="error" value-type="int" />
+  </entity>
+  <entity name="exception-exclude">
+    <attribute name="id" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="name" value-type="String" />
+  </entity>
+</model>
+

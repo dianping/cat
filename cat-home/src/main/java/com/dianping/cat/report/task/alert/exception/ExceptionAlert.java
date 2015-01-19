@@ -26,12 +26,12 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.report.task.alert.sender.AlertManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class ExceptionAlert implements Task {
 
 	@Inject
-	protected ExceptionConfigManager m_exceptionConfigManager;
+	protected ExceptionRuleConfigManager m_exceptionConfigManager;
 
 	@Inject
 	protected AlertExceptionBuilder m_alertBuilder;

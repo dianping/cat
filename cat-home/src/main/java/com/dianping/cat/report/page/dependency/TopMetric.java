@@ -18,11 +18,11 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class TopMetric extends BaseVisitor {
 
-	private ExceptionConfigManager m_configManager;
+	private ExceptionRuleConfigManager m_configManager;
 
 	private List<String> m_excludedDomains;
 
@@ -52,7 +52,7 @@ public class TopMetric extends BaseVisitor {
 
 	private Date m_start;
 
-	public TopMetric(int count, int tops, ExceptionConfigManager configManager) {
+	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager) {
 		m_configManager = configManager;
 		m_error = new MetricItem(count, tops, m_configManager);
 		m_url = new MetricItem(count, tops);
@@ -62,7 +62,7 @@ public class TopMetric extends BaseVisitor {
 		m_cache = new MetricItem(count, tops);
 	}
 
-	public TopMetric(int count, int tops, ExceptionConfigManager configManager, List<String> excludedDomains) {
+	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager, List<String> excludedDomains) {
 		this(count, tops, configManager);
 		m_excludedDomains = excludedDomains;
 	}
@@ -174,11 +174,11 @@ public class TopMetric extends BaseVisitor {
 
 		private int m_alert;
 
-		private ExceptionConfigManager m_configManager;
+		private ExceptionRuleConfigManager m_configManager;
 
 		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
-		public Item(String domain, double value, ExceptionConfigManager configManager) {
+		public Item(String domain, double value, ExceptionRuleConfigManager configManager) {
 			m_domain = domain;
 			m_value = value;
 			m_configManager = configManager;
@@ -210,7 +210,7 @@ public class TopMetric extends BaseVisitor {
 				double errorLimit = -1;
 
 				if (m_configManager != null) {
-					ExceptionLimit exceptionLimit = m_configManager.queryDomainExceptionLimit(m_domain, entry.getKey());
+					ExceptionLimit exceptionLimit = m_configManager.queryExceptionLimit(m_domain, entry.getKey());
 					if (exceptionLimit != null) {
 						warnLimit = exceptionLimit.getWarning();
 						errorLimit = exceptionLimit.getError();
@@ -248,8 +248,10 @@ public class TopMetric extends BaseVisitor {
 			m_value = value;
 			double warningLimit = -1;
 			double errorLimit = -1;
+
 			if (m_configManager != null) {
-				ExceptionLimit totalLimit = m_configManager.queryDomainTotalLimit(m_domain);
+				ExceptionLimit totalLimit = m_configManager.queryTotalLimitByDomain(m_domain);
+
 				if (totalLimit != null) {
 					warningLimit = totalLimit.getWarning();
 					errorLimit = totalLimit.getError();
@@ -289,14 +291,14 @@ public class TopMetric extends BaseVisitor {
 
 		private Map<String, List<Item>> m_result;
 
-		private ExceptionConfigManager m_configManager;
+		private ExceptionRuleConfigManager m_configManager;
 
 		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 		}
 
-		public MetricItem(int minuteCount, int itemSize, ExceptionConfigManager configManager) {
+		public MetricItem(int minuteCount, int itemSize, ExceptionRuleConfigManager configManager) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
 			m_configManager = configManager;

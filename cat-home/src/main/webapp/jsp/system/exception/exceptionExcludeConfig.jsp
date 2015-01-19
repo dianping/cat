@@ -71,44 +71,29 @@
 </script>
 
 <form name="exceptionConfig" id="form" method="post"
-	action="${model.pageUri}?op=exceptionExcludeUpdateSubmit&domain=${payload.domain}&exception=${payload.exception}&type=异常过滤">
+	action="${model.pageUri}?op=exceptionExcludeUpdateSubmit&domain=${payload.domain}&exception=${payload.exception}&type=exclude">
 	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 	<h4 class="text-center text-danger">修改异常报警配置信息</h4>
 	<table class="table table-striped table-condensed   table-hover">
-	<c:set  var="action" value="exceptionExcludeUpdate"/>
 		<tr>
 			<td style="text-align:right" class="text-success" width="20%">项目名称</td>
 			<td>
-			<c:choose>
-			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.domain" size="50" value="${model.exceptionExclude.domain}" readonly required/>
-			</c:when>
-			<c:otherwise>
-				<div class="navbar-header pull-left position" >
-					<div class="input-group">
-					<input name="exceptionExclude.domain" id="search_domain" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off"/>
-					</div>
+			<div class="navbar-header pull-left position" >
+				<div class="input-group">
+				<input name="exceptionExclude.domain" id="search_domain" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input domain for search" autocomplete="off" required />
 				</div>
-			</c:otherwise>
-			</c:choose>
+			</div><span class="text-danger">&nbsp;&nbsp;*</span>
 			</td>
 		</tr>
 
 		<tr>
 			<td style="text-align:right" class="text-success" width="20%">异常名称</td>
 			<td width="80%">
-			<c:choose>
-			<c:when test="${payload.action.name eq action}">
-				<input name="exceptionExclude.id" size="50" value="${model.exceptionExclude.id}"/>
-			</c:when>
-			<c:otherwise>
-				<div class="navbar-header pull-left position">
-					<div class="input-group">
-					<input name="exceptionExclude.id" id="search_exception" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off"/>
-					</div>
+			<div class="navbar-header pull-left position">
+				<div class="input-group">
+				<input name="exceptionExclude.name" id="search_exception" size="60" type="text" class="search-input form-control ui-autocomplete-input" size="30" placeholder="input exception for search" autocomplete="off" required />
 				</div>
-			</c:otherwise>
-			</c:choose>
+			</div><span class="text-danger">&nbsp;&nbsp;*</span>
 			</td>
 		</tr>
 		<tr>

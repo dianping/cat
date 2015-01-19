@@ -62,7 +62,7 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
@@ -159,7 +159,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetworkRuleConfigManager.class)

@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
@@ -15,11 +16,10 @@ import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import org.unidal.lookup.util.StringUtils;
 
 public class ExceptionConfigProcessor {
 
@@ -27,22 +27,22 @@ public class ExceptionConfigProcessor {
 	private GlobalConfigProcessor m_globalConfigProcessor;
 
 	@Inject
-	private ExceptionConfigManager m_exceptionConfigManager;
+	private ExceptionRuleConfigManager m_exceptionRuleConfigManager;
 
 	@Inject
 	private ReportServiceManager m_reportService;
 
 	private void deleteExceptionExclude(Payload payload) {
-		m_exceptionConfigManager.deleteExceptionExclude(payload.getDomain(), payload.getException());
+		m_exceptionRuleConfigManager.deleteExceptionExclude(payload.getDomain(), payload.getException());
 	}
 
 	private void deleteExceptionLimit(Payload payload) {
-		m_exceptionConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
+		m_exceptionRuleConfigManager.deleteExceptionLimit(payload.getDomain(), payload.getException());
 	}
 
 	private void loadExceptionConfig(Model model) {
-		model.setExceptionExcludes(m_exceptionConfigManager.queryAllExceptionExcludes());
-		model.setExceptionLimits(m_exceptionConfigManager.queryAllExceptionLimits());
+		model.setExceptionExcludes(m_exceptionRuleConfigManager.queryAllExceptionExcludes());
+		model.setExceptionLimits(m_exceptionRuleConfigManager.queryAllExceptionLimits());
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -55,13 +55,13 @@ public class ExceptionConfigProcessor {
 			loadExceptionConfig(model);
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE:
-			model.setExceptionLimit(m_exceptionConfigManager.queryDomainExceptionLimit(payload.getDomain(),
+			model.setExceptionLimit(m_exceptionRuleConfigManager.queryExceptionLimit(payload.getDomain(),
 			      payload.getException()));
 			break;
 		case EXCEPTION_THRESHOLD_ADD:
 			List<String> exceptionThresholdList = queryExceptionList();
 
-			exceptionThresholdList.add(ExceptionConfigManager.TOTAL_STRING);
+			exceptionThresholdList.add(ExceptionRuleConfigManager.TOTAL_STRING);
 			model.setExceptionList(exceptionThresholdList);
 			model.setDomainList(m_globalConfigProcessor.queryDoaminList());
 			break;
@@ -72,10 +72,6 @@ public class ExceptionConfigProcessor {
 		case EXCEPTION_EXCLUDE_DELETE:
 			deleteExceptionExclude(payload);
 			loadExceptionConfig(model);
-			break;
-		case EXCEPTION_EXCLUDE_UPDATE:
-			model.setExceptionExclude(m_exceptionConfigManager.queryDomainExceptionExclude(payload.getDomain(),
-			      payload.getException()));
 			break;
 		case EXCEPTION_EXCLUDE_ADD:
 			List<String> exceptionExcludeList = queryExceptionList();
@@ -112,15 +108,22 @@ public class ExceptionConfigProcessor {
 
 	private void updateExceptionExclude(Payload payload) {
 		ExceptionExclude exclude = payload.getExceptionExclude();
-		
-		m_exceptionConfigManager.insertExceptionExclude(exclude);
+		exclude.setDomain(exclude.getDomain().trim());
+		exclude.setName(exclude.getName().trim());
+		exclude.setId(exclude.getDomain() + ":" + exclude.getName());
+
+		if (StringUtils.isNotEmpty(exclude.getDomain()) && StringUtils.isNotEmpty(exclude.getName()))
+			m_exceptionRuleConfigManager.insertExceptionExclude(exclude);
 	}
 
 	private void updateExceptionLimit(Payload payload) {
 		ExceptionLimit limit = payload.getExceptionLimit();
+		limit.setDomain(limit.getDomain().trim());
+		limit.setName(limit.getName().trim());
+		limit.setId(limit.getDomain() + ":" + limit.getName());
 
-		if (StringUtils.isNotEmpty(limit.getId().trim())) {
-			m_exceptionConfigManager.insertExceptionLimit(limit);
+		if (StringUtils.isNotEmpty(limit.getDomain()) && StringUtils.isNotEmpty(limit.getName())) {
+			m_exceptionRuleConfigManager.insertExceptionLimit(limit);
 		}
 	}
 }
