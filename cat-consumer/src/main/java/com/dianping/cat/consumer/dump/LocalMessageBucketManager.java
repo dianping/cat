@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer.dump;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -17,13 +20,16 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -56,6 +62,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private LogviewUploader m_logviewUploader;
+
+	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 	private long m_error;
 
@@ -109,7 +117,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void initialize() throws InitializationException {
 		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
-		
+
 		Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
 		Threads.forGroup("cat").start(new OldMessageMover(this, m_buckets, m_logviewUploader, m_configManager));
 
@@ -121,9 +129,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 
 			m_messageQueues.put(i, messageQueue);
-			Threads.forGroup("cat").start(
-			      new MessageGzip(this, m_buckets, m_pathBuilder, m_serverStateManager, m_messageBlocks, m_configManager,
-			            messageQueue, i));
+			Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
 		}
 	}
 
@@ -240,16 +246,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	public LocalMessageBucket lookupBucket() {
-		return (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-	}
-
 	public void releaseBucket(LocalMessageBucket bucket) {
 		release(bucket);
 	}
 
 	public void setBaseDir(File baseDir) {
 		m_baseDir = baseDir;
+	}
+
+	public void setLocalIp(String localIp) {
+		m_localIp = localIp;
 	}
 
 	@Override
@@ -281,4 +287,99 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		logStorageState(tree);
 	}
+
+	public class MessageGzip implements Task {
+
+		private int m_index;
+
+		public BlockingQueue<MessageItem> m_messageQueue;
+
+		private int m_count = -1;
+
+		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
+			m_messageQueue = messageQueue;
+			m_index = index;
+		}
+
+		@Override
+		public String getName() {
+			return "Message-Gzip-" + m_index;
+		}
+
+		private void gzipMessage(MessageItem item) {
+			try {
+				MessageId id = item.getMessageId();
+				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+				String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				LocalMessageBucket bucket = m_buckets.get(path);
+
+				if (bucket == null) {
+					synchronized (m_buckets) {
+						bucket = m_buckets.get(path);
+						if (bucket == null) {
+							bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+							bucket.setBaseDir(m_baseDir);
+							bucket.initialize(path);
+
+							LocalMessageBucket last = m_buckets.putIfAbsent(path, bucket);
+
+							if (last != null) {
+								bucket.close();
+
+								Cat.logEvent("BucketConcurrentModify", path, Event.SUCCESS, null);
+							}
+
+							bucket = m_buckets.get(path);
+						}
+					}
+				}
+
+				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
+				ByteBuf buf = tree.getBuffer();
+				MessageBlock bolck = bucket.storeMessage(buf, id);
+
+				if (bolck != null) {
+					if (!m_messageBlocks.offer(bolck)) {
+						m_serverStateManager.addBlockLoss(1);
+						Cat.logEvent("DumpError", tree.getDomain());
+					}
+				}
+			} catch (Throwable e) {
+				Cat.logError(e);
+			}
+		}
+
+		private void gzipMessageWithMonitor(MessageItem item) {
+			Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			t.setStatus(Transaction.SUCCESS);
+
+			gzipMessage(item);
+			t.complete();
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
+
+					if (item != null) {
+						m_count++;
+						if (m_count % (10000) == 0) {
+							gzipMessageWithMonitor(item);
+						} else {
+							gzipMessage(item);
+						}
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
 }
