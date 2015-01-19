@@ -30,8 +30,20 @@ public enum NetworkInterfaceManager {
 		}
 	}
 
+	public String getProperty(String name) {
+		String value = null;
+
+		value = System.getProperty(name);
+		
+		if (value == null) {
+			value = System.getenv(name);
+		}
+
+		return value;
+	}
+
 	private void load() {
-		String ip = System.getProperty("host.ip");
+		String ip = getProperty("host.ip");
 
 		if (ip != null) {
 			try {
@@ -47,7 +59,7 @@ public enum NetworkInterfaceManager {
 			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
 			List<InetAddress> addresses = new ArrayList<InetAddress>();
 			InetAddress local = null;
-			
+
 			try {
 				for (NetworkInterface ni : nis) {
 					if (ni.isUp()) {
