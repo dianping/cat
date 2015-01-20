@@ -28,7 +28,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -61,7 +61,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
-	private LogviewUploader m_logviewUploader;
+	private HdfsUploader m_logviewUploader;
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -119,7 +119,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
 		Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
-		Threads.forGroup("cat").start(new OldMessageMover(this, m_buckets, m_logviewUploader, m_configManager));
+		Threads.forGroup("cat").start(new LogviewUploader(this, m_buckets, m_logviewUploader, m_configManager));
 
 		if (m_configManager.isLocalMode()) {
 			m_gzipThreads = 1;

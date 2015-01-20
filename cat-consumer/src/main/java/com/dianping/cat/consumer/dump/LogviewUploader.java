@@ -16,12 +16,12 @@ import org.unidal.helper.Threads.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.message.LocalMessageBucket;
 
-public class OldMessageMover implements Task {
+public class LogviewUploader implements Task {
 
 	private LocalMessageBucketManager m_bucketManager;
 
@@ -29,14 +29,14 @@ public class OldMessageMover implements Task {
 
 	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets;
 
-	private LogviewUploader m_logviewUploader;
+	private HdfsUploader m_logviewUploader;
 
 	private ServerConfigManager m_configManager;
 
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
-	public OldMessageMover(LocalMessageBucketManager bucketManager,
-	      ConcurrentHashMap<String, LocalMessageBucket> buckets, LogviewUploader logviewUploader,
+	public LogviewUploader(LocalMessageBucketManager bucketManager,
+	      ConcurrentHashMap<String, LocalMessageBucket> buckets, HdfsUploader logviewUploader,
 	      ServerConfigManager configManager) {
 		m_baseDir = new File(configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 		m_bucketManager = bucketManager;
@@ -56,7 +56,7 @@ public class OldMessageMover implements Task {
 
 	private void deleteOldMessages() {
 		final List<String> paths = new ArrayList<String>();
-		final Set<String> validPaths = queryValidPath(m_configManager.getLogViewMaxStroageTime());
+		final Set<String> validPaths = findValidPath(m_configManager.getLogViewMaxStroageTime());
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
 			@Override
@@ -80,8 +80,21 @@ public class OldMessageMover implements Task {
 		});
 
 		if (paths.size() > 0) {
-			processFiles(paths, false);
+			processLogviewFiles(paths, false);
 		}
+	}
+
+	private Set<String> findValidPath(int storageDays) {
+		Set<String> strs = new HashSet<String>();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		long currentTimeMillis = System.currentTimeMillis();
+
+		for (int i = 0; i < storageDays; i++) {
+			Date date = new Date(currentTimeMillis - i * 24 * 60 * 60 * 1000L);
+
+			strs.add(sdf.format(date));
+		}
+		return strs;
 	}
 
 	@Override
@@ -89,7 +102,7 @@ public class OldMessageMover implements Task {
 		return "LocalMessageBucketManager-OldMessageMover";
 	}
 
-	private void processFiles(final List<String> paths, boolean upload) {
+	private void processLogviewFiles(final List<String> paths, boolean upload) {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		Transaction t = Cat.newTransaction("System", "Delete" + "-" + ip);
 
@@ -128,19 +141,6 @@ public class OldMessageMover implements Task {
 			}
 		}
 		t.complete();
-	}
-
-	private Set<String> queryValidPath(int day) {
-		Set<String> strs = new HashSet<String>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		long currentTimeMillis = System.currentTimeMillis();
-
-		for (int i = 0; i < day; i++) {
-			Date date = new Date(currentTimeMillis - i * 24 * 60 * 60 * 1000L);
-
-			strs.add(sdf.format(date));
-		}
-		return strs;
 	}
 
 	@Override
@@ -223,7 +223,7 @@ public class OldMessageMover implements Task {
 		});
 
 		if (paths.size() > 0) {
-			processFiles(paths, true);
+			processLogviewFiles(paths, true);
 		}
 	}
 

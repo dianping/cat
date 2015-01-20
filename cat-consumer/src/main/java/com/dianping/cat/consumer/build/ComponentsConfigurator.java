@@ -48,7 +48,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.service.DefaultReportManager;
@@ -130,7 +130,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class)//
-		      .req(LogviewUploader.class));
+		      .req(HdfsUploader.class));
 
 		return all;
 	}

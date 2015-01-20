@@ -10,7 +10,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucket;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
-import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
@@ -29,7 +29,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(FileSystemManager.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(LogviewUploader.class) //
+		all.add(C(HdfsUploader.class) //
 		      .req(FileSystemManager.class));
 
 		all.add(C(MessageBucket.class, HdfsMessageBucket.ID, HdfsMessageBucket.class) //

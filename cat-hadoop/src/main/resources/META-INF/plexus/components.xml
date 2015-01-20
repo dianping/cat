@@ -10,8 +10,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.hdfs.LogviewUploader</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.LogviewUploader</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.HdfsUploader</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsUploader</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
