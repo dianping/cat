@@ -60,7 +60,7 @@
 		  <c:set var="modalId" value="0" />
 		  <c:choose>
 		  	<c:when test="${fn:length(model.alertMinutes) == 0 }">
-		  		<div class="text-danger">该项目在该时间段内状态正常，没有告警信息。</div>
+		  		<h3 class="text-center text-danger">该项目在该时间段内状态正常，没有告警信息。</h3>
 		 	</c:when>
 		 	<c:otherwise>
 		 		<c:forEach var="minuteEntry" items="${model.alertMinutes}"  varStatus="itemStatus">
