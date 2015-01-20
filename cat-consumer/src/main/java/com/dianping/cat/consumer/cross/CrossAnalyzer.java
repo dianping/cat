@@ -6,6 +6,7 @@ import com.dianping.cat.consumer.cross.model.entity.*;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -16,7 +17,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
-import org.unidal.lookup.util.StringUtils;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -25,7 +25,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	protected ReportManager<CrossReport> m_reportManager;
 
 	@Inject
-	private IpConvertManager m_ipConvertManager;
+	protected IpConvertManager m_ipConvertManager;
 
 	private static final String UNKNOWN = "Unknown";
 
@@ -81,7 +81,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
-
+		
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
@@ -91,6 +91,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				}
                 if (CatConstants.TYPE_ESB_CALL_APP.equals(type) || CatConstants.TYPE_SOA_CALL_APP.equals(type)) {
 					crossInfo.setApp(message.getName());
+				}
+				if (type.equals("PigeonCall.port") || type.equals("Call.port")) {
+					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
@@ -112,9 +115,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		CrossInfo info = new CrossInfo();
 		info.setLocalAddress(remoteAddress);
-		info.setRemoteAddress(localIp + ":Caller");
-        info.setRemoteRole(crossInfo.getDetailType() + ".Caller");
-        info.setDetailType(crossInfo.getDetailType());
+    	String clientPort = crossInfo.getClientPort();
+		if (clientPort == null) {
+			info.setRemoteAddress(localIp + ":Caller");
+		} else {
+			info.setRemoteAddress(localIp + ":" + clientPort + ":Caller");
+		}
+		info.setRemoteRole("Pigeon.Caller");
+		info.setDetailType("PigeonCall");
 		info.setApp(client);
 
 		return info;
@@ -134,18 +142,20 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
-                if (CatConstants.TYPE_ESB_SERVICE_CLIENT.equals(type) || CatConstants.TYPE_SOA_SERVICE_CLIENT.equals(type)) {
-					String name = message.getName();
-					int index = name.indexOf(":");
-
-					if (index > 0) {
-						name = name.substring(0, index);
-					}
-					String formatIp = m_ipConvertManager.convertHostNameToIP(name);
-
-					if (formatIp != null && formatIp.length() > 0) {
-						crossInfo.setRemoteAddress(formatIp);
-					}
+//                if (CatConstants.TYPE_ESB_SERVICE_CLIENT.equals(type) || CatConstants.TYPE_SOA_SERVICE_CLIENT.equals(type)) {
+//					String name = message.getName();
+//					int index = name.indexOf(":");
+//
+//					if (index > 0) {
+//						name = name.substring(0, index);
+//					}
+//					String formatIp = m_ipConvertManager.convertHostNameToIP(name);
+//
+//					if (formatIp != null && formatIp.length() > 0) {
+//						crossInfo.setRemoteAddress(formatIp);
+//					}
+				if (CatConstants.TYPE_ESB_SERVICE_CLIENT.equals(type) || CatConstants.TYPE_SOA_SERVICE_CLIENT.equals(type)) {
+					crossInfo.setRemoteAddress(message.getName());
 				}
                 if (CatConstants.TYPE_ESB_SERVICE_APP.equals(type) || CatConstants.TYPE_SOA_SERVICE_APP.equals(type)) {
 					crossInfo.setApp(message.getName());
@@ -259,6 +269,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		private String m_app = "";
 
+		private String m_clientPort;
+
 		public String getDetailType() {
 			return m_detailType;
 		}
@@ -298,5 +310,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		public void setApp(String app) {
 			m_app = app;
 		}
+
+		public String getClientPort() {
+			return m_clientPort;
+		}
+
+		public void setClientPort(String clientPort) {
+			m_clientPort = clientPort;
+		}
 	}
+
 }

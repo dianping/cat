@@ -39,6 +39,22 @@ public class DefaultBaselineService implements BaselineService {
 		}
 	};
 
+	private Map<String, String> m_empties = new LinkedHashMap<String, String>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, String> eldest) {
+			return size() > 50000;
+		}
+	};
+
+	private Map<String, String> getEmpties() {
+		synchronized (this) {
+			return m_empties;
+		}
+	}
+
 	private double[] decodeBaselines(byte[] datas) throws IOException {
 		double[] result;
 		ByteArrayInputStream input = new ByteArrayInputStream(datas);
@@ -64,52 +80,53 @@ public class DefaultBaselineService implements BaselineService {
 	}
 
 	@Override
+	public boolean hasDailyBaseline(String reportName, String key, Date reportPeriod) {
+		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
+		Baseline baseline = m_baselines.get(baselineKey);
+		boolean has = false;
+
+		if (baseline != null) {
+			has = true;
+		} else {
+			try {
+				baseline = m_baselineDao
+				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				has = true;
+			} catch (DalNotFoundException e) {
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+		return has;
+	}
+
+	@Override
 	public void insertBaseline(Baseline baseline) {
 		try {
 			baseline.setData(encodeBaselines(baseline.getDataInDoubleArray()));
 			m_baselineDao.insert(baseline);
+
+			String baselineKey = baseline.getReportName() + ":" + baseline.getIndexKey() + ":"
+			      + baseline.getReportPeriod();
+
+			getEmpties().remove(baselineKey);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 	}
 
-	@Override
-	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
-		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
-		Baseline baseline = m_baselines.get(baselineKey);
+	public double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
 
-		if (baseline == null) {
-			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
-
-				m_baselines.put(baselineKey, baseline);
-			} catch (DalNotFoundException e) {
-			} catch (Exception e) {
-				Cat.logError(e);
-				return null;
-			}
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
 		}
-
-		try {
-			return decodeBaselines(baseline.getData());
-		} catch (Exception e) {
-			Cat.logError(e);
-			return null;
-		}
-	}
-
-	@Override
-	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
-		double[] result = new double[60];
-		Date today = TaskHelper.todayZero(reportPeriod);
-		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeHelper.ONE_HOUR);
-		double[] dayResult = queryDailyBaseline(reportName, key, today);
-
-		if (dayResult != null) {
-			for (int i = 0; i < 60; i++) {
-				result[i] = dayResult[hour * 60 + i];
-			}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
 		}
 		return result;
 	}
@@ -156,18 +173,50 @@ public class DefaultBaselineService implements BaselineService {
 		return result;
 	}
 
-	public double[] mergerArray(double[] from, double[] to) {
-		int fromLength = from.length;
-		int toLength = to.length;
-		double[] result = new double[fromLength + toLength];
-		int index = 0;
+	@Override
+	public double[] queryDailyBaseline(String reportName, String key, Date reportPeriod) {
+		String baselineKey = reportName + ":" + key + ":" + reportPeriod;
+		Baseline baseline = m_baselines.get(baselineKey);
 
-		for (int i = 0; i < fromLength; i++) {
-			result[i] = from[i];
-			index++;
+		if (baseline == null) {
+			try {
+				boolean has = getEmpties().containsKey(baselineKey);
+
+				if (!has) {
+					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
+					      BaselineEntity.READSET_FULL);
+					m_baselines.put(baselineKey, baseline);
+				} else {
+					return null;
+				}
+			} catch (DalNotFoundException e) {
+				getEmpties().put(baselineKey, baselineKey);
+				return null;
+			} catch (Exception e) {
+				Cat.logError(e);
+				return null;
+			}
 		}
-		for (int i = 0; i < toLength; i++) {
-			result[i + index] = to[i];
+
+		try {
+			return decodeBaselines(baseline.getData());
+		} catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
+	}
+
+	@Override
+	public double[] queryHourlyBaseline(String reportName, String key, Date reportPeriod) {
+		double[] result = new double[60];
+		Date today = TaskHelper.todayZero(reportPeriod);
+		int hour = (int) ((reportPeriod.getTime() - today.getTime()) / TimeHelper.ONE_HOUR);
+		double[] dayResult = queryDailyBaseline(reportName, key, today);
+
+		if (dayResult != null) {
+			for (int i = 0; i < 60; i++) {
+				result[i] = dayResult[hour * 60 + i];
+			}
 		}
 		return result;
 	}

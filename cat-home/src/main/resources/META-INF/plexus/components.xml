@@ -339,6 +339,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.config.SenderConfigManager</role>
+			<implementation>com.dianping.cat.system.config.SenderConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.ConfigReloadTask</role>
 			<implementation>com.dianping.cat.system.config.ConfigReloadTask</implementation>
 			<requirements>
@@ -2746,7 +2758,7 @@
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.MailSender</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.system.config.SenderConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2754,11 +2766,21 @@
 			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
 			<role-hint>sms</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.SmsSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
 			<role-hint>weixin</role-hint>
 			<implementation>com.dianping.cat.report.task.alert.sender.sender.WeixinSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
@@ -4529,6 +4551,11 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5210,11 +5237,26 @@
 				<requirement>
 					<role>com.dianping.cat.system.config.DomainGroupConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.SenderConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
 			<implementation>com.dianping.cat.system.config.ThirdPartyConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.SenderConfigManager</role>
+			<implementation>com.dianping.cat.system.config.SenderConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

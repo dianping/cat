@@ -364,16 +364,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOnline() {
-		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if (address.equals("10.1.6.128")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isClient(String type) {
 		return CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type);
 	}

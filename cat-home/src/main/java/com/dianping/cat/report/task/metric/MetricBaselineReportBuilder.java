@@ -103,9 +103,9 @@ public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 			m_baselineService.insertBaseline(baseline);
 
 			Date tomorrow = new Date(reportPeriod.getTime() + TimeHelper.ONE_DAY);
-			double[] baseLine = m_baselineService.queryDailyBaseline(reportName, key, tomorrow);
+			boolean has = m_baselineService.hasDailyBaseline(reportName, key, tomorrow);
 
-			if (baseLine == null) {
+			if (!has) {
 				Baseline tomorrowBaseline = new Baseline();
 
 				tomorrowBaseline.setDataInDoubleArray(result);

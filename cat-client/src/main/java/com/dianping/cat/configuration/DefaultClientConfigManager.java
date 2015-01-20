@@ -31,11 +31,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		m_logger = logger;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#getDomain()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#getDomain()
+	 */
 	@Override
-   public Domain getDomain() {
+	public Domain getDomain() {
 		Domain domain = null;
 
 		if (m_config != null) {
@@ -51,11 +53,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#getMaxMessageLength()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#getMaxMessageLength()
+	 */
 	@Override
-   public int getMaxMessageLength() {
+	public int getMaxMessageLength() {
 		if (m_config == null) {
 			return 5000;
 		} else {
@@ -63,11 +67,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#getServerConfigUrl()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#getServerConfigUrl()
+	 */
 	@Override
-   public String getServerConfigUrl() {
+	public String getServerConfigUrl() {
 		if (m_config == null) {
 			return null;
 		} else {
@@ -86,11 +92,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		return null;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#getServers()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#getServers()
+	 */
 	@Override
-   public List<Server> getServers() {
+	public List<Server> getServers() {
 		if (m_config == null) {
 			return Collections.emptyList();
 		} else {
@@ -98,19 +106,23 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#getTaggedTransactionCacheSize()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#getTaggedTransactionCacheSize()
+	 */
 	@Override
-   public int getTaggedTransactionCacheSize() {
+	public int getTaggedTransactionCacheSize() {
 		return 1024;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#initialize(java.io.File)
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#initialize(java.io.File)
+	 */
 	@Override
-   public void initialize(File configFile) throws Exception {
+	public void initialize(File configFile) throws Exception {
 		ClientConfig globalConfig = null;
 		ClientConfig clientConfig = null;
 
@@ -148,11 +160,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		m_config = clientConfig;
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#isCatEnabled()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#isCatEnabled()
+	 */
 	@Override
-   public boolean isCatEnabled() {
+	public boolean isCatEnabled() {
 		if (m_config == null) {
 			return false;
 		} else {
@@ -160,11 +174,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/* (non-Javadoc)
-    * @see com.dianping.cat.configuration.ClientConfig#isDumpLocked()
-    */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.dianping.cat.configuration.ClientConfig#isDumpLocked()
+	 */
 	@Override
-   public boolean isDumpLocked() {
+	public boolean isDumpLocked() {
 		if (m_config == null) {
 			return false;
 		} else {
@@ -173,42 +189,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	}
 
 	private ClientConfig loadConfigFromEnviroment() {
-		InputStream in = null;
-		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_CLIENT_XML);
+		String appName = loadProjectName();
 
-			if (in == null) {
-				in = Cat.class.getResourceAsStream(PROPERTIES_CLIENT_XML);
-			}
-			if (in != null) {
-				Properties prop = new Properties();
+		if (appName != null) {
+			ClientConfig config = new ClientConfig();
 
-				prop.load(in);
-
-				String appName = prop.getProperty("app.name");
-
-				if (appName != null) {
-					ClientConfig config = new ClientConfig();
-
-					config.addDomain(new Domain(appName));
-					m_logger.info(String.format("Find domain name %s from app.properties.", appName));
-					return config;
-				} else {
-					m_logger.info(String.format("Can't find app.name from app.properties."));
-					return null;
-				}
-			} else {
-				m_logger.info(String.format("Can't find app.properties in %s", PROPERTIES_CLIENT_XML));
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			if (in != null) {
-				try {
-					in.close();
-				} catch (Exception e) {
-				}
-			}
+			config.addDomain(new Domain(appName));
+			return config;
 		}
 		return null;
 	}
@@ -239,5 +226,42 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			}
 		}
 		return null;
+	}
+
+	private String loadProjectName() {
+		String appName = null;
+		InputStream in = null;
+		try {
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_CLIENT_XML);
+
+			if (in == null) {
+				in = Cat.class.getResourceAsStream(PROPERTIES_CLIENT_XML);
+			}
+			if (in != null) {
+				Properties prop = new Properties();
+
+				prop.load(in);
+
+				appName = prop.getProperty("app.name");
+				if (appName != null) {
+					m_logger.info(String.format("Find domain name %s from app.properties.", appName));
+				} else {
+					m_logger.info(String.format("Can't find app.name from app.properties."));
+					return null;
+				}
+			} else {
+				m_logger.info(String.format("Can't find app.properties in %s", PROPERTIES_CLIENT_XML));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (in != null) {
+				try {
+					in.close();
+				} catch (Exception e) {
+				}
+			}
+		}
+		return appName;
 	}
 }

@@ -21,6 +21,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -45,6 +46,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private DomainGroupConfigManager m_domainGroupConfigManger;
+
+	@Inject
+	private SenderConfigManager m_senderConfigManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -151,6 +155,13 @@ public class GlobalConfigProcessor {
 				model.setOpState(m_routerConfigManager.insert(routerConfig));
 			}
 			model.setContent(m_routerConfigManager.getRouterConfig().toString());
+			break;
+		case ALERT_SENDER_CONFIG_UPDATE:
+			String senderConfig = payload.getContent();
+			if (!StringUtils.isEmpty(senderConfig)) {
+				model.setOpState(m_senderConfigManager.insert(senderConfig));
+			}
+			model.setContent(m_senderConfigManager.getConfig().toString());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

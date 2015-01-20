@@ -24,6 +24,7 @@ import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.BaseAlert;
 import com.dianping.cat.report.task.alert.MetricReportGroup;
 import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
@@ -126,7 +127,7 @@ public class BusinessAlert extends BaseAlert {
 
 			if (results.size() > 0) {
 				updateAlertStatus(product, metricKey);
-				sendAlerts(product, metric, results);
+				sendBusinessAlerts(product, domain, metric, results);
 			}
 		}
 	}
@@ -152,8 +153,7 @@ public class BusinessAlert extends BaseAlert {
 	@Override
 	protected void processProductLine(ProductLine productLine) {
 		String productId = productLine.getId();
-		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId,
-		      ProductLineConfig.METRIC);
+		List<String> domains = m_productLineConfigManager.queryDomainsByProductLine(productId, ProductLineConfig.METRIC);
 		List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 		int nowMinute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
@@ -172,6 +172,20 @@ public class BusinessAlert extends BaseAlert {
 			}
 		} else {
 			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
+		}
+	}
+
+	private void sendBusinessAlerts(String productlineName, String domain, String metricName,
+	      List<AlertResultEntity> alertResults) {
+		for (AlertResultEntity alertResult : alertResults) {
+			AlertEntity entity = new AlertEntity();
+
+			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+			      .setLevel(alertResult.getAlertLevel());
+			entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
+			entity.getParas().put("domain", domain);
+
+			m_sendManager.addAlert(entity);
 		}
 	}
 

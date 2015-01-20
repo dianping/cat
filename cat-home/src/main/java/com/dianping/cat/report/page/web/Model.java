@@ -7,13 +7,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.problem.ProblemStatistics;
 
 public class Model extends AbstractReportModel<Action, Context> {
+
+	@EntityMeta
+	private ProblemStatistics m_allStatistics;
 
 	private Collection<PatternItem> m_pattermItems;
 
@@ -39,8 +47,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_json;
 
+	private ProblemReport m_problemReport;
+
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public ProblemStatistics getAllStatistics() {
+		return m_allStatistics;
 	}
 
 	public List<String> getCities() {
@@ -67,6 +81,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
+	}
+
+	public List<String> getIps() {
+		if (m_problemReport == null) {
+			return new ArrayList<String>();
+		} else {
+			return SortHelper.sortIpAddress(m_problemReport.getIps());
+		}
 	}
 
 	@Override
@@ -121,8 +143,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_pieCharts;
 	}
 
+	public ProblemReport getProblemReport() {
+		return m_problemReport;
+	}
+
 	public Date getStart() {
 		return m_start;
+	}
+
+	public void setAllStatistics(ProblemStatistics allStatistics) {
+		m_allStatistics = allStatistics;
 	}
 
 	public void setCities(List<String> cities) {
@@ -167,6 +197,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setPieCharts(List<PieChart> pieCharts) {
 		m_pieCharts = pieCharts;
+	}
+
+	public void setProblemReport(ProblemReport problemReport) {
+		m_problemReport = problemReport;
 	}
 
 	public void setStart(Date start) {

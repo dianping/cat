@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="sender-config" root="true">
+    <entity-ref name="sender" type="list" names="senders" />
+  </entity>
+  <entity name="sender">
+    <attribute name="id" value-type="String" />
+    <attribute name="url" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="successCode" value-type="String" />
+    <attribute name="batchSend" value-type="boolean" />
+    <entity-ref name="par" type="list" names="pars" />
+  </entity>
+  <entity name="par">
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+
