@@ -47,22 +47,17 @@ public class LogviewUploader implements Task {
 
 	private void closeBuckets(final List<String> paths) {
 		for (String path : paths) {
-			File file = new File(m_baseDir, path);
-			String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
 			LocalMessageBucket bucket = m_buckets.get(path);
 
 			if (bucket != null) {
 				try {
 					bucket.close();
-					Cat.getProducer().logEvent("Close", "Outbox.Normal", Message.SUCCESS, loginfo);
 				} catch (Exception e) {
 					Cat.logError(e);
 				} finally {
 					m_buckets.remove(path);
 					m_bucketManager.releaseBucket(bucket);
 				}
-			} else {
-				Cat.getProducer().logEvent("Close", "Outbox.AbNormal", Message.SUCCESS, loginfo);
 			}
 		}
 	}
