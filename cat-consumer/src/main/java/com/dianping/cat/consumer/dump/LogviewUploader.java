@@ -23,9 +23,9 @@ import com.dianping.cat.storage.message.LocalMessageBucket;
 
 public class LogviewUploader implements Task {
 
-	private LocalMessageBucketManager m_bucketManager;
-
 	private File m_baseDir;
+
+	private LocalMessageBucketManager m_bucketManager;
 
 	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets;
 
@@ -43,6 +43,28 @@ public class LogviewUploader implements Task {
 		m_buckets = buckets;
 		m_logviewUploader = logviewUploader;
 		m_configManager = configManager;
+	}
+
+	private void closeBuckets(final List<String> paths) {
+		for (String path : paths) {
+			File file = new File(m_baseDir, path);
+			String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
+			LocalMessageBucket bucket = m_buckets.get(path);
+
+			if (bucket != null) {
+				try {
+					bucket.close();
+					Cat.getProducer().logEvent("Close", "Outbox.Normal", Message.SUCCESS, loginfo);
+				} catch (Exception e) {
+					Cat.logError(e);
+				} finally {
+					m_buckets.remove(path);
+					m_bucketManager.releaseBucket(bucket);
+				}
+			} else {
+				Cat.getProducer().logEvent("Close", "Outbox.AbNormal", Message.SUCCESS, loginfo);
+			}
+		}
 	}
 
 	private void deleteFile(String path) {
@@ -84,6 +106,23 @@ public class LogviewUploader implements Task {
 		}
 	}
 
+	private List<String> findCloseBuckets() {
+		final List<String> paths = new ArrayList<String>();
+
+		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (path.indexOf(".idx") == -1 && shouldUpload(path)) {
+						paths.add(path);
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
+		return paths;
+	}
+
 	private Set<String> findValidPath(int storageDays) {
 		Set<String> strs = new HashSet<String>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -112,29 +151,17 @@ public class LogviewUploader implements Task {
 		for (String path : paths) {
 			File file = new File(m_baseDir, path);
 			String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
-			LocalMessageBucket bucket = m_buckets.get(path);
 
-			if (bucket != null) {
-				try {
-					bucket.close();
-					Cat.getProducer().logEvent("Upload", "Outbox.Normal", Message.SUCCESS, loginfo);
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} finally {
-					m_buckets.remove(path);
-					m_bucketManager.releaseBucket(bucket);
-				}
-			}
 			try {
 				if (upload) {
 					uploadFile(path);
 					uploadFile(path + ".idx");
+					Cat.getProducer().logEvent("Upload", "UploadAndDelete", Message.SUCCESS, loginfo);
 				} else {
 					deleteFile(path);
 					deleteFile(path + ".idx");
+					Cat.getProducer().logEvent("Upload", "Delete", Message.SUCCESS, loginfo);
 				}
-				Cat.getProducer().logEvent("Upload", "Outbox.Abnormal", Message.SUCCESS, loginfo);
 			} catch (Exception e) {
 				t.setStatus(e);
 				Cat.logError(e);
@@ -155,9 +182,16 @@ public class LogviewUploader implements Task {
 
 					// make system 0-10 min is not busy
 					if (min > 10) {
-						uploadOldMessages();
+						List<String> paths = findCloseBuckets();
+
+						closeBuckets(paths);
+						processLogviewFiles(paths, true);
 					}
 				} else {
+					// for clean java memory
+					List<String> paths = findCloseBuckets();
+
+					closeBuckets(paths);
 					deleteOldMessages();
 				}
 			} catch (Throwable e) {
@@ -204,26 +238,6 @@ public class LogviewUploader implements Task {
 
 		if (success) {
 			deleteFile(path);
-		}
-	}
-
-	private void uploadOldMessages() {
-		final List<String> paths = new ArrayList<String>();
-
-		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String path) {
-				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == -1 && shouldUpload(path)) {
-						paths.add(path);
-					}
-				}
-				return Direction.DOWN;
-			}
-		});
-
-		if (paths.size() > 0) {
-			processLogviewFiles(paths, true);
 		}
 	}
 
