@@ -81,7 +81,7 @@
 								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40"
 									value="${model.queryName}">
-		    <input id="queryname" style="WIDTH: 60px"
+		    <input id="queryname" style="WIDTH: 60px" class="btn btn-sm btn-primary"
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列

@@ -74,7 +74,7 @@
 								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40"
 									value="${model.queryName}">
-		    <input id="queryname" style="WIDTH: 60px"
+		    <input id="queryname" style="WIDTH: 60px"  class="btn btn-sm btn-primary"
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -111,8 +111,7 @@
 				<c:set var="e" value="${item.name}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="  right">
-					<td
-										style="text-align: left; word-wrap: break-word; word-break: break-all;">
+					<td style="text-align: left; word-wrap: break-word; word-break: break-all;">
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.get,'#,###,###,###,##0')}</td>
@@ -130,10 +129,7 @@
 				<div class="span5">
 					<div id="cacheGraph"></div>
 					<script type="text/javascript">
-						var data = $
-						{
-							model.pieChart
-						};
+						var data = ${model.pieChart};
 						graphPieChart(document.getElementById('cacheGraph'),
 								data);
 					</script>
