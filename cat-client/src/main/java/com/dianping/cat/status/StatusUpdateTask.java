@@ -122,7 +122,11 @@ public class StatusUpdateTask implements Task, Initializable {
 			}
 		}
 
-		buildClasspath();
+		try {
+	      buildClasspath();
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
 		MessageProducer cat = Cat.getProducer();
 		Transaction reboot = cat.newTransaction("System", "Reboot");
 
