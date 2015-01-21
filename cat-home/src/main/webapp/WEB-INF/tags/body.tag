@@ -83,6 +83,9 @@
 						<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
 							<b class="arrow"></b></li>
+						<li id="crashLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
+							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
+							<b class="arrow"></b></li>
 					</ul>
 				</li>
 				<li id="Transaction_report" >
