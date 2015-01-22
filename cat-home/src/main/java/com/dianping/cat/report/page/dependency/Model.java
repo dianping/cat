@@ -28,6 +28,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
+	
+	@EntityMeta
+	private TopReport m_topReport;
+
+	@EntityMeta
+	private TopReport m_lastTopReport;
 
 	public String m_message;
 
@@ -58,8 +64,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_reportEnd;
 
 	private TopMetric m_topMetric;
-
-	private TopReport m_topReport;
 
 	private String m_format;
 
@@ -242,5 +246,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTopReport(TopReport topReport) {
 		m_topReport = topReport;
 	}
+
+	public TopReport getLastTopReport() {
+   	return m_lastTopReport;
+   }
+
+	public void setLastTopReport(TopReport lastTopReport) {
+   	m_lastTopReport = lastTopReport;
+   }
 
 }
