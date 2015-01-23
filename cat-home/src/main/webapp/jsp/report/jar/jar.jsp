@@ -31,13 +31,13 @@
 		</div>
 	</div>
 	<div style="display:inline-flex;padding-top:3px;">
-		<table id="contents" class="table table-striped table-condensed   table-hover">
+		<table id="contents" class="table table-striped table-condensed table-hover">
 		<thead>
 		<tr>
 			<th>domain</th>
 			<th>ip</th>
 			<c:forEach var="item" items="${model.jars}" varStatus="status">
-				<th width="7%">${item}</th>
+				<th>${item}</th>
 			</c:forEach>
 		</tr></thead>
 	<tbody>

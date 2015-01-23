@@ -92,9 +92,13 @@ public class ExternalInfoBuilder {
 		if (minuteCount > minute) {
 			Payload lastPayload = new Payload();
 			Date lastHour = new Date(payload.getDate() - TimeHelper.ONE_HOUR);
+			
 			lastPayload.setDate(new SimpleDateFormat("yyyyMMddHH").format(lastHour));
 
-			topMetric.visitTopReport(queryTopReport(lastPayload));
+			TopReport lastReport = queryTopReport(lastPayload);
+			
+			topMetric.visitTopReport(lastReport);
+			model.setLastTopReport(lastReport);
 		}
 		topMetric.visitTopReport(report);
 		model.setTopReport(report);
