@@ -9,6 +9,14 @@
 		<td>Link</td>
 	</tr>
 		<tr>
+			<td>URL</td>
+			<td style="text-align:right">6,900</td>
+			<td style="text-align:right">0</td>
+			<td style="text-align:right">0.00</td>
+			<td style="text-align:right">0.08</td>
+			<td style="text-align:right"><a href="http://cat.dianpingoa.com/cat/r/e?op=historyGraph&domain=MobileApi&date=2012051700&ip=All&reportType=day&type=URL" target="_blank">Graph</a></td>
+		</tr>
+		<tr>
 			<td>User</td>
 			<td style="text-align:right">1,705</td>
 			<td style="text-align:right">0</td>
