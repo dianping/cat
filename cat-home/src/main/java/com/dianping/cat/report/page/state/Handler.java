@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -33,8 +35,8 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private StateGraphs m_stateGraphs;
-	
+	private StateGraphBuilder m_stateGraphs;
+
 	@Inject
 	private StateBuilder m_stateBuilder;
 
@@ -46,6 +48,15 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_configManager;
+
+	private void buildDisplayInfo(Model model, Payload payload, StateReport report) {
+		StateDisplay display = new StateDisplay(payload.getIpAddress(), m_configManager.getUnusedDomains());
+
+		display.setSortType(payload.getSort());
+		display.visitStateReport(report);
+		model.setState(display);
+		model.setReport(report);
+	}
 
 	public StateReport getHistoryReport(Payload payload) {
 		String domain = Constants.CAT;
@@ -87,35 +98,31 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		String key = payload.getKey();
 		StateReport report = null;
-		LineChart item = null;
+		Pair<LineChart, PieChart> pair = null;
+
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);
 			model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
+			buildDisplayInfo(model, payload, report);
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);
+			buildDisplayInfo(model, payload, report);
 			break;
 		case GRAPH:
 			report = getHourlyReport(payload);
-			item = m_stateGraphs.buildGraph(report, payload.getDomain(), payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate(), "graph", key, payload.getIpAddress());
+			pair = m_stateGraphs.buildGraph(payload, key, report);
+
+			model.setGraph(new JsonBuilder().toJson(pair.getKey()));
+			model.setPieChart(new JsonBuilder().toJson(pair.getValue()));
 			break;
 		case HISTORY_GRAPH:
-			item = m_stateGraphs.buildGraph(null, payload.getDomain(), payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate(), "historyGraph", key, payload.getIpAddress());
+			pair = m_stateGraphs.buildGraph(payload, key);
+
+			model.setGraph(new JsonBuilder().toJson(pair.getKey()));
+			model.setPieChart(new JsonBuilder().toJson(pair.getValue()));
 			break;
-		}
-
-		if (action == Action.HOURLY || action == Action.HISTORY) {
-			StateDisplay show = new StateDisplay(payload.getIpAddress(),m_configManager);
-
-			show.setSortType(payload.getSort());
-			show.visitStateReport(report);
-			model.setState(show);
-			model.setReport(report);
-		} else {
-			model.setGraph(new JsonBuilder().toJson(item));
 		}
 		m_jspViewer.view(ctx, model);
 	}

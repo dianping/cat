@@ -45,7 +45,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.state.StateGraphs;
+import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
@@ -91,7 +91,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
-		all.add(C(StateGraphs.class, StateGraphs.class).//
+		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
 		      req(ReportServiceManager.class, ServerConfigManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectService.class));
 

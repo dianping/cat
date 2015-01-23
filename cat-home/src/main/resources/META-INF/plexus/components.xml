@@ -31,8 +31,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.state.StateGraphs</role>
-			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -3980,7 +3980,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.state.StateGraphs</role>
+					<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.state.StateBuilder</role>
@@ -4008,8 +4008,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.state.StateGraphs</role>
-			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>

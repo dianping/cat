@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.cache;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -21,8 +19,6 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.PieChart;
@@ -57,10 +53,6 @@ public class Handler implements PageHandler<Context> {
 		String queryName = payload.getQueryName();
 		String ip = payload.getIpAddress();
 		String sortBy = payload.getSortBy();
-		ReportVisitor visitor = new ReportVisitor();
-
-		visitor.visitTransactionReport(transactionReport);
-
 		TransactionReportVistor vistor = new TransactionReportVistor();
 
 		vistor.setType(type).setQueryName(queryName).setSortBy(sortBy).setCurrentIp(ip);
@@ -210,23 +202,4 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}
-
-	public static class ReportVisitor extends BaseVisitor {
-
-		private Set<String> m_cacheTypes = new HashSet<String>();
-
-		public Set<String> getCacheTypes() {
-			return m_cacheTypes;
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			String typeName = type.getId();
-
-			if (typeName.startsWith("Cache.")) {
-				m_cacheTypes.add(typeName);
-			}
-		}
-	}
-
 }

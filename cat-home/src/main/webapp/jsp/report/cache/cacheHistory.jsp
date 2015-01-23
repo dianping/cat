@@ -96,14 +96,13 @@
 			<th class="left">
 			<a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
 								</th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=get&queryname=${model.queryName}">Get</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=mget&queryname=${model.queryName}">mGet</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=add&queryname=${model.queryName}">Add</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=remove&queryname=${model.queryName}">Remove</a></th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<c:forEach var="item" items="${model.report.methods}" varStatus="status">
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=${item}&queryname=${model.queryName}">${item}</a></th>
+			</c:forEach>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
 			<th class="right"><a  href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th class="right">QPS</th>
 							</tr>
 			<c:forEach var="item" items="${model.report.nameItems}"
@@ -115,10 +114,16 @@
 										style="text-align: left; word-wrap: break-word; word-break: break-all;">
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
-					<td>${w:format(item.get,'#,###,###,###,##0')}</td>
-					<td>${w:format(item.mget,'#,###,###,###,##0')}</td>
-					<td>${w:format(item.add,'#,###,###,###,##0')}</td>
-					<td>${w:format(item.remove,'#,###,###,###,##0')}</td>
+					<c:forEach var="method" items="${model.report.methods}" varStatus="status">
+						<c:choose>
+						<c:when test="${item.methodCounts[method] != null}">
+							<td>${w:format(item.methodCounts[method],'#,###,###,###,##0')}</td>
+						</c:when>
+						<c:otherwise>
+							<td>0</td>
+						</c:otherwise>
+						</c:choose>
+					</c:forEach>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.0000%')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>

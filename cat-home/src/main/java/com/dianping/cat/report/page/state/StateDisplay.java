@@ -4,85 +4,50 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 
 public class StateDisplay extends BaseVisitor {
 
-	private Machine m_total = new Machine();
-
-	private Map<Long, Message> m_messages = new LinkedHashMap<Long, Message>();
-
-	private Map<String, ProcessDomain> m_processDomains = new LinkedHashMap<String, ProcessDomain>();
-
-	private String m_currentIp;
-
-	private String m_ip;
+	protected String m_ip;
 
 	private String m_sortType;
 
-	private ProcessDomain m_processDomain;
+	protected ProcessDomain m_processDomain;
 
-	private ServerConfigManager m_configManager;
+	protected ProcessDomain m_allProcessDomain;
 
-	public StateDisplay(String ip,ServerConfigManager configManager) {
+	private Set<String> m_fakeDomains;
+
+	protected StateReport m_stateReport = new StateReport();
+
+	public StateDisplay(String ip, Set<String> fakeDomains) {
 		m_ip = ip;
-		m_configManager= configManager;
+		m_fakeDomains = fakeDomains;
 	}
 
-	public List<Message> getMessages() {
-		List<Message> all = new ArrayList<Message>(m_messages.values());
-		List<Message> result = new ArrayList<Message>();
-		long current = System.currentTimeMillis();
-
-		for (Message message : all) {
-			if (message.getId() < current) {
-				result.add(message);
-			}
-		}
-		return result;
+	public Map<Long, Message> getMessages() {
+		return getMachine().getMessages();
 	}
 
-	public Map<Long, Message> getMessagesMap() {
-		return m_messages;
-	}
-
-	public Map<String, ProcessDomain> getProcessDomainMap() {
-		return m_processDomains;
+	public ProcessDomain getProcessDomain(String name) {
+		return getMachine().findOrCreateProcessDomain(name);
 	}
 
 	public List<ProcessDomain> getProcessDomains() {
-		Set<String> invalids = m_configManager.getUnusedDomains();
+		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(m_stateReport.findMachine(m_ip).getProcessDomains()
+		      .values());
 
-		for (String s : invalids) {
-			ProcessDomain domain = m_processDomains.get(s);
-
-			if (domain != null) {
-				domain.getIps().clear();
-			}
-		}
-
-		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(m_processDomains.values());
-
-		for (ProcessDomain temp : domains) {
-			long total = temp.getTotal();
-			double size = temp.getSize();
-
-			if (total > 0) {
-				temp.setAvg(size / total);
-			}
-		}
 		if (m_sortType == null) {
 			Collections.sort(domains, new SizeCompartor());
 		} else if (m_sortType.equals("total")) {
@@ -98,86 +63,77 @@ public class StateDisplay extends BaseVisitor {
 		} else {
 			Collections.sort(domains, new DomainCompartor());
 		}
-
-		domains.add(0, mergeAll(domains));
 		return domains;
 	}
 
-	public Machine getTotal() {
-		return m_total;
+	public StateReport getStateReport() {
+		return m_stateReport;
+	}
+
+	public Machine getMachine() {
+		return m_stateReport.findOrCreateMachine(m_ip);
 	}
 
 	public int getTotalSize() {
 		Set<String> ips = new HashSet<String>();
 
-		for (ProcessDomain domain : m_processDomains.values()) {
-			Set<String> temp = domain.getIps();
+		for (ProcessDomain process : getMachine().getProcessDomains().values()) {
+			Set<String> temp = process.getIps();
 
-			for (String str : temp) {
-				if (validateIp(str)) {
-					ips.add(str);
+			for (String ip : temp) {
+				if (validateIp(ip)) {
+					ips.add(ip);
 				}
 			}
 		}
 		return ips.size();
 	}
 
-	private ProcessDomain mergeAll(List<ProcessDomain> domains) {
-		ProcessDomain all = new ProcessDomain("ALL");
+	protected ProcessDomain mergeProcessDomain(ProcessDomain other, String name) {
+		ProcessDomain old = getMachine().findOrCreateProcessDomain(name);
 
-		for (ProcessDomain temp : domains) {
-			all.setSize(all.getSize() + temp.getSize());
-			all.setTotal(all.getTotal() + temp.getTotal());
-			all.setTotalLoss(all.getTotalLoss() + temp.getTotalLoss());
-		}
-
-		if (all.getTotal() > 0) {
-			all.setAvg(all.getSize() / all.getTotal());
-		}
-		return all;
+		old.setSize(old.getSize() + other.getSize());
+		old.setTotal(old.getTotal() + other.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
+		old.setAvg(old.getTotal() > 0 ? old.getSize() / old.getTotal() : 0);
+		return old;
 	}
 
-	private Machine mergerMachine(Machine total, Machine machine) {
-		total.setAvgTps(total.getAvgTps() + machine.getAvgTps());
-		total.setTotal(total.getTotal() + machine.getTotal());
-		total.setTotalLoss(total.getTotalLoss() + machine.getTotalLoss());
-		total.setDump(total.getDump() + machine.getDump());
-		total.setDumpLoss(total.getDumpLoss() + machine.getDumpLoss());
-		total.setSize(total.getSize() + machine.getSize());
-		total.setDelaySum(total.getDelaySum() + machine.getDelaySum());
-		total.setDelayCount(total.getDelayCount() + machine.getDelayCount());
-		total.setBlockTotal(total.getBlockTotal() + machine.getBlockTotal());
-		total.setBlockLoss(total.getBlockLoss() + machine.getBlockLoss());
-		total.setBlockTime(total.getBlockTime() + machine.getBlockTime());
-		total.setPigeonTimeError(total.getPigeonTimeError() + machine.getPigeonTimeError());
-		total.setNetworkTimeError(total.getNetworkTimeError() + machine.getNetworkTimeError());
+	protected Detail mergeDetail(ProcessDomain processDomain, Detail other) {
+		Detail old = processDomain.findOrCreateDetail(other.getId());
 
-		if (machine.getMaxTps() > total.getMaxTps()) {
-			total.setMaxTps(machine.getMaxTps());
+		old.setSize(old.getSize() + other.getSize());
+		old.setTotal(old.getTotal() + other.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
+		return old;
+	}
+
+	protected Machine mergerMachine(Machine old, Machine other) {
+		old.setAvgTps(old.getAvgTps() + other.getAvgTps());
+		old.setTotal(old.getTotal() + other.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
+		old.setDump(old.getDump() + other.getDump());
+		old.setDumpLoss(old.getDumpLoss() + other.getDumpLoss());
+		old.setSize(old.getSize() + other.getSize());
+		old.setDelaySum(old.getDelaySum() + other.getDelaySum());
+		old.setDelayCount(old.getDelayCount() + other.getDelayCount());
+		old.setBlockTotal(old.getBlockTotal() + other.getBlockTotal());
+		old.setBlockLoss(old.getBlockLoss() + other.getBlockLoss());
+		old.setBlockTime(old.getBlockTime() + other.getBlockTime());
+		old.setPigeonTimeError(old.getPigeonTimeError() + other.getPigeonTimeError());
+		old.setNetworkTimeError(old.getNetworkTimeError() + other.getNetworkTimeError());
+
+		if (other.getMaxTps() > old.getMaxTps()) {
+			old.setMaxTps(other.getMaxTps());
 		}
 
-		long count = total.getDelayCount();
-		double sum = total.getDelaySum();
+		long count = old.getDelayCount();
+		double sum = old.getDelaySum();
 		if (count > 0) {
-			total.setDelayAvg(sum / count);
+			old.setDelayAvg(sum / count);
 		}
 
-		return total;
-	}
-
-	private void mergerMessage(Message total, Message message) {
-		total.setDelayCount(total.getDelayCount() + message.getDelayCount());
-		total.setDelaySum(total.getDelaySum() + message.getDelaySum());
-		total.setDump(total.getDump() + message.getDump());
-		total.setDumpLoss(total.getDumpLoss() + message.getDumpLoss());
-		total.setSize(total.getSize() + message.getSize());
-		total.setTotal(total.getTotal() + message.getTotal());
-		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
-		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
-		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
-		total.setBlockTime(total.getBlockTime() + message.getBlockTime());
-		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
-		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
+		return old;
 	}
 
 	public void setSortType(String sort) {
@@ -192,63 +148,70 @@ public class StateDisplay extends BaseVisitor {
 
 	@Override
 	public void visitDetail(Detail detail) {
-		Map<Long, Detail> details = m_processDomain.getDetails();
-		Long id = detail.getId();
-		Detail temp = details.get(id);
-		if (temp == null) {
-			details.put(id, detail);
-		} else {
-			temp.setSize(temp.getSize() + detail.getSize());
-			temp.setTotal(temp.getTotal() + detail.getTotal());
-			temp.setTotalLoss(temp.getTotalLoss() + detail.getTotalLoss());
-		}
+		mergeDetail(m_processDomain, detail);
+		mergeDetail(m_allProcessDomain, detail);
 	}
 
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
-		m_currentIp = ip;
 
-		if (m_total == null) {
-			m_total = new Machine();
-			m_total.setIp(ip);
-		}
 		if (m_ip.equals(Constants.ALL) || m_ip.equalsIgnoreCase(ip)) {
-			m_total = mergerMachine(m_total, machine);
+			Machine m = getMachine();
+
+			mergerMachine(m, machine);
 			super.visitMachine(machine);
 		}
 	}
 
 	@Override
 	public void visitMessage(Message message) {
-		Message temp = m_messages.get(message.getId());
-		if (temp == null) {
-			m_messages.put(message.getId(), message);
-		} else {
-			mergerMessage(temp, message);
-		}
+		Message total = getMachine().findOrCreateMessage(message.getId());
+
+		total.setDelayCount(total.getDelayCount() + message.getDelayCount());
+		total.setDelaySum(total.getDelaySum() + message.getDelaySum());
+		total.setDump(total.getDump() + message.getDump());
+		total.setDumpLoss(total.getDumpLoss() + message.getDumpLoss());
+		total.setSize(total.getSize() + message.getSize());
+		total.setTotal(total.getTotal() + message.getTotal());
+		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
+		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
+		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
+		total.setBlockTime(total.getBlockTime() + message.getBlockTime());
+		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
+		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
 	}
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		if (m_ip.equals(m_currentIp) || m_ip.equals(Constants.ALL)) {
-			m_processDomain = m_processDomains.get(processDomain.getName());
-			if (m_processDomain == null) {
-				m_processDomains.put(processDomain.getName(), processDomain);
-			} else {
-				m_processDomain.getIps().addAll(processDomain.getIps());
-				m_processDomain.setSize(m_processDomain.getSize() + processDomain.getSize());
-				m_processDomain.setTotal(m_processDomain.getTotal() + processDomain.getTotal());
-				m_processDomain.setTotalLoss(m_processDomain.getTotalLoss() + processDomain.getTotalLoss());
-				super.visitProcessDomain(processDomain);
+		m_allProcessDomain = mergeProcessDomain(processDomain, Constants.ALL);
+		m_processDomain = mergeProcessDomain(processDomain, processDomain.getName());
+
+		for (String ip : processDomain.getIps()) {
+			if (!m_fakeDomains.contains(ip)) {
+				m_processDomain.getIps().add(ip);
 			}
 		}
+		super.visitProcessDomain(processDomain);
+	}
+
+	@Override
+	public void visitStateReport(StateReport stateReport) {
+		m_stateReport.setDomain(stateReport.getDomain()).setStartTime(stateReport.getStartTime())
+		      .setEndTime(stateReport.getEndTime());
+		super.visitStateReport(stateReport);
 	}
 
 	public static class AvgCompartor implements Comparator<ProcessDomain> {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return (int) (o2.getAvg() * 100 - o1.getAvg() * 100);
 		}
 	}
@@ -257,6 +220,12 @@ public class StateDisplay extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return o1.getName().compareTo(o2.getName());
 		}
 	}
@@ -265,6 +234,12 @@ public class StateDisplay extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return (int) (o2.getTotalLoss() - o1.getTotalLoss());
 		}
 	}
@@ -273,6 +248,12 @@ public class StateDisplay extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return (int) (o2.getIps().size() - o1.getIps().size());
 		}
 	}
@@ -281,6 +262,12 @@ public class StateDisplay extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return new Double(o2.getSize()).compareTo(o1.getSize());
 		}
 	}
@@ -289,6 +276,12 @@ public class StateDisplay extends BaseVisitor {
 
 		@Override
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			if (o1.getName() != null && o1.getName().equalsIgnoreCase(Constants.ALL)) {
+				return -1;
+			}
+			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
+				return 1;
+			}
 			return (int) (o2.getTotal() - o1.getTotal());
 		}
 	}
