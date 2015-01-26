@@ -402,4 +402,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return 30;
 	}
 
+	public int getLocalReportStroageTime(){
+		return 7;
+	}
 }
