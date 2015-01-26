@@ -1,3 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
+   <rule id="data">
+      <metric-item monitorCount="true" productText="fff" metricItemText="ddd"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="DescVal" text="1"/>
+         </condition>
+      </config>
+   </rule>
 </monitor-rules>

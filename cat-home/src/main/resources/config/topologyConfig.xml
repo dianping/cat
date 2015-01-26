@@ -15,10 +15,10 @@
       <domain-config id="cat" warning-threshold="100" error-threshold="500" warning-response-time="50.0" error-response-time="100.0"/>
    </node-config>
    <node-config type="Cache" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="10.0" default-error-response-time="30.0">
-      <domain-config id="ShopServer" warning-threshold="100" error-threshold="500" warning-response-time="10.01" error-response-time="30.01"/>
+      <domain-config id="cat" warning-threshold="100" error-threshold="500" warning-response-time="10.01" error-response-time="30.01"/>
    </node-config>
    <node-config type="PigeonService" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
-      <domain-config id="TuanGouTracking" warning-threshold="10" error-threshold="50" warning-response-time="80.0" error-response-time="150.0"/>
+      <domain-config id="cat" warning-threshold="10" error-threshold="50" warning-response-time="80.0" error-response-time="150.0"/>
    </node-config>
-   <edge-config key="PigeonCall:TuanGouWeb:Cache.memcached-tuangou" type="PigeonCall" from="TuanGouWeb" to="Cache.memcached-tuangou" warning-threshold="10" error-threshold="50" warning-response-time="10.0" error-response-time="30.0"/>
+   <edge-config key="PigeonCall:test:Cache.memcached-test" type="PigeonCall" from="test" to="Cache.memcached-test" warning-threshold="10" error-threshold="50" warning-response-time="10.0" error-response-time="30.0"/>
 </topology-graph-config>

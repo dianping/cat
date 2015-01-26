@@ -1,65 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exception-rule-config>
-      <exception-limit id="tuangou-web:com.dianping.tuangou.web.biz.index.ListPageException" domain="tuangou-web" name="com.dianping.tuangou.web.biz.index.ListPageException " warning="200" error="400" />
-      <exception-limit id="tuangou-web:com.dianping.tuangou.web.biz.index.ListPageException" domain="tuangou-web" name="com.dianping.tuangou.web.biz.index.ListPageException" warning="100" error="300" />
-      <exception-limit id="tuangou-web:com.dianping.tuangou.web.biz.index.CityHomeException" domain="tuangou-web" name="com.dianping.tuangou.web.biz.index.CityHomeException" warning="200" error="400" />
-      <exception-limit id="tuangou-web:com.dianping.tuangou.web.biz.detail.DetailPageException" domain="tuangou-web" name="com.dianping.tuangou.web.biz.detail.DetailPageException" warning="200" error="400" />
-      <exception-limit id="SearchTuanGou:Total" domain="SearchTuanGou" name="Total" warning="2000" error="2500" />
-      <exception-limit id="ba-base-organizationalstructure-server:Total" domain="ba-base-organizationalstructure-server" name="Total" warning="1" error="3" />
-      <exception-limit id="piccenter-display:Total" domain="piccenter-display" name="Total" warning="100" error="200" />
-      <exception-limit id="rs-mapi-web:Total" domain="rs-mapi-web" name="Total" warning="150" error="150" />
-      <exception-limit id="rs-open-service:Total" domain="rs-open-service" name="Total" warning="100" error="100" />
-      <exception-limit id="piccenter-storage:Total" domain="piccenter-storage" name="Total" warning="50" error="100" />
-      <exception-limit id="ba-es-employeeport-web:Total" domain="ba-es-employeeport-web" name="Total" warning="10" error="10" />
-      <exception-limit id="ba-esb:Total" domain="ba-esb" name="Total" warning="5" error="5" />
-      <exception-limit id="rs-service:Total" domain="rs-service" name="Total" warning="100" error="100" />
-      <exception-limit id="to-lab-web:Total" domain="to-lab-web" name="Total" warning="10000" error="500" />
-      <exception-limit id="review-web:Total" domain="review-web" name="Total" warning="60" error="120" />
-      <exception-limit id="netjob:Total" domain="netjob" name="Total" warning="10" error="5" />
-      <exception-limit id="argus-web:Total" domain="argus-web" name="Total" warning="10" error="1" />
-      <exception-limit id="ba-workflow-k2-service:Total" domain="ba-workflow-k2-service" name="Total" warning="1" error="2" />
-      <exception-limit id="piccenter-web:Total" domain="piccenter-web" name="Total" warning="50" error="100" />
       <exception-limit id="cat:Total" domain="cat" name="Total" warning="100" error="300" />
-      <exception-exclude id="cat:java.net.UnknownHostException" domain="cat" name="java.net.UnknownHostException"/>
-      <exception-exclude id="cat:org.unidal.dal.jdbc.DalNotFoundException" domain="cat" name="org.unidal.dal.jdbc.DalNotFoundException"/>
-      <exception-exclude id="cat:org.unidal.dal.jdbc.DalException" domain="cat" name="org.unidal.dal.jdbc.DalException"/>
-      <exception-exclude id="cat:com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException" domain="cat" name="com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException"/>
       <exception-exclude id="cat:org.apache.hadoop.ipc.RemoteException" domain="cat" name="org.apache.hadoop.ipc.RemoteException"/>
       <exception-exclude id="cat:java.net.ConnectException" domain="cat" name="java.net.ConnectException"/>
-      <exception-limit id="search-arts-tuangou:com.dianping.dpsf.exception.NetTimeoutException" domain="search-arts-tuangou" name="com.dianping.dpsf.exception.NetTimeoutException" warning="1000" error="10000" />
-      <exception-limit id="review-server:Total" domain="review-server" name="Total" warning="60" error="120" />
-      <exception-limit id="piccenter-upload:Total" domain="piccenter-upload" name="Total" warning="50" error="100" />
-      <exception-limit id="mobile-reviewapi-web:java.lang.SecurityException at com.dianping.app.PushService$CheckUpdateTask.onPostExecute(PushService.java:909)" domain="mobile-reviewapi-web" name="java.lang.SecurityException at com.dianping.app.PushService$CheckUpdateTask.onPostExecute(PushService.java:909)" warning="60" error="120" />
-      <exception-limit id="piccenter-service:Total" domain="piccenter-service" name="Total" warning="50" error="100" />
-      <exception-limit id="shoppic-web:Total" domain="shoppic-web" name="Total" warning="200" error="1000" />
-      <exception-limit id="midas-micro-power-web:Total" domain="midas-micro-power-web" name="Total" warning="1" error="1" />
-      <exception-limit id="receipt-service-mq:com.dianping.tuangou.receipt.mq.notify.exception.ReceiptBuySuccessException" domain="receipt-service-mq" name="com.dianping.tuangou.receipt.mq.notify.exception.ReceiptBuySuccessException" warning="300" error="300" />
-      <exception-limit id="shoppic-service:Total" domain="shoppic-service" name="Total" warning="100" error="500" />
-      <exception-limit id="ba-tgplatform-mq:Total" domain="ba-tgplatform-mq" name="Total" warning="1" error="1" />
-      <exception-limit id="MobileLogWeb:Total" domain="MobileLogWeb" name="Total" warning="500" error="300" />
-      <exception-limit id="promo-server:Total" domain="promo-server" name="Total" warning="10" error="20" />
       <exception-limit id="Default:Total" domain="Default" name="Total" warning="200" error="400" />
       <exception-exclude id="Default:com.mongodb.MongoException$Network" domain="Default" name="com.mongodb.MongoException$Network"/>
       <exception-exclude id="Default:net.spy.memcached.internal.CheckedOperationTimeoutException" domain="Default" name="net.spy.memcached.internal.CheckedOperationTimeoutException"/>
-      <exception-limit id="mpos-web:Total" domain="mpos-web" name="Total" warning="10" error="5" />
-      <exception-limit id="rs-shop-web:Total" domain="rs-shop-web" name="Total" warning="1000" error="500" />
-      <exception-limit id="promo-web:Total" domain="promo-web" name="Total" warning="10" error="20" />
-      <exception-exclude id="to-flashsale-web:com.dianping.mobile.core.exception.ApplicationRuntimeException" domain="to-flashsale-web" name="com.dianping.mobile.core.exception.ApplicationRuntimeException"/>
-      <exception-limit id="emidas-activityvip-web:Total" domain="emidas-activityvip-web" name="Total" warning="5" error="10" />
-      <exception-limit id="emidas-activity-web:Total" domain="emidas-activity-web" name="Total" warning="15" error="15" />
-      <exception-limit id="emidas-prize-web:Total" domain="emidas-prize-web" name="Total" warning="5" error="5" />
-      <exception-limit id="emidas-lottery-web:Total" domain="emidas-lottery-web" name="Total" warning="5" error="5" />
-      <exception-limit id="emidas-admin-web:Total" domain="emidas-admin-web" name="Total" warning="20" error="20" />
-      <exception-limit id="SearchShop:Total" domain="SearchShop" name="Total" warning="500" error="1000" />
-      <exception-limit id="takeaway-base-service:Total" domain="takeaway-base-service" name="Total" warning="300" error="100" />
-      <exception-limit id="TakeawayMapiWeb:Total" domain="TakeawayMapiWeb" name="Total" warning="300" error="100" />
-      <exception-limit id="search-bizer-tuangourec:Total" domain="search-bizer-tuangourec" name="Total" warning="2000" error="4000" />
-      <exception-exclude id="MerchantMemberRpcService:com.dianping.merchant.member.exception.ShopAccountNotFoundException" domain="MerchantMemberRpcService" name="com.dianping.merchant.member.exception.ShopAccountNotFoundException"/>
-      <exception-limit id="data-server:Total" domain="data-server" name="Total" warning="5000" error="50000" />
-      <exception-limit id="credit-placeorder-service:Total" domain="credit-placeorder-service" name="Total" warning="10" error="100" />
-      <exception-limit id="credit-coupon-service:Total" domain="credit-coupon-service" name="Total" warning="5" error="10" />
-      <exception-limit id="search-bizer-tuangou:Total" domain="search-bizer-tuangou" name="Total" warning="2000" error="2500" />
-      <exception-limit id="mail-postman:org.springframework.mail.MailSendException" domain="mail-postman" name="org.springframework.mail.MailSendException" warning="10000" error="100" />
-      <exception-exclude id="PumaServer:java.lang.RuntimeException" domain="PumaServer" name="java.lang.RuntimeException"/>
 </exception-rule-config>
 

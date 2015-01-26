@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <topoGraph-format-config>
-	<productLine id="团购" colInside='5' />
-	<productLine id="支付" colInside='3' />
-	<productLine id="会员卡" colInside='2' />
-	<productLine id="预约预订" colInside='4' />
-	<productLine id="商户" colInside='4' />
-	<productLine id="广告" colInside='5' />
-	<productLine id="用户中心" colInside='4' />
-	<productLine id="移动" colInside='4' />
-	<productLine id="账号中心" colInside='4' />
-	<productLine id="社区" colInside='4' />
-	<productLine id="外卖" colInside='4' />
+	<productLine id="titile1" colInside='5' />
+	<productLine id="title2" colInside='3' />
 </topoGraph-format-config>

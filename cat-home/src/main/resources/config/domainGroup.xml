@@ -1,27 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <domain-group>
    <domain id="PayOrder">
-      <group id="weixin">
-         <ip>10.1.108.101</ip>
-         <ip>10.1.108.139</ip>
-         <ip>10.1.108.142</ip>
-         <ip>10.1.108.167</ip>
-         <ip>10.1.108.164</ip>
-      </group>
       <group id="main">
-         <ip>10.1.4.198</ip>
-         <ip>10.1.4.204</ip>
-         <ip>10.1.4.98</ip>
-         <ip>10.1.7.123</ip>
-         <ip>10.2.7.157</ip>
-         <ip>10.2.7.87</ip>
+         <ip>10.10.10.1</ip>
+         <ip>10.10.10.2</ip>
       </group>
       <group id="event">
-         <ip>10.1.111.123</ip>
-         <ip>10.1.111.132</ip>
-         <ip>10.1.111.162</ip>
-         <ip>10.1.111.31</ip>
-         <ip>10.1.111.53</ip>
+         <ip>10.10.10.3</ip>
+         <ip>10.10.10.4</ip>
       </group>
    </domain>
 </domain-group>

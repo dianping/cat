@@ -68,10 +68,10 @@
 		<h5 class="text-center">请求量分布</h5>
 		<div id="piechart"></div>
 		<br/>
-	<table id="web_content" class="table table-striped table-condensed table-bordered">
+	<table id="web_content" class="table table-striped table-condensed">
 		<thead><tr class="text-success">
 		<c:if test="${payload.groupByField.name eq 'code'}">
-		<th>返回码</th>
+		<th width="20%" colspan="2">返回码 (默认设置无法编辑)</th>
 		</c:if>
 		<th>类别</th>
 		<th>请求总数</th>
@@ -81,9 +81,15 @@
 	<tbody>
 	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
 		<tr>
-		
 		<c:if test="${payload.groupByField.name eq 'code'}">
-			<td>${item.id}&nbsp;&nbsp;<a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
+			<c:choose>
+			<c:when test="${model.codes[item.id] != null}">
+				<td width="5%">${item.id}</td><td><a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
+			</c:when>
+			<c:otherwise>
+				<td colspan="2">${item.id}</td>  
+			</c:otherwise>
+			</c:choose>
 		</c:if>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>

@@ -108,6 +108,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);
+
 			buildDisplayInfo(model, payload, report);
 			break;
 		case GRAPH:
@@ -130,12 +131,9 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STATE);
 		String ip = payload.getIpAddress();
-		Action action = payload.getAction();
 
-		if (action == Action.HOURLY || action == Action.HISTORY) {
-			if (!Constants.CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
-				payload.setIpAddress(Constants.ALL);
-			}
+		if (StringUtils.isEmpty(ip)) {
+			payload.setIpAddress(Constants.ALL);
 		}
 		m_normalizePayload.normalize(model, payload);
 	}

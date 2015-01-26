@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <url-pattern>
-   <pattern-item group="cdn-s1" name="s1-small-dnsLookup" pattern="http://j1.s1.dpfile.com/lib/1.0/cdn-perf/res/cdn_small.png/dnsLookup" domain=" "/>
+   <pattern-item group="cdn-s1" name="s1-small-dnsLookup" pattern="http://test/cdn_small.png/dnsLookup" domain="test"/>
 </url-pattern>
