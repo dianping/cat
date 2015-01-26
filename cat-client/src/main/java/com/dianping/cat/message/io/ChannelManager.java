@@ -141,7 +141,7 @@ public class ChannelManager implements Task {
 			future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 			if (!future.isSuccess()) {
-				m_logger.error("Error when try to connecting to " + address);
+				m_logger.error("Error when try connecting to " + address);
 				closeChannel(future);
 			} else {
 				m_logger.info("Connected to CAT server at " + address);
