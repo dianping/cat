@@ -223,7 +223,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
 		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ServerStatisticManager.class));
+		      .req(ServerStatisticManager.class, ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
