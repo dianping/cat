@@ -170,7 +170,10 @@ public class Handler implements PageHandler<Context> {
 				model.setPieChart(pieChartPair.getKey());
 				model.setPieChartDetailInfos(pieChartPair.getValue());
 			}
-			model.setCommandId(payload.getQueryEntity1().getId());
+			int commandId = payload.getQueryEntity1().getId();
+
+			model.setCommandId(commandId);
+			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		case PIECHART_JSON:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload, field);
