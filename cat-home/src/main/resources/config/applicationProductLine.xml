@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <company>
-   <product-line id="shop" order="5.0" title="商户" metric-dashboard="false" application-dashboard="true" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
-      <domain id="ShopEvent"/>
-      <domain id="ShopServer"/>
-      <domain id="ShopWeb"/>
-      <domain id="ActivityShopAdminWeb"/>
-      <domain id="ShopAccountAdminWeb"/>
-      <domain id="ShopAccountServer"/>
-      <domain id="ShopAccountWeb"/>
+   <product-line id="shop" order="5.0" title="商户" >
+      <domain id="domain1"/>
+      <domain id="domain2"/>
+      <domain id="domain3"/>
    </product-line>
 </company>

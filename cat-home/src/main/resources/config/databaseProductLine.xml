@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <company>
-   <product-line id="db-mysql-tg01s6.nh[10.1.1.136]" order="0.0" title="db-mysql-tg01s6.nh[10.1.1.136]" metric-dashboard="false" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="true">
+   <product-line id="db-mysql" order="0.0" title="db-mysql" >
       <domain id="cat"/>
    </product-line>
 </company>

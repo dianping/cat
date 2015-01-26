@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <company>
-   <product-line id="mkt-get-items" order="0.0" title="mkt-get-items" metric-dashboard="false" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="true" database-monitor-dashboard="false">
+   <product-line id="mkt-get-items" order="0.0" title="mkt-get-items">
       <domain id="broker-service"/>
    </product-line>
 </company>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <company>
-   <product-line id="Platform" order="10.0" title="架构" metric-dashboard="true" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
+   <product-line id="Platform" order="10.0" title="架构" >
       <domain id="Cat"/>
       <domain id="PumaServer"/>
       <domain id="SessionService"/>

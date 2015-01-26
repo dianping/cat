@@ -2,7 +2,6 @@
 <company>
    <product-line id="switch-AntiDDoS" order="1.0" title="switch-AntiDDoS" metric-dashboard="false" application-dashboard="false" network-dashboard="true" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
       <domain id="AntiDDoS"/>
-      <domain id="Cat"/>
       <domain id="cat"/>
    </product-line>
 </company>

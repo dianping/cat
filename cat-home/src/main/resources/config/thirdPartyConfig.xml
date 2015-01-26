@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <third-party-config>
-   <http url="http://180.153.86.71/stand/soap/standard.wsdl" type="get" domain="ShopHotelServer">
+   <http url="http://testUrl1/" type="get" domain="test">
    </http>
-   <http url="http://api.map.baidu.com/geocoder/v2/" type="get" domain="TakeawayMapiWeb">
-      <par id="ak=D596723a1485b344262c330e80511371"/>
-      <par id="location=31.222358208789,121.4270487196"/>
+   <http url="http://testUrl2/" type="get" domain="test">
       <par id="output=json"/>
       <par id="pois=0"/>
-      <par id="coordtype=bd09ll"/>
    </http>
 </third-party-config>
