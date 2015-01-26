@@ -24,6 +24,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 	@Inject
 	private ReportBucketManager m_bucketManager;
 
+
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
 	}
@@ -41,13 +42,13 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 	public String buildXml(StateReport report) {
 		return report.toString();
 	}
-
+	
 	@Override
 	public boolean createHourlyTask(StateReport report) {
 		Date startTime = report.getStartTime();
 		String domain = report.getDomain();
 
-		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.APP_DATABASE_PRUNER, TaskProlicy.DAILY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_ALERT, TaskProlicy.ALL);
