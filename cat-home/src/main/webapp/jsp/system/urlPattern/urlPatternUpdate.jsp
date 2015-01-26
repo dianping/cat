@@ -26,8 +26,7 @@
 					<tr>
 						<th>Pattern名</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.pattern" required value="${model.patternItem.pattern}"/></td>
-						<td><span class="text-danger">支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api，
-													<br/>部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</span></td>
+						<td><span class="text-danger">仅支持完全匹配方式，确保和JS埋点一直，比如http://m.api.dianping.com/searchshop.api</span></td>
 					</tr>
 					<tr>
 						<th>项目组</th>

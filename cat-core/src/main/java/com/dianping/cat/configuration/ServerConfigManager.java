@@ -154,7 +154,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
 
-			return storage.getMaxStorageTime();
+			return storage.getMaxHdfsStorageTime();
 		} else {
 			return 15;
 		}
@@ -201,6 +201,26 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return ldap;
 		} else {
 			return null;
+		}
+	}
+
+	public int getLocalReportStroageTime() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getLocalReportStorageTime();
+		} else {
+			return 7;
+		}
+	}
+
+	public int getLogViewMaxStroageTime() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getLocalLogivewStorageTime();
+		} else {
+			return 30;
 		}
 	}
 
@@ -317,6 +337,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean isClient(String type) {
+		return "PigeonCall".equals(type) || "Call".equals(type);
+	}
+
 	public boolean isClientCall(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
 	}
@@ -363,10 +387,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isClient(String type) {
-		return "PigeonCall".equals(type) || "Call".equals(type);
-	}
-
 	public boolean isServer(String type) {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
@@ -396,13 +416,5 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
-	}
-
-	public int getLogViewMaxStroageTime() {
-		return 30;
-	}
-
-	public int getLocalReportStroageTime(){
-		return 7;
 	}
 }
