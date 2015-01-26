@@ -41,13 +41,17 @@ public class CacheReport {
 
 	private Set<String> m_methods = new LinkedHashSet<String>();
 
+	private String firstLetterUpper(String input) {
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String arrays[] = transactionName.getId().split(":");
 		String categroy = arrays[0];
 		String method = "";
 
 		if (arrays.length > 1) {
-			method = arrays[1];
+			method = firstLetterUpper(arrays[1]);
 		}
 		CacheNameItem item = m_nameItems.get(categroy);
 		CacheNameItem all = m_nameItems.get(ALL);
@@ -174,8 +178,8 @@ public class CacheReport {
 
 			if (!StringUtils.isEmpty(method)) {
 				long total = incMethodCount(method, transactionTotalCount);
-
-				if ("get".equals(method)) {
+				
+				if ("get".equalsIgnoreCase(method)) {
 					m_missed = m_missed + eventName.getTotalCount();
 					m_hited = 1 - (double) m_missed / total;
 				}
