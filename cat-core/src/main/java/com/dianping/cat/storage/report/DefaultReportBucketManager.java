@@ -34,8 +34,8 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 		try {
 			File reportDir = new File(m_reportBaseDir);
 			final List<String> toRemovePaths = new ArrayList<String>();
-			final Set<String> validPaths = queryValidPath(7);
-			
+			final Set<String> validPaths = queryValidPath(m_configManager.getLocalReportStroageTime());
+
 			Scanners.forDir().scan(reportDir, new FileMatcher() {
 				@Override
 				public Direction matches(File base, String path) {
