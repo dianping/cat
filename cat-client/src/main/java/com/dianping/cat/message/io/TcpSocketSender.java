@@ -52,6 +52,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
+    private ByteBuf buf;
+
 	private boolean checkWritable(ChannelFuture channel) {
 		boolean isWriteable = false;
 
@@ -136,18 +138,24 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private void sendInternal(MessageTree tree) {
-		ChannelFuture future = m_manager.channel();
-		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
+        ChannelFuture future = m_manager.channel();
 
-		m_codec.encode(tree, buf);
+        if (null == buf) {
+            buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
+        } else {
+            buf.clear();
+        }
 
-		int size = buf.readableBytes();
+        m_codec.encode(tree, buf);
 
-		future.channel().writeAndFlush(buf);
+        int size = buf.readableBytes();
 
-		if (m_statistics != null) {
-			m_statistics.onBytes(size);
-		}
+        buf.retain();                        // ref count 1 => 2
+        future.channel().writeAndFlush(buf); // ref count 2 => 1
+
+        if (m_statistics != null) {
+            m_statistics.onBytes(size);
+        }
 	}
 
 	public void setCodec(MessageCodec codec) {
