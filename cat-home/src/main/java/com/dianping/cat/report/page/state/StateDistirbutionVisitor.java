@@ -14,13 +14,11 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 
 	private Map<String, Double> m_distribute = new HashMap<String, Double>();
 
-	protected String m_currentIp;
+	private String m_currentIp;
 
-	protected ProcessDomain m_processDomain;
+	private String m_domain = "";
 
-	protected String m_domain = "";
-
-	protected String m_attribute = "";
+	private String m_attribute = "";
 
 	public Map<String, Double> getDistribute() {
 		return m_distribute;
@@ -76,8 +74,6 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 
 		if (old == null) {
 			old = new Double(0);
-
-			m_distribute.put(ip, old);
 		}
 		m_distribute.put(ip, old + value);
 	}
