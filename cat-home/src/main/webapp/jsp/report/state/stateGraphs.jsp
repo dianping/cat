@@ -15,7 +15,7 @@
 
 
 <c:choose>
-<c:when test="${payload.ipAddress eq 'All' }">
+<c:when test="${payload.ipAddress eq 'All' and payload.key ne 'delayAvg'}">
 <table width=100%>
 	<tr>
 		<td width="50%"><div id="trendGraph" class="graph"></div></td>
