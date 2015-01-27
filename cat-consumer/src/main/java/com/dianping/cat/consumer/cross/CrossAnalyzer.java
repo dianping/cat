@@ -71,9 +71,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		} else {
 			String type = t.getType();
 
-			if (m_serverConfigManager.isClientCall(type)) {
+			if (m_serverConfigManager.isRpcClient(type)) {
 				return parsePigeonClientTransaction(t, tree);
-			} else if (m_serverConfigManager.isServer(type)) {
+			} else if (m_serverConfigManager.isRpcServer(type)) {
 				return parsePigeonServerTransaction(t, tree);
 			}
 			return null;
@@ -187,7 +187,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			updateCrossReport(report, t, crossInfo);
 
 			String domain = crossInfo.getApp();
-			if (m_serverConfigManager.isClientCall(t.getType()) && StringUtils.isNotEmpty(domain)) {
+			if (m_serverConfigManager.isRpcClient(t.getType()) && StringUtils.isNotEmpty(domain)) {
 				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				updateServerCrossReport(t, domain, info);

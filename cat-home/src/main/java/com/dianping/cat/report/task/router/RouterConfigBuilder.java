@@ -83,7 +83,6 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 
 		routerConfig.setStartTime(end);
 		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
-
 		DailyReport dailyReport = new DailyReport();
 
 		dailyReport.setContent("");
@@ -124,12 +123,13 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 		return result;
 	}
 
-	private Server findMinProcessServer(Map<Server, Long> maps) {
+	private Server findMinServer(Map<Server, Long> maps) {
 		long min = Long.MAX_VALUE;
 		Server result = null;
 
 		for (Entry<Server, Long> entry : maps.entrySet()) {
-			Long value = entry.getValue();
+			Server server = entry.getKey();
+			Long value = (long) (entry.getValue() / server.getWeight());
 
 			if (value < min) {
 				result = entry.getKey();
@@ -172,7 +172,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 					}
 					backServers.put(server, serverProcess);
 				}
-				Server nextServer = findMinProcessServer(serverProcess);
+				Server nextServer = findMinServer(serverProcess);
 
 				if (nextServer != null) {
 					Long oldValue = serverProcess.get(nextServer);
@@ -193,7 +193,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 			Long value = entry.getValue();
 
 			if (defaultDomainConfig == null) {
-				Server server = findMinProcessServer(servers);
+				Server server = findMinServer(servers);
 				Long oldValue = servers.get(server);
 				Domain domainConfig = new Domain(domainName);
 

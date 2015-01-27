@@ -143,7 +143,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(ReportServiceManager.class));
 
-		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class).req(ReportServiceManager.class));
+		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //
+		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
+		      .req(ReportServiceManager.class));
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(ReportServiceManager.class,
 		      RouterConfigManager.class));

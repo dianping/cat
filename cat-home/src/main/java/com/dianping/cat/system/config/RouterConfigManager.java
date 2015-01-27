@@ -118,7 +118,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 		for (DefaultServer server : servers) {
 			if (server.isEnable()) {
-				result.add(new Server().setId(server.getId()).setPort(server.getPort()));
+				result.add(new Server().setId(server.getId()).setPort(server.getPort()).setWeight(server.getWeight()));
 			}
 		}
 		return result;

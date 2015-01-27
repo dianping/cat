@@ -1,23 +1,29 @@
 package com.dianping.cat.report.task.state;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 
 public class StateReportBuilder implements TaskBuilder {
 
@@ -25,6 +31,15 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Inject
 	protected ReportServiceManager m_reportService;
+
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	private ProjectService m_projectService;
+
+	@Inject
+	private HostinfoService m_hostinfoService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -44,7 +59,12 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("State report don't support HourReport!");
+		StateReport stateReport = m_reportService.queryStateReport(domain, period, new Date(period.getTime()
+		      + TimeHelper.ONE_HOUR));
+
+		new StateReportVisitor().visitStateReport(stateReport);
+
+		return true;
 	}
 
 	@Override
@@ -125,11 +145,46 @@ public class StateReportBuilder implements TaskBuilder {
 		return stateReport;
 	}
 
+	private void updateDomainInfo(String domain, String ip) {
+		if (m_serverConfigManager.validateDomain(domain)) {
+			if (!m_projectService.containsDomainInCat(domain)) {
+				m_projectService.insertDomain(domain);
+
+			}
+			Hostinfo info = m_hostinfoService.findByIp(ip);
+
+			if (info == null) {
+				m_hostinfoService.insert(domain, ip);
+			} else {
+				String oldDomain = info.getDomain();
+
+				if (!domain.equals(oldDomain) && !Constants.CAT.equals(oldDomain)) {
+					m_hostinfoService.update(info.getId(), domain, ip);
+				}
+			}
+		}
+	}
+
 	public static class ClearDetailInfo extends BaseVisitor {
 
 		@Override
 		public void visitProcessDomain(ProcessDomain processDomain) {
 			processDomain.getDetails().clear();
+		}
+	}
+
+	public class StateReportVisitor extends BaseVisitor {
+
+		@Override
+		public void visitProcessDomain(ProcessDomain processDomain) {
+			String domain = processDomain.getName();
+			Set<String> ips = processDomain.getIps();
+
+			for (String ip : ips) {
+				if (m_serverConfigManager.validateDomain(domain) && m_serverConfigManager.validateIp(ip)) {
+					updateDomainInfo(domain, ip);
+				}
+			}
 		}
 	}
 
