@@ -14,7 +14,7 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private MetricConfigManager m_metricConfigManager;
-	
+
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
 
@@ -29,7 +29,15 @@ public class ConfigReloadTask implements Task {
 		while (active) {
 			try {
 				m_productLineConfigManager.refreshProductLineConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			try {
 				m_metricConfigManager.refreshMetricConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			try {
 				m_routerConfigManager.refreshRouterConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
