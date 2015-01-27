@@ -29,7 +29,7 @@
 						<td><span class="text-danger">仅支持完全匹配方式，确保和JS埋点一直，比如http://m.api.dianping.com/searchshop.api</span></td>
 					</tr>
 					<tr>
-						<th>项目组</th>
+						<th>项目名</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.domain" required value="${model.patternItem.domain}"/></td>
 						<td><span class="text-danger">根据项目组查找需要发送告警的联系人信息</span></td>
 					</tr>

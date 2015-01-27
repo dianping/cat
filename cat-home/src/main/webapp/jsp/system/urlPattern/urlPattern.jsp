@@ -21,7 +21,7 @@
 					<th width="15%">唯一ID</th>
 					<th width="15%">属于组</th>
 					<th width="42%">Pattern内容</th>
-					<th width="15%">项目组</th>
+					<th width="15%">项目名</th>
 					<th width="8%">操作 <a href="?op=urlPatternUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
