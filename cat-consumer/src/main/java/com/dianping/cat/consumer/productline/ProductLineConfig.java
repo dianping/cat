@@ -20,7 +20,7 @@ public enum ProductLineConfig {
 
 	SYSTEM("systemProductLine", "系统监控", "system-"),
 
-	DATABASE("databaseProductline", "数据库监控", "db-"),
+	DATABASE("databaseProductLine", "数据库监控", "db-"),
 
 	CDN("cdnProductLine", "CDN监控", "cdn");
 
