@@ -15,13 +15,13 @@
 				<table style='width:100%' class='table table-striped table-condensed table-bordered table-hover'>
 					<tr>
 						<th width="10%">唯一ID</th>
-						<td width="40%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
-						<td width="50%"><span class="text-danger">不能有特殊字符，仅限于英文字母和-</span></td>
+						<td width="25%"><input type="text" class="input-xlarge"  name="patternItem.name" required value="${model.patternItem.name}"/></td>
+						<td width="65%"><span class="text-danger">不能有特殊字符，仅限于英文字母和-</span></td>
 					</tr>
 					<tr>
 						<th>所属组</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.group" required value="${model.patternItem.group}"/></td>
-						<td><span class="text-danger">暂时不起作用，仅仅用作url的分组，用于展示目的</span></td>
+						<td><span class="text-danger">不起作用，仅仅用作url的分组，用于展示分组</span></td>
 					</tr>
 					<tr>
 						<th>Pattern名</th>
@@ -31,7 +31,7 @@
 					<tr>
 						<th>项目名</th>
 						<td><input type="text" class="input-xlarge"  name="patternItem.domain" required value="${model.patternItem.domain}"/></td>
-						<td><span class="text-danger">根据项目组查找需要发送告警的联系人信息</span></td>
+						<td><span class="text-danger">后续配置在这个规则上的告警，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)</span></td>
 					</tr>
 					<tr>
 						<td style='text-align:center' colspan='3'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>

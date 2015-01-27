@@ -73,7 +73,7 @@
 		</td>
 		<tr>
 		<tr>
-			<td>项目</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">（支持数字、字符）</span><br/>
+			<td>项目名</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">&nbsp;&nbsp;后续配置在这个规则的告警，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)</span><br/>
 </td>
 </tr>
 		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
