@@ -125,56 +125,37 @@ public class StateHistoryGraphVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMessage(Message message) {
-		Message msg = mergeMessage(message);
 		int hour = (int) ((m_currentStart - m_start) / TimeHelper.ONE_HOUR);
 
 		if (m_attribute.equalsIgnoreCase("total")) {
-			m_data[hour] = (double) msg.getTotal();
+			m_data[hour] += (double) message.getTotal();
 		} else if (m_attribute.equalsIgnoreCase("totalLoss")) {
-			m_data[hour] = (double) msg.getTotalLoss();
+			m_data[hour] += (double) message.getTotalLoss();
 		} else if (m_attribute.equalsIgnoreCase("avgTps")) {
-			m_data[hour] = (double) msg.getTotal();
+			m_data[hour] += (double) message.getTotal();
 		} else if (m_attribute.equalsIgnoreCase("maxTps")) {
-			m_data[hour] = (double) msg.getTotal();
+			m_data[hour] += (double) message.getTotal();
 		} else if (m_attribute.equalsIgnoreCase("dump")) {
-			m_data[hour] = (double) msg.getDump();
+			m_data[hour] += (double) message.getDump();
 		} else if (m_attribute.equalsIgnoreCase("dumpLoss")) {
-			m_data[hour] = (double) msg.getDumpLoss();
+			m_data[hour] += (double) message.getDumpLoss();
 		} else if (m_attribute.equalsIgnoreCase("pigeonTimeError")) {
-			m_data[hour] = (double) msg.getPigeonTimeError();
+			m_data[hour] += (double) message.getPigeonTimeError();
 		} else if (m_attribute.equalsIgnoreCase("networkTimeError")) {
-			m_data[hour] = (double) msg.getNetworkTimeError();
+			m_data[hour] += (double) message.getNetworkTimeError();
 		} else if (m_attribute.equalsIgnoreCase("blockTotal")) {
-			m_data[hour] = (double) msg.getBlockTotal();
+			m_data[hour] += (double) message.getBlockTotal();
 		} else if (m_attribute.equalsIgnoreCase("blockLoss")) {
-			m_data[hour] = (double) msg.getBlockLoss();
+			m_data[hour] = (double) message.getBlockLoss();
 		} else if (m_attribute.equalsIgnoreCase("blockTime")) {
-			m_data[hour] = (double) msg.getBlockTime() * 1.0 / 60 / 1000;
+			m_data[hour] += (double) message.getBlockTime() * 1.0 / 60 / 1000;
 		} else if (m_attribute.equalsIgnoreCase("size")) {
-			m_data[hour] = (double) msg.getSize() / 1024 / 1024;
+			m_data[hour] += (double) message.getSize() / 1024 / 1024;
 		} else if (m_attribute.equalsIgnoreCase("delayAvg")) {
-			if (msg.getDelayCount() > 0) {
-				m_data[hour] = msg.getDelaySum() / msg.getDelayCount();
+			if (message.getDelayCount() > 0) {
+				m_data[hour] += message.getDelaySum() / message.getDelayCount();
 			}
 		}
-	}
-
-	private Message mergeMessage(Message message) {
-		Message total = m_stateReport.findOrCreateMachine(m_ip).findOrCreateMessage(message.getId());
-
-		total.setDelayCount(total.getDelayCount() + message.getDelayCount());
-		total.setDelaySum(total.getDelaySum() + message.getDelaySum());
-		total.setDump(total.getDump() + message.getDump());
-		total.setDumpLoss(total.getDumpLoss() + message.getDumpLoss());
-		total.setSize(total.getSize() + message.getSize());
-		total.setTotal(total.getTotal() + message.getTotal());
-		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
-		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
-		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
-		total.setBlockTime(total.getBlockTime() + message.getBlockTime());
-		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
-		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
-		return total;
 	}
 
 	@Override
