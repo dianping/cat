@@ -22,12 +22,8 @@
 			$('#metricConfigList').addClass('active');
 			
 			var productLine = '${payload.productLineName}';
-			if(productLine ==''){
-				 productLine = 'TuanGou';
-			}
 			$('#tab-'+productLine).addClass('active');
 			$('#tabContent-'+productLine).addClass('active');
-
 			
 			var action = '${payload.action.name}';
 			if(action=='metricConfigDelete'||action=='metricConfigAddSumbit'||action=='metricRuleAddSubmit'){
