@@ -105,14 +105,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return "";
 	}
 
-	public String getEmailAccount() {
-		return "book.robot.dianping@gmail.com";
-	}
-
-	public String getEmailPassword() {
-		return "xudgtsnoxivwclna";
-	}
-
 	public String getHdfsBaseDir(String id) {
 		if (m_config != null) {
 			HdfsConfig hdfsConfig = m_config.getStorage().findHdfs(id);
@@ -215,7 +207,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public int getLogViewMaxStroageTime() {
+	public int getLogViewStroageTime() {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
 
@@ -338,14 +330,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isClient(String type) {
-		return "PigeonCall".equals(type) || "Call".equals(type);
-	}
-
-	public boolean isClientCall(String type) {
-		return "PigeonCall".equals(type) || "Call".equals(type);
-	}
-
 	public boolean isCrashLog(String domain) {
 		return m_crashLogs.contains(domain);
 	}
@@ -356,10 +340,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		} else {
 			return false;
 		}
-	}
-
-	public boolean isInitialized() {
-		return m_config != null;
 	}
 
 	public boolean isJobMachine() {
@@ -388,7 +368,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isServer(String type) {
+	public boolean isRpcClient(String type) {
+		return "PigeonCall".equals(type) || "Call".equals(type);
+	}
+
+	public boolean isRpcServer(String type) {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
@@ -419,7 +403,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 	
-
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");

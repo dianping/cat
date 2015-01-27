@@ -108,7 +108,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		String type = t.getType();
 		Ratio ratio = null;
 
-		if (m_serverConfigManager.isClient(type)) {
+		if (m_serverConfigManager.isRpcClient(type)) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
 			ratio = ratios.get("SQL");

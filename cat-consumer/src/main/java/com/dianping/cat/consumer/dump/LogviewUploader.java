@@ -73,7 +73,7 @@ public class LogviewUploader implements Task {
 
 	private void deleteOldMessages() {
 		final List<String> paths = new ArrayList<String>();
-		final Set<String> validPaths = findValidPath(m_configManager.getLogViewMaxStroageTime());
+		final Set<String> validPaths = findValidPath(m_configManager.getLogViewStroageTime());
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
 			@Override
