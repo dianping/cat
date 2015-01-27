@@ -23,5 +23,6 @@
   <entity name="server">
     <attribute name="id" value-type="String"/>
     <attribute name="port" value-type="int" primitive="true" />
+    <attribute name="weight" value-type="double" primitive="true" default-value="1"/>
   </entity>
 </model>

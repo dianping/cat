@@ -2,6 +2,7 @@ package com.dianping.cat.message.io;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 
 import java.net.InetSocketAddress;
@@ -52,11 +53,12 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
-	private boolean checkWritable(ChannelFuture channel) {
+	private boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
+		Channel channel = future.channel();
 
-		if (channel != null && channel.channel().isOpen()) {
-			if (channel.channel().isActive()) {
+		if (future != null && channel.isOpen()) {
+			if (channel.isActive() && channel.isWritable()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();
@@ -142,9 +144,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_codec.encode(tree, buf);
 
 		int size = buf.readableBytes();
+		Channel channel = future.channel();
 
-		future.channel().writeAndFlush(buf);
-
+		channel.writeAndFlush(buf);
 		if (m_statistics != null) {
 			m_statistics.onBytes(size);
 		}
