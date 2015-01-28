@@ -391,10 +391,10 @@ public class Handler implements PageHandler<Context> {
 
 			@Override
 			public int compare(java.util.Map.Entry<String, ErrorStatis> o1, java.util.Map.Entry<String, ErrorStatis> o2) {
-				String department1 = o1.getValue().getDepartment();
-				String department2 = o2.getValue().getDepartment();
-				String productLine1 = o1.getValue().getProductLine();
-				String productLine2 = o2.getValue().getProductLine();
+				String department1 = String.valueOf(o1.getValue().getDepartment());
+				String department2 = String.valueOf(o2.getValue().getDepartment());
+				String productLine1 = String.valueOf(o1.getValue().getProductLine());
+				String productLine2 = String.valueOf(o2.getValue().getProductLine());
 
 				if (department1.equals(department2)) {
 					return productLine1.compareTo(productLine2);
