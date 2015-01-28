@@ -249,10 +249,10 @@ public class GlobalConfigProcessor {
 
 		@Override
 		public int compare(Project o1, Project o2) {
-			String department1 = o1.getDepartment();
-			String department2 = o2.getDepartment();
-			String productLine1 = o1.getProjectLine();
-			String productLine2 = o2.getProjectLine();
+			String department1 = o1.getBu();
+			String department2 = o2.getBu();
+			String productLine1 = o1.getCmdbProductline();
+			String productLine2 = o2.getCmdbProductline();
 
 			if (department1.equalsIgnoreCase(department2)) {
 				if (productLine1.equalsIgnoreCase(productLine2)) {

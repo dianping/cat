@@ -116,14 +116,14 @@
 			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
-			<td style="width:10%;">所属部门</td>
-			<td><input type="name" name="project.department" value="${model.project.department}" required/></td>
-			<td style='color:red'>（一级分类）建议填写，主站、手机、团购、搜索、架构</td>
+			<td style="width:10%;">CMDB事业部</td>
+			<td><input type="name" name="project.bu" value="${model.project.bu}" required/></td>
+			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
-			<td style="width:10%;">产品线</td>
-			<td><input type="name" name="project.projectLine" value="${model.project.projectLine}" required/></td>
-			<td style='color:red'>（二级分类）由各自业务线决定,建议字数小于4</td>
+			<td style="width:10%;">CMDB产品线</td>
+			<td><input type="name" name="project.cmdbProductline" value="${model.project.cmdbProductline}" required/></td>
+			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">负责人</td>

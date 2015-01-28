@@ -456,8 +456,8 @@ public class Handler implements PageHandler<Context> {
 			Project project = m_projectService.findByDomain(m_currentDomain.getId());
 
 			if (project != null) {
-				String productLine = project.getProjectLine();
-				String department = project.getDepartment();
+				String productLine = project.getCmdbProductline();
+				String department = project.getBu();
 				ErrorStatis statis = findOrCreateErrorStatis(productLine);
 
 				statis.setDepartment(department);
