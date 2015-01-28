@@ -46,7 +46,7 @@
 			<c:forEach var="project" items="${model.projects}">
 						var item = {};
 						item['label'] = '${project.domain}';
-						item['category'] ='${project.department} - ${project.projectLine}';
+						item['category'] ='${project.bu} - ${project.cmdbProductline}';
 						
 						data.push(item);
 			</c:forEach>
@@ -101,43 +101,45 @@
 	<table class="table table-striped table-condensed ">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
-		<input type="hidden" name="project.bu" value="${model.project.bu}" />
-		<input type="hidden" name="project.cmdbProductline" value="${model.project.cmdbProductline}" />
-		<input type="hidden" name="project.level" value="${model.project.level}" />
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
-			<td style="width:10%;">项目名称</td>
+			<td style="width:10%;">CAT项目名称</td>
 			<td>${model.project.domain}</td>
-			<td style="color:red">注意：如果CMDB中存在该项目信息，信息修改会被CMDB同步更新覆盖掉。</td>
+			<td style="color:red">注意：建议使用统一项目名规范。</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB项目名称</td>
-			<td><input type="name" name="project.cmdbDomain" value="${model.project.cmdbDomain}" required/></td>
+			<td><input type="name" class="input-xlarge" name="project.cmdbDomain" value="${model.project.cmdbDomain}" required/></td>
 			<td>cmdb中项目统一名称</td>
+		</tr>
+		<tr>
+			<td style="width:10%;">CMDB项目级别</td>
+			<td><input type="name" class="input-xlarge" name="project.level" value="${model.project.level}" required/></td>
+			<td>cmdb中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB事业部</td>
-			<td><input type="name" name="project.bu" value="${model.project.bu}" required/></td>
-			<td>cmdb中项目统一名称</td>
+			<td><input type="name" class="input-xlarge" name="project.bu" value="${model.project.bu}" required/></td>
+			<td>cmdb中项目所属事业部名称<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB产品线</td>
-			<td><input type="name" name="project.cmdbProductline" value="${model.project.cmdbProductline}" required/></td>
-			<td>cmdb中项目统一名称</td>
+			<td><input type="name" class="input-xlarge" name="project.cmdbProductline" value="${model.project.cmdbProductline}" required/></td>
+			<td>cmdb中项目所属产品线名称<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">负责人</td>
-			<td><input type="name" name="project.owner" value="${model.project.owner}"/></td>
+			<td><input type="name" class="input-xlarge" name="project.owner" value="${model.project.owner}"/></td>
 			<td>可选字段</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">项目组邮件</td>
-			<td><input type="name" name="project.email" size="50" value="${model.project.email}"/></td>
+			<td><input type="name" name="project.email" class="input-xxlarge" value="${model.project.email}"/></td>
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
 			<td>项目组号码</td>
-			<td><input type="name" name="project.phone" size="50" value="${model.project.phone}"/></td>
+			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
 			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
