@@ -157,7 +157,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.LINECHART;
 	}
 
 	@Override

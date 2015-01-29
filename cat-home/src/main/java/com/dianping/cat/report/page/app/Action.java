@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view"),
+	LINECHART("view"),
 
 	LINECHART_JSON("linechartJson"),
 
