@@ -3,7 +3,6 @@ package com.dianping.cat.consumer.dump;
 import io.netty.buffer.ByteBuf;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,11 +63,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
+	private Logger m_logger;
+
 	private long m_error;
 
 	private long m_total;
-
-	private Logger m_logger;
 
 	private int m_gzipThreads = 20;
 
@@ -89,22 +88,17 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				keys.add(key);
 			}
 		}
-		try {
-			for (String key : keys) {
+		for (String key : keys) {
+			try {
 				LocalMessageBucket bucket = m_buckets.get(key);
+				MessageBlock block = bucket.flushBlock();
 
-				try {
-					MessageBlock block = bucket.flushBlock();
-
-					if (block != null) {
-						m_messageBlocks.put(block);
-					}
-				} catch (IOException e) {
-					Cat.logError(e);
+				if (block != null) {
+					m_messageBlocks.put(block);
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
 		}
 	}
 
@@ -133,7 +127,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	@Override
-	public MessageTree loadMessage(String messageId)  {
+	public MessageTree loadMessage(String messageId) {
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
