@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer.dump;
 
-import java.io.IOException;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -115,12 +113,12 @@ public class DumpAnalyzerTest {
 		protected int m_insert = 0;
 
 		@Override
-		public MessageTree loadMessage(String messageId) throws IOException {
+		public MessageTree loadMessage(String messageId) {
 			return new DefaultMessageTree();
 		}
 
 		@Override
-		public void storeMessage(MessageTree tree, MessageId id) throws IOException {
+		public void storeMessage(MessageTree tree, MessageId id) {
 			m_insert++;
 		}
 

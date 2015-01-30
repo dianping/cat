@@ -29,7 +29,6 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -134,7 +133,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	@Override
-	public MessageTree loadMessage(String messageId) throws IOException {
+	public MessageTree loadMessage(String messageId)  {
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
@@ -208,23 +207,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					}
 				}
 			}
-
 			return null;
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			t.setStatus(e);
 			cat.logError(e);
-			throw e;
-		} catch (RuntimeException e) {
-			t.setStatus(e);
-			cat.logError(e);
-			throw e;
-		} catch (Error e) {
-			t.setStatus(e);
-			cat.logError(e);
-			throw e;
 		} finally {
 			t.complete();
 		}
+		return null;
 	}
 
 	private void logStorageState(final MessageTree tree) {
@@ -259,7 +249,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	@Override
-	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
+	public void storeMessage(final MessageTree tree, final MessageId id) {
 		m_total++;
 		boolean errorFlag = true;
 		int index = (int) (m_total % m_gzipThreads);
@@ -321,15 +311,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							bucket.setBaseDir(m_baseDir);
 							bucket.initialize(path);
 
-							LocalMessageBucket last = m_buckets.putIfAbsent(path, bucket);
-
-							if (last != null) {
-								bucket.close();
-
-								Cat.logEvent("BucketConcurrentModify", path, Event.SUCCESS, null);
-							}
-
-							bucket = m_buckets.get(path);
+							m_buckets.put(path, bucket);
 						}
 					}
 				}

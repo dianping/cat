@@ -76,7 +76,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	}
 
 	@Override
-	public MessageTree loadMessage(String messageId) throws IOException {
+	public MessageTree loadMessage(String messageId) {
 		if (!m_serverConfigManager.isHdfsOn()) {
 			return null;
 		}
@@ -135,12 +135,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					Cat.logError(e);
 				}
 			}
-
-			return null;
 		} catch (IOException e) {
 			t.setStatus(e);
 			cat.logError(e);
-			throw e;
 		} catch (RuntimeException e) {
 			t.setStatus(e);
 			cat.logError(e);
@@ -148,10 +145,11 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		} finally {
 			t.complete();
 		}
+		return null;
 	}
 
 	@Override
-	public void storeMessage(MessageTree tree, MessageId id) throws IOException {
+	public void storeMessage(MessageTree tree, MessageId id) {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 
