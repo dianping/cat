@@ -135,9 +135,9 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	public MessageBlock storeMessage(final ByteBuf buf, final MessageId id) throws IOException {
-		int size = buf.readableBytes();
-
 		synchronized (this) {
+			int size = buf.readableBytes();
+
 			m_dirty.set(true);
 			m_lastAccessTime = System.currentTimeMillis();
 			m_blockSize += size;
