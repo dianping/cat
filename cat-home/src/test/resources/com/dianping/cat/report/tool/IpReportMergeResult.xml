@@ -1,9 +1,0 @@
-<ip-report domain="Cat">
-   <period minute="32">
-      <ip address="0:0:0:0:0:0:0:1" count="10"/>
-      <ip address="192.168.32.68" count="8"/>
-   </period>
-   <period minute="33">
-      <ip address="0:0:0:0:0:0:0:1" count="2"/>
-   </period>
-</ip-report>

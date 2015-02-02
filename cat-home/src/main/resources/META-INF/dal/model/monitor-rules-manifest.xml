@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="monitor-rules-codegen.xml" />
-  <file path="monitor-rules-model.xml" />
-</manifest>
-

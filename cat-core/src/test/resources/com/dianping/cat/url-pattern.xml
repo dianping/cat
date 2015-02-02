@@ -1,5 +1,0 @@
-<url-pattern>
-	<pattern-item group="GroupWeb" name="index1" pattern="http://i{x}.dpfile.com/{*}"></pattern-item>
-	<pattern-item group="GroupWeb" name="index2" pattern="http://i{x}.dpfile.com/{*}"></pattern-item>
-	<pattern-item group="GroupService" name="index3" pattern="http://i{x}.dpfile.com/{*}"></pattern-item>
-</url-pattern>

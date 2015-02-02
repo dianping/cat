@@ -1,5 +1,0 @@
-<metric-config>
-	<metric-item-config id="/detail" domain="TuanGouWeb" type="URL" view-order="1" metric-key="/order/submitOrder" title="支付页面"
-	 show-count="true" show-avg="true" show-sum="true"></metric-item-config>
-	<metric-item-config></metric-item-config>
-</metric-config>

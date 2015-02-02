@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model>
-  <entity name="jar-report" root="true">
-    <attribute name="domain" value-type="String" />
-    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-  </entity>
-</model>
-

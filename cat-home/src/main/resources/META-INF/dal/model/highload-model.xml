@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.home.highload"
-	enable-xml-parser="false" enable-xml-builder="false"
-	enable-native-parser="true" enable-native-builder="true" />
-

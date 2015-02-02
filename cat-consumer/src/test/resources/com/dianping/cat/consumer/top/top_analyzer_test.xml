@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<top-report domain="cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
-   <domain name="Cat">
-      <segment id="2" error="0" url="8" url-duration="10.00" service="30" service-duration="10.00" sql="19" sql-duration="10.00" call="27" call-duration="10.00" cache="0" cache-duration="0.00" url-error="2" url-sum="80.00" service-error="4" service-sum="300.00" sql-error="2" sql-sum="190.00" call-error="4" call-sum="270.00" cache-error="0" cache-sum="0.00">
-      </segment>
-   </domain>
-</top-report>

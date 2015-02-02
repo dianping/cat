@@ -1,4 +1,0 @@
-<utilization-config url-weight="1.0" service-weight="2.0" sql-weight="10.0" pigeoncall-weight="100.0" cache-weight="1.0" swallow-weight="10.0">
-	<domain id="Cat"  url-weight="1.0" service-weight="2.0" sql-weight="10.0" pigeoncall-weight="100.0" cache-weight="1.0" swallow-weight="10.0"></domain>
-	<domain id="Cat"  url-weight="1.0" service-weight="2.0" sql-weight="10.0" pigeoncall-weight="100.0" cache-weight="1.0" swallow-weight="10.0"></domain>
-</utilization-config>

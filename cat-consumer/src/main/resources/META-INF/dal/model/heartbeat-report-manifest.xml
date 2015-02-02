@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="heartbeat-report-codegen.xml" />
-  <file path="heartbeat-report-model.xml" />
-</manifest>
-

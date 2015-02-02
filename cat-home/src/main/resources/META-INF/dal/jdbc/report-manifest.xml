@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="report-codegen.xml" />
-  <file path="report-dal.xml"  />
-</manifest>
-

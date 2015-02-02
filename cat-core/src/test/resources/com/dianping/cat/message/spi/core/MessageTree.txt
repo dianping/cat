@@ -1,9 +1,0 @@
-PT1	null	localhost-cat	192.168.1.1	null	null	null	null	Cat-0a010680-384736-2062	Cat-0a010680-384736-2061	null
-t2012-01-02 15:33:41.987	transaction	transaction	
-L2012-01-02 15:33:41.987	logTrace	<trace>	0		
-L2012-01-02 15:33:41.987	logTrace	<trace>	0	data	
-E2012-01-02 15:33:41.987	logEvent	<event>	0	data	
-E2012-01-02 15:33:41.987	RemoteLink	<event>	0	data	
-M2012-01-02 15:33:41.987	logEvent	<event>	0	data	
-H2012-01-02 15:33:41.987	logHeartbeat	<event>	0	data	
-T2012-01-02 15:33:49.987	transaction	transaction	0	8000000us

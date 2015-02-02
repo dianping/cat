@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<company>
-<product-line id="cdn" order="0.0" title="cdn" metric-dashboard="false" application-dashboard="false" network-dashboard="false" system-monitor-dashboard="false" user-monitor-dashboard="false" database-monitor-dashboard="false">
-	<domain id="piccenter-display" />
-</product-line>
-</company>

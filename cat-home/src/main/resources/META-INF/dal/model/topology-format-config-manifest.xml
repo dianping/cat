@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="topology-format-config-codegen.xml" />
-  <file path="topology-format-config-model.xml" />
-</manifest>
-

@@ -1,7 +1,0 @@
-f5-2400-1-dianping-com.*(?=inerrors$)
-switch-SH-HM-C3750G.*(?=GigabitEthernet[12]/0/[12]-in)
-switch-SH-HM-C3750G.*(?=GigabitEthernet1/0/[59]-in)
-switch-SH-HM-C3750G.*(?=GigabitEthernet2/0/[78]-in)
-f5-2400-1-dianping-com.*(?=:1/1-[1268]-out)
-switch-SH-N5596UP-2.*(?=Ethernet1/47-out)
-switch-SH-N5596UP-2.*(?=Ethernet1/43-in)
