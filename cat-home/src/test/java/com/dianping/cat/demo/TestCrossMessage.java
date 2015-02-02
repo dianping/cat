@@ -8,7 +8,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCrossMessage {
-
+	
 	@Test
 	public void testCross() throws Exception {
 		String serverIp = "10.10.10.1";
@@ -23,6 +23,20 @@ public class TestCrossMessage {
 			sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient2", clientIp + ":1001");
 			sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient1", clientIp + ":1000");
 			sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient2", clientIp + ":1001");
+		}
+		Thread.sleep(10000);
+	}
+
+	@Test
+	public void testCross1() throws Exception {
+		String serverIp = "10.10.10.1";
+		String clientIp = "10.10.10.2";
+
+		for (int i = 0; i < 1000; i++) {
+			sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer1", serverIp + ":1000");
+			sendClientMsg("Cat-Call", "catServer1", serverIp, "1000", "catClient1", clientIp + ":1000");
+			sendServiceMsg("Cat-Call", "catClient1", clientIp, "catServer1", serverIp + ":1000");
+			sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient1", clientIp + ":1000");
 		}
 		Thread.sleep(10000);
 	}

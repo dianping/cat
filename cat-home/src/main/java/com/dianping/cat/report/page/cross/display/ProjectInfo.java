@@ -44,18 +44,6 @@ public class ProjectInfo extends BaseVisitor {
 		m_reportDuration = reportDuration;
 	}
 
-	public void addCallerProjectInfo(String domain, TypeDetailInfo info) {
-		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
-
-		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			all.setType(info.getType());
-			m_callerProjectsInfo.put(ALL_CLIENT, all);
-		}
-		all.mergeTypeDetailInfo(info);
-		m_callerProjectsInfo.put(domain, info);
-	}
-
 	private void addCallerProject(String ip, String app, Type type) {
 		String projectName = app;
 
@@ -75,6 +63,18 @@ public class ProjectInfo extends BaseVisitor {
 		}
 		info.mergeType(type);
 		all.mergeType(type);
+	}
+
+	public void addCallerProjectInfo(String domain, TypeDetailInfo info) {
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
+
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			all.setType(info.getType());
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
+		}
+		all.mergeTypeDetailInfo(info);
+		m_callerProjectsInfo.put(domain, info);
 	}
 
 	private void addCallProject(String ip, String app, Type type) {
@@ -122,19 +122,13 @@ public class ProjectInfo extends BaseVisitor {
 		return m_callProjectsInfo;
 	}
 
-	public Collection<TypeDetailInfo> getCallProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
-		Collections.sort(values, new TypeComparator(m_callSortBy));
-		return values;
-	}
-
 	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
 		return m_callerProjectsInfo;
 	}
 
-	public List<TypeDetailInfo> getServiceProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
-		Collections.sort(values, new TypeComparator(m_serviceSortBy));
+	public Collection<TypeDetailInfo> getCallProjectsInfo() {
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
+		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
 	}
 
@@ -150,6 +144,12 @@ public class ProjectInfo extends BaseVisitor {
 
 	public long getReportDuration() {
 		return m_reportDuration;
+	}
+
+	public List<TypeDetailInfo> getServiceProjectsInfo() {
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
+		Collections.sort(values, new TypeComparator(m_serviceSortBy));
+		return values;
 	}
 
 	public ProjectInfo setCallSortBy(String callSoryBy) {
@@ -185,7 +185,11 @@ public class ProjectInfo extends BaseVisitor {
 
 	@Override
 	public void visitRemote(Remote remote) {
-		String remoteIp = remote.getId();
+		String remoteIp = remote.getIp();
+
+		if (remoteIp == null) {
+			remoteIp = remote.getId();
+		}
 		String role = remote.getRole();
 		String app = remote.getApp();
 

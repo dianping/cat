@@ -85,22 +85,23 @@ public class LocalMessageBucket implements MessageBucket {
 
 	public MessageBlock flushBlock() throws IOException {
 		if (m_dirty.get()) {
-			m_out.close();
-			byte[] data = m_buf.toByteArray();
+			synchronized (this) {
+				m_out.close();
+				byte[] data = m_buf.toByteArray();
 
-			try {
-				m_block.setData(data);
-				m_blockSize = 0;
-				m_buf.reset();
-				m_out = new GZIPOutputStream(m_buf);
-				m_dirty.set(false);
+				try {
+					m_block.setData(data);
+					m_blockSize = 0;
+					m_buf.reset();
+					m_out = new GZIPOutputStream(m_buf);
+					m_dirty.set(false);
 
-				return m_block;
-			} finally {
-				m_block = new MessageBlock(m_dataFile);
+					return m_block;
+				} finally {
+					m_block = new MessageBlock(m_dataFile);
+				}
 			}
 		}
-
 		return null;
 	}
 

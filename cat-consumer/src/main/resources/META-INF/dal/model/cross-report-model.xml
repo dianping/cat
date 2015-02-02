@@ -16,6 +16,7 @@
 		<attribute name="role" value-type="String" />
 		<attribute name="app" value-type="String" />
 		<entity-ref name="type" />
+		<attribute name="ip" value-type="String" />
 	</entity>
 	<entity name="type">
 		<attribute name="id" value-type="String" />

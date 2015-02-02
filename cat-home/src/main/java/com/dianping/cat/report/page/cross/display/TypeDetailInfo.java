@@ -69,7 +69,7 @@ public class TypeDetailInfo {
 		return m_type;
 	}
 
-	public void mergeType(Type type) {
+	public TypeDetailInfo mergeType(Type type) {
 		m_type = type.getId();
 		m_totalCount += type.getTotalCount();
 		m_failureCount += type.getFailCount();
@@ -82,9 +82,10 @@ public class TypeDetailInfo {
 		if (m_seconds > 0) {
 			m_tps = m_totalCount / (double) m_seconds;
 		}
+		return this;
 	}
 
-	public void mergeTypeDetailInfo(TypeDetailInfo type) {
+	public TypeDetailInfo mergeTypeDetailInfo(TypeDetailInfo type) {
 		m_totalCount += type.getTotalCount();
 		m_failureCount += type.getFailureCount();
 		m_sum += type.getSum();
@@ -96,38 +97,47 @@ public class TypeDetailInfo {
 		if (m_seconds > 0) {
 			m_tps = m_totalCount / (double) m_seconds;
 		}
+		return this;
 	}
 
-	public void setAvg(double avg) {
+	public TypeDetailInfo setAvg(double avg) {
 		m_avg = avg;
+		return this;
 	}
 
-	public void setFailureCount(long failureCount) {
+	public TypeDetailInfo setFailureCount(long failureCount) {
 		m_failureCount = failureCount;
+		return this;
 	}
 
-	public void setFailurePercent(double failrePercent) {
+	public TypeDetailInfo setFailurePercent(double failrePercent) {
 		m_failurePercent = failrePercent;
+		return this;
 	}
 
-	public void setIp(String ip) {
+	public TypeDetailInfo setIp(String ip) {
 		m_ip = ip;
+		return this;
 	}
 
-	public void setProjectName(String projectName) {
+	public TypeDetailInfo setProjectName(String projectName) {
 		m_projectName = projectName;
+		return this;
 	}
 
-	public void setSum(double sum) {
+	public TypeDetailInfo setSum(double sum) {
 		m_sum = sum;
+		return this;
 	}
 
-	public void setTotalCount(long totalCount) {
+	public TypeDetailInfo setTotalCount(long totalCount) {
 		m_totalCount = totalCount;
+		return this;
 	}
 
-	public void setType(String type) {
+	public TypeDetailInfo setType(String type) {
 		m_type = type;
+		return this;
 	}
 
 }
