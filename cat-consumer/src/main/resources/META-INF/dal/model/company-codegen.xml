@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="company" root="true">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="product-line" type="list" names="product-lines" />
+  </entity>
+  <entity name="product-line">
+    <attribute name="id" value-type="String" />
+    <attribute name="order" value-type="int" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+

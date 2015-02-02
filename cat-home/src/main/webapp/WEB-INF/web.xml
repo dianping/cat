@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<filter>
+		<filter-name>cat-filter</filter-name>
+		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+	</filter>
+	<filter>
+		<filter-name>domain-filter</filter-name>
+		<filter-class>com.dianping.cat.report.view.DomainFilter</filter-class>
+	</filter>
+	<servlet>
+		<servlet-name>cat-servlet</servlet-name>
+		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
+		<servlet-name>mvc-servlet</servlet-name>
+		<servlet-class>org.unidal.web.MVC</servlet-class>
+		<init-param>
+			<param-name>cat-client-xml</param-name>
+			<param-value>client.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>init-modules</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/r/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>domain-filter</filter-name>
+		<url-pattern>/r/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/s/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/jsp/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+	<servlet-mapping>
+		<servlet-name>mvc-servlet</servlet-name>
+		<url-pattern>/r/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>mvc-servlet</servlet-name>
+		<url-pattern>/s/*</url-pattern>
+	</servlet-mapping>
+	<jsp-config>
+		<taglib>
+			<taglib-uri>/WEB-INF/app.tld</taglib-uri>
+			<taglib-location>/WEB-INF/app.tld</taglib-location>
+		</taglib>
+	</jsp-config>
+</web-app>
+

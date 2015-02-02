@@ -1,0 +1,29 @@
+<h4><a href="http://cat.dianpingoa.com/cat/r/p?op=history&domain=Cat&date=2012062616&reportType=day" target="_blank">ProblemReport</a></h4>
+<table rules="all" border="1" >
+	<tr>
+		<td>Type</td>
+		<td>Total Count</td>
+		<td>Link</td>
+	</tr>
+		<tr>
+			<td>error</td>
+			<td style="text-align:right">10</td>
+			<td style="text-align:right"><a href="http://cat.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=error" target="_blank">Graph</a></td>
+		</tr>
+		<tr>
+			<td>failure</td>
+			<td style="text-align:right">10</td>
+			<td style="text-align:right"><a href="http://cat.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=failure" target="_blank">Graph</a></td>
+		</tr>
+		<tr>
+			<td>heartbeat</td>
+			<td style="text-align:right">1</td>
+			<td style="text-align:right"><a href="http://cat.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=heartbeat" target="_blank">Graph</a></td>
+		</tr>
+		<tr>
+			<td>url</td>
+			<td style="text-align:right">10</td>
+			<td style="text-align:right"><a href="http://cat.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=url" target="_blank">Graph</a></td>
+		</tr>
+</table>
+

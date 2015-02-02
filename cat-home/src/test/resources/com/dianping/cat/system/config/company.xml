@@ -1,0 +1,7 @@
+<company name="dianping">
+	<product-line id="TuanGou" owner="youyong" email="youyong" title="TuanGou" order="1" dashboard="true">
+		<domain id="MobileApi"></domain>
+		<domain id="MobileApi"></domain>
+	</product-line>
+	<product-line></product-line>
+</company>

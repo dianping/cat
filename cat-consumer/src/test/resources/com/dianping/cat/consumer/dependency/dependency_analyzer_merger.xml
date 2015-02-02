@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependency-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domainName>group</domainName>
+   <segment id="0">
+      <index name="PigeonCall" total-count="68" error-count="68" sum="6868.00" avg="101.00"/>
+      <index name="SQL" total-count="66" error-count="66" sum="6600.00" avg="100.00"/>
+      <index name="Call" total-count="66" error-count="66" sum="6732.00" avg="102.00"/>
+      <dependency type="PigeonCall" target="CatServer" total-count="134" avg="101.49" error-count="134" key="PigeonCall:CatServer" sum="13600.00"/>
+      <dependency type="Database" target="127.0.0.1:3306" total-count="66" avg="100.00" error-count="66" key="Database:127.0.0.1:3306" sum="6600.00"/>
+   </segment>
+   <segment id="5">
+      <index name="Exception" total-count="66" error-count="66" sum="0.00" avg="0.00"/>
+   </segment>
+</dependency-report>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<utilization-report domain="Cat" startTime="2013-12-16 16:00:00" endTime="2013-12-16 17:00:00">
+   <domain id="OpenMetadataWeb" machine-number="1">
+      <machineState id="newGc" count="1" sum="6.0000" avg="6.0000" avg-max="2.0000"/>
+      <machineState id="fullGc" count="1" sum="0.0000" avg="0.0000" avg-max="0.0000"/>
+      <machineState id="load" count="1" sum="0.0237" avg="0.0237" avg-max="0.1900"/>
+      <applicationState id="SQL" failure-count="0" failure-percent="0.000000" count="7" maxQps="1.0033" avg="45.5014" sum="318.5100" avg95="129.0000"/>
+      <applicationState id="PigeonService" failure-count="0" failure-percent="0.000000" count="12759" maxQps="19.7967" avg="1.3833" sum="17649.5460" avg95="6.0000"/>
+      <applicationState id="URL" failure-count="0" failure-percent="0.000000" count="22" maxQps="1.0533" avg="167.4835" sum="3684.6370" avg95="241.0000"/>
+      <applicationState id="PigeonCall" failure-count="0" failure-percent="0.000000" count="22" maxQps="1.0533" avg="167.4835" sum="3684.6370" avg95="241.0000"/>
+   </domain>
+   <domain id="UserAdminWeb" machine-number="2">
+      <machineState id="newGc" count="2" sum="2.0000" avg="1.0000" avg-max="1.0000"/>
+      <machineState id="fullGc" count="2" sum="2.0000" avg="1.0000" avg-max="2.0000"/>
+      <machineState id="load" count="2" sum="0.0442" avg="0.0221" avg-max="0.2500"/>
+      <applicationState id="SQL" failure-count="0" failure-percent="0.000000" count="18" maxQps="0.0017" avg="42.4157" sum="763.4830" avg95="107.0556"/>
+      <applicationState id="URL" failure-count="1" failure-percent="1.000000" count="1" maxQps="0.0000" avg="0.9970" sum="0.9970" avg95="0.0000"/>
+   </domain>
+</utilization-report>

@@ -1,0 +1,491 @@
+@h-sidebar-background: @nav-item-background;
+@h-sidebar-preground: #E4E4E4;
+@h-sidebar-preshadow: ~"0 -1px 1px 0 rgba(0, 0, 0, 0.05) inset";
+
+@h-nav-item-border-active: #79B0CE;
+@h-nav-item-border-hover: #CEDDE5;
+
+@h-navbar-shadow: ~"0 2px 4px 0 rgba(0, 0, 0, 0.25)";
+
+
+.enable_horizontal_menu() when (@enable-horizontal-menu = true) {
+	@media only screen and (min-width: @grid-float-breakpoint) {
+	 .navbar.h-navbar {
+		.box-shadow(@h-navbar-shadow);
+	 }
+
+	 .sidebar.h-sidebar {
+		position: relative;
+		float: none !important;
+		width: auto !important;
+		margin-top: 17px;
+
+		border-width: 0 !important;
+		box-shadow: none;
+
+		&.sidebar-fixed {
+			position: fixed;
+		}
+
+		&:before {
+			display: block;
+			position: absolute; 
+			z-index: -1;
+
+			left:0 !important;
+			right: 0 !important;
+			top: -17px;
+			bottom: auto;
+
+			height: 17px;
+			width: auto;
+
+			border-width: 0;
+			border-bottom: 1px solid; 
+			border-bottom-color: inherit;
+		}
+
+		&.hide-before .nav-list > li:before {
+			top: 0;
+		}
+
+		.nav-list {
+			border-width: 0;
+			border-bottom: 2px solid @h-nav-item-border-active;
+		}
+		.nav-list > li {
+			float: left;
+
+			border-width: 0 1px;
+			margin-left: -1px;
+
+			//the hover highlight line
+			&:before {
+				left: -1px;
+				right: -1px;
+				bottom: auto;
+				top: -2px;
+
+				max-width: none;
+				width: auto; 
+				height: 2px;
+
+				border-width: 0;
+			}
+			&.active:before {
+				display: block;
+			}
+			&.active:after {
+				display: none;
+			}
+
+			&:hover {
+				z-index: @zindex-submenu;
+			}
+			&.active {
+				z-index: @zindex-submenu + 1;
+			}
+		}
+	
+		.nav-list > li:first-child {
+			border-left-width: 0;
+			margin-left: 0
+		}
+		.sidebar-shortcuts + .nav-list > li:first-child {
+			border-left-width: 1px;
+			margin-left: -1px;
+		}
+
+		//!importants are for overriding .menu-min and .compact
+		.nav-list > li > a {
+			line-height: 22px !important;
+			height: auto !important;
+
+			padding: 10px 14px !important;
+			
+			> .menu-icon {
+				display: block !important;;
+				margin: 1px 0 4px;
+				line-height: inherit;
+				width: auto;
+			}
+			> .arrow {
+				display: none;
+			}
+		}
+		
+
+		//hover submenu
+		.nav-list > li.hover {
+			&.pull_right {
+				float: none !important;
+			}
+			> .submenu {
+				top: 100%;
+				left: 1px;
+				margin-top: auto;
+				margin-left: -2px;
+				width: @sidebar-width;
+				z-index: @zindex-submenu;
+			}
+			&.pull_right > .submenu {
+				left: auto;
+				right: 1px;
+			}
+
+			//-li > .arrow
+			> .arrow {
+				right: auto;
+				top: auto;
+				left: 24px; 
+				bottom: 7px;
+			}
+			&.pull_right > .arrow {
+				left: auto;
+				right: 24px;
+			}
+
+			
+				> .arrow:before, > .arrow:after {
+					border-width: 0 8px 8px !important;
+				}
+				> .arrow:after {
+					border-color: transparent;
+					//!importants are for overriding .menu-min+.rtl
+					border-left-color: transparent !important;
+					border-right-color: transparent !important;
+					
+					-moz-border-right-colors: none !important;
+					-moz-border-left-colors: none !important;
+					-moz-border-top-colors: none;
+					-moz-border-bottom-colors: none;
+				
+					left: -10px !important;
+					right: auto !important;
+				}
+				> .arrow:before {
+					border-color: transparent;
+					//!importants are for overriding .menu-min+.rtl
+					border-left-color: transparent !important;
+					border-right-color: transparent !important;
+	
+					-moz-border-right-colors: none !important;
+					-moz-border-left-colors: none !important;
+					-moz-border-top-colors: none;
+					-moz-border-bottom-colors: none;
+
+					right: auto !important;
+					left: -10px !important;
+					top: -1px !important;
+				}
+
+
+			&:hover > a ~ .arrow {
+				display: none;
+			}
+			&:hover > a.dropdown-toggle ~ .arrow {
+				display: block;
+			}
+		}	
+
+		//add an arrow to shortcuts dropdown like //-li > .arrow
+		.sidebar-shortcuts-large {
+			&:before, &:after {
+				display: block;
+				content: "";
+				position: absolute;
+				 
+				left: 50%;			
+				margin-left: -8px;
+				 
+				border: 1px solid transparent;
+				border-width: 0 8px 8px;
+			}
+		}
+		.sidebar-shortcuts-large:after {
+			//border-bottom-color: #FFF;
+			border-right-color: transparent;
+			
+			//-moz-border-bottom-colors: #FFF;
+			-moz-border-right-colors: none;
+
+			top: -8px;
+		}
+		.sidebar-shortcuts-large:before {
+			-moz-border-bottom-colors: #CCC;
+			border-bottom-color: #CCC;
+
+			top: -9px;
+		}
+
+
+		
+		.sidebar-toggle {
+			display: none;
+		}
+		.sidebar-shortcuts {
+			float: left;
+			display: block;
+			overflow: visible;
+			position: relative;
+	 
+			margin: 0;
+			padding: 12px 8px 9px;
+			max-height: none !important;
+	 
+			background-color: transparent;
+			
+			&:hover .sidebar-shortcuts-large {
+				display: block;
+			}
+		}
+		.sidebar-shortcuts-large {
+			display: none;
+			width: 52px;
+			height: auto;
+
+			position: absolute;
+			z-index: 15;
+			top: 100%;
+			margin-top: -5px;
+			left: 10px;
+
+			padding: 3px 2px;
+			border: 1px solid;
+		}
+		
+		.sidebar-shortcuts-mini {
+			width:auto;
+			max-width: 52px;
+
+			display: block;
+			background-color: transparent;
+			padding-top: 3px;
+			padding-bottom: 5px; // for .sidebar-shortcuts-large:"margin-top: -5px" to work, so that as soon as mouse is inside .sidebar-shortcuts, ".sidebar-shortcuts-large" is displayed
+
+			> .btn {
+				margin: 1px;
+				padding: 9px !important;
+			}
+		}
+
+
+		.nav-list a .badge, .nav-list a .label {
+			position: absolute;
+			top: 11px;
+			right: auto !important;
+			left: 50%;
+			margin-left: 10px;
+		}
+
+		
+		
+		+ .main-content {
+			margin-left: 0;
+			.breadcrumbs {
+				margin: 6px 9px;
+				border: 1px solid;
+				//.no-skin & {
+					border-color: #E5E5E5;
+				//}
+
+				@media (max-width: @grid-float-breakpoint-max) {
+					& {	
+						margin: 0; 
+						border-width: 0 0 1px;
+					}
+				}
+			}
+		}
+
+
+	 }//.h-sidebar
+
+
+
+	 .h-sidebar.sidebar-fixed {
+		//z-index: 1000;
+		top: auto;
+		width: 100%;
+		left:0; 
+		right: 0;
+		&:before {
+			z-index: auto;
+		}
+		
+		&  , .nav-list {
+			border-right-width: 0;
+			border-left-width: 0;
+		}
+		.sidebar-shortcuts  {
+			border-width: 0;
+		}
+	 }
+	 .h-sidebar.sidebar-fixed  + .main-content {
+		padding-top: 88px;
+	 }
+	}//@media
+
+
+
+
+	.enable_container_horizontal_menu() when(@enable-container = true) {
+	//inside .container
+	.main-container.container .h-sidebar.sidebar-fixed.navbar-collapse  {
+		left: 0 !important;
+		right: 0 !important;
+		width: auto !important;
+	}
+
+	@media (min-width: @screen-sm-min) {
+	 .main-container.container .h-sidebar.sidebar-fixed.navbar-collapse {
+		left: auto !important;
+		right: auto !important;
+		width: @container-sm !important;
+	 }
+	}
+	@media (min-width: @screen-md-min) {
+	 .main-container.container .h-sidebar.sidebar-fixed.navbar-collapse {
+		width: @container-md !important;
+	 }
+	}
+	@media (min-width: @screen-lg-min) {
+	 .main-container.container .h-sidebar.sidebar-fixed.navbar-collapse {
+		width: @container-lg !important;
+	 }
+	}
+
+	/**
+	@media (min-width: @screen-sm-min) and (max-width: @grid-float-breakpoint-max) {
+	 .main-container.container .sidebar.sidebar-fixed.navbar-collapse
+	 {
+		left: auto !important;
+		right: auto !important;
+		width: @container-sm !important;
+	 }
+	}
+
+
+	@media (max-width: @grid-float-breakpoint-max) {
+		.main-container.container .sidebar.sidebar-fixed.navbar-collapse {
+			.sidebar-shortcuts {
+				max-height: none;
+				border-bottom-width: 0;
+			}
+		}
+	}
+	*/
+	}
+	.enable_container_horizontal_menu();
+
+
+	
+	
+  @media (min-width: @grid-float-breakpoint) {
+	
+	.sidebar.h-sidebar {
+		//reset .compact & .menu-min		
+		.nav-list > li > a > .menu-text {
+			background-color: transparent !important;
+			border-width: 0 !important;
+			.box-shadow(none) !important;
+			display: inline !important;
+			
+			margin: auto !important;
+			padding: 0 !important;
+			
+			position: static !important;
+			
+			font-size: inherit;
+			line-height: inherit;
+			text-align: inherit;
+		}
+		.nav-list > li > a > .menu-icon {
+			height: auto;
+			font-size: @nav-item-icon-size;
+		}
+	/**
+		&.compact {
+			margin-top: 0 !important;
+			&:before {
+				display: none;
+			}
+			.sidebar-shortcuts {
+				padding-top: 9px;
+			}
+			.sidebar-shortcuts-large {
+				margin-top: -1px;
+			}
+			.sidebar-shortcuts-mini {
+				max-height: 22px;
+				overflow: hidden;
+			}
+			.nav-list > li:before {
+				top: 0;
+			}
+			.nav-list > li > a .badge, .nav-list > li > a .label {
+				position: relative;
+				top: -1px;
+				left: auto;
+				margin: auto;
+				display: inline;
+			}
+
+			.nav-list > li > a > .menu-text {
+				position: absolute !important;
+				top: 0;
+				bottom: 0;
+				left: 0;
+				min-width: 120%;
+				
+				text-align: center;
+				
+				padding-left: 8px !important;
+				padding-right: 8px !important;
+				border-right: 1px solid #79B0CE;
+				
+				line-height: 42px;
+				background-color: #FFFFFF !important;
+				white-space: nowrap;
+
+				.opacity(0);
+				.transition(~"opacity 0.2s");
+				z-index: -1;
+			}
+			.nav-list > li:hover > a > .menu-text {
+				.opacity(1);
+				z-index: 2;
+			}
+
+			.nav-list > li > a > .menu-icon {
+				position: static;
+				height: 18px;
+
+				.opacity(1);
+				.transition(~"opacity 0.2s");
+			}
+			
+			.nav-list > li:hover > a > .menu-icon {
+				.opacity(0);
+			}
+		}*/
+	}
+  }
+
+}
+.enable_horizontal_menu();
+
+
+
+
+/**
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+	.menu-toggler + .sidebar.h-sidebar {
+		margin-top: (@breadcrumb-height - 1) !important;
+	}
+	.sidebar.h-sidebar.responsive-min , .sidebar.h-sidebar.navbar-collapse {
+		margin-top: auto !important;
+	}
+}
+*/
+

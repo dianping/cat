@@ -1,0 +1,586 @@
+.no-skin {
+	.navbar .navbar-toggle {
+		background-color: #75B3D7;
+		&:focus {
+			background-color: #75B3D7;
+			border-color: transparent;
+		}
+		&:hover {
+			background-color: darken(#75B3D7 , 5%);
+			border-color: rgba(255,255,255,0.1);
+		}
+		
+		&.display, &[data-toggle=collapse]:not(.collapsed) {
+			background-color: darken(#75B3D7 , 10%);
+			box-shadow: inset 1px 1px 2px 0 rgba(0, 0, 0, 0.25);
+			border-color: rgba(255, 255, 255, 0.35);
+		}
+	}
+
+	.sidebar {
+		background-color: @sidebar-background;
+		border-style: solid;
+		border-color: @sidebar-border;
+		border-width: 0 1px 0 0;
+	}
+
+	.nav-list .open > a {
+		& , &:hover, &:focus {
+			background-color: @nav-item-background-open;
+		}
+	}
+
+
+	.nav-list > li {
+		border-color: @nav-item-border;
+		> a {
+			background-color: @nav-item-background;
+			color: @nav-item-color;
+			
+			&:focus {
+				background-color: @nav-item-background;
+				color: @nav-item-color-focus;
+			}
+		}
+
+		&:hover > a {
+			background-color: @nav-item-background-hover;
+			color: @nav-item-color-hover;
+		}
+		
+		&.open > a {
+			background-color: @nav-item-background-open;
+			color: @nav-item-color-focus;
+		}
+		
+		&.active > a {
+			font-weight: bold;
+			color: @nav-item-color-active;
+			& , &:hover, &:focus {
+				background-color: @nav-item-background-active;
+			}
+		}
+	}
+
+
+	//submenu
+	.nav-list > li .submenu {
+		background-color: @submenu-background;
+		border-color: @submenu-border;
+
+		> li > a {
+			border-top-color: @submenu-item-border;
+			background-color: @submenu-item-background;
+			color: @submenu-item-color;
+			
+			&:hover {
+				color: @submenu-item-color-hover;
+				background-color: @submenu-item-background-hover;
+			}
+		}
+		> li.active > a {
+			color: @nav-item-color-active;
+			> .menu-icon {
+				color: @submenu-item-icon-active;
+			}
+		}
+		> li.active.open > a > .menu-icon {
+			color: inherit;
+		}
+		
+		@media only screen and (min-width: @screen-hover-menu) {
+			> li.active.hover > a.dropdown-toggle > .menu-icon {
+				color: inherit;
+			}
+		}
+
+
+		> li.active:not(.open) > a {
+			background-color: @submenu-item-background-active;
+			&:hover {
+				background-color: @submenu-item-background-hover;
+			}
+		}
+	}
+
+	.nav-list > li > .submenu {
+		.open > a, .open > a:hover, .open > a:focus {
+			border-color: @submenu-item-border;
+		}
+		
+		li > .submenu > li a{
+			color: lighten(@submenu-item-color , 8%);
+			&:hover {
+				color: @3rd-level-item-color-hover;
+				background-color: @3rd-level-item-background-hover;
+			}
+		}
+		
+		li.open > a {
+			color: @3rd-level-item-color-hover;
+		}
+		li > .submenu li.open > a , li > .submenu li.active > a {
+			color: @3rd-level-item-color-hover;
+		}
+	}
+	
+	//the tree line
+	.nav-list > li {
+		> .submenu:before,
+		> .submenu > li:before {
+			border-color: @submenu-tree-line-color;
+		}
+		&.active > .submenu:before,
+		&.active > .submenu > li:before	{
+			border-color: @submenu-tree-line-color-active;
+		}
+	}
+
+
+
+	//extra
+	.sidebar-toggle {
+		background-color: @sidebar-toggle-background;
+		border-color: @sidebar-toggle-border;
+
+		> .@{icon} {
+			border-color: @sidebar-toggle-icon-border;
+			color: @sidebar-toggle-icon-color;
+			background-color: @sidebar-toggle-icon-background;
+		}
+	}
+	.sidebar-shortcuts {
+		background-color: @shortcuts-background;
+	}
+	.sidebar-fixed .sidebar-shortcuts {
+		border-color: @shortcuts-border;
+	}
+	.sidebar-shortcuts-mini {
+		background-color: @submenu-background;
+	}
+
+
+
+	//-li > .arrow
+	.nav-list li > .arrow {
+		&:before {
+			border-right-color: #B8B8B8;
+			-moz-border-right-colors: #B8B8B8;
+			
+			border-width: 10px 10px 10px 0;
+			//because border-width: 10px in firefox doesn't look good
+			//but on other skins, it has a bad edge on firefox
+			left: -11px;
+		}
+		&:after {
+			border-right-color: @submenu-background;
+			-moz-border-right-colors: @submenu-background;
+			
+			border-width: 10px 10px 10px 0;
+			left: -10px;
+		}
+	}
+	.nav-list > li.pull_up > .arrow {
+		&:after {
+			border-right-color: @submenu-background !important;
+			-moz-border-right-colors: @submenu-background !important;
+			
+			border-width: 10px 10px 10px 0 !important;//to override .menu-min
+			left: -10px !important;
+		}
+		&:before {
+			border-width: 10px 10px 10px 0 !important;
+			left: -11px !important;
+		}
+	}
+
+
+
+	//active state
+	.nav-list li.active > a:after {
+		border-right-color: @nav-item-color-active;
+		-moz-border-right-colors: @nav-item-color-active;
+	}
+	//the border on right of active item
+	.nav-list > li.active:after {
+		display: block;
+		content: "";
+		position: absolute;
+		right: -2px;
+		top: -1px;
+		bottom: 0;
+		z-index: 1;
+
+		border: 2px solid;
+		border-width: 0 2px 0 0;
+		border-color: @nav-item-color-active
+	}
+	.sidebar-scroll .nav-list > li.active:after {
+		//so that its inside sidebar
+		right: 0;
+	}
+
+	
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		.sidebar.responsive .nav-list > li.active.open > a:after {
+			display: block;
+		}
+	}
+
+
+
+
+	 //menu min
+	.menu_min_no_skin() {
+		 .nav-list > li > a {
+			> .menu-text {
+				background-color: @menumin-text-background;
+				.box-shadow(@menumin-shadow1);
+				border-color: @menumin-border;
+			}
+			&.dropdown-toggle > .menu-text {
+				.box-shadow(@menumin-shadow2);
+			}
+		 }
+		 .nav-list > li {
+			 &.active > .submenu {
+				border-left-color: @submenu-border-active;
+			 }
+		 }
+		 .nav-list > li > .submenu {
+				background-color: @submenu-background;
+				border: 1px solid @menumin-border;
+				border-top-color: lighten(@menumin-border , 10%);
+				.box-shadow(@menumin-shadow2);
+		 }
+		 
+		 //-li > .arrow
+		.nav-list > li {
+			 > .arrow:after {
+				border-right-color: @menumin-text-background;
+				-moz-border-right-colors: @menumin-text-background;
+				
+				border-width: 8px 8px 8px 0;
+				left: -8px;
+			 }
+			 > .arrow:before {
+				border-width: 8px 8px 8px 0;
+				left: -9px;
+			 }
+
+			 &.active > .arrow:before {
+				border-right-color: darken(@submenu-border-active , 11%);
+				-moz-border-right-colors: darken(@submenu-border-active , 11%);
+			 }
+			 &.active > a > .menu-text {
+				border-left-color: @submenu-border-active;
+			 }
+		}
+
+		
+		.sidebar-shortcuts-large {
+			background-color: @submenu-background;
+			.box-shadow(@menumin-shadow1);
+			border-color: @menumin-border;
+		}
+		.sidebar-toggle > .@{icon} {
+			border-color: darken(@sidebar-toggle-icon-border, 4%);
+		}
+	}
+
+	.enable_sidebar_collapse_no_skin() when(@enable-sidebar-collapse = true) {
+		.sidebar.menu-min {
+			.menu_min_no_skin();
+		}
+	}
+	.enable_sidebar_collapse_no_skin();
+	
+	.enable_minimized_responsive_menu_no_skin() when(@enable-minimized-responsive-menu = true) {
+		@media (max-width: @grid-float-breakpoint-max) {
+			.sidebar.responsive-min {
+				.menu_min_no_skin();
+			}
+		}
+	}
+	.enable_minimized_responsive_menu_no_skin();
+
+
+
+
+  .enable_hover_submenu_no_skin() when(@enable-submenu-hover = true) {
+	//.hover menu
+	@media only screen and (min-width: @screen-hover-menu) {
+	.nav-list li.hover {
+		> .submenu {
+			.box-shadow(@menumin-shadow1);
+			border-color: @hover-submenu-border;
+
+			> li.active > a {
+				background-color: @hover-submenu-background-active;
+			}
+
+			> li:hover > a {
+				background-color: @hover-submenu-item-background-hover;
+				color: @hover-submenu-item-color-hover;
+			}
+
+		}
+	}
+	}
+
+	
+   .enable_collapsible_responsive_hover_menu_no_skin() when(@enable-collapsible-responsive-menu = true) {
+	@media only screen and (min-width: @screen-hover-menu) and (max-width: @grid-float-breakpoint-max) {
+	 .sidebar.navbar-collapse {
+		.nav-list li li.hover.active.open > a {
+			background-color: @nav-item-background-active;
+		}
+		//in wide view when we hover a submenu item, its parent LI > A are highlighted, but not needed in small view
+		//so remove "li.hover:hover > a" highlight
+		.nav-list li li.hover:hover > a {
+			background-color: @submenu-item-background;
+		}
+		//and instead highlight "li.hover > a:hover"
+		.nav-list li li.hover > a:hover,
+		.nav-list li li.hover.open > a:hover,
+		.nav-list li li.hover.open.active > a:hover {
+			background-color: @submenu-item-background-hover;
+		}
+
+		//active submenu item icon is red
+		.nav-list > li .submenu > li.active.hover > a.dropdown-toggle > .menu-icon {
+			color: @submenu-item-icon-active;
+		}
+		//active submenu item icon inherits color
+		.nav-list > li .submenu > li.active.open.hover > a.dropdown-toggle > .menu-icon {
+			color: inherit;
+		}
+
+	  }
+	}
+
+	//sometimes .hover items are opened in small view, and back in large view we reset the highlight state
+	@media only screen and (min-width: max(@screen-hover-menu, @grid-float-breakpoint)) {
+	  .sidebar.navbar-collapse {
+		.nav-list > li.open.hover:not(:hover):not(:focus):not(.active) > a {
+			color: @nav-item-color;
+			> .arrow {
+				color: inherit;
+			}
+		}
+		.nav-list > li.open.hover:hover > a {
+			background-color: @nav-item-background-hover;
+		}
+
+		.nav-list > li > .submenu li.open.hover:not(:hover):not(:focus):not(.active) > a {
+			color: @submenu-item-color;
+			> .arrow {
+				color: inherit;
+			}
+		}
+	  }
+	}//@media
+	//reset .hover to normal
+	@media only screen and (min-width: @screen-hover-menu) and (max-width: @grid-float-breakpoint-max) {
+		.sidebar.navbar-collapse {
+			.nav-list li.hover > .submenu {
+				border-top-color: @submenu-border;
+				background-color: @submenu-background;
+			}
+		}
+		
+		.nav-list li.hover > .submenu > li.active:not(.open) > a {
+			background-color: @submenu-item-background-active;
+			&:hover {
+				background-color: @submenu-item-background-hover;
+			}
+		}
+	}
+   }
+   .enable_collapsible_responsive_hover_menu_no_skin();
+
+	
+  }
+  .enable_hover_submenu_no_skin();
+
+
+
+
+	//horizontal
+	.enable_horizontal_menu_no_skin() when(@enable-horizontal-menu = true) {
+	  @media only screen and (min-width: @grid-float-breakpoint) {
+		 .sidebar.h-sidebar {
+			background-color: @h-sidebar-background;
+			&:before {
+				background-color: @h-sidebar-preground;
+				.box-shadow(@h-sidebar-preshadow);
+			}
+
+			.nav-list > li {
+				&:hover {
+					border-color: @h-nav-item-border-hover;
+				}
+				&.active {
+					border-color: @h-nav-item-border-active;
+				}
+			}
+			.nav-list > li.active:before {
+				background-color: @nav-item-color-active;//#2B7DBC;
+			}
+			
+			//a white line on bottom of active item to cover the blue separator
+			.nav-list > li.active > a:after {
+				border-width: 0 0 3px 0;
+				border-color: transparent;
+				border-bottom-color: #FFF;
+
+				left: 0;
+				right: 0;
+				top: auto;
+				bottom: -3px;
+			}
+			
+			
+			.sidebar-shortcuts-large {
+				background-color: #FFF;
+				border-color: #CCC;
+				.box-shadow(~"2px 1px 2px 0 rgba(0,0,0,0.1)");
+			}
+			.sidebar-shortcuts-large:after {
+				border-bottom-color: #FFF;
+				-moz-border-bottom-colors: #FFF;
+			}
+		 }
+
+		 .sidebar.h-sidebar {
+			.nav-list > li.hover {
+				> .submenu {
+					border-color: @hover-submenu-border;
+				}
+			}
+
+			.nav-list > li.hover {
+				> .arrow:after {
+					border-color: transparent;
+					-moz-border-right-colors: none;
+					-moz-border-top-colors: none;
+					-moz-border-left-colors: none;					
+
+					border-bottom-color: #FFF;
+					-moz-border-bottom-colors: #FFF;
+				}
+				> .arrow:before {
+					border-color: transparent;
+					-moz-border-right-colors: none;
+					-moz-border-top-colors: none;
+					-moz-border-left-colors: none;
+
+					-moz-border-bottom-colors: #B8B8B8;
+					border-bottom-color: #B8B8B8;
+				}
+			}
+		}
+	  }
+	}
+	.enable_horizontal_menu_no_skin();
+
+
+
+	@media only screen and (max-width: @grid-float-breakpoint-max) {
+		.sidebar {
+			border-width: 0 1px 1px 0;
+			border-top-color: lighten(@sidebar-border , 4%);
+		}
+		.menu-toggler + .sidebar.responsive {
+			border-top-width: 1px;
+		}
+
+		.sidebar.responsive-min {
+			border-width: 0 1px 0 0;
+		}
+
+		.sidebar.navbar-collapse {
+			border-width: 0;
+			border-bottom-width: 1px !important;//to override .rtl's
+			border-bottom-color: @sidebar-border;
+			.box-shadow(~"0 2px 2px rgba(0, 0, 0, 0.1)") !important;//to override .rtl's
+			
+			&.menu-min {
+				.nav-list > li > .submenu {
+					background-color: @submenu-background;
+				}
+			}
+		}
+	}//@media
+	
+
+	
+	.sidebar-scroll {
+	 .sidebar-shortcuts {
+		border-bottom-color: darken(@nav-item-border , 3%);
+	 }
+	 .sidebar-toggle {
+		border-top-color: darken(@nav-item-border , 3%);
+	 }
+	}
+
+
+
+
+	.enable_old_menu_toggle_button_no_skin() when(@enable-old-menu-toggle-button = true) {
+	  .main-container .menu-toggler {
+		background-color: @sidebar-toggler-background;
+		&:before {
+			border-top-color: @sidebar-toggler-line-1;
+			border-bottom-color: @sidebar-toggler-line-2;
+		}
+		
+		&:after {
+			border-top-color: @sidebar-toggler-line-3;
+			border-bottom-color: @sidebar-toggler-line-4;
+		}
+		> .toggler-text {
+			border-top-color: @sidebar-toggler-background;
+			-moz-border-top-colors: @sidebar-toggler-background;
+		}
+	  }
+	}
+	.enable_old_menu_toggle_button_no_skin();
+	
+	
+	
+	//disabled state
+	.nav-list > li.disabled:before {
+		display: none !important;
+	}
+	.nav-list > li.disabled > a {
+		background-color: darken(@nav-item-background, 5%) !important;
+		color: lighten(@nav-item-color, 5%) !important;
+	}
+	
+	
+	.nav-list li .submenu > li.disabled > a,
+	.nav-list li.disabled .submenu > li > a {
+		background-color: darken(@submenu-item-background, 5%) !important;
+		color: desaturate(lighten(@submenu-item-color, 10%), 10%) !important;
+		cursor: not-allowed !important;
+		> .menu-icon {
+			display: none;
+		}
+	}
+	/**
+	.nav-list > li.disabled.active:after {
+		border-color: #999;
+	}
+	.nav-list li.disabled li.active > a:after,
+	.nav-list li.active.disabled > a:after {
+		-moz-border-right-colors: #999 !important;
+		border-right-color: #999 !important;
+	}
+	*/
+	
+}//.no-skin
+
+
+//hover highlight
+@import "../sidebar/highlight.less";

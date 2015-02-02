@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="metric-config" root="true">
+    <entity-ref name="metric-item-config" type="list" names="metric-item-configs" />
+  </entity>
+  <entity name="metric-item-config">
+    <attribute name="id" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="view-order" value-type="int" />
+    <attribute name="metric-key" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <attribute name="show-count" value-type="boolean" />
+    <attribute name="show-avg" value-type="boolean" />
+    <attribute name="show-sum" value-type="boolean" />
+  </entity>
+  <entity name="tag">
+    <attribute name="name" value-type="String"/>
+	<attribute name="type" value-type="String" />
+  </entity>
+</model>
+

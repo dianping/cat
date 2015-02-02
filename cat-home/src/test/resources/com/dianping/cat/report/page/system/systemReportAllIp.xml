@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report product="system-Cat" startTime="2014-06-08 18:00:00" endTime="2014-06-08 18:59:59">
+   <metric-item id="cpu_10.254.251.60" type="T">
+      <segment id="0" count="12" sum="0.97" avg="0.08"/>
+      <segment id="1" count="12" sum="0.85" avg="0.07"/>
+      <segment id="2" count="12" sum="1.16" avg="0.09"/>
+      <segment id="3" count="12" sum="1.71" avg="0.14"/>
+      <segment id="4" count="12" sum="1.57" avg="0.13"/>
+      <segment id="5" count="10" sum="1.27" avg="0.12"/>
+   </metric-item>
+   <metric-item id="cpu_10.10.1.1" type="T">
+      <segment id="0" count="12" sum="3.37" avg="0.28"/>
+      <segment id="1" count="12" sum="3.24" avg="0.27"/>
+      <segment id="2" count="12" sum="3.55" avg="0.29"/>
+      <segment id="3" count="12" sum="4.11" avg="0.34"/>
+      <segment id="4" count="12" sum="3.96" avg="0.33"/>
+      <segment id="5" count="10" sum="3.27" avg="0.32"/>
+   </metric-item>
+   <metric-item id="en0-in-flow_10.254.251.60" type="S,C">
+      <segment id="0" count="12" sum="3542675.0" avg="295222.91"/>
+      <segment id="1" count="12" sum="20824.0" avg="1735.33"/>
+      <segment id="2" count="12" sum="48941.0" avg="4078.41"/>
+      <segment id="3" count="12" sum="19277.0" avg="1606.41"/>
+      <segment id="4" count="12" sum="4380573.0" avg="365047.75"/>
+      <segment id="5" count="10" sum="56446.0" avg="5644.6"/>
+   </metric-item>
+   <metric-item id="en0-in-flow_10.10.1.1" type="S,C">
+      <segment id="0" count="12" sum="4742675.0" avg="395222.91"/>
+      <segment id="1" count="12" sum="1220824.0" avg="101735.33"/>
+      <segment id="2" count="12" sum="1248941.0" avg="104078.41"/>
+      <segment id="3" count="12" sum="1219277.0" avg="101606.41"/>
+      <segment id="4" count="12" sum="5580573.0" avg="465047.75"/>
+      <segment id="5" count="10" sum="1056446.0" avg="105644.6"/>
+   </metric-item>
+   <statistic id="ipList">
+      <statistics-item id="10.254.251.60" count="0"/>
+      <statistics-item id="10.10.1.1" count="0"/>
+   </statistic>
+</metric-report>

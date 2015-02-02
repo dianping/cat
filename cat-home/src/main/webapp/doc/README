@@ -1,0 +1,5 @@
+lanch CAT
+1、put krb5.conf and krb5.keytab to /etc/ folder
+2、put client.xml、server.xml、datasources.xml cat.keytab to /data/appdatas/cat/ folder
+3、mvn eclipse:eclipse
+4、run the junit test  TestServer.java

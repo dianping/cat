@@ -1,0 +1,5 @@
+@media screen {
+	.navbar .nav>li>a {
+		padding: 10px 7px 10px;
+	}
+}

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="bug-config" root="true">
+    <element name="exception" value-type="String" type="list" names="exceptions" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="additivity" value-type="boolean" />
+    <element name="exception" value-type="String" type="list" names="exceptions" />
+  </entity>
+</model>
+

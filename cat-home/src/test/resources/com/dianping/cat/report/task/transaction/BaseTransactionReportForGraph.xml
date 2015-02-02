@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi" startTime="2012-05-17 14:00:00"
+	endTime="2012-05-17 14:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.194</ip>
+	<ip>10.1.77.193</ip>
+	<machine ip="10.1.77.193">
+		<type id="URL" totalCount="242" failCount="0" failPercent="0.00"
+			min="1.789" max="13639.94" avg="0.0" sum="180904.4" sum2="1931440775.2"
+			std="0.0" tps="0.00" avg2="6380.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+			</successMessageUrl>
+			<name id="url1" totalCount="154" failCount="0" failPercent="0.00"
+				min="2.712" max="10.994" avg="0.0" sum="730.6" sum2="3686.2" std="0.0"
+				tps="0.00" avg2="6.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+			<name id="url2" totalCount="11" failCount="0" failPercent="0.00"
+				min="1.789" max="29.611" avg="0.0" sum="53.8" sum2="937.9" std="0.0"
+				tps="0.00" avg2="29.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234661043-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+		</type><type id="User" totalCount="242" failCount="0" failPercent="0.00"
+			min="1.789" max="13639.94" avg="0.0" sum="180904.4" sum2="1931440775.2"
+			std="0.0" tps="0.00" avg2="6380.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+			</successMessageUrl>
+			<name id="url1" totalCount="154" failCount="0" failPercent="0.00"
+				min="2.712" max="10.994" avg="0.0" sum="730.6" sum2="3686.2" std="0.0"
+				tps="0.00" avg2="6.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+			<name id="url2" totalCount="11" failCount="0" failPercent="0.00"
+				min="1.789" max="29.611" avg="0.0" sum="53.8" sum2="937.9" std="0.0"
+				tps="0.00" avg2="29.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234661043-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+		</type>
+	</machine>
+	<machine ip="10.1.77.194">
+		<type id="URL" totalCount="242" failCount="0" failPercent="0.00"
+			min="1.789" max="13639.94" avg="0.0" sum="180904.4" sum2="1931440775.2"
+			std="0.0" tps="0.00" avg2="6380.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+			</successMessageUrl>
+			<name id="url1" totalCount="154" failCount="0" failPercent="0.00"
+				min="2.712" max="10.994" avg="0.0" sum="730.6" sum2="3686.2" std="0.0"
+				tps="0.00" avg2="6.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+			<name id="url3" totalCount="11" failCount="0" failPercent="0.00"
+				min="1.789" max="29.611" avg="0.0" sum="53.8" sum2="937.9" std="0.0"
+				tps="0.00" avg2="29.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234661043-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+		</type><type id="User1" totalCount="242" failCount="0" failPercent="0.00"
+			min="1.789" max="13639.94" avg="0.0" sum="180904.4" sum2="1931440775.2"
+			std="0.0" tps="0.00" avg2="6380.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+			</successMessageUrl>
+			<name id="url1" totalCount="154" failCount="0" failPercent="0.00"
+				min="2.712" max="10.994" avg="0.0" sum="730.6" sum2="3686.2" std="0.0"
+				tps="0.00" avg2="6.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234416291-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+			<name id="url2" totalCount="11" failCount="0" failPercent="0.00"
+				min="1.789" max="29.611" avg="0.0" sum="53.8" sum2="937.9" std="0.0"
+				tps="0.00" avg2="29.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337234661043-0
+				</successMessageUrl>
+				<range value="0" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="1" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="2" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="3" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="4" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="5" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="6" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="7" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="8" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="9" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="10" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="11" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="12" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="13" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="14" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="15" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="16" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="17" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="18" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="19" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="20" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="21" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="22" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="23" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="24" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="25" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="26" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="27" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="28" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="29" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="30" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="31" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="32" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="33" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="34" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="35" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="36" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="37" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="38" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="39" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="40" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="41" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="42" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="43" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="44" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="45" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="46" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="47" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="48" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="49" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="50" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="51" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="52" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="53" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="54" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="55" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="56" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="57" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="58" count="10" sum="10" avg="0.0" fails="5" />
+				<range value="59" count="10" sum="10" avg="0.0" fails="5" />
+			</name>
+		</type>
+	</machine>
+</transaction-report>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dependency-report domain="Cat" startTime="2013-05-08 11:00:00" endTime="2013-05-08 11:59:59">
+   <domainName>Cat</domainName>
+   <segment id="16">
+      <index name="URL" total-count="2" error-count="3" sum="2.00" avg="1.00"/>
+   </segment>
+   <segment id="18">
+      <index name="URL" total-count="4" error-count="0" sum="4.00" avg="1.00"/>
+      <index name="Cache" total-count="2" error-count="0" sum="2.00" avg="1.00"/>
+      <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <index name="PigeonService" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <dependency key="DB:database0" type="Database" target="DB:database0" total-count="6" avg="1.00" error-count="2" sum="6.00"/>
+      <dependency key="DB:database1" type="Database" target="DB:database1" total-count="6" avg="1.00" error-count="4" sum="6.00"/>
+      <dependency key="DB:database2" type="Database" target="DB:database2" total-count="6" avg="1.00" error-count="6" sum="6.00"/>
+      <dependency key="DB:database3" type="Database" target="DB:database3" total-count="6" avg="1.00" error-count="8" sum="6.00"/>
+      <dependency key="DB:database4" type="Database" target="DB:database4" total-count="3" avg="1.00" error-count="4" sum="3.00"/>
+      <dependency key="UserService" type="PigeonServer" target="UserService" total-count="40" avg="20.00" error-count="40" sum="800.00"/>
+      <dependency key="UserService1" type="PigeonServer" target="UserService1" total-count="40" avg="20.00" error-count="40" sum="800.00"/>
+      <dependency key="UserService2" type="PigeonServer" target="UserService2" total-count="40" avg="20.00" error-count="40" sum="800.00"/>
+      <dependency key="UserWeb" type="PigeonClient" target="UserWeb" total-count="40" avg="20.00" error-count="40" sum="800.00"/>
+      <dependency key="UserWeb3" type="PigeonClient" target="UserWeb3" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+      <dependency key="UserWeb2" type="PigeonClient" target="UserWeb2" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+   </segment>
+   <segment id="19">
+      <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <index name="PigeonService" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <index name="URL" total-count="2" error-count="0" sum="2.00" avg="1.00"/>
+      <dependency key="DB:database0" type="Database" target="DB:database0" total-count="3" avg="1.00" error-count="0" sum="3.00"/>
+      <dependency key="DB:database1" type="Database" target="DB:database1" total-count="3" avg="1.00" error-count="0" sum="3.00"/>
+      <dependency key="DB:database2" type="Database" target="DB:database2" total-count="3" avg="1.00" error-count="0" sum="3.00"/>
+      <dependency key="DB:database3" type="Database" target="DB:database3" total-count="3" avg="1.00" error-count="0" sum="3.00"/>
+      <dependency key="UserService" type="PigeonServer" target="UserService" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+      <dependency key="UserService1" type="PigeonServer" target="UserService1" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+      <dependency key="UserService2" type="PigeonServer" target="UserService2" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+      <dependency key="UserWeb" type="PigeonClient" target="UserWeb" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+      <dependency key="UserWeb2" type="PigeonClient" target="UserWeb2" total-count="20" avg="20.00" error-count="20" sum="400.00"/>
+   </segment>
+</dependency-report>

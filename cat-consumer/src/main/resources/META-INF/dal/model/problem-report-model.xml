@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.problem.model" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true">
+	<entity name="problem-report" root="true">
+		<attribute name="domain" value-type="String" key="true" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+	</entity>
+	<entity name="machine">
+		<attribute name="ip" value-type="String" key="true" />
+		<entity-ref name="entity" type="map" names="entities" method-find-or-create="true" />
+	</entity>
+	<entity name="entry">
+		 <attribute name="type" value-type="String" />
+    	<attribute name="status" value-type="String" />
+		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
+		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
+	</entity>
+	<entity name="entity">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="type" value-type="String" />
+    	<attribute name="status" value-type="String" />
+		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
+		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
+	</entity>
+	<entity name="thread" class-name="java-thread">
+		<attribute name="id" value-type="String" key="true" />
+		<entity-ref name="segment" type="map" names="segments" method-find-or-create="true" />
+	</entity>
+	<entity name="segment">
+		<attribute name="id" value-type="int" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="duration">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+</model>

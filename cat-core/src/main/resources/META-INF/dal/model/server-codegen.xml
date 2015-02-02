@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="config" root="true">
+    <attribute name="local-mode" value-type="boolean" />
+    <attribute name="job-machine" value-type="boolean" />
+    <entity-ref name="storage" />
+    <entity-ref name="consumer" />
+    <entity-ref name="console" />
+  </entity>
+  <entity name="storage">
+    <attribute name="local-base-dir" value-type="String" />
+    <attribute name="hdfs-disabled" value-type="boolean" />
+    <entity-ref name="hdfs" type="list" names="hdfses" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="hdfs">
+    <attribute name="id" value-type="String" />
+    <attribute name="max-size" value-type="String" />
+    <attribute name="server-uri" value-type="String" />
+    <attribute name="base-dir" value-type="String" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="consumer">
+    <entity-ref name="long-config" />
+  </entity>
+  <entity name="long-config">
+    <attribute name="default-url-threshold" value-type="int" />
+    <attribute name="default-sql-threshold" value-type="int" />
+    <attribute name="default-service-threshold" value-type="int" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" />
+    <attribute name="url-threshold" value-type="int" />
+    <attribute name="sql-threshold" value-type="int" />
+    <attribute name="service-threshold" value-type="int" />
+  </entity>
+  <entity name="console">
+    <attribute name="default-domain" value-type="String" />
+    <attribute name="show-cat-domain" value-type="boolean" />
+    <element name="remote-servers" value-type="String" />
+  </entity>
+</model>
+

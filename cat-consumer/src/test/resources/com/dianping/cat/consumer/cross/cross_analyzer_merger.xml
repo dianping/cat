@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cross-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domain>group</domain>
+   <ip>192.168.1.1</ip>
+   <local id="192.168.1.1">
+      <remote id="192.168.1.2" role="Pigeon.Client" app="client">
+         <type id="PigeonService" totalCount="100" failCount="100" failPercent="100.00" avg="100.00" sum="10000.00" tps="0.00">
+            <name id="Cat-Test-Service" totalCount="100" failCount="100" failPercent="100.00" avg="100.00" sum="10000.00" tps="0.00"/>
+         </type>
+      </remote>
+      <remote id="192.168.1.0:3000:class:method1" role="Pigeon.Server" app="server">
+         <type id="PigeonCall" totalCount="100" failCount="100" failPercent="100.00" avg="102.00" sum="10200.00" tps="0.00">
+            <name id="Cat-Test-Call" totalCount="100" failCount="100" failPercent="100.00" avg="102.00" sum="10200.00" tps="0.00"/>
+         </type>
+      </remote>
+   </local>
+</cross-report>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app-speed-config>
+   <speed id="1" page="index.bin" step="1" title="首页加载第一步" threshold="200"/>
+   <speed id="2" page="index.bin" step="2" title="首页加载第二步" threshold="200"/>
+   <speed id="3" page="index.bin" step="3" title="首页加载第三步" threshold="200"/>
+   <speed id="4" page="index.bin" step="4" title="首页加载第四步" threshold="200"/>
+</app-speed-config>

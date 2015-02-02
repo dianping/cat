@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="metric-report" root="true">
+    <attribute name="product" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="metric-item" type="list" names="metric-items" />
+  </entity>
+  <entity name="metric-item">
+    <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="abtest" type="map" names="abtests" method-find-or-create="true" />
+    <entity-ref name="segment" type="list" names="segments"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+  </entity>
+</model>
+

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities  do-package="com.dianping.cat.core.config" gen="true" >
+  <entity name="config" table="config" alias="c">
+    <member name="creation-date" insert-expr="NOW()" />
+    <member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+    <query-defs>
+      <query name="find-by-name" type="SELECT">
+        <param name="name" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='name'/> = ${name}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  
+   <entity name="config" table="config" alias="c">
+		<query-defs>
+			<query name="find-all-config" type="SELECT" multiple="true">
+					<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>

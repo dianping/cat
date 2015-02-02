@@ -1,0 +1,10 @@
+<matrix-report domain="Cat" startTime="2012-05-16 16:00:00"	endTime="2012-05-16 16:59:59">
+	<domain>Cat1</domain>
+	<domain>Cat</domain>
+	<matrix type="URL" name="/index" count="100" totalTime="500.0"  >
+		<ratio type="SQL" count="1" min="1" max="2" totalCount="150"  totalTime="400.0"/>
+		<ratio/>
+	</matrix>
+	<matrix>
+	</matrix>
+</matrix-report>

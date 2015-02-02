@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.home.dal.report" gen="true">
+	<entity name="alert" table="alert" alias="al">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="categories" value-type="String[]" />
+		<param name="domain" />
+		<query-defs>
+			<query name="query-alerts-by-time-domain" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> desc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-domain-categories" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<param name="categories" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					AND <FIELD name='category'/> in <IN>${categories}</IN>
+					ORDER BY <FIELD name='alert-time'/> desc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-category-domain" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> asc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-category" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> asc		
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="alert-summary" table="alert_summary" alias="as">
+		<member name="creation-date" insert-expr="NOW()" />
+	</entity>
+	<entity name="alteration" table="alteration" alias="a">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="types" value-type="String[]" />
+		<param name="type" />
+		<param name="domain" />
+		<param name="hostname" />
+		<query-defs>
+			<query name="find-by-dtdh" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+			<query name="find-by-dtdh-types" type="SELECT"	multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<param name="domain" />
+				<param name="hostname" />
+				<param name="types" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					<IF type='NOT_NULL' field='hostname'>
+						AND <FIELD name='hostname'/> = ${hostname} 
+					</IF>
+					AND <FIELD name='type'/> in <IN>${types}</IN>
+					ORDER BY <FIELD name='date'/> desc	
+					]]></statement>
+			</query>
+			<query name="find-by-domain-and-time" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="topology-graph" table="topologyGraph" alias="t">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-period" type="SELECT">
+				<param name="period" />
+				<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="baseline" table="baseline" alias="b">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="dataInDoubleArray" value-type="double[]" />
+		<query-defs>
+			<query name="find-by-report-name-key-time" type="SELECT">
+				<param name="report-period" />
+				<param name="report-name" />
+				<param name="index-key" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-period'/> = ${report-period}
+					AND <FIELD name='report-name'/> = ${report-name}
+					AND <FIELD name='index-key'/> = ${index-key} 
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="monthly-report-content" table="monthly_report_content" alias="mrc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="capacity" value-type="double" />
+	 <var name="start-id" value-type="int" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="start-id" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> > ${start-id}
+				ORDER BY <FIELD name='report-id'/> asc  limit 1000
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="weekly-report-content" table="weekly_report_content" alias="wrc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="capacity" value-type="double" />
+	 <var name="start-id" value-type="int" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="start-id" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> > ${start-id}
+				ORDER BY <FIELD name='report-id'/> asc  limit 1000
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="daily-report-content" table="daily_report_content" alias="drc">
+	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <var name="start-id" value-type="int" />
+	 <var name="end-id" value-type="int" />
+	 <var name="capacity" value-type="double" />
+	 <readsets>
+		<readset name="LENGTH">
+			<member name="report-id" />
+			<member name="content-length" />
+		</readset>
+	 </readsets>
+     <query-defs>
+     	<query name="find-overload-report" type="SELECT" multiple="true">
+			<param name="start-id" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='report-id'/> > ${start-id}
+				ORDER BY <FIELD name='report-id'/> asc  limit 1000
+				]]></statement>
+		</query>
+     </query-defs>
+    </entity>
+    <entity name="overload" table="overload" alias="ot">
+   		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="type" value-type="int" />
+    	<member name="creation-date" insert-expr="NOW()" />
+   		<member name="max-id" value-type="int" all="false" select-expr="max(report_id)" length="19" nullable="false" />
+   		<member name="count" value-type="int" all="false" select-expr="count(*)" length="19" nullable="false" />
+    	<readsets>
+			<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+			<readset name="count-num">
+				<member name="count" />
+			</readset>
+			<readset name="id-size-type">
+				<member name="report-id" />
+				<member name="report-size" />
+				<member name="report-type" />
+			</readset>
+		 </readsets>
+	     <query-defs>
+	     	<query name="find-max-id-by-type" type="SELECT" multiple="false">
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-type'/> = ${type}
+					]]></statement>
+			</query>
+			<query name="find-count" type="SELECT" multiple="false">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+			<query name="find-id-and-size-by-duration" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-time}
+					AND <FIELD name='period'/> <= ${end-time} 
+					ORDER BY <FIELD name='period'/> DESC, <FIELD name='report-type'/> ASC
+					]]></statement>
+			</query>
+	     </query-defs>
+    </entity>
+    <entity name="user-define-rule" table="user_define_rule" alias="udr">
+    	<member name="max-id" value-type="int" all="false" select-expr="max(id)" length="19" nullable="false" />
+    	<member name="creation-date" insert-expr="NOW()" />
+    	<readsets>
+	    	<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+		</readsets>
+    	<query-defs>
+	     	<query name="find-max-id" type="SELECT" multiple="false">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+		</query-defs>
+    </entity>
+    <entity name="config-modification" table="config_modification" alias="cm">
+    	<member name="creation-date" insert-expr="NOW()" />
+    </entity>
+</entities>

@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
+   <domain>Cat</domain>
+   <domain>MobileApi</domain>
+   <ip>10.1.77.193</ip>
+   <machine ip="10.1.77.193">
+      <type id="Task" totalCount="60" failCount="0" failPercent="0.00" min="96.36" max="621.15" avg="0.0" sum="21662.9" sum2="8482162.5" std="0.0" tps="0.00" line95Value="569.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999228037-0
+			</successMessageUrl>
+         <name id="Status" totalCount="60" failCount="0" failPercent="0.00" min="96.36" max="621.15" avg="0.0" sum="21662.9" sum2="8482162.5" std="0.0" tps="0.00" line95Value="569.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999228037-0
+				</successMessageUrl>
+            <range value="0" count="5" sum="2092.209" avg="0.0" fails="0"/>
+            <range value="5" count="5" sum="1685.823" avg="0.0" fails="0"/>
+            <range value="10" count="5" sum="1711.9150000000002" avg="0.0" fails="0"/>
+            <range value="15" count="5" sum="1471.703" avg="0.0" fails="0"/>
+            <range value="20" count="5" sum="2416.348" avg="0.0" fails="0"/>
+            <range value="25" count="5" sum="1788.179" avg="0.0" fails="0"/>
+            <range value="30" count="5" sum="1933.049" avg="0.0" fails="0"/>
+            <range value="35" count="5" sum="2140.6090000000004" avg="0.0" fails="0"/>
+            <range value="40" count="5" sum="1564.711" avg="0.0" fails="0"/>
+            <range value="45" count="5" sum="2180.902" avg="0.0" fails="0"/>
+            <range value="50" count="5" sum="1543.9950000000001" avg="0.0" fails="0"/>
+            <range value="55" count="5" sum="1133.452" avg="0.0" fails="0"/>
+            <duration value="512" count="48"/>
+            <duration value="256" count="6"/>
+            <duration value="1024" count="5"/>
+            <duration value="128" count="1"/>
+         </name>
+      </type>
+      <type id="SQL" totalCount="507" failCount="0" failPercent="0.00" min="0.42" max="102.92" avg="0.0" sum="1937.0" sum2="34333.7" std="0.0" tps="0.00" line95Value="14.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999254922-0
+			</successMessageUrl>
+         <name id="APIBadge.getBadgeTaskList" totalCount="60" failCount="0" failPercent="0.00" min="0.68" max="1.40" avg="0.0" sum="57.5" sum2="56.3" std="0.0" tps="0.00" line95Value="1.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999254922-0
+				</successMessageUrl>
+            <range value="0" count="5" sum="4.384" avg="0.0" fails="0"/>
+            <range value="5" count="5" sum="4.748" avg="0.0" fails="0"/>
+            <range value="10" count="5" sum="4.2829999999999995" avg="0.0" fails="0"/>
+            <range value="15" count="5" sum="4.077" avg="0.0" fails="0"/>
+            <range value="20" count="5" sum="4.518" avg="0.0" fails="0"/>
+            <range value="25" count="5" sum="5.066999999999999" avg="0.0" fails="0"/>
+            <range value="30" count="5" sum="4.779" avg="0.0" fails="0"/>
+            <range value="35" count="5" sum="4.925" avg="0.0" fails="0"/>
+            <range value="40" count="5" sum="5.011" avg="0.0" fails="0"/>
+            <range value="45" count="5" sum="5.166" avg="0.0" fails="0"/>
+            <range value="50" count="5" sum="5.2620000000000005" avg="0.0" fails="0"/>
+            <range value="55" count="5" sum="5.255000000000001" avg="0.0" fails="0"/>
+            <duration value="1" count="39"/>
+            <duration value="2" count="21"/>
+         </name>
+         <name id="APIAnnounce.getValid" totalCount="120" failCount="0" failPercent="0.00" min="1.63" max="4.28" avg="0.0" sum="332.1" sum2="933.8" std="0.0" tps="0.00" line95Value="3.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999254947-0
+				</successMessageUrl>
+            <range value="0" count="10" sum="28.248" avg="0.0" fails="0"/>
+            <range value="5" count="10" sum="26.973" avg="0.0" fails="0"/>
+            <range value="10" count="10" sum="28.307999999999996" avg="0.0" fails="0"/>
+            <range value="15" count="10" sum="25.756" avg="0.0" fails="0"/>
+            <range value="20" count="10" sum="28.573" avg="0.0" fails="0"/>
+            <range value="25" count="10" sum="27.699000000000005" avg="0.0" fails="0"/>
+            <range value="30" count="10" sum="28.823" avg="0.0" fails="0"/>
+            <range value="35" count="10" sum="26.977999999999994" avg="0.0" fails="0"/>
+            <range value="40" count="10" sum="27.426000000000002" avg="0.0" fails="0"/>
+            <range value="45" count="10" sum="27.386" avg="0.0" fails="0"/>
+            <range value="50" count="10" sum="27.596000000000004" avg="0.0" fails="0"/>
+            <range value="55" count="10" sum="28.365" avg="0.0" fails="0"/>
+            <duration value="4" count="115"/>
+            <duration value="8" count="3"/>
+            <duration value="2" count="2"/>
+         </name>
+         <name id="APICampaign.getCampaignCacheList" totalCount="5" failCount="0" failPercent="0.00" min="1.36" max="5.82" avg="0.0" sum="13.5" sum2="49.3" std="0.0" tps="0.00" line95Value="5.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999454591-0
+				</successMessageUrl>
+            <range value="0" count="1" sum="2.466" avg="0.0" fails="0"/>
+            <range value="20" count="1" sum="1.831" avg="0.0" fails="0"/>
+            <range value="35" count="1" sum="1.365" avg="0.0" fails="0"/>
+            <range value="50" count="1" sum="2.024" avg="0.0" fails="0"/>
+            <range value="55" count="1" sum="5.825" avg="0.0" fails="0"/>
+            <duration value="4" count="2"/>
+            <duration value="2" count="2"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="APIPush.getAndroidPushItems" totalCount="6" failCount="0" failPercent="0.00" min="0.44" max="0.78" avg="0.0" sum="3.5" sum2="2.1" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999658957-0
+				</successMessageUrl>
+            <range value="5" count="1" sum="0.663" avg="0.0" fails="0"/>
+            <range value="15" count="1" sum="0.464" avg="0.0" fails="0"/>
+            <range value="25" count="1" sum="0.526" avg="0.0" fails="0"/>
+            <range value="35" count="1" sum="0.441" avg="0.0" fails="0"/>
+            <range value="45" count="1" sum="0.586" avg="0.0" fails="0"/>
+            <range value="55" count="1" sum="0.779" avg="0.0" fails="0"/>
+            <duration value="1" count="6"/>
+         </name>
+         <name id="APICommonToken.queryByType" totalCount="4" failCount="0" failPercent="0.00" min="50.54" max="102.92" avg="0.0" sum="255.9" sum2="18391.6" std="0.0" tps="0.00" line95Value="102.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999663688-0
+				</successMessageUrl>
+            <range value="5" count="1" sum="51.69" avg="0.0" fails="0"/>
+            <range value="55" count="3" sum="204.185" avg="0.0" fails="0"/>
+            <duration value="64" count="3"/>
+            <duration value="128" count="1"/>
+         </name>
+         <name id="APILocation.getOffset" totalCount="1" failCount="0" failPercent="0.00" min="23.00" max="23.00" avg="0.0" sum="23.0" sum2="529.2" std="0.0" tps="0.00" line95Value="23.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="23.004" avg="0.0" fails="0"/>
+            <duration value="32" count="1"/>
+         </name>
+         <name id="APIRegion.getHotRegionList" totalCount="1" failCount="0" failPercent="0.00" min="5.23" max="5.23" avg="0.0" sum="5.2" sum2="27.4" std="0.0" tps="0.00" line95Value="5.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999975733-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="5.232" avg="0.0" fails="0"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="APICategory.getCNTreeList" totalCount="1" failCount="0" failPercent="0.00" min="0.85" max="0.85" avg="0.0" sum="0.9" sum2="0.7" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999975894-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="0.853" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+         </name>
+         <name id="APICategory.getCNTreeChildrenList" totalCount="1" failCount="0" failPercent="0.00" min="1.62" max="1.62" avg="0.0" sum="1.6" sum2="2.6" std="0.0" tps="0.00" line95Value="1.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999975894-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="1.624" avg="0.0" fails="0"/>
+            <duration value="2" count="1"/>
+         </name>
+         <name id="APILocateCategory.getLocateList" totalCount="1" failCount="0" failPercent="0.00" min="0.69" max="0.69" avg="0.0" sum="0.7" sum2="0.5" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999994494-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="0.688" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+         </name>
+         <name id="APIShop.getShop" totalCount="195" failCount="0" failPercent="0.00" min="0.76" max="15.88" avg="0.0" sum="267.5" sum2="1088.6" std="0.0" tps="0.00" line95Value="4.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000013672-0
+				</successMessageUrl>
+            <range value="10" count="195" sum="267.46799999999985" avg="0.0" fails="0"/>
+            <duration value="16" count="5"/>
+            <duration value="1" count="153"/>
+            <duration value="8" count="5"/>
+            <duration value="2" count="30"/>
+            <duration value="4" count="2"/>
+         </name>
+         <name id="APIShop.getGoogleLatLngByShopId" totalCount="26" failCount="0" failPercent="0.00" min="0.42" max="8.24" avg="0.0" sum="55.9" sum2="262.0" std="0.0" tps="0.00" line95Value="8.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000013672-0
+				</successMessageUrl>
+            <range value="10" count="26" sum="55.909" avg="0.0" fails="0"/>
+            <duration value="8" count="4"/>
+            <duration value="1" count="16"/>
+            <duration value="4" count="2"/>
+            <duration value="2" count="3"/>
+            <duration value="16" count="1"/>
+         </name>
+         <name id="APIPromo.getPromoByShop" totalCount="52" failCount="0" failPercent="0.00" min="14.10" max="16.83" avg="0.0" sum="749.7" sum2="10820.7" std="0.0" tps="0.00" line95Value="16.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000013672-0
+				</successMessageUrl>
+            <range value="10" count="52" sum="749.7379999999999" avg="0.0" fails="0"/>
+            <duration value="32" count="2"/>
+            <duration value="16" count="50"/>
+         </name>
+         <name id="APIShop.getChildrenShopIdsByGroupId" totalCount="26" failCount="0" failPercent="0.00" min="0.49" max="11.22" avg="0.0" sum="77.7" sum2="503.4" std="0.0" tps="0.00" line95Value="11.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000013672-0
+				</successMessageUrl>
+            <range value="10" count="26" sum="77.70800000000001" avg="0.0" fails="0"/>
+            <duration value="8" count="6"/>
+            <duration value="16" count="2"/>
+            <duration value="4" count="2"/>
+            <duration value="1" count="15"/>
+            <duration value="2" count="1"/>
+         </name>
+         <name id="APIRegion.getRegionList" totalCount="1" failCount="0" failPercent="0.00" min="4.48" max="4.48" avg="0.0" sum="4.5" sum2="20.1" std="0.0" tps="0.00" line95Value="4.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000038292-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="4.483" avg="0.0" fails="0"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="APIRegion.getRegionTreeList" totalCount="1" failCount="0" failPercent="0.00" min="10.62" max="10.62" avg="0.0" sum="10.6" sum2="112.9" std="0.0" tps="0.00" line95Value="10.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000038292-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="10.625" avg="0.0" fails="0"/>
+            <duration value="16" count="1"/>
+         </name>
+         <name id="APIHotRgc.getAllHotDistricts" totalCount="1" failCount="0" failPercent="0.00" min="0.87" max="0.87" avg="0.0" sum="0.9" sum2="0.8" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002657174-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="0.87" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+         </name>
+         <name id="APICategory.getAllCategoryList" totalCount="1" failCount="0" failPercent="0.00" min="26.35" max="26.35" avg="0.0" sum="26.4" sum2="694.4" std="0.0" tps="0.00" line95Value="26.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002657327-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="26.352" avg="0.0" fails="0"/>
+            <duration value="32" count="1"/>
+         </name>
+         <name id="APICategory.getAllCategoryTreeList" totalCount="1" failCount="0" failPercent="0.00" min="15.02" max="15.02" avg="0.0" sum="15.0" sum2="225.7" std="0.0" tps="0.00" line95Value="15.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002657702-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="15.022" avg="0.0" fails="0"/>
+            <duration value="16" count="1"/>
+         </name>
+         <name id="APICategory.getAllRootCategoryList" totalCount="1" failCount="0" failPercent="0.00" min="20.82" max="20.82" avg="0.0" sum="20.8" sum2="433.4" std="0.0" tps="0.00" line95Value="20.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002657908-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="20.818" avg="0.0" fails="0"/>
+            <duration value="32" count="1"/>
+         </name>
+         <name id="APICategory.getAllParentCategoryId" totalCount="1" failCount="0" failPercent="0.00" min="13.33" max="13.33" avg="0.0" sum="13.3" sum2="177.6" std="0.0" tps="0.00" line95Value="13.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002657975-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="13.326" avg="0.0" fails="0"/>
+            <duration value="16" count="1"/>
+         </name>
+         <name id="APISearch.getFilterOptionList" totalCount="1" failCount="0" failPercent="0.00" min="0.87" max="0.87" avg="0.0" sum="0.9" sum2="0.8" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002658121-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="0.871" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+         </name>
+      </type>
+      <type id="URL" totalCount="12" failCount="0" failPercent="0.00" min="2.35" max="2164.39" avg="0.0" sum="2689.6" sum2="4772307.3" std="0.0" tps="0.00" line95Value="2164.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+         <name id="/config.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.35" max="2.72" avg="0.0" sum="5.1" sum2="13.0" std="0.0" tps="0.00" line95Value="2.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="5.079000000000001" avg="0.0" fails="0"/>
+            <duration value="4" count="2"/>
+         </name>
+         <name id="/hotregion.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.91" max="8.31" avg="0.0" sum="11.2" sum2="77.5" std="0.0" tps="0.00" line95Value="8.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960753-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="11.219" avg="0.0" fails="0"/>
+            <duration value="4" count="1"/>
+            <duration value="16" count="1"/>
+         </name>
+         <name id="/category.bin" totalCount="2" failCount="0" failPercent="0.00" min="12.93" max="13.06" avg="0.0" sum="26.0" sum2="337.7" std="0.0" tps="0.00" line95Value="13.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960794-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="25.99" avg="0.0" fails="0"/>
+            <duration value="16" count="2"/>
+         </name>
+         <name id="/city.bin" totalCount="1" failCount="0" failPercent="0.00" min="38.21" max="38.21" avg="0.0" sum="38.2" sum2="1460.0" std="0.0" tps="0.00" line95Value="38.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999961753-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="38.21" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+         </name>
+         <name id="/location.bin" totalCount="1" failCount="0" failPercent="0.00" min="249.69" max="249.69" avg="0.0" sum="249.7" sum2="62347.1" std="0.0" tps="0.00" line95Value="249.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="249.694" avg="0.0" fails="0"/>
+            <duration value="256" count="1"/>
+         </name>
+         <name id="/locatecategory.bin" totalCount="1" failCount="0" failPercent="0.00" min="5.39" max="5.39" avg="0.0" sum="5.4" sum2="29.1" std="0.0" tps="0.00" line95Value="5.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999994494-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="5.392" avg="0.0" fails="0"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="/localshop.bin" totalCount="3" failCount="0" failPercent="0.00" min="42.47" max="2164.39" avg="0.0" sum="2354.1" sum2="4708042.8" std="0.0" tps="0.00" line95Value="2164.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000001993-0
+				</successMessageUrl>
+            <range value="10" count="3" sum="2354.0570000000002" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+            <duration value="256" count="1"/>
+            <duration value="4096" count="1"/>
+         </name>
+      </type>
+      <type id="Action" totalCount="12" failCount="0" failPercent="0.00" min="0.23" max="2129.16" avg="0.0" sum="2575.0" sum2="4616437.9" std="0.0" tps="0.00" line95Value="2129.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+         <name id="config.bin" totalCount="2" failCount="0" failPercent="0.00" min="0.45" max="0.51" avg="0.0" sum="1.0" sum2="0.5" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="0.9550000000000001" avg="0.0" fails="0"/>
+            <duration value="1" count="2"/>
+         </name>
+         <name id="hotregion.bin" totalCount="2" failCount="0" failPercent="0.00" min="0.34" max="6.56" avg="0.0" sum="6.9" sum2="43.2" std="0.0" tps="0.00" line95Value="6.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960753-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="6.907" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="category.bin" totalCount="2" failCount="0" failPercent="0.00" min="0.52" max="5.31" avg="0.0" sum="5.8" sum2="28.5" std="0.0" tps="0.00" line95Value="5.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960794-0
+				</successMessageUrl>
+            <range value="10" count="2" sum="5.831" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+            <duration value="8" count="1"/>
+         </name>
+         <name id="city.bin" totalCount="1" failCount="0" failPercent="0.00" min="0.23" max="0.23" avg="0.0" sum="0.2" sum2="0.1" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999961753-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="0.226" avg="0.0" fails="0"/>
+            <duration value="1" count="1"/>
+         </name>
+         <name id="location.bin" totalCount="1" failCount="0" failPercent="0.00" min="247.15" max="247.15" avg="0.0" sum="247.2" sum2="61084.6" std="0.0" tps="0.00" line95Value="247.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="247.153" avg="0.0" fails="0"/>
+            <duration value="256" count="1"/>
+         </name>
+         <name id="locatecategory.bin" totalCount="1" failCount="0" failPercent="0.00" min="2.74" max="2.74" avg="0.0" sum="2.7" sum2="7.5" std="0.0" tps="0.00" line95Value="2.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999994494-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="2.736" avg="0.0" fails="0"/>
+            <duration value="4" count="1"/>
+         </name>
+         <name id="localshop.bin" totalCount="3" failCount="0" failPercent="0.00" min="39.24" max="2129.16" avg="0.0" sum="2311.2" sum2="4555273.6" std="0.0" tps="0.00" line95Value="2129.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000001993-0
+				</successMessageUrl>
+            <range value="10" count="3" sum="2311.217" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+            <duration value="256" count="1"/>
+            <duration value="4096" count="1"/>
+         </name>
+      </type>
+      <type id="Response" totalCount="12" failCount="0" failPercent="0.00" min="0.42" max="37.31" avg="0.0" sum="98.1" sum2="2687.0" std="0.0" tps="0.00" line95Value="37.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+         <name id="Format" totalCount="12" failCount="0" failPercent="0.00" min="0.42" max="37.31" avg="0.0" sum="98.1" sum2="2687.0" std="0.0" tps="0.00" line95Value="37.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+            <range value="10" count="12" sum="98.061" avg="0.0" fails="0"/>
+            <duration value="1" count="6"/>
+            <duration value="16" count="1"/>
+            <duration value="64" count="2"/>
+            <duration value="8" count="1"/>
+            <duration value="2" count="1"/>
+            <duration value="4" count="1"/>
+         </name>
+      </type>
+      <type id="Call" totalCount="6" failCount="0" failPercent="0.00" min="32.68" max="503.84" avg="0.0" sum="1138.3" sum2="379908.0" std="0.0" tps="0.00" line95Value="503.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+			</successMessageUrl>
+         <name id="LocationService.getReverseGeocoding" totalCount="1" failCount="0" failPercent="0.00" min="220.85" max="220.85" avg="0.0" sum="220.9" sum2="48775.6" std="0.0" tps="0.00" line95Value="220.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+            <range value="10" count="1" sum="220.852" avg="0.0" fails="0"/>
+            <duration value="256" count="1"/>
+         </name>
+         <name id="SearchService.searchShop" totalCount="3" failCount="0" failPercent="0.00" min="32.68" max="503.84" avg="0.0" sum="604.4" sum2="259529.4" std="0.0" tps="0.00" line95Value="503.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340000001993-0
+				</successMessageUrl>
+            <range value="10" count="3" sum="604.391" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+            <duration value="128" count="1"/>
+            <duration value="512" count="1"/>
+         </name>
+         <name id="cacheService:cacheConfigService_1.0.0:getCacheConfigurations" totalCount="1" failCount="0" failPercent="0.00" min="262.84" max="262.84" avg="0.0" sum="262.8" sum2="69083.3" std="0.0" tps="0.00" line95Value="262.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002655592-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="262.837" avg="0.0" fails="0"/>
+            <duration value="512" count="1"/>
+         </name>
+         <name id="cacheService:cacheConfigService_1.0.0:getKeyConfigurations" totalCount="1" failCount="0" failPercent="0.00" min="50.20" max="50.20" avg="0.0" sum="50.2" sum2="2519.7" std="0.0" tps="0.00" line95Value="50.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002655891-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="50.197" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+         </name>
+      </type>
+      <type id="Result" totalCount="2" failCount="0" failPercent="0.00" min="22.92" max="39.05" avg="0.0" sum="62.0" sum2="2050.3" std="0.0" tps="0.00" line95Value="39.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1340002655816-0
+			</successMessageUrl>
+         <name id="cacheService:cacheConfigService_1.0.0:getCacheConfigurations" totalCount="1" failCount="0" failPercent="0.00" min="39.05" max="39.05" avg="0.0" sum="39.0" sum2="1524.8" std="0.0" tps="0.00" line95Value="39.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002655816-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="39.049" avg="0.0" fails="0"/>
+            <duration value="64" count="1"/>
+         </name>
+         <name id="cacheService:cacheConfigService_1.0.0:getKeyConfigurations" totalCount="1" failCount="0" failPercent="0.00" min="22.92" max="22.92" avg="0.0" sum="22.9" sum2="525.5" std="0.0" tps="0.00" line95Value="22.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1340002655918-0
+				</successMessageUrl>
+            <range value="55" count="1" sum="22.923" avg="0.0" fails="0"/>
+            <duration value="32" count="1"/>
+         </name>
+      </type>
+   </machine>
+</transaction-report>
+

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exception-threshold-config>
+   <domain-config id="Default">
+      <exception-limit domain="Default" id="Total" warning="200" error="400"/>
+   </domain-config>
+</exception-threshold-config>

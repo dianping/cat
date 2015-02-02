@@ -1,0 +1,95 @@
+//the .navbar.navbar-collapse
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+ .navbar.navbar-collapse {
+	max-height: none;
+ }
+	
+ .navbar {
+   .navbar-header, .navbar-collapse {
+	 margin-left: 0 !important;
+	 margin-right: 0 !important
+   }
+ }
+
+
+ //.navbar.navbar-collapse .nav-brand {
+ .navbar.navbar-collapse .navbar-header {
+	float: none !important;
+	min-height: @navbar-min-height;
+ }
+
+ //will become hidden and a .navbar-toggle button toggles it
+ .navbar.navbar-collapse .navbar-buttons {
+	min-height: 0;//the above @navbar-min-height will interfere with CSS3 transition
+	
+	padding-left: 0;
+	padding-right: 0;
+	
+	border: 1px solid @ace-nav-border;
+	border-width: 1px 0 0;
+
+	width: 100%;
+
+	&.in {
+		overflow: visible !important;
+	}
+	
+	> .ace-nav {
+		display: block;
+		float: none !important;
+		text-align: center;
+
+		background-color: transparent !important;
+		
+		border-width:0;
+
+		letter-spacing: -3px;
+		> li {
+			display: inline-block;
+			float:none !important;
+			text-align: left;
+
+			letter-spacing: normal;
+			
+			&:first-child {
+				border-left: 1px solid @ace-nav-border;
+			}
+			&:last-child {
+				border-right: 1px solid @ace-nav-border;
+			}
+		}
+	}
+ }
+}
+.container > .navbar-buttons, .container-fluid > .navbar-buttons {
+	padding-right: 0 !important;
+}
+
+
+
+//make fixed navbar-collapse smaller so scrollbars show all content when needed
+@media only screen and (max-height: 400px) {
+ .navbar-fixed-top .navbar-collapse {
+    max-height: 280px;
+ }
+}
+@media only screen and (max-height: 360px) {
+ .navbar-fixed-top .navbar-collapse {
+    max-height: 240px;
+ }
+}
+@media only screen and (max-height: 320px) {
+ .navbar-fixed-top .navbar-collapse {
+    max-height: 200px;
+ }
+}
+@media only screen and (max-height: 280px) {
+ .navbar-fixed-top .navbar-collapse {
+    max-height: 160px;
+ }
+}
+@media only screen and (max-height: 240px) {
+ .navbar-fixed-top .navbar-collapse {
+    max-height: 120px;
+ }
+}

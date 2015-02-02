@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config mode="client" enabled="true" dev-mode="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+   <base-log-dir>target/catlog</base-log-dir>
+   <servers>
+      <server ip="192.168.8.21" port="2280" http-port="8080" enabled="true"/>
+      <server ip="192.168.8.22" port="2281" http-port="8080" enabled="false"/>
+      <server ip="192.168.8.23" port="2280" http-port="8080" enabled="true"/>
+   </servers>
+   <domain id="Group" enabled="true" max-message-size="1000"/>
+   <domain id="Review" ip="192.168.8.1" enabled="false" max-message-size="1000"/>
+   <bind ip="192.168.8.21" port="2280"/>
+   <properties>
+      <property name="failure-base-dir">/data/appdatas/cat/report/failure/</property>
+      <property name="transaction-base-dir">/data/appdatas/cat/report/transaction/</property>
+   </properties>
+</config>

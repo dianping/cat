@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="aggregation" root="true">
+    <entity-ref name="aggregation-rule" type="list" names="aggregation-rules" />
+  </entity>
+  <entity name="aggregation-rule">
+    <attribute name="type" value-type="int" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="pattern" value-type="String" />
+    <attribute name="sample" value-type="String" />
+    <attribute name="display-name" value-type="String" />
+    <attribute name="creation-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+  </entity>
+</model>
+

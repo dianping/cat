@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="problem-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="machine" type="list" names="machines" />
+  </entity>
+  <entity name="machine">
+    <attribute name="ip" value-type="String" />
+    <entity-ref name="entry" type="list" names="entries" />
+  </entity>
+  <entity name="entry">
+    <attribute name="type" value-type="String" />
+    <attribute name="status" value-type="String" />
+    <entity-ref name="duration" type="list" names="durations" />
+    <entity-ref name="thread" type="list" names="threads" />
+  </entity>
+  <entity name="thread">
+    <attribute name="group-name" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <attribute name="id" value-type="String" />
+    <entity-ref name="segment" type="list" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <element name="message" value-type="String" type="list" names="messages"/>
+  </entity>
+  <entity name="duration">
+    <attribute name="value" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <element name="message" value-type="String" type="list" names="messages"/>
+  </entity>
+</model>
+

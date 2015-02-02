@@ -1,0 +1,9 @@
+<metric-report product="TuanGou" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+	<metric-item id="addCount" type="S">
+		<domain>TuanGouWeb</domain>
+		<domain>TuanGouAPI</domain>
+		<segment id="1" count="1" sum="1.0" avg="123.0"/>
+		<segment id="2" count="1" sum="1.0" avg="123.0"/>
+	</metric-item>
+	<metric-item></metric-item>
+</metric-report>

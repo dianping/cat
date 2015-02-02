@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.metric.model"
+	enable-merger="true" enable-sax-parser="true"   enable-native-parser="true"  enable-native-builder="true"
+	enable-base-visitor="true" >
+  <entity name="metric-report" root="true">
+    <attribute name="product" value-type="String" key="true"/>
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="metric-item" type="map" names="metric-items" method-find-or-create="true" />
+    <entity-ref name="statistic" type="map" names="statistics" method-find-or-create="true" />
+  </entity>
+  <entity name="metric-item">
+    <attribute name="id" value-type="String" key="true"/>
+	<element name="domain" value-type="String" type="set" names="domains" />
+    <entity-ref name="abtest" type="map" names="abtests" method-find-or-create="true" />
+    <entity-ref name="segment" type="map" names="segments" method-find-or-create="true"/>
+  </entity>
+  <entity name="abtest">
+    <attribute name="run-id" value-type="String" key="true"/>
+    <attribute name="name" value-type="String" />
+    <entity-ref name="group" type="map" names="groups"  method-find-or-create="true"/>
+  </entity>
+  <entity name="group">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="point" type="map" names="points" method-find-or-create="true" />
+  </entity>
+  <entity name="point">
+    <attribute name="id" value-type="int" key="true"/>
+    <attribute name="count" value-type="int"  primitive="true"/>
+    <attribute name="sum" value-type="double" primitive="true"/>
+    <attribute name="avg" value-type="double" primitive="true"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" key="true"/>
+    <attribute name="count" value-type="int"  primitive="true"/>
+    <attribute name="sum" value-type="double" primitive="true"/>
+    <attribute name="avg" value-type="double" primitive="true"/>
+  </entity>
+  <entity name="statistic">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="statistics-item" type="map" names="statistics-items" method-find-or-create="true" />
+  </entity>
+  <entity name="statistics-item">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="int"  primitive="true"/>
+  </entity>
+</model>

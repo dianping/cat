@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="Cat" startTime="2012-06-26 16:00:00" endTime="2012-06-26 16:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.165.2</ip>
+   <machine ip="192.168.165.2">
+      <entry type="heartbeat" status="192.168.165.2">
+         <duration value="0" count="1">
+            <message>Cat-c0a8a501-1340700793104-0</message>
+         </duration>
+         <thread group-name="Cat" name="Cat-StatusUpdateTask" id="27">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793104-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="home">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="p">
+         <duration value="50" count="8">
+            <message>Cat-c0a8a501-1340700795112-0</message>
+            <message>Cat-c0a8a501-1340700799623-0</message>
+            <message>Cat-c0a8a501-1340700799739-0</message>
+            <message>Cat-c0a8a501-1340700799941-0</message>
+            <message>Cat-c0a8a501-1340700799949-0</message>
+            <message>Cat-c0a8a501-1340700799945-1</message>
+            <message>Cat-c0a8a501-1340700800040-0</message>
+            <message>Cat-c0a8a501-1340700800046-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700795112-0</message>
+               <message>Cat-c0a8a501-1340700799623-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-3" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799739-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-6" id="38">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799941-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-4" id="36">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799949-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-5" id="37">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799945-1</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-9" id="86">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700800040-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700800046-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="url" status="p">
+         <duration value="0" count="10">
+            <message>Cat-c0a8a501-1340700799568-0</message>
+            <message>Cat-c0a8a501-1340700799623-0</message>
+            <message>Cat-c0a8a501-1340700799710-0</message>
+            <message>Cat-c0a8a501-1340700799739-0</message>
+            <message>Cat-c0a8a501-1340700799941-0</message>
+            <message>Cat-c0a8a501-1340700799945-1</message>
+            <message>Cat-c0a8a501-1340700800046-0</message>
+            <message>Cat-c0a8a501-1340700802944-0</message>
+            <message>Cat-c0a8a501-1340700802937-0</message>
+            <message>Cat-c0a8a501-1340700803230-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799568-0</message>
+               <message>Cat-c0a8a501-1340700800046-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799623-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-4" id="36">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799710-0</message>
+               <message>Cat-c0a8a501-1340700802944-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-3" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799739-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-6" id="38">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799941-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-5" id="37">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799945-1</message>
+               <message>Cat-c0a8a501-1340700803230-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-9" id="86">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700802937-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="failure" status="MVC:OutboundPhase">
+         <duration value="0" count="10">
+            <message>Cat-c0a8a501-1340700799568-0</message>
+            <message>Cat-c0a8a501-1340700799623-0</message>
+            <message>Cat-c0a8a501-1340700799710-0</message>
+            <message>Cat-c0a8a501-1340700799739-0</message>
+            <message>Cat-c0a8a501-1340700799941-0</message>
+            <message>Cat-c0a8a501-1340700799945-1</message>
+            <message>Cat-c0a8a501-1340700800046-0</message>
+            <message>Cat-c0a8a501-1340700802944-0</message>
+            <message>Cat-c0a8a501-1340700802937-0</message>
+            <message>Cat-c0a8a501-1340700803230-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799568-0</message>
+               <message>Cat-c0a8a501-1340700800046-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799623-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-4" id="36">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799710-0</message>
+               <message>Cat-c0a8a501-1340700802944-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-3" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799739-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-6" id="38">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799941-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-5" id="37">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799945-1</message>
+               <message>Cat-c0a8a501-1340700803230-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-9" id="86">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700802937-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="error" status="java.lang.RuntimeException">
+         <duration value="0" count="10">
+            <message>Cat-c0a8a501-1340700799568-0</message>
+            <message>Cat-c0a8a501-1340700799623-0</message>
+            <message>Cat-c0a8a501-1340700799710-0</message>
+            <message>Cat-c0a8a501-1340700799739-0</message>
+            <message>Cat-c0a8a501-1340700799941-0</message>
+            <message>Cat-c0a8a501-1340700799945-1</message>
+            <message>Cat-c0a8a501-1340700800046-0</message>
+            <message>Cat-c0a8a501-1340700802944-0</message>
+            <message>Cat-c0a8a501-1340700802937-0</message>
+            <message>Cat-c0a8a501-1340700803230-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799568-0</message>
+               <message>Cat-c0a8a501-1340700800046-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799623-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-4" id="36">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799710-0</message>
+               <message>Cat-c0a8a501-1340700802944-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-3" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799739-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-6" id="38">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700799941-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-5" id="37">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700799945-1</message>
+               <message>Cat-c0a8a501-1340700803230-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-9" id="86">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700802937-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="t">
+         <duration value="50" count="2">
+            <message>Cat-c0a8a501-1340700805433-0</message>
+            <message>Cat-c0a8a501-1340700808403-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="2">
+               <message>Cat-c0a8a501-1340700805433-0</message>
+               <message>Cat-c0a8a501-1340700808403-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="model">
+         <duration value="50" count="2">
+            <message>Cat-c0a8a501-1340700810278-0</message>
+            <message>Cat-c0a8a501-1340700810277-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-3" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700810278-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main" name="btpool0-7" id="41">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700810277-0</message>
+            </segment>
+         </thread>
+      </entry>
+      <entry type="long-url" status="m">
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700810268-0</message>
+         </duration>
+         <thread group-name="main" name="btpool0-2" id="34">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700810268-0</message>
+            </segment>
+         </thread>
+         <thread group-name="main1" name="btpool0-2" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700810268-0</message>
+            </segment>
+         </thread>
+      </entry>
+   </machine>
+</problem-report>

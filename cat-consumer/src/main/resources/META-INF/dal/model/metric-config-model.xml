@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.metric.config"  enable-merger="true"  enable-sax-parser="true">
+  <entity name="metric-config" root="true">
+    <entity-ref name="metric-item-config" type="map" names="metric-item-configs" method-find-or-create="true"/>
+  </entity>
+  <entity name="metric-item-config">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="domain" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="view-order" value-type="double" primitive="true"/>
+    <attribute name="metric-key" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <attribute name="show-count" value-type="boolean" primitive="true"/>
+    <attribute name="show-avg" value-type="boolean" primitive="true"/>
+    <attribute name="show-sum" value-type="boolean" primitive="true"/>
+    <attribute name="show-dashboard-order" value-type="double" primitive="true"/>
+    <attribute name="alarm" value-type="boolean" primitive="true"  default-value="false"/>
+    <entity-ref name="tag" type="list" names="tags" />
+  </entity>
+  <entity name="tag">
+    <attribute name="name" value-type="String"/>
+	<attribute name="type" value-type="String" />
+  </entity>
+</model>

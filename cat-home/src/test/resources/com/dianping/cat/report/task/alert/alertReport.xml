@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<alert-report domain="cat" start-time="2014-05-06 21:00:00" end-time="2014-05-06 21:59:59">
+   <domain name="domainC" warn-number="6" error-number="7">
+      <exception id="exceptionB" warn-number="2" error-number="2"/>
+      <exception id="exceptionC" warn-number="1" error-number="2"/>
+      <exception id="TotalExceptionAlert" warn-number="2" error-number="2"/>
+      <exception id="exceptionD" warn-number="1" error-number="1"/>
+   </domain>
+</alert-report>

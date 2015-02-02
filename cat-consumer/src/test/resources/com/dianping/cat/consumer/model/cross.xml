@@ -1,0 +1,33 @@
+<cross-report domain="MobileApi" startTime="2012-06-18 14:00:00"
+	endTime="2012-06-18 14:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<ip>10.1.77.194</ip>
+	<local id="10.1.77.193">
+		<remote id="10.1.77.194" role="Pigeon.Client">
+			<type id="PigeonCall" totalCount="111507" failCount="0" failPercent="0.00"
+				avg="0.0" sum="1937.0" sum2="34333.7" std="0.0" tps="0.00">
+				<name id="GroupService:GroupClass:GroupMethod" totalCount="1">
+				</name>
+				<name id="GroupService:GroupClass:GroupMethod1" totalCount="1"
+					failCount="0" failPercent="0.00" avg="0.0" sum="0.9" sum2="0.8"
+					std="0.0" tps="0.00">
+				</name>
+			</type>
+		</remote>
+		<remote id="10.1.77.194:8080" role="Pigeon.Server">
+			<type id="PigeonCall" totalCount="111 507" failCount="0" failPercent="0.00"
+				avg="0.0" sum="1937.0" sum2="34333.7" std="0.0" tps="0.00">
+				<name id="GroupService:GroupClass:GroupMethod" totalCount="1"
+					failCount="0" failPercent="0.00" avg="0.0" sum="13.3" tps="0.00">
+				</name>
+				<name id="GroupService:GroupClass:GroupMethod1" totalCount="1"
+					failCount="0" failPercent="0.00" avg="0.0" sum="0.9" tps="0.00">
+				</name>
+			</type>
+		</remote>
+		<remote></remote>
+	</local>
+</cross-report>
+

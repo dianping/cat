@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="MobileApi" startTime="2012-06-18 15:00:00"
+	endTime="2012-06-18 15:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<ip>10.1.77.191</ip>
+	<machine ip="10.1.77.191">
+		<type id="RemoteCall" totalCount="40000" failCount="0" failPercent="0.00" tps="0.46">
+			<successMessageUrl>MobileApi-0a014dbf-1340004471358-0
+			</successMessageUrl>
+		</type>
+		<type id="PigeonRespone" totalCount="20000" failCount="0"
+			failPercent="0.00" tps="0.23">
+			<successMessageUrl>MobileApi-0a014dbf-1340004471574-0
+			</successMessageUrl>
+		</type>
+	</machine>
+</event-report>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="cross-report-codegen.xml" />
+  <file path="cross-report-model.xml" />
+</manifest>
+

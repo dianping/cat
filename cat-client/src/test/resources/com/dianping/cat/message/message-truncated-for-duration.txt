@@ -1,0 +1,15 @@
+t URL MyPage
+E Event Name0 0 
+E Event Name1 0 
+E Event Name2 0 
+A URL1 MyPage 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+t URL2 MyPage
+E Event2 Name0 0 
+E Event2 Name1 0 
+E Event2 Name2 0 
+T URL2 MyPage 0 
+E TruncatedTransaction TotalDuration 0
+T URL MyPage 0 k1=v1

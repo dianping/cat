@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.system" enable-merger="false"  enable-sax-parser="true"
+	enable-base-visitor="false" enable-native-parser="true" enable-native-builder="true">
+  <entity name="system-report" root="true">
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="entity" type="map" names="entities" method-find-or-create="true" />
+  </entity>
+  <entity name="entity">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="rush" />
+    <entity-ref name="day" />
+    <entity-ref name="machine" type="map" names="machines"  method-find-or-create="true"/>
+  </entity>
+  <entity name="rush">
+    <attribute name="count" value-type="long" method-inc="true" primitive="true" />
+    <attribute name="sum" value-type="double" method-inc="true" primitive="true" />
+    <attribute name="avg" value-type="double" primitive="true" />
+  </entity>
+  <entity name="day">
+    <attribute name="count" value-type="long" method-inc="true" primitive="true" />
+    <attribute name="sum" value-type="double" method-inc="true" primitive="true" />
+    <attribute name="avg" value-type="double" primitive="true" />
+  </entity>
+  <entity name="machine">
+    <attribute name="ip" value-type="String" key="true" />
+  </entity>
+</model>
+

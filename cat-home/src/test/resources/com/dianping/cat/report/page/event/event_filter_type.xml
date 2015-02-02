@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="MobileApi" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
+<domain>Cat</domain>
+<domain>MobileApi</domain>
+<ip>10.1.77.193</ip>
+<machine ip="10.1.77.193">
+<type id="SQL.PARAM" totalCount="507" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1339999254922-0
+			</successMessageUrl>
+</type>
+<type id="URL" totalCount="24" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+</type>
+<type id="User" totalCount="12" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+</type>
+<type id="Mobile" totalCount="13" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+</type>
+<type id="Response" totalCount="12" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+</type>
+<type id="RemoteCall" totalCount="4" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1340002655592-0
+			</successMessageUrl>
+</type>
+<type id="PigeonRespone" totalCount="2" failCount="0" failPercent="0.00" tps="0.00">
+<successMessageUrl>MobileApi-0a014dc1-1340002655816-0
+			</successMessageUrl>
+</type>
+</machine>
+</event-report>

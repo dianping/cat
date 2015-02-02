@@ -1,0 +1,8 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.message.io.TransportManager</role>
+			<implementation>com.dianping.cat.hadoop.sql.MockTransportManager</implementation>
+		</component>
+	</components>
+</plexus>

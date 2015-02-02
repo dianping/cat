@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.utilization"  enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-xml-parser="false"  enable-xml-builder="false"  enable-native-parser="true"  enable-native-builder="true">
+   <entity name="utilization-report" root="true">
+    <attribute name="domain" value-type="String" key="true"/>
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="map" names="domains"  method-find-or-create='true'/>
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="cmdb-id" value-type="String"/>
+    <attribute name="machine-number" value-type="int"  primitive="true"/>
+    <entity-ref name="machineState" type="map" names="machineStates"  method-find-or-create='true'/>
+    <entity-ref name="applicationState" type="map" names="applicationStates"  method-find-or-create='true'/>
+  </entity>
+  <entity name="machineState">
+  	<attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="long"  primitive="true"/>
+    <attribute name="sum" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg-max" value-type="double"  format="0.0000" primitive="true"/>
+  </entity>
+  <entity name="applicationState">
+  	<attribute name="id" value-type="String" key="true"/>
+    <attribute name="failure-count" value-type="long"  primitive="true"/>
+    <attribute name="failure-percent" value-type="double" format="0.000000" primitive="true"/>
+    <attribute name="count" value-type="long"  primitive="true"/>
+    <attribute name="maxQps" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="sum" value-type="double"  format="0.0000" primitive="true"/>
+    <attribute name="avg95" value-type="double" format="0.0000" primitive="true"/>
+  </entity>
+</model>

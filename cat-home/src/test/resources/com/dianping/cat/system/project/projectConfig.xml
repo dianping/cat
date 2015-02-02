@@ -1,0 +1,11 @@
+<project-config>
+	<department id="Info" email="yong.you@dianping.com" owner="one">
+		<product-line id="GroupService" email="yong.you@dianping.com"
+			owner="one">
+			<project id="TuanGouWeb" email="yong.you@dianping.com" owner="one"></project>
+			<project id="TuanGouWeb" email="yong.you@dianping.com" owner="one"></project>
+		</product-line>
+		<product-line></product-line>
+	</department>
+	<department></department>
+</project-config>

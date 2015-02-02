@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="Cat" startTime="2012-06-26 16:00:00" endTime="2012-06-26 16:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.165.1</ip>
+   <ip>192.168.165.2</ip>
+   <machine ip="192.168.165.1">
+      <entity id="problem:hello" type="problem" status="hello">
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+      </entity>
+      <entity id="problem:hello≈∆˚˙˚∆˚∆˚ world" type="problem" status="hello≈∆˚˙˚∆˚∆˚ world">
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+      </entity>
+      <entity id="long-url:home" type="long-url" status="home">
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+      </entity>
+   </machine>
+   <machine ip="192.168.165.2">
+      <entity id="error:home" type="error" status="home">
+         <thread group-name="main" name="btpool0-1" id="33">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700793743-0</message>
+            </segment>
+         </thread>
+         <duration value="50" count="1">
+            <message>Cat-c0a8a501-1340700793743-0</message>
+         </duration>
+      </entity>
+   </machine>
+</problem-report>
+

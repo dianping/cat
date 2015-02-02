@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="Cat" startTime="2012-05-17 13:00:00" endTime="2012-05-17 13:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.165.1</ip>
+   <ip>192.168.165.2</ip>
+   <machine ip="192.168.165.1">
+      <type id="Task1" totalCount="2" failCount="0" failPercent="0.00" tps="5.00">
+         <successMessageUrl>Cat-c0a8a501-1337230848968-0</successMessageUrl>
+         <name id="Status1" totalCount="2" failCount="0" failPercent="0.00" tps="5.00">
+            <successMessageUrl>Cat-c0a8a501-1337230848968-0</successMessageUrl>
+            <range value="0" count="2" fails="0"/>
+         </name>
+      </type>
+      <type id="URL" totalCount="1" failCount="0" failPercent="0.00" tps="3.00">
+         <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="model2" totalCount="1" failCount="0" failPercent="0.00" tps="3.00">
+            <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+            <range value="0" count="1" fails="0"/>
+         </name>
+      </type>
+   </machine>
+   <machine ip="192.168.165.2">
+      <type id="Task" totalCount="2" failCount="0" failPercent="0.00" tps="5.00">
+         <successMessageUrl>Cat-c0a8a501-1337230848968-0</successMessageUrl>
+         <name id="Status" totalCount="2" failCount="0" failPercent="0.00" tps="5.00">
+            <successMessageUrl>Cat-c0a8a501-1337230848968-0</successMessageUrl>
+            <range value="0" count="2" fails="0"/>
+         </name>
+      </type>
+      <type id="URL" totalCount="1" failCount="0" failPercent="0.00" tps="3.00">
+         <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="model" totalCount="1" failCount="0" failPercent="0.00" tps="3.00">
+            <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+            <range value="0" count="1" fails="0"/>
+         </name>
+      </type>
+   </machine>
+</event-report>

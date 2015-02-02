@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<state-report domain="Cat" startTime="2012-11-22 23:00:00" endTime="2012-11-22 23:59:59">
+   <machine ip="192.168.66.125" total="480" totalLoss="10" maxTps="60.0" avgTps="4.0" blockTotal="4" blockLoss="2" blockTime="2" pigeonTimeError="8" networkTimeError="6" dump="480" dumpLoss="10" size="200.0" delaySum="200.0" delayAvg="50.0" delayCount="4">
+      <processDomains>
+         <processDomain name="Cat" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+         <processDomain name="Cat1" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+      </processDomains>
+   </machine>
+   <machine ip="192.168.66.126" total="240" totalLoss="0" maxTps="60.0" avgTps="4.0" blockTotal="2" blockLoss="1" blockTime="1" pigeonTimeError="4" networkTimeError="3" dump="240" dumpLoss="0" size="100.0" delaySum="100.0" delayAvg="50.0" delayCount="2">
+      <processDomains>
+         <processDomain name="Cat" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+         <processDomain name="Cat2" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+      </processDomains>
+   </machine>
+</state-report>

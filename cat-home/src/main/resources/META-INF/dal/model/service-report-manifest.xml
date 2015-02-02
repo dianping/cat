@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="service-report-codegen.xml" />
+  <file path="service-report-model.xml" />
+</manifest>
+

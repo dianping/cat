@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="metric-report-codegen.xml" />
+  <file path="metric-report-model.xml" />
+</manifest>
+

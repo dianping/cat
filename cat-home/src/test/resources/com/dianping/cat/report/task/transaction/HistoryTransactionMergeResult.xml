@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi" startTime="2012-06-18 16:00:00" endTime="2012-06-18 16:59:59">
+   <domain>Cat</domain>
+   <domain>MobileApi</domain>
+   <ip>10.1.77.193</ip>
+   <machine ip="10.1.77.193">
+      <type id="Result" totalCount="416" failCount="0" failPercent="0.00" min="0.22" max="673.74" avg="7.8" sum="3236.0" sum2="981717.6" std="48.0" tps="0.00" line95Value="44.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1340006403188-1
+			</successMessageUrl>
+         <name id="ClientInfo" totalCount="7329336" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="42.42" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a01017e-1340121600084-0
+				</successMessageUrl>
+         </name>
+         <name id="Payload" totalCount="7329336" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="42.42" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a01017e-1340121600084-0
+				</successMessageUrl>
+         </name>
+      </type>
+   </machine>
+</transaction-report>

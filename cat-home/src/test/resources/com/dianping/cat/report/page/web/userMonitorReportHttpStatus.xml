@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report product="userMonitor">
+   <metric-item id="httpStatus|200">
+      <segment id="0" count="10" sum="936.1356811314506" avg="93.61356811314506"/>
+      <segment id="1" count="10" sum="381.28123501478564" avg="38.12812350147856"/>
+      <segment id="2" count="10" sum="173.11401113220782" avg="17.311401113220782"/>
+      <segment id="3" count="10" sum="696.3032973946334" avg="69.63032973946335"/>
+      <segment id="4" count="10" sum="159.61541902877195" avg="15.961541902877196"/>
+      <segment id="5" count="10" sum="46.23485683980966" avg="4.623485683980966"/>
+      <segment id="6" count="10" sum="97.83276648948258" avg="9.783276648948258"/>
+      <segment id="7" count="10" sum="945.8062787681994" avg="94.58062787681993"/>
+      <segment id="8" count="10" sum="216.99852635600524" avg="21.699852635600525"/>
+      <segment id="9" count="10" sum="791.1427840654915" avg="79.11427840654915"/>
+   </metric-item>
+   <metric-item id="httpStatus|300">
+      <segment id="0" count="10" sum="829.4228129376035" avg="82.94228129376035"/>
+      <segment id="1" count="10" sum="607.4840516229727" avg="60.748405162297274"/>
+      <segment id="2" count="10" sum="901.8729514412508" avg="90.18729514412509"/>
+      <segment id="3" count="10" sum="640.1582547123211" avg="64.0158254712321"/>
+      <segment id="4" count="10" sum="201.4020714314221" avg="20.14020714314221"/>
+      <segment id="5" count="10" sum="833.0991511009953" avg="83.30991511009952"/>
+      <segment id="6" count="10" sum="593.9975156772188" avg="59.39975156772188"/>
+      <segment id="7" count="10" sum="511.5413713511685" avg="51.15413713511685"/>
+      <segment id="8" count="10" sum="280.3917240756598" avg="28.039172407565978"/>
+      <segment id="9" count="10" sum="883.491889230012" avg="88.34918892300121"/>
+   </metric-item>
+</metric-report>

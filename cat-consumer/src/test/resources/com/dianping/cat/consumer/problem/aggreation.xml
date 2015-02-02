@@ -1,0 +1,4 @@
+<aggregation>
+	<aggregation-rule type='3' domain='doamin' pattern='pattern' sample="sample" display-name="name" creation-date="2013-05-20 13:34:00"></aggregation-rule>
+	<aggregation-rule type='3' domain='doamin' pattern='pattern' sample="sample" display-name="name" creation-date="2013-05-20 13:34:00"></aggregation-rule>
+</aggregation>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="service-report" root="true">
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <element name="totalCount" value-type="int" />
+    <element name="failureCount" value-type="int" />
+    <element name="failurePercent" value-type="double" />
+    <element name="sum" value-type="int" />
+    <element name="avg" value-type="int" />
+    <element name="qps" value-type="int" />
+  </entity>
+</model>
+

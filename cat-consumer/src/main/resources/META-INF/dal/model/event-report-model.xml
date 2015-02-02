@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.event.model" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true">
+	<entity name="event-report" root="true">
+		<attribute name="domain" key="true" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+	</entity>
+	<entity name="machine">
+		<attribute name="ip" value-type="String" key="true"/>
+		<entity-ref name="type" type="map" names="types" method-find-or-create="true" />
+	</entity>
+	<entity name="type" class-name="EventType">
+		<attribute name="id" key="true" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<entity-ref name="name" type="map" method-find-or-create="true" />
+	</entity>
+	<entity name="name" class-name="EventName">
+		<attribute name="id" key="true" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" render="false"/>
+		<entity-ref name="range" type="map" names="ranges" method-find-or-create="true" />
+	</entity>
+	<entity name="range">
+		<attribute name="value" value-type="int" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+</model>
+

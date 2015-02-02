@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="alert-summary" root="true">
+    <attribute name="alert-date" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="domain" value-type="String" />
+    <entity-ref name="category" type="map" names="categories" method-find-or-create='true' />
+  </entity>
+  <entity name="category">
+    <attribute name="name" value-type="String" key="true" />
+    <entity-ref name="alert" type="list" names="alerts" />
+  </entity>
+  <entity name="alert">
+    <attribute name="alertTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="type" value-type="String" />
+    <attribute name="metric" value-type="String" />
+    <attribute name="context" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="count" value-type="int" />
+  </entity>
+</model>
+

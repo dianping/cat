@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="Cat" startTime="2012-05-17 13:00:00" endTime="2012-05-17 13:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.165.1</ip>
+   <ip>192.168.165.2</ip>
+   <machine ip="All">
+      <type id="URL" totalCount="2" failCount="0" failPercent="0.00" min="39780.276" max="39780.276" avg="39780.3" sum="79560.6" sum2="3164940717.2" std="0.0" tps="0.00" line95Value="39780.00" line95Sum="79560.00" line95Count="2">
+         <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="ALL" totalCount="0" failCount="0" failPercent="0.00" min="8.64E7" max="-1.0" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line95Sum="0.00" line95Count="0">
+            <range value="0" count="2" sum="79560.552" avg="39780.3" fails="0"/>
+            <duration value="65536" count="2"/>
+         </name>
+      </type>
+   </machine>
+</transaction-report>

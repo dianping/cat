@@ -1,0 +1,42 @@
+//.nav-list li 
+.nav-list li {
+ .active_state_caret() {
+	display: block;
+	content: "";
+
+	position: absolute;
+	right: 0;
+	top: 4px;
+
+	border: 8px solid transparent;
+	border-width: 14px 10px;
+ }
+
+ &.active > a:after {
+	.active_state_caret();
+ }
+ &.open > a:after {
+	//no caret for open menu item
+	display: none;
+ }
+ &.active.no-active-child {
+	> a:after {
+		//show caret for active menu item with childs which is not open(i.e. no submenu item is active)
+		display: block;
+	}
+ }
+}
+
+
+
+.nav-list > li {
+  li.active > a:after {
+	top: 2px;
+	border-width: 14px 8px;
+  }
+}
+
+.nav-list li.active:not(.open) li.active > a:after {
+	//hide the active caret when parent submenu is being closed (not open)
+	display: none !important;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<state-report domain="Cat" startTime="2012-11-22 23:00:00" endTime="2012-11-22 23:59:59">
+   <machine ip="192.168.66.125" total="480" totalLoss="10" maxTps="60.0" avgTps="4.0" blockTotal="4" blockLoss="2" blockTime="2" pigeonTimeError="8" networkTimeError="6" dump="480" dumpLoss="10" size="200.0" delaySum="200.0" delayAvg="50.0" delayCount="4">
+      <processDomains>
+         <processDomain name="Cat" total="10" totalLoss="10" size="10.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+         <processDomain name="Cat1" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+      </processDomains>
+      <message id="1353596400000" time="2012-11-22 23:00:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596460000" time="2012-11-22 23:01:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596520000" time="2012-11-22 23:02:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596580000" time="2012-11-22 23:03:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596640000" time="2012-11-22 23:04:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596700000" time="2012-11-22 23:05:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596760000" time="2012-11-22 23:06:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596820000" time="2012-11-22 23:07:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596880000" time="2012-11-22 23:08:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353596940000" time="2012-11-22 23:09:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597000000" time="2012-11-22 23:10:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597060000" time="2012-11-22 23:11:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597120000" time="2012-11-22 23:12:00" total="560" totalLoss="0" dump="560" dumpLoss="0" size="669180.0" delaySum="43061066.0" delayCount="56" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597180000" time="2012-11-22 23:13:00" total="280" totalLoss="0" dump="280" dumpLoss="0" size="414620.0" delaySum="22068644.0" delayCount="28" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597240000" time="2012-11-22 23:14:00" total="20" totalLoss="0" dump="20" dumpLoss="0" size="175276.0" delaySum="1749974.0" delayCount="2" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597300000" time="2012-11-22 23:15:00" total="80" totalLoss="0" dump="80" dumpLoss="0" size="229816.0" delaySum="7341868.0" delayCount="8" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597360000" time="2012-11-22 23:16:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="8" networkTimeError="6" blockTotal="4" blockLoss="2" blockTime="2"/>
+      <message id="1353597420000" time="2012-11-22 23:16:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597480000" time="2012-11-22 23:16:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+   </machine>
+   <machine ip="192.168.66.126" total="240" totalLoss="0" maxTps="60.0" avgTps="4.0" blockTotal="2" blockLoss="1" blockTime="1" pigeonTimeError="4" networkTimeError="3" dump="240" dumpLoss="0" size="100.0" delaySum="100.0" delayAvg="50.0" delayCount="2">
+      <processDomains>
+         <processDomain name="Cat" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+         <processDomain name="Cat2" total="0" totalLoss="0" size="0.0" avg="0.0">
+            <ip>192.168.66.125</ip>
+            <ip>192.168.66.126</ip>
+         </processDomain>
+      </processDomains>
+      <message id="1353596400000" time="2012-11-22 23:00:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596460000" time="2012-11-22 23:01:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596520000" time="2012-11-22 23:02:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596580000" time="2012-11-22 23:03:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596640000" time="2012-11-22 23:04:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596700000" time="2012-11-22 23:05:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596760000" time="2012-11-22 23:06:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596820000" time="2012-11-22 23:07:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596880000" time="2012-11-22 23:08:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353596940000" time="2012-11-22 23:09:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597000000" time="2012-11-22 23:10:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597060000" time="2012-11-22 23:11:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597120000" time="2012-11-22 23:12:00" total="280" totalLoss="0" dump="280" dumpLoss="0" size="334590.0" delaySum="21530533.0" delayCount="28" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597180000" time="2012-11-22 23:13:00" total="140" totalLoss="0" dump="140" dumpLoss="0" size="207310.0" delaySum="11034322.0" delayCount="14" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597240000" time="2012-11-22 23:14:00" total="10" totalLoss="0" dump="10" dumpLoss="0" size="87638.0" delaySum="874987.0" delayCount="1" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597300000" time="2012-11-22 23:15:00" total="40" totalLoss="0" dump="40" dumpLoss="0" size="114908.0" delaySum="3670934.0" delayCount="4" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+      <message id="1353597360000" time="2012-11-22 23:16:00" total="0" totalLoss="0" dump="0" dumpLoss="0" size="0.0" delaySum="0.0" delayCount="0" pigeonTimeError="4" networkTimeError="3" blockTotal="2" blockLoss="1" blockTime="1"/>
+   </machine>
+</state-report>

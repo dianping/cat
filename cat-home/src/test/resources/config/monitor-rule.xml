@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="SearchShop:Metric:arts-shop-sc">
+      <metric-item monitorCount="true" monitorSum="true" monitorAvg="true" metricItemText="SearchShop:Metric:arts-shop-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="75.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReceiptVerifyService:Metric:Receipt Verify Success">
+      <metric-item monitorCount="true" metricItemText="ReceiptVerifyService:Metric:Receipt Verify Success"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100Mb.s"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShopHotelServer:Metric:trip_intime_price_count">
+      <metric-item monitorCount="true" metricItemText="ShopHotelServer:Metric:trip_intime_price_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="800.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="HotelSearchWeb:Metric:trip_hotel_search_pv">
+      <metric-item monitorCount="true" metricItemText="HotelSearchWeb:Metric:trip_hotel_search_pv"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="Unipay:Metric:WEIXIN_PUB.payment.success">
+      <metric-item monitorCount="true" metricItemText="Unipay:Metric:WEIXIN_PUB.payment.success"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess">
+      <metric-item monitorCount="true" metricItemText="MobileMembercardMainApiWeb:Metric:MainWebJoinedCardSuccess"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail">
+      <metric-item monitorCount="true" metricItemText="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGouRec:Metric:arts-tuangourec-sc">
+      <metric-item monitorCount="true" metricItemText="SearchTuanGouRec:Metric:arts-tuangourec-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangou-sc">
+      <metric-item monitorCount="true" metricItemText="SearchTuanGou:Metric:arts-tuangou-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouTracking:Metric:对外合作成功引流">
+      <metric-item monitorCount="true" metricItemText="TuanGouTracking:Metric:对外合作成功引流"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="800.0"></sub-condition>
+            <sub-condition type="DescPer" text="70.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouTracking:Metric:Open对外合作成功引流">
+      <metric-item monitorCount="true" metricItemText="TuanGouTracking:Metric:Open对外合作成功引流"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchAd:Metric:arts-ad-sc">
+      <metric-item monitorCount="true" metricItemText="SearchAd:Metric:arts-ad-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="75.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="AccountMQ:Metric:WeiXinLogin">
+      <metric-item monitorCount="true" metricItemText="AccountMQ:Metric:WeiXinLogin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="20000.0"></sub-condition>
+            <sub-condition type="DescPer" text="200.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchDavinci:Metric:arts-takeaway-sc">
+      <metric-item monitorCount="true" metricItemText="SearchDavinci:Metric:arts-takeaway-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchTuanGou:Metric:arts-tuangoux-sc">
+      <metric-item metricItemText="SearchTuanGou:Metric:arts-tuangoux-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_index">
+      <metric-item metricItemText="TuanGouMApiSubWeb:Metric:weixin_index"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMApiSubWeb:Metric:weixin_detail">
+      <metric-item metricItemText="TuanGouMApiSubWeb:Metric:weixin_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchShopwx:Metric:arts-shopwx-sc">
+      <metric-item monitorCount="true" metricItemText="SearchShopwx:Metric:arts-shopwx-sc"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:ReviewList_WeiXin_Ref">
+      <metric-item monitorCount="true" metricItemText="MobileWapMWeb:Metric:ReviewList_WeiXin_Ref"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:ajaxPictureDetail">
+      <metric-item monitorCount="true" metricItemText="MobileWapMWeb:Metric:ajaxPictureDetail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_detail">
+      <metric-item monitorCount="true" metricItemText="TuanGouMMWeb:Metric:weixin_detail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="TuanGouMMWeb:Metric:weixin_index">
+      <metric-item monitorCount="true" metricItemText="TuanGouMMWeb:Metric:weixin_index"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="300.0"></sub-condition>
+            <sub-condition type="DescPer" text="80.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MobileWapMWeb:Metric:PictureList_WeiXin_Ref">
+      <metric-item monitorCount="true" metricItemText="MobileWapMWeb:Metric:PictureList_WeiXin_Ref"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShoppicService:Metric:PCUploadPicCount">
+      <metric-item monitorCount="true" metricItemText="ShoppicService:Metric:PCUploadPicCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ShoppicService:Metric:MobileUploadPicCount">
+      <metric-item monitorCount="true" metricItemText="ShoppicService:Metric:MobileUploadPicCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:Mobile-AddReview">
+      <metric-item monitorCount="true" metricItemText="ReviewServer:Metric:Mobile-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:PC-AddReview">
+      <metric-item monitorCount="true" metricItemText="ReviewServer:Metric:PC-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="ReviewServer:Metric:MWap-AddReview">
+      <metric-item monitorCount="true" metricItemText="ReviewServer:Metric:MWap-AddReview"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/find_businesses">
+      <metric-item monitorCount="true" metricItemText="OpenPremiumAPI:Metric:/premium/wechat/find_businesses"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby">
+      <metric-item monitorCount="true" metricItemText="OpenPremiumAPI:Metric:/premium/wechat/get_single_business_for_nearby"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:getPhoneByTelAndSubTel_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_count">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:getPhoneByTel_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_count">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:updatePhoneRecord_count"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:add_one_to_BookingUser_table">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:add_one_to_BookingUser_table"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:updatePhoneRecord_fail">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:updatePhoneRecord_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="weddingMarketingWeb:Metric:getPhoneByTel_fail">
+      <metric-item monitorCount="true" metricItemText="weddingMarketingWeb:Metric:getPhoneByTel_fail"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="AccountMQ:Metric:QQLogin">
+      <metric-item monitorCount="true" metricItemText="AccountMQ:Metric:QQLogin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="50.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin">
+      <metric-item monitorCount="true" metricItemText="OpenPremiumAPI:Metric:/premium/qq/find_businesses_nearby_for_checkin"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchPicasso:Metric:mtcorder.FullIndex.DocCount">
+      <metric-item monitorCount="true" metricItemText="SearchPicasso:Metric:mtcorder.FullIndex.DocCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="SearchShop:Metric:FullIndex.DocCount">
+      <metric-item monitorCount="true" metricItemText="SearchShop:Metric:FullIndex.DocCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushOnlineCount">
+      <metric-item monitorCount="true" metricItemText="MOSSDpPushServer:Metric:dpPushOnlineCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushReceivedCount">
+      <metric-item monitorCount="true" metricItemText="MOSSDpPushServer:Metric:dpPushReceivedCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+   <rule id="MOSSDpPushServer:Metric:dpPushCount">
+      <metric-item monitorCount="true" metricItemText="MOSSDpPushServer:Metric:dpPushCount"></metric-item>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3">
+            <sub-condition type="DescVal" text="100.0"></sub-condition>
+            <sub-condition type="DescPer" text="50.0"></sub-condition>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

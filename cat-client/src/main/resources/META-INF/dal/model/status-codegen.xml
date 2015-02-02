@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="status" root="true">
+    <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
+    <entity-ref name="runtime" />
+    <entity-ref name="os" />
+    <entity-ref name="disk" />
+    <entity-ref name="memory" />
+    <entity-ref name="thread" />
+    <entity-ref name="message" />
+  </entity>
+  <entity name="runtime">
+    <attribute name="start-time" value-type="int" />
+    <attribute name="up-time" value-type="int" />
+    <attribute name="java-version" value-type="String" />
+    <attribute name="user-name" value-type="String" />
+    <element name="user-dir" value-type="String" />
+    <element name="java-classpath" value-type="String" />
+  </entity>
+  <entity name="os">
+    <attribute name="name" value-type="String" />
+    <attribute name="arch" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <attribute name="available-processors" value-type="int" />
+    <attribute name="system-load-average" value-type="double" />
+    <attribute name="process-time" value-type="int" />
+    <attribute name="total-physical-memory" value-type="int" />
+    <attribute name="free-physical-memory" value-type="int" />
+    <attribute name="committed-virtual-memory" value-type="int" />
+    <attribute name="total-swap-space" value-type="int" />
+    <attribute name="free-swap-space" value-type="int" />
+  </entity>
+  <entity name="disk">
+    <entity-ref name="disk-volume" type="list" names="disk-volumes" />
+  </entity>
+  <entity name="disk-volume">
+    <attribute name="id" value-type="String" />
+    <attribute name="total" value-type="long" />
+    <attribute name="free" value-type="long" />
+    <attribute name="usable" value-type="long" />
+  </entity>
+  <entity name="memory">
+    <attribute name="max" value-type="int" />
+    <attribute name="total" value-type="int" />
+    <attribute name="free" value-type="int" />
+    <attribute name="heap-usage" value-type="int" />
+    <attribute name="non-heap-usage" value-type="int" />
+  </entity>
+  <entity name="thread">
+    <attribute name="count" value-type="int" />
+    <attribute name="daemon-count" value-type="int" />
+    <attribute name="peek-count" value-type="int" />
+    <attribute name="total-started-count" value-type="int" />
+    <attribute name="cat-thread-count" value-type="int" />
+    <attribute name="pigeon-thread-count" value-type="int" />
+    <attribute name="http-thread-count" value-type="int" />
+    <element name="dump" value-type="String"/>
+  </entity>
+  <entity name="message">
+    <attribute name="produced" value-type="int" />
+    <attribute name="overflowed" value-type="int" />
+    <attribute name="bytes" value-type="int" />
+  </entity>
+</model>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<matrix-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domain>group</domain>
+   <matrix type="PigeonService" name="Cat-Test-Service" count="134" totalTime="13468000" url="1">
+      <ratio type="SQL" min="1" max="1" totalCount="68" totalTime="3434000" url="1"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="1" totalCount="66" totalTime="3300000" url="2"/>
+   </matrix>
+   <matrix type="URL" name="Cat-Test-Call" count="66" totalTime="6732000" url="3">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="1" max="1" totalCount="66" totalTime="3366000" url="3"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+</matrix-report>

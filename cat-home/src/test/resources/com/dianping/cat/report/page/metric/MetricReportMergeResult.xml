@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report product="arch" startTime="2013-06-24 10:00:00" endTime="2013-06-24 10:59:59">
+   <metric-item id="home" type="C">
+      <segment id="40" count="2" sum="200.0" avg="100.0"/>
+      <segment id="41" count="1" sum="100.0" avg="100.0"/>
+   </metric-item>
+   <metric-item id="t" type="C">
+      <segment id="40" count="2" sum="200.0" avg="100.0"/>
+      <segment id="41" count="1" sum="100.0" avg="100.0"/>
+   </metric-item>
+   <metric-item id="state" type="C">
+      <segment id="40" count="2" sum="200.0" avg="100.0"/>
+   </metric-item>
+   <metric-item id="state2" type="C">
+      <segment id="40" count="1" sum="100.0" avg="100.0"/>
+   </metric-item>
+   <metric-item id="state1" type="C">
+      <segment id="40" count="1" sum="100.0" avg="100.0"/>
+   </metric-item>
+</metric-report>

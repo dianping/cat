@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<heartbeat-report domain="Cat" startTime="2013-09-12 17:00:00" endTime="2013-09-12 17:59:59">
+   <domain>Cat</domain>
+   <domain>Taurus</domain>
+   <domain>Swallow</domain>
+   <ip>10.1.6.145</ip>
+   <ip>10.1.6.108</ip>
+   <ip>10.1.6.128</ip>
+   <ip>10.1.6.37</ip>
+   <ip>10.1.6.126</ip>
+   <ip>10.1.6.102</ip>
+   <ip>10.1.8.64</ip>
+   <ip>10.1.101.84</ip>
+   <machine ip="10.1.6.108">
+      <period minute="0" thread-count="203" daemon-count="202" total-started-count="98501" cat-thread-count="109" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30094" old-gc-count="5" memory-free="10070664032" heap-usage="2584992928" none-heap-usage="56535160" system-load-average="1.19" cat-message-produced="4561083" cat-message-overflow="0" cat-message-size="4001825555.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59847499776" usable="46688186368"/>
+      </period>
+      <period minute="1" thread-count="203" daemon-count="202" total-started-count="98502" cat-thread-count="109" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30107" old-gc-count="5" memory-free="10598106968" heap-usage="2057549992" none-heap-usage="56535160" system-load-average="1.24" cat-message-produced="4562713" cat-message-overflow="0" cat-message-size="4003190529.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59665051648" usable="46505738240"/>
+      </period>
+      <period minute="2" thread-count="203" daemon-count="202" total-started-count="98503" cat-thread-count="109" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30119" old-gc-count="5" memory-free="8056629704" heap-usage="4599027256" none-heap-usage="56538472" system-load-average="1.27" cat-message-produced="4564294" cat-message-overflow="0" cat-message-size="4004521295.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59482882048" usable="46323568640"/>
+      </period>
+      <period minute="3" thread-count="191" daemon-count="190" total-started-count="98505" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30135" old-gc-count="5" memory-free="9693279776" heap-usage="2962377184" none-heap-usage="56543776" system-load-average="1.21" cat-message-produced="4565869" cat-message-overflow="0" cat-message-size="4006281949.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59136933888" usable="45977620480"/>
+      </period>
+      <period minute="4" thread-count="191" daemon-count="190" total-started-count="98506" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30149" old-gc-count="5" memory-free="9604435424" heap-usage="3051221536" none-heap-usage="56543936" system-load-average="0.90" cat-message-produced="4567506" cat-message-overflow="0" cat-message-size="4007750379.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58954899456" usable="45795586048"/>
+      </period>
+      <period minute="5" thread-count="191" daemon-count="190" total-started-count="98507" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30164" old-gc-count="5" memory-free="9416383632" heap-usage="3239273328" none-heap-usage="56547248" system-load-average="0.97" cat-message-produced="4569546" cat-message-overflow="0" cat-message-size="4009488709.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58768195584" usable="45608882176"/>
+      </period>
+      <period minute="6" thread-count="191" daemon-count="190" total-started-count="98508" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30177" old-gc-count="5" memory-free="9596682440" heap-usage="3058974520" none-heap-usage="56547248" system-load-average="0.88" cat-message-produced="4571144" cat-message-overflow="0" cat-message-size="4010820600.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58581921792" usable="45422608384"/>
+      </period>
+      <period minute="7" thread-count="191" daemon-count="190" total-started-count="98509" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30190" old-gc-count="5" memory-free="8692609440" heap-usage="3963047520" none-heap-usage="56551560" system-load-average="1.10" cat-message-produced="4572771" cat-message-overflow="0" cat-message-size="4012170801.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58393243648" usable="45233930240"/>
+      </period>
+      <period minute="8" thread-count="191" daemon-count="190" total-started-count="98510" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30203" old-gc-count="5" memory-free="9197824160" heap-usage="3457832800" none-heap-usage="56554872" system-load-average="1.03" cat-message-produced="4574370" cat-message-overflow="0" cat-message-size="4013501987.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58205995008" usable="45046681600"/>
+      </period>
+      <period minute="9" thread-count="191" daemon-count="190" total-started-count="98511" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30217" old-gc-count="5" memory-free="9316119872" heap-usage="3339537088" none-heap-usage="56554872" system-load-average="1.25" cat-message-produced="4575960" cat-message-overflow="0" cat-message-size="4014823893.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58016915456" usable="44857602048"/>
+      </period>
+      <period minute="10" thread-count="191" daemon-count="190" total-started-count="98512" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30230" old-gc-count="5" memory-free="9032943576" heap-usage="3622713384" none-heap-usage="56554872" system-load-average="0.91" cat-message-produced="4578209" cat-message-overflow="0" cat-message-size="4016751665.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="57828790272" usable="44669476864"/>
+      </period>
+      <period minute="11" thread-count="191" daemon-count="190" total-started-count="98513" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30244" old-gc-count="5" memory-free="7324564864" heap-usage="5331092096" none-heap-usage="56559280" system-load-average="1.10" cat-message-produced="4579838" cat-message-overflow="0" cat-message-size="4018101300.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="57436332032" usable="44277018624"/>
+      </period>
+      <period minute="12" thread-count="193" daemon-count="192" total-started-count="98569" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30259" old-gc-count="5" memory-free="10548464808" heap-usage="2107192152" none-heap-usage="56559280" system-load-average="2.34" cat-message-produced="4581458" cat-message-overflow="0" cat-message-size="4019451282.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="57477312512" usable="44317999104"/>
+      </period>
+      <period minute="13" thread-count="192" daemon-count="191" total-started-count="98635" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30272" old-gc-count="5" memory-free="8666588368" heap-usage="3989068592" none-heap-usage="56559360" system-load-average="2.49" cat-message-produced="4583048" cat-message-overflow="0" cat-message-size="4020773006.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58269429760" usable="45110099968"/>
+      </period>
+      <period minute="14" thread-count="193" daemon-count="192" total-started-count="98717" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30286" old-gc-count="5" memory-free="6729959912" heap-usage="5925697048" none-heap-usage="56569080" system-load-average="2.84" cat-message-produced="4584597" cat-message-overflow="0" cat-message-size="4022050821.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58544304128" usable="45384990720"/>
+      </period>
+      <period minute="15" thread-count="191" daemon-count="190" total-started-count="98810" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30300" old-gc-count="5" memory-free="7797277952" heap-usage="4858379008" none-heap-usage="56569080" system-load-average="2.72" cat-message-produced="4586680" cat-message-overflow="0" cat-message-size="4023843385.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58521243648" usable="45361930240"/>
+      </period>
+      <period minute="16" thread-count="191" daemon-count="190" total-started-count="98831" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30314" old-gc-count="5" memory-free="10061214152" heap-usage="2594442808" none-heap-usage="56569080" system-load-average="2.45" cat-message-produced="4588267" cat-message-overflow="0" cat-message-size="4025154088.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58471608320" usable="45312294912"/>
+      </period>
+      <period minute="17" thread-count="193" daemon-count="192" total-started-count="98968" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30329" old-gc-count="5" memory-free="8283549888" heap-usage="4372107072" none-heap-usage="56572392" system-load-average="2.89" cat-message-produced="4589903" cat-message-overflow="0" cat-message-size="4026513177.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="58592378880" usable="45433065472"/>
+      </period>
+      <period minute="18" thread-count="191" daemon-count="190" total-started-count="98994" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30342" old-gc-count="5" memory-free="7190981824" heap-usage="5464675136" none-heap-usage="56576344" system-load-average="2.37" cat-message-produced="4591522" cat-message-overflow="0" cat-message-size="4027858660.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59584245760" usable="46424932352"/>
+      </period>
+      <period minute="19" thread-count="193" daemon-count="192" total-started-count="99008" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30356" old-gc-count="5" memory-free="8390263120" heap-usage="4265393840" none-heap-usage="56582360" system-load-average="1.97" cat-message-produced="4593092" cat-message-overflow="0" cat-message-size="4029174471.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59578920960" usable="46419607552"/>
+      </period>
+      <period minute="20" thread-count="192" daemon-count="191" total-started-count="99126" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30370" old-gc-count="5" memory-free="6903833040" heap-usage="5751823920" none-heap-usage="56585672" system-load-average="1.56" cat-message-produced="4595391" cat-message-overflow="0" cat-message-size="4031228414.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="59834388480" usable="46675075072"/>
+      </period>
+      <period minute="21" thread-count="193" daemon-count="192" total-started-count="99387" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30385" old-gc-count="5" memory-free="9675005720" heap-usage="2980651240" none-heap-usage="56585672" system-load-average="1.01" cat-message-produced="4597004" cat-message-overflow="0" cat-message-size="4032572230.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="60659531776" usable="47500218368"/>
+      </period>
+      <period minute="22" thread-count="193" daemon-count="192" total-started-count="99655" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30399" old-gc-count="5" memory-free="7970451384" heap-usage="4685205576" none-heap-usage="56586304" system-load-average="0.91" cat-message-produced="4598605" cat-message-overflow="0" cat-message-size="4033907089.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="61844709376" usable="48685395968"/>
+      </period>
+      <period minute="23" thread-count="191" daemon-count="190" total-started-count="99706" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30414" old-gc-count="5" memory-free="8878615048" heap-usage="3777041912" none-heap-usage="56589616" system-load-average="0.80" cat-message-produced="4600240" cat-message-overflow="0" cat-message-size="4035358958.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="62433550336" usable="49274236928"/>
+      </period>
+      <period minute="24" thread-count="193" daemon-count="192" total-started-count="99865" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30428" old-gc-count="5" memory-free="8047970616" heap-usage="4607686344" none-heap-usage="56589616" system-load-average="0.60" cat-message-produced="4601837" cat-message-overflow="0" cat-message-size="4036684020.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="62671929344" usable="49512615936"/>
+      </period>
+      <period minute="25" thread-count="193" daemon-count="192" total-started-count="100062" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30442" old-gc-count="5" memory-free="10443337936" heap-usage="2212319024" none-heap-usage="56589616" system-load-average="0.63" cat-message-produced="4603914" cat-message-overflow="0" cat-message-size="4038457747.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="63456505856" usable="50297192448"/>
+      </period>
+      <period minute="26" thread-count="192" daemon-count="191" total-started-count="100212" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30455" old-gc-count="5" memory-free="9261452664" heap-usage="3394204296" none-heap-usage="56592928" system-load-average="0.64" cat-message-produced="4605537" cat-message-overflow="0" cat-message-size="4039805523.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="63717933056" usable="50558619648"/>
+      </period>
+      <period minute="27" thread-count="191" daemon-count="190" total-started-count="100304" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30468" old-gc-count="5" memory-free="8758339080" heap-usage="3897317880" none-heap-usage="56592928" system-load-average="0.59" cat-message-produced="4607159" cat-message-overflow="0" cat-message-size="4041160724.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="63681638400" usable="50522324992"/>
+      </period>
+      <period minute="28" thread-count="193" daemon-count="192" total-started-count="100385" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30481" old-gc-count="5" memory-free="8055770496" heap-usage="4599886464" none-heap-usage="56592992" system-load-average="0.82" cat-message-produced="4608829" cat-message-overflow="0" cat-message-size="4042566441.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="64344002560" usable="51184689152"/>
+      </period>
+      <period minute="29" thread-count="193" daemon-count="192" total-started-count="100600" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30495" old-gc-count="5" memory-free="7343840128" heap-usage="5311816832" none-heap-usage="56596304" system-load-average="0.62" cat-message-produced="4610516" cat-message-overflow="0" cat-message-size="4043978769.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="64800743424" usable="51641430016"/>
+      </period>
+      <period minute="30" thread-count="191" daemon-count="190" total-started-count="100695" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30508" old-gc-count="5" memory-free="6832655952" heap-usage="5823001008" none-heap-usage="56596304" system-load-average="0.54" cat-message-produced="4612703" cat-message-overflow="0" cat-message-size="4045955319.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="65230929920" usable="52071616512"/>
+      </period>
+      <period minute="31" thread-count="191" daemon-count="190" total-started-count="100696" cat-thread-count="97" pigeon-thread-count="0" http-thread-count="68" new-gc-count="30523" old-gc-count="5" memory-free="7154677616" heap-usage="5500979344" none-heap-usage="56596304" system-load-average="0.56" cat-message-produced="4614332" cat-message-overflow="0" cat-message-size="4047323111.00">
+         <disk path="/" total="10568916992" free="8837701632" usable="8300830720"/>
+         <disk path="/data" total="259056660480" free="65045893120" usable="51886579712"/>
+      </period>
+   </machine>
+</heartbeat-report>

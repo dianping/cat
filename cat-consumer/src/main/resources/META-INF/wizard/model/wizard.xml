@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.consumer">
+   <model package="com.dianping.cat.consumer.metric-report" name="metric-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/metric/model/metric-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.consumer.aggreation" name="aggreation">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/problem/aggreation/aggreation.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.consumer.company" name="company">
+      <sample-model>src/test/resources/com/dianping/cat/system/config/company.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.consumer.url.pattern" name="url.pattern">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/url-pattern.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.advanced.dependency-report" name="dependency-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/advanced/dependency-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.advanced.metric-report" name="metric-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/metric-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.advanced.metric-config" name="metric-config">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/metric-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.advanced.browser-meta-report" name="browser-meta-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/browser-meta.xml</sample-model>
+   </model>
+</wizard>

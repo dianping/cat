@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report product="arch" startTime="2013-06-24 10:00:00"
+	endTime="2013-06-24 10:59:59">
+	<metric-item id="home" type="C">
+		<segment id="40" count="1" sum="100" avg="100.0" />
+	</metric-item>
+	<metric-item id="t" type="C">
+		<segment id="40" count="1" sum="100" avg="100.0" />
+	</metric-item>
+	<metric-item id="state" type="C">
+		<segment id="40" count="1" sum="100" avg="100.0" />
+	</metric-item>
+</metric-report>

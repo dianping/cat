@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="top-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="segment" type="list" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" />
+    <attribute name="error" value-type="int" />
+    <attribute name="url" value-type="int" />
+    <attribute name="url-duration" value-type="double" />
+    <attribute name="service" value-type="int" />
+    <attribute name="service-duration" value-type="double" />
+    <attribute name="sql" value-type="int" />
+    <attribute name="sql-duration" value-type="int" />
+    <attribute name="call" value-type="int" />
+    <attribute name="call-duration" value-type="double" />
+    <attribute name="cache" value-type="int" />
+    <attribute name="cache-duration" value-type="double" />
+  </entity>
+</model>
+

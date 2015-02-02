@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="MobileApi" startTime="2012-05-17 13:00:00"
+	endTime="2012-05-17 13:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<ip>10.1.77.194</ip>
+	<machine ip="10.1.77.193">
+		<type id="URL" totalCount="690" failCount="0" failPercent="0.00" tps="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+			<name id="ClientInfo" totalCount="345" failCount="0"
+				failPercent="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="48" fails="0" />
+				<range value="20" count="22" fails="0" />
+				<range value="25" count="44" fails="0" />
+				<range value="30" count="27" fails="0" />
+				<range value="35" count="73" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="17" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="16" fails="0" />
+			</name>
+			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="48" fails="0" />
+				<range value="20" count="22" fails="0" />
+				<range value="25" count="44" fails="0" />
+				<range value="30" count="27" fails="0" />
+				<range value="35" count="73" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="17" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="16" fails="0" />
+			</name>
+		</type>
+		<type id="User" totalCount="341" failCount="0" failPercent="0.00" tps="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="35" fails="0" />
+				<range value="20" count="21" fails="0" />
+				<range value="25" count="43" fails="0" />
+				<range value="30" count="22" fails="0" />
+				<range value="35" count="58" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="15" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="15" fails="0" />
+			</name>
+			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337231972930-0
+				</successMessageUrl>
+				<range value="15" count="13" fails="0" />
+				<range value="20" count="1" fails="0" />
+				<range value="30" count="5" fails="0" />
+				<range value="35" count="14" fails="0" />
+				<range value="55" count="1" fails="0" />
+			</name>
+		</type>
+	</machine>
+	<machine ip="10.1.77.194">
+		<type id="URL" totalCount="690" failCount="0" failPercent="0.00" tps="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+			<name id="ClientInfo" totalCount="345" failCount="0"
+				failPercent="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="48" fails="0" />
+				<range value="20" count="22" fails="0" />
+				<range value="25" count="44" fails="0" />
+				<range value="30" count="27" fails="0" />
+				<range value="35" count="73" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="17" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="16" fails="0" />
+			</name>
+			<name id="Payload" totalCount="345" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="48" fails="0" />
+				<range value="20" count="22" fails="0" />
+				<range value="25" count="44" fails="0" />
+				<range value="30" count="27" fails="0" />
+				<range value="35" count="73" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="17" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="16" fails="0" />
+			</name>
+		</type>
+		<type id="User1" totalCount="341" failCount="0" failPercent="0.00" tps="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+			<name id="LogIn" totalCount="307" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+				<range value="0" count="15" fails="0" />
+				<range value="5" count="17" fails="0" />
+				<range value="10" count="25" fails="0" />
+				<range value="15" count="35" fails="0" />
+				<range value="20" count="21" fails="0" />
+				<range value="25" count="43" fails="0" />
+				<range value="30" count="22" fails="0" />
+				<range value="35" count="58" fails="0" />
+				<range value="40" count="26" fails="0" />
+				<range value="45" count="15" fails="0" />
+				<range value="50" count="15" fails="0" />
+				<range value="55" count="15" fails="0" />
+			</name>
+			<name id="NotLogIn" totalCount="34" failCount="0" failPercent="0.00" tps="0.00">
+				<successMessageUrl>MobileApi-0a014dc1-1337231972930-0
+				</successMessageUrl>
+				<range value="15" count="13" fails="0" />
+				<range value="20" count="1" fails="0" />
+				<range value="30" count="5" fails="0" />
+				<range value="35" count="14" fails="0" />
+				<range value="55" count="1" fails="0" />
+			</name>
+		</type>
+	</machine>
+</event-report>
