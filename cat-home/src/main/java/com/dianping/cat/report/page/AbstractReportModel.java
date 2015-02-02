@@ -94,7 +94,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		if (domain != null && m_manager != null) {
 			Project project = m_manager.getProjectByName(domain);
 			if (project != null) {
-				return project.getDepartment();
+				return project.getBu();
 			}
 		}
 		return "Default";
@@ -180,7 +180,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		if (domain != null && m_manager != null) {
 			Project project = m_manager.getProjectByName(domain);
 			if (project != null) {
-				return project.getProjectLine();
+				return project.getCmdbProductline();
 			}
 		}
 		return "Default";

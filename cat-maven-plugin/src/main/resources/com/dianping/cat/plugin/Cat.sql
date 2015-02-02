@@ -168,10 +168,8 @@ CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(200) NOT NULL COMMENT '项目名称',
   `cmdb_domain` varchar(200) DEFAULT  NULL COMMENT 'cmdb项目名称',
-  `level` int(5) DEFAULT NULL COMMENT '项目级别', 
-  `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
-  `department` varchar(50) DEFAULT NULL COMMENT '关联项目组名称',  
-  `bu` varchar(50) DEFAULT NULL COMMENT 'BU',
+  `level` int(5) DEFAULT NULL COMMENT '项目级别',  
+  `bu` varchar(50) DEFAULT NULL COMMENT 'CMDB事业部',
   `cmdb_productline` varchar(50) DEFAULT NULL COMMENT 'CMDB产品线',
   `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
   `email` varchar(200)  DEFAULT NULL COMMENT '项目组邮件',
@@ -331,4 +329,5 @@ CREATE TABLE `user_define_rule` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1242 DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
+
 

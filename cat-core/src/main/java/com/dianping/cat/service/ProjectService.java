@@ -169,8 +169,8 @@ public class ProjectService implements Initializable {
 		Project project = createLocal();
 
 		project.setDomain(domain);
-		project.setProjectLine("Default");
-		project.setDepartment("Default");
+		project.setCmdbProductline("Default");
+		project.setBu("Default");
 		try {
 			insert(project);
 			m_domains.add(domain);

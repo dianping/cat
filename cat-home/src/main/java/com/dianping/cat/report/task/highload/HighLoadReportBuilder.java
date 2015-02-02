@@ -42,7 +42,7 @@ public class HighLoadReportBuilder implements TaskBuilder {
 		Project project = m_projectService.findByCmdbDomain(domain);
 
 		name.setBu(project.getBu());
-		name.setProductLine(project.getProjectLine());
+		name.setProductLine(project.getCmdbProductline());
 	}
 
 	@Override

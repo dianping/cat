@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.dump;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -94,27 +93,23 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			return;
 		}
 		if (messageId.getVersion() == 2) {
-			try {
-				long time = tree.getMessage().getTimestamp();
-				long fixedTime = time - time % (60 * 60 * 1000);
-				long idTime = messageId.getTimestamp();
-				long duration = fixedTime - idTime;
+			long time = tree.getMessage().getTimestamp();
+			long fixedTime = time - time % (60 * 60 * 1000);
+			long idTime = messageId.getTimestamp();
+			long duration = fixedTime - idTime;
 
-				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-					m_bucketManager.storeMessage(tree, messageId);
+			if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
+				m_bucketManager.storeMessage(tree, messageId);
+			} else {
+				m_serverStateManager.addPigeonTimeError(1);
+
+				Integer size = m_errorTimestampDomains.get(domain);
+
+				if (size == null) {
+					m_errorTimestampDomains.put(domain, 1);
 				} else {
-					m_serverStateManager.addPigeonTimeError(1);
-
-					Integer size = m_errorTimestampDomains.get(domain);
-
-					if (size == null) {
-						m_errorTimestampDomains.put(domain, 1);
-					} else {
-						m_errorTimestampDomains.put(domain, size + 1);
-					}
+					m_errorTimestampDomains.put(domain, size + 1);
 				}
-			} catch (IOException e) {
-				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
 		} else {
 			Integer size = m_oldVersionDomains.get(domain);

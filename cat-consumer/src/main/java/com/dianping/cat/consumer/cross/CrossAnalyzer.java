@@ -36,6 +36,31 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private int m_errorAppName;
 
+	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
+		String localIp = crossInfo.getLocalAddress();
+		String remoteAddress = crossInfo.getRemoteAddress();
+		int index = remoteAddress.indexOf(":");
+
+		if (index > 0) {
+			remoteAddress = remoteAddress.substring(0, index);
+		}
+
+		CrossInfo info = new CrossInfo();
+		info.setLocalAddress(remoteAddress);
+
+		String clientPort = crossInfo.getClientPort();
+		if (clientPort == null) {
+			info.setRemoteAddress(localIp);
+		} else {
+			info.setRemoteAddress(localIp + ":" + clientPort);
+		}
+		info.setRemoteRole("Pigeon.Caller");
+		info.setDetailType("PigeonCall");
+		info.setApp(client);
+
+		return info;
+	}
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -84,7 +109,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
-		
+
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
@@ -105,37 +130,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		crossInfo.setRemoteRole("Pigeon.Server");
 		crossInfo.setDetailType("PigeonCall");
 		return crossInfo;
-	}
-
-	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
-		String localIp = crossInfo.getLocalAddress();
-		String remoteAddress = crossInfo.getRemoteAddress();
-		int index = remoteAddress.indexOf(":");
-
-		if (index > 0) {
-			remoteAddress = remoteAddress.substring(0, index);
-		}
-
-		CrossInfo info = new CrossInfo();
-		info.setLocalAddress(remoteAddress);
-
-		String clientPort = crossInfo.getClientPort();
-		if (clientPort == null) {
-			info.setRemoteAddress(localIp + ":Caller");
-		} else {
-			info.setRemoteAddress(localIp + ":" + clientPort + ":Caller");
-		}
-		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCall");
-		info.setApp(client);
-
-		return info;
-	}
-
-	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-
-		updateCrossReport(report, t, info);
 	}
 
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
@@ -222,9 +216,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
 		Local local = report.findOrCreateLocal(localIp);
-		Remote remote = local.findOrCreateRemote(remoteIp);
+		String remoteId = remoteIp + ":" + role;
+		Remote remote = local.findOrCreateRemote(remoteId);
 
 		report.addIp(localIp);
+		remote.setIp(remoteIp);
 		remote.setRole(role);
 		remote.setApp(info.getApp());
 
@@ -252,6 +248,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		name.setSum(name.getSum() + duration);
 	}
 
+	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
+		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+
+		updateCrossReport(report, t, info);
+	}
+
 	public static class CrossInfo {
 		private String m_remoteRole = UNKNOWN;
 
@@ -264,6 +266,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		private String m_app = "";
 
 		private String m_clientPort;
+
+		public String getApp() {
+			return m_app;
+		}
+
+		public String getClientPort() {
+			return m_clientPort;
+		}
 
 		public String getDetailType() {
 			return m_detailType;
@@ -281,8 +291,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			return m_remoteRole;
 		}
 
-		public String getApp() {
-			return m_app;
+		public void setApp(String app) {
+			m_app = app;
+		}
+
+		public void setClientPort(String clientPort) {
+			m_clientPort = clientPort;
 		}
 
 		public void setDetailType(String detailType) {
@@ -299,18 +313,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		public void setRemoteRole(String remoteRole) {
 			m_remoteRole = remoteRole;
-		}
-
-		public void setApp(String app) {
-			m_app = app;
-		}
-
-		public String getClientPort() {
-			return m_clientPort;
-		}
-
-		public void setClientPort(String clientPort) {
-			m_clientPort = clientPort;
 		}
 	}
 

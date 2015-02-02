@@ -59,11 +59,6 @@
              <version>2.3.8</version>
        </dependency>
        <dependency>
-              <groupId>com.dianping.hawk</groupId>
-              <artifactId>hawk-client</artifactId>
-             <version>0.6.7</version>
-       </dependency>
-       <dependency>
               <groupId>com.dianping</groupId>
               <artifactId>avatar-cache</artifactId>
              <version>2.5.10</version>

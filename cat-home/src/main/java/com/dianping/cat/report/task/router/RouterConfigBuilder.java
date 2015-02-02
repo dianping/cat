@@ -41,7 +41,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 	@Inject
 	private RouterConfigManager m_configManager;
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -78,8 +78,6 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 		}
 
 		processBackServer(servers, routerConfig, numbers);
-
-		m_logger.info(servers.toString());
 
 		routerConfig.setStartTime(end);
 		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
