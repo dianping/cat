@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.message.Transaction;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -30,6 +28,7 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
+import com.dianping.cat.message.Transaction;
 
 public class ServerConfigManager implements Initializable, LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
@@ -319,7 +318,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isClientCall(String type) {
-        return CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type);
+		return "PigeonCall".equals(type) || "Call".equals(type);
 	}
 
 	public boolean isCrashLog(String domain) {
@@ -364,12 +363,22 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
+	public boolean isOnline() {
+		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		if (address.equals("10.1.6.128")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isClient(String type) {
-		return CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type);
+		return "PigeonCall".equals(type) || "Call".equals(type);
 	}
 
 	public boolean isServer(String type) {
-        return CatConstants.TYPE_ESB_SERVICE.equals(type) || CatConstants.TYPE_SOA_SERVICE.equals(type);
+		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {

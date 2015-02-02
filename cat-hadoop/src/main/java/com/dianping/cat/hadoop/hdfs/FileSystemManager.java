@@ -75,6 +75,7 @@ public class FileSystemManager implements Initializable {
 	private Configuration getHdfsConfiguration() throws IOException {
 		Configuration config = new Configuration();
 		Map<String, String> properties = m_configManager.getHdfsProperties();
+		String authentication = properties.get("hadoop.security.authentication");
 
 		config.setInt("io.file.buffer.size", 8192);
 
@@ -84,6 +85,17 @@ public class FileSystemManager implements Initializable {
 
 		for (Map.Entry<String, String> property : properties.entrySet()) {
 			config.set(property.getKey(), property.getValue());
+		}
+
+		if ("kerberos".equals(authentication)) {
+			// For MAC OS X
+			// -Djava.security.krb5.realm=OX.AC.UK
+			// -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk
+			System.setProperty("java.security.krb5.realm",
+			      getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
+			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
+
+			UserGroupInformation.setConfiguration(config);
 		}
 
 		return config;
@@ -106,7 +118,7 @@ public class FileSystemManager implements Initializable {
 		if (m_configManager.isHdfsOn()) {
 			try {
 				m_config = getHdfsConfiguration();
-//				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
+				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
 			} catch (IOException e) {
 				Cat.logError(e);
 			}

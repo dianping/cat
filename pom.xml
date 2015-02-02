@@ -3,7 +3,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
-	<artifactId>cat</artifactId>
+	<artifactId>parent</artifactId>
 	<version>1.2.3</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
@@ -204,21 +204,16 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			<url>https://raw.github.com/dianping/cat/mvn-repo</url>
 		</pluginRepository>
 	</pluginRepositories>
-    <distributionManagement>
-        <repository>
-            <id>releases</id>
-            <url>
-                http://maven.dev.sh.ctripcorp.com:8081/nexus/content/repositories/fxrelease
-            </url>
-        </repository>
-        <snapshotRepository>
-            <id>snapshots</id>
-            <url>
-                http://maven.dev.sh.ctripcorp.com:8081/nexus/content/repositories/fxsnapshot
-            </url>
-        </snapshotRepository>
-
-    </distributionManagement>
+	<distributionManagement>
+		<repository>
+			<id>dianping.repo</id>
+			<url>http://mvn.dianpingoa.com/dianping-releases</url>
+		</repository>
+		<snapshotRepository>
+			<id>dianping.repo.snapshots</id>
+			<url>http://mvn.dianpingoa.com/dianping-snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>

@@ -52,19 +52,17 @@ public class MethodInfo extends BaseVisitor {
 
 	private void addCallProject(String type, Name name) {
 		String id = name.getId();
-        String allKey = ALL_METHOD + type;
-        NameDetailInfo all = m_callProjectsInfo.get(allKey);
+		NameDetailInfo all = m_callProjectsInfo.get(ALL_METHOD);
 
 		if (all == null) {
 			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
-			m_callProjectsInfo.put(allKey, all);
+			m_callProjectsInfo.put(ALL_METHOD, all);
 		}
-        String key = type + id;
-        NameDetailInfo info = m_callProjectsInfo.get(key);
+		NameDetailInfo info = m_callProjectsInfo.get(id);
 
 		if (info == null) {
 			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
-			m_callProjectsInfo.put(key, info);
+			m_callProjectsInfo.put(id, info);
 		}
 		info.mergeName(name);
 		all.mergeName(name);
@@ -72,19 +70,17 @@ public class MethodInfo extends BaseVisitor {
 
 	private void addCallerProject(String type, Name name) {
 		String id = name.getId();
-        NameDetailInfo all = m_callerProjectsInfo.get(ALL_METHOD);
-        String allKey = ALL_METHOD + type;
+		NameDetailInfo all = m_callerProjectsInfo.get(ALL_METHOD);
 
 		if (all == null) {
 			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
-			m_callerProjectsInfo.put(allKey, all);
+			m_callerProjectsInfo.put(ALL_METHOD, all);
 		}
-        String key = type + id;
-        NameDetailInfo info = m_callerProjectsInfo.get(key);
+		NameDetailInfo info = m_callerProjectsInfo.get(id);
 
 		if (info == null) {
 			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
-			m_callerProjectsInfo.put(key, info);
+			m_callerProjectsInfo.put(id, info);
 		}
 		info.mergeName(name);
 		all.mergeName(name);
@@ -92,19 +88,17 @@ public class MethodInfo extends BaseVisitor {
 
 	private void addServiceProject(String type, Name name) {
 		String id = name.getId();
-        String allKey = ALL_METHOD + type;
-        NameDetailInfo all = m_serviceProjectsInfo.get(allKey);
+		NameDetailInfo all = m_serviceProjectsInfo.get(ALL_METHOD);
 
 		if (all == null) {
 			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
-			m_serviceProjectsInfo.put(allKey, all);
+			m_serviceProjectsInfo.put(ALL_METHOD, all);
 		}
-        String key = type + id;
-        NameDetailInfo info = m_serviceProjectsInfo.get(key);
+		NameDetailInfo info = m_serviceProjectsInfo.get(id);
 
 		if (info == null) {
 			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
-			m_serviceProjectsInfo.put(key, info);
+			m_serviceProjectsInfo.put(id, info);
 		}
 		info.mergeName(name);
 		all.mergeName(name);

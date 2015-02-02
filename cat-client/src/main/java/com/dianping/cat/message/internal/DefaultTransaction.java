@@ -114,6 +114,19 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_standalone;
 	}
 
+	protected void replaceChild(Message from, Message to) {
+		int len = m_children.size();
+
+		for (int i = 0; i < len; i++) {
+			Message message = m_children.get(i);
+
+			if (message == from) {
+				m_children.set(i, to);
+				break;
+			}
+		}
+	}
+
 	public void setDurationInMicros(long duration) {
 		m_durationInMicro = duration;
 	}

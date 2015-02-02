@@ -9,7 +9,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
@@ -31,8 +30,8 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Inject
 	private DatabaseParser m_parser;
 
-	private Set<String> m_types = new HashSet<String>(Arrays.asList(CatConstants.TYPE_URL, CatConstants.TYPE_ESB_CALL, CatConstants.TYPE_SOA_CALL, CatConstants.TYPE_SOA_SERVICE,
-            CatConstants.TYPE_ESB_SERVICE, CatConstants.TYPE_SQL));
+	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
+	      "PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
 
@@ -78,7 +77,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			if (message instanceof Event) {
 				String type = message.getType();
 
-                if (CatConstants.TYPE_SQL_DATABASE.equals(type)) {
+				if (type.equals("SQL.Database")) {
 					return m_parser.parseDatabaseName(message.getName());
 				}
 			}
@@ -91,7 +90,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-                if (CatConstants.TYPE_ESB_CALL_APP.equals(message.getType()) || CatConstants.TYPE_SOA_CALL_APP.equals(message.getType())) {
+				if (message.getType().equals("PigeonCall.app")) {
 					return message.getName();
 				}
 			}
@@ -129,7 +128,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t) {
 		String type = t.getType();
 
-        if (CatConstants.TYPE_ESB_CALL.equals(type) || CatConstants.TYPE_SOA_CALL.equals(type)) {
+		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String target = parseServerName(t);
 			String callType = "PigeonCall";
 
@@ -137,7 +136,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				updateDependencyInfo(report, t, target, callType);
 				DependencyReport serverReport = findOrCreateReport(target);
 
-				updateDependencyInfo(serverReport, t, tree.getDomain(), "Service");
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
 		}
 	}
@@ -145,7 +144,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
 		String type = t.getType();
 
-        if (CatConstants.TYPE_SQL.equals(type)) {
+		if ("SQL".equals(type)) {
 			String database = parseDatabase(t);
 
 			if (database != null) {

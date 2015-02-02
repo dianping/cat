@@ -45,13 +45,12 @@ public class ProjectInfo extends BaseVisitor {
 	}
 
 	public void addCallerProjectInfo(String domain, TypeDetailInfo info) {
-        String allKey = ALL_CLIENT + info.getType();
-        TypeDetailInfo all = m_callerProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
 
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			all.setType(info.getType());
-			m_callerProjectsInfo.put(allKey, all);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
 		all.mergeTypeDetailInfo(info);
 		m_callerProjectsInfo.put(domain, info);
@@ -64,17 +63,15 @@ public class ProjectInfo extends BaseVisitor {
 			projectName = getProjectName(ip);
 		}
 
-        String allKey = ALL_CLIENT + type.getId();
-        TypeDetailInfo all = m_callerProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			m_callerProjectsInfo.put(allKey, all);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
-        String key = projectName + type.getId();
-        TypeDetailInfo info = m_callerProjectsInfo.get(key);
+		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration, projectName);
-			m_callerProjectsInfo.put(key, info);
+			m_callerProjectsInfo.put(projectName, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);
@@ -86,17 +83,15 @@ public class ProjectInfo extends BaseVisitor {
 		if (StringUtils.isEmpty(projectName)) {
 			projectName = getProjectName(ip);
 		}
-        String allKey = ALL_SERVER + type.getId();
-        TypeDetailInfo all = m_callProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_SERVER);
-			m_callProjectsInfo.put(allKey, all);
+			m_callProjectsInfo.put(ALL_SERVER, all);
 		}
-        String key = projectName + type.getId();
-        TypeDetailInfo info = m_callProjectsInfo.get(key);
+		TypeDetailInfo info = m_callProjectsInfo.get(projectName);
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration, projectName);
-			m_callProjectsInfo.put(key, info);
+			m_callProjectsInfo.put(projectName, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);
@@ -109,17 +104,15 @@ public class ProjectInfo extends BaseVisitor {
 			projectName = getProjectName(ip);
 		}
 
-        String allKey = ALL_CLIENT + type.getId();
-        TypeDetailInfo all = m_serviceProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			m_serviceProjectsInfo.put(allKey, all);
+			m_serviceProjectsInfo.put(ALL_CLIENT, all);
 		}
-        String key = projectName + type.getId();
-        TypeDetailInfo info = m_serviceProjectsInfo.get(key);
+		TypeDetailInfo info = m_serviceProjectsInfo.get(projectName);
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration, projectName);
-			m_serviceProjectsInfo.put(key, info);
+			m_serviceProjectsInfo.put(projectName, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);

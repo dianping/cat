@@ -44,64 +44,58 @@ public class HostInfo extends BaseVisitor {
 	}
 
 	private void addCallProject(String ip, Type type) {
-        String allKey = ALL_SERVER_IP + type.getId();
-        TypeDetailInfo all = m_callProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER_IP);
 
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration);
 			all.setIp(ALL_SERVER_IP);
-			m_callProjectsInfo.put(allKey, all);
+			m_callProjectsInfo.put(ALL_SERVER_IP, all);
 		}
-        String key = ip + type.getId();
-        TypeDetailInfo info = m_callProjectsInfo.get(key);
+		TypeDetailInfo info = m_callProjectsInfo.get(ip);
 
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(ip);
-			m_callProjectsInfo.put(key, info);
+			m_callProjectsInfo.put(ip, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);
 	}
 
 	private void addCallerProject(String ip, Type type) {
-        String allKey = ALL_CLIENT_IP + type.getId();
-        TypeDetailInfo all = m_callerProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT_IP);
 
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration);
 			all.setIp(ALL_CLIENT_IP);
-			m_callerProjectsInfo.put(allKey, all);
+			m_callerProjectsInfo.put(ALL_CLIENT_IP, all);
 		}
 		String realIp = ip.substring(0, ip.indexOf(":Caller"));
-        String key = realIp + type.getId();
-        TypeDetailInfo info = m_callerProjectsInfo.get(key);
+		TypeDetailInfo info = m_callerProjectsInfo.get(realIp);
 
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(realIp);
-			m_callerProjectsInfo.put(key, info);
+			m_callerProjectsInfo.put(realIp, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);
 	}
 
 	private void addServiceProject(String ip, Type type) {
-        String allKey = ALL_CLIENT_IP + type.getId();
-        TypeDetailInfo all = m_serviceProjectsInfo.get(allKey);
+		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT_IP);
 
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration);
 			all.setIp(ALL_CLIENT_IP);
-			m_serviceProjectsInfo.put(allKey, all);
+			m_serviceProjectsInfo.put(ALL_CLIENT_IP, all);
 		}
-        String key = ip + type.getId();
-        TypeDetailInfo info = m_serviceProjectsInfo.get(key);
+		TypeDetailInfo info = m_serviceProjectsInfo.get(ip);
 
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(ip);
-			m_serviceProjectsInfo.put(key, info);
+			m_serviceProjectsInfo.put(ip, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);

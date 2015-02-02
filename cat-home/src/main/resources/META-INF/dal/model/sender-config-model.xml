@@ -9,7 +9,7 @@
     <attribute name="url" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="successCode" value-type="String" />
-    <attribute name="batchSend" value-type="boolean" primitive="true" />
+      <attribute name="batchSend" value-type="boolean" primitive="true" />
     <entity-ref name="par" type="list" names="pars" />
   </entity>
   <entity name="par">

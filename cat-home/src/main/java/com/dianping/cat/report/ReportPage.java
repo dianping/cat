@@ -21,7 +21,7 @@ public enum ReportPage implements Page {
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
-   MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
+   MATRIX("matrix", "matrix", "Matrix", "Matrix", false),
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 

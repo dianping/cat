@@ -8,7 +8,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.task.alert.AlertType;
 import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.task.alert.sender.sender.MailSender;
@@ -30,57 +29,5 @@ public class SenderTest extends ComponentTestCase {
 		Assert.assertEquals(true, mailSender.get(MailSender.ID).send(entity));
 		Assert.assertEquals(true, mailSender.get(WeixinSender.ID).send(entity));
 		Assert.assertEquals(true, mailSender.get(SmsSender.ID).send(entity2));
-	}
-
-	@Test
-	public void testJson() {
-		SubItem item = new SubItem();
-		item.setTest("subTest");
-
-		Item i = new Item();
-		i.setTest("test");
-		i.setItem(item);
-
-		JsonBuilder jsonBuilder = new JsonBuilder();
-
-		String json = jsonBuilder.toJson(i);
-		System.out.println(json);
-		Item result = (Item) jsonBuilder.parse(json, Item.class);
-		System.out.println(jsonBuilder.toJson(result));
-	}
-
-	public static class Item {
-		private String test;
-
-		private SubItem item;
-
-		public String getTest() {
-			return test;
-		}
-
-		public void setTest(String test) {
-			this.test = test;
-		}
-
-		public SubItem getItem() {
-			return item;
-		}
-
-		public void setItem(SubItem item) {
-			this.item = item;
-		}
-
-	}
-
-	public static class SubItem {
-		private String test;
-
-		public String getTest() {
-			return test;
-		}
-
-		public void setTest(String test) {
-			this.test = test;
-		}
 	}
 }

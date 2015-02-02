@@ -241,7 +241,7 @@ public class CatFilter implements Filter {
 				sb.append("&Referer=").append(req.getHeader("referer"));
 				sb.append("&Agent=").append(req.getHeader("user-agent"));
 
-                Cat.logEvent(type, type + ".Client", Message.SUCCESS, sb.toString());
+				Cat.logEvent(type, type + ".Server", Message.SUCCESS, sb.toString());
 			}
 
 			protected void logRequestPayload(HttpServletRequest req, String type) {

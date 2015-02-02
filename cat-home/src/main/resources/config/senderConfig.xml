@@ -6,7 +6,7 @@
 		<par id="to=${receiver}" />
 		<par id="value=${title},${content}" />
 	</sender>
-	<sender id="weixin" url="http://dpoa.api.dianping.com/app/monitor/cat/push" type="post" successCode="success" batchSend="true">
+	<sender id="weixin" url="http://dpoa.api.dianping.com/app/monitor/cat/push" type="post" successCode="200" batchSend="true">
 		<par id="domain=${domain}"/>
 		<par id="email=${receiver}" />
 		<par id="title=${title}" />
