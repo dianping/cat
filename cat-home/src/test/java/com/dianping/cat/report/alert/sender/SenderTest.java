@@ -31,21 +31,21 @@ public class SenderTest extends ComponentTestCase {
 		Assert.assertEquals(true, mailSender.get(SmsSender.ID).send(entity2));
 	}
 
-    @Test
-    public void testJson() {
-        SubItem item = new SubItem();
-        item.setTest("subTest");
-
-        Item i = new Item();
-        i.setTest("test");
-        i.setItem(item);
-
-        JsonBuilder jsonBuilder = new JsonBuilder();
-        String json = jsonBuilder.toJson(i);
-        System.out.println(json);
-        Item result = (Item) jsonBuilder.parse(json, Item.class);
-        System.out.println(jsonBuilder.toJson(result));
-    }
+//    @Test
+//    public void testJson() {
+//        SubItem item = new SubItem();
+//        item.setTest("subTest");
+//
+//        Item i = new Item();
+//        i.setTest("test");
+//        i.setItem(item);
+//
+//        JsonBuilder jsonBuilder = new JsonBuilder();
+//        String json = jsonBuilder.toJson(i);
+//        System.out.println(json);
+//        Item result = (Item) jsonBuilder.parse(json, Item.class);
+//        System.out.println(jsonBuilder.toJson(result));
+//    }
 
     public static class Item {
         private String test;
