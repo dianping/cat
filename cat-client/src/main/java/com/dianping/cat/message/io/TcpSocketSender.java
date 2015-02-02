@@ -56,7 +56,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		boolean isWriteable = false;
 
 		if (channel != null && channel.channel().isOpen()) {
-			if (channel.channel().isActive()) {
+			if (channel.channel().isWritable()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();

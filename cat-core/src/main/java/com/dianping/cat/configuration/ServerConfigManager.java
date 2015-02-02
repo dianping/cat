@@ -363,16 +363,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOnline() {
-		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if (address.equals("10.1.6.128")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isClient(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
 	}

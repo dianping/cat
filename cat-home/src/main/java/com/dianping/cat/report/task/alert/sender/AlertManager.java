@@ -63,7 +63,7 @@ public class AlertManager implements Initializable {
 	private Map<String, AlertEntity> m_sendedAlerts = new ConcurrentHashMap<String, AlertEntity>(1000);
 
 	public boolean addAlert(AlertEntity alert) {
-		if (m_configManager.isOnline()) {
+		if (m_configManager.isAlertMachine()) {
 			String type = alert.getType();
 			String group = alert.getGroup();
 			Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
