@@ -48,7 +48,7 @@ public class SystemReportStatistics extends BaseVisitor {
 		m_key = fields[1];
 		m_ip = fields[2];
 
-		if (m_keys == null || m_keys.isEmpty() || m_keys.contains(m_key)) {
+		if (m_keys.contains(m_key)) {
 			updateMachine(Constants.ALL);
 			updateMachine(m_productLine);
 			super.visitMetricItem(metricItem);
@@ -112,4 +112,5 @@ public class SystemReportStatistics extends BaseVisitor {
 		return start.getTime() >= m_start + TimeHelper.ONE_HOUR * 16
 		      && end.getTime() <= m_start + TimeHelper.ONE_HOUR * 18;
 	}
+
 }
