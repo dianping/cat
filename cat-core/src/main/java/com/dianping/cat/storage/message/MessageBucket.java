@@ -9,8 +9,6 @@ public interface MessageBucket {
 	
 	public MessageTree findById(String messageId) throws IOException;
 
-	public MessageTree findByIndex(int index) throws IOException;
-
 	public long getLastAccessTime();
 
 	public void initialize(String dataFile) throws IOException;

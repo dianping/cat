@@ -66,7 +66,6 @@ public class LocalMessageBucket implements MessageBucket {
 		return findByIndex(index);
 	}
 
-	@Override
 	public MessageTree findByIndex(int index) throws IOException {
 		try {
 			m_lastAccessTime = System.currentTimeMillis();
@@ -86,21 +85,19 @@ public class LocalMessageBucket implements MessageBucket {
 
 	public MessageBlock flushBlock() throws IOException {
 		if (m_dirty.get()) {
-			synchronized (this) {
-				m_out.close();
-				byte[] data = m_buf.toByteArray();
+			m_out.close();
+			byte[] data = m_buf.toByteArray();
 
-				try {
-					m_block.setData(data);
-					m_blockSize = 0;
-					m_buf.reset();
-					m_out = new GZIPOutputStream(m_buf);
-					m_dirty.set(false);
+			try {
+				m_block.setData(data);
+				m_blockSize = 0;
+				m_buf.reset();
+				m_out = new GZIPOutputStream(m_buf);
+				m_dirty.set(false);
 
-					return m_block;
-				} finally {
-					m_block = new MessageBlock(m_dataFile);
-				}
+				return m_block;
+			} finally {
+				m_block = new MessageBlock(m_dataFile);
 			}
 		}
 
@@ -115,7 +112,6 @@ public class LocalMessageBucket implements MessageBucket {
 	public MessageBlockWriter getWriter() {
 		return m_writer;
 	}
-
 
 	@Override
 	public void initialize(String dataFile) throws IOException {
@@ -138,19 +134,21 @@ public class LocalMessageBucket implements MessageBucket {
 		m_codec = codec;
 	}
 
-	public synchronized MessageBlock storeMessage(final ByteBuf buf, final MessageId id) throws IOException {
+	public MessageBlock storeMessage(final ByteBuf buf, final MessageId id) throws IOException {
 		int size = buf.readableBytes();
 
-		m_dirty.set(true);
-		m_lastAccessTime = System.currentTimeMillis();
-		m_blockSize += size;
-		m_block.addIndex(id.getIndex(), size);
-		buf.getBytes(0, m_out, size); // write buffer and compress it
+		synchronized (this) {
+			m_dirty.set(true);
+			m_lastAccessTime = System.currentTimeMillis();
+			m_blockSize += size;
+			m_block.addIndex(id.getIndex(), size);
+			buf.getBytes(0, m_out, size); // write buffer and compress it
 
-		if (m_blockSize >= MAX_BLOCK_SIZE) {
-			return flushBlock();
-		} else {
-			return null;
+			if (m_blockSize >= MAX_BLOCK_SIZE) {
+				return flushBlock();
+			} else {
+				return null;
+			}
 		}
 	}
 

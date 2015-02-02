@@ -171,7 +171,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 					}
-					MessageTree tree = bucket.findByIndex(id.getIndex());
+					MessageTree tree = bucket.findById(messageId);
 
 					if (tree != null && tree.getMessageId().equals(messageId)) {
 						t.addData("path", dataFile);
@@ -186,7 +186,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							bucket.setBaseDir(m_baseDir);
 							bucket.initialize(dataFile);
 
-							MessageTree tree = bucket.findByIndex(id.getIndex());
+							MessageTree tree = bucket.findById(messageId);
 
 							if (tree != null && tree.getMessageId().equals(messageId)) {
 								t.addData("path", dataFile);
