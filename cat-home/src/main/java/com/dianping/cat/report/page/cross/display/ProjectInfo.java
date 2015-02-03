@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.service.HostinfoService;
 
 public class ProjectInfo extends BaseVisitor {
 
@@ -38,8 +37,6 @@ public class ProjectInfo extends BaseVisitor {
 
 	private String m_serviceSortBy = "Avg";
 
-	private HostinfoService m_hostinfoService;
-
 	public ProjectInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
 	}
@@ -48,7 +45,7 @@ public class ProjectInfo extends BaseVisitor {
 		String projectName = app;
 
 		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
+			projectName = UNKNOWN_PROJECT;
 		}
 
 		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
@@ -56,6 +53,7 @@ public class ProjectInfo extends BaseVisitor {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
+		
 		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration, projectName);
@@ -81,7 +79,7 @@ public class ProjectInfo extends BaseVisitor {
 		String projectName = app;
 
 		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
+			projectName = UNKNOWN_PROJECT;
 		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
 		if (all == null) {
@@ -101,7 +99,7 @@ public class ProjectInfo extends BaseVisitor {
 		String projectName = app;
 
 		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
+			projectName = UNKNOWN_PROJECT;
 		}
 
 		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
@@ -132,16 +130,6 @@ public class ProjectInfo extends BaseVisitor {
 		return values;
 	}
 
-	public String getProjectName(String ip) {
-		if (StringUtils.isEmpty(ip)) {
-			return UNKNOWN_PROJECT;
-		}
-		if (ip.indexOf(':') > 0) {
-			ip = ip.substring(0, ip.indexOf(':'));
-		}
-		return m_hostinfoService.queryDomainByIp(ip);
-	}
-
 	public long getReportDuration() {
 		return m_reportDuration;
 	}
@@ -160,10 +148,6 @@ public class ProjectInfo extends BaseVisitor {
 	public ProjectInfo setClientIp(String clientIp) {
 		m_clientIp = clientIp;
 		return this;
-	}
-
-	public void setHostinfoService(HostinfoService hostinfoService) {
-		m_hostinfoService = hostinfoService;
 	}
 
 	public ProjectInfo setServiceSortBy(String serviceSortBy) {

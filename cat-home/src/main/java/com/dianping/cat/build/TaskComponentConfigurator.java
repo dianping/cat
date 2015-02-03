@@ -137,7 +137,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(ReportServiceManager.class,
-		      HostinfoService.class, ServerConfigManager.class));
+		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(ReportServiceManager.class));
 
@@ -157,7 +157,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
-		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class, HostinfoService.class));
+		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      ReportServiceManager.class, TopologyGraphBuilder.class, TopologyGraphDao.class));

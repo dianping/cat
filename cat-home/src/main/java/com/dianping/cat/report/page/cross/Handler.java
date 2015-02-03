@@ -57,7 +57,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-
 	private CrossReport getSummarizeReport(Payload payload) {
 		String domain = payload.getDomain();
 
@@ -88,7 +87,6 @@ public class Handler implements PageHandler<Context> {
 			CrossReport projectReport = getHourlyReport(payload);
 			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-			projectInfo.setHostinfoService(m_hostinfoService);
 			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			projectInfo.visitCrossReport(projectReport);
@@ -123,13 +121,11 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyProjectReport = getSummarizeReport(payload);
 			ProjectInfo historyProjectInfo = new ProjectInfo(historyTime);
 
-			historyProjectInfo.setHostinfoService(m_hostinfoService);
 			historyProjectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyProjectInfo.visitCrossReport(historyProjectReport);
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
-
 			break;
 		case HISTORY_HOST:
 			CrossReport historyHostReport = getSummarizeReport(payload);
@@ -158,7 +154,7 @@ public class Handler implements PageHandler<Context> {
 
 		case METHOD_QUERY:
 			String method = payload.getMethod();
-			CrossMethodVisitor info = new CrossMethodVisitor(method, m_hostinfoService);
+			CrossMethodVisitor info = new CrossMethodVisitor(method);
 			String reportType = payload.getReportType();
 			CrossReport queryReport = null;
 

@@ -1201,9 +1201,6 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
@@ -1302,9 +1299,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
