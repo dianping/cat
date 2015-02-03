@@ -25,8 +25,6 @@ public class StateDisplay extends BaseVisitor {
 
 	protected ProcessDomain m_processDomain;
 
-	protected ProcessDomain m_allProcessDomain;
-
 	private Set<String> m_fakeDomains;
 
 	protected StateReport m_stateReport = new StateReport();
@@ -149,7 +147,6 @@ public class StateDisplay extends BaseVisitor {
 	@Override
 	public void visitDetail(Detail detail) {
 		mergeDetail(m_processDomain, detail);
-		mergeDetail(m_allProcessDomain, detail);
 	}
 
 	@Override
@@ -184,7 +181,6 @@ public class StateDisplay extends BaseVisitor {
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		m_allProcessDomain = mergeProcessDomain(processDomain, Constants.ALL);
 		m_processDomain = mergeProcessDomain(processDomain, processDomain.getName());
 
 		for (String ip : processDomain.getIps()) {

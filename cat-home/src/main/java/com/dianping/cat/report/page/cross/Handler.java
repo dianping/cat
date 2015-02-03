@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.cross;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -13,7 +12,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.report.ReportPage;
@@ -21,11 +19,9 @@ import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
-import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -45,27 +41,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = CrossAnalyzer.ID)
 	private ModelService<CrossReport> m_service;
 
-	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
-		CrossReport projectReport = getHourlyReport(domain, period, date, Constants.ALL);
-		ProjectInfo projectInfo = new ProjectInfo(duration);
-
-		projectInfo.setHostinfoService(m_hostinfoService);
-		projectInfo.setClientIp(Constants.ALL);
-		projectInfo.visitCrossReport(projectReport);
-
-		return projectInfo;
-	}
-
-	private ProjectInfo buildHistoryCallProjectInfo(String domain, Date start, Date end) {
-		CrossReport projectReport = getSummarizeReport(domain, start, end);
-		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
-
-		projectInfo.setHostinfoService(m_hostinfoService);
-		projectInfo.setClientIp(Constants.ALL);
-		projectInfo.visitCrossReport(projectReport);
-		return projectInfo;
-	}
-
 	private CrossReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
@@ -82,29 +57,12 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private CrossReport getHourlyReport(String domain, ModelPeriod period, String date, String ip) {
-		ModelRequest request = new ModelRequest(domain, Long.parseLong(date)) //
-		      .setProperty("ip", ip);
-
-		if (m_service.isEligable(request)) {
-			ModelResponse<CrossReport> response = m_service.invoke(request);
-
-			return response.getModel();
-		} else {
-			throw new RuntimeException("Internal error: no eligable cross service registered for " + request + "!");
-		}
-	}
-
 	private CrossReport getSummarizeReport(Payload payload) {
 		String domain = payload.getDomain();
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryCrossReport(domain, start, end);
-	}
-
-	private CrossReport getSummarizeReport(String domain, Date start, Date end) {
 		return m_reportService.queryCrossReport(domain, start, end);
 	}
 
@@ -124,39 +82,16 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		long historyTime = payload.getHistoryEndDate().getTime() - payload.getHistoryStartDate().getTime();
 
-		String domain = payload.getDomain();
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
 			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-			projectInfo.setHostinfoService(m_hostinfoService);
 			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			projectInfo.visitCrossReport(projectReport);
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
-
-			List<TypeDetailInfo> hourlyDetails = projectInfo.getServiceProjectsInfo();
-
-			if (projectInfo.getCallerProjectsInfo().isEmpty()) {
-				for (TypeDetailInfo info : hourlyDetails) {
-					String projectName = info.getProjectName();
-					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
-					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
-						continue;
-					}
-					ProjectInfo temp = buildCallProjectInfo(projectName, payload.getPeriod(),
-					      String.valueOf(payload.getDate()), payload.getHourDuration());
-
-					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
-
-					if (detail != null) {
-						detail.setProjectName(projectName);
-						projectInfo.addCallerProjectInfo(projectName, detail);
-					}
-				}
-			}
 			break;
 		case HOURLY_HOST:
 			CrossReport hostReport = getHourlyReport(payload);
@@ -186,34 +121,11 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyProjectReport = getSummarizeReport(payload);
 			ProjectInfo historyProjectInfo = new ProjectInfo(historyTime);
 
-			historyProjectInfo.setHostinfoService(m_hostinfoService);
 			historyProjectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyProjectInfo.visitCrossReport(historyProjectReport);
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
-
-			List<TypeDetailInfo> historyDetails = historyProjectInfo.getServiceProjectsInfo();
-
-			if (historyProjectInfo.getCallerProjectsInfo().isEmpty()) {
-				for (TypeDetailInfo info : historyDetails) {
-					String projectName = info.getProjectName();
-					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
-					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
-						continue;
-					}
-					Date start = payload.getHistoryStartDate();
-					Date end = payload.getHistoryEndDate();
-					ProjectInfo temp = buildHistoryCallProjectInfo(projectName, start, end);
-
-					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
-
-					if (detail != null) {
-						detail.setProjectName(projectName);
-						historyProjectInfo.addCallerProjectInfo(projectName, detail);
-					}
-				}
-			}
 			break;
 		case HISTORY_HOST:
 			CrossReport historyHostReport = getSummarizeReport(payload);
@@ -242,7 +154,7 @@ public class Handler implements PageHandler<Context> {
 
 		case METHOD_QUERY:
 			String method = payload.getMethod();
-			CrossMethodVisitor info = new CrossMethodVisitor(method, m_hostinfoService);
+			CrossMethodVisitor info = new CrossMethodVisitor(method);
 			String reportType = payload.getReportType();
 			CrossReport queryReport = null;
 

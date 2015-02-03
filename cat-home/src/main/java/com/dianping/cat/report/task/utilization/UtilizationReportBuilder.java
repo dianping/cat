@@ -29,7 +29,6 @@ import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.TaskBuilder;
-import com.dianping.cat.service.HostinfoService;
 
 public class UtilizationReportBuilder implements TaskBuilder {
 
@@ -43,9 +42,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ServerConfigManager m_configManger;
-
-	@Inject
-	private HostinfoService m_hostinfoService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -98,7 +94,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
-				projectInfo.setHostinfoService(m_hostinfoService);
 				projectInfo.setClientIp(Constants.ALL);
 				projectInfo.visitCrossReport(crossReport);
 				Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();

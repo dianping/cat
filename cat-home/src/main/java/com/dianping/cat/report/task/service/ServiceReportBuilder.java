@@ -27,7 +27,6 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.TaskBuilder;
-import com.dianping.cat.service.HostinfoService;
 
 public class ServiceReportBuilder implements TaskBuilder {
 
@@ -35,9 +34,6 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 	@Inject
 	protected ReportServiceManager m_reportService;
-
-	@Inject
-	private HostinfoService m_hostinfoService;
 
 	@Inject
 	private ServerConfigManager m_configManger;
@@ -72,7 +68,6 @@ public class ServiceReportBuilder implements TaskBuilder {
 				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
-				projectInfo.setHostinfoService(m_hostinfoService);
 				projectInfo.setClientIp(Constants.ALL);
 				projectInfo.visitCrossReport(crossReport);
 				Collection<TypeDetailInfo> callInfos = projectInfo.getCallProjectsInfo();
