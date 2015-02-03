@@ -45,17 +45,17 @@ public class MailSender extends AbstractSender {
 		String content = message.getContent().replaceAll(",", " ");
 		String urlPrefix = sender.getUrl();
 		String urlPars = m_senderConfigManager.queryParString(sender);
-		String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
+        String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 
 		try {
-			urlPars = urlPars.replace("${receiver}", receiver).replace("${title}", URLEncoder.encode(title, "utf-8"))
-			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
-			      .replace("${time}", URLEncoder.encode(time, "utf-8"));
+                urlPars = urlPars.replace("${receiver}", receiver).replace("${title}", URLEncoder.encode(title, "utf-8"))
+                         .replace("${content}", URLEncoder.encode(content, "utf-8"))
+                         .replace("${time}", URLEncoder.encode(time, "utf-8"));
 
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
+        return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 	}
 }
