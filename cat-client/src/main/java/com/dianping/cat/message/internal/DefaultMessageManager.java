@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
+import com.dianping.cat.message.ForkedTransaction;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -228,7 +229,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	private String nextMessageId() {
+	public void linkAsRunAway(DefaultForkedTransaction transaction) {
+		Context ctx = getContext();
+		if (ctx != null) {
+			ctx.linkAsRunAway(transaction);
+		}
+	}
+
+	public String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -414,6 +422,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
+		public void linkAsRunAway(DefaultForkedTransaction transaction) {
+			m_validator.linkAsRunAway(transaction);
+		}
+
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -441,9 +453,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public void start(Transaction transaction, boolean forked) {
 			if (!m_stack.isEmpty()) {
-				Transaction parent = m_stack.peek();
-
-				addTransactionChild(transaction, parent);
+				// Do NOT make strong reference from parent transaction to forked transaction.
+				// Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
+				// By doing so, there is no need for synchronization between parent and child threads.
+				// Both threads can complete() anytime despite the other thread.
+				if (!(transaction instanceof ForkedTransaction)) {
+					Transaction parent = m_stack.peek();
+					addTransactionChild(transaction, parent);
+				}
 			} else {
 				if (m_tree.getMessageId() == null) {
 					m_tree.setMessageId(nextMessageId());
@@ -463,7 +480,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	class TransactionHelper {
-		private void linkAsRunAway(Transaction parent, DefaultForkedTransaction transaction) {
+		private void linkAsRunAway(DefaultForkedTransaction transaction) {
 			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
 
 			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
@@ -472,11 +489,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			event.setCompleted(true);
 			transaction.setStandalone(true);
 
-			if (parent instanceof DefaultTransaction) {
-				((DefaultTransaction) parent).replaceChild(transaction, event);
-			} else {
-				add(event);
-			}
+			add(event);
 		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {
@@ -597,7 +610,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else if (!transaction.isCompleted()) {
 				if (transaction instanceof DefaultForkedTransaction) {
 					// link it as run away message since the forked transaction is not completed yet
-					linkAsRunAway(parent, (DefaultForkedTransaction) transaction);
+					linkAsRunAway((DefaultForkedTransaction) transaction);
 				} else if (transaction instanceof DefaultTaggedTransaction) {
 					// link it as run away message since the forked transaction is not completed yet
 					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);

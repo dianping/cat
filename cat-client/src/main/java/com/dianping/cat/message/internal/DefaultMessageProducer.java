@@ -165,6 +165,9 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (m_manager.isMessageEnabled()) {
 			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
 
+			if (m_manager instanceof DefaultMessageManager) {
+				((DefaultMessageManager) m_manager).linkAsRunAway(transaction);
+			}
 			m_manager.start(transaction, true);
 			return transaction;
 		} else {
@@ -179,7 +182,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name,m_manager);
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name, m_manager);
 
 			return heartbeat;
 		} else {
