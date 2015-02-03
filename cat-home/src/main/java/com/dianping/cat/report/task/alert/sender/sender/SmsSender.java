@@ -37,8 +37,8 @@ public class SmsSender extends AbstractSender {
 		return result;
 	}
 
-    private boolean sendSms(AlertMessageEntity message, String receiver,
-        com.dianping.cat.home.sender.entity.Sender sender) {
+	private boolean sendSms(AlertMessageEntity message, String receiver,
+	      com.dianping.cat.home.sender.entity.Sender sender) {
 		String filterContent = message.getContent().replaceAll("(<a href.*(?=</a>)</a>)|(\n)", "");
 		String content = message.getTitle() + " " + filterContent;
 		String urlPrefix = sender.getUrl();
@@ -51,6 +51,6 @@ public class SmsSender extends AbstractSender {
 			Cat.logError(e);
 		}
 
-        return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
+		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 	}
 }

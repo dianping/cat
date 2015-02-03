@@ -109,6 +109,15 @@ public class AppConfigManager implements Initializable {
 		return storeConfig();
 	}
 
+	public Map<Integer, Code> queryInternalCodes(int commandId) {
+		Command cmd = m_config.getCommands().get(commandId);
+
+		if (cmd != null) {
+			return cmd.getCodes();
+		}
+		return new HashMap<Integer, Code>();
+	}
+
 	public Pair<Boolean, List<Integer>> deleteCommand(String domain, String name) {
 		Collection<Command> commands = m_config.getCommands().values();
 		List<Integer> needDeleteIds = new ArrayList<Integer>();
@@ -235,21 +244,6 @@ public class AppConfigManager implements Initializable {
 			}
 		}
 		return false;
-	}
-
-	public Code queryCode(int commandId, int codeId) {
-		Command command = m_config.findCommand(commandId);
-
-		if (command != null) {
-			Code code = command.findCode(codeId);
-
-			if (code == null) {
-				code = m_config.findCode(codeId);
-			}
-			return code;
-		} else {
-			return null;
-		}
 	}
 
 	public Map<Integer, Code> queryCodeByCommand(int command) {

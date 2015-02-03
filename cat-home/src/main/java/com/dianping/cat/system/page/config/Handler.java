@@ -163,7 +163,6 @@ public class Handler implements PageHandler<Context> {
 		case EXCEPTION_THRESHOLD_ADD:
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 		case EXCEPTION_EXCLUDE_DELETE:
-		case EXCEPTION_EXCLUDE_UPDATE:
 		case EXCEPTION_EXCLUDE_ADD:
 		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
 			m_exceptionConfigProcessor.process(action, payload, model);

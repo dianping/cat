@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -16,7 +17,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
-import com.dianping.cat.report.page.cache.Handler.ReportVisitor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
@@ -43,19 +43,15 @@ public class CacheOutputTest extends ComponentTestCase {
 		String type = "Cache.web";
 		String queryName = "";
 		String ip = "All";
-		ReportVisitor visitor = new ReportVisitor();
+		TransactionReportVistor visitor = new TransactionReportVistor();
 
+		visitor.setType(type).setQueryName(queryName).setCurrentIp(ip);
+		visitor.setEventReport(eventReport);
 		visitor.visitTransactionReport(transactionReport);
-
-		TransactionReportVistor vistor = new TransactionReportVistor();
-
-		vistor.setType(type).setQueryName(queryName).setCurrentIp(ip);
-		vistor.setEventReport(eventReport);
-		vistor.visitTransactionReport(transactionReport);
-		return vistor.getCacheReport();
+		return visitor.getCacheReport();
 	}
 
-	// @Test
+	@Test
 	public void printCacheWebInfos() {
 		ReportServiceManager manager = lookup(ReportServiceManager.class);
 		Date endDate = TimeHelper.getCurrentDay();

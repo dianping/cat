@@ -26,7 +26,7 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 		m_logger = logger;
 	}
 
-	public boolean httpGetSend(String successCode, String urlPrefix, String urlPars) {
+	private boolean httpGetSend(String successCode, String urlPrefix, String urlPars) {
 		URL url = null;
 		InputStream in = null;
 		URLConnection conn = null;
@@ -60,7 +60,7 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 		}
 	}
 
-	public boolean httpPostSend(String successCode, String urlPrefix, String content) {
+	private boolean httpPostSend(String successCode, String urlPrefix, String content) {
 		URL url = null;
 		InputStream in = null;
 		OutputStreamWriter writer = null;
@@ -74,6 +74,7 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 			conn.setReadTimeout(3000);
 			conn.setDoOutput(true);
 			conn.setDoInput(true);
+			conn.setRequestProperty("content-type", "application/x-www-form-urlencoded;charset=UTF-8");
 			writer = new OutputStreamWriter(conn.getOutputStream());
 
 			writer.write(content);
@@ -105,6 +106,8 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 	}
 
 	public boolean httpSend(String successCode, String type, String urlPrefix, String urlPars) {
+		m_logger.info("url:" + urlPrefix);
+		m_logger.info("urlPars:" + urlPars);
 		if ("get".equalsIgnoreCase(type)) {
 			return httpGetSend(successCode, urlPrefix, urlPars);
 		} else if ("post".equalsIgnoreCase(type)) {

@@ -44,11 +44,6 @@ public class HdfsMessageBucket implements MessageBucket {
 	public MessageTree findById(String messageId) throws IOException {
 		int index = MessageId.parse(messageId).getIndex();
 
-		return findByIndex(index);
-	}
-
-	@Override
-	public MessageTree findByIndex(int index) throws IOException {
 		try {
 			byte[] data = m_reader.readMessage(index);
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);

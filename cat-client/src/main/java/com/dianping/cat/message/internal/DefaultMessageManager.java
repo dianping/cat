@@ -123,14 +123,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_configManager;
 	}
 
-    public void linkAsRunAway(DefaultForkedTransaction transaction)
-    {
-        Context ctx = getContext();
-        if (ctx != null) {
-            ctx.linkAsRunAway(transaction);
-        }
-    }
-
 	private Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
@@ -234,6 +226,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return content.isTraceMode();
 		} else {
 			return false;
+		}
+	}
+
+	public void linkAsRunAway(DefaultForkedTransaction transaction) {
+		Context ctx = getContext();
+		if (ctx != null) {
+			ctx.linkAsRunAway(transaction);
 		}
 	}
 
@@ -423,6 +422,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
+		public void linkAsRunAway(DefaultForkedTransaction transaction) {
+			m_validator.linkAsRunAway(transaction);
+		}
+
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -450,14 +453,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public void start(Transaction transaction, boolean forked) {
 			if (!m_stack.isEmpty()) {
-                // Do NOT make strong reference from parent transaction to forked transaction.
-                // Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
-                // By doing so, there is no need for synchronization between parent and child threads.
-                // Both threads can complete() anytime despite the other thread.
-                if (!(transaction instanceof ForkedTransaction)) {
-                    Transaction parent = m_stack.peek();
-                    addTransactionChild(transaction, parent);
-                }
+				// Do NOT make strong reference from parent transaction to forked transaction.
+				// Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
+				// By doing so, there is no need for synchronization between parent and child threads.
+				// Both threads can complete() anytime despite the other thread.
+				if (!(transaction instanceof ForkedTransaction)) {
+					Transaction parent = m_stack.peek();
+					addTransactionChild(transaction, parent);
+				}
 			} else {
 				if (m_tree.getMessageId() == null) {
 					m_tree.setMessageId(nextMessageId());
@@ -470,11 +473,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				m_stack.push(transaction);
 			}
 		}
-
-        public void linkAsRunAway(DefaultForkedTransaction transaction) {
-            m_validator.linkAsRunAway(transaction);
-        }
-
 
 		private long trimToHour(long timestamp) {
 			return timestamp - timestamp % (3600 * 1000L);
@@ -491,7 +489,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			event.setCompleted(true);
 			transaction.setStandalone(true);
 
-            add(event);
+			add(event);
 		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {

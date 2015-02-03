@@ -55,6 +55,6 @@ public class WeixinSender extends AbstractSender {
 			Cat.logError(e);
 		}
 
-        return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
+		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 	}
 }

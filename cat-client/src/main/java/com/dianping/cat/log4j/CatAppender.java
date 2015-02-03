@@ -72,13 +72,14 @@ public class CatAppender extends AppenderSkeleton {
 		String type = "Log4j";
 		String name = event.getLevel().toString();
 		Object message = event.getMessage();
-
 		String data;
+		
 		if (message instanceof Throwable) {
 			data = buildExceptionStack((Throwable) message);
 		} else {
 			data = event.getMessage().toString();
 		}
+		
 		ThrowableInformation info = event.getThrowableInformation();
 
 		if (info != null) {

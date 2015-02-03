@@ -161,9 +161,9 @@ public class AppGraphCreator {
 				title = code.getName();
 				int status = code.getStatus();
 				if (status == 0) {
-					title += "<span class='text-success'>【成功】</span>";
+					title = "<span class='text-success'>【成功】</span>" + title;
 				} else {
-					title += "<span class='text-error'>【失败】</span>";
+					title = "<span class='text-error'>【失败】</span>" + title;
 				}
 			}
 			break;

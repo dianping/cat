@@ -141,15 +141,9 @@ public class MonitorManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	private String parseFormatUrl(String url) {
-		String result = m_patternManger.handle(url);
-
-		return result;
-	}
-
 	private void processOneEntity(MonitorEntity entity) {
 		String targetUrl = entity.getTargetUrl();
-		String url = parseFormatUrl(targetUrl);
+		String url = m_patternManger.handle(targetUrl);
 
 		if (url != null) {
 			Transaction t = Cat.newTransaction("Monitor", url);

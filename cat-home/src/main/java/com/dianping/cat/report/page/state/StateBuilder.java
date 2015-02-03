@@ -37,7 +37,9 @@ public class StateBuilder {
 		return strs;
 	}
 
-	private String buildCatInfoMessage(StateReport report) {
+	public String buildStateMessage(long date, String ip) {
+		StateReport report = queryHourlyReport(date, ip);
+
 		int realSize = report.getMachines().size();
 		List<String> servers = queryAllServers();
 		int excepeted = servers.size();
@@ -61,10 +63,6 @@ public class StateBuilder {
 		} else {
 			return null;
 		}
-	}
-
-	public String buildStateMessage(long date, String ip) {
-		return buildCatInfoMessage(queryHourlyReport(date, ip));
 	}
 
 	private StateReport queryHourlyReport(long date, String ip) {

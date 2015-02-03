@@ -18,6 +18,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
+	
+	@FieldMeta("ip")
+	private String m_ip;
 
 	@FieldMeta("date")
 	private String m_date;
@@ -62,6 +65,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.ROUTER);
 	}
+	
+	public String getIp() {
+   	return m_ip;
+   }
+
+	public void setIp(String ip) {
+   	m_ip = ip;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -69,4 +80,5 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			m_action = Action.API;
 		}
 	}
+	
 }

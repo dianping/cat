@@ -146,11 +146,23 @@ public class Handler implements PageHandler<Context> {
 		String sortBy = payload.getSort();
 
 		switch (action) {
-		case VIEW:
+		case LINECHART:
 			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildLineChart(model, payload, field, sortBy);
 
 			model.setLineChart(lineChartPair.getKey());
 			model.setAppDataDetailInfos(lineChartPair.getValue());
+			break;
+		case PIECHART:
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload, field);
+
+			if (pieChartPair != null) {
+				model.setPieChart(pieChartPair.getKey());
+				model.setPieChartDetailInfos(pieChartPair.getValue());
+			}
+			int commandId = payload.getQueryEntity1().getId();
+
+			model.setCommandId(commandId);
+			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		case LINECHART_JSON:
 			Pair<LineChart, List<AppDataDetail>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
@@ -162,15 +174,6 @@ public class Handler implements PageHandler<Context> {
 				lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
 				model.setFetchData(new JsonBuilder().toJson(lineChartObjs));
 			}
-			break;
-		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload, field);
-
-			if (pieChartPair != null) {
-				model.setPieChart(pieChartPair.getKey());
-				model.setPieChartDetailInfos(pieChartPair.getValue());
-			}
-			model.setCommandId(payload.getQueryEntity1().getId());
 			break;
 		case PIECHART_JSON:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload, field);

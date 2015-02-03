@@ -19,7 +19,7 @@
 		  <c:set var="modalId" value="0" />
 		  <c:choose>
 		  	<c:when test="${fn:length(model.alterationMinuites) == 0 }">
-		  		<div class="text-danger">该项目在该时间段内没有变更信息。</div>
+		  		<h3 class="text-center text-danger">该项目在该时间段内没有变更信息。</h3>
 		 	</c:when>
 		 	<c:otherwise>
 			      <c:forEach var="minuteEntry" items="${model.alterationMinuites}"  varStatus="itemStatus">

@@ -74,7 +74,14 @@ public class MetricConfigProcessor extends BaseProcesser {
 			}
 			metricConfigs.put(productLine, configs);
 			knowDomains.addAll(domains);
+
 		}
+		
+		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
+			payload.setProductLineName(entry.getKey());
+			break;
+		}
+		
 		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
 
 		for (MetricItemConfig config : m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values()) {

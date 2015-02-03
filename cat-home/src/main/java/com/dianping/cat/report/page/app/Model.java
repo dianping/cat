@@ -69,28 +69,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, List<Speed>> m_speeds;
 
+	private Map<Integer, Code> m_codes;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public List<AppDataDetail> getAppDataDetailInfos() {
 		return m_appDataDetailInfos;
-	}
-
-	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
-		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
-		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
-
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
-				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
-				AppSpeedDetail d = entry.getValue();
-
-				m.put(d.getMinuteOrder(), d);
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -114,8 +100,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_appSpeedDisplayInfo;
 	}
 
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+				AppSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
 	public Map<Integer, Item> getCities() {
 		return m_cities;
+	}
+
+	public Map<Integer, Code> getCodes() {
+		return m_codes;
 	}
 
 	public String getCommand() {
@@ -151,7 +157,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.LINECHART;
 	}
 
 	@Override
@@ -166,7 +172,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getDomainToCommandsJson() {
 		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
-		
+
 		map.put(Constants.ALL, m_commands);
 		for (Command command : m_commands) {
 			String domain = command.getDomain();
@@ -251,6 +257,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
+	}
+
+	public void setCodes(Map<Integer, Code> codes) {
+		m_codes = codes;
 	}
 
 	public void setCommandId(int commandId) {

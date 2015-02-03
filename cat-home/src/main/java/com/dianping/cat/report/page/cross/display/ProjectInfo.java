@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.service.HostinfoService;
 
 public class ProjectInfo extends BaseVisitor {
 
@@ -38,10 +37,30 @@ public class ProjectInfo extends BaseVisitor {
 
 	private String m_serviceSortBy = "Avg";
 
-	private HostinfoService m_hostinfoService;
-
 	public ProjectInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
+	}
+
+	private void addCallerProject(String ip, String app, Type type) {
+		String projectName = app;
+
+		if (StringUtils.isEmpty(projectName)) {
+			projectName = UNKNOWN_PROJECT;
+		}
+
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			m_callerProjectsInfo.put(ALL_CLIENT, all);
+		}
+		
+		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
+		if (info == null) {
+			info = new TypeDetailInfo(m_reportDuration, projectName);
+			m_callerProjectsInfo.put(projectName, info);
+		}
+		info.mergeType(type);
+		all.mergeType(type);
 	}
 
 	public void addCallerProjectInfo(String domain, TypeDetailInfo info) {
@@ -56,32 +75,11 @@ public class ProjectInfo extends BaseVisitor {
 		m_callerProjectsInfo.put(domain, info);
 	}
 
-	private void addCallerProject(String ip, String app, Type type) {
-		String projectName = app;
-
-		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
-		}
-
-		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
-		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			m_callerProjectsInfo.put(ALL_CLIENT, all);
-		}
-		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
-		if (info == null) {
-			info = new TypeDetailInfo(m_reportDuration, projectName);
-			m_callerProjectsInfo.put(projectName, info);
-		}
-		info.mergeType(type);
-		all.mergeType(type);
-	}
-
 	private void addCallProject(String ip, String app, Type type) {
 		String projectName = app;
 
 		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
+			projectName = UNKNOWN_PROJECT;
 		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
 		if (all == null) {
@@ -101,7 +99,7 @@ public class ProjectInfo extends BaseVisitor {
 		String projectName = app;
 
 		if (StringUtils.isEmpty(projectName)) {
-			projectName = getProjectName(ip);
+			projectName = UNKNOWN_PROJECT;
 		}
 
 		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
@@ -122,34 +120,24 @@ public class ProjectInfo extends BaseVisitor {
 		return m_callProjectsInfo;
 	}
 
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
+	}
+
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
 	}
 
-	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
-		return m_callerProjectsInfo;
+	public long getReportDuration() {
+		return m_reportDuration;
 	}
 
 	public List<TypeDetailInfo> getServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
 		Collections.sort(values, new TypeComparator(m_serviceSortBy));
 		return values;
-	}
-
-	public String getProjectName(String ip) {
-		if (StringUtils.isEmpty(ip)) {
-			return UNKNOWN_PROJECT;
-		}
-		if (ip.indexOf(':') > 0) {
-			ip = ip.substring(0, ip.indexOf(':'));
-		}
-		return m_hostinfoService.queryDomainByIp(ip);
-	}
-
-	public long getReportDuration() {
-		return m_reportDuration;
 	}
 
 	public ProjectInfo setCallSortBy(String callSoryBy) {
@@ -160,10 +148,6 @@ public class ProjectInfo extends BaseVisitor {
 	public ProjectInfo setClientIp(String clientIp) {
 		m_clientIp = clientIp;
 		return this;
-	}
-
-	public void setHostinfoService(HostinfoService hostinfoService) {
-		m_hostinfoService = hostinfoService;
 	}
 
 	public ProjectInfo setServiceSortBy(String serviceSortBy) {
@@ -185,7 +169,11 @@ public class ProjectInfo extends BaseVisitor {
 
 	@Override
 	public void visitRemote(Remote remote) {
-		String remoteIp = remote.getId();
+		String remoteIp = remote.getIp();
+
+		if (remoteIp == null) {
+			remoteIp = remote.getId();
+		}
 		String role = remote.getRole();
 		String app = remote.getApp();
 

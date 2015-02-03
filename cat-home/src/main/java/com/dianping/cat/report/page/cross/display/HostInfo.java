@@ -43,6 +43,25 @@ public class HostInfo extends BaseVisitor {
 		m_reportDuration = reportDuration;
 	}
 
+	private void addCallerProject(String ip, Type type) {
+		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT_IP);
+
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration);
+			all.setIp(ALL_CLIENT_IP);
+			m_callerProjectsInfo.put(ALL_CLIENT_IP, all);
+		}
+		TypeDetailInfo info = m_callerProjectsInfo.get(ip);
+
+		if (info == null) {
+			info = new TypeDetailInfo(m_reportDuration);
+			info.setIp(ip);
+			m_callerProjectsInfo.put(ip, info);
+		}
+		info.mergeType(type);
+		all.mergeType(type);
+	}
+
 	private void addCallProject(String ip, Type type) {
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER_IP);
 
@@ -57,26 +76,6 @@ public class HostInfo extends BaseVisitor {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(ip);
 			m_callProjectsInfo.put(ip, info);
-		}
-		info.mergeType(type);
-		all.mergeType(type);
-	}
-
-	private void addCallerProject(String ip, Type type) {
-		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT_IP);
-
-		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration);
-			all.setIp(ALL_CLIENT_IP);
-			m_callerProjectsInfo.put(ALL_CLIENT_IP, all);
-		}
-		String realIp = ip.substring(0, ip.indexOf(":Caller"));
-		TypeDetailInfo info = m_callerProjectsInfo.get(realIp);
-
-		if (info == null) {
-			info = new TypeDetailInfo(m_reportDuration);
-			info.setIp(realIp);
-			m_callerProjectsInfo.put(realIp, info);
 		}
 		info.mergeType(type);
 		all.mergeType(type);
@@ -101,15 +100,15 @@ public class HostInfo extends BaseVisitor {
 		all.mergeType(type);
 	}
 
+	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
+	}
+
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 
 		Collections.sort(values, new TypeComparator(m_callSortBy));
 		return values;
-	}
-
-	public Map<String, TypeDetailInfo> getCallerProjectsInfo() {
-		return m_callerProjectsInfo;
 	}
 
 	public long getReportDuration() {
@@ -188,17 +187,30 @@ public class HostInfo extends BaseVisitor {
 
 	@Override
 	public void visitRemote(Remote remote) {
-		String remoteIp = remote.getId();
+		// String remoteIp = remote.getId();
+		String id = remote.getId();
+		String remoteIp = remote.getIp();
+
+		if (remoteIp == null) {
+			remoteIp = remote.getId();
+
+			int index = remoteIp.indexOf(":Caller");
+
+			if (index > -1) {
+				remoteIp = remoteIp.substring(0, index);
+			}
+		}
+
 		String role = remote.getRole();
 		String app = remote.getApp();
-		boolean flag = projectContains(remoteIp, app, m_projectName, role);
+		boolean flag = projectContains(id, app, m_projectName, role);
 
 		if (flag) {
 			if (role != null && role.endsWith("Client")) {
 				addServiceProject(remoteIp, remote.getType());
 			} else if (role != null && role.endsWith("Server")) {
 				addCallProject(remoteIp, remote.getType());
-			} else if (role != null && role.endsWith("Caller") && remoteIp.endsWith(":Caller")) {
+			} else if (role != null && role.endsWith("Caller")) {
 				addCallerProject(remoteIp, remote.getType());
 			}
 		}

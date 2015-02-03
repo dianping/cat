@@ -28,6 +28,12 @@ $(document).delegate('.state_graph_link', 'click', function(e){
 					
 					var data = $('#trendMeta',cell).text();
 					graphLineChart($('#trendGraph',cell)[0],eval('('+data+')'));
+					
+					data = $('#distributionMeta', cell).text();
+					
+					if (data != null && data.length > 0) {
+						graphPieChart($('#distributionChart', cell)[0], eval('(' + data + ')'));
+					}
 				}
 			});
 		}

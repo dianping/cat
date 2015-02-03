@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.page.JsonBuilder;
 
 public class CacheReport {
+
 	private static final String ALL = "ALL";
 
 	private String m_domain;
@@ -38,13 +39,19 @@ public class CacheReport {
 
 	private Map<String, CacheTypeItem> m_typeItems = new HashMap<String, CacheTypeItem>();
 
+	private Set<String> m_methods = new LinkedHashSet<String>();
+
+	private String firstLetterUpper(String input) {
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String arrays[] = transactionName.getId().split(":");
 		String categroy = arrays[0];
 		String method = "";
 
 		if (arrays.length > 1) {
-			method = arrays[1];
+			method = firstLetterUpper(arrays[1]);
 		}
 		CacheNameItem item = m_nameItems.get(categroy);
 		CacheNameItem all = m_nameItems.get(ALL);
@@ -62,6 +69,7 @@ public class CacheReport {
 			m_nameItems.put(categroy, item);
 		}
 		item.add(transactionName, eventName, method);
+		m_methods.add(method);
 	}
 
 	public void addNewTypeItem(TransactionType transactionType, EventType eventType) {
@@ -113,6 +121,10 @@ public class CacheReport {
 		return result;
 	}
 
+	public Set<String> getMethods() {
+		return m_methods;
+	}
+
 	public void setDomain(String domain) {
 		m_domain = domain;
 	}
@@ -150,13 +162,7 @@ public class CacheReport {
 
 		private long m_missed;
 
-		private long m_add;
-
-		private long m_get;
-
-		private long m_mget;
-
-		private long m_remove;
+		private Map<String, Long> m_methodCounts = new HashMap<String, Long>();
 
 		private TransactionName m_name;
 
@@ -171,50 +177,52 @@ public class CacheReport {
 			m_name.setTps(m_name.getTps() + transactionName.getTps());
 
 			if (!StringUtils.isEmpty(method)) {
-				if ("get".equals(method)) {
-					m_get += transactionTotalCount;
+				long total = incMethodCount(method, transactionTotalCount);
+				
+				if ("get".equalsIgnoreCase(method)) {
 					m_missed = m_missed + eventName.getTotalCount();
-					m_hited = 1 - (double) m_missed / m_get;
-				} else if ("mGet".equals(method)) {
-					m_mget += transactionTotalCount;
-				} else if ("add".equals(method)) {
-					m_add += transactionTotalCount;
-				} else if ("remove".equals(method)) {
-					m_remove += transactionTotalCount;
+					m_hited = 1 - (double) m_missed / total;
 				}
 			}
-		}
-
-		public long getAdd() {
-			return m_add;
 		}
 
 		public String getCategory() {
 			return m_category;
 		}
 
-		public long getGet() {
-			return m_get;
+		private Long getMethodCount(String field) {
+			Long value = m_methodCounts.get(field);
+
+			if (value == null) {
+				value = new Long(0);
+
+				m_methodCounts.put(field, value);
+			}
+			return value;
+		}
+
+		private long incMethodCount(String method, Long value) {
+			Long source = getMethodCount(method);
+			long result = source + value;
+
+			m_methodCounts.put(method, result);
+			return result;
 		}
 
 		public double getHited() {
 			return m_hited;
 		}
 
-		public long getMget() {
-			return m_mget;
-		}
-
 		public long getMissed() {
 			return m_missed;
 		}
 
-		public TransactionName getName() {
-			return m_name;
+		public Map<String, Long> getMethodCounts() {
+			return m_methodCounts;
 		}
 
-		public long getRemove() {
-			return m_remove;
+		public TransactionName getName() {
+			return m_name;
 		}
 
 		public void setHited(double hited) {
@@ -247,25 +255,28 @@ public class CacheReport {
 				return 1;
 			}
 			if (m_sort.equals("total")) {
-				return (int) (o2.getName().getTotalCount() - o1.getName().getTotalCount());
+				long result = o2.getName().getTotalCount() - o1.getName().getTotalCount();
+
+				return result == 0 ? 0 : (result > 0 ? 1 : -1);
 			} else if (m_sort.equals("missed")) {
-				return (int) (o2.getMissed() - o1.getMissed());
+				long result = o2.getMissed() - o1.getMissed();
+
+				return result == 0 ? 0 : (result > 0 ? 1 : -1);
 			} else if (m_sort.equals("hitPercent")) {
-				return (int) (o1.getHited() * 1000 - o2.getHited() * 1000);
+				double result = o1.getHited() * 1000 - o2.getHited() * 1000;
+
+				return result == 0 ? 0 : (result > 0 ? 1 : -1);
 			} else if (m_sort.equals("avg")) {
-				return (int) (o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000);
+				double result = o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000;
+
+				return result == 0 ? 0 : (result > 0 ? 1 : -1);
 			} else if (m_sort.equals("name")) {
 				return o1.getName().getId().compareTo(o2.getName().getId());
-			} else if (m_sort.equals("add")) {
-				return (int) (o2.getAdd() - o1.getAdd());
-			} else if (m_sort.equals("get")) {
-				return (int) (o2.getGet() - o1.getGet());
-			} else if (m_sort.equals("mget")) {
-				return (int) (o2.getMget() - o1.getMget());
-			} else if (m_sort.equals("remove")) {
-				return (int) (o2.getRemove() - o1.getRemove());
+			} else {
+				long result = o2.getMethodCount(m_sort) - o1.getMethodCount(m_sort);
+
+				return result == 0 ? 0 : (result > 0 ? 1 : -1);
 			}
-			return 0;
 		}
 	}
 

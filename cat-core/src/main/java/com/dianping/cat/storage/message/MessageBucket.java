@@ -6,10 +6,8 @@ import com.dianping.cat.message.spi.MessageTree;
 
 public interface MessageBucket {
 	public void close() throws IOException;
-
+	
 	public MessageTree findById(String messageId) throws IOException;
-
-	public MessageTree findByIndex(int index) throws IOException;
 
 	public long getLastAccessTime();
 

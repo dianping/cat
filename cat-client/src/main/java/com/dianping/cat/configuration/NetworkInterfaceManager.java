@@ -18,52 +18,6 @@ public enum NetworkInterfaceManager {
 		load();
 	}
 
-	public String getLocalHostAddress() {
-		return m_local.getHostAddress();
-	}
-
-	public String getLocalHostName() {
-		try {
-			return InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			return m_local.getHostName();
-		}
-	}
-
-	private void load() {
-		String ip = System.getProperty("host.ip");
-
-		if (ip != null) {
-			try {
-				m_local = InetAddress.getByName(ip);
-				return;
-			} catch (Exception e) {
-				System.err.println(e);
-				// ignore
-			}
-		}
-
-		try {
-			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
-			List<InetAddress> addresses = new ArrayList<InetAddress>();
-			InetAddress local = null;
-			
-			try {
-				for (NetworkInterface ni : nis) {
-					if (ni.isUp()) {
-						addresses.addAll(Collections.list(ni.getInetAddresses()));
-					}
-				}
-				local = findValidateIp(addresses);
-			} catch (Exception e) {
-				// ignore
-			}
-			m_local = local;
-		} catch (SocketException e) {
-			// ignore it
-		}
-	}
-
 	public InetAddress findValidateIp(List<InetAddress> addresses) {
 		InetAddress local = null;
 		for (InetAddress address : addresses) {
@@ -90,5 +44,63 @@ public enum NetworkInterfaceManager {
 			}
 		}
 		return local;
+	}
+
+	public String getLocalHostAddress() {
+		return m_local.getHostAddress();
+	}
+
+	public String getLocalHostName() {
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			return m_local.getHostName();
+		}
+	}
+
+	private String getProperty(String name) {
+		String value = null;
+
+		value = System.getProperty(name);
+		
+		if (value == null) {
+			value = System.getenv(name);
+		}
+
+		return value;
+	}
+
+	private void load() {
+		String ip = getProperty("host.ip");
+
+		if (ip != null) {
+			try {
+				m_local = InetAddress.getByName(ip);
+				return;
+			} catch (Exception e) {
+				System.err.println(e);
+				// ignore
+			}
+		}
+
+		try {
+			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
+			List<InetAddress> addresses = new ArrayList<InetAddress>();
+			InetAddress local = null;
+
+			try {
+				for (NetworkInterface ni : nis) {
+					if (ni.isUp()) {
+						addresses.addAll(Collections.list(ni.getInetAddresses()));
+					}
+				}
+				local = findValidateIp(addresses);
+			} catch (Exception e) {
+				// ignore
+			}
+			m_local = local;
+		} catch (SocketException e) {
+			// ignore it
+		}
 	}
 }

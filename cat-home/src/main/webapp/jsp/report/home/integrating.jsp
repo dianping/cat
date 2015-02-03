@@ -18,7 +18,7 @@
     </filter-mapping>
 	</xmp>
   </dd>
-	  <h5 class="text-danger">stucts会吃掉URL中的ERROR信息，请在配置中加
+	  <h5 class="text-danger">struts会吃掉URL中的ERROR信息，请在配置中加
 	  	<xmp class="well"> <constant name="struts.handle.exception" value="false" /> 
 	  	</xmp>
 	  </h5>
@@ -57,11 +57,6 @@
               <groupId>com.dianping.dpsf</groupId>
               <artifactId>dpsf-net</artifactId>
              <version>2.3.8</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping.hawk</groupId>
-              <artifactId>hawk-client</artifactId>
-             <version>0.6.7</version>
        </dependency>
        <dependency>
               <groupId>com.dianping</groupId>

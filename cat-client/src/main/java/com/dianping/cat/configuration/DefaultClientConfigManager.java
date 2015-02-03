@@ -85,8 +85,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 				if (httpPort == null || httpPort == 0) {
 					httpPort = 8080;
 				}
-				return String.format("http://%s:%d/cat/s/router?domain=%s", server.getIp().trim(), httpPort, getDomain()
-				      .getId());
+				return String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s", server.getIp().trim(), httpPort,
+				      getDomain().getId(), NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			}
 		}
 		return null;

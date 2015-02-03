@@ -14,12 +14,12 @@ import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.task.alert.AlertLevel;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class AlertExceptionBuilder {
 
 	@Inject
-	private ExceptionConfigManager m_exceptionConfigManager;
+	private ExceptionRuleConfigManager m_exceptionConfigManager;
 
 	@Inject
 	private AggregationConfigManager m_aggregationConfigManager;
@@ -54,19 +54,18 @@ public class AlertExceptionBuilder {
 			totalException += value;
 
 			if (errorLimit > 0 && value >= errorLimit) {
-				alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value, needSendSms(domain,
-				      exceptionName)));
+				alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
 			} else if (warnLimit > 0 && value >= warnLimit) {
 				alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
 			}
 		}
 
 		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-			alertExceptions.add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException,
-			      needSendSms(domain, ExceptionConfigManager.TOTAL_STRING)));
+			alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR,
+			      totalException));
 		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions
-			      .add(new AlertException(ExceptionConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
+			alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING,
+			      totalException));
 		}
 
 		return alertExceptions;
@@ -91,18 +90,8 @@ public class AlertExceptionBuilder {
 		return alertExceptions;
 	}
 
-	private boolean needSendSms(String domain, String exception) {
-		boolean send = false;
-		ExceptionLimit limit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exception);
-
-		if (limit != null) {
-			send = limit.getSmsSending();
-		}
-		return send;
-	}
-
 	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
-		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryDomainExceptionLimit(domain, exceptionName);
+		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryExceptionLimit(domain, exceptionName);
 		Pair<Double, Double> limits = new Pair<Double, Double>();
 		double warnLimit = -1;
 		double errorLimit = -1;
@@ -118,7 +107,7 @@ public class AlertExceptionBuilder {
 	}
 
 	private Pair<Double, Double> queryDomainTotalLimit(String domain) {
-		ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryDomainTotalLimit(domain);
+		ExceptionLimit totalExceptionLimit = m_exceptionConfigManager.queryTotalLimitByDomain(domain);
 		Pair<Double, Double> limits = new Pair<Double, Double>();
 		double totalWarnLimit = -1;
 		double totalErrorLimit = -1;
@@ -141,20 +130,10 @@ public class AlertExceptionBuilder {
 
 		private double m_count;
 
-		private boolean m_isTriggered;
-
 		public AlertException(String name, String type, double count) {
 			m_name = name;
 			m_type = type;
 			m_count = count;
-			m_isTriggered = false;
-		}
-
-		public AlertException(String name, String type, double count, boolean isTriggered) {
-			m_name = name;
-			m_type = type;
-			m_count = count;
-			m_isTriggered = isTriggered;
 		}
 
 		public String getName() {
@@ -163,10 +142,6 @@ public class AlertExceptionBuilder {
 
 		public String getType() {
 			return m_type;
-		}
-
-		public boolean isTriggered() {
-			return m_isTriggered;
 		}
 
 		@Override

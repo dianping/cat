@@ -48,7 +48,7 @@
 		
 		<c:choose>
 		<c:when test="${!empty model.methodInfo.callProjectsInfo}">
-			<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+			<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
@@ -63,7 +63,7 @@
 			</c:when>
 			<c:otherwise>
 				<c:if test="${!empty model.methodInfo.serviceProjectsInfo}">
-				<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+				<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 			    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
 				支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 				</th></tr>
@@ -87,7 +87,7 @@
 		<tr><td colspan="8" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
 		<tr>
 			<th class="left">Type</th>
-			<th class="left">RemoteIp</th>
+			<th class="left">RemoteId</th>
 			<th class="left">Method</th>
 			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=total&queryName=${model.queryName}">Total</a></th>
 			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=failure&queryName=${model.queryName}">Failure</a></th>
@@ -118,7 +118,7 @@
 			</tr>
 		      <tr>
 		         <th class="left">Type</th>
-				 <th class="left">RemoteIp</th>
+				 <th class="left">RemoteId</th>
 				 <th class="left">Method</th>
 		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=total&queryName=${model.queryName}">Total</a></th>
 		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failure&queryName=${model.queryName}">Failure</a></th>
@@ -128,7 +128,7 @@
 		         <c:if test="${!empty model.methodInfo.callerProjectsInfo}">
 		         	 <th></th>
 					 <th class="left">Type</th>
-					 <th class="left">RemoteIp</th>
+					 <th class="left">RemoteId</th>
 					 <th class="left">Method</th>
 			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=total&queryName=${model.queryName}">Total</a></th>
 			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failure&queryName=${model.queryName}">Failure</a></th>

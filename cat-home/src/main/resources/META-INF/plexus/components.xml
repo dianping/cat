@@ -31,8 +31,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.state.StateGraphs</role>
-			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -135,8 +135,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
+			<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1201,9 +1201,6 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
@@ -1234,6 +1231,15 @@
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.HostinfoService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 			</requirements>
@@ -1260,7 +1266,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1293,9 +1299,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3039,7 +3042,7 @@
 			<implementation>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
@@ -3051,7 +3054,7 @@
 			<implementation>com.dianping.cat.report.task.alert.exception.ExceptionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
@@ -3070,7 +3073,7 @@
 			<implementation>com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
@@ -3980,7 +3983,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.state.StateGraphs</role>
+					<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.state.StateBuilder</role>
@@ -4008,8 +4011,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.state.StateGraphs</role>
-			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<role>com.dianping.cat.report.page.state.StateGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -4286,7 +4289,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4294,8 +4297,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionConfigManager</implementation>
+			<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5386,7 +5389,7 @@
 					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionConfigManager</role>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>

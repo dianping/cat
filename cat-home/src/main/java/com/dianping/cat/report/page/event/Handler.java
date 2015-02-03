@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayNameReport(displayNames.display(sorted, type, ip, report));
 			buildEventNamePieChart(displayNames.getResults(), model);
 		} else {
-			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), report));
+			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 		}
 	}
 
@@ -231,7 +231,7 @@ public class Handler implements PageHandler<Context> {
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeManager.mergerAllIp(report, ipAddress);
-			
+
 			if (report != null) {
 				model.setReport(report);
 

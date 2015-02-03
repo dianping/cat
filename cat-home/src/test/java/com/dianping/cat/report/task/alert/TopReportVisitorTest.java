@@ -15,7 +15,7 @@ import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.task.alert.exception.TopReportVisitor;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class TopReportVisitorTest extends ComponentTestCase {
 
@@ -29,8 +29,8 @@ public class TopReportVisitorTest extends ComponentTestCase {
 
 		ExceptionConfigMock exceptionConfigManager = new ExceptionConfigMock();
 		AlertReport alertReport = new AlertReport(Constants.CAT);
-		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport).setExceptionConfigManager(
-				exceptionConfigManager).setConfigManager(new ServerConfigManager());
+		TopReportVisitor visitor = new TopReportVisitor().setReport(alertReport)
+		      .setExceptionRuleConfigManager(exceptionConfigManager).setConfigManager(new ServerConfigManager());
 
 		alertReport.setStartTime(topReport.getStartTime());
 		alertReport.setEndTime(topReport.getEndTime());
@@ -40,7 +40,7 @@ public class TopReportVisitorTest extends ComponentTestCase {
 		      .replace("\r", ""));
 	}
 
-	public class ExceptionConfigMock extends ExceptionConfigManager {
+	public class ExceptionConfigMock extends ExceptionRuleConfigManager {
 
 		private Map<String, ExceptionLimit> exceptionLimitMap = new HashMap<String, ExceptionLimit>();
 
@@ -91,15 +91,15 @@ public class TopReportVisitorTest extends ComponentTestCase {
 
 		}
 
-		public ExceptionLimit queryDomainExceptionLimit(String domain, String exceptionName) {
+		public ExceptionLimit queryExceptionLimit(String domain, String exceptionName) {
 			return exceptionLimitMap.get(domain + "_" + exceptionName);
 		}
 
-		public ExceptionLimit queryDomainTotalLimit(String domain) {
+		public ExceptionLimit queryTotalLimitByDomain(String domain) {
 			return exceptionLimitMap.get(domain);
 		}
 
-		public ExceptionExclude queryDomainExceptionExclude(String domain, String exceptionName) {
+		public ExceptionExclude queryExceptionExclude(String domain, String exceptionName) {
 			ExceptionExclude exceptionExclude = null;
 			exceptionExclude = exceptionExcludeMap.get(domain + "_" + exceptionName);
 			if (exceptionExclude == null) {

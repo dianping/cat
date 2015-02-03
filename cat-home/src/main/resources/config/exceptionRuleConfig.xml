@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exception-rule-config>
+      <exception-limit id="cat:Total" domain="cat" name="Total" warning="100" error="300" />
+      <exception-exclude id="cat:org.apache.hadoop.ipc.RemoteException" domain="cat" name="org.apache.hadoop.ipc.RemoteException"/>
+      <exception-exclude id="cat:java.net.ConnectException" domain="cat" name="java.net.ConnectException"/>
+      <exception-limit id="Default:Total" domain="Default" name="Total" warning="200" error="400" />
+      <exception-exclude id="Default:com.mongodb.MongoException$Network" domain="Default" name="com.mongodb.MongoException$Network"/>
+      <exception-exclude id="Default:net.spy.memcached.internal.CheckedOperationTimeoutException" domain="Default" name="net.spy.memcached.internal.CheckedOperationTimeoutException"/>
+</exception-rule-config>
+

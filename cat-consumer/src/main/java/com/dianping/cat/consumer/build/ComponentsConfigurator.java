@@ -15,10 +15,10 @@ import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.IpConvertManager;
+import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.dependency.DatabaseParser;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
@@ -48,11 +48,10 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.hadoop.hdfs.LogviewUploader;
+import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.service.DefaultReportManager;
-import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
@@ -130,7 +129,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class)//
-		      .req(LogviewUploader.class));
+		      .req(HdfsUploader.class));
 
 		return all;
 	}
@@ -224,12 +223,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ProjectService.class).req(ProjectDao.class, ServerConfigManager.class));
 		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class, ServerStatisticManager.class));
+		      .req(ServerStatisticManager.class, ServerConfigManager.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, StateDelegate.class).req(TaskManager.class, ReportBucketManager.class));
+		all.add(C(ReportDelegate.class, ID, StateDelegate.class) //
+		      .req(TaskManager.class, ReportBucketManager.class));
 
 		return all;
 	}

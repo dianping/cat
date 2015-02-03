@@ -25,7 +25,7 @@
 			$('#exception').addClass('active');
 			var type = "${payload.type}";
 			if (type == '') {
-				type = '异常阈值';
+				type = 'threshold';
 			}
 			$('#tab-' + type).addClass('active');
 			$('#tabContent-' + type).addClass('active');
@@ -50,18 +50,14 @@
 			<div class="tabbable tabs-left" id="content">
 				<!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs">
-					<c:set var="keys" value="异常阈值,异常过滤" />
-					<c:forEach var="key" items="${keys}" varStatus="status">
-						<li id="tab-${key}" class="text-right"><a
-							href="#tabContent-${key}" data-toggle="tab">${key}</a></li>
-					</c:forEach>
+					<li id="tab-threshold" class="text-right"><a href="#tabContent-threshold" data-toggle="tab">异常阈值</a></li>
+					<li id="tab-exclude" class="text-right"><a href="#tabContent-exclude" data-toggle="tab">异常过滤</a></li>
 				</ul>
 				<div class="tab-content">
-					<div class="tab-pane" id="tabContent-异常阈值">
+					<div class="tab-pane" id="tabContent-threshold">
 						<h5 class="text-center text-danger">异常阈值配置</h5>
-						<table
-							class="table table-striped table-condensed table-bordered  table-hover"
-							id="content-异常阈值" width="100%">
+						<table class="table table-striped table-condensed table-bordered  table-hover"
+							id="content-threshold" width="100%">
 							<thead>
 								<tr >
 									<th width="25%">域名</th>
@@ -78,13 +74,13 @@
 									varStatus="status">
 									<tr class="">
 										<td>${item.domain}</td>
-										<td>${item.id}</td>
+										<td>${item.name}</td>
 										<td>${item.warning}</td>
 										<td>${item.error}</td>
 										<td>
-							<a href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.id}" class="btn btn-primary btn-xs">
+							<a href="?op=exceptionThresholdUpdate&domain=${item.domain}&exception=${item.name}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.id}&type=异常阈值" class="btn btn-danger btn-xs delete" >
+						<a href="?op=exceptionThresholdDelete&domain=${item.domain}&exception=${item.name}&type=threshold" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
 										</td>
 									</tr>
@@ -93,16 +89,15 @@
 						</table>
 					</div>
 
-					<div class="tab-pane" id="tabContent-异常过滤">
+					<div class="tab-pane" id="tabContent-exclude">
 						<h5 class="text-center text-danger">异常过滤配置</h5>
-						<table
-							class="table table-striped table-condensed  table-bordered table-hover"
-							id="contents-异常过滤" width="100%">
+						<table class="table table-striped table-condensed  table-bordered table-hover"
+							id="contents-exclude" width="100%">
 							<thead>
 								<tr >
-									<th width="25%">域名</th>
+									<th width="35%">域名</th>
 									<th width="60%">异常名称</th>
-									<th width="8%">操作 <a href="?op=exceptionExcludeAdd" class="btn btn-primary btn-xs" >
+									<th width="5%"><a href="?op=exceptionExcludeAdd" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 								</tr>
 							</thead>
@@ -111,12 +106,9 @@
 									varStatus="status">
 									<tr class="">
 										<td>${item.domain}</td>
-										<td>${item.id}</td>
-										<td>
-											<a href="?op=exceptionExcludeUpdate&domain=${item.domain}&exception=${item.id}" class="btn btn-primary btn-xs">
-						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.id}&type=异常过滤" class="btn btn-danger btn-xs delete" >
-						<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+										<td>${item.name}</td>
+										<td><a href="?op=exceptionExcludeDelete&domain=${item.domain}&exception=${item.name}&type=exclude" class="btn btn-danger btn-xs delete" >
+										<i class="ace-icon fa fa-trash-o bigger-120"></i></a>
 										</td>
 									</tr>
 								</c:forEach>

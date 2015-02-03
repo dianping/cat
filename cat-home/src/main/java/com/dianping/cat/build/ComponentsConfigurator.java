@@ -45,7 +45,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.state.StateGraphs;
+import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
@@ -62,7 +62,7 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.BusinessRuleConfigManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
@@ -91,7 +91,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
-		all.add(C(StateGraphs.class, StateGraphs.class).//
+		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
 		      req(ReportServiceManager.class, ServerConfigManager.class));
 		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
@@ -159,7 +159,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ExceptionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetworkRuleConfigManager.class)

@@ -10,7 +10,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case VIEW:
+		case LINECHART:
 			return JspFile.VIEW.getPath();
 		case PIECHART:
 			return JspFile.PIECHART.getPath();

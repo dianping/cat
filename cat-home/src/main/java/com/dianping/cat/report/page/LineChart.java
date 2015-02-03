@@ -229,4 +229,8 @@ public class LineChart {
 		}
 		return min;
 	}
+	
+	public String toString(){
+		return new JsonBuilder().toJson(this);
+	}
 }

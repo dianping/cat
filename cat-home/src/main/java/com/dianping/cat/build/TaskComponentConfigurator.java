@@ -88,7 +88,7 @@ import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.ExceptionConfigManager;
+import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 
@@ -137,25 +137,27 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(ReportServiceManager.class,
-		      HostinfoService.class, ServerConfigManager.class));
+		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(ReportServiceManager.class));
 
 		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(ReportServiceManager.class));
 
-		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class).req(ReportServiceManager.class));
+		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //
+		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
+		      .req(ReportServiceManager.class));
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(ReportServiceManager.class,
 		      RouterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(ReportServiceManager.class,
-		      ExceptionConfigManager.class, ServerConfigManager.class));
+		      ExceptionRuleConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(ReportServiceManager.class,
 		      ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
-		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class, HostinfoService.class));
+		      ReportServiceManager.class, TransactionMergeHelper.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      ReportServiceManager.class, TopologyGraphBuilder.class, TopologyGraphDao.class));

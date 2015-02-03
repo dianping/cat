@@ -77,7 +77,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 			if (m_failureTypes.contains(type)) {
 				type = transaction.getType();
 				// make it march for alarm
-				if (m_configManager.isClient(type)) {
+				if (m_configManager.isRpcClient(type)) {
 					type = "call";
 				}
 				status = transaction.getName();

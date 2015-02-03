@@ -19,11 +19,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public StateReport m_report;
 
 	@EntityMeta
-	public StateShow m_state;
+	public StateDisplay m_state;
 	
 	public String m_message;
 
 	public String m_graph;
+	
+	public String m_pieChart;
 	
 	public Model(Context ctx) {
 		super(ctx);
@@ -63,7 +65,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_report;
 	}
 
-	public StateShow getState() {
+	public StateDisplay getState() {
 		return m_state;
 	}
 
@@ -79,7 +81,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_report = reports;
 	}
 
-	public void setState(StateShow state) {
+	public void setState(StateDisplay state) {
 		m_state = state;
 	}
+
+	public String getPieChart() {
+   	return m_pieChart;
+   }
+
+	public void setPieChart(String pieChart) {
+   	m_pieChart = pieChart;
+   }
+	
 }

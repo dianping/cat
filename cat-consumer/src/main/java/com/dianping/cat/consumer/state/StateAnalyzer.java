@@ -17,11 +17,8 @@ import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -34,12 +31,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
-
-	@Inject
-	private ProjectService m_projectService;
-
-	@Inject
-	private HostinfoService m_hostinfoService;
 
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -202,31 +193,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 			machine.findOrCreateProcessDomain(domain).addIp(ip);
-			if (!m_projectService.containsDomainInCat(domain)) {
-				boolean insert = m_projectService.insertDomain(domain);
-
-				if (!insert) {
-					m_logger.warn(String.format("Error when insert domain %s info", domain));
-				}
-			}
-			Hostinfo info = m_hostinfoService.findByIp(ip);
-
-			if (info == null) {
-				m_hostinfoService.insert(domain, ip);
-			} else {
-				String oldDomain = info.getDomain();
-
-				if (!domain.equals(oldDomain) && !Constants.CAT.equals(oldDomain)) {
-					// only work on online environment
-					long current = System.currentTimeMillis();
-					Date lastModifiedDate = info.getLastModifiedDate();
-
-					if (lastModifiedDate != null && (current - lastModifiedDate.getTime()) > ONE_HOUR) {
-						m_hostinfoService.update(info.getId(), domain, ip);
-						m_logger.info(String.format("old domain is %s , change ip %s to %s", oldDomain, ip, domain));
-					}
-				}
-			}
 		}
 	}
 }

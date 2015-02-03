@@ -187,7 +187,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			processLongCache(machine, transaction, tree);
 		} else if (type.equals("SQL")) {
 			processLongSql(machine, transaction, tree);
-		} else if (m_configManager.isClient(type)) {
+		} else if (m_configManager.isRpcClient(type)) {
 			processLongCall(machine, transaction, tree);
 		}
 
