@@ -187,7 +187,6 @@ public class Handler implements PageHandler<Context> {
 				payload.setAction("history");
 			}
 		}
-
 		if (StringUtils.isEmpty(payload.getRemoteIp())) {
 			if (payload.getAction() == Action.HOURLY_METHOD) {
 				payload.setAction("view");

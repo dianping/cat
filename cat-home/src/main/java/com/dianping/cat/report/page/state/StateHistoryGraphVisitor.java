@@ -65,10 +65,10 @@ public class StateHistoryGraphVisitor extends BaseVisitor {
 
 		long count = old.getDelayCount();
 		double sum = old.getDelaySum();
+		
 		if (count > 0) {
 			old.setDelayAvg(sum / count);
 		}
-
 		return old;
 	}
 

@@ -70,7 +70,7 @@ public class SystemReportBuilder implements TaskBuilder {
 				try {
 					MetricReport r = m_reportService.queryMetricReport(productLine, sDate, eDate);
 
-					r.accept(statistics);
+					statistics.visitMetricReport(r);
 				} catch (Exception e) {
 					Cat.logError(productLine + " system report visitor error", e);
 				}
