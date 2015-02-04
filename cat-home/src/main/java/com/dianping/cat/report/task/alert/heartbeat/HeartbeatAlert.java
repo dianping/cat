@@ -56,25 +56,26 @@ public class HeartbeatAlert extends BaseAlert {
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
 
-	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
-		for (String id : extractExtentionMetrics(period)) {
-			double[] array = map.get(id);
+	private void buildArrayForExtensions(Map<String, double[]> map, Period period) {
+		List<String> metrics = extractExtentionMetrics(period);
+		int index = period.getMinute();
+
+		for (String metric : metrics) {
+			double[] array = map.get(metric);
 
 			if (array == null) {
 				array = new double[60];
-				map.put(id, array);
+				map.put(metric, array);
 			}
 			try {
-				String[] str = id.split(",");
-				int unit = m_displayManager.queryUnit(str[0], str[1]);
-				for (Extension extension : period.getExtensions().values()) {
-					Detail detail = extension.findDetail(id);
+				String[] str = metric.split(":");
+				String groupName = str[0];
+				String metricName = str[1];
+				
+				int unit = m_displayManager.queryUnit(groupName, metricName);
+				Detail detail = period.findOrCreateExtension(groupName).findOrCreateDetail(metricName);
 
-					if (detail != null) {
-						array[index] = detail.getValue() / unit;
-						return;
-					}
-				}
+				array[index] = detail.getValue() / unit;
 			} catch (Exception e) {
 				array[index] = 0;
 			}
@@ -153,9 +154,11 @@ public class HeartbeatAlert extends BaseAlert {
 		List<String> metrics = new ArrayList<String>();
 
 		for (Extension extension : period.getExtensions().values()) {
-			Set<String> tmpMetrics = extension.getDetails().keySet();
+			Map<String, Detail> details = extension.getDetails();
 
-			metrics.addAll(tmpMetrics);
+			for (Entry<String, Detail> detail : details.entrySet()) {
+				metrics.add(extension.getId() + ":" + detail.getKey());
+			}
 		}
 		return metrics;
 	}
@@ -166,9 +169,8 @@ public class HeartbeatAlert extends BaseAlert {
 
 		for (int index = 0; index < periods.size(); index++) {
 			Period period = periods.get(index);
-			int minute = period.getMinute();
 
-			buildArrayForExtensions(map, minute, period);
+			buildArrayForExtensions(map, period);
 		}
 		convertDeltaMetrics(map);
 		return map;
