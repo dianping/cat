@@ -31,7 +31,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -53,31 +53,13 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private DisplayPolicyManager m_manager;
+	private HeartbeatDisplayPolicyManager m_manager;
 
-	private void buildHeartbeatGraphInfo(Model model, HeartbeatSvg displayHeartbeat) {
+	private void buildHeartbeatGraphInfo(Model model, HeartbeatSvgGraph displayHeartbeat) {
 		if (displayHeartbeat == null) {
 			return;
 		}
 		model.setResult(displayHeartbeat);
-		model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
-		model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
-		model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
-		model.setHttpThreadGraph(displayHeartbeat.getHttpTheadGraph());
-		model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
-		model.setCatThreadGraph(displayHeartbeat.getCatThreadGraph());
-		model.setPigeonThreadGraph(displayHeartbeat.getPigeonTheadGraph());
-		model.setCatMessageProducedGraph(displayHeartbeat.getCatMessageProducedGraph());
-		model.setCatMessageOverflowGraph(displayHeartbeat.getCatMessageOverflowGraph());
-		model.setCatMessageSizeGraph(displayHeartbeat.getCatMessageSizeGraph());
-		model.setNewGcCountGraph(displayHeartbeat.getNewGcCountGraph());
-		model.setOldGcCountGraph(displayHeartbeat.getOldGcCountGraph());
-		model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
-		model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
-		model.setDisks(displayHeartbeat.getDisks());
-		model.setDisksGraph(displayHeartbeat.getDisksGraph());
-		model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
-		model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 		model.setExtensionGraph(displayHeartbeat.getExtensionGraph());
 	}
 
@@ -147,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		HeartbeatSvg heartbeat = null;
+		HeartbeatSvgGraph heartbeat = null;
 
 		normalize(model, payload);
 		switch (payload.getAction()) {
@@ -189,7 +171,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private HeartbeatSvg showReport(Model model, Payload payload) {
+	private HeartbeatSvgGraph showReport(Model model, Payload payload) {
 		try {
 			HeartbeatReport report = getReport(payload.getDomain(), payload.getIpAddress(), payload.getDate(),
 			      payload.getPeriod());
@@ -198,7 +180,7 @@ public class Handler implements PageHandler<Context> {
 				String displayIp = getIpAddress(report, payload);
 
 				payload.setRealIp(displayIp);
-				return new HeartbeatSvg(m_builder, m_manager).display(report, displayIp);
+				return new HeartbeatSvgGraph(m_builder, m_manager).display(report, displayIp);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);

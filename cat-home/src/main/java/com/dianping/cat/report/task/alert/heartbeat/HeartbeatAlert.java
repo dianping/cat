@@ -36,7 +36,7 @@ import com.dianping.cat.report.task.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.BaseRuleConfigManager;
-import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 
 public class HeartbeatAlert extends BaseAlert {
@@ -48,7 +48,7 @@ public class HeartbeatAlert extends BaseAlert {
 	private ModelService<TransactionReport> m_transactionService;
 
 	@Inject
-	private DisplayPolicyManager m_displayManager;
+	private HeartbeatDisplayPolicyManager m_displayManager;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -56,27 +56,19 @@ public class HeartbeatAlert extends BaseAlert {
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
 
-	private void buildArray(Map<String, double[]> map, int index, String name, double value) {
-		double[] array = map.get(name);
-		if (array == null) {
-			array = new double[60];
-			map.put(name, array);
-		}
-		array[index] = value;
-	}
-
 	private void buildArrayForExtensions(Map<String, double[]> map, int index, Period period) {
-		for (String metricName : extractExtentionMetrics(period)) {
-			double[] array = map.get(metricName);
+		for (String id : extractExtentionMetrics(period)) {
+			double[] array = map.get(id);
 
 			if (array == null) {
 				array = new double[60];
-				map.put(metricName, array);
+				map.put(id, array);
 			}
 			try {
-				int unit = m_displayManager.queryUnit(metricName);
+				String[] str = id.split(",");
+				int unit = m_displayManager.queryUnit(str[0], str[1]);
 				for (Extension extension : period.getExtensions().values()) {
-					Detail detail = extension.findDetail(metricName);
+					Detail detail = extension.findDetail(id);
 
 					if (detail != null) {
 						array[index] = detail.getValue() / unit;
@@ -107,9 +99,11 @@ public class HeartbeatAlert extends BaseAlert {
 	}
 
 	private void convertDeltaMetrics(Map<String, double[]> map) {
-		for (String metric : map.keySet()) {
-			if (m_displayManager.isDelta(metric)) {
-				convertToDelta(map, metric);
+		for (String id : map.keySet()) {
+			String[] str = id.split(",");
+
+			if (m_displayManager.isDelta(str[0], str[1])) {
+				convertToDelta(map, id);
 			}
 		}
 	}
@@ -174,20 +168,6 @@ public class HeartbeatAlert extends BaseAlert {
 			Period period = periods.get(index);
 			int minute = period.getMinute();
 
-			buildArray(map, minute, "ThreadCount", period.getThreadCount());
-			buildArray(map, minute, "DaemonCount", period.getDaemonCount());
-			buildArray(map, minute, "TotalStartedCount", period.getTotalStartedCount());
-			buildArray(map, minute, "CatThreadCount", period.getCatThreadCount());
-			buildArray(map, minute, "PiegonThreadCount", period.getPigeonThreadCount());
-			buildArray(map, minute, "HttpThreadCount", period.getHttpThreadCount());
-			buildArray(map, minute, "NewGcCount", period.getNewGcCount());
-			buildArray(map, minute, "OldGcCount", period.getOldGcCount());
-			buildArray(map, minute, "MemoryFree", period.getMemoryFree());
-			buildArray(map, minute, "HeapUsage", period.getHeapUsage());
-			buildArray(map, minute, "NoneHeapUsage", period.getNoneHeapUsage());
-			buildArray(map, minute, "SystemLoadAverage", period.getSystemLoadAverage());
-			buildArray(map, minute, "CatMessageOverflow", period.getCatMessageOverflow());
-			buildArray(map, minute, "CatMessageSize", period.getCatMessageSize());
 			buildArrayForExtensions(map, minute, period);
 		}
 		convertDeltaMetrics(map);

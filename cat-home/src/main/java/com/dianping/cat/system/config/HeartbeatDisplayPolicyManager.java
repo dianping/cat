@@ -17,12 +17,12 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.heartbeat.entity.DisplayPolicy;
+import com.dianping.cat.home.heartbeat.entity.HeartbeatDisplayPolicy;
 import com.dianping.cat.home.heartbeat.entity.Group;
 import com.dianping.cat.home.heartbeat.entity.Metric;
 import com.dianping.cat.home.heartbeat.transform.DefaultSaxParser;
 
-public class DisplayPolicyManager implements Initializable {
+public class HeartbeatDisplayPolicyManager implements Initializable {
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -34,11 +34,11 @@ public class DisplayPolicyManager implements Initializable {
 
 	private int m_configId;
 
-	private DisplayPolicy m_config;
+	private HeartbeatDisplayPolicy m_config;
 
-	private static final String CONFIG_NAME = "displayPolicy";
+	private static final String CONFIG_NAME = "heartbeat-display-policy";
 
-	public DisplayPolicy getDisplayPolicy() {
+	public HeartbeatDisplayPolicy getHeartbeatDisplayPolicy() {
 		return m_config;
 	}
 
@@ -68,7 +68,7 @@ public class DisplayPolicyManager implements Initializable {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new DisplayPolicy();
+			m_config = new HeartbeatDisplayPolicy();
 		}
 	}
 
@@ -83,8 +83,10 @@ public class DisplayPolicyManager implements Initializable {
 		}
 	}
 
-	public boolean isDelta(String metricName) {
-		for (Group group : m_config.getGroups().values()) {
+	public boolean isDelta(String groupName, String metricName) {
+		Group group = m_config.findGroup(groupName);
+
+		if (group != null) {
 			Metric metric = group.findMetric(metricName);
 
 			if (metric != null) {
@@ -93,33 +95,52 @@ public class DisplayPolicyManager implements Initializable {
 		}
 		return false;
 	}
+	
+	public Metric queryMetric(String groupName,String metricName){
+		Group group = m_config.findGroup(groupName);
+
+		if (group != null) {
+			Metric metric = group.findMetric(metricName);
+
+			if (metric != null) {
+				return metric;
+			}
+		}
+		return null;
+	}
 
 	public List<String> queryAlertMetrics() {
 		List<String> metrics = new ArrayList<String>();
 
 		for (Group group : m_config.getGroups().values()) {
+			String groupId = group.getId();
+			
 			for (Metric metric : group.getMetrics().values()) {
 				if (metric.isAlert()) {
-					metrics.add(metric.getId());
+					metrics.add(groupId + ":" + metric.getId());
 				}
 			}
 		}
 		return metrics;
 	}
 
-	public int queryUnit(String metricName) {
-		for (Group group : m_config.getGroups().values()) {
-			if (group.findMetric(metricName) != null) {
-				Metric metric = group.findMetric(metricName);
+	public int queryUnit(String groupName, String metricName) {
+		Group group = m_config.findGroup(groupName);
 
-				if (metric != null) {
-					String metricUnit = metric.getUnit();
+		if (group != null) {
+			Metric metric = group.findMetric(metricName);
 
-					if ("K".equals(metricUnit)) {
-						return K;
-					} else if ("M".equals(metricUnit)) {
-						return K * K;
-					}
+			if (metric != null) {
+				String metricUnit = metric.getUnit();
+
+				if ("K".equals(metricUnit)) {
+					return K;
+				} else if ("M".equals(metricUnit)) {
+					return K * K;
+				} else if ("G".equals(metricUnit)) {
+					return K * K * K;
+				} else {
+					return Integer.parseInt(metricUnit);
 				}
 			}
 		}

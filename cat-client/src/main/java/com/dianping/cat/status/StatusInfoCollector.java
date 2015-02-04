@@ -35,21 +35,11 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	private String m_dataPath = "/data";
 
+	private StatusInfo m_statusInfo;
+
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
 		m_statistics = statistics;
 		m_jars = jars;
-	}
-
-	private void appendExtension(StatusInfo status) {
-		Extension heapUsage = new Extension("HeapUsage");
-		status.addExtension(heapUsage);
-
-		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
-			long count = mpBean.getUsage().getUsed();
-			String name = mpBean.getName().replace(" ", "");
-
-			heapUsage.setDynamicAttribute(name, Long.toString(count));
-		}
 	}
 
 	private int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
@@ -141,11 +131,14 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	@Override
 	public void visitDiskVolume(DiskVolumeInfo diskVolume) {
+		Extension diskExtension = m_statusInfo.findOrCreateExtension("Disk");
 		File volume = new File(diskVolume.getId());
 
 		diskVolume.setTotal(volume.getTotalSpace());
 		diskVolume.setFree(volume.getFreeSpace());
 		diskVolume.setUsable(volume.getUsableSpace());
+
+		diskExtension.findOrCreateExtensionDetail(diskVolume.getId() + " Free").setValue(volume.getFreeSpace());
 	}
 
 	@Override
@@ -160,16 +153,30 @@ public class StatusInfoCollector extends BaseVisitor {
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
 
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
+		Extension gcExtension = m_statusInfo.findOrCreateExtension("GC");
 
 		for (GarbageCollectorMXBean mxbean : beans) {
 			if (mxbean.isValid()) {
 				GcInfo gc = new GcInfo();
+				String name = mxbean.getName();
+				long count = mxbean.getCollectionCount();
 
-				gc.setName(mxbean.getName());
-				gc.setCount(mxbean.getCollectionCount());
+				gc.setName(name);
+				gc.setCount(count);
 				gc.setTime(mxbean.getCollectionTime());
 				memory.addGc(gc);
+
+				gcExtension.findOrCreateExtensionDetail(name + "Count").setValue(count);
+				gcExtension.findOrCreateExtensionDetail(name + "Time").setValue(mxbean.getCollectionTime());
 			}
+		}
+		Extension heapUsage = m_statusInfo.findOrCreateExtension("JVMHeap");
+
+		for (MemoryPoolMXBean mpBean : ManagementFactory.getMemoryPoolMXBeans()) {
+			long count = mpBean.getUsage().getUsed();
+			String name = mpBean.getName();
+
+			heapUsage.findOrCreateExtensionDetail(name).setValue(count);
 		}
 
 		super.visitMemory(memory);
@@ -177,15 +184,18 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	@Override
 	public void visitMessage(MessageInfo message) {
+		Extension catExtension = m_statusInfo.findOrCreateExtension("CatUsage");
+
 		if (m_statistics != null) {
-			message.setProduced(m_statistics.getProduced());
-			message.setOverflowed(m_statistics.getOverflowed());
-			message.setBytes(m_statistics.getBytes());
+			catExtension.findOrCreateExtensionDetail("Produced").setValue(m_statistics.getProduced());
+			catExtension.findOrCreateExtensionDetail("Overflowed").setValue(m_statistics.getOverflowed());
+			catExtension.findOrCreateExtensionDetail("Bytes").setValue(m_statistics.getBytes());
 		}
 	}
 
 	@Override
 	public void visitOs(OsInfo os) {
+		Extension systemExtension = m_statusInfo.findOrCreateExtension("System");
 		OperatingSystemMXBean bean = ManagementFactory.getOperatingSystemMXBean();
 
 		os.setArch(bean.getArch());
@@ -193,6 +203,8 @@ public class StatusInfoCollector extends BaseVisitor {
 		os.setVersion(bean.getVersion());
 		os.setAvailableProcessors(bean.getAvailableProcessors());
 		os.setSystemLoadAverage(bean.getSystemLoadAverage());
+
+		systemExtension.findOrCreateExtensionDetail("LoadAverage").setValue(bean.getSystemLoadAverage());
 
 		// for Sun JDK
 		if (isInstanceOfInterface(bean.getClass(), "com.sun.management.OperatingSystemMXBean")) {
@@ -204,7 +216,11 @@ public class StatusInfoCollector extends BaseVisitor {
 			os.setFreeSwapSpace(b.getFreeSwapSpaceSize());
 			os.setProcessTime(b.getProcessCpuTime());
 			os.setCommittedVirtualMemory(b.getCommittedVirtualMemorySize());
+
+			systemExtension.findOrCreateExtensionDetail("FreePhysicalMemory").setValue(b.getFreePhysicalMemorySize());
+			systemExtension.findOrCreateExtensionDetail("FreeSwapSpaceSize").setValue(b.getFreeSwapSpaceSize());
 		}
+		m_statusInfo.addExtension(systemExtension);
 	}
 
 	@Override
@@ -228,13 +244,14 @@ public class StatusInfoCollector extends BaseVisitor {
 		status.setMemory(new MemoryInfo());
 		status.setThread(new ThreadsInfo());
 		status.setMessage(new MessageInfo());
+		m_statusInfo = status;
 
 		super.visitStatus(status);
-		appendExtension(status);
 	}
 
 	@Override
 	public void visitThread(ThreadsInfo thread) {
+		Extension frameworkThread = m_statusInfo.findOrCreateExtension("FrameworkThread");
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 
 		bean.setThreadContentionMonitoringEnabled(true);
@@ -251,14 +268,20 @@ public class StatusInfoCollector extends BaseVisitor {
 		thread.setDaemonCount(bean.getDaemonThreadCount());
 		thread.setPeekCount(bean.getPeakThreadCount());
 		thread.setTotalStartedCount((int) bean.getTotalStartedThreadCount());
-		thread.setCatThreadCount(countThreadsByPrefix(threads, "Cat-"));
-		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-",
-		      "Client-ResponseProcessor"));
 
 		int jbossThreadsCount = countThreadsByPrefix(threads, "http-", "catalina-exec-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
 
-		thread.setHttpThreadCount(jbossThreadsCount + jettyThreadsCount);
 		thread.setDump(getThreadDump(threads));
+
+		frameworkThread.findOrCreateExtensionDetail("HttpThread").setValue(jbossThreadsCount + jettyThreadsCount);
+		frameworkThread.findOrCreateExtensionDetail("CatThread").setValue(countThreadsByPrefix(threads, "Cat-"));
+		frameworkThread.findOrCreateExtensionDetail("PigeonThread").setValue(
+		      countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-", "Client-ResponseProcessor"));
+		frameworkThread.findOrCreateExtensionDetail("ActiveThread").setValue(bean.getThreadCount());
+		frameworkThread.findOrCreateExtensionDetail("StartedThread").setValue(bean.getTotalStartedThreadCount());
+
+		m_statusInfo.addExtension(frameworkThread);
 	}
+
 }

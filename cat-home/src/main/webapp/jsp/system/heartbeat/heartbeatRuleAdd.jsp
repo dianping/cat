@@ -35,20 +35,6 @@
 					        项目：<textarea name="productlineText" class="productlineText" type=" text" placeholder="支持正则,为空即为全局规则"></textarea>
 					        指标：
 					        <select name="metricText" class="metricText">
-					        	<option value="ThreadCount">ThreadCount</option>
-					        	<option value="DaemonCount">DaemonCount</option>
-					        	<option value="TotalStartedCount">TotalStartedCount</option>
-					        	<option value="CatThreadCount">CatThreadCount</option>
-					        	<option value="PiegonThreadCount">PiegonThreadCount</option>
-					        	<option value="HttpThreadCount">HttpThreadCount</option>
-					        	<option value="NewGcCount">NewGcCount</option>
-					        	<option value="OldGcCount">OldGcCount</option>
-					        	<option value="MemoryFree">MemoryFree</option>
-					        	<option value="HeapUsage">HeapUsage</option>
-					        	<option value="NoneHeapUsage">NoneHeapUsage</option>
-					        	<option value="SystemLoadAverage">SystemLoadAverage</option>
-					        	<option value="CatMessageOverflow">CatMessageOverflow</option>
-					        	<option value="CatMessageSize">CatMessageSize</option>
 					        	<c:forEach var="metric" items="${model.heartbeatExtensionMetrics}" >
 					        		<option value="${metric}">${metric}</option>
 					        	</c:forEach>
