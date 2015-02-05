@@ -50,7 +50,7 @@ public class JarReportBuilder implements TaskBuilder {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(period, end, HeartbeatAnalyzer.ID);
 		JarReport jarReport = new JarReport();
-		HearbeartReportVisitor visitor = new HearbeartReportVisitor(jarReport);
+		HeartbeatReportVisitor visitor = new HeartbeatReportVisitor(jarReport);
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
@@ -75,13 +75,13 @@ public class JarReportBuilder implements TaskBuilder {
 		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
-	public class HearbeartReportVisitor extends BaseVisitor {
+	public class HeartbeatReportVisitor extends BaseVisitor {
 
 		private String m_currentDomain;
 
 		private JarReport m_jarReport;
 
-		public HearbeartReportVisitor(JarReport jarReport) {
+		public HeartbeatReportVisitor(JarReport jarReport) {
 			m_jarReport = jarReport;
 		}
 
