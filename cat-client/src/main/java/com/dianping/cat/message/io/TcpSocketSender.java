@@ -97,7 +97,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		while (m_active) {
 			ChannelFuture channel = m_manager.channel();
 
-			if (checkWritable(channel)) {
+			if (channel != null && checkWritable(channel)) {
 				try {
 					MessageTree tree = m_queue.poll();
 

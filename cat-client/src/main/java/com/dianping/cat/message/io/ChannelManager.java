@@ -73,7 +73,12 @@ public class ChannelManager implements Task {
 			List<InetSocketAddress> configedAddresses = parseSocketAddress(serverConfig);
 			ChannelHolder holder = initChannel(configedAddresses, serverConfig);
 
-			m_activeChannelHolder = holder;
+			if (holder != null) {
+				m_activeChannelHolder = holder;
+			} else {
+				m_activeChannelHolder = new ChannelHolder();
+				m_activeChannelHolder.setServerAddresses(configedAddresses);
+			}
 		} else {
 			ChannelHolder holder = initChannel(serverAddresses, null);
 
@@ -168,7 +173,11 @@ public class ChannelManager implements Task {
 	}
 
 	public ChannelFuture channel() {
-		return m_activeChannelHolder.getActiveFuture();
+		if (m_activeChannelHolder != null) {
+			return m_activeChannelHolder.getActiveFuture();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
