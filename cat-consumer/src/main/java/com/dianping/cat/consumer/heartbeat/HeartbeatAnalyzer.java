@@ -79,7 +79,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		MessageInfo message = info.getMessage();
 
 		if (message.getProduced() > 0 || message.getBytes() > 0) {
-
 			catExtension.findOrCreateExtensionDetail("Produced").setValue(message.getProduced());
 			catExtension.findOrCreateExtensionDetail("Overflowed").setValue(message.getOverflowed());
 			catExtension.findOrCreateExtensionDetail("Bytes").setValue(message.getBytes());
