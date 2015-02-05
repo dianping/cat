@@ -56,7 +56,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public String getType() {
 		return m_type;
 	}
-
+	
 	public boolean isXml() {
 		return m_xml;
 	}

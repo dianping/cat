@@ -79,7 +79,7 @@
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class=" right">
 					<td class="left"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
-					&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
+					&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}"> ${item.detail.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
 					<td>&nbsp;${w:format(e.failPercent/100,'0.0000%')}</td>
