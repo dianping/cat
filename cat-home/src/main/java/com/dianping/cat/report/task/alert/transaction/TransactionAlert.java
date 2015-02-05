@@ -47,7 +47,12 @@ public class TransactionAlert extends BaseAlert {
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
 
-	private double[] buildArrayData(int start, int end, String type, String name, TransactionReport report) {
+	private static String AVG = "avg";
+
+	private static String COUNT = "count";
+
+	private double[] buildArrayData(int start, int end, String type, String name, String monitor,
+	      TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
 		Map<Integer, Range> range = transactionName.getRanges();
@@ -55,18 +60,25 @@ public class TransactionAlert extends BaseAlert {
 		double[] datas = new double[60];
 		double[] result = new double[length];
 
-		for (Entry<Integer, Range> entry : range.entrySet()) {
-			datas[entry.getKey()] = entry.getValue().getAvg();
+		if (AVG.equalsIgnoreCase(monitor)) {
+			for (Entry<Integer, Range> entry : range.entrySet()) {
+				datas[entry.getKey()] = entry.getValue().getAvg();
+			}
+		} else if (COUNT.equalsIgnoreCase(monitor)) {
+			for (Entry<Integer, Range> entry : range.entrySet()) {
+				datas[entry.getKey()] = entry.getValue().getCount();
+			}
 		}
 		System.arraycopy(datas, start, result, 0, length);
 
 		return result;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, List<Config> configs,
-	      int minute) {
+	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, String monitor,
+	      List<Config> configs) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
+		int minute = calAlreadyMinute();
 
 		if (conditionPair != null) {
 			int maxMinute = conditionPair.getKey();
@@ -82,7 +94,7 @@ public class TransactionAlert extends BaseAlert {
 				if (report != null) {
 					int start = minute + 1 - maxMinute;
 					int end = minute;
-					double[] data = buildArrayData(start, end, type, name, report);
+					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
@@ -92,7 +104,7 @@ public class TransactionAlert extends BaseAlert {
 				if (report != null) {
 					int start = 60 + minute + 1 - (maxMinute);
 					int end = 60 + minute;
-					double[] data = buildArrayData(start, end, type, name, report);
+					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
@@ -102,11 +114,11 @@ public class TransactionAlert extends BaseAlert {
 
 				if (currentReport != null && lastReport != null) {
 					int currentStart = 0, currentEnd = minute;
-					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, currentReport);
+					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, monitor, currentReport);
 
 					int lastStart = 60 + 1 - (maxMinute - minute);
 					int lastEnd = 59;
-					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, currentReport);
+					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, currentReport);
 
 					double[] data = mergerArray(lastValue, currentValue);
 					results.addAll(m_dataChecker.checkData(data, conditions));
@@ -147,16 +159,15 @@ public class TransactionAlert extends BaseAlert {
 		String domain = fields.get(0);
 		String type = fields.get(1);
 		String name = fields.get(2);
-		int minute = calAlreadyMinute();
+		String monitor = fields.get(3);
 
-		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, rule.getConfigs(), minute);
-		
+		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
 		for (AlertResultEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(type + "-" + name).setType(getName()).setGroup(domain);
+			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
 			m_sendManager.addAlert(entity);
 		}
 	}

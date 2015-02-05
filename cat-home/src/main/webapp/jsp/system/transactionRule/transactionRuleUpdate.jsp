@@ -17,10 +17,15 @@
 				<c:set var="domain" value="${conditions[0]}" />
 				<c:set var="type" value="${conditions[1]}" />
 				<c:set var="name" value="${conditions[2]}" />
+				<c:set var="monitor" value="${conditions[3]}" />
 				<tr>
 					<td>&nbsp;&nbsp;项目&nbsp;&nbsp;<input name="domain" id="domain" value="${domain}"/>
 					&nbsp;&nbsp;Type&nbsp;&nbsp;<input name="type" id="type" value="${type}"/>
-					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）</td>
+					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）
+					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="monitor" id="monitor" style="width:200px;">
+													<option value="count">执行次数</option>
+								                	<option value="avg">响应时间</option>
+								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
@@ -52,18 +57,23 @@ function update() {
 		name = "All";
 		$("#domain").val("All");
 	}
+    
+    var monitor = $("#monitor").val();
     var split = ";";
-    var id = domain + split + type + split + name;
+    var id = domain + split + type + split + name + split + monitor;
     window.location.href = "?op=transactionRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
-		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer","FluAscPer", "FluDescPer", "MinVal", "SumMaxVal", "SumMinVal"]);
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
 			document.getElementById("domain").disabled = true;
 			document.getElementById("type").disabled = true;
 			document.getElementById("name").disabled = true;
+			document.getElementById("monitor").disabled = true;
+			var monitor = ruleId.split(';')[3];
+			$('#monitor').val(monitor);
 		}
 		var name = $("#name").val();
 		if(name == "" || name.length == 0){
