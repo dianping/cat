@@ -20,9 +20,9 @@ public class MergeAllName extends BaseVisitor {
 
 	public String m_currentName;
 
-	public Integer m_currentRange;
+	public int m_currentRange;
 
-	public Integer m_currentDuration;
+	public int m_currentDuration;
 
 	public TransactionReportMerger m_merger = new TransactionReportMerger(new TransactionReport());
 

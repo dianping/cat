@@ -135,14 +135,14 @@ public class Handler implements PageHandler<Context> {
 		      .setProperty("ip", ipAddress);
 		TransactionReport transactionReport = null;
 
-		if (StringUtils.isEmpty(type)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			transactionReport = response.getModel();
-		} else {
+		if (StringUtils.isNotEmpty(type)) {
 			request.setProperty("type", type);
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			transactionReport = response.getModel();
 		}
+		
+		ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+		
+		transactionReport = response.getModel();
+
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
 

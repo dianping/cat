@@ -89,7 +89,6 @@ public class TransactionAlert extends BaseAlert {
 			}
 			if (minute >= maxMinute - 1) {
 				TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
-				report = m_mergeManager.mergerAllName(report, Constants.ALL, name);
 
 				if (report != null) {
 					int start = minute + 1 - maxMinute;
@@ -115,10 +114,9 @@ public class TransactionAlert extends BaseAlert {
 				if (currentReport != null && lastReport != null) {
 					int currentStart = 0, currentEnd = minute;
 					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, monitor, currentReport);
-
 					int lastStart = 60 + 1 - (maxMinute - minute);
 					int lastEnd = 59;
-					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, currentReport);
+					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, lastReport);
 
 					double[] data = mergerArray(lastValue, currentValue);
 					results.addAll(m_dataChecker.checkData(data, conditions));
@@ -136,7 +134,8 @@ public class TransactionAlert extends BaseAlert {
 
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		return report;
+
+		return m_mergeManager.mergerAllName(report, Constants.ALL, name);
 	}
 
 	@Override
@@ -175,7 +174,7 @@ public class TransactionAlert extends BaseAlert {
 	@Override
 	public void run() {
 		boolean active = TimeHelper.sleepToNextMinute();
-
+		
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
