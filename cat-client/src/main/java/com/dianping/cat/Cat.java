@@ -65,8 +65,6 @@ public class Cat {
 	}
 
 	public static Cat getInstance() {
-		checkAndInitialize();
-		
 		return s_instance;
 	}
 

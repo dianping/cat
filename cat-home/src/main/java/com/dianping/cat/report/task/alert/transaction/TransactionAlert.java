@@ -150,6 +150,7 @@ public class TransactionAlert extends BaseAlert {
 		int minute = calAlreadyMinute();
 
 		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, rule.getConfigs(), minute);
+		
 		for (AlertResultEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 

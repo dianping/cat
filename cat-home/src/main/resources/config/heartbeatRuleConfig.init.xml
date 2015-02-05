@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="全局FullGC">
+      <metric-item metricItemText="OldGcCount"/>
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="3" alertType="warning">
+            <sub-condition type="SumMaxVal" text="5"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

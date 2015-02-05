@@ -21,6 +21,9 @@
       <metric id="CMS Perm Gen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
    </group>
    <group id="FrameworkThread" order="4">
+      <metric id="HttpThread" unit="1" delta="false" order="1" lable="MB" alert="true"/>
+      <metric id="PigeonThread" unit="1" delta="false" order="2" lable="MB" alert="true"/>
+      <metric id="ActiveThread" unit="1" delta="false" order="3" lable="MB" alert="true"/>
    </group>
    <group id="Disk" order="5">
       <metric id="/ Free" unit="M" delta="false" order="1" lable="MB" alert="false"/>

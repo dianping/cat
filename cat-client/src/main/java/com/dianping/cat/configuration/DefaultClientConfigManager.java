@@ -147,7 +147,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		if (clientConfig == null) {
 			clientConfig = loadConfigFromXml();
 		}
-
 		// merge the two configures together to make it effected
 		if (globalConfig != null && clientConfig != null) {
 			globalConfig.accept(new ClientConfigMerger(clientConfig));

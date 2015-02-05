@@ -1,8 +1,8 @@
 package com.dianping.cat.report.task.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,32 +56,37 @@ public class HeartbeatAlert extends BaseAlert {
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
 
-	private void buildArrayForExtensions(Map<String, double[]> map, Period period) {
-		List<Pair<String, String>> metrics = extractExtentionMetrics(period);
-		int index = period.getMinute();
+	private Map<String, double[]> buildArrayForExtensions(List<Period> periods) {
+		Map<String, double[]> map = new LinkedHashMap<String, double[]>();
 
-		for (Pair<String, String> metric : metrics) {
-			double[] array = map.get(metric);
+		for (Period period : periods) {
+			List<Pair<String, String>> metrics = extractExtentionMetrics(period);
+			int index = period.getMinute();
 
-			if (array == null) {
-				array = new double[60];
-				map.put(metric.getKey() + ":" + metric.getValue(), array);
-			}
-			try {
-				String groupName = metric.getKey();
-				String metricName = metric.getValue();
+			for (Pair<String, String> metric : metrics) {
+				String key = metric.getKey() + ":" + metric.getValue();
+				double[] array = map.get(key);
 
-				int unit = m_displayManager.queryUnit(groupName, metricName);
-				Detail detail = period.findOrCreateExtension(groupName).findOrCreateDetail(metricName);
+				if (array == null) {
+					array = new double[60];
+					map.put(key, array);
+				}
+				try {
+					String groupName = metric.getKey();
+					String metricName = metric.getValue();
+					int unit = m_displayManager.queryUnit(groupName, metricName);
+					Detail detail = period.findOrCreateExtension(groupName).findOrCreateDetail(metricName);
 
-				array[index] = detail.getValue() / unit;
-			} catch (Exception e) {
-				array[index] = 0;
+					array[index] = detail.getValue() / unit;
+				} catch (Exception e) {
+					array[index] = 0;
+				}
 			}
 		}
+		return map;
 	}
 
-	private int calMaxMinuteFromMap(Map<String, List<Config>> configs) {
+	private int calMaxMinute(Map<String, List<Config>> configs) {
 		int maxMinute = 0;
 
 		for (List<Config> tmpConfigs : configs.values()) {
@@ -98,55 +103,34 @@ public class HeartbeatAlert extends BaseAlert {
 		return maxMinute;
 	}
 
-	private void convertDeltaMetrics(Map<String, double[]> map) {
-		for (String id : map.keySet()) {
-			String[] str = id.split(":");
-
-			if (m_displayManager.isDelta(str[0], str[1])) {
-				convertToDelta(map, id);
-			}
-		}
-	}
-
-	private void convertToDelta(Map<String, double[]> map, String metric) {
-		double[] sources = map.get(metric);
-
-		if (sources != null) {
-			double[] targets = new double[60];
-
-			for (int i = 1; i < 60; i++) {
-				if (sources[i - 1] > 0) {
-					double delta = sources[i] - sources[i - 1];
-
-					if (delta >= 0) {
-						targets[i] = delta;
-					}
-				}
-			}
-			map.put(metric, targets);
-		}
-	}
-
 	private double[] extract(double[] lastHourValues, double[] currentHourValues, int maxMinute, int alreadyMinute) {
-		int lastLength = maxMinute - alreadyMinute - 1;
-		double[] result = new double[maxMinute];
+		if (lastHourValues != null && currentHourValues != null) {
+			int lastLength = maxMinute - alreadyMinute - 1;
+			double[] result = new double[maxMinute];
 
-		for (int i = 0; i < lastLength; i++) {
-			result[i] = lastHourValues[60 - lastLength + i];
+			for (int i = 0; i < lastLength; i++) {
+				result[i] = lastHourValues[60 - lastLength + i];
+			}
+			for (int i = lastLength; i < maxMinute; i++) {
+				result[i] = currentHourValues[i - lastLength];
+			}
+			return result;
+		} else {
+			return null;
 		}
-		for (int i = lastLength; i < maxMinute; i++) {
-			result[i] = currentHourValues[i - lastLength];
-		}
-		return result;
 	}
 
 	private double[] extract(double[] values, int maxMinute, int alreadyMinute) {
-		double[] result = new double[maxMinute];
+		if (values != null) {
+			double[] result = new double[maxMinute];
 
-		for (int i = 0; i < maxMinute; i++) {
-			result[i] = values[alreadyMinute + 1 - maxMinute + i];
+			for (int i = 0; i < maxMinute; i++) {
+				result[i] = values[alreadyMinute + 1 - maxMinute + i];
+			}
+			return result;
+		} else {
+			return null;
 		}
-		return result;
 	}
 
 	private List<Pair<String, String>> extractExtentionMetrics(Period period) {
@@ -162,16 +146,29 @@ public class HeartbeatAlert extends BaseAlert {
 		return metrics;
 	}
 
-	private Map<String, double[]> generateArgumentMap(Machine machine) {
-		Map<String, double[]> map = new HashMap<String, double[]>();
-		List<Period> periods = machine.getPeriods();
+	private Map<String, double[]> buildBaseValue(Machine machine) {
+		Map<String, double[]> map = buildArrayForExtensions(machine.getPeriods());
 
-		for (int index = 0; index < periods.size(); index++) {
-			Period period = periods.get(index);
+		for (String id : map.keySet()) {
+			String[] str = id.split(":");
 
-			buildArrayForExtensions(map, period);
+			if (m_displayManager.isDelta(str[0], str[1])) {
+				double[] sources = map.get(id);
+				double[] targets = new double[60];
+
+				for (int i = 1; i < 60; i++) {
+					if (sources[i - 1] > 0) {
+						double delta = sources[i] - sources[i - 1];
+
+						if (delta >= 0) {
+							targets[i] = delta;
+						}
+					}
+				}
+				map.put(id, targets);
+			}
 		}
-		convertDeltaMetrics(map);
+
 		return map;
 	}
 
@@ -220,7 +217,7 @@ public class HeartbeatAlert extends BaseAlert {
 	private void processDomain(String domain) {
 		int minute = calAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
-		int domainMaxMinute = calMaxMinuteFromMap(configsMap);
+		int domainMaxMinute = calMaxMinute(configsMap);
 		HeartbeatReport currentReport = null;
 		HeartbeatReport lastReport = null;
 		boolean isDataReady = false;
@@ -259,7 +256,7 @@ public class HeartbeatAlert extends BaseAlert {
 					if (minute >= maxMinute - 1) {
 						for (Machine machine : currentReport.getMachines().values()) {
 							String ip = machine.getIp();
-							double[] arguments = generateArgumentMap(machine).get(metric);
+							double[] arguments = buildBaseValue(machine).get(metric);
 
 							if (arguments != null) {
 								double[] values = extract(arguments, maxMinute, minute);
@@ -270,7 +267,7 @@ public class HeartbeatAlert extends BaseAlert {
 					} else if (minute < 0) {
 						for (Machine machine : lastReport.getMachines().values()) {
 							String ip = machine.getIp();
-							double[] arguments = generateArgumentMap(machine).get(metric);
+							double[] arguments = buildBaseValue(machine).get(metric);
 
 							if (arguments != null) {
 								double[] values = extract(arguments, maxMinute, 59);
@@ -284,8 +281,8 @@ public class HeartbeatAlert extends BaseAlert {
 							Machine currentMachine = currentReport.getMachines().get(ip);
 
 							if (currentMachine != null) {
-								Map<String, double[]> lastHourArguments = generateArgumentMap(lastMachine);
-								Map<String, double[]> currentHourArguments = generateArgumentMap(currentMachine);
+								Map<String, double[]> lastHourArguments = buildBaseValue(lastMachine);
+								Map<String, double[]> currentHourArguments = buildBaseValue(currentMachine);
 
 								if (lastHourArguments != null && currentHourArguments != null) {
 									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
@@ -304,17 +301,19 @@ public class HeartbeatAlert extends BaseAlert {
 	private void processMeitrc(String domain, String ip, String metric, List<Condition> conditions, int maxMinute,
 	      double[] values) {
 		try {
-			double[] baseline = new double[maxMinute];
-			List<AlertResultEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
+			if (values != null) {
+				double[] baseline = new double[maxMinute];
+				List<AlertResultEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
 
-			for (AlertResultEntity alertResult : alerts) {
-				AlertEntity entity = new AlertEntity();
+				for (AlertResultEntity alertResult : alerts) {
+					AlertEntity entity = new AlertEntity();
 
-				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(metric).setType(getName()).setGroup(domain);
-				entity.getParas().put("ip", ip);
-				m_sendManager.addAlert(entity);
+					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
+					      .setLevel(alertResult.getAlertLevel());
+					entity.setMetric(metric).setType(getName()).setGroup(domain);
+					entity.getParas().put("ip", ip);
+					m_sendManager.addAlert(entity);
+				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -329,6 +328,7 @@ public class HeartbeatAlert extends BaseAlert {
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
 			domains.addAll(response.getModel().getDomainNames());
 		}
+
 		return domains;
 	}
 
