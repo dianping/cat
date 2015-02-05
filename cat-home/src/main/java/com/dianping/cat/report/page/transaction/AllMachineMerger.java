@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
-public class MergeAllMachine extends BaseVisitor {
+public class AllMachineMerger extends BaseVisitor {
 
 	public TransactionReport m_report;
 
