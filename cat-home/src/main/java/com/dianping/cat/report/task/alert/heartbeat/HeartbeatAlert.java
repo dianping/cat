@@ -57,21 +57,20 @@ public class HeartbeatAlert extends BaseAlert {
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
 
 	private void buildArrayForExtensions(Map<String, double[]> map, Period period) {
-		List<String> metrics = extractExtentionMetrics(period);
+		List<Pair<String, String>> metrics = extractExtentionMetrics(period);
 		int index = period.getMinute();
 
-		for (String metric : metrics) {
+		for (Pair<String, String> metric : metrics) {
 			double[] array = map.get(metric);
 
 			if (array == null) {
 				array = new double[60];
-				map.put(metric, array);
+				map.put(metric.getKey() + ":" + metric.getValue(), array);
 			}
 			try {
-				String[] str = metric.split(":");
-				String groupName = str[0];
-				String metricName = str[1];
-				
+				String groupName = metric.getKey();
+				String metricName = metric.getValue();
+
 				int unit = m_displayManager.queryUnit(groupName, metricName);
 				Detail detail = period.findOrCreateExtension(groupName).findOrCreateDetail(metricName);
 
@@ -101,7 +100,7 @@ public class HeartbeatAlert extends BaseAlert {
 
 	private void convertDeltaMetrics(Map<String, double[]> map) {
 		for (String id : map.keySet()) {
-			String[] str = id.split(",");
+			String[] str = id.split(":");
 
 			if (m_displayManager.isDelta(str[0], str[1])) {
 				convertToDelta(map, id);
@@ -150,14 +149,14 @@ public class HeartbeatAlert extends BaseAlert {
 		return result;
 	}
 
-	private List<String> extractExtentionMetrics(Period period) {
-		List<String> metrics = new ArrayList<String>();
+	private List<Pair<String, String>> extractExtentionMetrics(Period period) {
+		List<Pair<String, String>> metrics = new ArrayList<Pair<String, String>>();
 
 		for (Extension extension : period.getExtensions().values()) {
 			Map<String, Detail> details = extension.getDetails();
 
 			for (Entry<String, Detail> detail : details.entrySet()) {
-				metrics.add(extension.getId() + ":" + detail.getKey());
+				metrics.add(new Pair<String, String>(extension.getId(), detail.getKey()));
 			}
 		}
 		return metrics;
