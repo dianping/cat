@@ -2902,7 +2902,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
@@ -3509,7 +3509,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3521,13 +3521,13 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
-			<implementation>com.dianping.cat.system.config.DisplayPolicyManager</implementation>
+			<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
+			<implementation>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5488,7 +5488,7 @@
 					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
@@ -5611,7 +5611,7 @@
 			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.config.DisplayPolicyManager</role>
+					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 			</requirements>
 		</component>

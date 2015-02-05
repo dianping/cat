@@ -25,15 +25,6 @@
 		<attribute name="total-swap-space" value-type="long" primitive="true" />
 		<attribute name="free-swap-space" value-type="long" primitive="true" />
 	</entity>
-	<entity name="disk" class-name="DiskInfo">
-		<entity-ref name="disk-volume" list="list" names="disk-volumes" />
-	</entity>
-	<entity name="disk-volume" class-name="DiskVolumeInfo">
-		<attribute name="id" value-type="String" key="true" />
-		<attribute name="total" value-type="long" primitive="true"/>
-		<attribute name="free" value-type="long" primitive="true" />
-		<attribute name="usable" value-type="long" primitive="true" />
-	</entity>
 	<entity name="memory" class-name="MemoryInfo">
 		<attribute name="max" value-type="long" primitive="true" />
 		<attribute name="total" value-type="long" primitive="true" />
@@ -56,13 +47,27 @@
 		<attribute name="pigeon-thread-count" value-type="int" primitive="true" />
 		<attribute name="http-thread-count" value-type="int" primitive="true" />
 	</entity>
+	<entity name="disk" class-name="DiskInfo">
+		<entity-ref name="disk-volume" list="list" names="disk-volumes" />
+	</entity>
+	<entity name="disk-volume" class-name="DiskVolumeInfo">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="total" value-type="long" primitive="true"/>
+		<attribute name="free" value-type="long" primitive="true" />
+		<attribute name="usable" value-type="long" primitive="true" />
+	</entity>
 	<entity name="message" class-name="MessageInfo">
 		<attribute name="produced" value-type="long" primitive="true" />
 		<attribute name="overflowed" value-type="long" primitive="true" />
 		<attribute name="bytes" value-type="long" primitive="true" />
 	</entity>
-	<entity name="extension" dynamic-attributes="true">
+	<entity name="extension">
 		<attribute name="id" value-type="String" key="true"/>
 		<element name="description" value-type="String" escape="false"/>
+		<entity-ref name="extensionDetail" names ="details" type="map" method-find-or-create="true"/>
+	</entity>
+	<entity name="extensionDetail">
+		<attribute name="id" value-type="String" key="true"/>
+		<attribute name="value" value-type="double" primitive="true" />
 	</entity>	
 </model>

@@ -15,6 +15,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.Error;
@@ -130,6 +131,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
 		private String m_domain;
 
+		private String m_ip;
+
 		private String m_type;
 
 		private String m_state;
@@ -148,6 +151,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		}
 
 		@Override
+		public void visitMachine(Machine machine) {
+			m_ip = machine.getIp();
+			super.visitMachine(machine);
+		}
+
+		@Override
 		public void visitProblemReport(ProblemReport problemReport) {
 			m_domain = problemReport.getDomain();
 			super.visitProblemReport(problemReport);
@@ -159,12 +168,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int count = segment.getCount();
 
 			if ("error".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
+				com.dianping.cat.consumer.top.model.entity.Segment segmentDetail = m_report.findOrCreateDomain(m_domain)
 				      .findOrCreateSegment(id);
-				temp.setError(temp.getError() + count);
+				segmentDetail.setError(segmentDetail.getError() + count);
 
-				Error error = temp.findOrCreateError(m_state);
+				Error error = segmentDetail.findOrCreateError(m_state);
+
 				error.setCount(error.getCount() + count);
+				segmentDetail.findOrCreateMachine(m_ip).incCount(count);
 			}
 		}
 	}
@@ -312,6 +323,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			m_type = type.getId();
 			super.visitType(type);
 		}
+		
 	}
 
 }
