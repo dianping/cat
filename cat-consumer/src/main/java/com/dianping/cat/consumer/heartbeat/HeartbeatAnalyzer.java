@@ -75,10 +75,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	private void transalteHearbeat(StatusInfo info) {
-		Extension catExtension = info.findOrCreateExtension("CatUsage");
 		MessageInfo message = info.getMessage();
 
 		if (message.getProduced() > 0 || message.getBytes() > 0) {
+			Extension catExtension = info.findOrCreateExtension("CatUsage");
+			
 			catExtension.findOrCreateExtensionDetail("Produced").setValue(message.getProduced());
 			catExtension.findOrCreateExtensionDetail("Overflowed").setValue(message.getOverflowed());
 			catExtension.findOrCreateExtensionDetail("Bytes").setValue(message.getBytes());
