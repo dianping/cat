@@ -25,8 +25,8 @@ import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.MergeAllMachine;
-import com.dianping.cat.report.page.transaction.MergeAllName;
+import com.dianping.cat.report.page.transaction.AllMachineMerger;
+import com.dianping.cat.report.page.transaction.AllNameMerger;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -112,13 +112,13 @@ public class Handler implements PageHandler<Context> {
 			eventReport = response.getModel();
 		}
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			com.dianping.cat.report.page.event.MergeAllMachine allEvent = new com.dianping.cat.report.page.event.MergeAllMachine();
+			com.dianping.cat.report.page.event.AllMachineMerger allEvent = new com.dianping.cat.report.page.event.AllMachineMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();
 		}
 		if (Constants.ALL.equalsIgnoreCase(type)) {
-			com.dianping.cat.report.page.event.MergeAllName allEvent = new com.dianping.cat.report.page.event.MergeAllName();
+			com.dianping.cat.report.page.event.AllNameMerger allEvent = new com.dianping.cat.report.page.event.AllNameMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();
@@ -144,13 +144,13 @@ public class Handler implements PageHandler<Context> {
 		transactionReport = response.getModel();
 
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
+			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(transactionReport);
 			transactionReport = all.getReport();
 		}
 		if (Constants.ALL.equalsIgnoreCase(type)) {
-			MergeAllName all = new MergeAllName();
+			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(transactionReport);
 			transactionReport = all.getReport();

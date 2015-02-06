@@ -7,7 +7,7 @@ public class TransactionMergeHelper {
 
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
+			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(report);
 			report = all.getReport();
@@ -17,7 +17,7 @@ public class TransactionMergeHelper {
 
 	private TransactionReport mergerAllName(TransactionReport report, String allName) {
 		if (Constants.ALL.equalsIgnoreCase(allName)) {
-			MergeAllName all = new MergeAllName();
+			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(report);
 			report = all.getReport();
