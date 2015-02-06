@@ -181,7 +181,7 @@ public class ProjectInfo extends BaseVisitor {
 			addServiceProject(remoteIp, app, remote.getType());
 		} else if (role != null && role.endsWith("Server")) {
 			addCallProject(remoteIp, app, remote.getType());
-		} else if (role != null && role.endsWith("Caller") && remoteIp.endsWith(":Caller")) {
+		} else if (role != null && role.endsWith("Caller")) {
 			addCallerProject(remoteIp, app, remote.getType());
 		}
 	}
