@@ -79,7 +79,7 @@ public class StatusUpdateTask implements Task, Initializable {
 				try {
 					double value = Double.parseDouble(entry.getValue());
 					item.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
-				} catch (NumberFormatException e) {
+				} catch (Exception e) {
 					Cat.logError("StatusExtension can only be double type", e);
 				}
 			}

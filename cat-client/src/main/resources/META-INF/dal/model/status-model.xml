@@ -66,7 +66,7 @@
 		<element name="description" value-type="String" escape="false"/>
 		<entity-ref name="extensionDetail" names ="details" type="map" method-find-or-create="true"/>
 	</entity>
-	<entity name="extensionDetail">
+	<entity name="extensionDetail" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true"/>
 		<attribute name="value" value-type="double" primitive="true" />
 	</entity>	
