@@ -91,7 +91,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
 								<b class="arrow"></b></li>
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
-								<i class="menu-icon fa fa-caret-right"></i>响应时间告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
 								<i class="menu-icon fa fa-caret-right"></i>异常告警</a>
