@@ -15,7 +15,7 @@ public class TestCrashLog {
 	public void test() throws InterruptedException {
 		while (true) {
 			for (int i = 0; i < 10; i++) {
-				Transaction t = Cat.newTransaction("AndroidCrashLog", "crashLog");
+				Transaction t = Cat.newTransaction("AndroidCrashLog#123", "crashLog#123");
 
 				Cat.logEvent("Error", "AndroidCrashLogTest1", "ERROR", "Crash log detail stack info A !");
 				Cat.logEvent("Error", "AndroidCrashLogTest2", "ERROR", "Crash log detail stack info B !");
