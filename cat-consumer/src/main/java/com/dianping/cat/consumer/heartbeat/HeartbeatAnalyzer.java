@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.heartbeat;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
