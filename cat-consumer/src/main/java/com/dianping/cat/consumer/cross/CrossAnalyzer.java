@@ -5,7 +5,6 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -20,6 +19,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
+import com.site.lookup.util.StringUtils;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -40,31 +40,27 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String localAddress = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
 
-		if (localAddress != null && remoteAddress != null) {
-			int index = remoteAddress.indexOf(":");
+		int index = remoteAddress.indexOf(":");
 
-			if (index > 0) {
-				remoteAddress = remoteAddress.substring(0, index);
-			}
-
-			CrossInfo info = new CrossInfo();
-			info.setLocalAddress(remoteAddress);
-
-			String clientPort = crossInfo.getClientPort();
-
-			if (clientPort == null) {
-				info.setRemoteAddress(localAddress);
-			} else {
-				info.setRemoteAddress(localAddress + ":" + clientPort);
-			}
-			info.setRemoteRole("Pigeon.Caller");
-			info.setDetailType("PigeonCall");
-			info.setApp(client);
-
-			return info;
-		} else {
-			return null;
+		if (index > 0) {
+			remoteAddress = remoteAddress.substring(0, index);
 		}
+
+		CrossInfo info = new CrossInfo();
+		info.setLocalAddress(remoteAddress);
+
+		String clientPort = crossInfo.getClientPort();
+
+		if (clientPort == null) {
+			info.setRemoteAddress(localAddress);
+		} else {
+			info.setRemoteAddress(localAddress + ":" + clientPort);
+		}
+		info.setRemoteRole("Pigeon.Caller");
+		info.setDetailType("PigeonCall");
+		info.setApp(client);
+
+		return info;
 	}
 
 	@Override
@@ -178,12 +174,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
 		CrossInfo crossInfo = parseCorssTransaction(t, tree);
 
-		if (crossInfo != null) {
+		if (crossInfo != null && crossInfo.validate()) {
 			updateCrossReport(report, t, crossInfo);
 
 			String targetDomain = crossInfo.getApp();
 
-			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)) {
+			if (m_serverConfigManager.isRpcClient(t.getType())) {
 				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				if (serverCrossInfo != null) {
@@ -222,56 +218,58 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
 
-		if (localIp != null && remoteIp != null) {
-			Local local = report.findOrCreateLocal(localIp);
-			String remoteId = remoteIp + ":" + role;
-			Remote remote = local.findOrCreateRemote(remoteId);
+		Local local = report.findOrCreateLocal(localIp);
+		String remoteId = remoteIp + ":" + role;
+		Remote remote = local.findOrCreateRemote(remoteId);
 
-			report.addIp(localIp);
-			remote.setIp(remoteIp);
-			remote.setRole(role);
-			remote.setApp(info.getApp());
+		report.addIp(localIp);
+		remote.setIp(remoteIp);
+		remote.setRole(role);
+		remote.setApp(info.getApp());
 
-			Type type = remote.getType();
+		Type type = remote.getType();
 
-			if (type == null) {
-				type = new Type();
-				type.setId(info.getDetailType());
-				remote.setType(type);
-			}
-
-			Name name = type.findOrCreateName(transactionName);
-
-			type.incTotalCount();
-			name.incTotalCount();
-
-			if (!t.isSuccess()) {
-				type.incFailCount();
-				name.incFailCount();
-			}
-
-			double duration = t.getDurationInMicros() / 1000d;
-
-			type.setSum(type.getSum() + duration);
-			name.setSum(name.getSum() + duration);
+		if (type == null) {
+			type = new Type();
+			type.setId(info.getDetailType());
+			remote.setType(type);
 		}
+
+		Name name = type.findOrCreateName(transactionName);
+
+		type.incTotalCount();
+		name.incTotalCount();
+
+		if (!t.isSuccess()) {
+			type.incFailCount();
+			name.incFailCount();
+		}
+
+		double duration = t.getDurationInMicros() / 1000d;
+
+		type.setSum(type.getSum() + duration);
+		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {
 		private String m_remoteRole;
 
-		private String m_LocalAddress;
+		private String m_localAddress;
 
-		private String m_RemoteAddress;
+		private String m_remoteAddress;
 
 		private String m_detailType;
 
-		private String m_app = DEFAULT;
+		private String m_app;
 
 		private String m_clientPort;
 
 		public String getApp() {
-			return m_app;
+			if (StringUtils.isEmpty(m_app)) {
+				return DEFAULT;
+			} else {
+				return m_app;
+			}
 		}
 
 		public String getClientPort() {
@@ -283,11 +281,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		public String getLocalAddress() {
-			return m_LocalAddress;
+			return m_localAddress;
 		}
 
 		public String getRemoteAddress() {
-			return m_RemoteAddress;
+			return m_remoteAddress;
 		}
 
 		public String getRemoteRole() {
@@ -307,15 +305,23 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		public void setLocalAddress(String localAddress) {
-			m_LocalAddress = localAddress;
+			m_localAddress = localAddress;
 		}
 
 		public void setRemoteAddress(String remoteAddress) {
-			m_RemoteAddress = remoteAddress;
+			m_remoteAddress = remoteAddress;
 		}
 
 		public void setRemoteRole(String remoteRole) {
 			m_remoteRole = remoteRole;
+		}
+
+		public boolean validate() {
+			if (m_localAddress != null && m_remoteAddress != null) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 
