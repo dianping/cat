@@ -34,6 +34,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private int m_errorAppName;
 
+	public static final String DEFAULT = "unknown";
+
 	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
 		String localAddress = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
@@ -180,8 +182,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			updateCrossReport(report, t, crossInfo);
 
 			String targetDomain = crossInfo.getApp();
-			
-			if (m_serverConfigManager.isRpcClient(t.getType()) && StringUtils.isNotEmpty(targetDomain)) {
+
+			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)) {
 				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				if (serverCrossInfo != null) {
@@ -264,7 +266,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		private String m_detailType;
 
-		private String m_app;
+		private String m_app = DEFAULT;
 
 		private String m_clientPort;
 
