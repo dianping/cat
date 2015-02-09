@@ -161,8 +161,7 @@
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
-							<a
-										href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&name=${item.name}"
+							<a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&name=${item.name}"
 										class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>

@@ -90,7 +90,7 @@
 								href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}"
 								class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 							&nbsp;&nbsp;&nbsp;<a
-								href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a>
+								href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${e.id}</a>
 							</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
