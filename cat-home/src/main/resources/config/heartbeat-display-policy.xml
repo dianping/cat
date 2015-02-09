@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <heartbeat-display-policy>
    <group id="System" order="1">
-      <metric id="LoadAverage" unit="1" delta="false" order="1" lable="MB" alert="true"/>
+      <metric id="LoadAverage" unit="1" delta="false" order="1" lable="个数" alert="true"/>
       <metric id="FreePhysicalMemory" unit="M" delta="false" order="1" lable="MB" alert="false"/>
       <metric id="FreeSwapSpaceSize" unit="M" delta="false" order="1" lable="MB" alert="false"/>
    </group>
@@ -30,8 +30,17 @@
       <metric id="/data Free" unit="M" delta="false" order="2" lable="MB" alert="false"/>
    </group>
    <group id="CatUsage" order="6">
-      <metric id="Produced" unit="1" delta="false" order="1" lable="MB" alert="false"/>
-      <metric id="Overflowed" unit="M" delta="false" order="2" lable="MB" alert="false"/>
-      <metric id="Bytes" unit="M" delta="false" order="2" lable="MB" alert="false"/>
+      <metric id="Produced" unit="1" delta="true" order="1" lable="MB" alert="false"/>
+      <metric id="Overflowed" unit="1" delta="true" order="2" lable="MB" alert="false"/>
+      <metric id="Bytes" unit="M" delta="true" order="2" lable="MB" alert="false"/>
+   </group>
+   <group id="HeapUsage" order="7">
+      <metric id="EdenUsage" unit="M" delta="false" order="1" lable="MB" alert="false"/>
+      <metric id="SurvivorUsage" unit="M" delta="false" order="2" lable="MB" alert="false"/>
+      <metric id="CodeCache" unit="M" delta="false" order="3" lable="MB" alert="false"/>
+      <metric id="ParEdenSpace" unit="M" delta="false" order="4" lable="MB" alert="false"/>
+      <metric id="ParSurvivorSpace" unit="M" delta="false" order="5" lable="MB" alert="false"/>
+      <metric id="CMSOldGen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
+      <metric id="CMSPermGen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
    </group>
 </heartbeat-display-policy>
