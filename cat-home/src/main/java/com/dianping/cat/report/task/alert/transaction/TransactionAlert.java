@@ -125,7 +125,7 @@ public class TransactionAlert extends BaseAlert {
 		}
 		return results;
 	}
-
+	
 	private TransactionReport fetchTransactionReport(String domain, String type, String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()) //
 		      .setProperty("type", type) //
