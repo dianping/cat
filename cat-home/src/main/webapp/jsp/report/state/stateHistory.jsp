@@ -45,7 +45,7 @@
 <table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<th width="30%" colspan=2>指标</th>
-		<th width="20%">值</th>
+		<th class="right" width="20%">值</th>
 		<th width="50%">备注</th>
 	</tr>
 	</tr>
