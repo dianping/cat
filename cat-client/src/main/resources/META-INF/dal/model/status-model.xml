@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.status.model" enable-sax-parser="true" enable-xml-schema="true"
 	enable-merger="true" enable-model-test="true" enable-base-visitor="true">
-	<entity name="status" class-name="StatusInfo" dynamic-attributes="true">
+	<entity name="status" class-name="StatusInfo">
 		<attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
 	    <entity-ref name="runtime" />
 	    <entity-ref name="os" />
@@ -61,7 +61,7 @@
 		<attribute name="overflowed" value-type="long" primitive="true" />
 		<attribute name="bytes" value-type="long" primitive="true" />
 	</entity>
-	<entity name="extension">
+	<entity name="extension"  dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true"/>
 		<element name="description" value-type="String" escape="false"/>
 		<entity-ref name="extensionDetail" names ="details" type="map" method-find-or-create="true"/>

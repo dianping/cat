@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.heartbeat;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -120,16 +122,18 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				disk.findOrCreateExtensionDetail(vinfo.getId() + " Free").setValue(vinfo.getFree());
 			}
 		}
-		Map<String, String> propertis = info.getDynamicAttributes();
 
-		for (Entry<String, String> entry : propertis.entrySet()) {
-			try {
-				double value = Double.parseDouble(entry.getValue());
-				Extension item = info.findOrCreateExtension("dal");
+		for (Extension ex : info.getExtensions().values()) {
+			Map<String, String> propertis = ex.getDynamicAttributes();
+			for (Entry<String, String> entry : propertis.entrySet()) {
+				try {
+					double value = Double.parseDouble(entry.getValue());
+					Extension item = info.findOrCreateExtension("dal");
 
-				item.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
-			} catch (Exception e) {
-				Cat.logError("StatusExtension can only be double type", e);
+					item.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
+				} catch (Exception e) {
+					Cat.logError("StatusExtension can only be double type", e);
+				}
 			}
 		}
 	}
