@@ -30,35 +30,39 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Inject
 	protected IpConvertManager m_ipConvertManager;
 
-	private static final String UNKNOWN = "Unknown";
-
 	private int m_discardLogs = 0;
 
 	private int m_errorAppName;
 
 	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
-		String localIp = crossInfo.getLocalAddress();
+		String localAddress = crossInfo.getLocalAddress();
 		String remoteAddress = crossInfo.getRemoteAddress();
-		int index = remoteAddress.indexOf(":");
 
-		if (index > 0) {
-			remoteAddress = remoteAddress.substring(0, index);
-		}
+		if (localAddress != null && remoteAddress != null) {
+			int index = remoteAddress.indexOf(":");
 
-		CrossInfo info = new CrossInfo();
-		info.setLocalAddress(remoteAddress);
+			if (index > 0) {
+				remoteAddress = remoteAddress.substring(0, index);
+			}
 
-		String clientPort = crossInfo.getClientPort();
-		if (clientPort == null) {
-			info.setRemoteAddress(localIp);
+			CrossInfo info = new CrossInfo();
+			info.setLocalAddress(remoteAddress);
+
+			String clientPort = crossInfo.getClientPort();
+
+			if (clientPort == null) {
+				info.setRemoteAddress(localAddress);
+			} else {
+				info.setRemoteAddress(localAddress + ":" + clientPort);
+			}
+			info.setRemoteRole("Pigeon.Caller");
+			info.setDetailType("PigeonCall");
+			info.setApp(client);
+
+			return info;
 		} else {
-			info.setRemoteAddress(localIp + ":" + clientPort);
+			return null;
 		}
-		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCall");
-		info.setApp(client);
-
-		return info;
 	}
 
 	@Override
@@ -107,7 +111,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private CrossInfo parsePigeonClientTransaction(Transaction t, MessageTree tree) {
 		CrossInfo crossInfo = new CrossInfo();
-		String localIp = tree.getIpAddress();
+		String localAddress = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
@@ -126,7 +130,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			}
 		}
 
-		crossInfo.setLocalAddress(localIp);
+		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("Pigeon.Server");
 		crossInfo.setDetailType("PigeonCall");
 		return crossInfo;
@@ -134,7 +138,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
 		CrossInfo crossInfo = new CrossInfo();
-		String localIp = tree.getIpAddress();
+		String localAddress = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
@@ -150,12 +154,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			}
 		}
 
-		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
-			m_discardLogs++;
-			return null;
-		}
-
-		crossInfo.setLocalAddress(localIp);
+		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("Pigeon.Client");
 		crossInfo.setDetailType("PigeonService");
 		return crossInfo;
@@ -180,11 +179,16 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		if (crossInfo != null) {
 			updateCrossReport(report, t, crossInfo);
 
-			String domain = crossInfo.getApp();
-			if (m_serverConfigManager.isRpcClient(t.getType()) && StringUtils.isNotEmpty(domain)) {
-				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
+			String targetDomain = crossInfo.getApp();
+			
+			if (m_serverConfigManager.isRpcClient(t.getType()) && StringUtils.isNotEmpty(targetDomain)) {
+				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
 
-				updateServerCrossReport(t, domain, info);
+				if (serverCrossInfo != null) {
+					CrossReport serverReport = m_reportManager.getHourlyReport(getStartTime(), targetDomain, true);
+
+					updateCrossReport(serverReport, t, serverCrossInfo);
+				}
 			} else {
 				m_errorAppName++;
 			}
@@ -215,55 +219,52 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String remoteIp = info.getRemoteAddress();
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
-		Local local = report.findOrCreateLocal(localIp);
-		String remoteId = remoteIp + ":" + role;
-		Remote remote = local.findOrCreateRemote(remoteId);
 
-		report.addIp(localIp);
-		remote.setIp(remoteIp);
-		remote.setRole(role);
-		remote.setApp(info.getApp());
+		if (localIp != null && remoteIp != null) {
+			Local local = report.findOrCreateLocal(localIp);
+			String remoteId = remoteIp + ":" + role;
+			Remote remote = local.findOrCreateRemote(remoteId);
 
-		Type type = remote.getType();
+			report.addIp(localIp);
+			remote.setIp(remoteIp);
+			remote.setRole(role);
+			remote.setApp(info.getApp());
 
-		if (type == null) {
-			type = new Type();
-			type.setId(info.getDetailType());
-			remote.setType(type);
+			Type type = remote.getType();
+
+			if (type == null) {
+				type = new Type();
+				type.setId(info.getDetailType());
+				remote.setType(type);
+			}
+
+			Name name = type.findOrCreateName(transactionName);
+
+			type.incTotalCount();
+			name.incTotalCount();
+
+			if (!t.isSuccess()) {
+				type.incFailCount();
+				name.incFailCount();
+			}
+
+			double duration = t.getDurationInMicros() / 1000d;
+
+			type.setSum(type.getSum() + duration);
+			name.setSum(name.getSum() + duration);
 		}
-
-		Name name = type.findOrCreateName(transactionName);
-
-		type.incTotalCount();
-		name.incTotalCount();
-
-		if (!t.isSuccess()) {
-			type.incFailCount();
-			name.incFailCount();
-		}
-
-		double duration = t.getDurationInMicros() / 1000d;
-
-		type.setSum(type.getSum() + duration);
-		name.setSum(name.getSum() + duration);
-	}
-
-	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-
-		updateCrossReport(report, t, info);
 	}
 
 	public static class CrossInfo {
-		private String m_remoteRole = UNKNOWN;
+		private String m_remoteRole;
 
-		private String m_LocalAddress = UNKNOWN;
+		private String m_LocalAddress;
 
-		private String m_RemoteAddress = UNKNOWN;
+		private String m_RemoteAddress;
 
-		private String m_detailType = UNKNOWN;
+		private String m_detailType;
 
-		private String m_app = "";
+		private String m_app;
 
 		private String m_clientPort;
 
