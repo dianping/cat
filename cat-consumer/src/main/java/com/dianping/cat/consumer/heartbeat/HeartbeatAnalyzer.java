@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -49,12 +50,12 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			return null;
 		}
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		int minute = cal.get(Calendar.MINUTE);
-		Period period = new Period(minute);
-
 		try {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timestamp);
+			int minute = cal.get(Calendar.MINUTE);
+			Period period = new Period(minute);
+
 			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
 				String id = entry.getKey();
 				Extension ext = entry.getValue();
@@ -67,11 +68,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					extension.findOrCreateDetail(extensionDetail.getId()).setValue(extensionDetail.getValue());
 				}
 			}
+			return period;
 		} catch (Exception e) {
 			Cat.logError(e);
+			return null;
 		}
-
-		return period;
 	}
 
 	private void transalteHearbeat(StatusInfo info) {
@@ -79,7 +80,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		if (message.getProduced() > 0 || message.getBytes() > 0) {
 			Extension catExtension = info.findOrCreateExtension("CatUsage");
-			
+
 			catExtension.findOrCreateExtensionDetail("Produced").setValue(message.getProduced());
 			catExtension.findOrCreateExtensionDetail("Overflowed").setValue(message.getOverflowed());
 			catExtension.findOrCreateExtensionDetail("Bytes").setValue(message.getBytes());
@@ -118,6 +119,17 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			for (DiskVolumeInfo vinfo : diskVolumes) {
 				disk.findOrCreateExtensionDetail(vinfo.getId() + " Free").setValue(vinfo.getFree());
+			}
+
+			Map<String, Extension> extensions = info.getExtensions();
+
+			for (Extension e : extensions.values()) {
+				String name = e.getId();
+				Collection<ExtensionDetail> details = e.getDetails().values();
+
+				for (ExtensionDetail detail : details) {
+					info.findOrCreateExtension(name).findExtensionDetail(detail.getId()).setValue(detail.getValue());
+				}
 			}
 		}
 	}
