@@ -55,6 +55,16 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			cal.setTimeInMillis(timestamp);
 			int minute = cal.get(Calendar.MINUTE);
 			Period period = new Period(minute);
+			Map<String, Extension> extensions = info.getExtensions();
+
+			for (Extension e : extensions.values()) {
+				String name = e.getId();
+				Collection<ExtensionDetail> details = e.getDetails().values();
+
+				for (ExtensionDetail detail : details) {
+					info.findOrCreateExtension(name).findExtensionDetail(detail.getId()).setValue(detail.getValue());
+				}
+			}
 
 			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
 				String id = entry.getKey();
@@ -119,17 +129,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			for (DiskVolumeInfo vinfo : diskVolumes) {
 				disk.findOrCreateExtensionDetail(vinfo.getId() + " Free").setValue(vinfo.getFree());
-			}
-
-			Map<String, Extension> extensions = info.getExtensions();
-
-			for (Extension e : extensions.values()) {
-				String name = e.getId();
-				Collection<ExtensionDetail> details = e.getDetails().values();
-
-				for (ExtensionDetail detail : details) {
-					info.findOrCreateExtension(name).findExtensionDetail(detail.getId()).setValue(detail.getValue());
-				}
 			}
 		}
 	}
