@@ -105,7 +105,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	public abstract String getDomain();
 
 	public Map<String, Department> getDomainGroups() {
-		return m_projectService.getDepartment(getDomains());
+		return m_projectService.findDepartments(getDomains());
 	}
 
 	public abstract Collection<String> getDomains();

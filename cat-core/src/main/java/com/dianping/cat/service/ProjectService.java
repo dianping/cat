@@ -3,7 +3,6 @@ package com.dianping.cat.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -51,11 +50,9 @@ public class ProjectService implements Initializable {
 
 	public boolean delete(Project project) {
 		int id = project.getId();
-		Iterator<Entry<String, Project>> iterator = m_domainToProjects.entrySet().iterator();
 		String domainName = null;
-
-		while (iterator.hasNext()) {
-			Entry<String, Project> entry = iterator.next();
+		
+		for(Entry<String,Project> entry:m_domainToProjects.entrySet()){
 			Project pro = entry.getValue();
 
 			if (pro.getId() == id) {
@@ -107,8 +104,8 @@ public class ProjectService implements Initializable {
 		return project;
 	}
 
-	public Map<String, Department> getDepartment(Collection<String> domains) {
-		Map<String, Department> result = new TreeMap<String, Department>();
+	public Map<String, Department> findDepartments(Collection<String> domains) {
+		Map<String, Department> departments = new TreeMap<String, Department>();
 
 		for (String domain : domains) {
 			Project project = findProject(domain);
@@ -122,16 +119,16 @@ public class ProjectService implements Initializable {
 				department = bu == null ? DEFAULT : bu;
 				projectLine = productline == null ? DEFAULT : productline;
 			}
-			Department temp = result.get(department);
+			Department temp = departments.get(department);
 
 			if (temp == null) {
 				temp = new Department();
-				result.put(department, temp);
+				departments.put(department, temp);
 			}
 			temp.findOrCreatProjectLine(projectLine).addDomain(domain);
 		}
 
-		return result;
+		return departments;
 	}
 
 	@Override
@@ -145,6 +142,7 @@ public class ProjectService implements Initializable {
 		m_domainToProjects.put(project.getDomain(), project);
 
 		int result = m_projectDao.insert(project);
+
 		if (result == 1) {
 			return true;
 		} else {
@@ -158,6 +156,7 @@ public class ProjectService implements Initializable {
 		project.setDomain(domain);
 		project.setCmdbProductline(DEFAULT);
 		project.setBu(DEFAULT);
+
 		try {
 			insert(project);
 			m_domains.add(domain);
@@ -206,11 +205,7 @@ public class ProjectService implements Initializable {
 		private Map<String, ProjectLine> m_projectLines = new TreeMap<String, ProjectLine>();
 
 		public ProjectLine findOrCreatProjectLine(String projectLine) {
-			if (projectLine == null) {
-				projectLine = "Default";
-			}
-
-			ProjectLine line = m_projectLines.get(projectLine);
+			ProjectLine line = m_projectLines.get(String.valueOf(projectLine));
 
 			if (line == null) {
 				line = new ProjectLine();
@@ -223,10 +218,6 @@ public class ProjectService implements Initializable {
 		public Map<String, ProjectLine> getProjectLines() {
 			return m_projectLines;
 		}
-
-		public void setProjectLines(Map<String, ProjectLine> projectLines) {
-			m_projectLines = projectLines;
-		}
 	}
 
 	public static class ProjectLine {
@@ -238,10 +229,6 @@ public class ProjectService implements Initializable {
 
 		public List<String> getLineDomains() {
 			return m_lineDomains;
-		}
-
-		public void setLineDomains(List<String> lineDomains) {
-			m_lineDomains = lineDomains;
 		}
 	}
 
@@ -275,4 +262,5 @@ public class ProjectService implements Initializable {
 		public void shutdown() {
 		}
 	}
+
 }
