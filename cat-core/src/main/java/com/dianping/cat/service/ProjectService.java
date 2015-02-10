@@ -51,8 +51,8 @@ public class ProjectService implements Initializable {
 	public boolean delete(Project project) {
 		int id = project.getId();
 		String domainName = null;
-		
-		for(Entry<String,Project> entry:m_domainToProjects.entrySet()){
+
+		for (Entry<String, Project> entry : m_domainToProjects.entrySet()) {
 			Project pro = entry.getValue();
 
 			if (pro.getId() == id) {
@@ -178,7 +178,12 @@ public class ProjectService implements Initializable {
 			for (Project project : projects) {
 				tmpDomains.add(project.getDomain());
 				tmpDomainProjects.put(project.getDomain(), project);
-				tmpCmdbProjects.put(project.getCmdbDomain(), project);
+
+				String cmdb = project.getCmdbDomain();
+
+				if (cmdb != null) {
+					tmpCmdbProjects.put(cmdb, project);
+				}
 			}
 			m_domains = tmpDomains;
 			m_domainToProjects = tmpDomainProjects;

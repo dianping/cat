@@ -5,8 +5,8 @@
 			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.JsonBuilder</role>
-			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
+			<role>com.dianping.cat.helper.JsonBuilder</role>
+			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.graph.svg.ValueTranslater</role>
@@ -3280,7 +3280,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.JsonBuilder</role>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3358,8 +3358,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.JsonBuilder</role>
-			<implementation>com.dianping.cat.report.page.JsonBuilder</implementation>
+			<role>com.dianping.cat.helper.JsonBuilder</role>
+			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -3841,7 +3841,7 @@
 					<field-name>m_problemService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.JsonBuilder</role>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4411,7 +4411,7 @@
 			<implementation>com.dianping.cat.report.page.monitor.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.JsonBuilder</role>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
