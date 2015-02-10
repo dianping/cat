@@ -122,10 +122,10 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 
 		Extension item = info.findOrCreateExtension("dal");
-		
+
 		for (Extension ex : info.getExtensions().values()) {
 			Map<String, String> propertis = ex.getDynamicAttributes();
-			
+
 			for (Entry<String, String> entry : propertis.entrySet()) {
 				try {
 					double value = Double.parseDouble(entry.getValue());
@@ -184,7 +184,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
 		Machine machine = report.findOrCreateMachine(ip);
-		Period period = buildHeartBeatInfo(machine, heartbeat, tree.getMessage().getTimestamp());
+		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
 
 		if (period != null) {
 			machine.getPeriods().add(period);

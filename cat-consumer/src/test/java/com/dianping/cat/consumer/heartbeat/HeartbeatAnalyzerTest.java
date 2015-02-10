@@ -35,7 +35,6 @@ public class HeartbeatAnalyzerTest extends ComponentTestCase {
 		super.setUp();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-
 		Date date = sdf.parse("20120101 00:00");
 
 		m_timestamp = date.getTime();
@@ -69,7 +68,7 @@ public class HeartbeatAnalyzerTest extends ComponentTestCase {
 
 		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
 
-		Heartbeat heartbeat = newHeartbeat("heartbeat", "fail", m_timestamp, "0");
+		Heartbeat heartbeat = newHeartbeat("heartbeat", "fail", m_timestamp + i * 1000 * 60, "0");
 
 		t.addChild(heartbeat);
 
@@ -77,7 +76,7 @@ public class HeartbeatAnalyzerTest extends ComponentTestCase {
 		t.setDurationInMillis(i * 2);
 		t.setTimestamp(m_timestamp + 1000);
 		tree.setMessage(t);
-
+		
 		return tree;
 	}
 
