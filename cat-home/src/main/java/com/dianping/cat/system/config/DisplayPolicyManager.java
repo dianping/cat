@@ -107,24 +107,29 @@ public class DisplayPolicyManager implements Initializable {
 		return metrics;
 	}
 
-	public int queryUnit(String metricName) {
-		for (Group group : m_config.getGroups().values()) {
-			if (group.findMetric(metricName) != null) {
-				Metric metric = group.findMetric(metricName);
+    public String queryUnitName(String metricName, String defaultUnitName) {
+        for (Group group : m_config.getGroups().values()) {
+            if (group.findMetric(metricName) != null) {
+                Metric metric = group.findMetric(metricName);
+                if (metric != null) {
+                    return metric.getUnit();
+                }
+            }
+        }
+        return defaultUnitName;
+    }
 
-				if (metric != null) {
-					String metricUnit = metric.getUnit();
-
-					if ("K".equals(metricUnit)) {
-						return K;
-					} else if ("M".equals(metricUnit)) {
-						return K * K;
-					}
-				}
-			}
-		}
-		return 1;
-	}
+    public int queryUnit(String metricName) {
+        String unitName = queryUnitName(metricName, null);
+        if (null != unitName) {
+            if ("K".equals(unitName) || "KB".equals(unitName)) {
+                return K;
+            } else if ("M".equals(unitName) || "MB".equals(unitName)) {
+                return K * K;
+            }
+        }
+        return 1;
+    }
 
 	public List<String> sortGroupNames(List<String> originGroupNames) {
 		List<Group> groups = new ArrayList<Group>();
