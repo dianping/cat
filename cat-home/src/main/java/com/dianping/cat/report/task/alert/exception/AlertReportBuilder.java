@@ -17,8 +17,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class AlertReportBuilder implements TaskBuilder {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.spi;
+package com.dianping.cat.report.task;
 
 public final class GraphLine {
 	public long failCount;

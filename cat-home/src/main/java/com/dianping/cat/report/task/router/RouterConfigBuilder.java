@@ -28,7 +28,7 @@ import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.transform.DefaultNativeBuilder;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.system.config.RouterConfigManager;
 
 public class RouterConfigBuilder implements TaskBuilder, LogEnabled {

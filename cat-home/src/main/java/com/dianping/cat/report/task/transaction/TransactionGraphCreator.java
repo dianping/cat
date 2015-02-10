@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.report.task.spi.GraphLine;
+import com.dianping.cat.report.task.GraphLine;
 
 public class TransactionGraphCreator {
 
