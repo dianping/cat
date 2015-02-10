@@ -13,10 +13,10 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dependency.format.entity.ProductLine;
 import com.dianping.cat.home.dependency.format.entity.TopoGraphFormatConfig;
 import com.dianping.cat.home.dependency.format.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.JsonBuilder;
 
 public class TopoGraphFormatConfigManager implements Initializable {
 

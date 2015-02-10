@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page;
+package com.dianping.cat.report.graph;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import com.dianping.cat.helper.JsonBuilder;
 
 public class LineChart {
 

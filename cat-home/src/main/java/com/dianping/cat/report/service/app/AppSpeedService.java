@@ -15,7 +15,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.AppSpeedDataEntity;
-import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.app.display.AppDataSequence;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;

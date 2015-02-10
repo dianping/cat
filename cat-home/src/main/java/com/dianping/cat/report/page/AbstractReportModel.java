@@ -15,6 +15,7 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;

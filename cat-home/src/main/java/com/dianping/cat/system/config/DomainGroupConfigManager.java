@@ -13,11 +13,11 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.group.entity.Group;
 import com.dianping.cat.home.group.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.JsonBuilder;
 
 public class DomainGroupConfigManager implements Initializable {
 

@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.ProblemStatistics;

@@ -15,9 +15,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.ConfigModification;
 import com.dianping.cat.home.dal.report.ConfigModificationDao;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;

@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.alert.AlertInfo;
 

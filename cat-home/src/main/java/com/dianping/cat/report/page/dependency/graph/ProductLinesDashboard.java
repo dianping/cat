@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
-import com.dianping.cat.report.page.JsonBuilder;
 
 public class ProductLinesDashboard {
 

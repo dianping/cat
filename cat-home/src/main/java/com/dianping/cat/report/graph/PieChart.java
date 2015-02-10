@@ -1,9 +1,11 @@
-package com.dianping.cat.report.page;
+package com.dianping.cat.report.graph;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import com.dianping.cat.helper.JsonBuilder;
 
 public class PieChart {
 

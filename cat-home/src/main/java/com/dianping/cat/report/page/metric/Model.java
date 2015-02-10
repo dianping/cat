@@ -10,8 +10,8 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.LineChart;
 
 @ModelMeta(MetricAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {

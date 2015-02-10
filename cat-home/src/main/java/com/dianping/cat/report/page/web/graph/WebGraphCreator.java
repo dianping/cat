@@ -17,10 +17,10 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.metric.MetricReportMerger;
 import com.dianping.cat.report.page.web.Handler.QueryEntity;
 
