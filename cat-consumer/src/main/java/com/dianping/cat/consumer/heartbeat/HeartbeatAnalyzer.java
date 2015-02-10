@@ -121,12 +121,14 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			}
 		}
 
+		Extension item = info.findOrCreateExtension("dal");
+		
 		for (Extension ex : info.getExtensions().values()) {
 			Map<String, String> propertis = ex.getDynamicAttributes();
+			
 			for (Entry<String, String> entry : propertis.entrySet()) {
 				try {
 					double value = Double.parseDouble(entry.getValue());
-					Extension item = info.findOrCreateExtension("dal");
 
 					item.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
 				} catch (Exception e) {
