@@ -18,6 +18,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
@@ -33,7 +34,6 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -54,9 +54,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
-
-	@Inject
-	private DomainNavManager m_domainNavManager;
 
 	private TopologyGraphBuilder m_currentBuilder;
 
@@ -206,40 +203,21 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private class DependencyReloadTask implements Task {
 
-		private void buildReport(Collection<String> domains) {
-			long current = System.currentTimeMillis();
-			long currentHour = current - current % TimeHelper.ONE_HOUR;
-			TopologyGraphBuilder builder = new TopologyGraphBuilder().setItemBuilder(m_itemBuilder);
+		private void buildDependencyInfo(TopologyGraphBuilder builder, String domain) {
+			if (m_manager.validateDomain(domain)) {
+				ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime());
 
-			for (String domain : domains) {
-				try {
-					if (m_manager.validateDomain(domain)) {
-						ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime()).setProperty(
-						      "date", String.valueOf(currentHour));
-						if (m_service.isEligable(request)) {
-							ModelResponse<DependencyReport> response = m_service.invoke(request);
-							DependencyReport report = response.getModel();
+				if (m_service.isEligable(request)) {
+					ModelResponse<DependencyReport> response = m_service.invoke(request);
+					DependencyReport report = response.getModel();
 
-							if (report != null) {
-								builder.visitDependencyReport(report);
-							}
-						} else {
-							m_logger.warn(String.format("Can't get dependency report of %s", domain));
-						}
+					if (report != null) {
+						builder.visitDependencyReport(report);
 					}
-				} catch (Exception e) {
-					Cat.logError(e);
+				} else {
+					m_logger.warn(String.format("Can't get dependency report of %s", domain));
 				}
 			}
-			Map<Long, TopologyGraph> graphs = builder.getGraphs();
-
-			for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
-				m_topologyGraphs.put(entry.getKey(), entry.getValue());
-
-				m_topologyGraphs.remove(entry.getKey() - TimeHelper.ONE_HOUR * 2);
-			}
-			m_currentBuilder = null;
-			m_currentBuilder = builder;
 		}
 
 		@Override
@@ -248,7 +226,16 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		private Collection<String> queryAllDomains() {
-			return m_domainNavManager.getDomains();
+			ModelRequest request = new ModelRequest(Constants.CAT, ModelPeriod.CURRENT.getStartTime());
+
+			if (m_service.isEligable(request)) {
+				ModelResponse<DependencyReport> response = m_service.invoke(request);
+				DependencyReport report = response.getModel();
+
+				return report.getDomainNames();
+			}
+
+			return new HashSet<String>();
 		}
 
 		@Override
@@ -259,9 +246,24 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				Transaction t = Cat.newTransaction("ReloadTask", "Dependency");
 				long current = System.currentTimeMillis();
 				try {
+					TopologyGraphBuilder builder = new TopologyGraphBuilder().setItemBuilder(m_itemBuilder);
 					Collection<String> domains = queryAllDomains();
 
-					buildReport(domains);
+					for (String domain : domains) {
+						try {
+							buildDependencyInfo(builder, domain);
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
+					}
+					Map<Long, TopologyGraph> graphs = builder.getGraphs();
+
+					for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
+						m_topologyGraphs.put(entry.getKey(), entry.getValue());
+
+						m_topologyGraphs.remove(entry.getKey() - TimeHelper.ONE_HOUR * 2);
+					}
+					m_currentBuilder = builder;
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
 					m_logger.error(e.getMessage(), e);

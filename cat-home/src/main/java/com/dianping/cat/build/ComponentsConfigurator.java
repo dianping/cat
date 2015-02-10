@@ -52,7 +52,6 @@ import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.task.alert.AlertInfo;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
-import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
@@ -93,7 +92,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
 		      req(ReportServiceManager.class, ServerConfigManager.class));
-		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
 		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -101,7 +99,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphManager.class)
 		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class) //
-		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
+		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		// update project database

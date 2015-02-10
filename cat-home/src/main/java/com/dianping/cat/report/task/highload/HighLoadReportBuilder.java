@@ -39,10 +39,12 @@ public class HighLoadReportBuilder implements TaskBuilder {
 
 	private void addProductlineInfo(Name name) {
 		String domain = name.getDomain();
-		Project project = m_projectService.findByCmdbDomain(domain);
+		Project project = m_projectService.findProject(domain);
 
-		name.setBu(project.getBu());
-		name.setProductLine(project.getCmdbProductline());
+		if (project != null) {
+			name.setBu(project.getBu());
+			name.setProductLine(project.getCmdbProductline());
+		}
 	}
 
 	@Override

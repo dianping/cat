@@ -147,8 +147,8 @@ public class StateReportBuilder implements TaskBuilder {
 
 	private void updateDomainInfo(String domain, String ip) {
 		if (m_serverConfigManager.validateDomain(domain)) {
-			if (!m_projectService.containsDomainInCat(domain)) {
-				m_projectService.insertDomain(domain);
+			if (!m_projectService.contains(domain)) {
+				m_projectService.insert(domain);
 
 			}
 			Hostinfo info = m_hostinfoService.findByIp(ip);

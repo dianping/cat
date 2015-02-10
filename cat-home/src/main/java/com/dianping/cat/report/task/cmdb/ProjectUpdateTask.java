@@ -396,7 +396,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 						boolean isProjectInfoChange = updateProject(pro);
 
 						if (isProjectInfoChange || isChange) {
-							m_projectService.updateProject(pro);
+							m_projectService.update(pro);
 						}
 					}
 				} catch (Exception e) {

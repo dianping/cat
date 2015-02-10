@@ -24,7 +24,6 @@ import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.task.alert.web.WebAlert;
-import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.config.ConfigReloadTask;
 
 public class CatHomeModule extends AbstractModule {
@@ -41,9 +40,7 @@ public class CatHomeModule extends AbstractModule {
 
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
 
-			Threads.forGroup("cat").start(domainNavManager);
 			Threads.forGroup("cat").start(taskConsumer);
 		}
 

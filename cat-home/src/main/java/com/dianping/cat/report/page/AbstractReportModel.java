@@ -15,13 +15,12 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.report.view.DomainNavManager.Department;
 import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;
 import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.service.ProjectService.Department;
 
 public abstract class AbstractReportModel<A extends Action, M extends ActionContext<?>> extends
       ViewModel<ReportPage, A, M> {
@@ -44,14 +43,14 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private String m_reportType;
 
-	private DomainNavManager m_manager;
+	private ProjectService m_projectService;
 
 	private HostinfoService m_hostinfoService;
 
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 		try {
-			m_manager = ContainerLoader.getDefaultContainer().lookup(DomainNavManager.class);
+			m_projectService = ContainerLoader.getDefaultContainer().lookup(ProjectService.class);
 			m_hostinfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -88,18 +87,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return m_dateFormat.format(new Date(m_date));
 	}
 
-	public String getDepartment() {
-		String domain = getDomain();
-
-		if (domain != null && m_manager != null) {
-			Project project = m_manager.getProjectByName(domain);
-			if (project != null) {
-				return project.getBu();
-			}
-		}
-		return "Default";
-	}
-
 	public String getDisplayDomain() {
 		return m_displayDomain;
 	}
@@ -118,7 +105,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	public abstract String getDomain();
 
 	public Map<String, Department> getDomainGroups() {
-		return m_manager.getDepartment(getDomains());
+		return m_projectService.getDepartment(getDomains());
 	}
 
 	public abstract Collection<String> getDomains();
@@ -172,18 +159,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public UrlNav[] getNavs() {
 		return UrlNav.values();
-	}
-
-	public String getProjectLine() {
-		String domain = getDomain();
-
-		if (domain != null && m_manager != null) {
-			Project project = m_manager.getProjectByName(domain);
-			if (project != null) {
-				return project.getCmdbProductline();
-			}
-		}
-		return "Default";
 	}
 
 	public String getReportType() {

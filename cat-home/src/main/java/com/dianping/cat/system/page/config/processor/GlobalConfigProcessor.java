@@ -16,7 +16,6 @@ import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.group.entity.Domain;
-import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -31,9 +30,6 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	public ProjectService m_projectService;
-
-	@Inject
-	public DomainNavManager m_manager;
 
 	@Inject
 	private BugConfigManager m_bugConfigManager;
@@ -56,7 +52,7 @@ public class GlobalConfigProcessor {
 
 		proto.setId(id);
 		proto.setKeyId(id);
-		return m_projectService.deleteProject(proto);
+		return m_projectService.delete(proto);
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -238,11 +234,7 @@ public class GlobalConfigProcessor {
 		Project project = payload.getProject();
 		project.setKeyId(project.getId());
 
-		boolean success = m_projectService.updateProject(project);
-		if (success) {
-			m_manager.getProjects().put(project.getDomain(), project);
-		}
-		return success;
+		return m_projectService.update(project);
 	}
 
 	public static class ProjectCompartor implements Comparator<Project> {

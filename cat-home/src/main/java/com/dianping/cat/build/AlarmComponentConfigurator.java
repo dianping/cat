@@ -105,7 +105,7 @@ import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TransactionRuleConfigManager;
 import com.dianping.cat.system.config.WebRuleConfigManager;
 
-class AlarmComponentConfigurator extends AbstractResourceConfigurator {
+public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 

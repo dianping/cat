@@ -1,19 +1,20 @@
 package com.dianping.cat.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -32,23 +33,23 @@ public class ProjectService implements Initializable {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private Map<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
-
 	private Set<String> m_domains = new HashSet<String>();
 
-	public void addDomain(String domain) {
-		m_domains.add(domain);
-	}
+	private Map<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
 
-	public boolean containsDomainInCat(String domain) {
+	private Map<String, Project> m_cmdbToProjects = new ConcurrentHashMap<String, Project>();
+
+	public static final String DEFAULT = "Default";
+
+	public boolean contains(String domain) {
 		return m_domains.contains(domain);
 	}
 
-	public Project createLocal() {
+	public Project create() {
 		return m_projectDao.createLocal();
 	}
 
-	public boolean deleteProject(Project project) {
+	public boolean delete(Project project) {
 		int id = project.getId();
 		Iterator<Entry<String, Project>> iterator = m_domainToProjects.entrySet().iterator();
 		String domainName = null;
@@ -64,8 +65,9 @@ public class ProjectService implements Initializable {
 		}
 
 		try {
-			m_domainToProjects.remove(domainName);
 			m_projectDao.deleteByPK(project);
+			m_domainToProjects.remove(domainName);
+			m_cmdbToProjects.remove(project.getCmdbDomain());
 			return true;
 		} catch (Exception e) {
 			Cat.logError("delete project error ", e);
@@ -75,25 +77,6 @@ public class ProjectService implements Initializable {
 
 	public List<Project> findAll() throws DalException {
 		return new ArrayList<Project>(m_domainToProjects.values());
-	}
-
-	public Set<String> findAllDomain() {
-		return m_domains;
-	}
-
-	public Map<String, Project> findAllProjects() {
-		return m_domainToProjects;
-	}
-
-	public Project findByCmdbDomain(String domainName) {
-		try {
-			Project project = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
-			return project;
-		} catch (DalException e) {
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return null;
 	}
 
 	public Project findByDomain(String domainName) {
@@ -115,36 +98,40 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public Project findProject(int id) {
-		Iterator<Entry<String, Project>> iterator = m_domainToProjects.entrySet().iterator();
+	public Project findProject(String domain) {
+		Project project = m_domainToProjects.get(domain);
 
-		while (iterator.hasNext()) {
-			Entry<String, Project> entry = iterator.next();
-			Project pro = entry.getValue();
+		if (project == null) {
+			project = m_cmdbToProjects.get(domain);
+		}
+		return project;
+	}
 
-			if (pro.getId() == id) {
-				return pro;
+	public Map<String, Department> getDepartment(Collection<String> domains) {
+		Map<String, Department> result = new TreeMap<String, Department>();
+
+		for (String domain : domains) {
+			Project project = findProject(domain);
+			String department = DEFAULT;
+			String projectLine = DEFAULT;
+
+			if (project != null) {
+				String bu = project.getBu();
+				String productline = project.getCmdbProductline();
+
+				department = bu == null ? DEFAULT : bu;
+				projectLine = productline == null ? DEFAULT : productline;
 			}
+			Department temp = result.get(department);
+
+			if (temp == null) {
+				temp = new Department();
+				result.put(department, temp);
+			}
+			temp.findOrCreatProjectLine(projectLine).addDomain(domain);
 		}
 
-		try {
-			Project project = m_projectDao.findByPK(id, ProjectEntity.READSET_FULL);
-
-			m_domainToProjects.put(project.getDomain(), project);
-			return project;
-		} catch (DalNotFoundException e) {
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return null;
-	}
-
-	public Set<String> getDomains() {
-		return m_domains;
-	}
-
-	public Map<String, Project> getProjects() {
-		return m_domainToProjects;
+		return result;
 	}
 
 	@Override
@@ -154,7 +141,7 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public boolean insert(Project project) throws DalException {
+	private boolean insert(Project project) throws DalException {
 		m_domainToProjects.put(project.getDomain(), project);
 
 		int result = m_projectDao.insert(project);
@@ -165,12 +152,12 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public boolean insertDomain(String domain) {
-		Project project = createLocal();
+	public boolean insert(String domain) {
+		Project project = create();
 
 		project.setDomain(domain);
-		project.setCmdbProductline("Default");
-		project.setBu("Default");
+		project.setCmdbProductline(DEFAULT);
+		project.setBu(DEFAULT);
 		try {
 			insert(project);
 			m_domains.add(domain);
@@ -185,21 +172,24 @@ public class ProjectService implements Initializable {
 	public void refresh() {
 		try {
 			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-			Map<String, Project> tmpProjects = new ConcurrentHashMap<String, Project>();
+			Map<String, Project> tmpDomainProjects = new ConcurrentHashMap<String, Project>();
+			Map<String, Project> tmpCmdbProjects = new ConcurrentHashMap<String, Project>();
 			Set<String> tmpDomains = new HashSet<String>();
 
 			for (Project project : projects) {
 				tmpDomains.add(project.getDomain());
-				tmpProjects.put(project.getDomain(), project);
+				tmpDomainProjects.put(project.getDomain(), project);
+				tmpCmdbProjects.put(project.getCmdbDomain(), project);
 			}
 			m_domains = tmpDomains;
-			m_domainToProjects = tmpProjects;
+			m_domainToProjects = tmpDomainProjects;
+			m_cmdbToProjects = tmpCmdbProjects;
 		} catch (DalException e) {
 			Cat.logError("initialize ProjectService error", e);
 		}
 	}
 
-	public boolean updateProject(Project project) {
+	public boolean update(Project project) {
 		m_domainToProjects.put(project.getDomain(), project);
 
 		try {
@@ -208,6 +198,50 @@ public class ProjectService implements Initializable {
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
+		}
+	}
+
+	public static class Department {
+
+		private Map<String, ProjectLine> m_projectLines = new TreeMap<String, ProjectLine>();
+
+		public ProjectLine findOrCreatProjectLine(String projectLine) {
+			if (projectLine == null) {
+				projectLine = "Default";
+			}
+
+			ProjectLine line = m_projectLines.get(projectLine);
+
+			if (line == null) {
+				line = new ProjectLine();
+
+				m_projectLines.put(projectLine, line);
+			}
+			return line;
+		}
+
+		public Map<String, ProjectLine> getProjectLines() {
+			return m_projectLines;
+		}
+
+		public void setProjectLines(Map<String, ProjectLine> projectLines) {
+			m_projectLines = projectLines;
+		}
+	}
+
+	public static class ProjectLine {
+		private List<String> m_lineDomains = new ArrayList<String>();
+
+		public void addDomain(String name) {
+			m_lineDomains.add(name);
+		}
+
+		public List<String> getLineDomains() {
+			return m_lineDomains;
+		}
+
+		public void setLineDomains(List<String> lineDomains) {
+			m_lineDomains = lineDomains;
 		}
 	}
 

@@ -43,15 +43,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.view.DomainNavManager</role>
-			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</implementation>
 			<requirements>
@@ -87,9 +78,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -4225,9 +4213,6 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -4257,15 +4242,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.view.DomainNavManager</role>
-			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5234,9 +5210,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BugConfigManager</role>
