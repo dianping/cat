@@ -51,7 +51,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.report.task.project.ProjectUpdateTask;
+import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;

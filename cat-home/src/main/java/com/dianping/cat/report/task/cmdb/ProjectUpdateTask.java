@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.project;
+package com.dianping.cat.report.task.cmdb;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,8 +42,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	private ReportService<TransactionReport> m_reportService;
 
 	protected Logger m_logger;
-
-	private static final long DURATION = 60 * 60 * 1000L;
 
 	private static final String CMDB_DOMAIN_URL = "http://api.cmdb.dp/api/v0.1/projects/s?private_ip=%s";
 
@@ -110,6 +108,19 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 		return null;
 	}
 
+	private String parseInfo(String content, String jsonName, String attrName) throws Exception {
+		JsonObject json = new JsonObject(content).getJSONObject(jsonName);
+
+		if (json != null) {
+			Object obj = json.get(attrName);
+
+			if (obj != null) {
+				return obj.toString();
+			}
+		}
+		return null;
+	}
+
 	private Map<String, String> parseInfos(String content) throws Exception {
 		Map<String, String> infosMap = new HashMap<String, String>();
 		JsonObject project = new JsonObject(content).getJSONObject("project");
@@ -147,19 +158,6 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			infosMap.put("level", null);
 		}
 		return infosMap;
-	}
-
-	private String parseInfo(String content, String jsonName, String attrName) throws Exception {
-		JsonObject json = new JsonObject(content).getJSONObject(jsonName);
-
-		if (json != null) {
-			Object obj = json.get(attrName);
-
-			if (obj != null) {
-				return obj.toString();
-			}
-		}
-		return null;
 	}
 
 	private String queryCmdbName(List<String> ips) {
@@ -250,7 +248,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseInfos(content.trim());
 		} catch (Exception e) {
-			//ignore
+			// ignore
 		} finally {
 			t.complete();
 		}
@@ -267,7 +265,7 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			t.addData(content);
 			return parseInfo(content, jsonName, attrName);
 		} catch (Exception e) {
-			//ignore
+			// ignore
 		} finally {
 			t.complete();
 		}
@@ -276,39 +274,24 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Override
 	public void run() {
-		boolean active = true;
+		Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
+		try {
+			updateHostNameInfo();
+			t1.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			t1.setStatus(e);
+		} finally {
+			t1.complete();
+		}
 
-		while (active) {
-			long startMill = System.currentTimeMillis();
-			Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
-			try {
-				updateHostNameInfo();
-				t1.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t1.setStatus(e);
-			} finally {
-				t1.complete();
-			}
-
-			Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
-			try {
-				updateProjectInfo();
-				t2.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
-				t2.setStatus(e);
-			} finally {
-				t2.complete();
-			}
-
-			try {
-				long executeMills = System.currentTimeMillis() - startMill;
-
-				if (executeMills < DURATION) {
-					Thread.sleep(DURATION - executeMills);
-				}
-			} catch (InterruptedException e) {
-				active = false;
-			}
+		Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
+		try {
+			updateProjectInfo();
+			t2.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			t2.setStatus(e);
+		} finally {
+			t2.complete();
 		}
 	}
 

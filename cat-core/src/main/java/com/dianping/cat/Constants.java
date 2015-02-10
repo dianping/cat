@@ -71,4 +71,6 @@ public class Constants {
 
 	public static final String REPORT_SYSTEM = "system";
 
+	public static final String CMDB = "cmdb";
+
 }

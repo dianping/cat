@@ -98,8 +98,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.project.ProjectUpdateTask</role>
-			<implementation>com.dianping.cat.report.task.project.ProjectUpdateTask</implementation>
+			<role>com.dianping.cat.report.task.cmdb.ProjectUpdateTask</role>
+			<implementation>com.dianping.cat.report.task.cmdb.ProjectUpdateTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -1374,6 +1374,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role-hint>cmdb</role-hint>
+			<implementation>com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.cmdb.ProjectUpdateTask</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</role>
 			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateStatusManager</implementation>
 			<requirements>
@@ -1610,6 +1620,43 @@
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.cached.CachedReportTask</role>
+			<implementation>com.dianping.cat.report.task.cached.CachedReportTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>cross</role-hint>
+					<field-name>m_crossReportBuilder</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role-hint>matrix</role-hint>
+					<field-name>m_matrixReportBuilder</field-name>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2167,43 +2214,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.cached.CachedReportTask</role>
-			<implementation>com.dianping.cat.report.task.cached.CachedReportTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ReportServiceManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionReportBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventReportBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_problemReportBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-					<role-hint>cross</role-hint>
-					<field-name>m_crossReportBuilder</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
-					<role-hint>matrix</role-hint>
-					<field-name>m_matrixReportBuilder</field-name>
 				</requirement>
 			</requirements>
 		</component>

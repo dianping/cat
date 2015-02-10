@@ -43,6 +43,8 @@ import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
+import com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder;
+import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.AppDatabasePruner;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -172,6 +174,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ProductLineConfigManager.class, CachedMetricReportService.class));
 
 		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
+		
+		all.add(C(TaskBuilder.class, CmdbInfoReloadBuilder.ID, CmdbInfoReloadBuilder.class).req(ProjectUpdateTask.class));
 
 		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
 
@@ -218,6 +222,13 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
 
 		all.add(C(ReportFacade.class));
+		
+		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class)
+		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
+		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
+		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")
+		      .req(TaskBuilder.class, CrossReportBuilder.ID, "m_crossReportBuilder")
+		      .req(TaskBuilder.class, MatrixReportBuilder.ID, "m_matrixReportBuilder"));
 
 		return all;
 	}
