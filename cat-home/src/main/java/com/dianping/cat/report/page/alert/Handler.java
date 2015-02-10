@@ -28,9 +28,9 @@ import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

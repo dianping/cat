@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
-import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
+import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
+import com.dianping.cat.report.alert.transaction.TransactionAlert;
 
 public class AlertTest extends ComponentTestCase {
 

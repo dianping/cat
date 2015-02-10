@@ -16,7 +16,7 @@ import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.alert.AlertLevel;
+import com.dianping.cat.report.alert.AlertLevel;
 
 public class AppRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 	@Inject

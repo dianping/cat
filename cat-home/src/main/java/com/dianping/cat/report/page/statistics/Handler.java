@@ -45,7 +45,7 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.ServiceComparator;
 import com.dianping.cat.report.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.report.task.jar.JarReportBuilder;

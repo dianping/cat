@@ -18,7 +18,7 @@ import com.dianping.cat.home.alert.policy.entity.Group;
 import com.dianping.cat.home.alert.policy.entity.Level;
 import com.dianping.cat.home.alert.policy.entity.Type;
 import com.dianping.cat.home.alert.policy.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertChannel;
 
 public class AlertPolicyManager implements Initializable {
 

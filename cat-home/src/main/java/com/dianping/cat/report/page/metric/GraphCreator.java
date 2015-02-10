@@ -23,8 +23,8 @@ import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.MetricType;
 import com.dianping.cat.service.ProjectService;
 
 public class GraphCreator extends AbstractGraphCreator {

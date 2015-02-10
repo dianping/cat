@@ -26,9 +26,12 @@ import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.alert.AlertReportBuilderTest;
-import com.dianping.cat.report.task.alert.MetricIdAndRuleMappingTest;
-import com.dianping.cat.report.task.alert.TopReportVisitorTest;
+import com.dianping.cat.report.alert.AlertReportBuilderTest;
+import com.dianping.cat.report.alert.ExtractDataTest;
+import com.dianping.cat.report.alert.JudgeTimeTest;
+import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
+import com.dianping.cat.report.alert.TopReportVisitorTest;
+import com.dianping.cat.report.alert.UserDefineRuleTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
@@ -136,7 +139,13 @@ WebReportConvertorTest.class,
 
 SystemReportStatisticsTest.class,
 
-MetricIdAndRuleMappingTest.class })
+MetricIdAndRuleMappingTest.class,
+
+ExtractDataTest.class,
+
+JudgeTimeTest.class,
+
+UserDefineRuleTest.class })
 public class AllTests {
 
 	@BeforeClass

@@ -14,7 +14,7 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.entity.Switch;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 
 public class NetGraphBuilder {
 

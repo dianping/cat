@@ -378,8 +378,8 @@
 			<implementation>com.dianping.cat.report.graph.metric.impl.MetricDataFetcherImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.task.alert.AlertInfo</implementation>
+			<role>com.dianping.cat.report.alert.AlertInfo</role>
+			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -1011,7 +1011,7 @@
 					<role>com.dianping.cat.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
+					<role>com.dianping.cat.report.task.ReportFacade</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1061,7 +1061,7 @@
 			<implementation>com.dianping.cat.report.task.metric.BaselineConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.task.metric.MetricBaselineReportBuilder</implementation>
 			<requirements>
@@ -1089,7 +1089,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -1111,7 +1111,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
@@ -1133,7 +1133,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
@@ -1155,7 +1155,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
@@ -1168,7 +1168,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.task.bug.BugReportBuilder</implementation>
 			<requirements>
@@ -1181,7 +1181,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>service</role-hint>
 			<implementation>com.dianping.cat.report.task.service.ServiceReportBuilder</implementation>
 			<requirements>
@@ -1194,7 +1194,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
@@ -1204,7 +1204,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
@@ -1214,7 +1214,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
 			<requirements>
@@ -1233,7 +1233,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>router</role-hint>
 			<implementation>com.dianping.cat.report.task.router.RouterConfigBuilder</implementation>
 			<requirements>
@@ -1246,9 +1246,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>alert</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.exception.AlertReportBuilder</implementation>
+			<implementation>com.dianping.cat.report.alert.exception.AlertReportBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -1262,7 +1262,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>heavy</role-hint>
 			<implementation>com.dianping.cat.report.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
@@ -1275,7 +1275,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>utilization</role-hint>
 			<implementation>com.dianping.cat.report.task.utilization.UtilizationReportBuilder</implementation>
 			<requirements>
@@ -1291,7 +1291,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.task.dependency.DependencyReportBuilder</implementation>
 			<requirements>
@@ -1307,7 +1307,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>NetTopology</role-hint>
 			<implementation>com.dianping.cat.report.task.network.NetTopologyReportBuilder</implementation>
 			<requirements>
@@ -1323,7 +1323,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>jar</role-hint>
 			<implementation>com.dianping.cat.report.task.jar.JarReportBuilder</implementation>
 			<requirements>
@@ -1336,7 +1336,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>system</role-hint>
 			<implementation>com.dianping.cat.report.task.system.SystemReportBuilder</implementation>
 			<requirements>
@@ -1352,7 +1352,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>cachedReport</role-hint>
 			<implementation>com.dianping.cat.report.task.cached.CachedReportBuilder</implementation>
 			<requirements>
@@ -1362,7 +1362,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>cmdb</role-hint>
 			<implementation>com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder</implementation>
 			<requirements>
@@ -1481,7 +1481,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>databaseCapacity</role-hint>
 			<implementation>com.dianping.cat.report.task.overload.CapacityUpdateTask</implementation>
 			<requirements>
@@ -1508,7 +1508,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>highLoad</role-hint>
 			<implementation>com.dianping.cat.report.task.highload.HighLoadReportBuilder</implementation>
 			<requirements>
@@ -1542,7 +1542,7 @@
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
@@ -1562,7 +1562,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>dailyNotify</role-hint>
 			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
 			<requirements>
@@ -1570,7 +1570,7 @@
 					<role>com.dianping.cat.report.task.notify.ReportRender</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
@@ -1587,7 +1587,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>appDatabasePruner</role-hint>
 			<implementation>com.dianping.cat.report.task.database.AppDatabasePruner</implementation>
 			<requirements>
@@ -1606,8 +1606,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
-			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
+			<role>com.dianping.cat.report.task.ReportFacade</role>
+			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.cached.CachedReportTask</role>
@@ -1620,27 +1620,27 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_transactionReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>event</role-hint>
 					<field-name>m_eventReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_problemReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>cross</role-hint>
 					<field-name>m_crossReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.spi.TaskBuilder</role>
+					<role>com.dianping.cat.report.task.TaskBuilder</role>
 					<role-hint>matrix</role-hint>
 					<field-name>m_matrixReportBuilder</field-name>
 				</requirement>
@@ -2470,16 +2470,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.task.alert.AlertInfo</implementation>
+			<role>com.dianping.cat.report.alert.AlertInfo</role>
+			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.DataChecker</role>
-			<implementation>com.dianping.cat.report.task.alert.DefaultDataChecker</implementation>
+			<role>com.dianping.cat.report.alert.DataChecker</role>
+			<implementation>com.dianping.cat.report.alert.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
-			<implementation>com.dianping.cat.report.task.alert.RemoteMetricReportService</implementation>
+			<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+			<implementation>com.dianping.cat.report.alert.RemoteMetricReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -2487,9 +2487,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Business</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.BusinessContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.BusinessContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2500,9 +2500,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Network</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.NetworkContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.NetworkContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2513,9 +2513,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Database</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.DatabaseContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.DatabaseContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2526,9 +2526,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>System</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.SystemContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.SystemContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2539,9 +2539,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Exception</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ExceptionContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.ExceptionContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2552,9 +2552,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.HeartbeatContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2565,9 +2565,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>ThirdParty</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ThirdpartyContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.ThirdpartyContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2578,9 +2578,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>FrontEnd</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.FrontEndExceptionContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
@@ -2591,9 +2591,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>App</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.AppContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.AppContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -2607,9 +2607,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.WebContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.WebContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
@@ -2623,9 +2623,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.Contactor</role>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>Transaction</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.TransactionContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.TransactionContactor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2636,19 +2636,19 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.ContactorManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Business</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.BusinessDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2656,42 +2656,42 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Network</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.NetworkDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.NetworkDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Database</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DatabaseDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.DatabaseDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.HeartbeatDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Exception</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ExceptionDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.ExceptionDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>System</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.SystemDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.SystemDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>ThirdParty</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.ThirdpartyDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.ThirdpartyDecorator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -2699,28 +2699,28 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>FrontEnd</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>App</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.AppDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.AppDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Web</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.WebDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.WebDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.Decorator</role>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Transaction</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.TransactionDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.TransactionDecorator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.config.AlertPolicyManager</role>
@@ -2735,28 +2735,28 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role>com.dianping.cat.report.alert.sender.spliter.Spliter</role>
 			<role-hint>mail</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.spliter.MailSpliter</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.spliter.MailSpliter</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role>com.dianping.cat.report.alert.sender.spliter.Spliter</role>
 			<role-hint>sms</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.spliter.SmsSpliter</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.spliter.SmsSpliter</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.spliter.Spliter</role>
+			<role>com.dianping.cat.report.alert.sender.spliter.Spliter</role>
 			<role-hint>weixin</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.spliter.WeixinSpliter</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.spliter.WeixinSpliter</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.spliter.SpliterManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
 			<role-hint>mail</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.MailSender</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.sender.MailSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.SenderConfigManager</role>
@@ -2764,9 +2764,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
 			<role-hint>sms</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.SmsSender</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.sender.SmsSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.SenderConfigManager</role>
@@ -2774,9 +2774,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.Sender</role>
+			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
 			<role-hint>weixin</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.WeixinSender</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.sender.WeixinSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.SenderConfigManager</role>
@@ -2784,30 +2784,30 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.AlertManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.AlertManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertPolicyManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.decorator.DecoratorManager</role>
+					<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.receiver.ContactorManager</role>
+					<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.service.AlertEntityService</role>
+					<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.spliter.SpliterManager</role>
+					<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -2815,8 +2815,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.business.BusinessAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.business.BusinessAlert</implementation>
+			<role>com.dianping.cat.report.alert.business.BusinessAlert</role>
+			<implementation>com.dianping.cat.report.alert.business.BusinessAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -2825,19 +2825,19 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.BaselineService</role>
@@ -2845,56 +2845,56 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.network.NetworkAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.network.NetworkAlert</implementation>
+			<role>com.dianping.cat.report.alert.network.NetworkAlert</role>
+			<implementation>com.dianping.cat.report.alert.network.NetworkAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.database.DatabaseAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.database.DatabaseAlert</implementation>
+			<role>com.dianping.cat.report.alert.database.DatabaseAlert</role>
+			<implementation>com.dianping.cat.report.alert.database.DatabaseAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert</implementation>
+			<role>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</role>
+			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
@@ -2903,22 +2903,22 @@
 					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2933,44 +2933,44 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.system.SystemAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.system.SystemAlert</implementation>
+			<role>com.dianping.cat.report.alert.system.SystemAlert</role>
+			<implementation>com.dianping.cat.report.alert.system.SystemAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.app.AppAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.app.AppAlert</implementation>
+			<role>com.dianping.cat.report.alert.app.AppAlert</role>
+			<implementation>com.dianping.cat.report.alert.app.AppAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.app.AppDataService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -2978,26 +2978,26 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.web.WebAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.web.WebAlert</implementation>
+			<role>com.dianping.cat.report.alert.web.WebAlert</role>
+			<implementation>com.dianping.cat.report.alert.web.WebAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
@@ -3005,26 +3005,26 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.transaction.TransactionAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.transaction.TransactionAlert</implementation>
+			<role>com.dianping.cat.report.alert.transaction.TransactionAlert</role>
+			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.DataChecker</role>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3036,8 +3036,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
-			<implementation>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</implementation>
+			<role>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</role>
+			<implementation>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
@@ -3048,17 +3048,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.ExceptionAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.exception.ExceptionAlert</implementation>
+			<role>com.dianping.cat.report.alert.exception.ExceptionAlert</role>
+			<implementation>com.dianping.cat.report.alert.exception.ExceptionAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
+					<role>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3067,17 +3067,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert</implementation>
+			<role>com.dianping.cat.report.alert.exception.FrontEndExceptionAlert</role>
+			<implementation>com.dianping.cat.report.alert.exception.FrontEndExceptionAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.exception.AlertExceptionBuilder</role>
+					<role>com.dianping.cat.report.alert.exception.AlertExceptionBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3086,27 +3086,27 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>
-			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</implementation>
+			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert</role>
+			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.AlertManager</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</role>
-			<implementation>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</implementation>
+			<role>com.dianping.cat.report.alert.thirdParty.HttpConnector</role>
+			<implementation>com.dianping.cat.report.alert.thirdParty.HttpConnector</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder</role>
-			<implementation>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder</implementation>
+			<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder</role>
+			<implementation>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.thirdParty.HttpConnector</role>
+					<role>com.dianping.cat.report.alert.thirdParty.HttpConnector</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert</role>
+					<role>com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ThirdPartyConfigManager</role>
@@ -3114,8 +3114,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.service.AlertEntityService</role>
-			<implementation>com.dianping.cat.report.task.alert.service.AlertEntityService</implementation>
+			<role>com.dianping.cat.report.alert.service.AlertEntityService</role>
+			<implementation>com.dianping.cat.report.alert.service.AlertEntityService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -3123,8 +3123,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</implementation>
+			<role>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</role>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -3135,8 +3135,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</implementation>
+			<role>com.dianping.cat.report.alert.summary.AlertSummaryManager</role>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
@@ -3144,22 +3144,22 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 			<role-hint>AlertSummaryContentGenerator</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryContentGenerator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryManager</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 			<role-hint>FailureDecorator</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.summary.FailureSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.FailureSummaryContentGenerator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3168,9 +3168,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 			<role-hint>AlterationSummaryContentGenerator</role-hint>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlterationSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.AlterationSummaryContentGenerator</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
@@ -3178,24 +3178,24 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>AlertSummaryContentGenerator</role-hint>
 					<field-name>m_alertSummaryContentGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>FailureDecorator</role-hint>
 					<field-name>m_failureSummaryContentGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>AlterationSummaryContentGenerator</role-hint>
 					<field-name>m_alterationSummaryContentGenerator</field-name>
 				</requirement>
@@ -4114,7 +4114,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4155,8 +4155,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.AlertInfo</role>
-			<implementation>com.dianping.cat.report.task.alert.AlertInfo</implementation>
+			<role>com.dianping.cat.report.alert.AlertInfo</role>
+			<implementation>com.dianping.cat.report.alert.AlertInfo</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -4323,7 +4323,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4349,32 +4349,32 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</role>
-			<implementation>com.dianping.cat.report.task.alert.summary.AlertSummaryExecutor</implementation>
+			<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>AlertSummaryContentGenerator</role-hint>
 					<field-name>m_alertSummaryContentGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>FailureDecorator</role-hint>
 					<field-name>m_failureSummaryContentGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
 					<role-hint>AlterationSummaryContentGenerator</role-hint>
 					<field-name>m_alterationSummaryContentGenerator</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
-			<implementation>com.dianping.cat.report.task.alert.sender.sender.SenderManager</implementation>
+			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
+			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
@@ -4468,7 +4468,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4477,7 +4477,7 @@
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4489,7 +4489,7 @@
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
@@ -4497,8 +4497,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.RemoteMetricReportService</role>
-			<implementation>com.dianping.cat.report.task.alert.RemoteMetricReportService</implementation>
+			<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+			<implementation>com.dianping.cat.report.alert.RemoteMetricReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4598,7 +4598,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4652,7 +4652,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4703,7 +4703,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4882,7 +4882,7 @@
 					<role>com.dianping.cat.report.page.alert.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.sender.sender.SenderManager</role>
+					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -5065,7 +5065,7 @@
 					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.AlertInfo</role>
+					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5269,7 +5269,7 @@
 					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5304,8 +5304,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
-			<implementation>com.dianping.cat.report.task.alert.RuleFTLDecorator</implementation>
+			<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
+			<implementation>com.dianping.cat.report.alert.RuleFTLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
@@ -5342,7 +5342,7 @@
 					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5390,7 +5390,7 @@
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5417,7 +5417,7 @@
 					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5444,7 +5444,7 @@
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5474,7 +5474,7 @@
 					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5510,7 +5510,7 @@
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5570,7 +5570,7 @@
 					<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.alert.RuleFTLDecorator</role>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
