@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.report.graph.svg.AbstractGraphPayload;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.system.config.DisplayPolicyManager;
+import org.apache.commons.lang.StringUtils;
 
 public class HeartbeatSvg {
 
@@ -116,7 +117,8 @@ public class HeartbeatSvg {
 						INDEX.put(subTitle, INDEX_COUNTER.getAndIncrement());
 					}
 
-					map.put(subTitle, m_builder.build(new HeartbeatSvgPayload(INDEX.get(subTitle), subTitle, "Minute", "Count",
+                    String unitName = m_manager.queryUnitName(subTitle, "Count");
+					map.put(subTitle, m_builder.build(new HeartbeatSvgPayload(INDEX.get(subTitle), subTitle, "Minute", unitName,
 					      subEntry.getValue())));
 				}
 			}
@@ -131,7 +133,8 @@ public class HeartbeatSvg {
 			for (Entry<String, double[]> item : entry.getValue().entrySet()) {
 				String key = item.getKey();
 
-				map.put(key, m_builder.build(new HeartbeatSvgPayload(i++, key, "Minute", "MB", item.getValue())));
+                String unitName = m_manager.queryUnitName(key, "MB");
+				map.put(key, m_builder.build(new HeartbeatSvgPayload(i++, key, "Minute", unitName, item.getValue())));
 			}
 		}
 	}
