@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -123,7 +124,10 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		boolean requireAll = Boolean.valueOf(request.getProperty("requireAll", "false"));
 
 		if (requireAll && responses.size() != size) {
-			Cat.logEvent("FetchReportError", this.getClass().getSimpleName() + ":" + request.getDomain());
+			String data = "require:" + size + " actual:" + responses.size();
+			String eventName = this.getClass().getSimpleName() + ":" + request.getDomain();
+			Cat.logEvent("FetchReportError", eventName, Event.SUCCESS, data);
+			
 			return null;
 		}
 		ModelResponse<T> aggregated = new ModelResponse<T>();

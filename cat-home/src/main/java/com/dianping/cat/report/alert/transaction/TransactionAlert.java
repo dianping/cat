@@ -149,7 +149,7 @@ public class TransactionAlert extends BaseAlert {
 
 	@Override
 	protected Map<String, ProductLine> getProductlines() {
-		return null;
+		throw new RuntimeException("Transaction alert don't support get productline");
 	}
 
 	@Override
