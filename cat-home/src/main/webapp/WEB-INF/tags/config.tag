@@ -114,6 +114,9 @@
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>应用监控大盘</a>
 								<b class="arrow"></b></li>
+							<li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>活动配置</a>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">

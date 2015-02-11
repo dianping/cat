@@ -55,6 +55,7 @@ import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.config.ActivityConfigManager;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -177,6 +178,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
 		      RouterConfigManager.class));
 

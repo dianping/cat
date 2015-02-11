@@ -232,6 +232,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case DISPLAY_POLICY:
+		case ACTIVITY_CONFIG_UPDATE:
 			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
