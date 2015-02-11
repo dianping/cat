@@ -171,7 +171,9 @@
 						<li id="system_alert"><a href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">
 							<i class="menu-icon fa fa-caret-right"></i>告警信息</a>
 							<b class="arrow"></b></li>
-						
+						<li id="system_activity"><a href="/cat/r/activity?domain=${model.domain}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>活动大盘</a>
+							<b class="arrow"></b></li>
 					</ul>
 				</li>
 				</ul>

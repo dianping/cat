@@ -4,6 +4,7 @@
     <entity-ref name="activity" type="list" names="activities"/>
   </entity>
   <entity name="activity">
+    <attribute name="title" value-type="String" />
     <attribute name="domain" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="name" value-type="String" />

@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.transaction;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.site.lookup.util.StringUtils;
 
 public class TransactionMergeHelper {
 
@@ -16,7 +17,7 @@ public class TransactionMergeHelper {
 	}
 
 	private TransactionReport mergerAllName(TransactionReport report, String allName) {
-		if (Constants.ALL.equalsIgnoreCase(allName)) {
+		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
 			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(report);

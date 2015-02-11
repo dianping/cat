@@ -5093,6 +5093,12 @@
 					<role>com.dianping.cat.report.page.activity.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.config.ActivityConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_service</field-name>
@@ -5105,6 +5111,18 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ActivityConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ActivityConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5637,18 +5655,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.ActivityConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ActivityConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ActivityConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

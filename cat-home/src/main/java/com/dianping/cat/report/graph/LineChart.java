@@ -172,8 +172,9 @@ public class LineChart {
 		return this;
 	}
 
-	public void setStep(long step) {
+	public LineChart setStep(long step) {
 		m_step = step;
+		return this;
 	}
 
 	public LineChart setSubTitles(List<String> subTitles) {

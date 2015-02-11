@@ -54,7 +54,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private TransactionMergeHelper m_mergeManager;
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -210,7 +210,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -246,7 +246,7 @@ public class Handler implements PageHandler<Context> {
 				name = Constants.ALL;
 			}
 
-			report = m_mergeManager.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergerAllName(report, ip, name);
 
 			model.setReport(report);
 			buildTransactionNameGraph(model, report, type, name, ip);
@@ -254,7 +254,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -267,7 +267,7 @@ public class Handler implements PageHandler<Context> {
 			      payload.getHistoryEndDate());
 
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 			if (report != null) {
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
@@ -281,7 +281,7 @@ public class Handler implements PageHandler<Context> {
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
-			report = m_mergeManager.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergerAllName(report, ip, name);
 			model.setReport(report);
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;

@@ -38,7 +38,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 	protected ReportServiceManager m_reportService;
 
 	@Inject
-	private TransactionMergeHelper m_mergeManager;
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
 	private ServerConfigManager m_configManger;
@@ -76,7 +76,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 				int size = transactionReport.getMachines().size();
 
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
-				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
+				transactionReport = m_mergeHelper.mergerAllIp(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
 			}
 		}
