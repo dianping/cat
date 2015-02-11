@@ -70,20 +70,20 @@ public class Handler implements PageHandler<Context> {
 		ModelPeriod period = ModelPeriod.getByTime(time);
 		String key = String.valueOf(time) + ":" + domain;
 
-		if (period.isLast()) {
+		if (period.isHistorical()) {
 			TransactionReport report = m_reports.get(key);
 
 			if (report != null) {
 				return report;
 			}
 		}
-		ModelRequest request = new ModelRequest(domain, period) //
+		ModelRequest request = new ModelRequest(domain, time) //
 		      .setProperty("type", type) //
 		      .setProperty("name", name);
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 
-		if (period.isLast()) {
+		if (period.isLast() && report != null) {
 			m_reports.put(key, report);
 		}
 		return report;
@@ -101,15 +101,14 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		Date date = payload.getDate();
-		Date end = new Date(date.getTime() + TimeHelper.ONE_HOUR);
-		Date start = new Date(date.getTime() - TimeHelper.ONE_HOUR);
+		Date start = payload.getStartDate();
+		Date end = payload.getEndDate();
 		List<Activity> activities = m_configManager.getActivityConfig().getActivities();
-		Map<String,List<LineChart>> chartsMap = new LinkedHashMap<String,List<LineChart>>();
-		
+		Map<String, List<LineChart>> chartsMap = new LinkedHashMap<String, List<LineChart>>();
+
 		for (Activity activity : activities) {
 			List<LineChart> charts = buildLineChart(activity, start, end);
-			
+
 			chartsMap.put(activity.getTitle(), charts);
 		}
 		model.setCharts(chartsMap);
@@ -124,23 +123,26 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public List<LineChart> buildLineChart(Activity activity, Date start, Date end) {
-		int step = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
-		LineChart countChart = new LineChart().setTitle("qps").setStep(step);
-		LineChart avgChart = new LineChart().setTitle("avg").setStep(step);
+		String type = activity.getType();
+		String name = activity.getName();
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+		LineChart countChart = new LineChart().setTitle("count (minute)").setStep(TimeHelper.ONE_MINUTE)
+		      .setId(type + "_" + name + "_qps").setSize(size).setStart(start);
+		LineChart avgChart = new LineChart().setTitle("response time(ms)").setStep(TimeHelper.ONE_MINUTE)
+		      .setId(type + "_" + name + "_avg").setSize(size).setStart(start);
 		List<LineChart> charts = new ArrayList<LineChart>();
-		Double[] allCounts = new Double[step];
-		Double[] allAvgs = new Double[step];
+		Double[] allCounts = new Double[size];
+		Double[] allAvgs = new Double[size];
 		long current = start.getTime();
 		int index = 0;
 
 		for (; current < end.getTime(); current = current + TimeHelper.ONE_HOUR) {
-			String name = activity.getName();
 			TransactionReport report = fetchReport(activity, current);
 
 			if (StringUtils.isEmpty(name)) {
 				m_mergeHelper.mergerAllName(report, Constants.ALL, name);
 			}
-			TransactionReportVisitor visitor = new TransactionReportVisitor();
+			TransactionReportVisitor visitor = new TransactionReportVisitor(type, name);
 
 			visitor.visitTransactionReport(report);
 
@@ -152,6 +154,7 @@ public class Handler implements PageHandler<Context> {
 				allAvgs[index] = avgs[i];
 			}
 		}
+
 		countChart.add("qps", allCounts);
 		avgChart.add("avg", allAvgs);
 		charts.add(countChart);
@@ -169,6 +172,11 @@ public class Handler implements PageHandler<Context> {
 
 		private Double[] m_avg = new Double[60];
 
+		public TransactionReportVisitor(String type, String name) {
+			m_type = type;
+			m_name = name;
+		}
+
 		@Override
 		public void visitMachine(Machine machine) {
 			super.visitMachine(machine);
@@ -184,7 +192,7 @@ public class Handler implements PageHandler<Context> {
 		public void visitRange(Range range) {
 			int id = range.getValue();
 
-			m_count[id] = (double) range.getCount() / 60;
+			m_count[id] = (double) range.getCount();
 			m_avg[id] = range.getAvg();
 		}
 

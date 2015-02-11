@@ -1,15 +1,16 @@
 package com.dianping.cat.report.page.activity;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.Constants;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.AbstractReportModel;
 
-import org.unidal.web.mvc.ViewModel;
-
-public class Model extends ViewModel<ReportPage, Action, Context> {
+public class Model  extends AbstractReportModel<Action, Context> {
 
 	private Date m_start;
 
@@ -49,4 +50,14 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public void setStart(Date start) {
 		m_start = start;
 	}
+
+	@Override
+   public String getDomain() {
+	   return Constants.CAT;
+   }
+
+	@Override
+   public Collection<String> getDomains() {
+	   return new HashSet<String>();
+   }
 }

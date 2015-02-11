@@ -142,24 +142,29 @@ public class LineChart {
 		return m_ylabel;
 	}
 
-	public void setDatas(List<Map<Long, Double>> datas) {
+	public LineChart setDatas(List<Map<Long, Double>> datas) {
 		m_datas = datas;
+		return this;
 	}
 
-	public void setHtmlTitle(String htmlTitle) {
+	public LineChart setHtmlTitle(String htmlTitle) {
 		m_htmlTitle = htmlTitle;
+		return this;
 	}
 
-	public void setId(String id) {
+	public LineChart setId(String id) {
 		m_id = id;
+		return this;
 	}
 
-	public void setMaxYlabel(Double maxYlabel) {
+	public LineChart setMaxYlabel(Double maxYlabel) {
 		m_maxYlabel = maxYlabel;
+		return this;
 	}
 
-	public void setMinYlable(Double minYlable) {
+	public LineChart setMinYlable(Double minYlable) {
 		m_minYlabel = minYlable;
+		return this;
 	}
 
 	public LineChart setSize(int size) {

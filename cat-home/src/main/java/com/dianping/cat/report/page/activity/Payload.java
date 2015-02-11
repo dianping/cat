@@ -5,45 +5,26 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
+public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("date")
-	private String m_date;
+	@FieldMeta("startTime")
+	private String m_startTime;
 
-	public Date getDate() {
-		Date date = null;
-		
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	@FieldMeta("endTime")
+	private String m_endTime;
 
-			date = sdf.parse(m_date);
-		} catch (Exception e) {
-			date = new Date();
-		}
-		if (date.getTime() > System.currentTimeMillis()) {
-			date = new Date();
-		}
-
-		Calendar cal = Calendar.getInstance();
-
-		cal.setTime(date);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+	public Payload() {
+		super(ReportPage.ACTIVITY);
 	}
 
 	@Override
@@ -54,6 +35,57 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
+	}
+
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
+	public Date getStartDate() {
+		if (m_startTime != null) {
+			return parseDate(m_startTime);
+		} else {
+			return TimeHelper.getCurrentHour(-1);
+		}
+	}
+
+	public Date getEndDate() {
+		if (m_endTime != null) {
+			return parseDate(m_endTime);
+		} else {
+			return TimeHelper.getCurrentHour(1);
+		}
+	}
+
+	public Date parseDate(String date) {
+		Date d = null;
+
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+			d = sdf.parse(date);
+		} catch (Exception e) {
+			d = new Date();
+		}
+		if (d.getTime() > System.currentTimeMillis()) {
+			d = new Date();
+		}
+
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTime(d);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	@Override
