@@ -192,7 +192,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
 
-		all.add(C(SenderManager.class));
+		all.add(C(SenderManager.class).req(ServerConfigManager.class));
 
 		all.add(C(AlertManager.class).req(AlertPolicyManager.class, DecoratorManager.class, ContactorManager.class,
 		      AlertEntityService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));

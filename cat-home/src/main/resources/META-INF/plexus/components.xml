@@ -2787,6 +2787,11 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.AlertManager</role>
@@ -4376,6 +4381,11 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.sender.SenderManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.alteration.Handler</role>
