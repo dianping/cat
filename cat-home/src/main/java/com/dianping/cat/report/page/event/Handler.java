@@ -119,20 +119,20 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	private EventReport getEventGraphReport(Model model, Payload payload) {
+	private EventReport getHourlyGraphReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		String name = payload.getName();
-		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);
 
 		if (name == null || name.length() == 0) {
-			request.setProperty("name", "*");
-			request.setProperty("all", "true");
-			name = Constants.ALL;
+			name = "*";
 		}
+
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", name)//
+		      .setProperty("ip", ipAddress);
+
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
 
@@ -213,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 			m_historyGraphs.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			report = getEventGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
@@ -249,7 +249,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case GROUP_GRAPHS:
-			report = getEventGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);

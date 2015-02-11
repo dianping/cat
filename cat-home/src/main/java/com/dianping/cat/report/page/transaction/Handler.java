@@ -150,21 +150,19 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private TransactionReport getTransactionGraphReport(Model model, Payload payload) {
+	private TransactionReport getHourlyGraphReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		String name = payload.getName();
 
+		if (name == null || name.length() == 0) {
+			name = "*";
+		}
+
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
+		      .setProperty("name", name)//
 		      .setProperty("ip", ipAddress);
-
-		if (name == null || name.length() == 0) {
-			request.setProperty("name", "*");
-			request.setProperty("all", "true");
-			name = Constants.ALL;
-		}
 
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
@@ -229,7 +227,7 @@ public class Handler implements PageHandler<Context> {
 			m_historyGraph.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			report = getTransactionGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
@@ -266,7 +264,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case GROUP_GRAPHS:
-			report = getTransactionGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 			buildDistributionInfo(model, type, name, report);
 
