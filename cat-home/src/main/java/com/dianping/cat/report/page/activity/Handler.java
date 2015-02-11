@@ -59,6 +59,62 @@ public class Handler implements PageHandler<Context> {
 		}
 	};
 
+	public List<LineChart> buildLineChart(Activity activity, Date start, Date end) {
+		String type = activity.getType();
+		String name = activity.getName();
+		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
+		LineChart countChart = new LineChart().setTitle("count (minute)").setStep(TimeHelper.ONE_MINUTE)
+		      .setId(type + "_" + name + "_qps").setSize(size).setStart(start);
+		LineChart avgChart = new LineChart().setTitle("response time(ms)").setStep(TimeHelper.ONE_MINUTE)
+		      .setId(type + "_" + name + "_avg").setSize(size).setStart(start);
+		List<LineChart> charts = new ArrayList<LineChart>();
+		Double[] allCounts = new Double[size];
+		Double[] allAvgs = new Double[size];
+		long current = start.getTime();
+		int index = 0;
+
+		for (; current < end.getTime(); current = current + TimeHelper.ONE_HOUR) {
+			TransactionReport report = fetchReport(activity, current);
+			TransactionReportVisitor visitor = null;
+
+			report = m_mergeHelper.mergerAllIp(report, Constants.ALL);
+			if (StringUtils.isEmpty(name)) {
+				report = m_mergeHelper.mergerAllName(report, Constants.ALL);
+				visitor = new TransactionReportVisitor(type, Constants.ALL);
+			} else {
+				visitor = new TransactionReportVisitor(type, name);
+			}
+
+			visitor.visitTransactionReport(report);
+
+			Double[] counts = visitor.getCount();
+			Double[] avgs = visitor.getAvg();
+
+			for (int i = 0; i < 60; i++, index++) {
+				allCounts[index] = counts[i];
+				allAvgs[index] = avgs[i];
+			}
+		}
+
+		int max = 0;
+		for (int i = 0; i < allCounts.length; i++) {
+			if (allCounts[i] == null) {
+				max = i;
+				break;
+			}
+		}
+		if (max > 1) {
+			allCounts[max - 1] = null;
+			allAvgs[max - 1] = null;
+		}
+
+		countChart.add("qps", allCounts);
+		avgChart.add("avg", allAvgs);
+		charts.add(countChart);
+		charts.add(avgChart);
+		return charts;
+	}
+
 	private TransactionReport fetchReport(Activity activity, long time) {
 		String domain = activity.getDomain();
 		String type = activity.getType();
@@ -83,7 +139,7 @@ public class Handler implements PageHandler<Context> {
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 
-		if (period.isLast() && report != null) {
+		if (period.isHistorical() && report != null) {
 			m_reports.put(key, report);
 		}
 		return report;
@@ -122,46 +178,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public List<LineChart> buildLineChart(Activity activity, Date start, Date end) {
-		String type = activity.getType();
-		String name = activity.getName();
-		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
-		LineChart countChart = new LineChart().setTitle("count (minute)").setStep(TimeHelper.ONE_MINUTE)
-		      .setId(type + "_" + name + "_qps").setSize(size).setStart(start);
-		LineChart avgChart = new LineChart().setTitle("response time(ms)").setStep(TimeHelper.ONE_MINUTE)
-		      .setId(type + "_" + name + "_avg").setSize(size).setStart(start);
-		List<LineChart> charts = new ArrayList<LineChart>();
-		Double[] allCounts = new Double[size];
-		Double[] allAvgs = new Double[size];
-		long current = start.getTime();
-		int index = 0;
-
-		for (; current < end.getTime(); current = current + TimeHelper.ONE_HOUR) {
-			TransactionReport report = fetchReport(activity, current);
-
-			if (StringUtils.isEmpty(name)) {
-				m_mergeHelper.mergerAllName(report, Constants.ALL, name);
-			}
-			TransactionReportVisitor visitor = new TransactionReportVisitor(type, name);
-
-			visitor.visitTransactionReport(report);
-
-			Double[] counts = visitor.getCount();
-			Double[] avgs = visitor.getAvg();
-
-			for (int i = 0; i < 60; i++, index++) {
-				allCounts[index] = counts[i];
-				allAvgs[index] = avgs[i];
-			}
-		}
-
-		countChart.add("qps", allCounts);
-		avgChart.add("avg", allAvgs);
-		charts.add(countChart);
-		charts.add(avgChart);
-		return charts;
-	}
-
 	public class TransactionReportVisitor extends BaseVisitor {
 
 		private String m_type;
@@ -172,9 +188,27 @@ public class Handler implements PageHandler<Context> {
 
 		private Double[] m_avg = new Double[60];
 
+		private Double[] m_sum = new Double[60];
+
 		public TransactionReportVisitor(String type, String name) {
 			m_type = type;
 			m_name = name;
+		}
+
+		public Double[] getAvg() {
+			for (int i = 0; i < 60; i++) {
+				Double sum = m_sum[i];
+				Double count = m_count[i];
+
+				if (count != null && sum != null && count > 0) {
+					m_avg[i] = sum / count;
+				}
+			}
+			return m_avg;
+		}
+
+		public Double[] getCount() {
+			return m_count;
 		}
 
 		@Override
@@ -192,8 +226,17 @@ public class Handler implements PageHandler<Context> {
 		public void visitRange(Range range) {
 			int id = range.getValue();
 
-			m_count[id] = (double) range.getCount();
-			m_avg[id] = range.getAvg();
+			if (m_count[id] != null) {
+				m_count[id] = m_count[id] + (double) range.getCount();
+			} else {
+				m_count[id] = (double) range.getCount();
+			}
+
+			if (m_sum[id] != null) {
+				m_sum[id] = m_sum[id] + range.getSum();
+			} else {
+				m_sum[id] = range.getSum();
+			}
 		}
 
 		@Override
@@ -201,14 +244,6 @@ public class Handler implements PageHandler<Context> {
 			if (m_type.equals(type.getId())) {
 				super.visitType(type);
 			}
-		}
-
-		public Double[] getCount() {
-			return m_count;
-		}
-
-		public Double[] getAvg() {
-			return m_avg;
 		}
 
 	}

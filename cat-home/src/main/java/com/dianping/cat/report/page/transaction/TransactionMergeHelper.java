@@ -7,7 +7,7 @@ import com.site.lookup.util.StringUtils;
 public class TransactionMergeHelper {
 
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
-		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+		if (StringUtils.isEmpty(ipAddress) ||Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(report);
@@ -16,7 +16,7 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	private TransactionReport mergerAllName(TransactionReport report, String allName) {
+	public TransactionReport mergerAllName(TransactionReport report, String allName) {
 		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
 			AllNameMerger all = new AllNameMerger();
 
