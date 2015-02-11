@@ -58,6 +58,16 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DomainGroupConfigManager m_configManager;
 
+	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
+
+		chartVisitor.visitEventReport(report);
+		detailVisitor.visitEventReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
+	}
+
 	private void buildEventMetaInfo(Model model, Payload payload, EventReport report) {
 		String type = payload.getType();
 		String sorted = payload.getSortBy();
@@ -272,16 +282,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
-		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
-		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
-
-		chartVisitor.visitEventReport(report);
-		detailVisitor.visitEventReport(report);
-		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {

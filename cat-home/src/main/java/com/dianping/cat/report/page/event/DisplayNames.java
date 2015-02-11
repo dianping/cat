@@ -105,10 +105,6 @@ public class DisplayNames {
 			return m_detail;
 		}
 
-		public String getType() {
-			return m_type;
-		}
-
 		public String getName() {
 			String id = m_detail.getId();
 
@@ -117,6 +113,10 @@ public class DisplayNames {
 			} catch (Exception e) {
 				return id;
 			}
+		}
+
+		public String getType() {
+			return m_type;
 		}
 	}
 

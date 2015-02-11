@@ -65,6 +65,16 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
 
+	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
+
+		chartVisitor.visitTransactionReport(report);
+		detailVisitor.visitTransactionReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
+	}
+
 	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
 		String type = payload.getType();
 		String sorted = payload.getSortBy();
@@ -134,22 +144,6 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	private TransactionReport getHourlyReport(Payload payload) {
-		String domain = payload.getDomain();
-		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())
-		      .setProperty("ip", ipAddress);
-
-		if (m_service.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_service.invoke(request);
-			TransactionReport report = response.getModel();
-
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
-		}
-	}
-
 	private TransactionReport getHourlyGraphReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
@@ -167,6 +161,22 @@ public class Handler implements PageHandler<Context> {
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 		return report;
+	}
+
+	private TransactionReport getHourlyReport(Payload payload) {
+		String domain = payload.getDomain();
+		String ipAddress = payload.getIpAddress();
+		ModelRequest request = new ModelRequest(domain, payload.getDate()).setProperty("type", payload.getType())
+		      .setProperty("ip", ipAddress);
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_service.invoke(request);
+			TransactionReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
+		}
 	}
 
 	@Override
@@ -292,16 +302,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
-		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
-		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
-
-		chartVisitor.visitTransactionReport(report);
-		detailVisitor.visitTransactionReport(report);
-		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {
