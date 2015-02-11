@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
@@ -51,6 +52,9 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.state.CompositeStateService;
 import com.dianping.cat.report.page.model.state.HistoricalStateService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
+import com.dianping.cat.report.page.model.storage.CompositeStorageService;
+import com.dianping.cat.report.page.model.storage.HistoricalStorageService;
+import com.dianping.cat.report.page.model.storage.LocalStorageService;
 import com.dianping.cat.report.page.model.top.CompositeTopService;
 import com.dianping.cat.report.page.model.top.HistoricalTopService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
@@ -137,6 +141,14 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, DependencyAnalyzer.ID, CompositeDependencyService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
+
+		all.add(C(ModelService.class, "storage-local", LocalStorageService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, "storage-historical", HistoricalStorageService.class) //
+		      .req(ReportBucketManager.class, ReportServiceManager.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, StorageAnalyzer.ID, CompositeStorageService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "metric-local", LocalMetricService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

@@ -2,10 +2,11 @@
 <model>
   <entity name="storage-report" root="true">
     <attribute name="id" value-type="String" />
-    <attribute name="domain" value-type="String" />
+    <attribute name="name" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="id" value-type="String" type="list" names="ids" />
     <entity-ref name="machine" type="list" names="machines" />
   </entity>
   <entity name="machine">

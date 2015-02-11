@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
@@ -79,4 +80,6 @@ public interface ReportServiceManager {
 	public JarReport queryJarReport(String domain, Date start, Date end);
 
 	public SystemReport querySystemReport(String domain, Date start, Date end);
+
+	public StorageReport queryStorageReport(String domain, Date start, Date end);
 }

@@ -607,6 +607,37 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.ReportService</role>
+			<role-hint>storage</role-hint>
+			<implementation>com.dianping.cat.report.service.impl.CrossReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.ReportService</role>
 			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.service.impl.BugReportService</implementation>
 			<requirements>
@@ -2082,6 +2113,55 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>dependency-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>storage-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.storage.LocalStorageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>storage-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.storage.HistoricalStorageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>storage</role-hint>
+			<implementation>com.dianping.cat.report.page.model.storage.CompositeStorageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>storage-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -3631,6 +3711,11 @@
 					<field-name>m_transactionService</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>storage-local</role-hint>
+					<field-name>m_storageService</field-name>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
@@ -3797,6 +3882,21 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.storage.LocalStorageService</role>
+			<implementation>com.dianping.cat.report.page.model.storage.LocalStorageService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.report.ReportBucketManager</role>

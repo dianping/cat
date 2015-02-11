@@ -44,7 +44,7 @@ public class CrossReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("Cross report don't support HourReport!");
+		throw new RuntimeException("Cross report don't support HourlyReport!");
 	}
 
 	@Override
