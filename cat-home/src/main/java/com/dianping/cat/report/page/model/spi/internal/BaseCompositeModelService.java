@@ -120,6 +120,12 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			t.complete();
 		}
 
+		boolean requireAll = Boolean.valueOf(request.getProperty("requireAll", "false"));
+
+		if (requireAll && responses.size() != size) {
+			Cat.logEvent("FetchReportError", this.getClass().getSimpleName() + ":" + request.getDomain());
+			return null;
+		}
 		ModelResponse<T> aggregated = new ModelResponse<T>();
 		T report = merge(request, responses);
 

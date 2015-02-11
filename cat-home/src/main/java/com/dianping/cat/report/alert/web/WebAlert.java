@@ -182,7 +182,7 @@ public class WebAlert extends BaseAlert {
 		pars.put("channel", channel);
 		request.getProperties().putAll(pars);
 
-		MetricReport report = m_service.invoke(request);
+		MetricReport report = m_service.fetchMetricReport(request);
 
 		return report;
 	}

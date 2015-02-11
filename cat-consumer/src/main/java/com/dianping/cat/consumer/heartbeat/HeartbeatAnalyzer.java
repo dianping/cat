@@ -42,6 +42,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		try {
 			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
+			machine.setClasspath(info.getRuntime().getJavaClasspath());
 
 			transalteHearbeat(info);
 		} catch (Exception e) {

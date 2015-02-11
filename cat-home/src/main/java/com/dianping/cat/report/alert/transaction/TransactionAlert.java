@@ -125,17 +125,21 @@ public class TransactionAlert extends BaseAlert {
 		}
 		return results;
 	}
-	
+
 	private TransactionReport fetchTransactionReport(String domain, String type, String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()) //
-		      .setProperty("type", type) //
-		      .setProperty("name", name)//
-		      .setProperty("ip", Constants.ALL);
+		      .setProperty("type", type).setProperty("name", name)//
+		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
 
-		return m_mergeManager.mergerAllName(report, Constants.ALL, name);
+		if (response != null) {
+			TransactionReport report = response.getModel();
+
+			return m_mergeManager.mergerAllName(report, Constants.ALL, name);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -174,7 +178,7 @@ public class TransactionAlert extends BaseAlert {
 	@Override
 	public void run() {
 		boolean active = TimeHelper.sleepToNextMinute();
-		
+
 		while (active) {
 			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();

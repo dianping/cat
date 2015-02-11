@@ -2478,11 +2478,12 @@
 			<implementation>com.dianping.cat.report.alert.DefaultDataChecker</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
-			<implementation>com.dianping.cat.report.alert.RemoteMetricReportService</implementation>
+			<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+			<implementation>com.dianping.cat.report.alert.MetricReportGroupService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -2828,7 +2829,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.BusinessRuleConfigManager</role>
@@ -2855,7 +2856,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetworkRuleConfigManager</role>
@@ -2879,7 +2880,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.DatabaseRuleConfigManager</role>
@@ -2903,7 +2904,7 @@
 					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.HeartbeatRuleConfigManager</role>
@@ -2943,7 +2944,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.SystemRuleConfigManager</role>
@@ -2988,7 +2989,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.WebRuleConfigManager</role>
@@ -3015,7 +3016,7 @@
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
@@ -4477,7 +4478,9 @@
 			<implementation>com.dianping.cat.report.page.network.nettopology.NetGraphManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>metric</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4493,15 +4496,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.NetGraphConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.alert.RemoteMetricReportService</role>
-			<implementation>com.dianping.cat.report.alert.RemoteMetricReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

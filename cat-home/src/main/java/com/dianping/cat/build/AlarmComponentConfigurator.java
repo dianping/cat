@@ -12,6 +12,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
@@ -29,7 +30,7 @@ import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.DefaultDataChecker;
-import com.dianping.cat.report.alert.RemoteMetricReportService;
+import com.dianping.cat.report.alert.MetricReportGroupService;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
@@ -113,7 +114,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertInfo.class));
 		all.add(C(DataChecker.class, DefaultDataChecker.class));
-		all.add(C(RemoteMetricReportService.class).req(ServerConfigManager.class));
+		all.add(C(MetricReportGroupService.class).req(ModelService.class, MetricAnalyzer.ID));
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
@@ -197,34 +198,34 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      AlertEntityService.class, SpliterManager.class, SenderManager.class, ServerConfigManager.class));
 
 		all.add(C(BusinessAlert.class).req(MetricConfigManager.class, ProductLineConfigManager.class, AlertInfo.class)
-		      .req(RemoteMetricReportService.class, BusinessRuleConfigManager.class, DataChecker.class,
+		      .req(MetricReportGroupService.class, BusinessRuleConfigManager.class, DataChecker.class,
 		            AlertManager.class, BaselineService.class));
 
 		all.add(C(NetworkAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		      MetricReportGroupService.class, NetworkRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(DatabaseAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		      MetricReportGroupService.class, DatabaseRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(HeartbeatAlert.class)
 		      .req(ProductLineConfigManager.class, HeartbeatDisplayPolicyManager.class)
-		      .req(RemoteMetricReportService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
+		      .req(MetricReportGroupService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
 		            ServerConfigManager.class, AlertManager.class, AlertInfo.class)
 		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 
 		all.add(C(SystemAlert.class).req(ProductLineConfigManager.class, AlertInfo.class).req(
-		      RemoteMetricReportService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
+		      MetricReportGroupService.class, SystemRuleConfigManager.class, DataChecker.class, AlertManager.class));
 
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
 		      DataChecker.class, AppConfigManager.class));
 
 		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, AlertInfo.class)
-		      .req(RemoteMetricReportService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
+		      .req(MetricReportGroupService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
 		      .req(UrlPatternConfigManager.class));
 
 		all.add(C(TransactionAlert.class).req(ProductLineConfigManager.class, AlertInfo.class)
-		      .req(RemoteMetricReportService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
+		      .req(MetricReportGroupService.class, TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));

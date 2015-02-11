@@ -20,6 +20,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -29,18 +30,19 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.alert.RemoteMetricReportService;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetGraphManager implements Initializable, LogEnabled {
 
-	@Inject
-	private RemoteMetricReportService m_service;
+	@Inject(type = ModelService.class, value = MetricAnalyzer.ID)
+	private ModelService<MetricReport> m_service;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
@@ -128,7 +130,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 		for (String group : groups) {
 			ModelRequest request = new ModelRequest(group, period);
-			MetricReport report = m_service.invoke(request);
+			ModelResponse<MetricReport> response = m_service.invoke(request);
+			MetricReport report = response.getModel();
 
 			reports.put(group, report);
 		}

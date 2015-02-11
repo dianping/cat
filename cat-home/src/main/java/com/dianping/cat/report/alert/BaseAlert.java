@@ -36,7 +36,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	protected ProductLineConfigManager m_productLineConfigManager;
 
 	@Inject
-	protected RemoteMetricReportService m_service;
+	protected MetricReportGroupService m_service;
 
 	@Inject
 	protected AlertManager m_sendManager;

@@ -188,7 +188,7 @@ public class HeartbeatAlert extends BaseAlert {
 
 	private HeartbeatReport generateReport(String domain, long date) {
 		ModelRequest request = new ModelRequest(domain, date)//
-		      .setProperty("ip", Constants.ALL);
+		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 
 		if (m_heartbeatService.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
