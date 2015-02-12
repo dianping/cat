@@ -83,6 +83,7 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.router.RouterConfigBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
+import com.dianping.cat.report.task.storage.StorageReportBuilder;
 import com.dianping.cat.report.task.system.SystemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
@@ -174,7 +175,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      ProductLineConfigManager.class, CachedMetricReportService.class));
 
 		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
-		
+
+		all.add(C(TaskBuilder.class, StorageReportBuilder.ID, StorageReportBuilder.class));
+
 		all.add(C(TaskBuilder.class, CmdbInfoReloadBuilder.ID, CmdbInfoReloadBuilder.class).req(ProjectUpdateTask.class));
 
 		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
@@ -222,7 +225,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
 
 		all.add(C(ReportFacade.class));
-		
+
 		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class)
 		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
 		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")

@@ -1,11 +1,14 @@
 package com.dianping.cat.report.page.storage;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -55,9 +58,17 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		if (m_report != null) {
-			return m_report.getIds();
+			return SortHelper.sortDomain(m_report.getIds());
 		} else {
 			return new HashSet<String>();
+		}
+	}
+
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return SortHelper.sortIpAddress(m_report.getIps());
 		}
 	}
 

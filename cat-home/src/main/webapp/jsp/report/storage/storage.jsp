@@ -30,7 +30,7 @@
 				<c:otherwise>
 					<a href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
-			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.report.ips}">
+			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">

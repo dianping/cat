@@ -27,7 +27,6 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 
 	@Override
 	public void afterLoad(Map<String, StorageReport> reports) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override

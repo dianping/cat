@@ -1409,6 +1409,11 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>storage</role-hint>
+			<implementation>com.dianping.cat.report.task.storage.StorageReportBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>cmdb</role-hint>
 			<implementation>com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder</implementation>
 			<requirements>

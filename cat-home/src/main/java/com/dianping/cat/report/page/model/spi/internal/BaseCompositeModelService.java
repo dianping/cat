@@ -98,8 +98,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 						if (response.getException() != null) {
 							logError(response.getException());
 						}
-
-						responses.add(response);
+						if (response != null && response.getModel() != null) {
+							responses.add(response);
+						}
 					} catch (Exception e) {
 						logError(e);
 						t.setStatus(e);
@@ -121,13 +122,12 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			t.complete();
 		}
 
-		boolean requireAll = Boolean.valueOf(request.getProperty("requireAll", "false"));
+		String requireAll = request.getProperty("requireAll");
 
-		if (requireAll && responses.size() != size) {
+		if (requireAll != null && responses.size() != size) {
 			String data = "require:" + size + " actual:" + responses.size();
-			String eventName = this.getClass().getSimpleName() + ":" + request.getDomain();
-			Cat.logEvent("FetchReportError", eventName, Event.SUCCESS, data);
-			
+			Cat.logEvent("FetchReportError:" + this.getClass().getSimpleName(), request.getDomain(), Event.SUCCESS, data);
+
 			return null;
 		}
 		ModelResponse<T> aggregated = new ModelResponse<T>();

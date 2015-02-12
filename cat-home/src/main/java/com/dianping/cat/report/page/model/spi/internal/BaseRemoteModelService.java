@@ -64,7 +64,6 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
-		ModelResponse<T> response = new ModelResponse<T>();
 		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
@@ -81,10 +80,13 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			t.addData("length", len);
 
 			if (len > 0) {
+				ModelResponse<T> response = new ModelResponse<T>();
 				T report = buildModel(xml);
 
 				response.setModel(report);
 				t.setStatus(Message.SUCCESS);
+				
+				return response;
 			} else {
 				t.setStatus("NoReport");
 			}
@@ -94,7 +96,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			t.complete();
 		}
 
-		return response;
+		return null;
 	}
 
 	@Override
