@@ -41,7 +41,7 @@
          <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
-         <page name="dependency" title="Dependency"  default="true"  path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
+         <page name="dependency" title="Dependency" default="true" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
             <description>Dependency</description>
          </page>
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">
@@ -79,6 +79,9 @@
          </page>
          <page name="database" title="Database" path="database" template="default">
             <description>Database</description>
+         </page>
+         <page name="storage" title="Storage" path="storage" template="default">
+            <description>Storage</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

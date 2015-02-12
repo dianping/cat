@@ -39,7 +39,6 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "database")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
 	}
 
 	@Override
@@ -61,12 +60,12 @@ public class Handler implements PageHandler<Context> {
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		}
-
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
-		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabaseProductLines().values());
+		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabaseProductLines()
+		      .values());
 
 		model.setPage(ReportPage.DATABASE);
 		model.setProductLines(databases);

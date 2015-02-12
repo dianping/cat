@@ -4,6 +4,8 @@
 	<id>shop-web</id>
 	<ip>10.10.10.1</ip>
 	<ip>10.10.10.2</ip>
+	<op>select</op>
+	<op>insert</op>
 	<machine id="10.1.6.102">
 		<domain id="All">
 			<operation id="get" count="100" avg="100" sum="10000" error="100" long-count="100">

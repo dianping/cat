@@ -136,7 +136,7 @@ public class TransactionAlert extends BaseAlert {
 		if (response != null) {
 			TransactionReport report = response.getModel();
 
-			return m_mergeManager.mergerAllName(report, Constants.ALL, name);
+			return m_mergeManager.mergeAllNames(report, Constants.ALL, name);
 		} else {
 			return null;
 		}

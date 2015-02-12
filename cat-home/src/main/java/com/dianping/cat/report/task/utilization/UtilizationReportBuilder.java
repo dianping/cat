@@ -76,7 +76,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 				int size = transactionReport.getMachines().size();
 
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
-				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
+				transactionReport = m_mergeManager.mergeAllMachines(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
 			}
 		}

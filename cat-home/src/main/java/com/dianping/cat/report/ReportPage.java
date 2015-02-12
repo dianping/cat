@@ -29,8 +29,6 @@ public enum ReportPage implements Page {
 
    STATE("state", "state", "State", "State", true),
 
-   TOP("top", "top", "Top", "Top", true),
-
    METRIC("metric", "metric", "Metric", "Metric", true),
 
    DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
@@ -57,7 +55,9 @@ public enum ReportPage implements Page {
 
    HIGHLOAD("highload", "highload", "Highload", "Highload", true),
 
-   DATABASE("database", "database", "Database", "Database", true);
+   DATABASE("database", "database", "Database", "Database", true),
+
+   STORAGE("storage", "storage", "Storage", "Storage", true);
 
    private String m_name;
 

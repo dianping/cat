@@ -11,9 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -171,7 +171,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			return new DependencyReportFilter()
 			      .buildXml((com.dianping.cat.consumer.dependency.model.IEntity<?>) dataModel);
 		} else if (StorageAnalyzer.ID.equals(report)) {
-			return new StorageReportFilter().buildXml((com.dianping.cat.consumer.storage.model.IEntity<?>) dataModel);
+			return new StorageReportFilter(ipAddress)
+			      .buildXml((com.dianping.cat.consumer.storage.model.IEntity<?>) dataModel);
 		} else {
 			return String.valueOf(dataModel);
 		}
@@ -472,8 +473,21 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	}
 
 	public static class StorageReportFilter extends com.dianping.cat.consumer.storage.model.transform.DefaultXmlBuilder {
-		public StorageReportFilter() {
+
+		private String m_ipAddress;
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.storage.model.entity.Machine machine) {
+			if (StringUtils.isEmpty(m_ipAddress) || m_ipAddress.equals(Constants.ALL)) {
+				super.visitMachine(machine);
+			} else if (machine.getId().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			}
+		}
+
+		public StorageReportFilter(String ip) {
 			super(true, new StringBuilder(DEFAULT_SIZE));
+			m_ipAddress = ip;
 		}
 	}
 

@@ -42,6 +42,7 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageDelegate;
+import com.dianping.cat.consumer.storage.StorageReportUpdater;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -270,14 +271,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	private Collection<Component> defineStorageComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = StorageAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, StorageAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID).req(ServerConfigManager.class));
+		all.add(C(com.dianping.cat.consumer.storage.DatabaseParser.class));
+		all.add(C(StorageReportUpdater.class));
+		all.add(C(MessageAnalyzer.class, ID, StorageAnalyzer.class).is(PER_LOOKUP)
+		      //
+		      .req(ReportManager.class, ID).req(ReportDelegate.class, ID).req(ServerConfigManager.class)
+		      .req(com.dianping.cat.consumer.storage.DatabaseParser.class).req(StorageReportUpdater.class));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, StorageDelegate.class).req(TaskManager.class, ServerConfigManager.class));
+		all.add(C(ReportDelegate.class, ID, StorageDelegate.class).req(TaskManager.class, ServerConfigManager.class,
+		      StorageReportUpdater.class));
 
 		return all;
 	}

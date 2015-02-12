@@ -620,6 +620,14 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
+			<implementation>com.dianping.cat.consumer.storage.DatabaseParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
+			<implementation>com.dianping.cat.consumer.storage.StorageReportUpdater</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.consumer.storage.StorageAnalyzer</implementation>
@@ -635,6 +643,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -671,6 +685,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 				</requirement>
 			</requirements>
 		</component>

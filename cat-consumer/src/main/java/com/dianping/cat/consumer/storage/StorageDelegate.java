@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.storage;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
@@ -23,6 +22,9 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	@Inject
+	private StorageReportUpdater m_reportUpdater;
+
 	@Override
 	public void afterLoad(Map<String, StorageReport> reports) {
 		// TODO Auto-generated method stub
@@ -31,10 +33,8 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 	@Override
 	public void beforeSave(Map<String, StorageReport> reports) {
 		for (StorageReport report : reports.values()) {
-			Set<String> domainNames = report.getIds();
 
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
+			m_reportUpdater.updateStorageIds(report.getId(), reports.keySet(), report);
 		}
 	}
 
