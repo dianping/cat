@@ -30,18 +30,16 @@ public class SenderManager extends ContainerHolder implements Initializable {
 		String channelName = channel.getName();
 
 		try {
-			Sender sender = m_senders.get(channelName);
 			boolean result = true;
 			String str = "nosend";
 
 			if (m_configManager.isSendMachine()) {
+				Sender sender = m_senders.get(channelName);
+
 				result = sender.send(message);
 				str = String.valueOf(result);
 			}
-
-			String type = message.getType();
-
-			Cat.logEvent("Channel:" + channelName, type + ":" + str, Event.SUCCESS, null);
+			Cat.logEvent("Channel:" + channelName, message.getType() + ":" + str, Event.SUCCESS, null);
 			return result;
 		} catch (Exception e) {
 			Cat.logError(e);
