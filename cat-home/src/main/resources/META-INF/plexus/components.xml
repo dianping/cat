@@ -3267,11 +3267,35 @@
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.black.BlackListManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.black.BlackListManager</role>
+			<implementation>com.dianping.cat.config.black.BlackListManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.config.ConfigDao</role>
+			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.Handler</role>
@@ -3357,15 +3381,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.config.ConfigDao</role>
-			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5294,18 +5309,6 @@
 		<component>
 			<role>com.dianping.cat.system.config.SenderConfigManager</role>
 			<implementation>com.dianping.cat.system.config.SenderConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.black.BlackListManager</role>
-			<implementation>com.dianping.cat.config.black.BlackListManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

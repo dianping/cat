@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
+			<h4 class="text-center text-danger">设定客户端黑名单，符合domain和ip的消息会直接被丢弃</h4>
 			<form name="blackConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=blackConfigUpdate">
 				<table class="table table-striped table-condensed   table-hover">
