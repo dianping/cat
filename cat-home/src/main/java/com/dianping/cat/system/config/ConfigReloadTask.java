@@ -4,6 +4,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 
@@ -17,6 +18,9 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
+	
+	@Inject
+	private BlackListManager m_blackListManager;
 
 	@Override
 	public String getName() {
@@ -39,6 +43,11 @@ public class ConfigReloadTask implements Task {
 			}
 			try {
 				m_routerConfigManager.refreshRouterConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			try {
+				m_blackListManager.refreshBlackList();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

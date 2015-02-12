@@ -10,6 +10,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -70,7 +71,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
-		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class));
+		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
 
 		all.addAll(defineTransactionComponents());
 		all.addAll(defineEventComponents());

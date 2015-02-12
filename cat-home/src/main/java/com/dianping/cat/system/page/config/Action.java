@@ -195,7 +195,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
 	
-	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate");
+	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
+	
+	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 
 	private String m_name;
 

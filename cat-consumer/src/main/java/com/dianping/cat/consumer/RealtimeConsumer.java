@@ -18,6 +18,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -33,11 +34,16 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
 
+	@Inject
+	private BlackListManager m_blackListManager;
+
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
 	private PeriodManager m_periodManager;
 
-	private long m_networkError;
+	private long m_networkError = -1;
+
+	private long m_black = -1;
 
 	private Logger m_logger;
 
@@ -47,13 +53,24 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void consume(MessageTree tree) {
-		long timestamp = tree.getMessage().getTimestamp();
-		Period period = m_periodManager.findPeriod(timestamp);
+		String domain = tree.getDomain();
+		String ip = tree.getIpAddress();
 
-		if (period != null) {
-			period.distribute(tree);
+		if (!m_blackListManager.isBlack(domain, ip)) {
+			long timestamp = tree.getMessage().getTimestamp();
+			Period period = m_periodManager.findPeriod(timestamp);
+
+			if (period != null) {
+				period.distribute(tree);
+			} else {
+				logErrorInfo(tree);
+			}
 		} else {
-			logErrorInfo(tree);
+			m_black++;
+
+			if (m_black % CatConstants.SUCCESS_COUNT == 0) {
+				Cat.logEvent("Discard", domain);
+			}
 		}
 	}
 
