@@ -17,6 +17,7 @@ import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppCommandDataTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -55,6 +56,7 @@ import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.config.ActivityConfigManager;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -177,8 +179,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class));
+		      RouterConfigManager.class, BlackListManager.class));
 
 		return all;
 	}

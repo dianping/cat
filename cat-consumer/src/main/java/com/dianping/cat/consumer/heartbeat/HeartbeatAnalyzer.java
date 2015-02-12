@@ -1,9 +1,11 @@
 package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -122,8 +124,14 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			}
 		}
 
-		Extension item = info.findOrCreateExtension("dal");
+		Set<String> exs = new HashSet<String>();
 
+		for (Extension ex : info.getExtensions().values()) {
+			exs.add(ex.getId());
+		}
+		for (String id : exs) {
+			info.findOrCreateExtension(id);
+		}
 		for (Extension ex : info.getExtensions().values()) {
 			Map<String, String> propertis = ex.getDynamicAttributes();
 
@@ -131,7 +139,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				try {
 					double value = Double.parseDouble(entry.getValue());
 
-					item.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
+					ex.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
 				} catch (Exception e) {
 					Cat.logError("StatusExtension can only be double type", e);
 				}

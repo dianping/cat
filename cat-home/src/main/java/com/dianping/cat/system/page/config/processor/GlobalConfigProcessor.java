@@ -7,21 +7,17 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.alert.thirdparty.entity.Http;
-import com.dianping.cat.home.alert.thirdparty.entity.Par;
-import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
-import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -35,9 +31,6 @@ public class GlobalConfigProcessor {
 	private BugConfigManager m_bugConfigManager;
 
 	@Inject
-	private ThirdPartyConfigManager m_thirdPartyConfigManager;
-
-	@Inject
 	private RouterConfigManager m_routerConfigManager;
 
 	@Inject
@@ -45,6 +38,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private SenderConfigManager m_senderConfigManager;
+	
+	@Inject
+	private BlackListManager m_blackListManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -116,35 +112,6 @@ public class GlobalConfigProcessor {
 			}
 			model.setBug(m_bugConfigManager.getBugConfig().toString());
 			break;
-		case THIRD_PARTY_RULE_CONFIGS:
-			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
-			break;
-		case THIRD_PARTY_RULE_UPDATE:
-			Pair<Http, Socket> pair = queryThirdPartyConfigInfo(payload);
-
-			if (pair != null) {
-				model.setHttp(pair.getKey());
-				model.setSocket(pair.getValue());
-			}
-			break;
-		case THIRD_PARTY_RULE_SUBMIT:
-			String type = payload.getType();
-
-			if ("http".equals(type)) {
-				m_thirdPartyConfigManager.insert(buildHttp(payload));
-			}
-			if ("socket".equals(type)) {
-				m_thirdPartyConfigManager.insert(payload.getSocket());
-			}
-			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
-			break;
-		case THIRD_PARTY_RULE_DELETE:
-			type = payload.getType();
-			String ruleId = payload.getRuleId();
-
-			m_thirdPartyConfigManager.remove(ruleId, type);
-			model.setThirdPartyConfig(m_thirdPartyConfigManager.getConfig());
-			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(routerConfig)) {
@@ -159,52 +126,20 @@ public class GlobalConfigProcessor {
 			}
 			model.setContent(m_senderConfigManager.getConfig().toString());
 			break;
+			
+		case  BLACK_CONFIG_UPDATE:
+			String blackConfig = payload.getContent();
+
+			if (!StringUtils.isEmpty(blackConfig)) {
+				model.setOpState(m_blackListManager.insert(blackConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_blackListManager.getBlackList().toString());
+			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
-	}
-
-	private Http buildHttp(Payload payload) {
-		Http http = payload.getHttp();
-		String[] pars = payload.getPars().split(",");
-		List<Par> lst = new ArrayList<Par>();
-
-		for (int i = 0; i < pars.length; i++) {
-			if (StringUtils.isNotEmpty(pars[i])) {
-				Par par = new Par();
-				String id = pars[i].trim();
-
-				if (!id.contains("=")) {
-					Par p = lst.get(lst.size() - 1);
-
-					p.setId(p.getId() + "," + id);
-				} else {
-					par.setId(id);
-					lst.add(par);
-				}
-			}
-		}
-		for (Par p : lst) {
-			http.addPar(p);
-		}
-		return http;
-	}
-
-	private Pair<Http, Socket> queryThirdPartyConfigInfo(Payload payload) {
-		String ruleId = payload.getRuleId();
-		String type = payload.getType();
-		Http http = null;
-		Socket socket = null;
-
-		if (StringUtils.isNotEmpty(ruleId)) {
-			if ("http".equals(type)) {
-				http = m_thirdPartyConfigManager.queryHttp(ruleId);
-			} else if ("socket".equals(type)) {
-				socket = m_thirdPartyConfigManager.querySocket(ruleId);
-			}
-			return new Pair<Http, Socket>(http, socket);
-		}
-		return null;
 	}
 
 	public List<Project> queryAllProjects() {

@@ -329,6 +329,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return false;
 		}
 	}
+	
+	public boolean isSendMachine() {
+		if (m_config != null) {
+			return m_config.isSendMachine();
+		} else {
+			return false;
+		}
+	}
 
 	public boolean isCrashLog(String domain) {
 		return m_crashLogs.contains(domain);

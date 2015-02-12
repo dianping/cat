@@ -193,7 +193,11 @@ public class HeartbeatAlert extends BaseAlert {
 		if (m_heartbeatService.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
 
-			return response.getModel();
+			if (response != null) {
+				return response.getModel();
+			} else {
+				return null;
+			}
 		} else {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
 		}
@@ -206,7 +210,7 @@ public class HeartbeatAlert extends BaseAlert {
 
 	@Override
 	protected Map<String, ProductLine> getProductlines() {
-		return null;
+		throw new RuntimeException("get productline is not support by heartbeat alert");
 	}
 
 	@Override

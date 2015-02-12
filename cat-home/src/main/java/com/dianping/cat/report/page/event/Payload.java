@@ -36,6 +36,14 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getEncodedType() {
+		try {
+			return URLEncoder.encode(m_type, "utf-8");
+		} catch (Exception e) {
+			return m_type;
+		}
+	}
+
 	public String getGroup() {
 		return m_group;
 	}
@@ -50,14 +58,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getType() {
 		return m_type;
-	}
-
-	public String getEncodedType() {
-		try {
-			return URLEncoder.encode(m_type, "utf-8");
-		} catch (Exception e) {
-			return m_type;
-		}
 	}
 
 	public boolean isShowAll() {

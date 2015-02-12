@@ -5,6 +5,7 @@
 		<attribute name="job-machine" value-type="boolean" default-value="false"/>
 		<attribute name="alert-machine" value-type="boolean" default-value="false"/>
 		<attribute name="hdfs-machine" value-type="boolean" default-value="true"/>
+		<attribute name="send-machine" value-type="boolean" default-value="true"/>
    	 	<entity-ref name="ldap" />
 		<entity-ref name="property" type="map" names="properties"/>
 	</entity>

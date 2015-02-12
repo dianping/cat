@@ -303,7 +303,7 @@ public class WebAlert extends BaseAlert {
 
 	@Override
 	protected Map<String, ProductLine> getProductlines() {
-		return null;
+		throw new RuntimeException("Web alert don't support get productline");
 	}
 
 }

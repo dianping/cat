@@ -16,6 +16,7 @@ import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
@@ -70,6 +71,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(BlackListManager.class).req(ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 

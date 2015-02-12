@@ -42,7 +42,7 @@ public class TransactionAlert extends BaseAlert {
 	private ModelService<TransactionReport> m_service;
 
 	@Inject
-	private TransactionMergeHelper m_mergeManager;
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
@@ -136,7 +136,7 @@ public class TransactionAlert extends BaseAlert {
 		if (response != null) {
 			TransactionReport report = response.getModel();
 
-			return m_mergeManager.mergeAllNames(report, Constants.ALL, name);
+			return m_mergeHelper.mergeAllNames(report, Constants.ALL, name);
 		} else {
 			return null;
 		}
@@ -149,7 +149,7 @@ public class TransactionAlert extends BaseAlert {
 
 	@Override
 	protected Map<String, ProductLine> getProductlines() {
-		return null;
+		throw new RuntimeException("Transaction alert don't support get productline");
 	}
 
 	@Override

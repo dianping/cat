@@ -2,11 +2,12 @@ package com.dianping.cat.report.page.transaction;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.site.lookup.util.StringUtils;
 
 public class TransactionMergeHelper {
 
 	public TransactionReport mergeAllMachines(TransactionReport report, String ipAddress) {
-		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+		if (StringUtils.isEmpty(ipAddress) || Constants.ALL.equalsIgnoreCase(ipAddress)) {
 			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(report);
@@ -15,8 +16,8 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	private TransactionReport mergeAllNames(TransactionReport report, String allName) {
-		if (Constants.ALL.equalsIgnoreCase(allName)) {
+	public TransactionReport mergeAllNames(TransactionReport report, String allName) {
+		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
 			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(report);

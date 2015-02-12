@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.activity" enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true">
+  <entity name="activity-config" root="true">
+    <entity-ref name="activity" type="list" names="activities"/>
+  </entity>
+  <entity name="activity">
+    <attribute name="title" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="name" value-type="String" />
+  </entity>
+</model>
+

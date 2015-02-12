@@ -83,6 +83,9 @@
          <page name="storage" title="Storage" path="storage" template="default">
             <description>Storage</description>
          </page>
+         <page name="activity" title="Activity" path="activity" template="default">
+            <description>Activity</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">

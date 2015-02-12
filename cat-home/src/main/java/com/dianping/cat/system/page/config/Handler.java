@@ -30,6 +30,7 @@ import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
+import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
@@ -39,6 +40,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GlobalConfigProcessor m_globalConfigProcessor;
+	
+	@Inject
+	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
 	private PatternConfigProcessor m_patternConfigProcessor;
@@ -109,11 +113,15 @@ public class Handler implements PageHandler<Context> {
 		case BUG_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
 		case ALERT_SENDER_CONFIG_UPDATE:
+		case BLACK_CONFIG_UPDATE:
+			m_globalConfigProcessor.process(action, payload, model);
+			break;
+			
 		case THIRD_PARTY_RULE_CONFIGS:
 		case THIRD_PARTY_RULE_UPDATE:
 		case THIRD_PARTY_RULE_SUBMIT:
 		case THIRD_PARTY_RULE_DELETE:
-			m_globalConfigProcessor.process(action, payload, model);
+			m_thirdPartyConfigProcessor.process(action, payload, model);
 			break;
 
 		case AGGREGATION_ALL:
@@ -232,6 +240,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case DISPLAY_POLICY:
+		case ACTIVITY_CONFIG_UPDATE:
 			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
