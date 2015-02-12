@@ -39,8 +39,6 @@
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
          </extension>
-         <extension id="dal">
-         </extension>
       </period>
       <period minute="2" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
          <extension id="System">
@@ -76,8 +74,6 @@
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
-         </extension>
-         <extension id="dal">
          </extension>
       </period>
       <period minute="3" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
@@ -115,8 +111,6 @@
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
          </extension>
-         <extension id="dal">
-         </extension>
       </period>
       <period minute="4" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
          <extension id="System">
@@ -152,8 +146,6 @@
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
-         </extension>
-         <extension id="dal">
          </extension>
       </period>
       <period minute="5" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
@@ -191,8 +183,6 @@
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
          </extension>
-         <extension id="dal">
-         </extension>
       </period>
       <period minute="6" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
          <extension id="System">
@@ -228,8 +218,6 @@
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
-         </extension>
-         <extension id="dal">
          </extension>
       </period>
       <period minute="7" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
@@ -267,8 +255,6 @@
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
          </extension>
-         <extension id="dal">
-         </extension>
       </period>
       <period minute="8" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
          <extension id="System">
@@ -304,8 +290,6 @@
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
-         </extension>
-         <extension id="dal">
          </extension>
       </period>
       <period minute="9" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
@@ -343,8 +327,6 @@
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
          </extension>
-         <extension id="dal">
-         </extension>
       </period>
       <period minute="10" thread-count="0" daemon-count="0" total-started-count="0" cat-thread-count="0" pigeon-thread-count="0" http-thread-count="0" new-gc-count="0" old-gc-count="0" memory-free="0" heap-usage="0" none-heap-usage="0" system-load-average="0.00" cat-message-produced="0" cat-message-overflow="0" cat-message-size="0.00">
          <extension id="System">
@@ -380,8 +362,6 @@
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
-         </extension>
-         <extension id="dal">
          </extension>
       </period>
    </machine>

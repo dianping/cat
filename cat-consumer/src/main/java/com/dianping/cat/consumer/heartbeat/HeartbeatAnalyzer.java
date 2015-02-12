@@ -1,11 +1,9 @@
 package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -124,14 +122,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			}
 		}
 
-		Set<String> exs = new HashSet<String>();
-
-		for (Extension ex : info.getExtensions().values()) {
-			exs.add(ex.getId());
-		}
-		for (String id : exs) {
-			info.findOrCreateExtension(id);
-		}
 		for (Extension ex : info.getExtensions().values()) {
 			Map<String, String> propertis = ex.getDynamicAttributes();
 
