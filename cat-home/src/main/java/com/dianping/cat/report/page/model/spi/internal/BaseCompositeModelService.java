@@ -69,8 +69,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	@Override
 	public ModelResponse<T> invoke(final ModelRequest request) {
-		int size = m_allServices.size();
-		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>(size));
+		int requireSize = 0;
+		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>());
 		final Semaphore semaphore = new Semaphore(0);
 		final Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 		int count = 0;
@@ -83,12 +83,13 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			if (!service.isEligable(request)) {
 				continue;
 			}
-
+			
 			// save current transaction so that child thread can access it
 			if (service instanceof ModelServiceWithCalSupport) {
 				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
-
+			requireSize++;
+			
 			s_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -124,8 +125,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		String requireAll = request.getProperty("requireAll");
 
-		if (requireAll != null && responses.size() != size) {
-			String data = "require:" + size + " actual:" + responses.size();
+		if (requireAll != null && responses.size() != requireSize) {
+			String data = "require:" + requireSize + " actual:" + responses.size();
 			Cat.logEvent("FetchReportError:" + this.getClass().getSimpleName(), request.getDomain(), Event.SUCCESS, data);
 
 			return null;
