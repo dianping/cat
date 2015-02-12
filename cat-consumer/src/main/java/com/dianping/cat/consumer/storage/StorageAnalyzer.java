@@ -41,6 +41,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_databaseParser.showErrorCon();
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
