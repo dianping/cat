@@ -24,21 +24,21 @@
 	<tr style="text-align:left"> 
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=storage&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
+					<a href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=storage&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.report.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=storage&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+						<a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=storage&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -59,14 +59,7 @@
 	</tr>
 </table>
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
-	<c:choose>
-		<c:when test="${payload.action.name eq 'database' }">
-			<c:set var="action" value="hourlyDatabaseGraph" />
-		</c:when>
-	<c:otherwise>
-		<c:set var="action" value="hourlyCacheGraph" />
-	</c:otherwise>
-	</c:choose>
+
 	<tr>
 		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
@@ -81,6 +74,14 @@
 			<th class="right">Error</th>
 		</c:forEach>
 	</tr>
+	<c:choose>
+		<c:when test="${payload.action.name eq 'database' }">
+			<c:set var="action" value="hourlyDatabaseGraph" />
+		</c:when>
+	<c:otherwise>
+		<c:set var="action" value="hourlyCacheGraph" />
+	</c:otherwise>
+	</c:choose>
 	<c:forEach var="domain" items="${model.machine.domains}"
 		varStatus="index">
 		<tr>
