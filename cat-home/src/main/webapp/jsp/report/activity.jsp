@@ -28,7 +28,7 @@
 					<h5 class="text-center text-error"> ${item.key}</h5>
 					<c:forEach var="chart" items="${item.value}" varStatus="status">
 		   				<div style="float:left;">
-		   						<div id="${chart.id}" class="metricGraph" style="width:45%;height:350px;"></div>
+		   						<div id="${chart.id}" class="metricGraph" style="width:40%;height:350px;"></div>
 		   				</div>
 		   			</c:forEach>
 				</div>
