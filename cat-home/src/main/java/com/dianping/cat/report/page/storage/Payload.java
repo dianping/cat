@@ -19,6 +19,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("project")
 	private String m_project;
 
+	@FieldMeta("sort")
+	private String m_sort = "domain";
+
 	public Payload() {
 		super(ReportPage.STORAGE);
 	}
@@ -41,6 +44,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_project;
 	}
 
+	public String getSort() {
+		return m_sort;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY_DATABASE);
 	}
@@ -56,6 +63,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setProject(String project) {
 		m_project = project;
+	}
+
+	public void setSort(String sort) {
+		m_sort = sort;
 	}
 
 	@Override
