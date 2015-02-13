@@ -45,7 +45,6 @@ public class StorageReportBuilder implements TaskBuilder {
 
 			DailyReport report = new DailyReport();
 
-			report.setContent("");
 			report.setCreationDate(new Date());
 			report.setDomain(reportId);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -78,7 +77,6 @@ public class StorageReportBuilder implements TaskBuilder {
 		StorageReport eventReport = queryDailyReportsByDuration(reportId, period, end);
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(reportId);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -102,7 +100,6 @@ public class StorageReportBuilder implements TaskBuilder {
 		StorageReport eventReport = queryDailyReportsByDuration(reportId, period, end);
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(reportId);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
