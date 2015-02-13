@@ -124,7 +124,6 @@ public class Handler implements PageHandler<Context> {
 					}
 				} catch (DalException e) {
 					setAlertResult(model, 5);
-					e.printStackTrace();
 					Cat.logError(e);
 				}
 			}
