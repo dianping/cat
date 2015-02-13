@@ -7,7 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeParser;
@@ -49,14 +49,14 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		StorageReportMerger merger = new StorageReportMerger(new StorageReport(id));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = Constants.REPORT_HEAVY;
+		String name = StorageAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(id, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
 				StorageReport reportModel = queryFromDailyBinary(report.getId(), id);
-				
+
 				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
 				// ignore
@@ -116,7 +116,7 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		StorageReportMerger merger = new StorageReportMerger(new StorageReport(reportId));
 		long startTime = start.getTime();
 		long endTime = end.getTime();
-		String name = Constants.REPORT_HEAVY;
+		String name = StorageAnalyzer.ID;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
@@ -150,7 +150,7 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 	@Override
 	public StorageReport queryMonthlyReport(String reportId, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, reportId, Constants.REPORT_HEAVY,
+			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, reportId, StorageAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
 
 			return queryFromMonthlyBinary(entity.getId(), reportId);
@@ -165,7 +165,7 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 	@Override
 	public StorageReport queryWeeklyReport(String reportId, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, reportId, Constants.REPORT_HEAVY,
+			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, reportId, StorageAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
 
 			return queryFromWeeklyBinary(entity.getId(), reportId);
