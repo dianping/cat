@@ -48,12 +48,12 @@ public class StorageSorter {
 	public StorageReport getSortedReport() {
 		Machine machine = getMachine();
 		Map<String, Domain> domains = machine.getDomains();
-		List<Entry<String, Domain>> list = new LinkedList<Entry<String, Domain>>(domains.entrySet());
-
-		Collections.sort(list, new DomainComparator());
+		List<Entry<String, Domain>> tmp = new LinkedList<Entry<String, Domain>>(domains.entrySet());
 		Map<String, Domain> results = new LinkedHashMap<String, Domain>();
 
-		for (Entry<String, Domain> entry : list) {
+		Collections.sort(tmp, new DomainComparator());
+
+		for (Entry<String, Domain> entry : tmp) {
 			results.put(entry.getKey(), entry.getValue());
 		}
 		machine.getDomains().clear();
