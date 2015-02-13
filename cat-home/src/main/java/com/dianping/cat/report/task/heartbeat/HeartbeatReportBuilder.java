@@ -37,7 +37,6 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
-			report.setContent("");
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(name);
 			report.setPeriod(period);

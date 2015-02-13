@@ -83,7 +83,6 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
 		DailyReport dailyReport = new DailyReport();
 
-		dailyReport.setContent("");
 		dailyReport.setCreationDate(new Date());
 		dailyReport.setDomain(domain);
 		dailyReport.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

@@ -189,9 +189,6 @@
 				<member name="domain" />
 				<member name="name" />
 			</readset>
-			<readset name="CONTENT">
-				<member name="content" />
-			</readset>
 		</readsets>
 		<query-defs>
 			<query name="find-all-by-domain-name-period" type="SELECT" multiple="true">

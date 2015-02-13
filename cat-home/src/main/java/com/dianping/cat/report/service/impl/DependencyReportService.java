@@ -62,19 +62,11 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {
-							DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser
-							      .parse(xml);
-							reportModel.accept(merger);
-						} else {
-							DependencyReport reportModel = queryFromHourlyBinary(report.getId(), domain);
-							reportModel.accept(merger);
-						}
+						DependencyReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

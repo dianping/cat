@@ -56,7 +56,6 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 			DailyReport report = new DailyReport();
 
-			report.setContent("");
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -105,7 +104,6 @@ public class ProblemReportBuilder implements TaskBuilder {
 		
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -137,7 +135,6 @@ public class ProblemReportBuilder implements TaskBuilder {
 		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

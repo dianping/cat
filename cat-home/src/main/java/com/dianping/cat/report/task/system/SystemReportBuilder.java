@@ -39,7 +39,6 @@ public class SystemReportBuilder implements TaskBuilder {
 		SystemReport report = buildSystemReport(period);
 		DailyReport dailyReport = new DailyReport();
 
-		dailyReport.setContent("");
 		dailyReport.setIp("");
 		dailyReport.setDomain(Constants.CAT);
 		dailyReport.setCreationDate(new Date());

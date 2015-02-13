@@ -28,7 +28,7 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 	public NetGraphSet queryDailyReport(String domain, Date start, Date end) {
 		throw new RuntimeException("net topology report don't support daily report");
 	}
-	
+
 	private NetGraphSet queryFromHourlyBinary(int id) throws DalException {
 		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
 
@@ -43,7 +43,7 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 	public NetGraphSet queryHourlyReport(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		String name = Constants.REPORT_NET_TOPOLOGY;
-		NetGraphSet netGraphSet = null;
+		NetGraphSet netGraphs = null;
 		List<HourlyReport> reports = null;
 
 		try {
@@ -54,24 +54,14 @@ public class NetTopologyReportService extends AbstractReportService<NetGraphSet>
 		}
 
 		if (reports != null && reports.size() > 0) {
-			String xml = reports.get(0).getContent();
-
-			if (xml != null && xml.length() > 0) {
-				try {
-					netGraphSet = com.dianping.cat.home.network.transform.DefaultSaxParser.parse(xml);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			} else {
-				try {
-					netGraphSet = queryFromHourlyBinary(reports.get(0).getId());
-            } catch (DalException e) {
-            	Cat.logError(e);
-            }
+			try {
+				netGraphs = queryFromHourlyBinary(reports.get(0).getId());
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
 		}
 
-		return netGraphSet;
+		return netGraphs;
 	}
 
 	@Override

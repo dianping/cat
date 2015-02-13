@@ -75,7 +75,6 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 		hourlyReport.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		hourlyReport.setDomain(domain);
 		hourlyReport.setPeriod(period);
-		hourlyReport.setContent("");
 		byte[] content = DefaultNativeBuilder.build(netGraphSet);
 		return m_reportService.insertHourlyReport(hourlyReport, content);
 	}

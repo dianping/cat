@@ -59,17 +59,9 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				TransactionReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					TransactionReport reportModel = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} else {
-					TransactionReport reportModel = queryFromDailyBinary(report.getId(), domain);
-
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
 				// ignore
 			} catch (Exception e) {
@@ -140,18 +132,10 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {// for old xml storage
-							TransactionReport reportModel = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
-							      .parse(xml);
-							reportModel.accept(merger);
-						} else {// for new binary storage, binary is same to report id
-							TransactionReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						TransactionReport reportModel = queryFromHourlyBinary(report.getId(), domain);
 
-							reportModel.accept(merger);
-						}
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
 					} catch (Exception e) {
@@ -177,13 +161,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			if (content != null && content.length() > 0) {
-				transactionReport = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
-			} else {
-				transactionReport = queryFromMonthlyBinary(entity.getId(), domain);
-			}
+			transactionReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
@@ -199,13 +177,7 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			if (content != null && content.length() > 0) {
-				transactionReport = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
-			} else {
-				transactionReport = queryFromWeeklyBinary(entity.getId(), domain);
-			}
+			transactionReport = queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
