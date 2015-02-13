@@ -77,9 +77,8 @@ public class StorageSorter {
 				}
 				if (Constants.ALL.equals(domain2)) {
 					return 1;
-				} else {
-					return sortValue(op1, op2);
 				}
+				return sortValue(op1, op2);
 			} else {
 				return sortDomain(domain1, domain2);
 			}
