@@ -42,6 +42,7 @@ import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
+import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
 import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
@@ -120,6 +121,8 @@ MetricReportParseTest.class,
 
 /* service */
 ServiceReportMergerTest.class,
+
+HistoryStorageReportMergerTest.class,
 
 AlertConfigTest.class,
 

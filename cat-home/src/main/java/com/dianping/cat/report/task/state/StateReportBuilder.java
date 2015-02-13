@@ -43,7 +43,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		StateReport stateReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
+		StateReport stateReport = queryHourlyReportsByDuration(domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
 		report.setContent("");
@@ -125,7 +125,7 @@ public class StateReportBuilder implements TaskBuilder {
 		return stateReport;
 	}
 
-	private StateReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
+	private StateReport queryHourlyReportsByDuration(String domain, Date period, Date endDate) {
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport(domain));
