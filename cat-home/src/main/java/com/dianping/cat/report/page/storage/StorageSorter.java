@@ -69,16 +69,16 @@ public class StorageSorter {
 			String domain2 = o2.getKey();
 
 			if (m_sortValue) {
-				Operation op1 = o1.getValue().findOrCreateOperation(m_operation);
-				Operation op2 = o2.getValue().findOrCreateOperation(m_operation);
-
 				if (Constants.ALL.equals(domain1)) {
 					return -1;
-				}
-				if (Constants.ALL.equals(domain2)) {
+				} else if (Constants.ALL.equals(domain2)) {
 					return 1;
+				} else {
+					Operation op1 = o1.getValue().findOrCreateOperation(m_operation);
+					Operation op2 = o2.getValue().findOrCreateOperation(m_operation);
+
+					return sortValue(op1, op2);
 				}
-				return sortValue(op1, op2);
 			} else {
 				return sortDomain(domain1, domain2);
 			}
