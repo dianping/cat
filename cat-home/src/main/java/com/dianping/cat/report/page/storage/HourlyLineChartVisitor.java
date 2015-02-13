@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.lookup.util.StringUtils;
 
@@ -31,7 +30,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private static final int SIZE = 60;
 
-	private Set<String> m_operations;
+	private List<String> m_operations;
 
 	private String m_domain;
 
@@ -39,7 +38,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private List<String> m_titles = Arrays.asList("count", "avg", "error", "long");
 
-	public HourlyLineChartVisitor(String ip, String domain, Set<String> operations, Date start) {
+	public HourlyLineChartVisitor(String ip, String domain, List<String> operations, Date start) {
 		m_ip = ip;
 		m_domain = domain;
 		m_operations = operations;

@@ -16,8 +16,10 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case HOURLY_DATABASE_GRAPH:
 		case HOURLY_CACHE_GRAPH:
 			return JspFile.HOURL_GRAPH.getPath();
+		case HISTORY_DATABASE:
+		case HISTORY_CACHE:
+			return JspFile.HISTORY_REPORT.getPath();
 		}
-
 		throw new RuntimeException("Unknown action: " + action);
 	}
 }

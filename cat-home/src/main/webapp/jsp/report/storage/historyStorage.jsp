@@ -12,38 +12,36 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report title="Storage Report"
+<a:historyReport title="Storage Report"
 	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&operations=${payload.operations}"
-	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-
-	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
-
+	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
-	<tr style="text-align:left"> 
+	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
-						class="current">All</a>
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
+								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=${payload.action.name}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
-							class="current">${ip}</a>
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
-		</th></tr>
+		</th>
+	</tr>
 </table>
 <table>
 	<tr>
@@ -61,33 +59,23 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
+		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right">Count</th>
+			<th class="right">Long</th>
+			<th class="right">Avg</th>
+			<th class="right">Error</th>
 		</c:forEach>
 	</tr>
-	<c:choose>
-		<c:when test="${payload.action.name eq 'database' }">
-			<c:set var="action" value="hourlyDatabaseGraph" />
-		</c:when>
-	<c:otherwise>
-		<c:set var="action" value="hourlyCacheGraph" />
-	</c:otherwise>
-	</c:choose>
 	<c:forEach var="domain" items="${model.machine.domains}"
 		varStatus="index">
 		<tr>
-		<td><a href="?op=${action}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
-		</td>
-		<td class="left">${domain.key}</td>
+		<td class="center">${domain.key}</td>
 		<c:forEach var="item" items="${model.operations}">
 			<td class="right">${w:format(domain.value.operations[item].count,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].longCount,'#,###,###,###,##0')}</td>
@@ -95,11 +83,8 @@
 			<td class="right">${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}</td>
 		</c:forEach>
 		</tr>
-		<tr class="graphs"><td colspan="${w:size(model.operations)*4 + 2}" style="display:none"><div id="${domain.key}" style="display:none"></div></td></tr>
-		<tr style="display:none"></tr>
 	</c:forEach>
 </table>
-<res:useJs value="${res.js.local.storage_js}" target="buttom-js" />
 </jsp:body>
 </a:report>
 
@@ -169,7 +154,7 @@
 	}
 	
 	$(document).ready(function() {
-		if('${payload.action.name}' == 'database'){
+		if('${payload.action.name}' == 'historyDatabase'){
 			$('#Database_report').addClass('active open');
 			$('#database_operation').addClass('active');
 		}else{

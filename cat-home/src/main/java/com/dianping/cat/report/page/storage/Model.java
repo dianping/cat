@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.storage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +30,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
-	public Set<String> getAllOperations() {
+	public List<String> getAllOperations() {
 		if (m_report != null) {
-			return m_report.getOps();
+			ArrayList<String> ops = new ArrayList<String>(m_report.getOps());
+
+			Collections.sort(ops);
+			return ops;
 		} else {
-			return new HashSet<String>();
+			return new ArrayList<String>();
 		}
 	}
 
@@ -93,8 +97,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return machine;
 	}
 
-	public Set<String> getOperations() {
-		return m_operations;
+	public List<String> getOperations() {
+		ArrayList<String> operations = new ArrayList<String>(m_operations);
+
+		Collections.sort(operations);
+		return operations;
 	}
 
 	public StorageReport getReport() {

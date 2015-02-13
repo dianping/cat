@@ -7,7 +7,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HOURLY_DATABASE_GRAPH("hourlyDatabaseGraph"),
 
-	HOURLY_CACHE_GRAPH("hourlyCacheGraph");
+	HOURLY_CACHE_GRAPH("hourlyCacheGraph"),
+
+	HISTORY_DATABASE("historyDatabase"),
+
+	HISTORY_CACHE("historyCache");
 
 	private String m_name;
 
