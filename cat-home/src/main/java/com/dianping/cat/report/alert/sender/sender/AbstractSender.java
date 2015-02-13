@@ -106,8 +106,6 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 	}
 
 	public boolean httpSend(String successCode, String type, String urlPrefix, String urlPars) {
-		m_logger.info("url:" + urlPrefix);
-		m_logger.info("urlPars:" + urlPars);
 		if ("get".equalsIgnoreCase(type)) {
 			return httpGetSend(successCode, urlPrefix, urlPars);
 		} else if ("post".equalsIgnoreCase(type)) {
