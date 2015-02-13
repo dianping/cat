@@ -623,7 +623,7 @@
 		<component>
 			<role>com.dianping.cat.report.service.ReportService</role>
 			<role-hint>storage</role-hint>
-			<implementation>com.dianping.cat.report.service.impl.CrossReportService</implementation>
+			<implementation>com.dianping.cat.report.service.impl.StorageReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>

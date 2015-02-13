@@ -54,7 +54,6 @@ public class CachedReportTask implements Task {
 	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -67,7 +66,6 @@ public class CachedReportTask implements Task {
 	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

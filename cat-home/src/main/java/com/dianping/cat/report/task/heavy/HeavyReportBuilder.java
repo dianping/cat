@@ -37,7 +37,6 @@ public class HeavyReportBuilder implements TaskBuilder {
 		HeavyReport heavyReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -67,7 +66,6 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -83,7 +81,6 @@ public class HeavyReportBuilder implements TaskBuilder {
 		HeavyReport heavyReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -100,7 +97,6 @@ public class HeavyReportBuilder implements TaskBuilder {
 		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

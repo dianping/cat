@@ -52,7 +52,6 @@ public class HighLoadReportBuilder implements TaskBuilder {
 		HighloadReport report = generateHighloadReport(period);
 		DailyReport dailyReport = new DailyReport();
 
-		dailyReport.setContent("");
 		dailyReport.setIp("");
 		dailyReport.setDomain("");
 		dailyReport.setCreationDate(new Date());

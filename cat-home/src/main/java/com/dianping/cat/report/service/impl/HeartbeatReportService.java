@@ -16,7 +16,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -50,17 +49,9 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				HeartbeatReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					HeartbeatReport reportModel = DefaultSaxParser.parse(xml);
-
-					reportModel.accept(merger);
-				} else {
-					HeartbeatReport reportModel = queryFromDailyBinary(report.getId(), domain);
-
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
 				// ignore
 			} catch (Exception e) {
@@ -74,7 +65,7 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		heartbeatReport.getDomainNames().addAll(domains);
-		
+
 		new HeartbeatConvertor().visitHeartbeatReport(heartbeatReport);
 		return heartbeatReport;
 	}
@@ -116,17 +107,9 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {
-							HeartbeatReport reportModel = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser
-							      .parse(xml);
-							reportModel.accept(merger);
-						} else {
-							HeartbeatReport reportModel = queryFromHourlyBinary(report.getId(), domain);
-							reportModel.accept(merger);
-						}
+						HeartbeatReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
 					} catch (Exception e) {

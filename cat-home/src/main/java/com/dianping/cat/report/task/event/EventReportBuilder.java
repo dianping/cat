@@ -54,7 +54,6 @@ public class EventReportBuilder implements TaskBuilder {
 
 			DailyReport report = new DailyReport();
 
-			report.setContent("");
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -119,7 +118,6 @@ public class EventReportBuilder implements TaskBuilder {
 		EventReport eventReport = queryDailyReportsByDuration(domain, period, end);
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -143,7 +141,6 @@ public class EventReportBuilder implements TaskBuilder {
 		EventReport eventReport = queryDailyReportsByDuration(domain, period, end);
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

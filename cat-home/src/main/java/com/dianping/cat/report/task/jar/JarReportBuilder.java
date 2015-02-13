@@ -64,7 +64,6 @@ public class JarReportBuilder implements TaskBuilder {
 
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

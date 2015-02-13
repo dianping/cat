@@ -48,7 +48,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		DailyReport report = new DailyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -80,7 +79,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -101,7 +99,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -122,7 +119,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
