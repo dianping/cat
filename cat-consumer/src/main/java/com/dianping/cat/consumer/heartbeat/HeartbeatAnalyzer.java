@@ -171,12 +171,15 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		Message message = tree.getMessage();
-		HeartbeatReport report = findOrCreateReport(domain);
-		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+		if (m_serverConfigManager.validateDomain(domain)) {
+			Message message = tree.getMessage();
+			HeartbeatReport report = findOrCreateReport(domain);
+			report.addIp(tree.getIpAddress());
+
+			if (message instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) message);
+			}
 		}
 	}
 
