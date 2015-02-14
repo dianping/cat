@@ -146,9 +146,7 @@ MetricIdAndRuleMappingTest.class,
 
 ExtractDataTest.class,
 
-JudgeTimeTest.class,
-
-UserDefineRuleTest.class })
+JudgeTimeTest.class })
 public class AllTests {
 
 	@BeforeClass
