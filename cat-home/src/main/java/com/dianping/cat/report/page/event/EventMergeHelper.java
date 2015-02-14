@@ -7,7 +7,7 @@ public class EventMergeHelper {
 
 	public EventReport mergerAllIp(EventReport report, String ipAddress) {
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
+			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitEventReport(report);
 			report = all.getReport();
@@ -17,7 +17,7 @@ public class EventMergeHelper {
 
 	private EventReport mergerAllName(EventReport report, String allName) {
 		if (Constants.ALL.equalsIgnoreCase(allName)) {
-			MergeAllName all = new MergeAllName();
+			AllNameMerger all = new AllNameMerger();
 
 			all.visitEventReport(report);
 			report = all.getReport();

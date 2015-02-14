@@ -25,8 +25,8 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
@@ -61,7 +61,6 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
-			report.setContent("");
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(name);
 			report.setPeriod(period);
@@ -125,7 +124,6 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, end);
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -149,7 +147,6 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		TransactionReport transactionReport = queryDailyReportsByDuration(domain, period, end);
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

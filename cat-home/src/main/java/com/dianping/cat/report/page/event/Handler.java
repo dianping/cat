@@ -19,12 +19,12 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.event.DisplayNames.EventNameModel;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -47,7 +47,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private EventMergeHelper m_mergeManager;
+	private EventMergeHelper m_mergeHelper;
 
 	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
 	private ModelService<EventReport> m_service;
@@ -57,6 +57,16 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private DomainGroupConfigManager m_configManager;
+
+	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
+
+		chartVisitor.visitEventReport(report);
+		detailVisitor.visitEventReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
+	}
 
 	private void buildEventMetaInfo(Model model, Payload payload, EventReport report) {
 		String type = payload.getType();
@@ -119,20 +129,20 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	private EventReport getEventGraphReport(Model model, Payload payload) {
+	private EventReport getHourlyGraphReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		String name = payload.getName();
-		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);
 
 		if (name == null || name.length() == 0) {
-			request.setProperty("name", "*");
-			request.setProperty("all", "true");
-			name = Constants.ALL;
+			name = "*";
 		}
+
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", name)//
+		      .setProperty("ip", ipAddress);
+
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
 
@@ -187,7 +197,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -213,16 +223,16 @@ public class Handler implements PageHandler<Context> {
 			m_historyGraphs.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			report = getEventGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
-				report = m_mergeManager.mergerAllName(report, ip, name);
+				report = m_mergeHelper.mergerAllName(report, ip, name);
 			}
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
@@ -230,7 +240,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -241,7 +251,7 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryEventReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergerAllIp(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -249,7 +259,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case GROUP_GRAPHS:
-			report = getEventGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
@@ -257,7 +267,7 @@ public class Handler implements PageHandler<Context> {
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
-			report = m_mergeManager.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergerAllName(report, ip, name);
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
 			break;
@@ -272,16 +282,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildDistributionInfo(Model model, String type, String name, EventReport report) {
-		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
-		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
-
-		chartVisitor.visitEventReport(report);
-		detailVisitor.visitEventReport(report);
-		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {

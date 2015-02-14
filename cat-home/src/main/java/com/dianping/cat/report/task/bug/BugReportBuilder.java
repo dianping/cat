@@ -21,8 +21,8 @@ import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class BugReportBuilder implements TaskBuilder {
 
@@ -48,7 +48,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		DailyReport report = new DailyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -80,7 +79,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -101,7 +99,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -122,7 +119,6 @@ public class BugReportBuilder implements TaskBuilder {
 		}
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

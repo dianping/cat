@@ -358,7 +358,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				for (int i = 0; i < len; i++) {
 					Message child = children.get(i);
 
-					count += encodeMessage(child, buf);
+					if (child != null) {
+						count += encodeMessage(child, buf);
+					}
 				}
 
 				count += encodeLine(transaction, buf, 'T', Policy.WITH_DURATION);

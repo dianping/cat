@@ -29,6 +29,8 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
+import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -99,7 +101,6 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
-			report.setContent("");
 			m_dailyReportDao.insert(report);
 
 			int id = report.getId();
@@ -118,7 +119,6 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 	@Override
 	public boolean insertHourlyReport(HourlyReport report, byte[] content) {
 		try {
-			report.setContent("");
 			m_hourlyReportDao.insert(report);
 
 			int id = report.getId();
@@ -334,6 +334,13 @@ public class DefaultReportServiceManager extends ContainerHolder implements Repo
 	@Override
 	public UtilizationReport queryUtilizationReport(String domain, Date start, Date end) {
 		ReportService<UtilizationReport> reportService = m_reportServices.get(Constants.REPORT_UTILIZATION);
+
+		return reportService.queryReport(domain, start, end);
+	}
+
+	@Override
+	public StorageReport queryStorageReport(String domain, Date start, Date end) {
+		ReportService<StorageReport> reportService = m_reportServices.get(StorageAnalyzer.ID);
 
 		return reportService.queryReport(domain, start, end);
 	}

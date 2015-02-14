@@ -11,11 +11,11 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 
 public class Model extends AbstractReportModel<Action, Context> {

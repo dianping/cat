@@ -6,18 +6,18 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 
 public class CachedReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.CACHED_REPORT;
 
 	@Inject
-	private CachedReportTask m_task;
-
+	private CachedReportTask m_cachedReportTask;
+	
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Threads.forGroup(Constants.CAT).start(m_task);
+		Threads.forGroup(Constants.CAT).start(m_cachedReportTask);
 		return true;
 	}
 

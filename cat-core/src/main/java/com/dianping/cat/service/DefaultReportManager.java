@@ -234,7 +234,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 							r.setPeriod(period);
 							r.setIp(ip);
 							r.setType(1);
-							r.setContent("");
 
 							m_reportDao.insert(r);
 

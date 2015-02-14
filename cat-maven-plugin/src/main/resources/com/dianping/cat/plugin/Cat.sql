@@ -21,7 +21,6 @@ CREATE TABLE `dailyreport` (
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
-  `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
@@ -34,7 +33,6 @@ CREATE TABLE `weeklyreport` (
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
-  `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
@@ -47,7 +45,6 @@ CREATE TABLE `monthreport` (
   `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
-  `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
@@ -85,7 +82,6 @@ CREATE TABLE `report` (
   `ip` varchar(50) DEFAULT NULL COMMENT '报表来自于哪台机器',
   `domain` varchar(50) NOT NULL  COMMENT '报表项目',
   `period` timestamp NOT NULL COMMENT '报表时间段',
-  `content` longtext NULL,
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),

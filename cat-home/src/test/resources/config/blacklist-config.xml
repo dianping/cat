@@ -1,0 +1,6 @@
+<black-list>
+	<domain id="shop-web"></domain>
+	<domain id="shop-web"></domain>
+	<ip id="10.1.6.12"></ip>
+	<ip id="10.1.6.11"></ip>
+</black-list>

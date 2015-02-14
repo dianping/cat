@@ -19,12 +19,12 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
@@ -54,7 +54,7 @@ public class Handler implements PageHandler<Context> {
 	private ReportServiceManager m_reportService;
 
 	@Inject
-	private TransactionMergeHelper m_mergeManager;
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -64,6 +64,16 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
+
+	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
+		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
+		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
+
+		chartVisitor.visitTransactionReport(report);
+		detailVisitor.visitTransactionReport(report);
+		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
+		model.setDistributionDetails(detailVisitor.getDetails());
+	}
 
 	private void buildTransactionMetaInfo(Model model, Payload payload, TransactionReport report) {
 		String type = payload.getType();
@@ -134,6 +144,25 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
+	private TransactionReport getHourlyGraphReport(Model model, Payload payload) {
+		String domain = payload.getDomain();
+		String ipAddress = payload.getIpAddress();
+		String name = payload.getName();
+
+		if (name == null || name.length() == 0) {
+			name = "*";
+		}
+
+		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", name)//
+		      .setProperty("ip", ipAddress);
+
+		ModelResponse<TransactionReport> response = m_service.invoke(request);
+		TransactionReport report = response.getModel();
+		return report;
+	}
+
 	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
@@ -148,27 +177,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
-	}
-
-	private TransactionReport getTransactionGraphReport(Model model, Payload payload) {
-		String domain = payload.getDomain();
-		String ipAddress = payload.getIpAddress();
-		String name = payload.getName();
-
-		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);
-
-		if (name == null || name.length() == 0) {
-			request.setProperty("name", "*");
-			request.setProperty("all", "true");
-			name = Constants.ALL;
-		}
-
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
-		return report;
 	}
 
 	@Override
@@ -202,7 +210,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -229,7 +237,7 @@ public class Handler implements PageHandler<Context> {
 			m_historyGraph.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			report = getTransactionGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
@@ -238,7 +246,7 @@ public class Handler implements PageHandler<Context> {
 				name = Constants.ALL;
 			}
 
-			report = m_mergeManager.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergeAllNames(report, ip, name);
 
 			model.setReport(report);
 			buildTransactionNameGraph(model, report, type, name, ip);
@@ -246,7 +254,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -257,23 +265,24 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
-
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeManager.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
+
 			if (report != null) {
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
 			}
 			break;
 		case GROUP_GRAPHS:
-			report = getTransactionGraphReport(model, payload);
+			report = getHourlyGraphReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
 			buildDistributionInfo(model, type, name, report);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
-			report = m_mergeManager.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergeAllNames(report, ip, name);
+
 			model.setReport(report);
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
@@ -294,16 +303,6 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private void buildDistributionInfo(Model model, String type, String name, TransactionReport report) {
-		PieGraphChartVisitor chartVisitor = new PieGraphChartVisitor(type, name);
-		DistributionDetailVisitor detailVisitor = new DistributionDetailVisitor(type, name);
-
-		chartVisitor.visitTransactionReport(report);
-		detailVisitor.visitTransactionReport(report);
-		model.setDistributionChart(chartVisitor.getPieChart().getJsonString());
-		model.setDistributionDetails(detailVisitor.getDetails());
 	}
 
 	private void normalize(Model model, Payload payload) {

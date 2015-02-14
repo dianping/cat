@@ -6,8 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.LineChart;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private List<String> m_cities;

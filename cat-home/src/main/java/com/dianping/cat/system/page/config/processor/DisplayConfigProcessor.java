@@ -3,7 +3,8 @@ package com.dianping.cat.system.page.config.processor;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.system.config.ActivityConfigManager;
+import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -11,7 +12,10 @@ import com.dianping.cat.system.page.config.Payload;
 public class DisplayConfigProcessor {
 
 	@Inject
-	private DisplayPolicyManager m_displayPolicyManager;
+	private HeartbeatDisplayPolicyManager m_displayPolicyManager;
+	
+	@Inject
+	private ActivityConfigManager m_activityConfigManager;
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
@@ -23,7 +27,18 @@ public class DisplayConfigProcessor {
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_displayPolicyManager.getDisplayPolicy().toString());
+			model.setContent(m_displayPolicyManager.getHeartbeatDisplayPolicy().toString());
+			break;
+			
+		case ACTIVITY_CONFIG_UPDATE:
+			String activityConfig = payload.getContent();
+
+			if (!StringUtils.isEmpty(activityConfig)) {
+				model.setOpState(m_activityConfigManager.insert(activityConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_activityConfigManager.getActivityConfig().toString());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

@@ -87,14 +87,17 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {
-				if ("state".equals(str1)) {
+				String state = "state";
+				String top = "top";
+				
+				if (state.equals(str1)) {
 					return 1;
-				} else if ("state".equals(str2)) {
+				} else if (state.equals(str2)) {
 					return -1;
 				}
-				if ("top".equals(str1)) {
+				if (top.equals(str1)) {
 					return -1;
-				} else if ("top".equals(str2)) {
+				} else if (top.equals(str2)) {
 					return 1;
 				}
 				return str1.compareTo(str2);

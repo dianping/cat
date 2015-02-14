@@ -24,8 +24,8 @@ import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -167,13 +167,13 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
-			model.setReport(report);
 			if (ip.equals(Constants.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
 			}
 			problemStatistics.visitProblemReport(report);
+			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_REPORT:
@@ -208,6 +208,7 @@ public class Handler implements PageHandler<Context> {
 			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
 
 			vistor.visitProblemReport(report);
+			model.setReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
 			buildDistributionChart(model, payload, report);
 			break;
@@ -221,6 +222,7 @@ public class Handler implements PageHandler<Context> {
 				problemStatistics.setIp(ip);
 			}
 			problemStatistics.visitProblemReport(report);
+			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case GROUP_GRAPHS:
@@ -232,6 +234,7 @@ public class Handler implements PageHandler<Context> {
 			vistor = new HourlyLineChartVisitor(Constants.ALL, type, state, start);
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_jsonBuilder.toJson(vistor.getGraphItem()));
+			model.setReport(report);
 			buildDistributionChart(model, payload, report);
 			break;
 		case HISTORY_GROUP_REPORT:

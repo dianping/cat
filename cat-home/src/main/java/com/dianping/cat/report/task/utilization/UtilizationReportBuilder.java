@@ -27,8 +27,8 @@ import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class UtilizationReportBuilder implements TaskBuilder {
 
@@ -38,7 +38,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 	protected ReportServiceManager m_reportService;
 
 	@Inject
-	private TransactionMergeHelper m_mergeManager;
+	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
 	private ServerConfigManager m_configManger;
@@ -49,7 +49,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 		      TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -76,7 +75,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 				int size = transactionReport.getMachines().size();
 
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
-				transactionReport = m_mergeManager.mergerAllIp(transactionReport, Constants.ALL);
+				transactionReport = m_mergeHelper.mergeAllMachines(transactionReport, Constants.ALL);
 				transactionVisitor.visitTransactionReport(transactionReport);
 			}
 		}
@@ -124,7 +123,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -142,7 +140,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 		      TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -160,7 +157,6 @@ public class UtilizationReportBuilder implements TaskBuilder {
 		      + TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

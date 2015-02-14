@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.report.page.JsonBuilder;
+import com.dianping.cat.helper.JsonBuilder;
 
 public class CacheReport {
 

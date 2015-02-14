@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.app.display;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.graph.LineChart;
 
 public class AppSpeedDisplayInfo {
 

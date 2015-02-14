@@ -22,8 +22,8 @@ import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetTopologyReportBuilder implements TaskBuilder {
@@ -75,7 +75,6 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 		hourlyReport.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		hourlyReport.setDomain(domain);
 		hourlyReport.setPeriod(period);
-		hourlyReport.setContent("");
 		byte[] content = DefaultNativeBuilder.build(netGraphSet);
 		return m_reportService.insertHourlyReport(hourlyReport, content);
 	}

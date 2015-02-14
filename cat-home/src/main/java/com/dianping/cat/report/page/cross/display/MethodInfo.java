@@ -226,20 +226,17 @@ public class MethodInfo extends BaseVisitor {
 	@Override
 	public void visitRemote(Remote remote) {
 		String role = remote.getRole();
-		// String ip = remote.getId();
 		String ip = remote.getIp();
 
 		if (ip == null) {
 			ip = remote.getId();
+			
 			if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
 				ip = ip.substring(0, ip.indexOf(":Caller"));
 			}
 		}
 		String app = remote.getApp();
-
-		// if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
-		// ip = ip.substring(0, ip.indexOf(":Caller"));
-		// }
+		
 		if (projectContains(m_remoteProject, app, ip, role) || m_remoteIp.equals(ip)) {
 			m_currentRole = role;
 			super.visitRemote(remote);

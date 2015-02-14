@@ -24,4 +24,7 @@
    <model package="com.dianping.cat.advanced.browser-meta-report" name="browser-meta-report">
       <sample-model>src/test/resources/com/dianping/cat/consumer/model/browser-meta.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.consumer.model" name="storage-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/storage/storage.xml</sample-model>
+   </model>
 </wizard>

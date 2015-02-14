@@ -15,8 +15,8 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 
 public class HeartbeatReportBuilder implements TaskBuilder {
 
@@ -37,7 +37,6 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 
 			report.setCreationDate(new Date());
 			report.setDomain(domain);
-			report.setContent("");
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(name);
 			report.setPeriod(period);

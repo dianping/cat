@@ -16,8 +16,8 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 
 @ModelMeta(DependencyAnalyzer.ID)

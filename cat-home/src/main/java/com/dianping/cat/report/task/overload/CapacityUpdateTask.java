@@ -9,7 +9,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 
 public class CapacityUpdateTask implements TaskBuilder, LogEnabled {
 

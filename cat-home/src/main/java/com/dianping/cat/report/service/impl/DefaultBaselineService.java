@@ -21,7 +21,7 @@ import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.alert.MetricType;
 import com.dianping.cat.service.ModelPeriod;
 
 public class DefaultBaselineService implements BaselineService {

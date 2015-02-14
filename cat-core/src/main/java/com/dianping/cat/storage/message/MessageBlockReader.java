@@ -31,17 +31,13 @@ public class MessageBlockReader {
 		int blockOffset = 0;
 		byte[] buf;
 
-		synchronized (m_indexFile) {
-			m_indexFile.seek(index * 6L);
-			blockAddress = m_indexFile.readInt();
-			blockOffset = m_indexFile.readShort() & 0xFFFF;
-		}
+		m_indexFile.seek(index * 6L);
+		blockAddress = m_indexFile.readInt();
+		blockOffset = m_indexFile.readShort() & 0xFFFF;
 
-		synchronized (m_dataFile) {
-			m_dataFile.seek(blockAddress);
-			buf = new byte[m_dataFile.readInt()];
-			m_dataFile.readFully(buf);
-		}
+		m_dataFile.seek(blockAddress);
+		buf = new byte[m_dataFile.readInt()];
+		m_dataFile.readFully(buf);
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
 		DataInputStream in = new DataInputStream(new GZIPInputStream(bais));

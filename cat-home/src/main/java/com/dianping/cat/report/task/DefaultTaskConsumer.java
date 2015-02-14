@@ -15,7 +15,6 @@ import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.TaskEntity;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.task.spi.ReportFacade;
 
 public class DefaultTaskConsumer extends TaskConsumer {
 

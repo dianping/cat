@@ -20,7 +20,7 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
 import com.dianping.cat.service.ModelPeriod;

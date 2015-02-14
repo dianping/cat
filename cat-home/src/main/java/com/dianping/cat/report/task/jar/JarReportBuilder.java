@@ -24,7 +24,7 @@ import com.dianping.cat.home.jar.entity.Jar;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.jar.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 
 public class JarReportBuilder implements TaskBuilder {
 
@@ -38,10 +38,7 @@ public class JarReportBuilder implements TaskBuilder {
 
 	public static List<String> s_jars = Arrays.asList("cat-client", "cat-core", "dpsf-net", "lion-client",
 	      "avatar-cache", "zebra-ds-monitor-client", "zebra-api", "swallow-client", "swallow-consumerclient",
-	      "swallow-producerclient", "platform-sdk", "tuangou-services-deal", "tuangou-services-coupon",
-	      "tuangou-services-order", "tuangou-services-pay", "tuangou-services-common", "tuangou-services-receipt",
-	      "tuangou-services-delivery", "tuangou-services-dal", "tuangou-services-lottery", "tuangou-services-billing",
-	      "tuangou-services-config", "tuangou-services-notify");
+	      "swallow-producerclient", "platform-sdk");
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -53,7 +50,7 @@ public class JarReportBuilder implements TaskBuilder {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(period, end, HeartbeatAnalyzer.ID);
 		JarReport jarReport = new JarReport();
-		HearbeartReportVisitor visitor = new HearbeartReportVisitor(jarReport);
+		HeartbeatReportVisitor visitor = new HeartbeatReportVisitor(jarReport);
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
@@ -67,7 +64,6 @@ public class JarReportBuilder implements TaskBuilder {
 
 		HourlyReport report = new HourlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -78,13 +74,13 @@ public class JarReportBuilder implements TaskBuilder {
 		return m_reportService.insertHourlyReport(report, binaryContent);
 	}
 
-	public class HearbeartReportVisitor extends BaseVisitor {
+	public class HeartbeatReportVisitor extends BaseVisitor {
 
 		private String m_currentDomain;
 
 		private JarReport m_jarReport;
 
-		public HearbeartReportVisitor(JarReport jarReport) {
+		public HeartbeatReportVisitor(JarReport jarReport) {
 			m_jarReport = jarReport;
 		}
 

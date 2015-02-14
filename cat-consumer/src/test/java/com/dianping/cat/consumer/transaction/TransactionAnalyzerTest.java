@@ -30,16 +30,11 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 		super.setUp();
 
 		m_timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
+		m_analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
+		Date date = sdf.parse("20120101 00:00");
 
-		try {
-			m_analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
-			Date date = sdf.parse("20120101 00:00");
-			
-			m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
 	@Test

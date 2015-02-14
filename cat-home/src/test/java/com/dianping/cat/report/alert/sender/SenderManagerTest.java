@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 
 public class SenderManagerTest extends ComponentTestCase {
 

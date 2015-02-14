@@ -12,6 +12,10 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TransactionPerformanceTest  extends ComponentTestCase{
 
+	public void setUp() throws Exception {
+		super.setUp();
+	}
+		
 	@Test
 	public void test() throws Exception {
 		TransactionAnalyzer analyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class, TransactionAnalyzer.ID);

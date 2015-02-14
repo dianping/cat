@@ -7,8 +7,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
@@ -20,8 +18,6 @@ public class ProjectInfo extends BaseVisitor {
 	public static final String ALL_SERVER = "AllServers";
 
 	public static final String ALL_CLIENT = "AllClients";
-
-	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private Map<String, TypeDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
@@ -43,12 +39,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private void addCallerProject(String ip, String app, Type type) {
 		String projectName = app;
-
-		if (StringUtils.isEmpty(projectName)) {
-			projectName = UNKNOWN_PROJECT;
-		}
-
 		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
+		
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			m_callerProjectsInfo.put(ALL_CLIENT, all);
@@ -77,11 +69,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private void addCallProject(String ip, String app, Type type) {
 		String projectName = app;
-
-		if (StringUtils.isEmpty(projectName)) {
-			projectName = UNKNOWN_PROJECT;
-		}
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
+		
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_SERVER);
 			m_callProjectsInfo.put(ALL_SERVER, all);
@@ -97,12 +86,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private void addServiceProject(String ip, String app, Type type) {
 		String projectName = app;
-
-		if (StringUtils.isEmpty(projectName)) {
-			projectName = UNKNOWN_PROJECT;
-		}
-
 		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
+
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			m_serviceProjectsInfo.put(ALL_CLIENT, all);
@@ -181,7 +166,7 @@ public class ProjectInfo extends BaseVisitor {
 			addServiceProject(remoteIp, app, remote.getType());
 		} else if (role != null && role.endsWith("Server")) {
 			addCallProject(remoteIp, app, remote.getType());
-		} else if (role != null && role.endsWith("Caller") && remoteIp.endsWith(":Caller")) {
+		} else if (role != null && role.endsWith("Caller")) {
 			addCallerProject(remoteIp, app, remote.getType());
 		}
 	}

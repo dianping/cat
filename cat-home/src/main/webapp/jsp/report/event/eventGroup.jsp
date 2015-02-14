@@ -10,8 +10,8 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report
-	title="Event Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}'>${payload.type}</a>"
-	navUrlPrefix="op=groupReport&op=groupReport&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
+	title="Event Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}'>${payload.type}</a>"
+	navUrlPrefix="op=groupReport&op=groupReport&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -21,11 +21,11 @@
 <table class="machines">
 	<tr class="left">
 		<th>&nbsp;[&nbsp; 
-					<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}" >All</a>
+					<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}" >All</a>
 		     &nbsp;]&nbsp; 
 			<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
-					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&group=${payload.group}&type=${payload.type}">${ip}</a>
+					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}">${ip}</a>
    	 		&nbsp;]&nbsp;
 			</c:forEach>
 		</th>
@@ -83,7 +83,7 @@ $(document).ready(function() {
 				<tr class=" right">
 					<td class="left">
 						<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=type"><a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${item.type}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
-						&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${item.type}">${item.type}</a>
+						&nbsp;&nbsp;<a href="?domain=${report.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${item.type}">${item.detail.id}</a>
 					</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(e.failCount,'#,###,###,###,##0')}</td>
@@ -98,14 +98,14 @@ $(document).ready(function() {
 		</c:when>
 		<c:otherwise>
 			<tr>
-			<th class="left"><a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.type}&op=groupReport" class="graph_link" data-status="-1">[:: show ::]</a>
-			<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=type"> Name</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=total">Total</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=failure">Failure</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<th class="left"><a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&op=groupReport" class="graph_link" data-status="-1">[:: show ::]</a>
+			<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=type"> Name</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">Total</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failure">Failure</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failurePercent">Failure%</a></th>
 			<th>Sample Link</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=total">QPS</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.type}&sort=total">Percent%</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">QPS</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">Percent%</a></th>
 			</tr>
 			<tr class="graphs"><td colspan="7" style="display:none"><div id="-1" style="display: none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
@@ -115,7 +115,7 @@ $(document).ready(function() {
 					<td class="left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a	href="?op=groupGraphs&domain=${report.domain}&op=groupReport&date=${model.date}&group=${payload.group}&type=${payload.type}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
+						<a	href="?op=groupGraphs&domain=${report.domain}&op=groupReport&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 					</c:when>
 					</c:choose>
 					&nbsp;&nbsp;${e.id}

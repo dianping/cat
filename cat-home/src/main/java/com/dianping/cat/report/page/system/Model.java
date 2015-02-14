@@ -8,8 +8,8 @@ import java.util.List;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.metric.Range;
 
 @ModelMeta("system")

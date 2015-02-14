@@ -24,9 +24,9 @@ import com.dianping.cat.configuration.app.comparison.entity.Item;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.CommandQueryEntity;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 
 public class AppDataComparisonNotifier {

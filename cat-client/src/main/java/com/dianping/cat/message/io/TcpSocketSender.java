@@ -25,7 +25,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-sender";
 
-	public static final int SIZE = 10000;
+	public static final int SIZE = 5000;
 
 	@Inject
 	private MessageCodec m_codec;
@@ -97,7 +97,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		while (m_active) {
 			ChannelFuture channel = m_manager.channel();
 
-			if (checkWritable(channel)) {
+			if (channel != null && checkWritable(channel)) {
 				try {
 					MessageTree tree = m_queue.poll();
 

@@ -125,7 +125,11 @@ public enum JspFile {
 
 	DOMAIN_GROUP_CONFIG_LIST("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
-	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp");
+	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp"), 
+	
+	ACTIVITY_CONFIG_UPDATE("/jsp/system/activity/activityConfigUpdate.jsp"),
+	
+	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp");
 
 	private String m_path;
 

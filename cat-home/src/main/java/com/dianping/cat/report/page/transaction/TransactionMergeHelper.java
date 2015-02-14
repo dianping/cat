@@ -2,12 +2,13 @@ package com.dianping.cat.report.page.transaction;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.site.lookup.util.StringUtils;
 
 public class TransactionMergeHelper {
 
-	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
-		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
+	public TransactionReport mergeAllMachines(TransactionReport report, String ipAddress) {
+		if (StringUtils.isEmpty(ipAddress) || Constants.ALL.equalsIgnoreCase(ipAddress)) {
+			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(report);
 			report = all.getReport();
@@ -15,9 +16,9 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	private TransactionReport mergerAllName(TransactionReport report, String allName) {
-		if (Constants.ALL.equalsIgnoreCase(allName)) {
-			MergeAllName all = new MergeAllName();
+	public TransactionReport mergeAllNames(TransactionReport report, String allName) {
+		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
+			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(report);
 			report = all.getReport();
@@ -25,10 +26,10 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	public TransactionReport mergerAllName(TransactionReport report, String ipAddress, String allName) {
-		TransactionReport temp = mergerAllIp(report, ipAddress);
+	public TransactionReport mergeAllNames(TransactionReport report, String ipAddress, String allName) {
+		TransactionReport temp = mergeAllMachines(report, ipAddress);
 
-		return mergerAllName(temp, allName);
+		return mergeAllNames(temp, allName);
 	}
 
 }

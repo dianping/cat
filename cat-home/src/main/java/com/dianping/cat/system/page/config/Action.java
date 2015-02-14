@@ -193,7 +193,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
 
-	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate");
+	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
+	
+	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
+	
+	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 
 	private String m_name;
 

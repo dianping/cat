@@ -91,7 +91,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>业务XML规则</a>
 								<b class="arrow"></b></li>
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
-								<i class="menu-icon fa fa-caret-right"></i>响应时间告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
 								<i class="menu-icon fa fa-caret-right"></i>异常告警</a>
@@ -113,6 +113,9 @@
 								<b class="arrow"></b></li>
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>应用监控大盘</a>
+								<b class="arrow"></b></li>
+							<li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>活动配置</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
@@ -147,6 +150,9 @@
 								<b class="arrow"></b></li>
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
+								<b class="arrow"></b></li>
+							<li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>全局黑名单</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>

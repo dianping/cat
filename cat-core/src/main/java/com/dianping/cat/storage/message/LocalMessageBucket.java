@@ -12,6 +12,7 @@ import java.util.zip.GZIPOutputStream;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -47,15 +48,17 @@ public class LocalMessageBucket implements MessageBucket {
 
 	@Override
 	public void close() throws IOException {
-		if (m_reader != null) {
-			m_reader.close();
-			m_writer.close();
-			m_out.close();
-			m_buf.close();
-			m_out = null;
-			m_buf = null;
-			m_reader = null;
-			m_writer = null;
+		synchronized (this) {
+			if (m_reader != null) {
+				m_reader.close();
+				m_writer.close();
+				m_out.close();
+				m_buf.close();
+				m_out = null;
+				m_buf = null;
+				m_reader = null;
+				m_writer = null;
+			}
 		}
 	}
 
@@ -78,7 +81,7 @@ public class LocalMessageBucket implements MessageBucket {
 			m_codec.decode(buf, tree);
 			return tree;
 		} catch (EOFException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 			return null;
 		}
 	}

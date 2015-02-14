@@ -189,9 +189,6 @@
 				<member name="domain" />
 				<member name="name" />
 			</readset>
-			<readset name="CONTENT">
-				<member name="content" />
-			</readset>
 		</readsets>
 		<query-defs>
 			<query name="find-all-by-domain-name-period" type="SELECT" multiple="true">
@@ -220,9 +217,6 @@
 					INSERT 
 					INTO <TABLE/>(<FIELDS/>) 
 					VALUES(<VALUES/>)
-					ON DUPLICATE KEY 
-						UPDATE <FIELD name='content'/> = ${content},
-							<FIELD name='creation-date'/> = NOW()
 				]]></statement>
 			</query>
 		</query-defs>

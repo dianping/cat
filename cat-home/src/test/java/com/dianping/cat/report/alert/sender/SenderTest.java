@@ -8,12 +8,12 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.task.alert.AlertType;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.MailSender;
-import com.dianping.cat.report.task.alert.sender.sender.Sender;
-import com.dianping.cat.report.task.alert.sender.sender.SmsSender;
-import com.dianping.cat.report.task.alert.sender.sender.WeixinSender;
+import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.MailSender;
+import com.dianping.cat.report.alert.sender.sender.Sender;
+import com.dianping.cat.report.alert.sender.sender.SmsSender;
+import com.dianping.cat.report.alert.sender.sender.WeixinSender;
 
 public class SenderTest extends ComponentTestCase {
 

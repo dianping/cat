@@ -12,20 +12,18 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.alert.app.AppAlert;
-import com.dianping.cat.report.task.alert.business.BusinessAlert;
-import com.dianping.cat.report.task.alert.database.DatabaseAlert;
-import com.dianping.cat.report.task.alert.exception.ExceptionAlert;
-import com.dianping.cat.report.task.alert.exception.FrontEndExceptionAlert;
-import com.dianping.cat.report.task.alert.heartbeat.HeartbeatAlert;
-import com.dianping.cat.report.task.alert.network.NetworkAlert;
-import com.dianping.cat.report.task.alert.system.SystemAlert;
-import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlert;
-import com.dianping.cat.report.task.alert.thirdParty.ThirdPartyAlertBuilder;
-import com.dianping.cat.report.task.alert.transaction.TransactionAlert;
-import com.dianping.cat.report.task.alert.web.WebAlert;
-import com.dianping.cat.report.task.project.ProjectUpdateTask;
-import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.report.alert.app.AppAlert;
+import com.dianping.cat.report.alert.business.BusinessAlert;
+import com.dianping.cat.report.alert.database.DatabaseAlert;
+import com.dianping.cat.report.alert.exception.ExceptionAlert;
+import com.dianping.cat.report.alert.exception.FrontEndExceptionAlert;
+import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
+import com.dianping.cat.report.alert.network.NetworkAlert;
+import com.dianping.cat.report.alert.system.SystemAlert;
+import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
+import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
+import com.dianping.cat.report.alert.transaction.TransactionAlert;
+import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.system.config.ConfigReloadTask;
 
 public class CatHomeModule extends AbstractModule {
@@ -42,9 +40,7 @@ public class CatHomeModule extends AbstractModule {
 
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-			DomainNavManager domainNavManager = ctx.lookup(DomainNavManager.class);
 
-			Threads.forGroup("cat").start(domainNavManager);
 			Threads.forGroup("cat").start(taskConsumer);
 		}
 
@@ -56,7 +52,6 @@ public class CatHomeModule extends AbstractModule {
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 			FrontEndExceptionAlert frontEndExceptionAlert = ctx.lookup(FrontEndExceptionAlert.class);
 			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
-			ProjectUpdateTask productUpdateTask = ctx.lookup(ProjectUpdateTask.class);
 			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
 			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
 			AppAlert appAlert = ctx.lookup(AppAlert.class);
@@ -70,7 +65,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(exceptionAlert);
 			Threads.forGroup("cat").start(frontEndExceptionAlert);
 			Threads.forGroup("cat").start(heartbeatAlert);
-			Threads.forGroup("cat").start(productUpdateTask);
 			Threads.forGroup("cat").start(thirdPartyAlert);
 			Threads.forGroup("cat").start(alertBuildingTask);
 			Threads.forGroup("cat").start(appAlert);

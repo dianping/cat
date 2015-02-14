@@ -71,9 +71,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 20;
 
-	private int m_gzipMessageSize = 10000;
+	private int m_gzipMessageSize = 5000;
 
-	private int m_messageBlockSize = 10000;
+	private int m_messageBlockSize = 5000;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 

@@ -70,12 +70,14 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 	}
 
 	private void incDistribute(String ip, double value) {
-		Double old = m_distribute.get(ip);
+		if (value > 0) {
+			Double old = m_distribute.get(ip);
 
-		if (old == null) {
-			old = new Double(0);
+			if (old == null) {
+				old = new Double(0);
+			}
+			m_distribute.put(ip, old + value);
 		}
-		m_distribute.put(ip, old + value);
 	}
 
 	private double queryValue(String key, ProcessDomain processDomain) {

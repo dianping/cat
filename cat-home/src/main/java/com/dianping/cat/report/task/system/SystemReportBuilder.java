@@ -17,7 +17,7 @@ import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 
 public class SystemReportBuilder implements TaskBuilder {
 
@@ -39,7 +39,6 @@ public class SystemReportBuilder implements TaskBuilder {
 		SystemReport report = buildSystemReport(period);
 		DailyReport dailyReport = new DailyReport();
 
-		dailyReport.setContent("");
 		dailyReport.setIp("");
 		dailyReport.setDomain(Constants.CAT);
 		dailyReport.setCreationDate(new Date());

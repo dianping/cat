@@ -278,7 +278,18 @@ public class StateDisplay extends BaseVisitor {
 			if (o2.getName() != null && o2.getName().equalsIgnoreCase(Constants.ALL)) {
 				return 1;
 			}
-			return (int) (o2.getTotal() - o1.getTotal());
+
+			long count2 = o2.getTotal();
+			long count1 = o1.getTotal();
+
+			if (count2 > count1) {
+				return 1;
+			} else if (count2 < count1) {
+				return -1;
+			} else {
+				return 0;
+			}
 		}
 	}
+	
 }

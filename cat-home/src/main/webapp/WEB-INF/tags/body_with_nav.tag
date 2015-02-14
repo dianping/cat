@@ -117,13 +117,30 @@
 						<i class="menu-icon  glyphicon glyphicon-random"></i>
 						<span class="menu-text">Cross</span>
 					</a>
-				</li>		
-				<li id="Cache_report" >
-					<a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-						<i class="menu-icon glyphicon glyphicon-flash"></i>
-						<span class="menu-text">Cache</span>
-					</a>
 				</li>
+				<li id="Cache_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Cache</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="cache_operation"><a href="/cat/r/storage?domain=memcached&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=cache">
+							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="cache_info"><a href="/cat/r/cache?cache=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>访问情况</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="Database_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-lemon-o"></i> <span class="menu-text">Database</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="database_operation"><a href="/cat/r/storage?domain=cat&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=database">
+							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="database_system"><a href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
+							<b class="arrow"></b></li>
+					</ul>		
 				<li id="Dependency_report" class="hsub"><a href="/cat/r/dependency?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-road"></i> <span class="menu-text">Dependency</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
@@ -159,9 +176,6 @@
 						<li id="system_network"><a href="/cat/r/network?op=metric&product=&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
 							<i class="menu-icon fa fa-caret-right"></i>网络监控</a>
 							<b class="arrow"></b></li>
-						<li id="system_database"><a href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
-							<i class="menu-icon fa fa-caret-right"></i>数据库</a>
-							<b class="arrow"></b></li>
 						<li id="system_paas"><a href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 							<i class="menu-icon fa fa-caret-right"></i>PAAS监控</a>
 							<b class="arrow"></b></li>
@@ -171,7 +185,9 @@
 						<li id="system_alert"><a href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">
 							<i class="menu-icon fa fa-caret-right"></i>告警信息</a>
 							<b class="arrow"></b></li>
-						
+						<li id="system_activity"><a href="/cat/r/activity?domain=${model.domain}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>活动大盘</a>
+							<b class="arrow"></b></li>
 					</ul>
 				</li>
 				</ul>

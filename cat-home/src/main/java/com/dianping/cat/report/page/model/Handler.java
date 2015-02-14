@@ -11,9 +11,9 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -37,6 +37,7 @@ import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.IEntity;
@@ -60,6 +61,7 @@ import com.dianping.cat.report.page.model.metric.LocalMetricService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
+import com.dianping.cat.report.page.model.storage.LocalStorageService;
 import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
@@ -103,6 +105,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
+
+	@Inject(type = ModelService.class, value = "storage-local")
+	private LocalStorageService m_storageService;
 
 	@Inject
 	private IpService m_ipService;
@@ -165,6 +170,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		} else if (DependencyAnalyzer.ID.equals(report)) {
 			return new DependencyReportFilter()
 			      .buildXml((com.dianping.cat.consumer.dependency.model.IEntity<?>) dataModel);
+		} else if (StorageAnalyzer.ID.equals(report)) {
+			return new StorageReportFilter(ipAddress)
+			      .buildXml((com.dianping.cat.consumer.storage.model.IEntity<?>) dataModel);
 		} else {
 			return String.valueOf(dataModel);
 		}
@@ -230,6 +238,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = processMetricRequest(payload, request);
 			} else if (DependencyAnalyzer.ID.equals(report)) {
 				response = m_dependencyService.invoke(request);
+			} else if (StorageAnalyzer.ID.equals(report)) {
+				response = m_storageService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
@@ -459,6 +469,25 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	public static class TopReportFilter extends com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder {
 		public TopReportFilter() {
 			super(true, new StringBuilder(DEFAULT_SIZE));
+		}
+	}
+
+	public static class StorageReportFilter extends com.dianping.cat.consumer.storage.model.transform.DefaultXmlBuilder {
+
+		private String m_ipAddress;
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.storage.model.entity.Machine machine) {
+			if (StringUtils.isEmpty(m_ipAddress) || m_ipAddress.equals(Constants.ALL)) {
+				super.visitMachine(machine);
+			} else if (machine.getId().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			}
+		}
+
+		public StorageReportFilter(String ip) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+			m_ipAddress = ip;
 		}
 	}
 

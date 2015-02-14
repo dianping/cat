@@ -154,6 +154,8 @@
 <script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Cache_report').addClass('active open');
+		$('#cache_info').addClass('active');
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>

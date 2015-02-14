@@ -38,11 +38,15 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.impl.DefaultBaselineService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.alert.exception.AlertReportBuilder;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.task.ReportFacade;
+import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.report.alert.exception.AlertReportBuilder;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
+import com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder;
+import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.AppDatabasePruner;
 import com.dianping.cat.report.task.dependency.DependencyReportBuilder;
@@ -78,9 +82,8 @@ import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.router.RouterConfigBuilder;
 import com.dianping.cat.report.task.service.ServiceReportBuilder;
-import com.dianping.cat.report.task.spi.ReportFacade;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.report.task.state.StateReportBuilder;
+import com.dianping.cat.report.task.storage.StorageReportBuilder;
 import com.dianping.cat.report.task.system.SystemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
@@ -173,6 +176,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
 
+		all.add(C(TaskBuilder.class, StorageReportBuilder.ID, StorageReportBuilder.class));
+
+		all.add(C(TaskBuilder.class, CmdbInfoReloadBuilder.ID, CmdbInfoReloadBuilder.class).req(ProjectUpdateTask.class));
+
 		all.add(C(CapacityUpdateStatusManager.class).req(OverloadDao.class, ConfigDao.class));
 
 		all.add(C(CapacityUpdater.class, HourlyCapacityUpdater.ID, HourlyCapacityUpdater.class).req(OverloadDao.class,
@@ -218,6 +225,13 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
 
 		all.add(C(ReportFacade.class));
+
+		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class)
+		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
+		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
+		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")
+		      .req(TaskBuilder.class, CrossReportBuilder.ID, "m_crossReportBuilder")
+		      .req(TaskBuilder.class, MatrixReportBuilder.ID, "m_matrixReportBuilder"));
 
 		return all;
 	}
