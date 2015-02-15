@@ -187,12 +187,11 @@ public class HostInfo extends BaseVisitor {
 
 	@Override
 	public void visitRemote(Remote remote) {
-		// String remoteIp = remote.getId();
 		String id = remote.getId();
 		String remoteIp = remote.getIp();
 
 		if (remoteIp == null) {
-			remoteIp = remote.getId();
+			remoteIp = id;
 
 			int index = remoteIp.indexOf(":Caller");
 

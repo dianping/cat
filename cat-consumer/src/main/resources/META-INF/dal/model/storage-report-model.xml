@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.storage.model" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true">
+  <entity name="storage-report" root="true">
+    <attribute name="id" key="true" />
+    <attribute name="id" value-type="String" />
+    <attribute name="name" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="id" value-type="String" type="set" names="ids" />
+    <element name="ip" value-type="String" type="set" names="ips" />
+	<element name="op" value-type="String" type="set" names="ops" />
+    <entity-ref name="machine" type="map" names="machines" method-find-or-create="true"/>
+  </entity>
+  <entity name="machine">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String"  key="true"/>
+    <entity-ref name="operation" type="map" names="operations" method-find-or-create="true"/>
+  </entity>
+  <entity name="operation">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="avg" value-type="double" primitive="true" format="0.0"/>
+    <attribute name="sum" value-type="double" primitive="true" format="0.0" method-inc="true" />
+    <attribute name="error" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="long-count" value-type="long" primitive="true" method-inc="true" />
+  <entity-ref name="segment" type="map" names="segments" method-find-or-create="true"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" primitive="true" key="true"/>
+    <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="avg" value-type="double" primitive="true" format="0.0" />
+    <attribute name="sum" value-type="double" primitive="true" format="0.0" method-inc="true" />
+    <attribute name="error" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="long-count" value-type="long" primitive="true" method-inc="true" />
+  </entity>
+</model>
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="display-policy" root="true">
+  <entity name="heartbeat-display-policy" root="true">
     <entity-ref name="group" type="list" names="groups" />
   </entity>
   <entity name="group">

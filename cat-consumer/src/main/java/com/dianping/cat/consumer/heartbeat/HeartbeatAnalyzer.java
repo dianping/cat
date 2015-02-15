@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -10,8 +11,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
-import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -21,12 +20,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
-import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
+import com.dianping.cat.status.model.entity.ExtensionDetail;
 import com.dianping.cat.status.model.entity.GcInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
+import com.dianping.cat.status.model.entity.OsInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 
@@ -42,80 +42,99 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		try {
 			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
+			machine.setClasspath(info.getRuntime().getJavaClasspath());
+
+			transalteHearbeat(info);
 		} catch (Exception e) {
-			m_logger.error(xml);
 			m_logger.error(e.getMessage(), e);
 			return null;
 		}
 
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(timestamp);
-		int minute = cal.get(Calendar.MINUTE);
-		Period period = new Period(minute);
-
 		try {
-			ThreadsInfo thread = info.getThread();
-			machine.setClasspath(info.getRuntime().getJavaClasspath());
-
-			period.setThreadCount(thread.getCount());
-			period.setDaemonCount(thread.getDaemonCount());
-			period.setTotalStartedCount(thread.getTotalStartedCount());
-			period.setCatThreadCount(thread.getCatThreadCount());
-			period.setPigeonThreadCount(thread.getPigeonThreadCount());
-			period.setHttpThreadCount(thread.getHttpThreadCount());
-
-			MessageInfo catInfo = info.getMessage();
-
-			period.setCatMessageProduced(catInfo.getProduced());
-			period.setCatMessageOverflow(catInfo.getOverflowed());
-			period.setCatMessageSize(catInfo.getBytes());
-
-			MemoryInfo memeryInfo = info.getMemory();
-			List<GcInfo> gcs = info.getMemory().getGcs();
-
-			for (GcInfo gc : gcs) {
-				String name = gc.getName();
-
-				if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
-					period.setNewGcCount(gc.getCount());
-				} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
-					period.setOldGcCount(gc.getCount());
-				}
-			}
-
-			period.setHeapUsage(memeryInfo.getHeapUsage());
-			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
-			period.setMemoryFree(memeryInfo.getFree());
-			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
-
-			DiskInfo diskInfo = info.getDisk();
-
-			if (diskInfo != null) {
-				for (DiskVolumeInfo volumeInfo : diskInfo.getDiskVolumes()) {
-					Disk disk = new Disk(volumeInfo.getId());
-
-					disk.setTotal(volumeInfo.getTotal());
-					disk.setFree(volumeInfo.getFree());
-					disk.setUsable(volumeInfo.getUsable());
-					period.addDisk(disk);
-				}
-			}
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timestamp);
+			int minute = cal.get(Calendar.MINUTE);
+			Period period = new Period(minute);
 
 			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
 				String id = entry.getKey();
 				Extension ext = entry.getValue();
-
 				com.dianping.cat.consumer.heartbeat.model.entity.Extension extension = period.findOrCreateExtension(id);
-				for (Entry<String, String> kv : ext.getDynamicAttributes().entrySet()) {
-					double value = Double.valueOf(kv.getValue());
-					extension.getDetails().put(kv.getKey(), new Detail(kv.getKey()).setValue(value));
+				Map<String, ExtensionDetail> details = ext.getDetails();
+
+				for (Entry<String, ExtensionDetail> detail : details.entrySet()) {
+					ExtensionDetail extensionDetail = detail.getValue();
+
+					extension.findOrCreateDetail(extensionDetail.getId()).setValue(extensionDetail.getValue());
 				}
 			}
+			return period;
 		} catch (Exception e) {
 			Cat.logError(e);
+			return null;
+		}
+	}
+
+	private void transalteHearbeat(StatusInfo info) {
+		MessageInfo message = info.getMessage();
+
+		if (message.getProduced() > 0 || message.getBytes() > 0) {
+			Extension catExtension = info.findOrCreateExtension("CatUsage");
+
+			catExtension.findOrCreateExtensionDetail("Produced").setValue(message.getProduced());
+			catExtension.findOrCreateExtensionDetail("Overflowed").setValue(message.getOverflowed());
+			catExtension.findOrCreateExtensionDetail("Bytes").setValue(message.getBytes());
+
+			Extension system = info.findOrCreateExtension("System");
+			OsInfo osInfo = info.getOs();
+
+			system.findOrCreateExtensionDetail("LoadAverage").setValue(osInfo.getSystemLoadAverage());
+			system.findOrCreateExtensionDetail("FreePhysicalMemory").setValue(osInfo.getFreePhysicalMemory());
+			system.findOrCreateExtensionDetail("FreeSwapSpaceSize").setValue(osInfo.getFreeSwapSpace());
+
+			Extension gc = info.findOrCreateExtension("GC");
+			MemoryInfo memory = info.getMemory();
+			List<GcInfo> gcs = memory.getGcs();
+
+			if (gcs.size() >= 2) {
+				GcInfo newGc = gcs.get(0);
+				GcInfo oldGc = gcs.get(1);
+				gc.findOrCreateExtensionDetail("ParNewCount").setValue(newGc.getCount());
+				gc.findOrCreateExtensionDetail("ParNewTime").setValue(newGc.getTime());
+				gc.findOrCreateExtensionDetail("ConcurrentMarkSweepCount").setValue(oldGc.getCount());
+				gc.findOrCreateExtensionDetail("ConcurrentMarkSweepTime").setValue(oldGc.getTime());
+			}
+
+			Extension thread = info.findOrCreateExtension("FrameworkThread");
+			ThreadsInfo threadInfo = info.getThread();
+
+			thread.findOrCreateExtensionDetail("HttpThread").setValue(threadInfo.getHttpThreadCount());
+			thread.findOrCreateExtensionDetail("CatThread").setValue(threadInfo.getCatThreadCount());
+			thread.findOrCreateExtensionDetail("PigeonThread").setValue(threadInfo.getPigeonThreadCount());
+			thread.findOrCreateExtensionDetail("ActiveThread").setValue(threadInfo.getCount());
+			thread.findOrCreateExtensionDetail("StartedThread").setValue(threadInfo.getTotalStartedCount());
+
+			Extension disk = info.findOrCreateExtension("Disk");
+			List<DiskVolumeInfo> diskVolumes = info.getDisk().getDiskVolumes();
+
+			for (DiskVolumeInfo vinfo : diskVolumes) {
+				disk.findOrCreateExtensionDetail(vinfo.getId() + " Free").setValue(vinfo.getFree());
+			}
 		}
 
-		return period;
+		for (Extension ex : info.getExtensions().values()) {
+			Map<String, String> propertis = ex.getDynamicAttributes();
+
+			for (Entry<String, String> entry : propertis.entrySet()) {
+				try {
+					double value = Double.parseDouble(entry.getValue());
+
+					ex.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
+				} catch (Exception e) {
+					Cat.logError("StatusExtension can only be double type", e);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -152,19 +171,22 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		Message message = tree.getMessage();
-		HeartbeatReport report = findOrCreateReport(domain);
-		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+		if (m_serverConfigManager.validateDomain(domain)) {
+			Message message = tree.getMessage();
+			HeartbeatReport report = findOrCreateReport(domain);
+			report.addIp(tree.getIpAddress());
+
+			if (message instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) message);
+			}
 		}
 	}
 
 	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
 		Machine machine = report.findOrCreateMachine(ip);
-		Period period = buildHeartBeatInfo(machine, heartbeat, tree.getMessage().getTimestamp());
+		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
 
 		if (period != null) {
 			machine.getPeriods().add(period);

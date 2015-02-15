@@ -24,7 +24,7 @@ import com.dianping.cat.home.highload.entity.Name;
 import com.dianping.cat.home.highload.entity.Type;
 import com.dianping.cat.home.highload.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.spi.TaskBuilder;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
 public class HighLoadReportBuilder implements TaskBuilder {
@@ -39,10 +39,12 @@ public class HighLoadReportBuilder implements TaskBuilder {
 
 	private void addProductlineInfo(Name name) {
 		String domain = name.getDomain();
-		Project project = m_projectService.findByCmdbDomain(domain);
+		Project project = m_projectService.findProject(domain);
 
-		name.setBu(project.getBu());
-		name.setProductLine(project.getCmdbProductline());
+		if (project != null) {
+			name.setBu(project.getBu());
+			name.setProductLine(project.getCmdbProductline());
+		}
 	}
 
 	@Override
@@ -50,7 +52,6 @@ public class HighLoadReportBuilder implements TaskBuilder {
 		HighloadReport report = generateHighloadReport(period);
 		DailyReport dailyReport = new DailyReport();
 
-		dailyReport.setContent("");
 		dailyReport.setIp("");
 		dailyReport.setDomain("");
 		dailyReport.setCreationDate(new Date());

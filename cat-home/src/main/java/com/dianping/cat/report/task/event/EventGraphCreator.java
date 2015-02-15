@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.report.task.spi.GraphLine;
+import com.dianping.cat.report.task.GraphLine;
 
 public class EventGraphCreator {
 

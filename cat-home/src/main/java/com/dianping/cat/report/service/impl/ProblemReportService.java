@@ -54,17 +54,9 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				ProblemReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser
-					      .parse(xml);
-					reportModel.accept(merger);
-				} else {
-					ProblemReport reportModel = queryFromDailyBinary(report.getId(), domain);
-
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
 				// ignore
 			} catch (Exception e) {
@@ -137,18 +129,10 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {// for old xml storage
-							ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser
-							      .parse(xml);
-							reportModel.accept(merger);
-						} else {// for new binary storage, binary is same to report id
-							ProblemReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						ProblemReport reportModel = queryFromHourlyBinary(report.getId(), domain);
 
-							reportModel.accept(merger);
-						}
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
 					} catch (Exception e) {
@@ -177,13 +161,8 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
-			String content = entity.getContent();
 
-			if (content != null && content.length() > 0) {
-				problemReport = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
-			} else {
-				problemReport = queryFromMonthlyBinary(entity.getId(), domain);
-			}
+			problemReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
@@ -202,14 +181,8 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, ProblemAnalyzer.ID,
 			      WeeklyReportEntity.READSET_FULL);
-			String content = entity.getContent();
 
-			if (content != null && content.length() > 0) {
-
-				problemReport = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
-			} else {
-				problemReport = queryFromWeeklyBinary(entity.getId(), domain);
-			}
+			problemReport = queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {

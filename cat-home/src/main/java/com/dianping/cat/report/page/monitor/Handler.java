@@ -13,14 +13,14 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.productline.ProductLineConfig;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.alert.MetricType;
 
 public class Handler implements PageHandler<Context> {
 

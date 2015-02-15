@@ -74,8 +74,8 @@
 	
 		$(document).ready(function() {
 			$('i[tips]').popover();
-			$('#System_report').addClass('active open');
-			$('#system_database').addClass('active');
+			$('#Database_report').addClass('active open');
+			$('#database_system').addClass('active');
 			
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 				_renderMenu: function( ul, items ) {

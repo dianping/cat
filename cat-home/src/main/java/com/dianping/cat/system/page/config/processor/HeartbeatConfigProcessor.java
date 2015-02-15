@@ -2,7 +2,7 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -14,7 +14,7 @@ public class HeartbeatConfigProcessor extends BaseProcesser {
 	private HeartbeatRuleConfigManager m_heartbeatRuleConfigManager;
 
 	@Inject
-	private DisplayPolicyManager m_displayPolicyManager;
+	private HeartbeatDisplayPolicyManager m_displayPolicyManager;
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {

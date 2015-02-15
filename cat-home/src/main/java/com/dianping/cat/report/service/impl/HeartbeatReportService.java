@@ -10,9 +10,12 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
+import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.consumer.heartbeat.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -46,17 +49,9 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				HeartbeatReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					HeartbeatReport reportModel = DefaultSaxParser.parse(xml);
-
-					reportModel.accept(merger);
-				} else {
-					HeartbeatReport reportModel = queryFromDailyBinary(report.getId(), domain);
-
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
 				// ignore
 			} catch (Exception e) {
@@ -70,6 +65,8 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		heartbeatReport.getDomainNames().addAll(domains);
+
+		new HeartbeatConvertor().visitHeartbeatReport(heartbeatReport);
 		return heartbeatReport;
 	}
 
@@ -110,17 +107,9 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {
-							HeartbeatReport reportModel = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser
-							      .parse(xml);
-							reportModel.accept(merger);
-						} else {
-							HeartbeatReport reportModel = queryFromHourlyBinary(report.getId(), domain);
-							reportModel.accept(merger);
-						}
+						HeartbeatReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
 					} catch (Exception e) {
@@ -136,6 +125,7 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		Set<String> domains = queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		heartbeatReport.getDomainNames().addAll(domains);
+		new HeartbeatConvertor().visitHeartbeatReport(heartbeatReport);
 		return heartbeatReport;
 	}
 
@@ -147,6 +137,44 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 	@Override
 	public HeartbeatReport queryWeeklyReport(String domain, Date start) {
 		throw new RuntimeException("Heartbeat report don't support weekly report");
+	}
+
+	public static class HeartbeatConvertor extends BaseVisitor {
+
+		@Override
+		public void visitPeriod(Period period) {
+			Extension catExtension = period.findOrCreateExtension("CatUsage");
+
+			if (period.getCatMessageProduced() > 0 || period.getCatMessageSize() > 0) {
+				catExtension.findOrCreateDetail("Produced").setValue(period.getCatMessageProduced());
+				catExtension.findOrCreateDetail("Overflowed").setValue(period.getCatMessageOverflow());
+				catExtension.findOrCreateDetail("Bytes").setValue(period.getCatMessageSize());
+
+				Extension system = period.findOrCreateExtension("System");
+
+				system.findOrCreateDetail("LoadAverage").setValue(period.getSystemLoadAverage());
+
+				Extension gc = period.findOrCreateExtension("GC");
+				gc.findOrCreateDetail("ParNewCount").setValue(period.getNewGcCount());
+				gc.findOrCreateDetail("ConcurrentMarkSweepCount").setValue(period.getOldGcCount());
+
+				Extension thread = period.findOrCreateExtension("FrameworkThread");
+
+				thread.findOrCreateDetail("HttpThread").setValue(period.getHttpThreadCount());
+				thread.findOrCreateDetail("CatThread").setValue(period.getCatThreadCount());
+				thread.findOrCreateDetail("PigeonThread").setValue(period.getPigeonThreadCount());
+				thread.findOrCreateDetail("ActiveThread").setValue(period.getThreadCount());
+				thread.findOrCreateDetail("StartedThread").setValue(period.getTotalStartedCount());
+
+				Extension disk = period.findOrCreateExtension("Disk");
+				List<Disk> disks = period.getDisks();
+
+				for (Disk vinfo : disks) {
+					disk.findOrCreateDetail(vinfo.getPath() + " Free").setValue(vinfo.getFree());
+				}
+			}
+			super.visitPeriod(period);
+		}
 	}
 
 }

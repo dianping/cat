@@ -28,7 +28,7 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
-import com.dianping.cat.report.task.alert.exception.AlertReportMerger;
+import com.dianping.cat.report.alert.exception.AlertReportMerger;
 
 public class AlertReportService extends AbstractReportService<AlertReport> {
 
@@ -52,17 +52,11 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				AlertReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					AlertReport reportModel = com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				} else {
-					AlertReport reportModel = queryFromDailyBinary(report.getId(), domain);
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
-				//ignore
+				// ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -131,18 +125,12 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {
-							AlertReport reportModel = com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(xml);
-							reportModel.accept(merger);
-						} else {
-							AlertReport reportModel = queryFromHourlyBinary(report.getId(), domain);
-							reportModel.accept(merger);
-						}
+						AlertReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -153,7 +141,7 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(new Date(end.getTime() - 1));
-		
+
 		return alertReport;
 	}
 
@@ -162,15 +150,10 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_ALERT,
 			      MonthlyReportEntity.READSET_FULL);
-			String content = entity.getContent();
 
-			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(content);
-			} else {
-				return queryFromMonthlyBinary(entity.getId(), domain);
-			}
+			return queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -182,15 +165,10 @@ public class AlertReportService extends AbstractReportService<AlertReport> {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_ALERT,
 			      WeeklyReportEntity.READSET_FULL);
-			String content = entity.getContent();
 
-			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.alert.report.transform.DefaultSaxParser.parse(content);
-			} else {
-				return queryFromWeeklyBinary(entity.getId(), domain);
-			}
+			return queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

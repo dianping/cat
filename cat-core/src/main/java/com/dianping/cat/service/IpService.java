@@ -32,6 +32,12 @@ public class IpService implements Initializable {
 	private long[] m_foreignEnds;
 
 	private long[] m_foreignStarts;
+	
+	private static final String OTHER = "其他";
+	
+	private String FOREIGN_OTHER = "国外其他";
+	
+	private String FOREIGN = "国外";
 
 	private IpInfo buildDefaultIpInfo(String nation, String other) {
 		IpInfo ipInfo = new IpInfo();
@@ -52,21 +58,23 @@ public class IpService implements Initializable {
 				IpInfo ipInfo = new IpInfo();
 
 				Area area = m_areas.get(m_areaIds[mid]);
+				
 				if (area != null) {
 					ipInfo.setNation(area.getNation());
 					ipInfo.setProvince(area.getProvince());
 					ipInfo.setCity(area.getCity());
 				} else {
-					ipInfo.setNation("其他");
-					ipInfo.setProvince("其他");
-					ipInfo.setCity("其他");
+					ipInfo.setNation(OTHER);
+					ipInfo.setProvince(OTHER);
+					ipInfo.setCity(OTHER);
 				}
+				
 				Corporation corp = m_corps.get(m_corpIds[mid]);
 
 				if (corp != null) {
 					ipInfo.setChannel(corp.getName());
 				} else {
-					ipInfo.setChannel("其他");
+					ipInfo.setChannel(OTHER);
 				}
 				return ipInfo;
 			} else if (ip < m_starts[mid]) {
@@ -85,18 +93,18 @@ public class IpService implements Initializable {
 			mid = (low + high) / 2;
 			if (ip >= m_foreignStarts[mid] && ip <= m_foreignEnds[mid]) {
 				IpInfo ipInfo = new IpInfo();
-
 				Area area = m_foreignAreas.get(m_foreignAreaIds[mid]);
+				
 				if (area != null) {
 					ipInfo.setNation(area.getNation());
 					ipInfo.setProvince(area.getProvince());
 					ipInfo.setCity(area.getCity());
 				} else {
-					ipInfo.setNation("国外");
-					ipInfo.setProvince("国外其他");
-					ipInfo.setCity("国外其他");
+					ipInfo.setNation(FOREIGN);
+					ipInfo.setProvince(FOREIGN_OTHER);
+					ipInfo.setCity(FOREIGN_OTHER);
 				}
-				ipInfo.setChannel("国外其他");
+				ipInfo.setChannel(FOREIGN_OTHER);
 				return ipInfo;
 			} else if (ip < m_foreignStarts[mid]) {
 				high = mid - 1;
@@ -104,7 +112,7 @@ public class IpService implements Initializable {
 				low = mid + 1;
 			}
 		}
-		return buildDefaultIpInfo("国外", "国外其他");
+		return buildDefaultIpInfo(FOREIGN, FOREIGN_OTHER);
 	}
 
 	private IpInfo findIpInfo(long ip) {

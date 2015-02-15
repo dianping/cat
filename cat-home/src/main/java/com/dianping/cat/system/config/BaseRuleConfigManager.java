@@ -28,9 +28,9 @@ import com.dianping.cat.home.rule.entity.SubCondition;
 import com.dianping.cat.home.rule.transform.DefaultJsonParser;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.task.alert.AlarmRule;
-import com.dianping.cat.report.task.alert.MetricType;
-import com.dianping.cat.report.task.alert.RuleType;
+import com.dianping.cat.report.alert.AlarmRule;
+import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.RuleType;
 
 public abstract class BaseRuleConfigManager {
 

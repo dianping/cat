@@ -20,8 +20,8 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.TaskBuilder;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
@@ -43,10 +43,9 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		StateReport stateReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
+		StateReport stateReport = queryHourlyReportsByDuration(domain, period, TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -72,7 +71,6 @@ public class StateReportBuilder implements TaskBuilder {
 		StateReport stateReport = queryDailyReportsByDuration(domain, period, TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -91,7 +89,6 @@ public class StateReportBuilder implements TaskBuilder {
 		StateReport stateReport = queryDailyReportsByDuration(domain, start, end);
 		WeeklyReport report = new WeeklyReport();
 
-		report.setContent("");
 		report.setCreationDate(new Date());
 		report.setDomain(domain);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -125,7 +122,7 @@ public class StateReportBuilder implements TaskBuilder {
 		return stateReport;
 	}
 
-	private StateReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
+	private StateReport queryHourlyReportsByDuration(String domain, Date period, Date endDate) {
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport(domain));
@@ -147,8 +144,8 @@ public class StateReportBuilder implements TaskBuilder {
 
 	private void updateDomainInfo(String domain, String ip) {
 		if (m_serverConfigManager.validateDomain(domain)) {
-			if (!m_projectService.containsDomainInCat(domain)) {
-				m_projectService.insertDomain(domain);
+			if (!m_projectService.contains(domain)) {
+				m_projectService.insert(domain);
 
 			}
 			Hostinfo info = m_hostinfoService.findByIp(ip);

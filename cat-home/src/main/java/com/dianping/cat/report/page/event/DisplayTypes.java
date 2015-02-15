@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.event;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -82,7 +83,11 @@ public class DisplayTypes {
 		}
 
 		public String getType() {
-			return m_type;
+			try {
+				return URLEncoder.encode(m_type, "utf-8");
+			} catch (Exception e) {
+				return m_type;
+			}
 		}
 	}
 }

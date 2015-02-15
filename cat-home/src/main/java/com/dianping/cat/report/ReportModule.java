@@ -57,7 +57,12 @@ com.dianping.cat.report.page.overload.Handler.class,
 
 com.dianping.cat.report.page.highload.Handler.class,
 
-com.dianping.cat.report.page.database.Handler.class
+com.dianping.cat.report.page.database.Handler.class,
+
+com.dianping.cat.report.page.storage.Handler.class,
+
+com.dianping.cat.report.page.activity.Handler.class
+
 })
 public class ReportModule extends AbstractModule {
 

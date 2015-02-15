@@ -10,8 +10,8 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 public class HeartbeatReportMergerTest {
 	@Test
 	public void testHaertbeatReportMerge() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer.xml"), "utf-8");
-		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer_old.xml"), "utf-8");
+		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer_old.xml"), "utf-8");
 		HeartbeatReport reportOld = DefaultSaxParser.parse(oldXml);
 		HeartbeatReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer_merge.xml"), "utf-8");

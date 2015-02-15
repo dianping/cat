@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.core.dal.Graph;
+import com.dianping.cat.report.task.GraphLine;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.spi.GraphLine;
 
 public class ProblemGraphCreator {
 

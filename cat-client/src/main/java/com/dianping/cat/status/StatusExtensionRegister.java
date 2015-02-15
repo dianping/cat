@@ -17,10 +17,14 @@ public class StatusExtensionRegister {
 	}
 
 	public List<StatusExtension> getStatusExtension() {
-		return m_extensions;
+		synchronized (this) {
+			return m_extensions;
+		}
 	}
 
 	public void register(StatusExtension monitor) {
-		m_extensions.add(monitor);
+		synchronized (this) {
+			m_extensions.add(monitor);
+		}
 	}
 }

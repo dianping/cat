@@ -36,8 +36,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("minute")
 	private int m_minute = -1;
 
+	@FieldMeta("operations")
+	private String m_operations;
+
+	@FieldMeta("project")
+	private String m_project;
+
 	public Payload() {
-		super(ReportPage.NETWORK);
+		super(ReportPage.DATABASE);
 	}
 
 	@Override
@@ -57,6 +63,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_minute;
 	}
 
+	public String getOperations() {
+		return m_operations;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -64,6 +74,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getProduct() {
 		return m_product;
+	}
+
+	public String getProject() {
+		return m_project;
 	}
 
 	public int getTimeRange() {
@@ -106,6 +120,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_minute = minute;
 	}
 
+	public void setOperations(String operations) {
+		m_operations = operations;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.NETWORK);
@@ -113,6 +131,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setProduct(String product) {
 		m_product = product;
+	}
+
+	public void setProject(String project) {
+		m_project = project;
 	}
 
 	public void setRefresh(boolean refresh) {
@@ -125,5 +147,5 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.VIEW;
 		}
 	}
-	
+
 }

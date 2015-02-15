@@ -9,6 +9,7 @@ import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
@@ -21,7 +22,6 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.JsonBuilder;
 
 @ModelMeta("statistics")
 public class Model extends AbstractReportModel<Action, Context> {

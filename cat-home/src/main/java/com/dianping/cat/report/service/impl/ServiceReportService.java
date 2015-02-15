@@ -52,17 +52,11 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
 				      DailyReportEntity.READSET_FULL);
-				String xml = report.getContent();
+				ServiceReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
-				if (xml != null && xml.length() > 0) {
-					ServiceReport reportModel = com.dianping.cat.home.service.transform.DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				} else {
-					ServiceReport reportModel = queryFromDailyBinary(report.getId(), domain);
-					reportModel.accept(merger);
-				}
+				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
-				//ignore
+				// ignore
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -131,18 +125,11 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			}
 			if (reports != null) {
 				for (HourlyReport report : reports) {
-					String xml = report.getContent();
-
 					try {
-						if (xml != null && xml.length() > 0) {
-							ServiceReport reportModel = com.dianping.cat.home.service.transform.DefaultSaxParser.parse(xml);
-							reportModel.accept(merger);
-						} else {
-							ServiceReport reportModel = queryFromHourlyBinary(report.getId(), domain);
-							reportModel.accept(merger);
-						}
+						ServiceReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
-						//ignore
+						// ignore
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -162,15 +149,9 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
 			      Constants.REPORT_SERVICE, MonthlyReportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);
-			} else {
-				return queryFromMonthlyBinary(entity.getId(), domain);
-			}
+			return queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -182,15 +163,10 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		try {
 			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, Constants.REPORT_SERVICE,
 			      WeeklyReportEntity.READSET_FULL);
-			String content = entity.getContent();
 
-			if (content != null && content.length() > 0) {
-				return com.dianping.cat.home.service.transform.DefaultSaxParser.parse(content);
-			} else {
-				return queryFromWeeklyBinary(entity.getId(), domain);
-			}
+			return queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
-			//ignore
+			// ignore
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

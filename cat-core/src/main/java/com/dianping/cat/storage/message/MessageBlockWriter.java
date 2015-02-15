@@ -21,9 +21,11 @@ public class MessageBlockWriter {
 		m_dataFile.seek(m_blockAddress); // move to end
 	}
 
-	public synchronized void close() throws IOException {
-		m_indexFile.close();
-		m_dataFile.close();
+	public void close() throws IOException {
+		synchronized (m_indexFile) {
+			m_indexFile.close();
+			m_dataFile.close();
+      }
 	}
 
 	public synchronized void writeBlock(MessageBlock block) throws IOException {

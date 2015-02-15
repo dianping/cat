@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.DailyReportDao;
@@ -45,6 +46,7 @@ import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.service.impl.RouterConfigService;
 import com.dianping.cat.report.service.impl.ServiceReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.service.impl.StorageReportService;
 import com.dianping.cat.report.service.impl.SystemReportService;
 import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
@@ -71,6 +73,9 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
 		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(ReportService.class, StateAnalyzer.ID, StateReportService.class).req(HourlyReportDao.class,
+		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
+		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
+		all.add(C(ReportService.class, StorageAnalyzer.ID, StorageReportService.class).req(HourlyReportDao.class,
 		      DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class, HourlyReportContentDao.class,
 		      DailyReportContentDao.class, WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 

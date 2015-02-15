@@ -15,6 +15,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -68,8 +69,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	@Override
 	public ModelResponse<T> invoke(final ModelRequest request) {
-		int size = m_allServices.size();
-		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>(size));
+		int requireSize = 0;
+		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>());
 		final Semaphore semaphore = new Semaphore(0);
 		final Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 		int count = 0;
@@ -82,12 +83,13 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			if (!service.isEligable(request)) {
 				continue;
 			}
-
+			
 			// save current transaction so that child thread can access it
 			if (service instanceof ModelServiceWithCalSupport) {
 				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
-
+			requireSize++;
+			
 			s_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -97,8 +99,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 						if (response.getException() != null) {
 							logError(response.getException());
 						}
-
-						responses.add(response);
+						if (response != null && response.getModel() != null) {
+							responses.add(response);
+						}
 					} catch (Exception e) {
 						logError(e);
 						t.setStatus(e);
@@ -120,6 +123,14 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			t.complete();
 		}
 
+		String requireAll = request.getProperty("requireAll");
+
+		if (requireAll != null && responses.size() != requireSize) {
+			String data = "require:" + requireSize + " actual:" + responses.size();
+			Cat.logEvent("FetchReportError:" + this.getClass().getSimpleName(), request.getDomain(), Event.SUCCESS, data);
+
+			return null;
+		}
 		ModelResponse<T> aggregated = new ModelResponse<T>();
 		T report = merge(request, responses);
 

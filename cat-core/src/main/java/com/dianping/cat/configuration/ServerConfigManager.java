@@ -329,6 +329,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return false;
 		}
 	}
+	
+	public boolean isSendMachine() {
+		if (m_config != null) {
+			return m_config.isSendMachine();
+		} else {
+			return false;
+		}
+	}
 
 	public boolean isCrashLog(String domain) {
 		return m_crashLogs.contains(domain);
@@ -376,6 +384,14 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
+	public boolean isSQLTransaction(String type) {
+		return "SQL".equals(type);
+	}
+
+	public boolean isCacheTransaction(String type) {
+		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
+	}
+
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
@@ -402,7 +418,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public boolean validateDomain(String domain) {
 		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
-	
+
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
 		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");

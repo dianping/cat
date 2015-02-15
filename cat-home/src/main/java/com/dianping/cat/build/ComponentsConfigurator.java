@@ -17,6 +17,7 @@ import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppCommandDataTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -26,6 +27,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
@@ -38,7 +40,6 @@ import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.graph.svg.ValueTranslater;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
@@ -50,12 +51,12 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
-import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.report.task.project.ProjectUpdateTask;
-import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.report.alert.AlertInfo;
+import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.system.config.ActivityConfigManager;
 import com.dianping.cat.system.config.AlertConfigManager;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.config.BugConfigManager;
@@ -93,7 +94,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
 		      req(ReportServiceManager.class, ServerConfigManager.class));
-		all.add(C(DomainNavManager.class).req(ProjectService.class));
 
 		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -101,7 +101,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopologyGraphManager.class)
 		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class) //
-		      .req(ProductLineConfigManager.class, TopologyGraphDao.class, DomainNavManager.class)//
+		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 
 		// update project database
@@ -179,8 +179,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class));
+		      RouterConfigManager.class, BlackListManager.class));
 
 		return all;
 	}

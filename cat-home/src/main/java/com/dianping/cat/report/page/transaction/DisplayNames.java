@@ -22,7 +22,7 @@ public class DisplayNames {
 	public DisplayNames display(String sorted, String type, String ip, TransactionReport report, String queryName) {
 		Map<String, TransactionType> types = report.findOrCreateMachine(ip).getTypes();
 		TransactionName all = new TransactionName("TOTAL");
-		
+
 		all.setTotalPercent(1);
 		if (types != null) {
 			TransactionType names = types.get(type);
@@ -126,7 +126,16 @@ public class DisplayNames {
 				return m1.getType().compareTo(m2.getType());
 			}
 			if (m_sorted.equals("total")) {
-				return (int) (m2.getDetail().getTotalCount() - m1.getDetail().getTotalCount());
+				long count2 = m2.getDetail().getTotalCount();
+				long count1 = m1.getDetail().getTotalCount();
+
+				if (count2 > count1) {
+					return 1;
+				} else if (count2 < count1) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 			if (m_sorted.equals("failure")) {
 				return (int) (m2.getDetail().getFailCount() - m1.getDetail().getFailCount());
@@ -173,10 +182,6 @@ public class DisplayNames {
 			return m_detail;
 		}
 
-		public String getType() {
-			return m_type;
-		}
-		
 		public String getName() {
 			String id = m_detail.getId();
 
@@ -185,6 +190,10 @@ public class DisplayNames {
 			} catch (Exception e) {
 				return id;
 			}
+		}
+
+		public String getType() {
+			return m_type;
 		}
 	}
 }

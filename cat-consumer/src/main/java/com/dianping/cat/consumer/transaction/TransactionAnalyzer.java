@@ -165,9 +165,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t)) {
-			return;
-		} else if ("ABTest".equals(t.getType())) {
+		if (m_serverConfigManager.discardTransaction(t) || "ABTest".equals(t.getType())) {
 			return;
 		} else {
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
@@ -218,17 +216,18 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		int allDuration = ((int) computeDuration(duration));
+		double sum = duration * duration;
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));
 		name.setSum(name.getSum() + duration);
-		name.setSum2(name.getSum2() + duration * duration);
+		name.setSum2(name.getSum2() + sum);
 		name.findOrCreateAllDuration(allDuration).incCount();
 
 		type.setMax(Math.max(type.getMax(), duration));
 		type.setMin(Math.min(type.getMin(), duration));
 		type.setSum(type.getSum() + duration);
-		type.setSum2(type.getSum2() + duration * duration);
+		type.setSum2(type.getSum2() + sum);
 		type.findOrCreateAllDuration(allDuration).incCount();
 
 		long current = t.getTimestamp() / 1000 / 60;
