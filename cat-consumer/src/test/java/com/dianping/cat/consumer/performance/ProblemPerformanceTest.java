@@ -22,13 +22,13 @@ public class ProblemPerformanceTest extends ComponentTestCase {
 
 		long current = System.currentTimeMillis();
 
-		long size = 1000000000l;
+		long size = 10000000l;
 		for (int i = 0; i < size; i++) {
 			analyzer.process(tree);
 		}
-		System.out.println(analyzer.getReport("cat"));
 		System.out.println("Cost " + (System.currentTimeMillis() - current)
 				/ 1000);
+		System.out.println(analyzer.getReport("cat"));
 		// cost 64
 	}
 
@@ -40,7 +40,7 @@ public class ProblemPerformanceTest extends ComponentTestCase {
 
 		long current = System.currentTimeMillis();
 
-		long size = 10000000000l;
+		long size = 10000000l;
 		for (int i = 0; i < size; i++) {
 			Event event = new DefaultEvent("Exception", "name" + i % 100);
 			tree.setMessage(event);
