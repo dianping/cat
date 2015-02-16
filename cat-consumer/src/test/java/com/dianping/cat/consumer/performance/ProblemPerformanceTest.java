@@ -21,7 +21,7 @@ public class ProblemPerformanceTest extends ComponentTestCase {
 
 		long current = System.currentTimeMillis();
 
-		long size = 10000000l;
+		long size = 1000000000l;
 		for (int i = 0; i < size; i++) {
 			analyzer.process(tree);
 		}

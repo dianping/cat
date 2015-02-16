@@ -21,7 +21,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 	@Inject
 	private ServerConfigManager m_configManager;
-	
+
 	@Inject
 	private Set<String> m_errorTypes;
 
@@ -33,12 +33,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			// TODO remove me
-			if (!"ABTest".equals(type)) {
-				processTransaction(machine, (Transaction) message, tree);
-			}
+			processTransaction(machine, (Transaction) message, tree);
 		} else if (message instanceof Event) {
 			processEvent(machine, (Event) message, tree);
 		} else if (message instanceof Heartbeat) {
@@ -72,18 +67,14 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if (!transactionStatus.equals(Transaction.SUCCESS)) {
 			String type = transaction.getType();
+			String name = transaction.getName();
 			String status = "";
 
 			if (m_failureTypes.contains(type)) {
-				type = transaction.getType();
-				// make it march for alarm
-				if (m_configManager.isRpcClient(type)) {
-					type = "call";
-				}
-				status = transaction.getName();
+				status = name;
 			} else {
+				status = type + ":" + name;
 				type = ProblemType.FAILURE.getName();
-				status = transaction.getType() + ":" + transaction.getName();
 			}
 
 			Entity entity = findOrCreateEntity(machine, type, status);
