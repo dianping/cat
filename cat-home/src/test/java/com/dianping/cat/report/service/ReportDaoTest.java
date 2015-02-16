@@ -74,4 +74,5 @@ public class ReportDaoTest  extends ComponentTestCase{
 		proto.setType(1);
 		dao.insert(proto);
 	}
+	
 }

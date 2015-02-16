@@ -58,6 +58,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return false;
 	}
 
+	public boolean discardTransaction(String type,String name){
+		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
