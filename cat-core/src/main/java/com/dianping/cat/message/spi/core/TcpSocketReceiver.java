@@ -132,8 +132,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 					}
 				} else {
 					// client message is error
-					length = buffer.readableBytes();
-					buffer.readBytes(buffer.readableBytes());
+					buffer.readBytes(length);
 				}
 			} catch (Exception e) {
 				m_serverStateManager.addMessageTotalLoss(1);
