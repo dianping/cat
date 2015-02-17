@@ -55,12 +55,12 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
 
-	private Map<Date, Set<String>> m_domains = new LinkedHashMap<Date, Set<String>>() {
+	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		protected boolean removeEldestEntry(Entry<Date, Set<String>> eldest) {
+		protected boolean removeEldestEntry(Entry<String, Set<String>> eldest) {
 			return size() > 1000;
 		}
 	};
@@ -114,19 +114,20 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			domains.addAll(queryAllDomains(new Date(startTime)));
+			domains.addAll(queryAllDomains(new Date(startTime), name));
 		}
 		return domains;
 	}
 
-	private Set<String> queryAllDomains(Date date) {
-		Set<String> domains = m_domains.get(date);
+	private Set<String> queryAllDomains(Date date, String name) {
+		String key = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(date) + ":" + name;
+		Set<String> domains = m_domains.get(key);
 
 		if (domains == null) {
 			domains = new HashSet<String>();
 			try {
-				List<HourlyReport> reports = m_hourlyReportDao
-				      .findAllByPeriod(date, HourlyReportEntity.READSET_DOMAIN_NAME);
+				List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriodName(date, name,
+				      HourlyReportEntity.READSET_DOMAIN_NAME);
 
 				if (reports != null) {
 					for (HourlyReport report : reports) {
@@ -135,7 +136,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 				}
 				Cat.logEvent("FindDomain", new SimpleDateFormat("yyyy-MM-dd HH:mm").format(date) + " " + domains.size(),
 				      Event.SUCCESS, domains.toString());
-				m_domains.put(date, domains);
+				m_domains.put(key, domains);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}

@@ -11,6 +11,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -144,7 +145,7 @@ public class HighLoadReportBuilder implements TaskBuilder {
 	}
 
 	protected Set<String> queryDomains(Date startTime, Date endTime) {
-		return m_reportService.queryAllDomainNames(startTime, endTime, "transaction");
+		return m_reportService.queryAllDomainNames(startTime, endTime, TransactionAnalyzer.ID);
 	}
 
 	public class Heap {
