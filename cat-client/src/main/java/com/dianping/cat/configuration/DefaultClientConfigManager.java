@@ -61,7 +61,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	@Override
 	public int getMaxMessageLength() {
 		if (m_config == null) {
-			return 2000;
+			return 5000;
 		} else {
 			return getDomain().getMaxMessageSize();
 		}

@@ -202,7 +202,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = ProblemAnalyzer.ID;
 
 		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
-		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//
 		      .config(E("errorType").value("Error,RuntimeException,Exception"))//
 		      .req(ServerConfigManager.class));
 
