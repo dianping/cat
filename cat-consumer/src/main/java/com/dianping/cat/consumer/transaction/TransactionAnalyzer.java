@@ -39,7 +39,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	public static final String ID = "transaction";
 
 	private Pair<Boolean, Long> checkForTruncatedMessage(Transaction t) {
-		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
+		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMillis());
 		List<Message> children = t.getChildren();
 		int size = children.size();
 
@@ -147,7 +147,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				TransactionName name = type.findOrCreateName(root.getName());
 				String messageId = tree.getMessageId();
 
-				processTypeAndName(root, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+				processTypeAndName(root, type, name, messageId, pair.getValue().doubleValue());
 			}
 
 			List<Message> children = root.getChildren();
@@ -190,7 +190,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			TransactionType transactionType = report.findOrCreateMachine(ip).findOrCreateType(type);
 			TransactionName transactionName = transactionType.findOrCreateName(name);
 			String messageId = tree.getMessageId();
-			processTypeAndName(t, transactionType, transactionName, messageId, t.getDurationInMillis() / 1000d);
+			processTypeAndName(t, transactionType, transactionName, messageId, t.getDurationInMillis());
 
 			List<Message> children = t.getChildren();
 
