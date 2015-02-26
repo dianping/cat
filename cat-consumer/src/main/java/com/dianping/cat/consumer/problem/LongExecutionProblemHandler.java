@@ -173,7 +173,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			processLongSql(machine, transaction, tree);
 		} else if (m_configManager.isRpcClient(type)) {
 			processLongCall(machine, transaction, tree);
-		} else if ("Service".equals(type) || "PigeonService".equals(type)) {
+		} else if (m_configManager.isRpcServer(type)) {
 			processLongService(machine, transaction, tree);
 		} else if ("URL".equals(type)) {
 			processLongUrl(machine, transaction, tree);

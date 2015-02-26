@@ -126,7 +126,6 @@
 			<role-hint>default-problem</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.DefaultProblemHandler</implementation>
 			<configuration>
-				<failureType>URL,SQL,Call,PigeonCall,Cache</failureType>
 				<errorType>Error,RuntimeException,Exception</errorType>
 			</configuration>
 			<requirements>

@@ -29,7 +29,6 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
-import com.dianping.cat.message.Transaction;
 
 public class ServerConfigManager implements Initializable, LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
@@ -47,16 +46,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
 	public static final String DUMP_DIR = "dump";
-
-	public boolean discardTransaction(Transaction t) {
-		String type = t.getType();
-		String name = t.getName();
-
-		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
-			return true;
-		}
-		return false;
-	}
 
 	public boolean discardTransaction(String type,String name){
 		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {

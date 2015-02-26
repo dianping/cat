@@ -25,9 +25,6 @@ public class DefaultProblemHandler extends ProblemHandler {
 	@Inject
 	private Set<String> m_errorTypes;
 
-	@Inject
-	private Set<String> m_failureTypes;
-
 	@Override
 	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
@@ -68,16 +65,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 		if (!transactionStatus.equals(Transaction.SUCCESS)) {
 			String type = transaction.getType();
 			String name = transaction.getName();
-			String status = "";
-
-			if (m_failureTypes.contains(type)) {
-				status = name;
-			} else {
-				status = type + ":" + name;
-				type = ProblemType.FAILURE.getName();
-			}
-
-			Entity entity = findOrCreateEntity(machine, type, status);
+			Entity entity = findOrCreateEntity(machine, type, name);
+			
 			updateEntity(tree, entity, 0);
 		}
 
@@ -98,7 +87,4 @@ public class DefaultProblemHandler extends ProblemHandler {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
 
-	public void setFailureType(String type) {
-		m_failureTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
-	}
 }

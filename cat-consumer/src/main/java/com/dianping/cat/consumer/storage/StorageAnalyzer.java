@@ -141,17 +141,14 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	private void processTransaction(MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t)) {
-			return;
-		} else {
-			String type = t.getType();
+		String type = t.getType();
 
-			if (m_serverConfigManager.isSQLTransaction(type)) {
-				processSQLTransaction(tree, t);
-			} else if (m_serverConfigManager.isCacheTransaction(type)) {
-				processCacheTransaction(tree, t);
-			}
+		if (m_serverConfigManager.isSQLTransaction(type)) {
+			processSQLTransaction(tree, t);
+		} else if (m_serverConfigManager.isCacheTransaction(type)) {
+			processCacheTransaction(tree, t);
 		}
+		
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
