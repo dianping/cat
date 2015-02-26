@@ -42,6 +42,9 @@ public final class TcpSocketReceiver implements LogEnabled {
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
 
+	@Inject
+	private DomainValidator m_domainValidator;
+
 	private Logger m_logger;
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
@@ -119,16 +122,23 @@ public final class TcpSocketReceiver implements LogEnabled {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
 					readBytes.markReaderIndex();
 					readBytes.readInt();
+
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
-					readBytes.resetReaderIndex();
-					tree.setBuffer(readBytes);
-					m_handler.handle(tree);
+					boolean valid = m_domainValidator.validate(tree.getDomain());
 
-					m_processCount++;
-					long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+					if (valid) {
+						readBytes.resetReaderIndex();
+						tree.setBuffer(readBytes);
+						m_handler.handle(tree);
+						m_processCount++;
 
-					if (flag == 0) {
-						m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+						long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+
+						if (flag == 0) {
+							m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+						}
+					} else {
+						m_logger.info("Invalid domain in TcpSocketReceiver found: " + tree.getDomain());
 					}
 				} else {
 					// client message is error

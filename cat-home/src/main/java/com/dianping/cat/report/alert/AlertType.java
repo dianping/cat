@@ -22,7 +22,9 @@ public enum AlertType {
 
 	Web("Web"),
 
-	Transaction("Transaction");
+	Transaction("Transaction"),
+
+	Storage("Storage");
 
 	private String m_name;
 
