@@ -4,18 +4,25 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultMerger;
+import com.dianping.cat.helper.TimeHelper;
 
 public class HeartbeatDailyMerger extends DefaultMerger {
 
-	private int m_mergedReportIndex = -1;
+	private long m_currentDay;
 
-	public HeartbeatDailyMerger(HeartbeatReport heartbeatReport) {
+	private int m_hourIndex;
+
+	public HeartbeatDailyMerger(HeartbeatReport heartbeatReport, long currentDay) {
 		super(heartbeatReport);
+
+		m_currentDay = currentDay;
 	}
 
 	@Override
 	public void visitHeartbeatReport(HeartbeatReport from) {
-		m_mergedReportIndex++;
+		long start = from.getStartTime().getTime();
+		m_hourIndex = (int) ((start - m_currentDay) / TimeHelper.ONE_HOUR);
+
 		super.visitHeartbeatReport(from);
 	}
 
@@ -24,7 +31,7 @@ public class HeartbeatDailyMerger extends DefaultMerger {
 		for (Period source : from.getPeriods()) {
 			int minute = source.getMinute();
 
-			source.setMinute(60 * m_mergedReportIndex + minute);
+			source.setMinute(60 * m_hourIndex + minute);
 		}
 		super.visitMachineChildren(to, from);
 	}
