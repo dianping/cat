@@ -6,7 +6,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -65,17 +64,16 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		// don't process frontEnd domain
-		if (Constants.FRONT_END.equals(domain)) {
-			return;
-		}
-		EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-		Message message = tree.getMessage();
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
-		} else if (message instanceof Event) {
-			processEvent(report, tree, (Event) message);
+		if (m_serverConfigManager.validateDomain(domain)) {
+			EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) message);
+			} else if (message instanceof Event) {
+				processEvent(report, tree, (Event) message);
+			}
 		}
 	}
 
@@ -119,14 +117,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private void processEventGrpah(EventName name, Event t, int count) {
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
+		Range range = name.findOrCreateRange(min);
 
-		synchronized (name) {
-			Range range = name.findOrCreateRange(min);
-
-			range.incCount(count);
-			if (!t.isSuccess()) {
-				range.incFails(count);
-			}
+		range.incCount(count);
+		if (!t.isSuccess()) {
+			range.incFails(count);
 		}
 	}
 

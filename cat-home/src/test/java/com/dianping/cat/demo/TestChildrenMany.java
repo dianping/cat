@@ -11,7 +11,7 @@ public class TestChildrenMany {
 	public void test() throws Exception {
 		Transaction t = Cat.newTransaction("Check1", "name");
 			Transaction t3 = Cat.newTransaction("Check2", "name");
-			for (int i = 0; i < 1080; i++) {
+			for (int i = 0; i < 2080; i++) {
 				Transaction t4 = Cat.newTransaction("Check3", "name");
 				t4.complete();
 			}

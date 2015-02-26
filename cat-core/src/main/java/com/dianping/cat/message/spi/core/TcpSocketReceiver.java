@@ -102,7 +102,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {
-		
+
 		@Override
 		protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
 			if (buffer.readableBytes() < 4) {
@@ -115,19 +115,24 @@ public final class TcpSocketReceiver implements LogEnabled {
 				return;
 			}
 			try {
-				ByteBuf readBytes = buffer.readBytes(length + 4);
-				readBytes.markReaderIndex();
-				readBytes.readInt();
-				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
-				readBytes.resetReaderIndex();
-				tree.setBuffer(readBytes);
-				m_handler.handle(tree);
+				if (length > 0) {
+					ByteBuf readBytes = buffer.readBytes(length + 4);
+					readBytes.markReaderIndex();
+					readBytes.readInt();
+					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
+					readBytes.resetReaderIndex();
+					tree.setBuffer(readBytes);
+					m_handler.handle(tree);
 
-				m_processCount++;
-				long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+					m_processCount++;
+					long flag = m_processCount % CatConstants.SUCCESS_COUNT;
 
-				if (flag == 0) {
-					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+					if (flag == 0) {
+						m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+					}
+				} else {
+					// client message is error
+					buffer.readBytes(length);
 				}
 			} catch (Exception e) {
 				m_serverStateManager.addMessageTotalLoss(1);

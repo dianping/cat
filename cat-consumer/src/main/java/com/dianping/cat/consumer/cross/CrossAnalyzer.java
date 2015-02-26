@@ -93,18 +93,14 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
-		if (m_serverConfigManager.discardTransaction(t)) {
-			return null;
-		} else {
-			String type = t.getType();
+		String type = t.getType();
 
-			if (m_serverConfigManager.isRpcClient(type)) {
-				return parsePigeonClientTransaction(t, tree);
-			} else if (m_serverConfigManager.isRpcServer(type)) {
-				return parsePigeonServerTransaction(t, tree);
-			}
-			return null;
+		if (m_serverConfigManager.isRpcClient(type)) {
+			return parsePigeonClientTransaction(t, tree);
+		} else if (m_serverConfigManager.isRpcServer(type)) {
+			return parsePigeonServerTransaction(t, tree);
 		}
+		return null;
 	}
 
 	private CrossInfo parsePigeonClientTransaction(Transaction t, MessageTree tree) {

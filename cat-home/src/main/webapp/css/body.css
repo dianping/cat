@@ -14,7 +14,7 @@ th{
 	word-break: break-all;
 }
 td{
-	word-break: break-all;
+	word-break: break-all;c
 	padding-left:3px;
 }
 
@@ -59,6 +59,10 @@ a.sql {
 }
 
 a.call {
+	background-color: #9966ff;
+}
+
+a.PigeonCall {
 	background-color: #9966ff;
 }
 
