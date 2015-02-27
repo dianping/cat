@@ -59,6 +59,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return getDisplayDomain();
 	}
 
+	// @Override
+	// public Map<String, Department> getDomainGroups() {
+	// // return m_projectService.findDepartments(getDomains());
+	// return null;
+	// }
+
 	@Override
 	public Collection<String> getDomains() {
 		if (m_report != null) {

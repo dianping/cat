@@ -21,24 +21,16 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 	@Inject
 	private ServerConfigManager m_configManager;
-	
-	@Inject
-	private Set<String> m_errorTypes;
 
 	@Inject
-	private Set<String> m_failureTypes;
+	private Set<String> m_errorTypes;
 
 	@Override
 	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			// TODO remove me
-			if (!"ABTest".equals(type)) {
-				processTransaction(machine, (Transaction) message, tree);
-			}
+			processTransaction(machine, (Transaction) message, tree);
 		} else if (message instanceof Event) {
 			processEvent(machine, (Event) message, tree);
 		} else if (message instanceof Heartbeat) {
@@ -72,21 +64,9 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if (!transactionStatus.equals(Transaction.SUCCESS)) {
 			String type = transaction.getType();
-			String status = "";
-
-			if (m_failureTypes.contains(type)) {
-				type = transaction.getType();
-				// make it march for alarm
-				if (m_configManager.isRpcClient(type)) {
-					type = "call";
-				}
-				status = transaction.getName();
-			} else {
-				type = ProblemType.FAILURE.getName();
-				status = transaction.getType() + ":" + transaction.getName();
-			}
-
-			Entity entity = findOrCreateEntity(machine, type, status);
+			String name = transaction.getName();
+			Entity entity = findOrCreateEntity(machine, type, name);
+			
 			updateEntity(tree, entity, 0);
 		}
 
@@ -107,7 +87,4 @@ public class DefaultProblemHandler extends ProblemHandler {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
 
-	public void setFailureType(String type) {
-		m_failureTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
-	}
 }

@@ -204,12 +204,14 @@
 					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
-			<query name="find-all-by-period" type="SELECT" multiple="true">
+			<query name="find-all-by-period-name" type="SELECT" multiple="true">
 				<param name="period" />
+				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
 			<query name="insert" type="INSERT">

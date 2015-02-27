@@ -30,6 +30,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.core.DefaultMessageHandler;
 import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
+import com.dianping.cat.message.spi.core.DomainValidator;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
@@ -53,6 +54,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
+		all.add(C(DomainValidator.class));
 		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
 
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class));
@@ -60,7 +62,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class).req(DomainValidator.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 

@@ -1411,6 +1411,20 @@
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.task.storage.StorageReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportServiceManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.StorageMergerHelper</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>

@@ -42,6 +42,9 @@ public final class TcpSocketReceiver implements LogEnabled {
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
 
+	@Inject
+	private DomainValidator m_domainValidator;
+
 	private Logger m_logger;
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
@@ -102,7 +105,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {
-		
+
 		@Override
 		protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {
 			if (buffer.readableBytes() < 4) {
@@ -115,19 +118,31 @@ public final class TcpSocketReceiver implements LogEnabled {
 				return;
 			}
 			try {
-				ByteBuf readBytes = buffer.readBytes(length + 4);
-				readBytes.markReaderIndex();
-				readBytes.readInt();
-				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
-				readBytes.resetReaderIndex();
-				tree.setBuffer(readBytes);
-				m_handler.handle(tree);
+				if (length > 0) {
+					ByteBuf readBytes = buffer.readBytes(length + 4);
+					readBytes.markReaderIndex();
+					readBytes.readInt();
 
-				m_processCount++;
-				long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
+					boolean valid = m_domainValidator.validate(tree.getDomain());
 
-				if (flag == 0) {
-					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+					if (valid) {
+						readBytes.resetReaderIndex();
+						tree.setBuffer(readBytes);
+						m_handler.handle(tree);
+						m_processCount++;
+
+						long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+
+						if (flag == 0) {
+							m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
+						}
+					} else {
+						m_logger.info("Invalid domain in TcpSocketReceiver found: " + tree.getDomain());
+					}
+				} else {
+					// client message is error
+					buffer.readBytes(length);
 				}
 			} catch (Exception e) {
 				m_serverStateManager.addMessageTotalLoss(1);

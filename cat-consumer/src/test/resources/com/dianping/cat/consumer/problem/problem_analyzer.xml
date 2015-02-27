@@ -259,7 +259,7 @@
             <message>69</message>
          </duration>
       </entity>
-      <entity id="failure:PigeonService:n0" type="failure" status="PigeonService:n0">
+      <entity id="PigeonService:n0" type="PigeonService" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>20</message>
@@ -357,33 +357,23 @@
             <message>91</message>
          </duration>
       </entity>
-      <entity id="call:n0" type="call" status="n0">
+      <entity id="Call:n0" type="Call" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
-            <segment id="0" count="11">
+            <segment id="0" count="6">
                <message>22</message>
-               <message>32</message>
                <message>36</message>
-               <message>46</message>
                <message>50</message>
-               <message>60</message>
                <message>64</message>
-               <message>74</message>
                <message>78</message>
-               <message>88</message>
                <message>92</message>
             </segment>
          </thread>
-         <duration value="0" count="11">
+         <duration value="0" count="6">
             <message>22</message>
-            <message>32</message>
             <message>36</message>
-            <message>46</message>
             <message>50</message>
-            <message>60</message>
             <message>64</message>
-            <message>74</message>
             <message>78</message>
-            <message>88</message>
             <message>92</message>
          </duration>
       </entity>
@@ -419,7 +409,7 @@
             <message>92</message>
          </duration>
       </entity>
-      <entity id="failure:Cache.:n1" type="failure" status="Cache.:n1">
+      <entity id="Cache.:n1" type="Cache." status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>23</message>
@@ -501,36 +491,24 @@
             <message>94</message>
          </duration>
       </entity>
-      <entity id="call:n1" type="call" status="n1">
+      <entity id="PigeonCall:n1" type="PigeonCall" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
-            <segment id="0" count="12">
+            <segment id="0" count="6">
                <message>25</message>
-               <message>29</message>
                <message>39</message>
-               <message>43</message>
                <message>53</message>
-               <message>57</message>
                <message>67</message>
-               <message>71</message>
                <message>81</message>
-               <message>85</message>
                <message>95</message>
-               <message>99</message>
             </segment>
          </thread>
-         <duration value="0" count="12">
+         <duration value="0" count="6">
             <message>25</message>
-            <message>29</message>
             <message>39</message>
-            <message>43</message>
             <message>53</message>
-            <message>57</message>
             <message>67</message>
-            <message>71</message>
             <message>81</message>
-            <message>85</message>
             <message>95</message>
-            <message>99</message>
          </duration>
       </entity>
       <entity id="long-call:n1" type="long-call" status="n1">
@@ -567,7 +545,7 @@
             <message>99</message>
          </duration>
       </entity>
-      <entity id="failure:Service:n0" type="failure" status="Service:n0">
+      <entity id="Service:n0" type="Service" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>26</message>
@@ -587,7 +565,7 @@
             <message>96</message>
          </duration>
       </entity>
-      <entity id="failure:PigeonService:n1" type="failure" status="PigeonService:n1">
+      <entity id="PigeonService:n1" type="PigeonService" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>27</message>
@@ -683,7 +661,27 @@
             <message>98</message>
          </duration>
       </entity>
-      <entity id="failure:Cache.:n0" type="failure" status="Cache.:n0">
+      <entity id="Call:n1" type="Call" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>29</message>
+               <message>43</message>
+               <message>57</message>
+               <message>71</message>
+               <message>85</message>
+               <message>99</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>29</message>
+            <message>43</message>
+            <message>57</message>
+            <message>71</message>
+            <message>85</message>
+            <message>99</message>
+         </duration>
+      </entity>
+      <entity id="Cache.:n0" type="Cache." status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>30</message>
@@ -761,7 +759,25 @@
             <message>87</message>
          </duration>
       </entity>
-      <entity id="failure:Service:n1" type="failure" status="Service:n1">
+      <entity id="PigeonCall:n0" type="PigeonCall" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="5">
+               <message>32</message>
+               <message>46</message>
+               <message>60</message>
+               <message>74</message>
+               <message>88</message>
+            </segment>
+         </thread>
+         <duration value="0" count="5">
+            <message>32</message>
+            <message>46</message>
+            <message>60</message>
+            <message>74</message>
+            <message>88</message>
+         </duration>
+      </entity>
+      <entity id="Service:n1" type="Service" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>33</message>

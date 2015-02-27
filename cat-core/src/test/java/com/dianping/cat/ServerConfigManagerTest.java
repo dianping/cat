@@ -8,8 +8,6 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultTransaction;
 
 public class ServerConfigManagerTest extends ComponentTestCase {
 
@@ -40,8 +38,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(true, manager.isRpcServer("PigeonService"));
 		Assert.assertEquals(false, manager.validateDomain("All"));
 		
-		Transaction t = new DefaultTransaction("Service", "piegonService:heartTaskService:heartBeat", null);
-		Assert.assertEquals(true, manager.discardTransaction(t));
+		Assert.assertEquals(true, manager.discardTransaction("Service", "piegonService:heartTaskService:heartBeat"));
 
 		manager.initialize(null);
 

@@ -10,7 +10,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
@@ -66,8 +65,8 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 	}
 
 	private HeartbeatReport queryDailyHeartbeatReport(String name, String domain, Date start, Date end) {
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport(domain));
+		Set<String> domains = m_reportService.queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
+		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport(domain), start.getTime());
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 
@@ -83,7 +82,7 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
 		heartbeatReport.getDomainNames().addAll(domains);
-		
+
 		return heartbeatReport;
 	}
 }
