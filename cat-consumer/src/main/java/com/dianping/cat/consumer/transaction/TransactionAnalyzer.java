@@ -38,12 +38,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	public static final String ID = "transaction";
 
-	private Pair<Boolean, Long> checkForTruncatedMessage(Transaction t) {
-		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMillis());
+	private Pair<Boolean, Long> checkForTruncatedMessage(MessageTree tree, Transaction t) {
+		Pair<Boolean, Long> pair = new Pair<Boolean, Long>(true, t.getDurationInMicros());
 		List<Message> children = t.getChildren();
 		int size = children.size();
 
-		if (size > 0) { // root transaction with children
+		if (tree.getMessage() == t && size > 0) { // root transaction with children
 			Message last = children.get(size - 1);
 
 			if (last instanceof Event) {
@@ -139,24 +139,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (message instanceof Transaction) {
 			Transaction root = (Transaction) message;
-			Pair<Boolean, Long> pair = checkForTruncatedMessage(root);
 
-			if (pair.getKey().booleanValue()) {
-				String ip = tree.getIpAddress();
-				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(root.getType());
-				TransactionName name = type.findOrCreateName(root.getName());
-				String messageId = tree.getMessageId();
-
-				processTypeAndName(root, type, name, messageId, pair.getValue().doubleValue());
-			}
-
-			List<Message> children = root.getChildren();
-
-			for (Message child : children) {
-				if (child instanceof Transaction) {
-					processTransaction(report, tree, (Transaction) child);
-				}
-			}
+			processTransaction(report, tree, root);
 		}
 	}
 
@@ -166,6 +150,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		while (dk < d) {
 			dk <<= 1;
 		}
+
 		Duration duration = name.findOrCreateDuration(dk);
 		Range range = name.findOrCreateRange(min);
 
@@ -180,17 +165,19 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		String type = t.getType();
-		String name = t.getName();
-
-		if (m_serverConfigManager.discardTransaction(type, name) || "ABTest".equals(type)) {
+		if (m_serverConfigManager.discardTransaction(t) || "ABTest".equals(t.getType())) {
 			return;
 		} else {
-			String ip = tree.getIpAddress();
-			TransactionType transactionType = report.findOrCreateMachine(ip).findOrCreateType(type);
-			TransactionName transactionName = transactionType.findOrCreateName(name);
-			String messageId = tree.getMessageId();
-			processTypeAndName(t, transactionType, transactionName, messageId, t.getDurationInMillis());
+			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
+
+			if (pair.getKey().booleanValue()) {
+				String ip = tree.getIpAddress();
+				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
+				TransactionName name = type.findOrCreateName(t.getName());
+				String messageId = tree.getMessageId();
+
+				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+			}
 
 			List<Message> children = t.getChildren();
 

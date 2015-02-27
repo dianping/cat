@@ -42,7 +42,7 @@ public class Period {
 	@Inject
 	private Logger m_logger;
 
-	private static int QUEUE_SIZE = 20000;
+	private static int QUEUE_SIZE = 30000;
 
 	public Period(long startTime, long endTime, MessageAnalyzerManager analyzerManager,
 	      ServerStatisticManager serverStateManager, Logger logger) {
