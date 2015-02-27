@@ -165,19 +165,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t) || "Cache.web".equals(t.getType())
-		      || "ABTest".equals(t.getType())) {
+		String type = t.getType();
+		
+		if (m_serverConfigManager.discardTransaction(t) || "Cache.web".equals(type) || "ABTest".equals(type)) {
 			return;
 		} else {
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
 
 			if (pair.getKey().booleanValue()) {
 				String ip = tree.getIpAddress();
-				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-				TransactionName name = type.findOrCreateName(t.getName());
+				TransactionType transactionType = report.findOrCreateMachine(ip).findOrCreateType(type);
+				TransactionName transactionName = transactionType.findOrCreateName(t.getName());
 				String messageId = tree.getMessageId();
 
-				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+				processTypeAndName(t, transactionType, transactionName, messageId, pair.getValue().doubleValue() / 1000d);
 			}
 
 			List<Message> children = t.getChildren();
