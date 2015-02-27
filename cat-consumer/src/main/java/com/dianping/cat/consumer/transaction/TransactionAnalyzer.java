@@ -190,6 +190,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			TransactionType transactionType = report.findOrCreateMachine(ip).findOrCreateType(type);
 			TransactionName transactionName = transactionType.findOrCreateName(name);
 			String messageId = tree.getMessageId();
+			
 			processTypeAndName(t, transactionType, transactionName, messageId, t.getDurationInMillis());
 
 			List<Message> children = t.getChildren();
