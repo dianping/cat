@@ -165,7 +165,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t) || "ABTest".equals(t.getType())) {
+		if (m_serverConfigManager.discardTransaction(t) || "Cache.web".equals(t.getType())
+		      || "ABTest".equals(t.getType())) {
 			return;
 		} else {
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
