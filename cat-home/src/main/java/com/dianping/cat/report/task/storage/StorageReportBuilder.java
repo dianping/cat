@@ -17,7 +17,7 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.storage.StorageMergerHelper;
+import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
@@ -36,7 +36,7 @@ public class StorageReportBuilder implements TaskBuilder {
 	protected ReportServiceManager m_reportService;
 
 	@Inject
-	private StorageMergerHelper m_storageMergerHelper;
+	private StorageMergeHelper m_storageMergerHelper;
 
 	@Override
 	public boolean buildDailyTask(String name, String reportId, Date period) {

@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<StorageReport> m_service;
 
 	@Inject
-	private StorageMergerHelper m_mergerHelper;
+	private StorageMergeHelper m_mergeHelper;
 
 	@Inject
 	private JsonBuilder m_jsonBuilder;
@@ -117,8 +117,8 @@ public class Handler implements PageHandler<Context> {
 		StorageReport storageReport = queryHourlyReport(payload, type);
 
 		if (storageReport != null) {
-			storageReport = m_mergerHelper.mergeAllMachines(storageReport, ipAddress);
-			storageReport = m_mergerHelper.mergeAllDomains(storageReport, Constants.ALL);
+			storageReport = m_mergeHelper.mergeAllMachines(storageReport, ipAddress);
+			storageReport = m_mergeHelper.mergeAllDomains(storageReport, Constants.ALL);
 
 			model.setReport(storageReport);
 			model.setOperations(storageReport.getOps());

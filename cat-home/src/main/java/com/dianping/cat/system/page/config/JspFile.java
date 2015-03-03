@@ -97,6 +97,10 @@ public enum JspFile {
 
 	TRANSACTION_RULE_UPDATE("/jsp/system/transactionRule/transactionRuleUpdate.jsp"),
 
+	STORAGE_RULE("/jsp/system/storageRule/storageRule.jsp"),
+
+	STORAGE_RULE_UPDATE("/jsp/system/storageRule/storageRuleUpdate.jsp"),
+
 	APP_NAME_CHECK("/jsp/system/appConfig/appNameCheck.jsp"),
 
 	APP_LIST("/jsp/system/appConfig/appList.jsp"),
@@ -116,7 +120,7 @@ public enum JspFile {
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
-	
+
 	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),
 
 	THIRD_PARTY_CONFIG_LIST("/jsp/system/thirdParty/thirdPartyConfig.jsp"),
@@ -125,10 +129,10 @@ public enum JspFile {
 
 	DOMAIN_GROUP_CONFIG_LIST("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
-	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp"), 
-	
+	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp"),
+
 	ACTIVITY_CONFIG_UPDATE("/jsp/system/activity/activityConfigUpdate.jsp"),
-	
+
 	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp");
 
 	private String m_path;

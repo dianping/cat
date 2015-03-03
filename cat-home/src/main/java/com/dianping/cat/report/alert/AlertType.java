@@ -24,7 +24,7 @@ public enum AlertType {
 
 	Transaction("Transaction"),
 
-	Storage("Storage");
+	StorageDatabase("StorageDatabase");
 
 	private String m_name;
 

@@ -99,9 +99,9 @@ public class AlertManager implements Initializable {
 		case Transaction:
 			return "transaction告警";
 		case DataBase:
-			return "数据库告警";
-		case Storage:
-			return "存储告警";
+			return "数据库系统告警";
+		case StorageDatabase:
+			return "数据库访问告警";
 		}
 		return type;
 	}

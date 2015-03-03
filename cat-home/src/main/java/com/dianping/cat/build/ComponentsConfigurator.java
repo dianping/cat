@@ -69,6 +69,8 @@ import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
+import com.dianping.cat.system.config.StorageCacheRuleConfigManager;
+import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
@@ -173,6 +175,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
+		all.add(C(StorageDatabaseRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      ContentFetcher.class));
+		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		      ContentFetcher.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
