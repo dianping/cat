@@ -5,7 +5,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;

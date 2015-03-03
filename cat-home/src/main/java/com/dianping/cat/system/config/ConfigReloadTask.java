@@ -5,8 +5,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.black.BlackListManager;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 
 public class ConfigReloadTask implements Task {
 

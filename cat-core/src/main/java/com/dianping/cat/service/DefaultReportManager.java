@@ -25,6 +25,7 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.core.DomainValidator;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
 
@@ -44,6 +45,9 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	@Inject
 	private HourlyReportContentDao m_reportContentDao;
+
+	@Inject
+	private DomainValidator m_validator;
 
 	private String m_name;
 
@@ -74,7 +78,15 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		if (reports == null) {
 			return new HashSet<String>();
 		} else {
-			return reports.keySet();
+			Set<String> domains = reports.keySet();
+			Set<String> result = new HashSet<String>();
+
+			for (String domain : domains) {
+				if (m_validator.validate(domain)) {
+					result.add(domain);
+				}
+			}
+			return result;
 		}
 	}
 
@@ -197,6 +209,20 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		try {
 			t.addData("reports", reports == null ? 0 : reports.size());
 
+			Set<String> errorDomains = new HashSet<String>();
+
+			for (String domain : reports.keySet()) {
+				if (!m_validator.validate(domain)) {
+					errorDomains.add(domain);
+				}
+			}
+			for (String domain : errorDomains) {
+				reports.remove(domain);
+			}
+			if (!errorDomains.isEmpty()) {
+				m_logger.info("error domain:" + errorDomains);
+			}
+
 			if (reports != null) {
 				m_reportDelegate.beforeSave(reports);
 
@@ -204,52 +230,14 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 					bucket = m_bucketManager.getReportBucket(startTime, m_name);
 
 					try {
-						for (T report : reports.values()) {
-							try {
-								String domain = m_reportDelegate.getDomain(report);
-								String xml = m_reportDelegate.buildXml(report);
-
-								bucket.storeById(domain, xml);
-							} catch (Exception e) {
-								t.setStatus(e);
-								Cat.logError(e);
-							}
-						}
+						storFile(reports, bucket);
 					} finally {
 						m_bucketManager.closeBucket(bucket);
 					}
 				}
 
 				if (policy.forDatabase()) {
-					Date period = new Date(startTime);
-					String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-					for (T report : reports.values()) {
-						try {
-							String domain = m_reportDelegate.getDomain(report);
-							HourlyReport r = m_reportDao.createLocal();
-
-							r.setName(m_name);
-							r.setDomain(domain);
-							r.setPeriod(period);
-							r.setIp(ip);
-							r.setType(1);
-
-							m_reportDao.insert(r);
-
-							int id = r.getId();
-							byte[] binaryContent = m_reportDelegate.buildBinary(report);
-							HourlyReportContent content = m_reportContentDao.createLocal();
-
-							content.setReportId(id);
-							content.setContent(binaryContent);
-							m_reportContentDao.insert(content);
-							m_reportDelegate.createHourlyTask(report);
-						} catch (Throwable e) {
-							t.setStatus(e);
-							Cat.getProducer().logError(e);
-						}
-					}
+					storeDatabase(startTime, reports);
 				}
 			}
 			t.setStatus(Message.SUCCESS);
@@ -263,6 +251,50 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
+			}
+		}
+	}
+
+	private void storeDatabase(long startTime, Map<String, T> reports) {
+		Date period = new Date(startTime);
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		for (T report : reports.values()) {
+			try {
+				String domain = m_reportDelegate.getDomain(report);
+				HourlyReport r = m_reportDao.createLocal();
+
+				r.setName(m_name);
+				r.setDomain(domain);
+				r.setPeriod(period);
+				r.setIp(ip);
+				r.setType(1);
+
+				m_reportDao.insert(r);
+
+				int id = r.getId();
+				byte[] binaryContent = m_reportDelegate.buildBinary(report);
+				HourlyReportContent content = m_reportContentDao.createLocal();
+
+				content.setReportId(id);
+				content.setContent(binaryContent);
+				m_reportContentDao.insert(content);
+				m_reportDelegate.createHourlyTask(report);
+			} catch (Throwable e) {
+				Cat.getProducer().logError(e);
+			}
+		}
+	}
+
+	private void storFile(Map<String, T> reports, ReportBucket<String> bucket) {
+		for (T report : reports.values()) {
+			try {
+				String domain = m_reportDelegate.getDomain(report);
+				String xml = m_reportDelegate.buildXml(report);
+
+				bucket.storeById(domain, xml);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}

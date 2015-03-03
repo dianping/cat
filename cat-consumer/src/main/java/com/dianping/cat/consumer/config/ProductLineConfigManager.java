@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.productline;
+package com.dianping.cat.consumer.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
