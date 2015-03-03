@@ -43,4 +43,8 @@
       <metric id="CMSOldGen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
       <metric id="CMSPermGen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
    </group>
+   <group id="LocksAndThreads" order="8">
+       <metric id="Total-Contentions" unit="1" delta="false" order="1" lable="个数" alert="false"/>
+       <metric id="Current-Queue-Length" unit="1" delta="false" order="2" lable="个数" alert="false"/>
+   </group>
 </heartbeat-display-policy>
