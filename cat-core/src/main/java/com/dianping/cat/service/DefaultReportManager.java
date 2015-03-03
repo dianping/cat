@@ -200,61 +200,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		m_reportDelegate = reportDelegate;
 	}
 
-	@Override
-	public void storeHourlyReports(long startTime, StoragePolicy policy) {
-		Transaction t = Cat.newTransaction("Checkpoint", m_name);
-		Map<String, T> reports = m_reports.get(startTime);
-		ReportBucket<String> bucket = null;
-
-		try {
-			t.addData("reports", reports == null ? 0 : reports.size());
-
-			Set<String> errorDomains = new HashSet<String>();
-
-			for (String domain : reports.keySet()) {
-				if (!m_validator.validate(domain)) {
-					errorDomains.add(domain);
-				}
-			}
-			for (String domain : errorDomains) {
-				reports.remove(domain);
-			}
-			if (!errorDomains.isEmpty()) {
-				m_logger.info("error domain:" + errorDomains);
-			}
-
-			if (reports != null) {
-				m_reportDelegate.beforeSave(reports);
-
-				if (policy.forFile()) {
-					bucket = m_bucketManager.getReportBucket(startTime, m_name);
-
-					try {
-						storFile(reports, bucket);
-					} finally {
-						m_bucketManager.closeBucket(bucket);
-					}
-				}
-
-				if (policy.forDatabase()) {
-					storeDatabase(startTime, reports);
-				}
-			}
-			t.setStatus(Message.SUCCESS);
-		} catch (Throwable e) {
-			Cat.logError(e);
-			t.setStatus(e);
-			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
-		} finally {
-			cleanup(startTime);
-			t.complete();
-
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
-			}
-		}
-	}
-
 	private void storeDatabase(long startTime, Map<String, T> reports) {
 		Date period = new Date(startTime);
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -282,6 +227,61 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				m_reportDelegate.createHourlyTask(report);
 			} catch (Throwable e) {
 				Cat.getProducer().logError(e);
+			}
+		}
+	}
+
+	@Override
+	public void storeHourlyReports(long startTime, StoragePolicy policy) {
+		Transaction t = Cat.newTransaction("Checkpoint", m_name);
+		Map<String, T> reports = m_reports.get(startTime);
+		ReportBucket<String> bucket = null;
+
+		try {
+			t.addData("reports", reports == null ? 0 : reports.size());
+
+			if (reports != null) {
+				Set<String> errorDomains = new HashSet<String>();
+
+				for (String domain : reports.keySet()) {
+					if (!m_validator.validate(domain)) {
+						errorDomains.add(domain);
+					}
+				}
+				for (String domain : errorDomains) {
+					reports.remove(domain);
+				}
+				if (!errorDomains.isEmpty()) {
+					m_logger.info("error domain:" + errorDomains);
+				}
+
+				m_reportDelegate.beforeSave(reports);
+
+				if (policy.forFile()) {
+					bucket = m_bucketManager.getReportBucket(startTime, m_name);
+
+					try {
+						storFile(reports, bucket);
+					} finally {
+						m_bucketManager.closeBucket(bucket);
+					}
+				}
+
+				if (policy.forDatabase()) {
+					storeDatabase(startTime, reports);
+				}
+			}
+			t.setStatus(Message.SUCCESS);
+		} catch (Throwable e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
+		} finally {
+			cleanup(startTime);
+			t.complete();
+
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}
