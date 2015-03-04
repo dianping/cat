@@ -74,7 +74,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -388,7 +388,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
@@ -1151,7 +1151,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.metric.BaselineCreator</role>
@@ -1420,7 +1420,7 @@
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.metric.CachedMetricReportService</role>
@@ -1442,12 +1442,6 @@
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.task.storage.StorageReportBuilder</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportServiceManager</role>
 				</requirement>
@@ -2803,7 +2797,7 @@
 			<implementation>com.dianping.cat.report.alert.sender.decorator.BusinessDecorator</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
@@ -2917,6 +2911,14 @@
 			<implementation>com.dianping.cat.report.alert.sender.spliter.SpliterManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
+			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.storage.topology.StorageGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.storage.topology.StorageGraphBuilder</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
 			<role-hint>mail</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.sender.MailSender</implementation>
@@ -2990,7 +2992,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -3017,7 +3019,7 @@
 			<implementation>com.dianping.cat.report.alert.network.NetworkAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -3041,7 +3043,7 @@
 			<implementation>com.dianping.cat.report.alert.database.DatabaseAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -3065,7 +3067,7 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.HeartbeatDisplayPolicyManager</role>
@@ -3105,7 +3107,7 @@
 			<implementation>com.dianping.cat.report.alert.system.SystemAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -3150,7 +3152,7 @@
 			<implementation>com.dianping.cat.report.alert.web.WebAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -3213,6 +3215,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.topology.StorageGraphBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4273,7 +4278,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.GraphCreator</role>
@@ -4293,8 +4298,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.productline.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.config.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -4327,7 +4332,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -4366,7 +4371,7 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4421,7 +4426,7 @@
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4647,7 +4652,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.GraphCreator</role>
@@ -4686,7 +4691,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -4809,7 +4814,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -4830,7 +4835,7 @@
 					<role>com.dianping.cat.report.page.system.graph.SystemGraphCreator</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4863,7 +4868,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -4914,7 +4919,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -5240,7 +5245,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.database.GraphCreator</role>
@@ -5276,7 +5281,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.AlertInfo</role>
@@ -5485,6 +5490,9 @@
 					<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -5618,7 +5626,7 @@
 			<implementation>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
@@ -5639,7 +5647,7 @@
 					<role>com.dianping.cat.system.page.config.processor.GlobalConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -5883,6 +5891,51 @@
 		<component>
 			<role>com.dianping.cat.system.config.TransactionRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.TransactionRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.StorageCacheRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.StorageCacheRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.StorageCacheRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

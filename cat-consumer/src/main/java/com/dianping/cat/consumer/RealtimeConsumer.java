@@ -1,10 +1,6 @@
 package com.dianping.cat.consumer;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -37,11 +33,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Inject
 	private BlackListManager m_blackListManager;
 
-	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
-
 	private PeriodManager m_periodManager;
-
-	private long m_networkError = -1;
 
 	private long m_black = -1;
 
@@ -49,7 +41,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	public static final long MINUTE = 60 * 1000L;
 
-	public static final long DURATION = 60 * MINUTE;
+	public static final long HOUR = 60 * MINUTE;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -63,7 +55,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (period != null) {
 				period.distribute(tree);
 			} else {
-				logErrorInfo(tree);
+				m_serverStateManager.addNetworkTimeError(1);
 			}
 		} else {
 			m_black++;
@@ -123,13 +115,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long getCurrentStartTime() {
 		long now = System.currentTimeMillis();
-		long time = now - now % DURATION;
+		long time = now - now % HOUR;
 
 		return time;
 	}
 
 	public MessageAnalyzer getLastAnalyzer(String name) {
-		long lastStartTime = getCurrentStartTime() - DURATION;
+		long lastStartTime = getCurrentStartTime() - HOUR;
 		Period period = m_periodManager.findPeriod(lastStartTime);
 
 		return period == null ? null : period.getAnalyzer(name);
@@ -137,34 +129,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_periodManager = new PeriodManager(DURATION, m_analyzerManager, m_serverStateManager, m_logger);
+		m_periodManager = new PeriodManager(HOUR, m_analyzerManager, m_serverStateManager, m_logger);
 		m_periodManager.init();
 
 		Threads.forGroup("cat").start(m_periodManager);
-	}
-
-	private void logErrorInfo(MessageTree tree) {
-		String domain = tree.getDomain();
-		Integer size = m_errorTimeDomains.get(domain);
-
-		if (size == null) {
-			size = 1;
-		} else {
-			size++;
-		}
-
-		m_serverStateManager.addNetworkTimeError(1);
-		m_errorTimeDomains.put(domain, size);
-		m_networkError++;
-
-		if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-
-			m_logger.error("Error network time:" + m_errorTimeDomains);
-			m_logger.error("The timestamp of message is out of range, IGNORED! "
-			      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
-			      + tree.getIpAddress());
-		}
 	}
 
 }

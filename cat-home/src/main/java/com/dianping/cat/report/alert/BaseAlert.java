@@ -13,8 +13,8 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
