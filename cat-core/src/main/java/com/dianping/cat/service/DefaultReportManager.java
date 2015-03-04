@@ -200,6 +200,10 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		m_reportDelegate = reportDelegate;
 	}
 
+	public void setValidator(DomainValidator validator) {
+		m_validator = validator;
+	}
+
 	private void storeDatabase(long startTime, Map<String, T> reports) {
 		Date period = new Date(startTime);
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -285,7 +289,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			}
 		}
 	}
-
+	
 	private void storFile(Map<String, T> reports, ReportBucket<String> bucket) {
 		for (T report : reports.values()) {
 			try {
