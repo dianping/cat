@@ -224,11 +224,11 @@
 <table  class="table table-hover table-striped table-condensed" width="100%">
 	<tr>
 		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain&show=true">处理项目列表</a></td>
-		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total&show=true">处理消息总量</a></td>
-		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss&show=true">丢失消息总量</a></td>
-		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size&show=true">压缩前消息大小(GB)</a></td>
-		<td width="10%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg&show=true">平均消息大小(KB)</a></td>
-		<td width="5%"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine&show=true">机器总数</a></td>
+		<td width="10%" class="right"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total&show=true">处理消息总量</a></td>
+		<td width="10%" class="right"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss&show=true">丢失消息总量</a></td>
+		<td width="10%" class="right"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size&show=true">压缩前消息大小(GB)</a></td>
+		<td width="10%" class="right"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg&show=true">平均消息大小(KB)</a></td>
+		<td width="5%"  class="right"><a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine&show=true">机器总数</a></td>
 		<td width="45%">项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
