@@ -273,7 +273,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }

@@ -29,6 +29,10 @@ public class TestChildrenMany {
 	public void testEvent() throws Exception {
 		for (int i = 0; i < 1000; i++) {
 			Cat.logEvent("Event", "Event", Event.SUCCESS, null);
+		
+			Transaction t = Cat.newTransaction("Cache.mem", "mem");
+			
+			t.complete();
 		}
 
 		Thread.sleep(100000);
