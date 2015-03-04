@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage-alert-info id="SQL"  start-time="2014-05-06 21:00:00">
+	  <storage id="cat" level="1" >
+	 	<machine id="10.10.10.1" level="1">
+	 		<operation id="select" level="1">
+	 			<attribute id="avg" title="响应时间" level="1">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" level="1" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" level="1" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>
+			<operation id="delete" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>	 	
+	 	</machine>
+	 	<machine id="10.10.10.2">
+	 		<operation id="select" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>
+			<operation id="delete" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>	 	
+	 	</machine>
+	 </storage>
+	 <storage id="shop-web">
+		 <machine id="10.10.10.3">
+	 		<operation id="select" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>
+			<operation id="delete" >
+	 			<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+ 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 		</operation>	 	
+	 	</machine>
+	 	<machine id="10.10.10.4">
+	 		<operation id="select" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>
+			<operation id="delete" >
+	 			<attribute id="avg" title="响应时间">
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 			<attribute id="error" title="错误率" >
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" />
+	 			</attribute>
+	 		</operation>	 	
+	 	</machine>
+ 	</storage>
+</storage-alert-info>

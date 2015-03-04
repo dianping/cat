@@ -254,7 +254,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private TransactionReport queryReport(String domain) {
 		long period = getStartTime();
 		long timestamp = System.currentTimeMillis();
-		long remainder = timestamp % 3600000;
+		long remainder = timestamp % ONE_HOUR;
 		long current = timestamp - remainder;
 
 		TransactionReport report = m_reportManager.getHourlyReport(period, domain, false);
@@ -263,6 +263,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (period == current) {
 			report.accept(m_computer.setDuration(remainder / 1000));
+		} else if (period < current) {
+			report.accept(m_computer.setDuration(3600));
 		}
 
 		return report;

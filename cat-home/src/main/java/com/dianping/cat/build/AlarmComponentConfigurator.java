@@ -92,6 +92,8 @@ import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
+import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.app.AppDataService;
@@ -197,6 +199,10 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SpliterManager.class));
 
+		all.add(C(StorageAlertInfoManager.class));
+
+		all.add(C(StorageGraphBuilder.class));
+
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
 
 		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
@@ -239,7 +245,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
 
 		all.add(C(StorageDatabaseAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
-		      .req(ModelService.class, StorageAnalyzer.ID).req(StorageDatabaseRuleConfigManager.class));
+		      .req(ModelService.class, StorageAnalyzer.ID)
+		      .req(StorageDatabaseRuleConfigManager.class, StorageGraphBuilder.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 

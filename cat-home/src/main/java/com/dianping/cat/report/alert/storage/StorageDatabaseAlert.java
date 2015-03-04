@@ -11,9 +11,11 @@ public class StorageDatabaseAlert extends AbstractStorageAlert {
 	@Inject
 	private StorageDatabaseRuleConfigManager m_configManager;
 
+	public static final String ID = AlertType.StorageDatabase.getName();
+
 	@Override
 	public String getName() {
-		return AlertType.StorageDatabase.getName();
+		return ID;
 	}
 
 	@Override

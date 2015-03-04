@@ -75,8 +75,8 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(storageDatabaseAlert);
 		}
 
-		StorageDatabaseAlert storageDatabaseAlert = ctx.lookup(StorageDatabaseAlert.class);
-		Threads.forGroup("cat").start(storageDatabaseAlert);
+		// StorageDatabaseAlert storageDatabaseAlert = ctx.lookup(StorageDatabaseAlert.class);
+		// Threads.forGroup("cat").start(storageDatabaseAlert);
 
 	}
 

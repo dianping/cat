@@ -13,6 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
@@ -21,6 +22,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.home.storage.entity.Storage;
+import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.DataChecker;
@@ -28,9 +31,11 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
+import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.StorageRuleConfigManager;
 
 public abstract class AbstractStorageAlert implements Task, LogEnabled {
@@ -47,6 +52,12 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	@Inject
 	protected AlertManager m_alertManager;
 
+	@Inject
+	protected StorageGroupConfigManager m_storageConfigManager;
+
+	@Inject
+	protected StorageGraphBuilder m_graphBuilder;
+
 	protected Logger m_logger;
 
 	private static final int DATA_AREADY_MINUTE = 1;
@@ -55,10 +66,10 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private double[] buildArrayData(int start, int end, ReportFetcherParam param, StorageReport report) {
 		String machine = param.getMachine();
-		String domain = param.getDomain();
 		String attribute = param.getAttribute();
 		String method = param.getMethod();
-		Operation op = report.findOrCreateMachine(machine).findOrCreateDomain(domain).findOrCreateOperation(method);
+		Operation op = report.findOrCreateMachine(machine).findOrCreateDomain(Constants.ALL)
+		      .findOrCreateOperation(method);
 		Map<Integer, Segment> segments = op.getSegments();
 		int length = end - start + 1;
 		double[] datas = new double[60];
@@ -95,18 +106,16 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return minute;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(ReportFetcherParam param, List<Config> configs) {
+	private List<AlertResultEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
+	      StorageReport report) {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
 		Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(configs);
-		int minute = calAlreadyMinute();
 
 		if (conditionPair != null) {
 			int maxMinute = conditionPair.getKey();
 			List<Condition> conditions = conditionPair.getValue();
 
 			if (minute >= maxMinute - 1) {
-				StorageReport report = fetchStorageReport(param, ModelPeriod.CURRENT);
-
 				if (report != null) {
 					int start = minute + 1 - maxMinute;
 					int end = minute;
@@ -115,8 +124,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			} else if (minute < 0) {
-				StorageReport report = fetchStorageReport(param, ModelPeriod.LAST);
-
+				report = fetchStorageReport(param.getName(), ModelPeriod.LAST);
 				if (report != null) {
 					int start = 60 + minute + 1 - maxMinute;
 					int end = 60 + minute;
@@ -125,12 +133,11 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			} else {
-				StorageReport currentReport = fetchStorageReport(param, ModelPeriod.CURRENT);
-				StorageReport lastReport = fetchStorageReport(param, ModelPeriod.LAST);
+				StorageReport lastReport = fetchStorageReport(param.getName(), ModelPeriod.LAST);
 
-				if (currentReport != null && lastReport != null) {
+				if (report != null && lastReport != null) {
 					int currentStart = 0, currentEnd = minute;
-					double[] currentValue = buildArrayData(currentStart, currentEnd, param, currentReport);
+					double[] currentValue = buildArrayData(currentStart, currentEnd, param, report);
 					int lastStart = 60 + 1 - (maxMinute - minute);
 					int lastEnd = 59;
 					double[] lastValue = buildArrayData(lastStart, lastEnd, param, lastReport);
@@ -148,18 +155,15 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private StorageReport fetchStorageReport(ReportFetcherParam param, ModelPeriod period) {
-		String name = param.getName();
-		String domain = param.getDomain();
-		String machine = param.getMachine();
+	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(name + "-" + getType(), period.getStartTime()) //
-		      .setProperty("ip", machine).setProperty("requireAll", "true");
+		      .setProperty("ip", "All").setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeReport(report, machine, domain);
+			return m_reportMergeHelper.mergeReport(report, Constants.ALL, Constants.ALL);
 		} else {
 			return null;
 		}
@@ -183,10 +187,11 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void processRule(Rule rule) {
-		ReportFetcherParam param = new ReportFetcherParam(rule.getId());
+	private void processRule(Rule rule, String name, String ip, StorageReport report) {
+		ReportFetcherParam param = new ReportFetcherParam(name, ip, rule.getId());
+		int minute = calAlreadyMinute();
 
-		List<AlertResultEntity> alertResults = computeAlertForRule(param, rule.getConfigs());
+		List<AlertResultEntity> alertResults = computeAlertForRule(minute, param, rule.getConfigs(), report);
 		for (AlertResultEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
@@ -194,7 +199,22 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
+
+			m_graphBuilder.processAlertEntity(minute, entity, param);
 		}
+	}
+
+	private void processStorage(String id) {
+		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
+
+		for (String ip : currentReport.getIps()) {
+			List<Rule> rules = getRuleConfigManager().findRule(id, ip);
+
+			for (Rule rule : rules) {
+				processRule(rule, id, ip, currentReport);
+			}
+		}
+
 	}
 
 	@Override
@@ -206,11 +226,11 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				Map<String, Rule> monitorRules = getRuleConfigManager().getMonitorRules().getRules();
+				StorageGroup groups = m_storageConfigManager.queryStorageGroup(StorageGroupConfigManager.DATABASE_TYPE);
 
-				for (Entry<String, Rule> entry : monitorRules.entrySet()) {
+				for (Entry<String, Storage> entry : groups.getStorages().entrySet()) {
 					try {
-						processRule(entry.getValue());
+						processStorage(entry.getValue().getId());
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -231,18 +251,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			} catch (InterruptedException e) {
 				active = false;
 			}
-		}
-	}
-
-	protected void sendAlerts(String productlineName, String metricName, List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
-			AlertEntity entity = new AlertEntity();
-
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(metricName).setType(getName()).setGroup(productlineName);
-
-			m_alertManager.addAlert(entity);
 		}
 	}
 
@@ -273,15 +281,12 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		private String m_attribute;
 
-		private String m_domain;
-
-		public ReportFetcherParam(String param) {
+		public ReportFetcherParam(String name, String machine, String param) {
 			List<String> fields = Splitters.by(";").split(param);
-			m_name = fields.get(0);
-			m_machine = fields.get(1);
+			m_name = name;
+			m_machine = machine;
 			m_method = fields.get(2);
 			m_attribute = fields.get(3);
-			m_domain = fields.get(4);
 		}
 
 		public String getName() {
@@ -300,13 +305,9 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			return m_attribute;
 		}
 
-		public String getDomain() {
-			return m_domain;
-		}
-
 		@Override
 		public String toString() {
-			return m_domain + " " + " " + m_machine + " " + m_method + " " + m_attribute;
+			return m_machine + " " + m_method + " " + m_attribute;
 		}
 
 	}

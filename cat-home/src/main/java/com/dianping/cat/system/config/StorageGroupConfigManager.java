@@ -32,7 +32,7 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String CACHE_TYPE = "cache";
 
-	public StorageGroupConfig getDomainGroup() {
+	public StorageGroupConfig getStorageGroupConfig() {
 		return m_config;
 	}
 
