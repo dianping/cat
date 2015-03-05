@@ -40,7 +40,7 @@ public class LDAPService {
 	private ServerConfigManager m_serverConfigManager;
 
 	public Token authenticate(String userName, String password) throws Exception {
-		if ("admin".equals(userName) && "admin".equals(password)) {
+		if ("catadmin".equals(userName) && "catadmin".equals(password)) {
 			return new Token(userName, userName);
 		}
 
