@@ -12,7 +12,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.productline.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;

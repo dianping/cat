@@ -55,6 +55,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -105,6 +108,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -188,6 +194,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -239,6 +248,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -289,6 +301,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -385,6 +400,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -443,6 +461,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -493,6 +514,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -552,6 +576,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -569,8 +596,8 @@
 			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
-			<implementation>com.dianping.cat.consumer.productline.ProductLineConfigManager</implementation>
+			<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+			<implementation>com.dianping.cat.consumer.config.ProductLineConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -591,7 +618,7 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -611,7 +638,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.productline.ProductLineConfigManager</role>
+					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
@@ -674,6 +701,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>

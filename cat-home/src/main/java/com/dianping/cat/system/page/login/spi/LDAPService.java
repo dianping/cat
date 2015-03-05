@@ -40,6 +40,11 @@ public class LDAPService {
 	private ServerConfigManager m_serverConfigManager;
 
 	public Token authenticate(String userName, String password) throws Exception {
+		// add the default admin account
+		if ("catadmin".equals(userName) && "catadmin".equals(password)) {
+			return new Token(userName, userName);
+		}
+
 		Ldap ldap = m_serverConfigManager.getLdap();
 		LdapContext context = null;
 		Hashtable<String, String> env = new Hashtable<String, String>();

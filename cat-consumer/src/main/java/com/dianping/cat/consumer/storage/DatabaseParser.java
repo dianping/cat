@@ -3,7 +3,6 @@ package com.dianping.cat.consumer.storage;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -11,23 +10,16 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
 public class DatabaseParser implements LogEnabled {
 
 	private Logger m_logger;
 
-	private Set<String> m_errorConnection = new HashSet<String>();
+	private Set<String> m_errorConnections = new HashSet<String>();
 
-	private Map<String, Database> m_connections = new LinkedHashMap<String, Database>() {
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected boolean removeEldestEntry(Entry<String, Database> eldest) {
-			return size() > 50000;
-		}
-	};
+	private Map<String, Database> m_connections = new LinkedHashMap<String, Database>();
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -37,7 +29,7 @@ public class DatabaseParser implements LogEnabled {
 	public Database queryDatabaseName(String connection) {
 		Database database = m_connections.get(connection);
 
-		if (database == null && StringUtils.isNotEmpty(connection) && !m_errorConnection.contains(connection)) {
+		if (database == null && StringUtils.isNotEmpty(connection) && !m_errorConnections.contains(connection)) {
 			try {
 				if (connection.contains("jdbc:mysql://")) {
 					String con = connection.split("jdbc:mysql://")[1];
@@ -56,11 +48,11 @@ public class DatabaseParser implements LogEnabled {
 
 					m_connections.put(connection, database);
 				} else {
-					m_errorConnection.add(connection);
+					m_errorConnections.add(connection);
 					m_logger.info("Unrecognized jdbc connection string: " + connection);
 				}
 			} catch (Exception e) {
-				m_errorConnection.add(connection);
+				m_errorConnections.add(connection);
 				Cat.logError(connection, e);
 			}
 		}
@@ -71,8 +63,8 @@ public class DatabaseParser implements LogEnabled {
 		if (!m_connections.isEmpty()) {
 			Transaction t = Cat.newTransaction("Connection", "Error");
 
-			for (String con : m_errorConnection) {
-				Cat.logEvent("connection", con);
+			for (String con : m_errorConnections) {
+				Cat.logEvent("Connection", "Error", Event.SUCCESS, con);
 			}
 			t.setStatus(Transaction.SUCCESS);
 			t.complete();

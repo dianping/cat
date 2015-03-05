@@ -47,13 +47,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public static final String DUMP_DIR = "dump";
 
-	public boolean discardTransaction(String type,String name){
+	public boolean discardTransaction(String type, String name) {
 		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -325,7 +325,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return false;
 		}
 	}
-	
+
 	public boolean isSendMachine() {
 		if (m_config != null) {
 			return m_config.isSendMachine();

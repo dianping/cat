@@ -19,9 +19,6 @@
 					<role>com.dianping.cat.message.io.TransportManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStatistics</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
 				</requirement>
 			</requirements>
