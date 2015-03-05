@@ -100,8 +100,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public void process(MessageTree tree) {
-		String domain = tree.getDomain();
-		DependencyReport report = findOrCreateReport(domain);
+		DependencyReport report = findOrCreateReport(tree.getDomain());
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -125,9 +124,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		String type = t.getType();
-
+	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t, String type) {
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String target = parseServerName(t);
 			String callType = "PigeonCall";
@@ -141,9 +138,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processSqlTransaction(DependencyReport report, Transaction t) {
-		String type = t.getType();
-
+	private void processSqlTransaction(DependencyReport report, Transaction t, String type) {
 		if ("SQL".equals(type)) {
 			String database = parseDatabase(t);
 
@@ -154,12 +149,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t)) {
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_serverConfigManager.discardTransaction(type, name)) {
 			return;
 		} else {
-			processTransactionType(report, t);
-			processSqlTransaction(report, t);
-			processPigeonTransaction(report, tree, t);
+			processTransactionType(report, t, type);
+			processSqlTransaction(report, t, type);
+			processPigeonTransaction(report, tree, t, type);
 
 			List<Message> children = t.getChildren();
 
@@ -173,9 +171,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processTransactionType(DependencyReport report, Transaction t) {
-		String type = t.getType();
-
+	private void processTransactionType(DependencyReport report, Transaction t, String type) {
 		if (m_types.contains(type) || isCache(type)) {
 			long current = t.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));

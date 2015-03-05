@@ -32,6 +32,7 @@ import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
+import com.dianping.cat.report.page.storage.StorageMergerHelper;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -176,7 +177,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, CachedReportBuilder.ID, CachedReportBuilder.class).req(CachedReportTask.class));
 
-		all.add(C(TaskBuilder.class, StorageReportBuilder.ID, StorageReportBuilder.class));
+		all.add(C(TaskBuilder.class, StorageReportBuilder.ID, StorageReportBuilder.class).req(GraphDao.class,
+		      DailyGraphDao.class, ReportServiceManager.class, StorageMergerHelper.class));
 
 		all.add(C(TaskBuilder.class, CmdbInfoReloadBuilder.ID, CmdbInfoReloadBuilder.class).req(ProjectUpdateTask.class));
 

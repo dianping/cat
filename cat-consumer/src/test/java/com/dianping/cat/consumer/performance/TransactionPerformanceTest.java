@@ -24,13 +24,13 @@ public class TransactionPerformanceTest  extends ComponentTestCase{
 
 		long current = System.currentTimeMillis();
 
-		long size = 10000000000l;
+		long size = 10000000l;
 		for (int i = 0; i < size; i++) {
 			analyzer.process(tree);
 		}
-		System.out.println(analyzer.getReport("cat"));
 		System.out.println("Cost " + (System.currentTimeMillis() - current) / 1000);
-		//cost 62
+		System.out.println(analyzer.getReport("cat"));
+		//cost 167 -> 77
 	}
 
 	public MessageTree buildMessage() {
@@ -56,6 +56,18 @@ public class TransactionPerformanceTest  extends ComponentTestCase{
 				                  .reset().child(t("MEMCACHED", "Get", 3496)) //
 				            ) //
 				            .reset().child(t("FINAL DATA SERVICE", "get", 4394) //
+				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				            ).reset().child(t("123123", "get", 4394) //
+				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				            ).reset().child(t("123123", "get", 4394) //
+				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				            ).reset().child(t("123123", "get", 4394) //
 				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
 				                  .reset().child(t("MEMCACHED", "Get", 322)) //
 				                  .reset().child(t("MEMCACHED", "Get", 322)) //

@@ -20,7 +20,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_sort;
 
 	@FieldMeta("show")
-	private boolean m_show = false;
+	private boolean m_show = true;
 
 	public Payload() {
 		super(ReportPage.STATE);

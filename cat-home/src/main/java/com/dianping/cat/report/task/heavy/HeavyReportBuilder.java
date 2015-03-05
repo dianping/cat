@@ -25,13 +25,13 @@ import com.dianping.cat.report.task.TaskHelper;
 public class HeavyReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_HEAVY;
-	
+
 	@Inject
 	protected ReportServiceManager m_reportService;
 
 	@Inject
 	private ServerConfigManager m_configManager;
-	
+
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		HeavyReport heavyReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
