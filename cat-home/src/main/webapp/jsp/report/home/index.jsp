@@ -30,4 +30,7 @@
 		<td><a target="_blank" href="http://www.travelzen.com/flight/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/zhenlv.png"/></a></td>
 		<td></td>
 	</tr>
+	<tr>
+		<td><a target="_blank" href="http://www.oppo.com/"><img  class="img-polaroid"  src="${model.webapp}/images/logo/oppo.png"/></a></td>
+	</tr>
 </table>
