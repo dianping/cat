@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.storage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -19,13 +21,17 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -41,7 +47,13 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<StorageReport> m_service;
 
 	@Inject
-	private StorageMergerHelper m_mergerHelper;
+	private StorageMergeHelper m_mergeHelper;
+
+	@Inject
+	private StorageAlertInfoManager m_alertInfoManager;
+
+	@Inject
+	private StorageGroupConfigManager m_storageGroupConfigManager;
 
 	@Inject
 	private JsonBuilder m_jsonBuilder;
@@ -92,6 +104,14 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_CACHE:
 			storageReport = queryHistoryReport(payload, CACHE_TYPE);
 			break;
+		case DASHBOARD:
+			StorageAlertInfo alertInfo = m_alertInfoManager.queryAlertInfo(payload.getDate(), model.getMinute());
+
+			model.setDepartments(m_storageGroupConfigManager.queryStorageDepartments());
+			model.setAlertInfo(alertInfo);
+			model.setReportStart(new Date(payload.getDate()));
+			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
+			break;
 		}
 		model.setPage(ReportPage.STORAGE);
 
@@ -117,8 +137,8 @@ public class Handler implements PageHandler<Context> {
 		StorageReport storageReport = queryHourlyReport(payload, type);
 
 		if (storageReport != null) {
-			storageReport = m_mergerHelper.mergeAllMachines(storageReport, ipAddress);
-			storageReport = m_mergerHelper.mergeAllDomains(storageReport, Constants.ALL);
+			storageReport = m_mergeHelper.mergeAllMachines(storageReport, ipAddress);
+			storageReport = m_mergeHelper.mergeAllDomains(storageReport, Constants.ALL);
 
 			model.setReport(storageReport);
 			model.setOperations(storageReport.getOps());
@@ -160,8 +180,39 @@ public class Handler implements PageHandler<Context> {
 		return m_reportService.queryStorageReport(id + "-" + type, start, end);
 	}
 
+	private int parseQueryMinute(Payload payload) {
+		int minute = 0;
+		String min = payload.getMinute();
+
+		if (StringUtils.isEmpty(min)) {
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
+			minute = (int) (current % (60));
+		} else {
+			minute = Integer.parseInt(min);
+		}
+
+		return minute;
+	}
+
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STORAGE);
 		m_normalizePayload.normalize(model, payload);
+
+		if (payload.getAction() == Action.DASHBOARD) {
+			Integer minute = parseQueryMinute(payload);
+			int maxMinute = 60;
+			List<Integer> minutes = new ArrayList<Integer>();
+
+			if (payload.getPeriod().isCurrent()) {
+				long current = payload.getCurrentTimeMillis() / 1000 / 60;
+				maxMinute = (int) (current % (60));
+			}
+			for (int i = 0; i < 60; i++) {
+				minutes.add(i);
+			}
+			model.setMinute(minute);
+			model.setMaxMinute(maxMinute);
+			model.setMinutes(minutes);
+		}
 	}
 }

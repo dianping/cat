@@ -1,8 +1,5 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8"%>
-<%@ page import="java.util.*"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>

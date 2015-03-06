@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.storage;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 
-public class StorageMergerHelper {
+public class StorageMergeHelper {
 
 	public StorageReport mergeAllMachines(StorageReport storageReport, String ipAddress) {
 		if (Constants.ALL.equals(ipAddress)) {
@@ -25,7 +25,7 @@ public class StorageMergerHelper {
 		return storageReport;
 	}
 
-	public StorageReport mergeAllNames(StorageReport report, String ipAddress, String domain) {
+	public StorageReport mergeReport(StorageReport report, String ipAddress, String domain) {
 		StorageReport temp = mergeAllMachines(report, ipAddress);
 
 		return mergeAllDomains(temp, domain);

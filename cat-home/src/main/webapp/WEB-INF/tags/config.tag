@@ -131,7 +131,13 @@
 								<i class="menu-icon fa fa-caret-right"></i>网络拓扑</a>
 								<b class="arrow"></b></li>
 							<li id="databaseRuleConfigList"><a href="/cat/s/config?op=databaseRuleConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>数据库告警</a>
+								<i class="menu-icon fa fa-caret-right"></i>数据库系统告警</a>
+								<b class="arrow"></b></li>
+							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>数据库分组</a>
+								<b class="arrow"></b></li>
+							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule">
+								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>
 								<b class="arrow"></b></li>
 							<li id="systemRuleConfigList"><a href="/cat/s/config?op=systemRuleConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>系统告警</a>

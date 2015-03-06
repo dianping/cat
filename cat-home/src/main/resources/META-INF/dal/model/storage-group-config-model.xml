@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.storage" enable-merger="true"  enable-sax-parser="true">
+  <entity name="storage-group-config" root="true">
+    <entity-ref name="storage-group" type="map" names="storage-groups" />
+  </entity>
+  <entity name="storage-group">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="storage" type="map" names="storages" />
+  </entity>
+  <entity name="storage">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="department" value-type="String" />
+    <attribute name="productline" value-type="String" />
+    <attribute name="title" value-type="String" />
+  </entity>
+</model>
+
