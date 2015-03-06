@@ -5,7 +5,7 @@
 <p>3、在所有cat服务器上安装tomcat，启动端口默认设定为8080。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tomcat启动参数参考：-Xms20288m -Xmx20288m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=10144m -XX:MaxNewSize=10144m -XX:SurvivorRatio=10</p>
 <p>4、确保所有cat客户端以及服务器对于/data目录具有读写权限。</p>
-<p>5、配置所有客户端和服务端的配置文件client.xml,文件路径/data/appdatas/cat/client.xml。</p>
+<p>5、配置所有客户端和服务端的配置文件client.xml，文件路径/data/appdatas/cat/client.xml。</p>
 <xmp class="well">
 	<config mode="client">
 	    	<servers>
@@ -46,7 +46,7 @@
 	</data-source>
 </data-sources>
 </xmp> 
-<p>7、配置服务端的server.xml,文件路径/data/appdatas/cat/server.xml。</p>
+<p>7、配置服务端的server.xml，文件路径/data/appdatas/cat/server.xml。</p>
 <xmp class="well">
 <!-- Configuration for production environment -->
 <!-- Note: -->
