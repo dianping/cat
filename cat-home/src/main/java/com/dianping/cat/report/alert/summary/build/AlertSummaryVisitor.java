@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -34,26 +34,23 @@ public class AlertSummaryVisitor extends BaseVisitor {
 	}
 
 	private String convertNameToChinese(String name) {
-		if (name == null) {
-		} else {
-			if (name.equals(AlertType.Network.getName())) {
-				return "网络告警";
-			}
-			if (name.equals(AlertType.Business.getName())) {
-				return "业务告警";
-			}
-			if (name.equals(AlertType.Exception.getName())) {
-				return "异常告警";
-			}
-			if (name.equals(AlertSummaryGenerator.LONG_CALL)) {
-				return LONG_CALL_NAME;
-			}
-			if (name.equals(AlertSummaryGenerator.PREFIX + AlertType.Exception.getName())) {
-				return "依赖异常告警";
-			}
-			if (name.equals(AlertType.System.getName())) {
-				return "系统告警";
-			}
+		if (name.equals(AlertType.Network.getName())) {
+			return "网络告警";
+		}
+		if (name.equals(AlertType.Business.getName())) {
+			return "业务告警";
+		}
+		if (name.equals(AlertType.Exception.getName())) {
+			return "异常告警";
+		}
+		if (name.equals(AlertInfoBuilder.LONG_CALL)) {
+			return LONG_CALL_NAME;
+		}
+		if (name.equals(AlertInfoBuilder.PREFIX + AlertType.Exception.getName())) {
+			return "依赖异常告警";
+		}
+		if (name.equals(AlertType.System.getName())) {
+			return "系统告警";
 		}
 
 		return "";

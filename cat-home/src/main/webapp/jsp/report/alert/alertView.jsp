@@ -50,6 +50,8 @@
 				  <input class="type" type="checkbox" value="zabbix"> Zabbix告警
 				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="database"> DB告警
+				</label><label class="btn btn-info btn-sm">
+				  <input class="type" type="checkbox" value="transaction"> Transaction告警
 				</label>
 			</div>
 		</div>

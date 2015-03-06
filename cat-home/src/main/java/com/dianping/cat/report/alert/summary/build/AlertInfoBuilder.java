@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,8 +21,9 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
-public class AlertSummaryGenerator {
+public class AlertInfoBuilder {
 
 	@Inject
 	private AlertDao m_alertDao;

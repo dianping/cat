@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -12,8 +12,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
+import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
-public class AlterationSummaryContentGenerator extends SummaryContentGenerator {
+public class AlterationSummaryBuilder extends SummaryBuilder {
 
 	@Inject
 	private AlterationDao m_alterationDao;
