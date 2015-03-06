@@ -9,11 +9,7 @@ import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.ThrowableInformation;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class CatAppender extends AppenderSkeleton {
 	@Override
@@ -47,23 +43,13 @@ public class CatAppender extends AppenderSkeleton {
 		ThrowableInformation info = event.getThrowableInformation();
 
 		if (info != null) {
-			MessageProducer cat = Cat.getProducer();
 			Throwable exception = info.getThrowable();
 			Object message = event.getMessage();
-			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-			if (tree == null) {
-				Transaction t = cat.newTransaction("System", "Log4jException");
-
-				if (message != null) {
-					cat.logError(String.valueOf(message), exception);
-				} else {
-					cat.logError(exception);
-				}
-				t.setStatus(Message.SUCCESS);
-				t.complete();
+			if (message != null) {
+				Cat.logError(String.valueOf(message), exception);
 			} else {
-				cat.logError(exception);
+				Cat.logError(exception);
 			}
 		}
 	}
@@ -73,13 +59,13 @@ public class CatAppender extends AppenderSkeleton {
 		String name = event.getLevel().toString();
 		Object message = event.getMessage();
 		String data;
-		
+
 		if (message instanceof Throwable) {
 			data = buildExceptionStack((Throwable) message);
 		} else {
 			data = event.getMessage().toString();
 		}
-		
+
 		ThrowableInformation info = event.getThrowableInformation();
 
 		if (info != null) {

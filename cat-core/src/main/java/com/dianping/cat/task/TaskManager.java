@@ -16,8 +16,6 @@ public class TaskManager {
 	@Inject
 	private TaskDao m_taskDao;
 
-	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	private static final long ONE_DAY = 24 * ONE_HOUR;
@@ -48,7 +46,7 @@ public class TaskManager {
 		Task task = m_taskDao.createLocal();
 
 		task.setCreationDate(new Date());
-		task.setProducer(m_ip);
+		task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		task.setReportDomain(domain);
 		task.setReportName(name);
 		task.setReportPeriod(period);
