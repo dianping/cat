@@ -24,6 +24,8 @@ public class StateBuilder {
 
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
+	
+	private static final int COUNT = 500 * 10000;
 
 	private List<String> queryAllServers() {
 		List<String> strs = new ArrayList<String>();
@@ -53,7 +55,7 @@ public class StateBuilder {
 			}
 		}
 		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > 300 * 10000) {
+			if (machine.getTotalLoss() > COUNT) {
 				errorServers.add(machine.getIp());
 			}
 		}

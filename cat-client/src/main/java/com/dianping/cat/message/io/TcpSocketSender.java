@@ -105,7 +105,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			return false;
+			String type = message.getType();
+
+			if (type.startsWith("Cache.") || "SQL".equals(type)) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return true;
 		}
@@ -132,7 +138,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		tran.setCompleted(true);
 		tran.setDurationInMicros(0);
 		tran.addChild(first.getMessage());
-		
+
 		while (max >= 0) {
 			MessageTree tree = trees.poll();
 
@@ -267,7 +273,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }

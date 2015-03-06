@@ -27,11 +27,16 @@ public class TestChildrenMany {
 
 	@Test
 	public void testEvent() throws Exception {
-		for (int i = 0; i < 1000; i++) {
-			Cat.logEvent("Event", "Event", Event.SUCCESS, null);
-		}
+		while (true) {
+			for (int i = 0; i < 1000; i++) {
+				Cat.logEvent("Event", "Event", Event.SUCCESS, null);
 
-		Thread.sleep(100000);
+				Transaction t = Cat.newTransaction("Cache.mem", "mem");
+
+				t.complete();
+			}
+			Thread.sleep(10);
+		}
 	}
 
 	@Test

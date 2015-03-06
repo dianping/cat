@@ -1,8 +1,9 @@
 package com.dianping.cat.report.page.transaction;
 
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.site.lookup.util.StringUtils;
 
 public class TransactionMergeHelper {
 
