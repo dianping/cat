@@ -67,7 +67,7 @@ public class AlertManager implements Initializable {
 		String group = alert.getGroup();
 		Cat.logEvent("Alert:" + type, group, Event.SUCCESS, alert.toString());
 
-		if (m_configManager.isAlertMachine() || true) {
+		if (m_configManager.isAlertMachine()) {
 			return m_alerts.offer(alert);
 		} else {
 			return true;
@@ -158,9 +158,9 @@ public class AlertManager implements Initializable {
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			message = new AlertMessageEntity(group, title, type, content, receivers);
 
-			// if (m_senderManager.sendAlert(channel, message)) {
-			// result = true;
-			// }
+			if (m_senderManager.sendAlert(channel, message)) {
+				result = true;
+			}
 		}
 
 		String dbContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(pair.getValue())
