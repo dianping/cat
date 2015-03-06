@@ -36,12 +36,22 @@ public class StorageGraphBuilder {
 		return level > other ? level : other;
 	}
 
+	private String queryTarget(String target) {
+		if ("avg".equals(target)) {
+			return "响应时间";
+		} else if ("error".equals(target)) {
+			return "错误率";
+		} else {
+			return target;
+		}
+	}
+
 	public void processAlertEntity(int minute, AlertEntity entity, ReportFetcherParam param) {
 		int level = queryLevel(entity.getLevel());
 		String name = param.getName();
 		String ip = param.getMachine();
 		String opertaion = param.getMethod();
-		String target = param.getTarget();
+		String target = queryTarget(param.getTarget());
 
 		Storage storage = getAlertInfo(minute).findOrCreateStorage(name);
 		storage.incCount();
@@ -66,7 +76,7 @@ public class StorageGraphBuilder {
 		List<String> fields = Splitters.by(";").split(alert.getMetric());
 		String ip = fields.get(0);
 		String operation = fields.get(1);
-		String target = fields.get(2);
+		String target = queryTarget(fields.get(2));
 		int level = queryLevel(alert.getType());
 
 		Storage storage = alertInfo.findOrCreateStorage(name);

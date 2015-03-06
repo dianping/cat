@@ -27,7 +27,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoService;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -50,7 +50,7 @@ public class Handler implements PageHandler<Context> {
 	private StorageMergeHelper m_mergeHelper;
 
 	@Inject
-	private StorageAlertInfoService m_alertInfoService;
+	private StorageAlertInfoManager m_alertInfoManager;
 
 	@Inject
 	private StorageGroupConfigManager m_storageGroupConfigManager;
@@ -105,7 +105,7 @@ public class Handler implements PageHandler<Context> {
 			storageReport = queryHistoryReport(payload, CACHE_TYPE);
 			break;
 		case DASHBOARD:
-			StorageAlertInfo alertInfo = m_alertInfoService.queryAlertInfo(payload.getDate(), model.getMinute());
+			StorageAlertInfo alertInfo = m_alertInfoManager.queryAlertInfo(payload.getDate(), model.getMinute());
 
 			model.setDepartments(m_storageGroupConfigManager.queryStorageDepartments());
 			model.setAlertInfo(alertInfo);

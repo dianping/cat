@@ -49,7 +49,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoService;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
@@ -117,7 +117,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageAlertInfoRTContainer.class));
 		all.add(C(StorageGraphBuilder.class).req(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoService.class).req(AlertDao.class).req(StorageAlertInfoRTContainer.class)
+		all.add(C(StorageAlertInfoManager.class).req(AlertDao.class).req(StorageAlertInfoRTContainer.class)
 		      .req(StorageGraphBuilder.class));
 
 		return all;

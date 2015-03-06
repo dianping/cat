@@ -115,8 +115,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoService</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoService</implementation>
+			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
+			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -5353,7 +5353,7 @@
 					<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoService</role>
+					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.StorageGroupConfigManager</role>
@@ -5377,8 +5377,8 @@
 			<implementation>com.dianping.cat.report.page.storage.StorageMergeHelper</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoService</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoService</implementation>
+			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
+			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>

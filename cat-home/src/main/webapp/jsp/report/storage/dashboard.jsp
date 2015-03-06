@@ -21,12 +21,12 @@
   	<c:set var="alertInfo" value="${model.alertInfo}" />
   	
 	<table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
-	<c:forEach var="entry" items="${model.departments}" varStatus="index">
-	<tr>
-		<td width="10%" rowspan="${w:size(entry.value.productlines)}">${entry.key}</td>
+	<c:forEach var="entry" items="${model.departments}">
+		<tr>
+		<td width="8%" rowspan="${w:size(entry.value.productlines)}" class="center" style="vertical-align:middle">${entry.key}</td>
+			<c:forEach var="e" items="${entry.value.productlines}" varStatus="index">
 			<c:if test="${index.index != 0}"><tr></c:if>
-			<c:forEach var="e" items="${entry.value.productlines}">
-				<td width="10%">${e.key}</td>
+				<td width="8%" class="center" style="vertical-align:middle">${e.key}</td>
 				<td>
 				<c:forEach var="storage" items="${e.value.storages}">
 					<c:set var="storageInfo" value="${alertInfo.storages[storage]}" />
@@ -35,59 +35,59 @@
 							  <div class="modal-dialog" style="width:1100px">
 							    <div class="modal-content">
 							      <div class="modal-body">
-							      	<h4 class=" text-center">数据库：<a href="/cat/r/storage?op=database&domain=${storage}&ip=All">${storage}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：第&nbsp;&nbsp;<span  class="text-danger">${model.minute}</span>&nbsp;&nbsp;分</h4>
+							      	<h4 class=" text-center"><strong>数据库：[&nbsp;<a href="/cat/r/storage?op=database&domain=${storage}&ip=All">${storage}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：第&nbsp;&nbsp;<span  class="text-danger">${model.minute}</span>&nbsp;&nbsp;分</strong></h4>
 							      	<table class="table table-striped table-condensed table-hover table-bordered">
-										<tr class="text-success">
-											<th width="10%">机器</th>
-											<th width="20%">方法</th>
-											<th width="20%">指标</th>
-											<th width="50%">内容</th>
-										</tr>
+										<thead><tr>
+											<th width="10%" class="center">机器</th>
+											<th width="10%" class="center">方法</th>
+											<th width="10%" class="center">指标</th>
+											<th width="70%" class="center">内容</th>
+										</tr></thead>
 										<c:forEach var="machine_entry" items="${storageInfo.machines}">
 											<tr>
 											<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
-											<c:if test="${machine_entry.value.level == 1}">
-													<span class="text-warning">
+												<c:if test="${machine_entry.value.level == 1}">
+													<span class="text-warning">${machine_entry.key}</span>
 												</c:if>
 												<c:if test="${machine_entry.value.level == 2}">
-													<span class="text-danger">
+													<span class="text-danger"><strong>${machine_entry.key}</strong></span>
 												</c:if>
-											${machine_entry.key}</span></td>
+											</td>
 											<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
-											<c:if test="${index1.index != 0}"><tr></c:if>
+												<c:if test="${index1.index != 0}"><tr></c:if>
+												
 												<td rowspan="${operation_entry.value.count}" class="center" style="vertical-align:middle">
 												<c:if test="${operation_entry.value.level == 1}">
-													<span class="text-warning">
+													<span class="text-warning">${operation_entry.key}</span>
 												</c:if>
 												<c:if test="${operation_entry.value.level == 2}">
-													<span class="text-danger">
+													<span class="text-danger"><strong>${operation_entry.key}</strong></span>
 												</c:if>
-												${operation_entry.key}</span></td>
+												</td>
 												<c:forEach var="target_entry" items="${operation_entry.value.targets}" varStatus="index2">
 													<c:if test="${index2.index != 0}"><tr></c:if>
 													<td rowspan="${target_entry.value.count}" class="center" style="vertical-align:middle">
 													<c:if test="${target_entry.value.level == 1}">
-													<span class="text-warning">
+													<span class="text-warning">${target_entry.key}</span>
 													</c:if>
 													<c:if test="${target_entry.value.level == 2}">
-														<span class="text-danger">
+														<span class="text-danger"><strong>${target_entry.key}</strong></span>
 													</c:if>
-													${target_entry.key}</span></td>
 													<c:forEach var="detail" items="${target_entry.value.details}" varStatus="index3">
 														<c:if test="${index3.index != 0}"><tr></c:if>
 															<td>
 															<c:if test="${detail.level == 1}">
-															<span class="text-warning">
+															<span class="text-warning">${detail.content}</span>
 															</c:if>
 															<c:if test="${detail.level == 2}">
-																<span class="text-danger">
+																<span class="text-danger"><strong>${detail.content}</span></strong>
 															</c:if>
-															${detail.content}</span></td>
+															</td>
 														<c:if test="${index3.index != 0}"></tr></c:if>
 													</c:forEach>
-													<c:if test="${index4.index != 0}"></tr></c:if>
+													<c:if test="${index2.index != 0}"></tr></c:if>
 												</c:forEach>
-												<c:if test="${index3.index != 0}"></tr></c:if>
+												<c:if test="${index1.index != 0}"></tr></c:if>
 											</c:forEach>
 											</tr>
 										</c:forEach>
@@ -97,21 +97,34 @@
 							  </div>
 							</div>	
 					</c:if>
+					
+					<c:if test="${storageInfo == null or storageInfo.level == 0 }">
+						<div class="modal fade" id="${storage}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+						  <div class="modal-dialog" style="width:1100px">
+						    <div class="modal-content">
+						      <div class="modal-body">
+						      	<h4 class="text-center"><strong>数据库：[&nbsp;<a href="/cat/r/storage?op=database&domain=${storage}&ip=All">${storage}</a>&nbsp;]&nbsp;&nbsp;&nbsp;<span class="text-success">正常！</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：第&nbsp;&nbsp;<span  class="text-danger">${model.minute}</span>&nbsp;&nbsp;分</strong></h4>
+						      </div>
+						    </div>
+						  </div>
+						</div>	
+					</c:if>
 				<c:choose>
 					<c:when test="${storageInfo != null && storageInfo.level == 1}">
-						<button class="btn btn-app btn-lg radius-4 btn-warning alert-modal" data-id="${storage}" style="height: 50px; width: 100px">${storage}<span class="label label-inverse arrowed-in">${alertInfo.storages[storage].count }</span></button>
+						<button class="btn btn-app btn-lg radius-4 btn-warning alert-modal" data-id="${storage}" style="height: 50px; min-width: 100px; width: auto">${storage}<span class="label label-inverse arrowed-in">${alertInfo.storages[storage].count }</span></button>
 					</c:when>
 					<c:when test="${storageInfo != null && storageInfo.level == 2}">
-						<button class="btn btn-app btn-lg radius-4 btn-danger alert-modal" data-id="${storage}" style="height: 50px; width: 100px">${storage}<span class="label label-inverse arrowed-in">${alertInfo.storages[storage].count }</span></button>
+						<button class="btn btn-app btn-lg radius-4 btn-danger alert-modal" data-id="${storage}" style="height: 50px;  min-width: 100px; width: auto">${storage}<span class="label label-inverse arrowed-in">${alertInfo.storages[storage].count }</span></button>
 					</c:when>
 					<c:otherwise>
-						<button class="btn btn-app btn-lg radius-4 btn-success alert-modal" onclick="document.location.href='/cat/r/storage?op=database&domain=${storage}&ip=All';" style="height: 50px; width: 100px">${storage}<span class="label label-inverse arrowed-in">${alertInfo.storages[storage].count }</span></button>
+						<button class="btn btn-app btn-lg radius-4 btn-success alert-modal" data-id="${storage}" style="height: 50px;  min-width: 100px; width: auto">${storage}</button>
 					</c:otherwise>
 				</c:choose>
 				</c:forEach>
 				</td>
-			</tr>
+				<c:if test="${index.index != 0}"></tr></c:if>
 			</c:forEach>
+			</tr>
 	</c:forEach>
 	</table>
 </jsp:body>

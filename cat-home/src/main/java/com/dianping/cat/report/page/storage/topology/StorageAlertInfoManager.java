@@ -14,7 +14,7 @@ import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.alert.AlertType;
 
-public class StorageAlertInfoService {
+public class StorageAlertInfoManager {
 
 	@Inject
 	private AlertDao m_alertDao;
@@ -37,7 +37,6 @@ public class StorageAlertInfoService {
 	private StorageAlertInfo buildFromDatabase(long time, int minute) {
 		Date start = new Date(time + minute * TimeHelper.ONE_MINUTE);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1000);
-		System.out.println(start + " " + end);
 		StorageAlertInfo alertInfo = new StorageAlertInfo("SQL");
 
 		try {

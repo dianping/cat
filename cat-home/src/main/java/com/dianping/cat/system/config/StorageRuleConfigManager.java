@@ -66,6 +66,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 
 	private void refreshData() {
 		Map<String, Rule> rules = m_config.getRules();
+		Map<String, RuleMappingConfig> mapping = new HashMap<String, RuleMappingConfig>();
 
 		for (Entry<String, Rule> entry : rules.entrySet()) {
 			String[] conditions = entry.getValue().getId().split(FIELD_SEPARATOR);
@@ -74,18 +75,19 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 				String machine = conditions[1];
 				String operation = conditions[2];
 				String attribute = conditions[3];
-				RuleMappingConfig ruleMappingConfig = m_ruleMappings.get(name);
+				RuleMappingConfig ruleMappingConfig = mapping.get(name);
 
 				if (ruleMappingConfig == null) {
 					ruleMappingConfig = new RuleMappingConfig(name);
 
-					m_ruleMappings.put(name, ruleMappingConfig);
+					mapping.put(name, ruleMappingConfig);
 				}
 				IpMappingConfig ip = ruleMappingConfig.findOrCreate(machine);
 				OperationConfig op = ip.findOrCreate(operation);
 				op.addRule(attribute, entry.getValue());
 			}
 		}
+		m_ruleMappings = mapping;
 	}
 
 	@Override
