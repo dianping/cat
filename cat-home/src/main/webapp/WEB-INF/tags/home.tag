@@ -49,6 +49,13 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
+					<li id="deployButton" >
+						<a href="/cat/r/home?op=view&docName=deploy">
+							<i class="menu-icon fa fa-cogs"></i>
+							<span class="menu-text">部署文档</span>
+						</a>
+						<b class="arrow"></b>
+					</li>
 					<li id="userButton" >
 						<a href="/cat/r/home?op=view&docName=user">
 							<i class="menu-icon fa fa-users"></i>
