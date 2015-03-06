@@ -92,7 +92,7 @@ import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
 import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
@@ -109,6 +109,7 @@ import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TransactionRuleConfigManager;
@@ -199,7 +200,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SpliterManager.class));
 
-		all.add(C(StorageAlertInfoManager.class));
+		all.add(C(StorageAlertInfoRTContainer.class));
 
 		all.add(C(StorageGraphBuilder.class));
 
@@ -246,7 +247,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageDatabaseAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageDatabaseRuleConfigManager.class, StorageGraphBuilder.class));
+		      .req(StorageDatabaseRuleConfigManager.class, StorageGroupConfigManager.class, StorageGraphBuilder.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 

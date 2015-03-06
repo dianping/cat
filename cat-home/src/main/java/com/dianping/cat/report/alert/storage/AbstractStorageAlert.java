@@ -66,7 +66,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private double[] buildArrayData(int start, int end, ReportFetcherParam param, StorageReport report) {
 		String machine = param.getMachine();
-		String attribute = param.getAttribute();
+		String target = param.getTarget();
 		String method = param.getMethod();
 		Operation op = report.findOrCreateMachine(machine).findOrCreateDomain(Constants.ALL)
 		      .findOrCreateOperation(method);
@@ -75,24 +75,24 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		double[] datas = new double[60];
 		double[] result = new double[length];
 
-		if (StorageAttribute.COUNT.equalsIgnoreCase(attribute)) {
+		if (StorageAttribute.COUNT.equalsIgnoreCase(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getCount();
 			}
-		} else if (StorageAttribute.LONG.equalsIgnoreCase(attribute)) {
+		} else if (StorageAttribute.LONG.equalsIgnoreCase(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getLongCount();
 			}
-		} else if (StorageAttribute.AVG.equals(attribute)) {
+		} else if (StorageAttribute.AVG.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getAvg();
 			}
-		} else if (StorageAttribute.ERROR.equals(attribute)) {
+		} else if (StorageAttribute.ERROR.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
-				datas[entry.getKey()] = entry.getValue().getError();
+				datas[entry.getKey()] = entry.getValue().getError() / entry.getValue().getCount();
 			}
 		} else {
-			Cat.logError(new RuntimeException("Unrecognized storage databse alert attribute: " + attribute));
+			Cat.logError(new RuntimeException("Unrecognized storage databse alert attribute: " + target));
 		}
 		System.arraycopy(datas, start, result, 0, length);
 
@@ -163,7 +163,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeReport(report, Constants.ALL, Constants.ALL);
+			return m_reportMergeHelper.mergeAllDomains(report, Constants.ALL);
 		} else {
 			return null;
 		}
@@ -279,14 +279,14 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		private String m_method;
 
-		private String m_attribute;
+		private String m_target;
 
 		public ReportFetcherParam(String name, String machine, String param) {
 			List<String> fields = Splitters.by(";").split(param);
 			m_name = name;
 			m_machine = machine;
 			m_method = fields.get(2);
-			m_attribute = fields.get(3);
+			m_target = fields.get(3);
 		}
 
 		public String getName() {
@@ -301,13 +301,13 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			return m_method;
 		}
 
-		public String getAttribute() {
-			return m_attribute;
+		public String getTarget() {
+			return m_target;
 		}
 
 		@Override
 		public String toString() {
-			return m_machine + " " + m_method + " " + m_attribute;
+			return m_machine + ";" + m_method + ";" + m_target;
 		}
 
 	}

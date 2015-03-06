@@ -1,5 +1,10 @@
 package com.dianping.cat.system.config;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -10,6 +15,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
 import com.dianping.cat.home.storage.transform.DefaultSaxParser;
@@ -32,7 +38,7 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String CACHE_TYPE = "cache";
 
-	public StorageGroupConfig getStorageGroupConfig() {
+	public StorageGroupConfig getConfig() {
 		return m_config;
 	}
 
@@ -105,4 +111,78 @@ public class StorageGroupConfigManager implements Initializable {
 		return true;
 	}
 
+	public Map<String, Department> queryStorageDepartments() {
+		Map<String, Department> departments = new LinkedHashMap<String, Department>();
+
+		for (Storage storage : queryStorageGroup(DATABASE_TYPE).getStorages().values()) {
+			String id = storage.getId();
+			String department = storage.getDepartment();
+			String product = storage.getProductline();
+			Department depart = departments.get(department);
+
+			if (depart == null) {
+				depart = new Department(department);
+
+				departments.put(department, depart);
+			}
+
+			depart.findOrCreateProductline(product).addStorage(id);
+		}
+		return departments;
+	}
+
+	public static class Department {
+
+		private String m_id;
+
+		private Map<String, Productline> m_productlines = new LinkedHashMap<String, Productline>();
+
+		public Department(String id) {
+			m_id = id;
+		}
+
+		public String getId() {
+			return m_id;
+		}
+
+		public Map<String, Productline> getProductlines() {
+			return m_productlines;
+		}
+
+		public Productline findOrCreateProductline(String productline) {
+			Productline product = m_productlines.get(productline);
+
+			if (product == null) {
+				product = new Productline(productline);
+
+				m_productlines.put(productline, product);
+			}
+			return product;
+		}
+	}
+
+	public static class Productline {
+
+		private String m_id;
+
+		private List<String> m_storages = new LinkedList<String>();
+
+		public Productline(String id) {
+			m_id = id;
+		}
+
+		public String getId() {
+			return m_id;
+		}
+
+		public List<String> addStorage(String storage) {
+			m_storages.add(storage);
+			return m_storages;
+		}
+
+		public List<String> getStorages() {
+			return m_storages;
+		}
+
+	}
 }

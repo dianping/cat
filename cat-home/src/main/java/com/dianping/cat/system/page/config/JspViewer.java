@@ -92,6 +92,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DATABASE_RULE_ADD_OR_UPDATE_SUBMIT.getPath();
 		case DATABASE_RULE_DELETE:
 			return JspFile.DATABASE_RULE_DELETE.getPath();
+		case STORAGE_GROUP_CONFIG_UPDATE:
+			return JspFile.STORAGE_GROUP_CONFIG_UPDATE.getPath();
 		case SYSTEM_RULE_CONFIG_LIST:
 			return JspFile.SYSTEM_RULE_CONFIG_LIST.getPath();
 		case SYSTEM_RULE_ADD_OR_UPDATE:

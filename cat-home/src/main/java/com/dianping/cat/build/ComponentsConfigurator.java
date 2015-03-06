@@ -28,6 +28,7 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
@@ -47,6 +48,9 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoService;
+import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
@@ -71,6 +75,7 @@ import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.StorageCacheRuleConfigManager;
 import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
@@ -109,6 +114,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// update project database
 		all.add(C(ProjectUpdateTask.class).req(ProjectService.class, HostinfoService.class)//
 		      .req(ReportService.class, TransactionAnalyzer.ID));
+
+		all.add(C(StorageAlertInfoRTContainer.class));
+		all.add(C(StorageGraphBuilder.class).req(StorageAlertInfoRTContainer.class));
+		all.add(C(StorageAlertInfoService.class).req(AlertDao.class).req(StorageAlertInfoRTContainer.class)
+		      .req(StorageGraphBuilder.class));
 
 		return all;
 	}
@@ -177,6 +187,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(StorageDatabaseRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
+		all.add(C(StorageGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));

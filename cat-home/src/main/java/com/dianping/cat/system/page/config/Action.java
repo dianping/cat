@@ -179,6 +179,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	STORAGE_RULE_DELETE("storageRuleDelete"),
 
+	STORAGE_GROUP_CONFIG_UPDATE("storageGroupConfigUpdate"),
+
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
 	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),

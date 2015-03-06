@@ -17,17 +17,15 @@
 				<c:set var="name" value="${conditions[0]}" />
 				<c:set var="machine" value="${conditions[1]}" />
 				<c:set var="method" value="${conditions[2]}" />
-				<c:set var="attribute" value="${conditions[3]}" />
-				<c:set var="domain" value="${conditions[4]}" />
+				<c:set var="target" value="${conditions[3]}" />
 				<tr>
 					<td>&nbsp;&nbsp;名字&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>
 					&nbsp;&nbsp;机器&nbsp;&nbsp;<input name="machine" id="machine" value="${machine}"/>
 					&nbsp;&nbsp;方法&nbsp;&nbsp;<input name="method" id="method" value="${method}"/>（默认为All）
-					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="attribute" id="attribute" style="width:200px;">
-													<option value="count">执行次数</option>
-								                	<option value="avg">错误率</option>
+					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="target" id="target" style="width:200px;">
+													<option value="error">错误率</option>
+								                	<option value="avg">响应时间</option>
 								            	</select>
-	            	&nbsp;&nbsp;项目&nbsp;&nbsp;<input name="domain" id="domain" value="${name}"/>（默认为All）
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
@@ -40,50 +38,62 @@
 <script type="text/javascript">
 function update() {
     var configStr = generateConfigsJsonString();
-    var domain = $("#domain").val();
-    if(domain == "undefined" || domain == ""){
-		if($("#errorMessage").length == 0){
-			$("#domain").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
-		}
-		return;
-	}
-    var type = $("#type").val();
-    if(type == "undefined" || type == ""){
-		if($("#errorMessage").length == 0){
-			$("#type").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
-		}
-		return;
-	}
     var name = $("#name").val();
     if(name == "undefined" || name == ""){
-		name = "All";
-		$("#domain").val("All");
+		if($("#errorMessage").length == 0){
+			$("#name").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+		}
+		return;
+	}
+    var machine = $("#machine").val();
+    if(machine == "undefined" || machine == ""){
+		if($("#errorMessage").length == 0){
+			$("#machine").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+		}
+		return;
+	}
+    var method = $("#method").val();
+    if(method == "undefined" || method == ""){
+    	if($("#errorMessage").length == 0){
+			$("#machine").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+		}
+		return;
+	}
+    var target = $("#target").val();
+    if(target == "undefined" || target == ""){
+    	if($("#errorMessage").length == 0){
+			$("#target").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+		}
+		return;
 	}
     
-    var monitor = $("#monitor").val();
     var split = ";";
-    var id = domain + split + type + split + name + split + monitor;
-    window.location.href = "?op=transactionRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    var id = name + split + machine + split + method + split + target;
+    window.location.href = "?op=storageRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
-			document.getElementById("domain").disabled = true;
-			document.getElementById("type").disabled = true;
 			document.getElementById("name").disabled = true;
-			document.getElementById("monitor").disabled = true;
-			var monitor = ruleId.split(';')[3];
-			$('#monitor').val(monitor);
+			document.getElementById("machine").disabled = true;
+			document.getElementById("method").disabled = true;
+			document.getElementById("target").disabled = true;
+			var target = ruleId.split(';')[3];
+			$('#target').val(target);
 		}
 		var name = $("#name").val();
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}
-		
-		$('#application_config').addClass('active open');
-		$('#transactionRule').addClass('active');
+		$('#alert_config').addClass('active open');
+		<c:if test="${empty payload.type or payload.type eq 'database'}">
+			$('#storageDatabaseRule').addClass('active');
+		</c:if>
+		<c:if test="${payload.type eq 'cache'}">
+			$('#storageCacheRule').addClass('active');
+		</c:if>
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();
 		})

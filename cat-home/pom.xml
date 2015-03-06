@@ -155,7 +155,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/network-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-summary-manifest.xml,
@@ -171,6 +170,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/exception-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/activity-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-group-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

@@ -25,7 +25,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, RuleMappingConfig> m_ruleMappings;
+	private Map<String, RuleMappingConfig> m_ruleMappings = new HashMap<String, RuleMappingConfig>();
 
 	public static final String ALL = Constants.ALL;
 
@@ -81,8 +81,9 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 
 					m_ruleMappings.put(name, ruleMappingConfig);
 				}
-
-				ruleMappingConfig.findOrCreate(machine).findOrCreate(operation).addRule(attribute, entry.getValue());
+				IpMappingConfig ip = ruleMappingConfig.findOrCreate(machine);
+				OperationConfig op = ip.findOrCreate(operation);
+				op.addRule(attribute, entry.getValue());
 			}
 		}
 	}
@@ -121,7 +122,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 			}
 		}
 
-		return null;
+		return rules;
 	}
 
 	public static class RuleMappingConfig {
@@ -144,7 +145,10 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 			if (config != null) {
 				return config;
 			} else {
-				return new IpMappingConfig(ip);
+				config = new IpMappingConfig(ip);
+
+				m_ips.put(ip, config);
+				return config;
 			}
 		}
 
@@ -154,6 +158,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	}
 
 	public static class IpMappingConfig {
+
 		private String m_ip;
 
 		private Map<String, OperationConfig> m_operations = new HashMap<String, OperationConfig>();
@@ -176,7 +181,10 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 			if (config != null) {
 				return config;
 			} else {
-				return new OperationConfig(operation);
+				config = new OperationConfig(operation);
+
+				m_operations.put(operation, config);
+				return config;
 			}
 		}
 
@@ -186,6 +194,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	}
 
 	public static class OperationConfig {
+
 		private String m_operation;
 
 		private Map<String, Rule> m_rules = new HashMap<String, Rule>();

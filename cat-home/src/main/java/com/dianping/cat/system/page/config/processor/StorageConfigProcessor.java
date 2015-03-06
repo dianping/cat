@@ -23,24 +23,22 @@ public class StorageConfigProcessor extends BaseProcesser {
 
 		if ("cache".equals(type)) {
 			configManager = m_cacheConfigManager;
-		} else if ("database".equals(type)) {
-			configManager = m_databaseConfigManager;
 		} else {
-			throw new RuntimeException("Error storage type " + type);
+			configManager = m_databaseConfigManager;
 		}
 
 		switch (action) {
-		case TRANSACTION_RULE:
+		case STORAGE_RULE:
 			model.setRules(configManager.getMonitorRules().getRules().values());
 			break;
-		case TRANSACTION_RULE_ADD_OR_UPDATE:
+		case STORAGE_RULE_ADD_OR_UPDATE:
 			generateRuleConfigContent(payload.getRuleId(), configManager, model);
 			break;
-		case TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT:
+		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(addSubmitRule(configManager, payload.getRuleId(), "", payload.getConfigs()));
 			model.setRules(configManager.getMonitorRules().getRules().values());
 			break;
-		case TRANSACTION_RULE_DELETE:
+		case STORAGE_RULE_DELETE:
 			model.setOpState(deleteRule(configManager, payload.getRuleId()));
 			model.setRules(configManager.getMonitorRules().getRules().values());
 			break;
@@ -48,5 +46,4 @@ public class StorageConfigProcessor extends BaseProcesser {
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
-
 }
