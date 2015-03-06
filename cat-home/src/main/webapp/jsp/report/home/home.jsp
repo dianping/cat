@@ -15,6 +15,9 @@
 	   	<c:when test="${payload.docName == 'release'}">
 	   		<%@ include file="releasenotes.jsp"%>
 	   	</c:when>
+	   	<c:when test="${payload.docName == 'deploy'}">
+	   		<%@ include file="deploy.jsp"%>
+	   	</c:when>
 	   	<c:when test="${payload.docName == 'integration'}">
 	   		<%@ include file="integrating.jsp"%>
 	   	</c:when>
