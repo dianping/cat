@@ -10,10 +10,10 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
-import com.dianping.cat.consumer.productline.ProductLineConfig;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;

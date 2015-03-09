@@ -11,12 +11,12 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.service.BaselineService;

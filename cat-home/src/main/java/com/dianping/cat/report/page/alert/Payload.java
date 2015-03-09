@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
@@ -12,7 +13,6 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
-import com.site.helper.Splitters;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	private ReportPage m_page;

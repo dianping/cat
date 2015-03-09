@@ -24,13 +24,13 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.config.entity.MetricConfig;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.consumer.metric.config.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.productline.ProductLineConfig;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;

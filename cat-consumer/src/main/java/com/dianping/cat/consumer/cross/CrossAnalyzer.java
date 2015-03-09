@@ -5,6 +5,7 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -19,7 +20,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.service.ReportManager;
-import com.site.lookup.util.StringUtils;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";

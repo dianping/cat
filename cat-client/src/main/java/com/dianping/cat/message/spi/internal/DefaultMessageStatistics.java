@@ -28,15 +28,11 @@ public class DefaultMessageStatistics implements MessageStatistics {
 	@Override
 	public void onBytes(int bytes) {
 		m_bytes += bytes;
+		m_produced++;
 	}
 
 	@Override
 	public void onOverflowed(MessageTree tree) {
 		m_overflowed++;
-	}
-
-	@Override
-	public void onSending(MessageTree tree) {
-		m_produced++;
 	}
 }

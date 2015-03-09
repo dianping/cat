@@ -26,13 +26,13 @@ import javax.naming.ldap.InitialLdapContext;
 import javax.naming.ldap.LdapContext;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.system.page.login.service.Token;
-import com.site.lookup.util.StringUtils;
 
 public class LDAPService {
 
@@ -40,6 +40,11 @@ public class LDAPService {
 	private ServerConfigManager m_serverConfigManager;
 
 	public Token authenticate(String userName, String password) throws Exception {
+		// add the default admin account
+		if ("catadmin".equals(userName) && "catadmin".equals(password)) {
+			return new Token(userName, userName);
+		}
+
 		Ldap ldap = m_serverConfigManager.getLdap();
 		LdapContext context = null;
 		Hashtable<String, String> env = new Hashtable<String, String>();

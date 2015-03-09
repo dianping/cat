@@ -9,7 +9,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
-import com.dianping.cat.message.ForkedTransaction;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -21,13 +20,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
@@ -37,9 +36,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Inject
 	private TransportManager m_transportManager;
-
-	@Inject
-	private MessageStatistics m_statistics;
 
 	@Inject
 	private MessageIdFactory m_factory;
@@ -106,9 +102,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
-			if (m_statistics != null) {
-				m_statistics.onSending(tree);
-			}
 			reset();
 		} else {
 			m_throttleTimes++;

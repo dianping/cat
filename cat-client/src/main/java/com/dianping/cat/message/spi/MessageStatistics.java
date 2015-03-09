@@ -11,5 +11,4 @@ public interface MessageStatistics {
 
 	public void onOverflowed(MessageTree tree);
 
-	public void onSending(MessageTree tree);
 }

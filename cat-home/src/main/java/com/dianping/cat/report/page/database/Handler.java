@@ -16,7 +16,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;

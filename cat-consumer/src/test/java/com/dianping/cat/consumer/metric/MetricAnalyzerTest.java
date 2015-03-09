@@ -24,13 +24,13 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dal.BusinessReport;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.productline.ProductLineConfig;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;

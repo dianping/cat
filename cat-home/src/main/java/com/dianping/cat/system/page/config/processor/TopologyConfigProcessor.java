@@ -6,7 +6,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.productline.ProductLineConfigManager;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
