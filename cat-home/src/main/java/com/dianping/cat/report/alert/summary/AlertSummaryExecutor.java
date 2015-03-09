@@ -88,7 +88,9 @@ public class AlertSummaryExecutor {
 			List<String> receivers = builderReceivers(receiverStr);
 			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
 
-			m_sendManager.sendAlert(AlertChannel.MAIL, message);
+			if (receivers.size() > 0) {
+				m_sendManager.sendAlert(AlertChannel.MAIL, message);
+			}
 		}
 
 		return content;
