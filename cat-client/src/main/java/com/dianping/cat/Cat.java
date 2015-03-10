@@ -32,13 +32,13 @@ import com.dianping.cat.message.spi.MessageManager;
 public class Cat {
 	private static Cat s_instance = new Cat();
 
+	private static volatile boolean s_init = false;
+	
 	private MessageProducer m_producer;
 
 	private MessageManager m_manager;
 
 	private PlexusContainer m_container;
-
-	private static volatile boolean s_init = false;
 
 	private static void checkAndInitialize() {
 		if (!s_init) {
