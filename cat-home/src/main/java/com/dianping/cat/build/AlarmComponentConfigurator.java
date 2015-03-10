@@ -108,7 +108,7 @@ import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
 import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
-import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
@@ -247,7 +247,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageDatabaseAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageDatabaseRuleConfigManager.class, StorageGroupConfigManager.class, StorageGraphBuilder.class));
+		      .req(StorageSQLRuleConfigManager.class, StorageGroupConfigManager.class, StorageGraphBuilder.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 

@@ -19,6 +19,7 @@ import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
 import com.dianping.cat.home.storage.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageGroupConfigManager implements Initializable {
 
@@ -33,10 +34,6 @@ public class StorageGroupConfigManager implements Initializable {
 	private StorageGroupConfig m_config;
 
 	private static final String CONFIG_NAME = "storageGroup";
-
-	public static final String DATABASE_TYPE = "database";
-
-	public static final String CACHE_TYPE = "cache";
 
 	public static final String DEFAULT = "Default";
 
@@ -116,7 +113,7 @@ public class StorageGroupConfigManager implements Initializable {
 	public Map<String, Department> queryStorageDepartments() {
 		Map<String, Department> departments = new LinkedHashMap<String, Department>();
 
-		for (Storage storage : queryStorageGroup(DATABASE_TYPE).getStorages().values()) {
+		for (Storage storage : queryStorageGroup(StorageConstants.SQL_TYPE).getStorages().values()) {
 			String id = storage.getId();
 			String department = storage.getDepartment();
 			String product = storage.getProductline();
@@ -137,7 +134,7 @@ public class StorageGroupConfigManager implements Initializable {
 		Map<String, Department> departments = new LinkedHashMap<String, Department>();
 
 		for (String id : ids) {
-			Storage storage = queryStorageGroup(DATABASE_TYPE).getStorages().get(id);
+			Storage storage = queryStorageGroup(StorageConstants.SQL_TYPE).getStorages().get(id);
 			String department;
 			String product;
 

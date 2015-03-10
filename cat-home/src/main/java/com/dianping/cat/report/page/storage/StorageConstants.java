@@ -17,5 +17,12 @@ public class StorageConstants {
 
 	public static final String LONG = "long";
 
-	public static final List<String> TITLES = Arrays.asList("count", "avg", "error", "long");
+	public static final List<String> TITLES = Arrays.asList(COUNT, AVG, ERROR, LONG);
+
+	public static final int MINUTE_COUNT = 8;
+
+	public static final int TOP_COUNT = 10;
+
+	public static final List<String> CACHE_METHODS = Arrays.asList("add", "get", "mGet", "remove");
+
 }

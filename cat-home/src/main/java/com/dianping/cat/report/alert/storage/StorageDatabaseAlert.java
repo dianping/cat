@@ -3,15 +3,15 @@ package com.dianping.cat.report.alert.storage;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageRuleConfigManager;
 
 public class StorageDatabaseAlert extends AbstractStorageAlert {
 
 	@Inject
-	private StorageDatabaseRuleConfigManager m_configManager;
+	private StorageSQLRuleConfigManager m_configManager;
 
-	public static final String ID = AlertType.StorageDatabase.getName();
+	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String getName() {

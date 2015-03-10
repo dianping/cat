@@ -74,7 +74,7 @@ import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.StorageCacheRuleConfigManager;
-import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
@@ -185,7 +185,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(StorageDatabaseRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+		all.add(C(StorageSQLRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(StorageGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,

@@ -71,31 +71,59 @@ public class Handler implements PageHandler<Context> {
 		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.LONG)));
 	}
 
-	private void buildOperations(Payload payload, Model model) {
+	private Set<String> buildOperations(Payload payload, Model model) {
 		String operations = payload.getOperations();
+		Set<String> ops = new HashSet<String>();
 
 		if (StringUtils.isNotEmpty(operations)) {
 			String[] op = operations.split(";");
-			Set<String> ops = new HashSet<String>();
 
 			for (int i = 0; i < op.length; i++) {
 				ops.add(op[i]);
 			}
-			model.setOperations(ops);
 		}
+		return ops;
 	}
 
 	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
+		Set<String> ops = buildOperations(payload, model);
+
 		if (storageReport != null) {
 			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+
+			if (ops.size() > 0) {
+				StorageOperationFilter filter = new StorageOperationFilter(ops);
+				filter.visitStorageReport(storageReport);
+
+				storageReport = filter.getStorageReport();
+			} else {
+				String type = payload.getType();
+				Set<String> reportOps = storageReport.getOps();
+
+				if (StorageConstants.SQL_TYPE.equals(type)) {
+					ops = reportOps;
+				} else if (StorageConstants.CACHE_TYPE.equals(type)) {
+
+					for (String method : StorageConstants.CACHE_METHODS) {
+						if (reportOps.contains(method)) {
+							ops.add(method);
+						}
+					}
+				}
+			}
+
 			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 			storageReport = sorter.getSortedReport();
 
 			model.setReport(storageReport);
-			model.setOperations(storageReport.getOps());
 		}
-		buildOperations(payload, model);
+
+		model.setOperations(ops);
 		return storageReport;
+	}
+
+	private String buildReportId(Payload payload) {
+		return payload.getId() + "-" + payload.getType();
 	}
 
 	@Override
@@ -114,35 +142,19 @@ public class Handler implements PageHandler<Context> {
 		StorageReport storageReport = null;
 
 		switch (payload.getAction()) {
-		case HOURLY_DATABASE:
-			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
+		case HOURLY_STORAGE:
+			storageReport = queryHourlyReport(payload);
 
 			buildReport(payload, model, storageReport);
 			break;
-		case HOURLY_CACHE:
-			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
-
-			buildReport(payload, model, storageReport);
-			break;
-		case HOURLY_DATABASE_GRAPH:
-			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
+		case HOURLY_STORAGE_GRAPH:
+			storageReport = queryHourlyReport(payload);
 
 			storageReport = buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
-		case HOURLY_CACHE_GRAPH:
-			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
-
-			buildReport(payload, model, storageReport);
-			buildLineCharts(model, payload, ipAddress, storageReport);
-			break;
-		case HISTORY_DATABASE:
-			storageReport = queryHistoryReport(payload, StorageConstants.SQL_TYPE);
-
-			buildReport(payload, model, storageReport);
-			break;
-		case HISTORY_CACHE:
-			storageReport = queryHistoryReport(payload, StorageConstants.CACHE_TYPE);
+		case HISTORY_STORAGE:
+			storageReport = queryHistoryReport(payload);
 
 			buildReport(payload, model, storageReport);
 			break;
@@ -197,16 +209,15 @@ public class Handler implements PageHandler<Context> {
 		return minute;
 	}
 
-	public StorageReport queryHistoryReport(Payload payload, String type) {
-		String id = payload.getId();
+	public StorageReport queryHistoryReport(Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStorageReport(id + "-" + type, start, end);
+		return m_reportService.queryStorageReport(buildReportId(payload), start, end);
 	}
 
-	private StorageReport queryHourlyReport(Payload payload, String type) {
-		ModelRequest request = new ModelRequest(payload.getId() + "-" + type, payload.getDate()).setProperty("ip",
+	private StorageReport queryHourlyReport(Payload payload) {
+		ModelRequest request = new ModelRequest(buildReportId(payload), payload.getDate()).setProperty("ip",
 		      payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {

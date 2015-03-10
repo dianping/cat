@@ -229,7 +229,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				StorageGroup groups = m_storageConfigManager.queryStorageGroup(StorageGroupConfigManager.DATABASE_TYPE);
+				StorageGroup groups = m_storageConfigManager.queryStorageGroup(StorageConstants.SQL_TYPE);
 
 				for (Entry<String, Storage> entry : groups.getStorages().entrySet()) {
 					try {

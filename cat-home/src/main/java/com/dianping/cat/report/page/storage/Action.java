@@ -1,17 +1,11 @@
 package com.dianping.cat.report.page.storage;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	HOURLY_DATABASE("database"),
+	HOURLY_STORAGE("view"),
 
-	HOURLY_CACHE("cache"),
+	HOURLY_STORAGE_GRAPH("hourlyGraph"),
 
-	HOURLY_DATABASE_GRAPH("hourlyDatabaseGraph"),
-
-	HOURLY_CACHE_GRAPH("hourlyCacheGraph"),
-
-	HISTORY_DATABASE("historyDatabase"),
-
-	HISTORY_CACHE("historyCache"),
+	HISTORY_STORAGE("history"),
 
 	DASHBOARD("dashboard");
 

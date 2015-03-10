@@ -298,8 +298,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.StorageSQLRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.StorageSQLRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -2819,7 +2819,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
-			<role-hint>StorageDatabase</role-hint>
+			<role-hint>SQL</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageDatabaseContactor</implementation>
 			<requirements>
 				<requirement>
@@ -2915,7 +2915,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
-			<role-hint>StorageDatabase</role-hint>
+			<role-hint>SQL</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageDatabaseDecorator</implementation>
 		</component>
 		<component>
@@ -3257,7 +3257,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.StorageGroupConfigManager</role>
@@ -6006,7 +6006,7 @@
 			<implementation>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
+					<role>com.dianping.cat.system.config.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.StorageCacheRuleConfigManager</role>
@@ -6017,8 +6017,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.StorageDatabaseRuleConfigManager</implementation>
+			<role>com.dianping.cat.system.config.StorageSQLRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.StorageSQLRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

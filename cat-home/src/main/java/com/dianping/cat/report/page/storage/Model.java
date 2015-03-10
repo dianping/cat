@@ -24,7 +24,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private StorageReport m_report;
 
-	private Set<String> m_operations = new HashSet<String>();
+	private Set<String> m_operations;
 
 	private String m_countTrend;
 
@@ -82,7 +82,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.HOURLY_DATABASE;
+		return Action.HOURLY_STORAGE;
 	}
 
 	public Map<String, Department> getDepartments() {

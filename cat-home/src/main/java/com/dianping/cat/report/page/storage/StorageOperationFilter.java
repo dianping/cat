@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.storage;
 
-import com.dianping.cat.Constants;
+import java.util.Set;
+
 import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
@@ -8,7 +9,7 @@ import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.BaseVisitor;
 
-public class AllDomainMerger extends BaseVisitor {
+public class StorageOperationFilter extends BaseVisitor {
 
 	private StorageReport m_storageReport;
 
@@ -18,12 +19,18 @@ public class AllDomainMerger extends BaseVisitor {
 
 	private String m_currentDomain;
 
+	private Set<String> m_operations;
+
+	public StorageOperationFilter(Set<String> ops) {
+		m_operations = ops;
+	}
+
 	public StorageReport getStorageReport() {
 		return m_storageReport;
 	}
 
-	private void mergeOperation(Operation operation, String domain) {
-		Operation to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
+	private void mergeOperation(Operation operation) {
+		Operation to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(m_currentDomain)
 		      .findOrCreateOperation(m_currentOperation);
 
 		to.setCount(to.getCount() + operation.getCount());
@@ -33,8 +40,8 @@ public class AllDomainMerger extends BaseVisitor {
 		to.setAvg(to.getCount() > 0 ? to.getSum() / to.getCount() : 0);
 	}
 
-	private void mergeSegment(Segment segment, String domain) {
-		Segment to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
+	private void mergeSegment(Segment segment) {
+		Segment to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(m_currentDomain)
 		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
 
 		to.setCount(to.getCount() + segment.getCount());
@@ -53,23 +60,22 @@ public class AllDomainMerger extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		m_currentMachine = machine.getId();
-
 		super.visitMachine(machine);
 	}
 
 	@Override
 	public void visitOperation(Operation operation) {
-		m_currentOperation = operation.getId();
+		if (m_operations.contains(operation.getId())) {
+			m_currentOperation = operation.getId();
 
-		mergeOperation(operation, Constants.ALL);
-		mergeOperation(operation, m_currentDomain);
-		super.visitOperation(operation);
+			mergeOperation(operation);
+			super.visitOperation(operation);
+		}
 	}
 
 	@Override
 	public void visitSegment(Segment segment) {
-		mergeSegment(segment, Constants.ALL);
-		mergeSegment(segment, m_currentDomain);
+		mergeSegment(segment);
 		super.visitSegment(segment);
 	}
 
@@ -82,7 +88,6 @@ public class AllDomainMerger extends BaseVisitor {
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
 		m_storageReport.getOps().addAll(storageReport.getOps());
-
 		super.visitStorageReport(storageReport);
 	}
 

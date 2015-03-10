@@ -5,7 +5,7 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 
 public class StorageDatabaseDecorator extends Decorator {
 
-	public static final String ID = AlertType.StorageDatabase.getName();
+	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String generateContent(AlertEntity alert) {

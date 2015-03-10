@@ -54,7 +54,7 @@ public class StorageAlertInfoManager implements Initializable {
 		StorageAlertInfo alertInfo = m_alertInfoRTContainer.makeAlertInfo(StorageConstants.SQL_TYPE, start);
 
 		try {
-			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.StorageDatabase.getName(),
+			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.STORAGE_SQL.getName(),
 			      AlertEntity.READSET_FULL);
 
 			for (Alert alert : alerts) {
@@ -150,7 +150,7 @@ public class StorageAlertInfoManager implements Initializable {
 					Date end = new Date(current + TimeHelper.ONE_MINUTE - 1000);
 					StorageAlertInfo alertInfo = m_alertInfoRTContainer.makeAlertInfo(StorageConstants.SQL_TYPE, start);
 					List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end,
-					      AlertType.StorageDatabase.getName(), AlertEntity.READSET_FULL);
+					      AlertType.STORAGE_SQL.getName(), AlertEntity.READSET_FULL);
 
 					for (Alert alert : alerts) {
 						m_builder.parseAlertEntity(alert, alertInfo);
