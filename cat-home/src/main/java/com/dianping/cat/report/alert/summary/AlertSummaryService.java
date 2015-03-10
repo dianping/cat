@@ -7,7 +7,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.AlertSummary;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 
-public class AlertSummaryManager {
+public class AlertSummaryService {
 
 	@Inject
 	private AlertSummaryDao m_alertSummaryDao;

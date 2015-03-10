@@ -3352,8 +3352,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</role>
-			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</implementation>
+			<role>com.dianping.cat.report.alert.summary.build.AlertInfoBuilder</role>
+			<implementation>com.dianping.cat.report.alert.summary.build.AlertInfoBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
@@ -3364,8 +3364,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.summary.AlertSummaryManager</role>
-			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryManager</implementation>
+			<role>com.dianping.cat.report.alert.summary.AlertSummaryService</role>
+			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertSummaryDao</role>
@@ -3373,22 +3373,22 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 			<role-hint>AlertSummaryContentGenerator</role-hint>
-			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.AlertSummaryGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.AlertInfoBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.AlertSummaryManager</role>
+					<role>com.dianping.cat.report.alert.summary.AlertSummaryService</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 			<role-hint>FailureDecorator</role-hint>
-			<implementation>com.dianping.cat.report.alert.summary.FailureSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -3397,9 +3397,9 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+			<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 			<role-hint>AlterationSummaryContentGenerator</role-hint>
-			<implementation>com.dianping.cat.report.alert.summary.AlterationSummaryContentGenerator</implementation>
+			<implementation>com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
@@ -3414,19 +3414,19 @@
 					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlertSummaryContentGenerator</role-hint>
-					<field-name>m_alertSummaryContentGenerator</field-name>
+					<field-name>m_relatedBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>FailureDecorator</role-hint>
-					<field-name>m_failureSummaryContentGenerator</field-name>
+					<field-name>m_failureBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlterationSummaryContentGenerator</role-hint>
-					<field-name>m_alterationSummaryContentGenerator</field-name>
+					<field-name>m_alterationBuilder</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4617,19 +4617,19 @@
 			<implementation>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlertSummaryContentGenerator</role-hint>
-					<field-name>m_alertSummaryContentGenerator</field-name>
+					<field-name>m_relatedBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>FailureDecorator</role-hint>
-					<field-name>m_failureSummaryContentGenerator</field-name>
+					<field-name>m_failureBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.summary.SummaryContentGenerator</role>
+					<role>com.dianping.cat.report.alert.summary.build.SummaryBuilder</role>
 					<role-hint>AlterationSummaryContentGenerator</role-hint>
-					<field-name>m_alterationSummaryContentGenerator</field-name>
+					<field-name>m_alterationBuilder</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>

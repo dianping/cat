@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +19,7 @@ import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
-public class FailureSummaryContentGenerator extends SummaryContentGenerator {
+public class FailureSummaryBuilder extends SummaryBuilder {
 
 	public static final String ID = "FailureDecorator";
 
