@@ -38,11 +38,14 @@ public class Cat {
 
 	private PlexusContainer m_container;
 
+	private static volatile boolean s_init = false;
+
 	private static void checkAndInitialize() {
-		if (s_instance.m_container == null) {
+		if (!s_init) {
 			synchronized (s_instance) {
-				if (s_instance.m_container == null) {
+				if (!s_init) {
 					initialize(new File(getCatHome(), "client.xml"));
+					s_init = true;
 					log("WARN", "Cat is lazy initialized!");
 				}
 			}
@@ -150,7 +153,7 @@ public class Cat {
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
-		//TO REMOVE ME
+		// TO REMOVE ME
 	}
 
 	/**
@@ -269,21 +272,14 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
-		m_container = container;
-
 		try {
+			m_container = container;
 			m_manager = container.lookup(MessageManager.class);
+			m_producer = container.lookup(MessageProducer.class);
 		} catch (ComponentLookupException e) {
 			throw new RuntimeException("Unable to get instance of MessageManager, "
 			      + "please make sure the environment was setup correctly!", e);
 		}
-
-		try {
-			m_producer = container.lookup(MessageProducer.class);
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageProducer, "
-			      + "please make sure the environment was setup correctly!", e);
-		}
 	}
-	
+
 }
