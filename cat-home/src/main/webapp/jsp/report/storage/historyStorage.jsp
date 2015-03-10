@@ -12,8 +12,8 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:historyReport title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&operations=${payload.operations}"
+<a:historyStorageReport title="Storage Report"
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&operations=${payload.operations}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
@@ -59,7 +59,7 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle">Domain</th>
+		<th rowspan="2" class="center" style="vertical-align:middle">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
@@ -86,7 +86,7 @@
 	</c:forEach>
 </table>
 </jsp:body>
-</a:report>
+</a:historyStorageReport>
 
 <script type="text/javascript">
 	var fs = "${model.allOperations}";

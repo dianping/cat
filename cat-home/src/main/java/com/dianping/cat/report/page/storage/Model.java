@@ -20,7 +20,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private StorageReport m_report;
 
-	private Set<String> m_operations;
+	private Set<String> m_operations = new HashSet<String>();
 
 	private String m_countTrend;
 
@@ -40,7 +40,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Date m_reportEnd;
 
-	private StorageAlertInfo m_alertInfo;
+	private Map<String, StorageAlertInfo> m_alertInfos;
 
 	private Map<String, Department> m_departments;
 
@@ -48,8 +48,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
-	public StorageAlertInfo getAlertInfo() {
-		return m_alertInfo;
+	public Map<String, StorageAlertInfo> getAlertInfos() {
+		return m_alertInfos;
 	}
 
 	public List<String> getAllOperations() {
@@ -154,8 +154,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_reportStart;
 	}
 
-	public void setAlertInfo(StorageAlertInfo alertInfo) {
-		m_alertInfo = alertInfo;
+	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
+		m_alertInfos = alertInfos;
 	}
 
 	public void setAvgTrend(String avgTrend) {

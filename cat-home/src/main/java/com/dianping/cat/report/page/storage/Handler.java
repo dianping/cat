@@ -32,6 +32,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -79,36 +80,42 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case HOURLY_DATABASE:
-			storageReport = buildHourlyReport(payload, model, ipAddress, SQL_TYPE);
+			storageReport = queryHourlyReport(payload, SQL_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
 			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 			storageReport = sorter.getSortedReport();
 			break;
 		case HOURLY_CACHE:
-			storageReport = buildHourlyReport(payload, model, ipAddress, CACHE_TYPE);
+			storageReport = queryHourlyReport(payload, CACHE_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
 			sorter = new StorageSorter(storageReport, payload.getSort());
 			storageReport = sorter.getSortedReport();
 			break;
 		case HOURLY_DATABASE_GRAPH:
-			storageReport = buildHourlyReport(payload, model, ipAddress, SQL_TYPE);
+			storageReport = queryHourlyReport(payload, SQL_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
 
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HOURLY_CACHE_GRAPH:
-			storageReport = buildHourlyReport(payload, model, ipAddress, CACHE_TYPE);
-
+			storageReport = queryHourlyReport(payload, CACHE_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HISTORY_DATABASE:
 			storageReport = queryHistoryReport(payload, SQL_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
 			break;
 		case HISTORY_CACHE:
 			storageReport = queryHistoryReport(payload, CACHE_TYPE);
+			storageReport = buildReport(payload, model, storageReport);
+			sorter = new StorageSorter(storageReport, payload.getSort());
+			storageReport = sorter.getSortedReport();
 			break;
 		case DASHBOARD:
-			StorageAlertInfo alertInfo = m_alertInfoManager.queryAlertInfo(payload.getDate(), model.getMinute());
+			Map<String, StorageAlertInfo> alertInfo = m_alertInfoManager.queryAlertInfos(payload, model);
 
-			model.setDepartments(m_storageGroupConfigManager.queryStorageDepartments());
-			model.setAlertInfo(alertInfo);
+			model.setAlertInfos(alertInfo);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 			break;
@@ -133,11 +140,9 @@ public class Handler implements PageHandler<Context> {
 		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get("long")));
 	}
 
-	private StorageReport buildHourlyReport(Payload payload, Model model, String ipAddress, String type) {
-		StorageReport storageReport = queryHourlyReport(payload, type);
-
+	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
-			storageReport = m_mergeHelper.mergeAllMachines(storageReport, ipAddress);
+			storageReport = m_mergeHelper.mergeAllMachines(storageReport, payload.getIpAddress());
 			storageReport = m_mergeHelper.mergeAllDomains(storageReport, Constants.ALL);
 
 			model.setReport(storageReport);
@@ -154,12 +159,13 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setOperations(ops);
 		}
+		StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 
-		return storageReport;
+		return sorter.getSortedReport();
 	}
 
 	private StorageReport queryHourlyReport(Payload payload, String type) {
-		ModelRequest request = new ModelRequest(payload.getDomain() + "-" + type, payload.getDate()).setProperty("ip",
+		ModelRequest request = new ModelRequest(payload.getId() + "-" + type, payload.getDate()).setProperty("ip",
 		      payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
@@ -197,6 +203,10 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STORAGE);
 		m_normalizePayload.normalize(model, payload);
+
+		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments();
+
+		model.setDepartments(departments);
 
 		if (payload.getAction() == Action.DASHBOARD) {
 			Integer minute = parseQueryMinute(payload);

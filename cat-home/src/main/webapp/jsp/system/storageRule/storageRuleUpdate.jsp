@@ -38,21 +38,21 @@
 <script type="text/javascript">
 function update() {
     var configStr = generateConfigsJsonString();
-    var name = $("#name").val();
+    var name = $("#name").val().trim();
     if(name == "undefined" || name == ""){
 		if($("#errorMessage").length == 0){
 			$("#name").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var machine = $("#machine").val();
+    var machine = $("#machine").val().trim();
     if(machine == "undefined" || machine == ""){
 		if($("#errorMessage").length == 0){
 			$("#machine").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var method = $("#method").val();
+    var method = $("#method").val().trim();
     if(method == "undefined" || method == ""){
     	if($("#errorMessage").length == 0){
 			$("#machine").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
@@ -83,7 +83,7 @@ function update() {
 			var target = ruleId.split(';')[3];
 			$('#target').val(target);
 		}
-		var name = $("#name").val();
+		var name = $("#name").val().trim();
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}

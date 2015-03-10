@@ -183,9 +183,69 @@
 					+"&showActivity=${payload.showActivity}";
 			window.location.href = href;
 		}
+		
+		var domainToCommandsJson = ${model.domainToCommandsJson};
+
+		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
+			if(domainInitVal == ""){
+				domainInitVal = $("#"+domainId).val()
+			}
+			var commandSelect = $("#"+commandId);
+			var commands = domainToCommandsJson[domainInitVal];
+			
+			$("#"+domainId).val(domainInitVal);
+			commandSelect.empty();
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+			if(commandInitVal != ''){
+				commandSelect.val(commandInitVal);
+			}
+		}
+		
+		function changeCommandByDomain(){
+			if($(this).attr("id")=="domains"){
+				var domain = $("#domains").val();
+				var commandSelect = $("#command");
+			}else{
+				var domain = $("#domains2").val();
+				var commandSelect = $("#command2");
+			}
+			var commands = domainToCommandsJson[domain];
+			commandSelect.empty();
+			
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+		}
+		
+		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
+			var domainsSelect = $("#"+domainSelectId);
+			for(var domain in domainToCommandsJson){
+				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+			}
+			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
+			domainsSelect.on('change', changeCommandByDomain);
+			domainsSelect.change();
+		}
 
 		$(document).ready(
 				function() {
+					initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
+					initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
+					command1Change();
+					command2Change();
+					
 					if(${payload.showActivity}){
 						$('#activity_trend').addClass('active');
 					} else {
@@ -211,7 +271,9 @@
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
 					
-					$("#command").val(words[1]);
+					if(typeof(words[1]) != undefined && words[0].length > 0 ){
+						$("#command").val(words[1]);
+					}
 					
 					if (typeof(words[0]) != undefined && words[0].length == 0) {
 						$("#time").val(getDate());
@@ -244,7 +306,9 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						$("#command2").val(words[1]);
+						if(typeof(words[1]) != undefined && words[0].length > 0 ){
+							$("#command2").val(words[1]);
+						}
 						command2Change();
 						$("#code2").val(words[2]);
 						$("#network2").val(words[3]);

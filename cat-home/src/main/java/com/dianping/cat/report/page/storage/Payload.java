@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.storage;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
@@ -35,6 +36,15 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
 
+	@FieldMeta("count")
+	private int m_minuteCounts = 8;
+
+	@FieldMeta("tops")
+	private int m_topCounts = 10;
+
+	@FieldMeta("id")
+	private String m_id = Constants.CAT;
+
 	public Payload() {
 		super(ReportPage.STORAGE);
 	}
@@ -44,15 +54,15 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public long getCurrentTimeMillis() {
-		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
-	}
-
 	@Override
 	public long getCurrentDate() {
 		long timestamp = getCurrentTimeMillis();
 
 		return timestamp - timestamp % TimeHelper.ONE_HOUR;
+	}
+
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
 	}
 
 	@Override
@@ -76,8 +86,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_frequency;
 	}
 
+	public String getId() {
+		return m_id;
+	}
+
 	public String getMinute() {
 		return m_minute;
+	}
+
+	public int getMinuteCounts() {
+		return m_minuteCounts;
 	}
 
 	public String getOperations() {
@@ -95,6 +113,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getSort() {
 		return m_sort;
+	}
+
+	public int getTopCounts() {
+		return m_topCounts;
 	}
 
 	public boolean isFullScreen() {
@@ -117,8 +139,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_fullScreen = fullScreen;
 	}
 
+	public void setId(String id) {
+		m_id = id;
+	}
+
 	public void setMinute(String minute) {
 		m_minute = minute;
+	}
+
+	public void setMinuteCounts(int minuteCounts) {
+		m_minuteCounts = minuteCounts;
 	}
 
 	public void setOperations(String operations) {
@@ -140,6 +170,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setSort(String sort) {
 		m_sort = sort;
+	}
+
+	public void setTopCounts(int topCounts) {
+		m_topCounts = topCounts;
 	}
 
 	@Override
