@@ -23,6 +23,7 @@ import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.page.storage.Model;
 import com.dianping.cat.report.page.storage.Payload;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageAlertInfoManager {
 
@@ -36,6 +37,62 @@ public class StorageAlertInfoManager {
 	private StorageAlertInfoRTContainer m_alertInfoRTContainer;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
+
+	private StorageAlertInfo buildFromDatabase(long time, int minute) {
+		Date start = new Date(time + minute * TimeHelper.ONE_MINUTE);
+		Date end = new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1000);
+		StorageAlertInfo alertInfo = new StorageAlertInfo(StorageConstants.SQL_TYPE);
+
+		try {
+			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.StorageDatabase.getName(),
+			      AlertEntity.READSET_FULL);
+
+			for (Alert alert : alerts) {
+				m_builder.parseAlertEntity(alert, alertInfo);
+			}
+		} catch (DalNotFoundException e) {
+			// ignore
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return alertInfo;
+	}
+
+	public StorageAlertInfo queryAlertInfo(long time, int minute, int tops) {
+		StorageAlertInfo alertInfo = m_alertInfoRTContainer.find(time, minute);
+
+		if (alertInfo == null) {
+			alertInfo = buildFromDatabase(time, minute);
+		}
+		List<Entry<String, Storage>> tmp = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
+
+		Collections.sort(tmp, new AlertInfoStorageComparator());
+
+		if (tmp.size() > tops) {
+			tmp = tmp.subList(0, tops);
+		}
+		StorageAlertInfo result = new StorageAlertInfo(alertInfo.getId());
+
+		result.setStartTime(alertInfo.getStartTime()).setEndTime(alertInfo.getEndTime());
+		Map<String, Storage> storages = result.getStorages();
+
+		for (Entry<String, Storage> storage : tmp) {
+			storages.put(storage.getKey(), storage.getValue());
+		}
+		return result;
+	}
+
+	private Map<String, StorageAlertInfo> queryAlertInfos(long time, int start, int end, int tops) {
+		Map<String, StorageAlertInfo> alertInfos = new LinkedHashMap<String, StorageAlertInfo>();
+
+		for (int i = start; i <= end; i++) {
+			StorageAlertInfo alertInfo = queryAlertInfo(time, i, tops);
+			Date minute = new Date(time + i * TimeHelper.ONE_MINUTE);
+
+			alertInfos.put(m_sdf.format(minute), alertInfo);
+		}
+		return alertInfos;
+	}
 
 	public Map<String, StorageAlertInfo> queryAlertInfos(Payload payload, Model model) {
 		long time = payload.getDate();
@@ -63,62 +120,6 @@ public class StorageAlertInfoManager {
 			results.put(key, alertInfos.get(key));
 		}
 		return results;
-	}
-
-	private Map<String, StorageAlertInfo> queryAlertInfos(long time, int start, int end, int tops) {
-		Map<String, StorageAlertInfo> alertInfos = new LinkedHashMap<String, StorageAlertInfo>();
-
-		for (int i = start; i <= end; i++) {
-			StorageAlertInfo alertInfo = queryAlertInfo(time, i, tops);
-			Date minute = new Date(time + i * TimeHelper.ONE_MINUTE);
-
-			alertInfos.put(m_sdf.format(minute), alertInfo);
-		}
-		return alertInfos;
-	}
-
-	public StorageAlertInfo queryAlertInfo(long time, int minute, int tops) {
-		StorageAlertInfo alertInfo = m_alertInfoRTContainer.find(time, minute);
-
-		if (alertInfo == null) {
-			alertInfo = buildFromDatabase(time, minute);
-		}
-		List<Entry<String, Storage>> tmp = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
-
-		Collections.sort(tmp, new AlertInfoStorageComparator());
-
-		if (tmp.size() > tops) {
-			tmp = tmp.subList(0, tops);
-		}
-		StorageAlertInfo result = new StorageAlertInfo(alertInfo.getId());
-
-		result.setStartTime(alertInfo.getStartTime()).setEndTime(alertInfo.getEndTime());
-		Map<String, Storage> storages = result.getStorages();
-
-		for (Entry<String, Storage> storage : tmp) {
-			storages.put(storage.getKey(), storage.getValue());
-		}
-		return result;
-	}
-
-	private StorageAlertInfo buildFromDatabase(long time, int minute) {
-		Date start = new Date(time + minute * TimeHelper.ONE_MINUTE);
-		Date end = new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1000);
-		StorageAlertInfo alertInfo = new StorageAlertInfo("SQL");
-
-		try {
-			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.StorageDatabase.getName(),
-			      AlertEntity.READSET_FULL);
-
-			for (Alert alert : alerts) {
-				m_builder.parseAlertEntity(alert, alertInfo);
-			}
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return alertInfo;
 	}
 
 	public static class AlertInfoStorageComparator implements Comparator<Entry<String, Storage>> {

@@ -5,9 +5,9 @@ import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 
 public class StorageMergeHelper {
 
-	public StorageReport mergeAllMachines(StorageReport storageReport, String ipAddress) {
-		if (Constants.ALL.equals(ipAddress)) {
-			AllMachineMerger merger = new AllMachineMerger();
+	public StorageReport mergeAllDomains(StorageReport storageReport, String domain) {
+		if (Constants.ALL.equals(domain)) {
+			AllDomainMerger merger = new AllDomainMerger();
 
 			merger.visitStorageReport(storageReport);
 			storageReport = merger.getStorageReport();
@@ -15,9 +15,9 @@ public class StorageMergeHelper {
 		return storageReport;
 	}
 
-	public StorageReport mergeAllDomains(StorageReport storageReport, String domain) {
-		if (Constants.ALL.equals(domain)) {
-			AllDomainMerger merger = new AllDomainMerger();
+	public StorageReport mergeAllMachines(StorageReport storageReport, String ipAddress) {
+		if (Constants.ALL.equals(ipAddress)) {
+			AllMachineMerger merger = new AllMachineMerger();
 
 			merger.visitStorageReport(storageReport);
 			storageReport = merger.getStorageReport();

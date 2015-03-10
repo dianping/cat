@@ -38,6 +38,8 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String CACHE_TYPE = "cache";
 
+	public static final String DEFAULT = "Default";
+
 	public StorageGroupConfig getConfig() {
 		return m_config;
 	}
@@ -118,6 +120,34 @@ public class StorageGroupConfigManager implements Initializable {
 			String id = storage.getId();
 			String department = storage.getDepartment();
 			String product = storage.getProductline();
+			Department depart = departments.get(department);
+
+			if (depart == null) {
+				depart = new Department(department);
+
+				departments.put(department, depart);
+			}
+
+			depart.findOrCreateProductline(product).addStorage(id);
+		}
+		return departments;
+	}
+
+	public Map<String, Department> queryStorageDepartments(List<String> ids) {
+		Map<String, Department> departments = new LinkedHashMap<String, Department>();
+
+		for (String id : ids) {
+			Storage storage = queryStorageGroup(DATABASE_TYPE).getStorages().get(id);
+			String department;
+			String product;
+
+			if (storage != null) {
+				department = storage.getDepartment();
+				product = storage.getProductline();
+			} else {
+				department = DEFAULT;
+				product = DEFAULT;
+			}
 			Department depart = departments.get(department);
 
 			if (depart == null) {

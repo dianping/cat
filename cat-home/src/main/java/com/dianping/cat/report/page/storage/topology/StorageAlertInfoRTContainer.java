@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageAlertInfoRTContainer {
 
@@ -21,18 +22,18 @@ public class StorageAlertInfoRTContainer {
 
 	};
 
+	public StorageAlertInfo find(long time, int minute) {
+		return m_alertInfos.get(time + minute * TimeHelper.ONE_MINUTE);
+	}
+
 	public StorageAlertInfo findOrCreate(long time) {
 		StorageAlertInfo report = m_alertInfos.get(time);
 
 		if (report == null) {
-			report = makeAlertInfo("SQL", new Date(time));
+			report = makeAlertInfo(StorageConstants.SQL_TYPE, new Date(time));
 			m_alertInfos.put(time, report);
 		}
 		return report;
-	}
-
-	public StorageAlertInfo find(long time, int minute) {
-		return m_alertInfos.get(time + minute * TimeHelper.ONE_MINUTE);
 	}
 
 	public StorageAlertInfo makeAlertInfo(String id, Date start) {

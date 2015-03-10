@@ -21,21 +21,21 @@
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -66,10 +66,10 @@
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right">Count</th>
-			<th class="right">Long</th>
-			<th class="right">Avg</th>
-			<th class="right">Error</th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
 	<c:forEach var="domain" items="${model.machine.domains}"
@@ -131,7 +131,7 @@
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&domain=${model.domain}&ip=${payload.ipAddress}&step=${payload.step}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&step=${payload.step}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){
