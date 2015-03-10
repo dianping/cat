@@ -96,22 +96,22 @@ public class StorageSorter {
 		}
 
 		private int sortValue(Operation op1, Operation op2) {
-			if ("count".equals(m_type)) {
+			if (StorageConstants.COUNT.equals(m_type)) {
 				long count1 = op1.getCount();
 				long count2 = op2.getCount();
 
 				return count2 > count1 ? 1 : (count2 < count1 ? -1 : 0);
-			} else if ("long".equals(m_type)) {
+			} else if (StorageConstants.LONG.equals(m_type)) {
 				long long1 = op1.getLongCount();
 				long long2 = op2.getLongCount();
 
 				return long2 > long1 ? 1 : (long2 < long1 ? -1 : 0);
-			} else if ("avg".equals(m_type)) {
+			} else if (StorageConstants.AVG.equals(m_type)) {
 				double avg1 = op1.getAvg();
 				double avg2 = op2.getAvg();
 
 				return avg2 > avg1 ? 1 : (avg2 < avg1 ? -1 : 0);
-			} else if ("error".equals(m_type)) {
+			} else if (StorageConstants.ERROR.equals(m_type)) {
 				long error1 = op1.getError();
 				long error2 = op2.getError();
 
@@ -121,4 +121,5 @@ public class StorageSorter {
 			}
 		}
 	}
+
 }

@@ -9,18 +9,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.lookup.ContainerLoader;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private StorageReport m_report;
 
-	private Set<String> m_operations;
+	private Set<String> m_operations = new HashSet<String>();
 
 	private String m_countTrend;
 
@@ -40,16 +44,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Date m_reportEnd;
 
-	private StorageAlertInfo m_alertInfo;
+	private Map<String, StorageAlertInfo> m_alertInfos;
 
-	private Map<String, Department> m_departments;
+	private StorageGroupConfigManager m_configManager;
 
 	public Model(Context ctx) {
 		super(ctx);
+		try {
+			m_configManager = ContainerLoader.getDefaultContainer().lookup(StorageGroupConfigManager.class);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
-	public StorageAlertInfo getAlertInfo() {
-		return m_alertInfo;
+	public Map<String, StorageAlertInfo> getAlertInfos() {
+		return m_alertInfos;
 	}
 
 	public List<String> getAllOperations() {
@@ -77,7 +86,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public Map<String, Department> getDepartments() {
-		return m_departments;
+		return m_configManager.queryStorageDepartments(SortHelper.sortDomain(m_report.getIds()));
 	}
 
 	@Override
@@ -87,11 +96,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Collection<String> getDomains() {
-		if (m_report != null) {
-			return SortHelper.sortDomain(m_report.getIds());
-		} else {
-			return new HashSet<String>();
-		}
+		return new HashSet<String>();
 	}
 
 	public String getErrorTrend() {
@@ -114,10 +119,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		Machine machine = new Machine();
 
 		if (m_report != null) {
-			Collection<Machine> machines = m_report.getMachines().values();
+			Machine m = m_report.getMachines().get(getIpAddress());
 
-			if (machines.size() > 0) {
-				machine = machines.iterator().next();
+			if (m != null) {
+				machine = m;
 			}
 		}
 		return machine;
@@ -154,8 +159,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_reportStart;
 	}
 
-	public void setAlertInfo(StorageAlertInfo alertInfo) {
-		m_alertInfo = alertInfo;
+	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
+		m_alertInfos = alertInfos;
 	}
 
 	public void setAvgTrend(String avgTrend) {
@@ -164,10 +169,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCountTrend(String countTrend) {
 		m_countTrend = countTrend;
-	}
-
-	public void setDepartments(Map<String, Department> departments) {
-		m_departments = departments;
 	}
 
 	public void setErrorTrend(String errorTrend) {

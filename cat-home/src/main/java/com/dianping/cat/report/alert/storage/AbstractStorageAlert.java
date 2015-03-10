@@ -30,6 +30,7 @@ import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.service.ModelPeriod;
@@ -75,19 +76,19 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		double[] datas = new double[60];
 		double[] result = new double[length];
 
-		if (StorageAttribute.COUNT.equalsIgnoreCase(target)) {
+		if (StorageConstants.COUNT.equalsIgnoreCase(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getCount();
 			}
-		} else if (StorageAttribute.LONG.equalsIgnoreCase(target)) {
+		} else if (StorageConstants.LONG.equalsIgnoreCase(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getLongCount();
 			}
-		} else if (StorageAttribute.AVG.equals(target)) {
+		} else if (StorageConstants.AVG.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getAvg();
 			}
-		} else if (StorageAttribute.ERROR.equals(target)) {
+		} else if (StorageConstants.ERROR.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getError() / entry.getValue().getCount();
 			}
@@ -142,7 +143,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 					int lastEnd = 59;
 					double[] lastValue = buildArrayData(lastStart, lastEnd, param, lastReport);
 
-					double[] data = mergerArray(lastValue, currentValue);
+					double[] data = mergeArray(lastValue, currentValue);
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			}
@@ -157,7 +158,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(name + "-" + getType(), period.getStartTime()) //
-		      .setProperty("ip", "All").setProperty("requireAll", "true");
+		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
@@ -171,7 +172,9 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	protected abstract StorageRuleConfigManager getRuleConfigManager();
 
-	protected double[] mergerArray(double[] from, double[] to) {
+	protected abstract String getType();
+
+	protected double[] mergeArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
 		double[] result = new double[fromLength + toLength];
@@ -258,19 +261,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	public void shutdown() {
 	}
 
-	protected abstract String getType();
-
-	public static class StorageAttribute {
-
-		public static final String COUNT = "count";
-
-		public static final String LONG = "long";
-
-		public static final String AVG = "avg";
-
-		public static final String ERROR = "error";
-	}
-
 	public static class ReportFetcherParam {
 
 		private String m_name;
@@ -289,16 +279,16 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			m_target = fields.get(3);
 		}
 
-		public String getName() {
-			return m_name;
-		}
-
 		public String getMachine() {
 			return m_machine;
 		}
 
 		public String getMethod() {
 			return m_method;
+		}
+
+		public String getName() {
+			return m_name;
 		}
 
 		public String getTarget() {
@@ -311,4 +301,5 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		}
 
 	}
+
 }

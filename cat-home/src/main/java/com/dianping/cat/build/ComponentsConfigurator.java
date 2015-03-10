@@ -117,8 +117,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageAlertInfoRTContainer.class));
 		all.add(C(StorageGraphBuilder.class).req(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoManager.class).req(AlertDao.class).req(StorageAlertInfoRTContainer.class)
-		      .req(StorageGraphBuilder.class));
+		all.add(C(StorageAlertInfoManager.class).req(ServerConfigManager.class, AlertDao.class)
+		      .req(StorageAlertInfoRTContainer.class).req(StorageGraphBuilder.class));
 
 		return all;
 	}

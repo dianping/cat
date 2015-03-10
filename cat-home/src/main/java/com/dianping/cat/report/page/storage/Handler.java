@@ -58,9 +58,45 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
-	private static final String SQL_TYPE = "SQL";
+	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
+		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(ipAddress, payload.getProject(),
+		      model.getOperations(), storageReport.getStartTime());
 
-	private static final String CACHE_TYPE = "Cache";
+		visitor.visitStorageReport(storageReport);
+		Map<String, LineChart> lineCharts = visitor.getLineChart();
+
+		model.setCountTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.COUNT)));
+		model.setAvgTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.AVG)));
+		model.setErrorTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.ERROR)));
+		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.LONG)));
+	}
+
+	private void buildOperations(Payload payload, Model model) {
+		String operations = payload.getOperations();
+
+		if (StringUtils.isNotEmpty(operations)) {
+			String[] op = operations.split(";");
+			Set<String> ops = new HashSet<String>();
+
+			for (int i = 0; i < op.length; i++) {
+				ops.add(op[i]);
+			}
+			model.setOperations(ops);
+		}
+	}
+
+	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
+		if (storageReport != null) {
+			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
+			storageReport = sorter.getSortedReport();
+
+			model.setReport(storageReport);
+			model.setOperations(storageReport.getOps());
+		}
+		buildOperations(payload, model);
+		return storageReport;
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -75,40 +111,45 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 		String ipAddress = payload.getIpAddress();
-		StorageReport storageReport;
+		StorageReport storageReport = null;
 
 		switch (payload.getAction()) {
 		case HOURLY_DATABASE:
-			storageReport = buildHourlyReport(payload, model, ipAddress, SQL_TYPE);
-			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
-			storageReport = sorter.getSortedReport();
+			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
+
+			buildReport(payload, model, storageReport);
 			break;
 		case HOURLY_CACHE:
-			storageReport = buildHourlyReport(payload, model, ipAddress, CACHE_TYPE);
-			sorter = new StorageSorter(storageReport, payload.getSort());
-			storageReport = sorter.getSortedReport();
+			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
+
+			buildReport(payload, model, storageReport);
 			break;
 		case HOURLY_DATABASE_GRAPH:
-			storageReport = buildHourlyReport(payload, model, ipAddress, SQL_TYPE);
+			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
 
+			storageReport = buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HOURLY_CACHE_GRAPH:
-			storageReport = buildHourlyReport(payload, model, ipAddress, CACHE_TYPE);
+			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
 
+			buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HISTORY_DATABASE:
-			storageReport = queryHistoryReport(payload, SQL_TYPE);
+			storageReport = queryHistoryReport(payload, StorageConstants.SQL_TYPE);
+
+			buildReport(payload, model, storageReport);
 			break;
 		case HISTORY_CACHE:
-			storageReport = queryHistoryReport(payload, CACHE_TYPE);
+			storageReport = queryHistoryReport(payload, StorageConstants.CACHE_TYPE);
+
+			buildReport(payload, model, storageReport);
 			break;
 		case DASHBOARD:
-			StorageAlertInfo alertInfo = m_alertInfoManager.queryAlertInfo(payload.getDate(), model.getMinute());
+			Map<String, StorageAlertInfo> alertInfo = m_alertInfoManager.queryAlertInfos(payload, model);
 
-			model.setDepartments(m_storageGroupConfigManager.queryStorageDepartments());
-			model.setAlertInfo(alertInfo);
+			model.setAlertInfos(alertInfo);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 			break;
@@ -118,80 +159,6 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
-	}
-
-	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
-		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(ipAddress, payload.getProject(),
-		      model.getOperations(), storageReport.getStartTime());
-
-		visitor.visitStorageReport(storageReport);
-		Map<String, LineChart> lineCharts = visitor.getLineChart();
-
-		model.setCountTrend(m_jsonBuilder.toJson(lineCharts.get("count")));
-		model.setAvgTrend(m_jsonBuilder.toJson(lineCharts.get("avg")));
-		model.setErrorTrend(m_jsonBuilder.toJson(lineCharts.get("error")));
-		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get("long")));
-	}
-
-	private StorageReport buildHourlyReport(Payload payload, Model model, String ipAddress, String type) {
-		StorageReport storageReport = queryHourlyReport(payload, type);
-
-		if (storageReport != null) {
-			storageReport = m_mergeHelper.mergeAllMachines(storageReport, ipAddress);
-			storageReport = m_mergeHelper.mergeAllDomains(storageReport, Constants.ALL);
-
-			model.setReport(storageReport);
-			model.setOperations(storageReport.getOps());
-		}
-		String operations = payload.getOperations();
-
-		if (StringUtils.isNotEmpty(operations)) {
-			String[] op = operations.split(";");
-			Set<String> ops = new HashSet<String>();
-
-			for (int i = 0; i < op.length; i++) {
-				ops.add(op[i]);
-			}
-			model.setOperations(ops);
-		}
-
-		return storageReport;
-	}
-
-	private StorageReport queryHourlyReport(Payload payload, String type) {
-		ModelRequest request = new ModelRequest(payload.getDomain() + "-" + type, payload.getDate()).setProperty("ip",
-		      payload.getIpAddress());
-
-		if (m_service.isEligable(request)) {
-			ModelResponse<StorageReport> response = m_service.invoke(request);
-			StorageReport report = response.getModel();
-
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
-		}
-	}
-
-	public StorageReport queryHistoryReport(Payload payload, String type) {
-		String id = payload.getDomain();
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-
-		return m_reportService.queryStorageReport(id + "-" + type, start, end);
-	}
-
-	private int parseQueryMinute(Payload payload) {
-		int minute = 0;
-		String min = payload.getMinute();
-
-		if (StringUtils.isEmpty(min)) {
-			long current = payload.getCurrentTimeMillis() / 1000 / 60;
-			minute = (int) (current % (60));
-		} else {
-			minute = Integer.parseInt(min);
-		}
-
-		return minute;
 	}
 
 	private void normalize(Model model, Payload payload) {
@@ -213,6 +180,42 @@ public class Handler implements PageHandler<Context> {
 			model.setMinute(minute);
 			model.setMaxMinute(maxMinute);
 			model.setMinutes(minutes);
+		}
+	}
+
+	private int parseQueryMinute(Payload payload) {
+		int minute = 0;
+		String min = payload.getMinute();
+
+		if (StringUtils.isEmpty(min)) {
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
+			minute = (int) (current % (60));
+		} else {
+			minute = Integer.parseInt(min);
+		}
+
+		return minute;
+	}
+
+	public StorageReport queryHistoryReport(Payload payload, String type) {
+		String id = payload.getId();
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+
+		return m_reportService.queryStorageReport(id + "-" + type, start, end);
+	}
+
+	private StorageReport queryHourlyReport(Payload payload, String type) {
+		ModelRequest request = new ModelRequest(payload.getId() + "-" + type, payload.getDate()).setProperty("ip",
+		      payload.getIpAddress());
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<StorageReport> response = m_service.invoke(request);
+			StorageReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
 }

@@ -119,6 +119,9 @@
 			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
 				</requirement>
 				<requirement>
@@ -5380,6 +5383,9 @@
 			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
 			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AlertDao</role>
 				</requirement>
