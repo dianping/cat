@@ -11,13 +11,15 @@ import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageAlertInfoRTContainer {
 
+	public static final int SIZE = 60;
+
 	private Map<Long, StorageAlertInfo> m_alertInfos = new LinkedHashMap<Long, StorageAlertInfo>() {
 
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected boolean removeEldestEntry(Entry<Long, StorageAlertInfo> eldest) {
-			return size() > 60;
+			return size() > SIZE;
 		}
 
 	};
@@ -36,6 +38,17 @@ public class StorageAlertInfoRTContainer {
 		return report;
 	}
 
+	public boolean offer(StorageAlertInfo alertInfo) {
+		long time = alertInfo.getStartTime().getTime();
+
+		if (!m_alertInfos.containsKey(time)) {
+			m_alertInfos.put(time, alertInfo);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public StorageAlertInfo makeAlertInfo(String id, Date start) {
 		StorageAlertInfo report = new StorageAlertInfo(id);
 
@@ -43,4 +56,5 @@ public class StorageAlertInfoRTContainer {
 		report.setEndTime(new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1));
 		return report;
 	}
+
 }

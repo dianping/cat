@@ -85,7 +85,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildReport(Payload payload, Model model, StorageReport storageReport) {
+	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
 			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
 			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
@@ -95,6 +95,7 @@ public class Handler implements PageHandler<Context> {
 			model.setOperations(storageReport.getOps());
 		}
 		buildOperations(payload, model);
+		return storageReport;
 	}
 
 	@Override
@@ -126,8 +127,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY_DATABASE_GRAPH:
 			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
 
-			buildReport(payload, model, storageReport);
-
+			storageReport = buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HOURLY_CACHE_GRAPH:

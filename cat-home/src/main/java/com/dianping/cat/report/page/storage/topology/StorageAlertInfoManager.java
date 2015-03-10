@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
@@ -25,7 +30,10 @@ import com.dianping.cat.report.page.storage.Model;
 import com.dianping.cat.report.page.storage.Payload;
 import com.dianping.cat.report.page.storage.StorageConstants;
 
-public class StorageAlertInfoManager {
+public class StorageAlertInfoManager implements Initializable {
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
 	private AlertDao m_alertDao;
@@ -36,12 +44,14 @@ public class StorageAlertInfoManager {
 	@Inject
 	private StorageAlertInfoRTContainer m_alertInfoRTContainer;
 
+	public static final int DEFAULT_MINUTE_COUNT = 8;
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
 	private StorageAlertInfo buildFromDatabase(long time, int minute) {
 		Date start = new Date(time + minute * TimeHelper.ONE_MINUTE);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1000);
-		StorageAlertInfo alertInfo = new StorageAlertInfo(StorageConstants.SQL_TYPE);
+		StorageAlertInfo alertInfo = m_alertInfoRTContainer.makeAlertInfo(StorageConstants.SQL_TYPE, start);
 
 		try {
 			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.StorageDatabase.getName(),
@@ -71,9 +81,7 @@ public class StorageAlertInfoManager {
 		if (tmp.size() > tops) {
 			tmp = tmp.subList(0, tops);
 		}
-		StorageAlertInfo result = new StorageAlertInfo(alertInfo.getId());
-
-		result.setStartTime(alertInfo.getStartTime()).setEndTime(alertInfo.getEndTime());
+		StorageAlertInfo result = m_alertInfoRTContainer.makeAlertInfo(alertInfo.getId(), alertInfo.getStartTime());
 		Map<String, Storage> storages = result.getStorages();
 
 		for (Entry<String, Storage> storage : tmp) {
@@ -122,6 +130,50 @@ public class StorageAlertInfoManager {
 		return results;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_serverConfigManager.isAlertMachine()) {
+			Threads.forGroup("cat").start(new StorageAlerInfoLoadTask());
+		}
+	}
+
+	public class StorageAlerInfoLoadTask implements Task {
+
+		@Override
+		public void run() {
+			long endTime = TimeHelper.getCurrentMinute().getTime() - TimeHelper.ONE_MINUTE;
+			long startTime = endTime - TimeHelper.ONE_MINUTE * DEFAULT_MINUTE_COUNT;
+
+			for (long current = startTime; current <= endTime; current += TimeHelper.ONE_MINUTE) {
+				try {
+					Date start = new Date(current);
+					Date end = new Date(current + TimeHelper.ONE_MINUTE - 1000);
+					StorageAlertInfo alertInfo = m_alertInfoRTContainer.makeAlertInfo(StorageConstants.SQL_TYPE, start);
+					List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end,
+					      AlertType.StorageDatabase.getName(), AlertEntity.READSET_FULL);
+
+					for (Alert alert : alerts) {
+						m_builder.parseAlertEntity(alert, alertInfo);
+					}
+					m_alertInfoRTContainer.offer(alertInfo);
+				} catch (DalNotFoundException e) {
+					// ignore
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "storage-alertInfo-load-task";
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
 	public static class AlertInfoStorageComparator implements Comparator<Entry<String, Storage>> {
 
 		@Override
@@ -159,4 +211,5 @@ public class StorageAlertInfoManager {
 			}
 		}
 	}
+
 }

@@ -58,17 +58,17 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
+		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
 	<c:choose>
@@ -82,7 +82,7 @@
 	<c:forEach var="domain" items="${model.machine.domains}"
 		varStatus="index">
 		<tr>
-		<td><a href="?op=${action}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
+		<td><a href="?op=${action}&domain=${model.domain}&date=${model.date}&id=${payload.id}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
 		</td>
 		<td class="left">${domain.key}</td>
 		<c:forEach var="item" items="${model.operations}">

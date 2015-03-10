@@ -65,23 +65,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
 	}
 
-	@Override
-	public long getDate() {
-		long current = getCurrentDate();
-		long extra = m_step * TimeHelper.ONE_HOUR;
-
-		if (m_date <= 0) {
-			return current + extra;
-		} else {
-			long result = m_date + extra;
-
-			if (result > current) {
-				return current;
-			}
-			return result;
-		}
-	}
-
 	public int getFrequency() {
 		return m_frequency;
 	}

@@ -13,8 +13,8 @@
 <c:set var="report" value="${model.report}" />
 
 <a:historyStorageReport title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&operations=${payload.operations}">
-	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	navUrlPrefix="id=${payload.id}&operations=${payload.operations}">
+	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
@@ -66,10 +66,10 @@
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
 	<c:forEach var="domain" items="${model.machine.domains}"

@@ -89,9 +89,9 @@
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
+				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
 		</div><!-- /.nav-search -->
 	</div>
 	<jsp:doBody />
