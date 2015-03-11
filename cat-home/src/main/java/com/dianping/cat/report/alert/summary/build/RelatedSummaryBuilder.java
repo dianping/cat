@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -9,14 +9,15 @@ import java.util.TreeMap;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
+import com.dianping.cat.report.alert.summary.AlertSummaryService;
 
-public class AlertSummaryContentGenerator extends SummaryContentGenerator {
-
-	@Inject
-	private AlertSummaryGenerator m_alertSummaryGenerator;
+public class RelatedSummaryBuilder extends SummaryBuilder {
 
 	@Inject
-	private AlertSummaryManager m_alertSummaryManager;
+	private AlertInfoBuilder m_alertSummaryManager;
+
+	@Inject
+	private AlertSummaryService m_alertSummaryService;
 
 	public static final String ID = "AlertSummaryContentGenerator";
 
@@ -40,8 +41,8 @@ public class AlertSummaryContentGenerator extends SummaryContentGenerator {
 			}
 
 			categories.remove(AlertSummaryVisitor.LONG_CALL_NAME);
-			categories.put(AlertSummaryGenerator.LONG_CALL, longCallMap);
-			map.put(AlertSummaryGenerator.LONG_CALL + "_length", alerts.size());
+			categories.put(AlertInfoBuilder.LONG_CALL, longCallMap);
+			map.put(AlertInfoBuilder.LONG_CALL + "_length", alerts.size());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -51,10 +52,9 @@ public class AlertSummaryContentGenerator extends SummaryContentGenerator {
 
 	@Override
 	public Map<Object, Object> generateModel(String domain, Date date) {
-		AlertSummary alertSummary = m_alertSummaryGenerator.generateAlertSummary(domain, date);
-		m_alertSummaryManager.insert(alertSummary);
-
+		AlertSummary alertSummary = m_alertSummaryManager.generateAlertSummary(domain, date);
 		AlertSummaryVisitor visitor = new AlertSummaryVisitor(alertSummary.getDomain());
+		
 		visitor.visitAlertSummary(alertSummary);
 
 		return gatherDomainsForDependBusiness(visitor.getResult());

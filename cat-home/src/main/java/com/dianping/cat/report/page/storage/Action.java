@@ -11,7 +11,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_DATABASE("historyDatabase"),
 
-	HISTORY_CACHE("historyCache");
+	HISTORY_CACHE("historyCache"),
+
+	DASHBOARD("dashboard");
 
 	private String m_name;
 

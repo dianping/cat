@@ -12,30 +12,30 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:historyReport title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&operations=${payload.operations}"
-	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+<a:historyStorageReport title="Storage Report"
+	navUrlPrefix="id=${payload.id}&operations=${payload.operations}">
+	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}"
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -59,17 +59,17 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle">Domain</th>
+		<th rowspan="2" class="center" style="vertical-align:middle">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right">Count</th>
-			<th class="right">Long</th>
-			<th class="right">Avg</th>
-			<th class="right">Error</th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
 	<c:forEach var="domain" items="${model.machine.domains}"
@@ -86,7 +86,7 @@
 	</c:forEach>
 </table>
 </jsp:body>
-</a:report>
+</a:historyStorageReport>
 
 <script type="text/javascript">
 	var fs = "${model.allOperations}";
@@ -131,7 +131,7 @@
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&domain=${model.domain}&ip=${payload.ipAddress}&step=${payload.step}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&step=${payload.step}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){

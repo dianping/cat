@@ -48,9 +48,9 @@
 
 function update() {
     var configStr = generateConfigsJsonString();
-    var name = $("#name").val();
+    var name = $("#name").val().trim();
     var url = $("#url").val();
-    var city = $("#city").val();
+    var city = $("#city");
     var operator = $("#operator").val();
     var metric = $("#metric").val();
     var split = ";";

@@ -18,6 +18,7 @@ import com.dianping.cat.system.config.BugConfigManager;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -38,9 +39,12 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private SenderConfigManager m_senderConfigManager;
-	
+
 	@Inject
 	private BlackListManager m_blackListManager;
+
+	@Inject
+	private StorageGroupConfigManager m_groupConfigManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -126,8 +130,7 @@ public class GlobalConfigProcessor {
 			}
 			model.setContent(m_senderConfigManager.getConfig().toString());
 			break;
-			
-		case  BLACK_CONFIG_UPDATE:
+		case BLACK_CONFIG_UPDATE:
 			String blackConfig = payload.getContent();
 
 			if (!StringUtils.isEmpty(blackConfig)) {
@@ -137,7 +140,15 @@ public class GlobalConfigProcessor {
 			}
 			model.setContent(m_blackListManager.getBlackList().toString());
 			break;
+		case STORAGE_GROUP_CONFIG_UPDATE:
+			String storageGroup = payload.getContent();
+			if (!StringUtils.isEmpty(storageGroup)) {
+				model.setOpState(m_groupConfigManager.insert(storageGroup));
+			}
+			model.setContent(m_groupConfigManager.getConfig().toString());
+			break;
 		default:
+			System.out.println(action);
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}

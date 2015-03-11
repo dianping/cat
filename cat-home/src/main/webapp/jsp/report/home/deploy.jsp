@@ -81,4 +81,4 @@
    <default-server id="10.1.1.3" port="2280" enable="true"/>
 </router-config>
 </xmp>
-<p>8、客户端集成，请参考集成文档</p>
+<p>10、客户端集成，请参考集成文档</p>

@@ -5,14 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -24,19 +26,19 @@ import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.BaseAlert;
+import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.BaseRuleConfigManager;
 import com.dianping.cat.system.config.TransactionRuleConfigManager;
 
-public class TransactionAlert extends BaseAlert {
+public class TransactionAlert implements Task, LogEnabled {
 
 	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
 	private ModelService<TransactionReport> m_service;
@@ -47,9 +49,21 @@ public class TransactionAlert extends BaseAlert {
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
 
+	@Inject
+	protected DataChecker m_dataChecker;
+
+	@Inject
+	protected AlertManager m_sendManager;
+
+	protected Logger m_logger;
+
 	private static String AVG = "avg";
 
 	private static String COUNT = "count";
+
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private double[] buildArrayData(int start, int end, String type, String name, String monitor,
 	      TransactionReport report) {
@@ -72,6 +86,13 @@ public class TransactionAlert extends BaseAlert {
 		System.arraycopy(datas, start, result, 0, length);
 
 		return result;
+	}
+
+	protected int calAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		return minute;
 	}
 
 	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, String monitor,
@@ -126,6 +147,11 @@ public class TransactionAlert extends BaseAlert {
 		return results;
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	private TransactionReport fetchTransactionReport(String domain, String type, String name, ModelPeriod period) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()) //
 		      .setProperty("type", type).setProperty("name", name)//
@@ -147,14 +173,20 @@ public class TransactionAlert extends BaseAlert {
 		return AlertType.Transaction.getName();
 	}
 
-	@Override
-	protected Map<String, ProductLine> getProductlines() {
-		throw new RuntimeException("Transaction alert don't support get productline");
-	}
+	protected double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
 
-	@Override
-	protected BaseRuleConfigManager getRuleConfigManager() {
-		return m_ruleConfigManager;
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
+		}
+		return result;
 	}
 
 	private void processRule(Rule rule) {
@@ -211,6 +243,10 @@ public class TransactionAlert extends BaseAlert {
 				active = false;
 			}
 		}
+	}
+
+	@Override
+	public void shutdown() {
 	}
 
 }

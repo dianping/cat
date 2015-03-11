@@ -3,20 +3,28 @@ package com.dianping.cat.report.page.storage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.unidal.lookup.ContainerLoader;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.system.config.StorageGroupConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private StorageReport m_report;
 
-	private Set<String> m_operations;
+	private Set<String> m_operations = new HashSet<String>();
 
 	private String m_countTrend;
 
@@ -26,8 +34,31 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_longTrend;
 
+	private int m_minute;
+
+	private List<Integer> m_minutes;
+
+	private int m_maxMinute;
+
+	private Date m_reportStart;
+
+	private Date m_reportEnd;
+
+	private Map<String, StorageAlertInfo> m_alertInfos;
+
+	private StorageGroupConfigManager m_configManager;
+
 	public Model(Context ctx) {
 		super(ctx);
+		try {
+			m_configManager = ContainerLoader.getDefaultContainer().lookup(StorageGroupConfigManager.class);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	public Map<String, StorageAlertInfo> getAlertInfos() {
+		return m_alertInfos;
 	}
 
 	public List<String> getAllOperations() {
@@ -54,24 +85,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.HOURLY_DATABASE;
 	}
 
+	public Map<String, Department> getDepartments() {
+		return m_configManager.queryStorageDepartments(SortHelper.sortDomain(m_report.getIds()));
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
 	}
 
-	// @Override
-	// public Map<String, Department> getDomainGroups() {
-	// // return m_projectService.findDepartments(getDomains());
-	// return null;
-	// }
-
 	@Override
 	public Collection<String> getDomains() {
-		if (m_report != null) {
-			return SortHelper.sortDomain(m_report.getIds());
-		} else {
-			return new HashSet<String>();
-		}
+		return new HashSet<String>();
+	}
+
+	public String getErrorTrend() {
+		return m_errorTrend;
 	}
 
 	public List<String> getIps() {
@@ -82,10 +111,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public String getErrorTrend() {
-		return m_errorTrend;
-	}
-
 	public String getLongTrend() {
 		return m_longTrend;
 	}
@@ -94,13 +119,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 		Machine machine = new Machine();
 
 		if (m_report != null) {
-			Collection<Machine> machines = m_report.getMachines().values();
+			Machine m = m_report.getMachines().get(getIpAddress());
 
-			if (machines.size() > 0) {
-				machine = machines.iterator().next();
+			if (m != null) {
+				machine = m;
 			}
 		}
 		return machine;
+	}
+
+	public int getMaxMinute() {
+		return m_maxMinute;
+	}
+
+	public int getMinute() {
+		return m_minute;
+	}
+
+	public List<Integer> getMinutes() {
+		return m_minutes;
 	}
 
 	public List<String> getOperations() {
@@ -112,6 +149,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public StorageReport getReport() {
 		return m_report;
+	}
+
+	public Date getReportEnd() {
+		return m_reportEnd;
+	}
+
+	public Date getReportStart() {
+		return m_reportStart;
+	}
+
+	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
+		m_alertInfos = alertInfos;
 	}
 
 	public void setAvgTrend(String avgTrend) {
@@ -130,6 +179,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_longTrend = longTrend;
 	}
 
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
+	public void setMinutes(List<Integer> minutes) {
+		m_minutes = minutes;
+	}
+
 	public void setOperations(Set<String> operations) {
 		m_operations = operations;
 	}
@@ -137,4 +198,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(StorageReport report) {
 		m_report = report;
 	}
+
+	public void setReportEnd(Date reportEnd) {
+		m_reportEnd = reportEnd;
+	}
+
+	public void setReportStart(Date reportStart) {
+		m_reportStart = reportStart;
+	}
+
 }

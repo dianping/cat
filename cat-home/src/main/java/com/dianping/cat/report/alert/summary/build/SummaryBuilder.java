@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.summary;
+package com.dianping.cat.report.alert.summary.build;
 
 import java.io.StringWriter;
 import java.util.Date;
@@ -12,7 +12,7 @@ import com.dianping.cat.Cat;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 
-public abstract class SummaryContentGenerator implements Initializable {
+public abstract class SummaryBuilder implements Initializable {
 
 	public Configuration m_configuration;
 
@@ -35,6 +35,7 @@ public abstract class SummaryContentGenerator implements Initializable {
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
 		m_configuration.setDefaultEncoding("UTF-8");
+		
 		try {
 			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
 		} catch (Exception e) {

@@ -11,13 +11,11 @@ import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeBuilder;
-import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.storage.StorageMergerHelper;
+import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
@@ -27,16 +25,10 @@ public class StorageReportBuilder implements TaskBuilder {
 	public static final String ID = StorageAnalyzer.ID;
 
 	@Inject
-	protected GraphDao m_graphDao;
-
-	@Inject
-	protected DailyGraphDao m_dailyGraphDao;
-
-	@Inject
 	protected ReportServiceManager m_reportService;
 
 	@Inject
-	private StorageMergerHelper m_storageMergerHelper;
+	private StorageMergeHelper m_storageMergerHelper;
 
 	@Override
 	public boolean buildDailyTask(String name, String reportId, Date period) {

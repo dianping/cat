@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
@@ -16,17 +15,21 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.sender.AlertChannel;
 import com.dianping.cat.report.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder;
+import com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder;
+import com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder;
+import com.dianping.cat.report.alert.summary.build.SummaryBuilder;
 
 public class AlertSummaryExecutor {
 
-	@Inject(type = SummaryContentGenerator.class, value = AlertSummaryContentGenerator.ID)
-	private SummaryContentGenerator m_alertSummaryContentGenerator;
+	@Inject(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
+	private SummaryBuilder m_relatedBuilder;
 
-	@Inject(type = SummaryContentGenerator.class, value = FailureSummaryContentGenerator.ID)
-	private SummaryContentGenerator m_failureSummaryContentGenerator;
+	@Inject(type = SummaryBuilder.class, value = FailureSummaryBuilder.ID)
+	private SummaryBuilder m_failureBuilder;
 
-	@Inject(type = SummaryContentGenerator.class, value = AlterationSummaryContentGenerator.ID)
-	private SummaryContentGenerator m_alterationSummaryContentGenerator;
+	@Inject(type = SummaryBuilder.class, value = AlterationSummaryBuilder.ID)
+	private SummaryBuilder m_alterationBuilder;
 
 	@Inject
 	private SenderManager m_sendManager;
@@ -55,24 +58,15 @@ public class AlertSummaryExecutor {
 	}
 
 	public String execute(String domain, Date date) {
-		if (StringUtils.isEmpty(domain) || date == null) {
-			return null;
-		}
-		date = normalizeDate(date);
-
 		Transaction t = Cat.newTransaction("Summary", domain);
 
+		date = normalizeDate(date);
 		try {
 			StringBuilder builder = new StringBuilder();
 
-			String summaryContent = m_alertSummaryContentGenerator.generateHtml(domain, date);
-			builder.append(summaryContent);
-
-			String failureContext = m_failureSummaryContentGenerator.generateHtml(domain, date);
-			builder.append(failureContext);
-
-			String alterationContext = m_alterationSummaryContentGenerator.generateHtml(domain, date);
-			builder.append(alterationContext);
+			builder.append(m_relatedBuilder.generateHtml(domain, date));
+			builder.append(m_failureBuilder.generateHtml(domain, date));
+			builder.append(m_alterationBuilder.generateHtml(domain, date));
 
 			t.setStatus(Transaction.SUCCESS);
 			return builder.toString();
@@ -94,7 +88,9 @@ public class AlertSummaryExecutor {
 			List<String> receivers = builderReceivers(receiverStr);
 			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
 
-			m_sendManager.sendAlert(AlertChannel.MAIL, message);
+			if (receivers.size() > 0) {
+				m_sendManager.sendAlert(AlertChannel.MAIL, message);
+			}
 		}
 
 		return content;
