@@ -148,7 +148,7 @@
 				document.getElementById(f).checked = true;
 			}
 		}
-		if(ffs.length == fs.length || ffs.length == 0){
+		if(ffs.length >= fs.length || ffs.length == 0){
 			document.getElementById("operation_All").checked = true;
 		}
 	}

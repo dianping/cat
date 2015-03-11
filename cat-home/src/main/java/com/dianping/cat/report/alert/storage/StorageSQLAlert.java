@@ -6,7 +6,7 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageRuleConfigManager;
 
-public class StorageDatabaseAlert extends AbstractStorageAlert {
+public class StorageSQLAlert extends AbstractStorageAlert {
 
 	@Inject
 	private StorageSQLRuleConfigManager m_configManager;

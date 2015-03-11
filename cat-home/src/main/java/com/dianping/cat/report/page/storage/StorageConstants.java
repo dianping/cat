@@ -19,10 +19,12 @@ public class StorageConstants {
 
 	public static final List<String> TITLES = Arrays.asList(COUNT, AVG, ERROR, LONG);
 
-	public static final int MINUTE_COUNT = 8;
+	public static final int DEFAULT_MINUTE_COUNT = 8;
 
-	public static final int TOP_COUNT = 10;
+	public static final int DEFAULT_TOP_COUNT = 10;
 
 	public static final List<String> CACHE_METHODS = Arrays.asList("add", "get", "mGet", "remove");
+
+	public static final List<String> SQL_METHODS = Arrays.asList("select", "delete", "insert", "update");
 
 }

@@ -3240,8 +3240,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.alert.storage.StorageDatabaseAlert</role>
-			<implementation>com.dianping.cat.report.alert.storage.StorageDatabaseAlert</implementation>
+			<role>com.dianping.cat.report.alert.storage.StorageSQLAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.StorageSQLAlert</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>

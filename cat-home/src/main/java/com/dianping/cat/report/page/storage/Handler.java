@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -21,6 +22,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.ReportPage;
@@ -32,6 +34,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -71,54 +74,68 @@ public class Handler implements PageHandler<Context> {
 		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.LONG)));
 	}
 
-	private Set<String> buildOperations(Payload payload, Model model) {
+	private String buildOperationStr(List<String> ops) {
+		return StringUtils.join(ops, ";");
+	}
+
+	private Pair<Boolean, Set<String>> buildOperations(Payload payload, Model model, Set<String> defaultValue) {
 		String operations = payload.getOperations();
 		Set<String> ops = new HashSet<String>();
+		boolean filter = false;
 
-		if (StringUtils.isNotEmpty(operations)) {
-			String[] op = operations.split(";");
+		if (operations != null) {
+			if (operations.length() > 0) {
+				filter = true;
+				String[] op = operations.split(";");
 
-			for (int i = 0; i < op.length; i++) {
-				ops.add(op[i]);
+				for (int i = 0; i < op.length; i++) {
+					ops.add(op[i]);
+				}
+			} else {
+				ops.addAll(defaultValue);
 			}
+		} else {
+			String type = payload.getType();
+			List<String> defaultMethods = new ArrayList<String>();
+
+			if (StorageConstants.CACHE_TYPE.equals(type)) {
+				defaultMethods = StorageConstants.CACHE_METHODS;
+			} else if (StorageConstants.SQL_TYPE.equals(type)) {
+				defaultMethods = StorageConstants.SQL_METHODS;
+			}
+
+			for (String method : defaultMethods) {
+				if (defaultValue.contains(method)) {
+					ops.add(method);
+				}
+			}
+			payload.setOperations(buildOperationStr(defaultMethods));
 		}
-		return ops;
+		return new Pair<Boolean, Set<String>>(filter, ops);
 	}
 
 	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
-		Set<String> ops = buildOperations(payload, model);
-
 		if (storageReport != null) {
+			Pair<Boolean, Set<String>> pair = buildOperations(payload, model, storageReport.getOps());
 			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+			Set<String> ops = pair.getValue();
 
-			if (ops.size() > 0) {
+			if (pair.getKey()) {
 				StorageOperationFilter filter = new StorageOperationFilter(ops);
 				filter.visitStorageReport(storageReport);
 
 				storageReport = filter.getStorageReport();
-			} else {
-				String type = payload.getType();
-				Set<String> reportOps = storageReport.getOps();
-
-				if (StorageConstants.SQL_TYPE.equals(type)) {
-					ops = reportOps;
-				} else if (StorageConstants.CACHE_TYPE.equals(type)) {
-
-					for (String method : StorageConstants.CACHE_METHODS) {
-						if (reportOps.contains(method)) {
-							ops.add(method);
-						}
-					}
-				}
 			}
-
 			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 			storageReport = sorter.getSortedReport();
 
 			model.setReport(storageReport);
-		}
+			model.setOperations(ops);
 
-		model.setOperations(ops);
+			Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
+			      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
+			model.setDepartments(departments);
+		}
 		return storageReport;
 	}
 
@@ -166,6 +183,7 @@ public class Handler implements PageHandler<Context> {
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 			break;
 		}
+
 		model.setPage(ReportPage.STORAGE);
 
 		if (!ctx.isProcessStopped()) {

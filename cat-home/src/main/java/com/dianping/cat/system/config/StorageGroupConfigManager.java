@@ -130,11 +130,11 @@ public class StorageGroupConfigManager implements Initializable {
 		return departments;
 	}
 
-	public Map<String, Department> queryStorageDepartments(List<String> ids) {
+	public Map<String, Department> queryStorageDepartments(List<String> ids, String type) {
 		Map<String, Department> departments = new LinkedHashMap<String, Department>();
 
 		for (String id : ids) {
-			Storage storage = queryStorageGroup(StorageConstants.SQL_TYPE).getStorages().get(id);
+			Storage storage = queryStorageGroup(type).getStorages().get(id);
 			String department;
 			String product;
 

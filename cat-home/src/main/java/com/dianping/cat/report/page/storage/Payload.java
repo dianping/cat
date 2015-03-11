@@ -40,10 +40,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_frequency = 10;
 
 	@FieldMeta("count")
-	private int m_minuteCounts = StorageConstants.MINUTE_COUNT;
+	private int m_minuteCounts = StorageConstants.DEFAULT_MINUTE_COUNT;
 
 	@FieldMeta("tops")
-	private int m_topCounts = StorageConstants.TOP_COUNT;
+	private int m_topCounts = StorageConstants.DEFAULT_TOP_COUNT;
 
 	@FieldMeta("id")
 	private String m_id = Constants.CAT;

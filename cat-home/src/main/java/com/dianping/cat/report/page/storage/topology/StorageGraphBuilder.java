@@ -1,6 +1,9 @@
 package com.dianping.cat.report.page.storage.topology;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
@@ -21,7 +24,7 @@ import com.dianping.cat.report.page.storage.StorageConstants;
 public class StorageGraphBuilder {
 
 	@Inject
-	private StorageAlertInfoRTContainer m_manager;
+	private StorageAlertInfoRTContainer m_container;
 
 	public int buildLevel(int level, int other) {
 		return level > other ? level : other;
@@ -30,7 +33,25 @@ public class StorageGraphBuilder {
 	public StorageAlertInfo getAlertInfo(int minute) {
 		long current = TimeHelper.getCurrentHour().getTime() + minute * TimeHelper.ONE_MINUTE;
 
-		return m_manager.findOrCreate(current);
+		return m_container.findOrCreate(current);
+	}
+
+	public Map<Long, StorageAlertInfo> buildStorageAlertInfos(List<Alert> alerts) {
+		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
+
+		for (Alert alert : alerts) {
+			long time = alert.getAlertTime().getTime();
+			long current = time - time % TimeHelper.ONE_MINUTE;
+			StorageAlertInfo alertInfo = alertInfos.get(current);
+
+			if (alertInfo == null) {
+				alertInfo = m_container.makeAlertInfo(alert.getCategory(), new Date(current));
+
+				alertInfos.put(current, alertInfo);
+			}
+			parseAlertEntity(alert, alertInfo);
+		}
+		return alertInfos;
 	}
 
 	public void parseAlertEntity(Alert alert, StorageAlertInfo alertInfo) {

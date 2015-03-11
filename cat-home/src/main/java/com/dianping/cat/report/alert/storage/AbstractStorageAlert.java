@@ -22,8 +22,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.storage.entity.Storage;
-import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.DataChecker;
@@ -210,14 +208,32 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
 
-		for (String ip : currentReport.getIps()) {
-			List<Rule> rules = getRuleConfigManager().findRule(id, ip);
+		if (currentReport != null) {
+			for (String ip : currentReport.getIps()) {
+				List<Rule> rules = getRuleConfigManager().findRule(id, ip);
 
-			for (Rule rule : rules) {
-				processRule(rule, id, ip, currentReport);
+				for (Rule rule : rules) {
+					processRule(rule, id, ip, currentReport);
+				}
 			}
 		}
+	}
 
+	private List<String> queryCurrentStorages() {
+		List<String> ids = new ArrayList<String>(m_storageConfigManager.queryStorageGroup(getType()).getStorages()
+		      .keySet());
+		ModelRequest request = new ModelRequest("*-" + getType(), ModelPeriod.CURRENT.getStartTime()) //
+		      .setProperty("ip", Constants.ALL);
+		ModelResponse<StorageReport> response = m_service.invoke(request);
+
+		if (response != null) {
+			StorageReport report = response.getModel();
+
+			if (report != null) {
+				ids.addAll(report.getIds());
+			}
+		}
+		return ids;
 	}
 
 	@Override
@@ -229,11 +245,11 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				StorageGroup groups = m_storageConfigManager.queryStorageGroup(StorageConstants.SQL_TYPE);
+				List<String> storages = queryCurrentStorages();
 
-				for (Entry<String, Storage> entry : groups.getStorages().entrySet()) {
+				for (String storage : storages) {
 					try {
-						processStorage(entry.getValue().getId());
+						processStorage(storage);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -242,6 +258,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
+				Cat.logError(e);
 			} finally {
 				t.complete();
 			}
