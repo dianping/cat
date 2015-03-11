@@ -20,10 +20,12 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.spi.MessageManager;
 
 /**
@@ -33,7 +35,7 @@ public class Cat {
 	private static Cat s_instance = new Cat();
 
 	private static volatile boolean s_init = false;
-	
+
 	private MessageProducer m_producer;
 
 	private MessageManager m_manager;
@@ -216,6 +218,16 @@ public class Cat {
 
 	private static void logMetricInternal(String name, String status, String keyValuePairs) {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
+	}
+
+	public static String logRemoteLink() {
+		String childId = createMessageId();
+		DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
+
+		next.addData(childId);
+		next.setStatus(Message.SUCCESS);
+		next.complete();
+		return childId;
 	}
 
 	public static void logTrace(String type, String name) {
