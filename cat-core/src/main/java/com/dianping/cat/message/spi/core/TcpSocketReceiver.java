@@ -68,7 +68,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	public void init() {
 		try {
 			startServer(m_port);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
 		}
 	}
@@ -98,10 +98,10 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 		try {
 			bootstrap.bind(port).sync();
+			m_logger.info("start netty server!");
 		} catch (Exception e) {
-			Cat.logError("Started Netty Server Failed:" + port, e);
+			m_logger.error("Started Netty Server Failed:" + port, e);
 		}
-		m_logger.info("start netty server!");
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {
