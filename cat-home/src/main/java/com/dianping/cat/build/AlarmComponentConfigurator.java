@@ -93,7 +93,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
-import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.app.AppDataService;
@@ -202,7 +202,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageAlertInfoRTContainer.class));
 
-		all.add(C(StorageGraphBuilder.class));
+		all.add(C(StorageAlertInfoBuilder.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
 
@@ -247,7 +247,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StorageSQLAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)
-		      .req(StorageSQLRuleConfigManager.class, StorageGroupConfigManager.class, StorageGraphBuilder.class));
+		      .req(StorageSQLRuleConfigManager.class, StorageGroupConfigManager.class, StorageAlertInfoBuilder.class));
 
 		all.add(C(AlertExceptionBuilder.class).req(ExceptionRuleConfigManager.class, AggregationConfigManager.class));
 

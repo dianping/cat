@@ -21,7 +21,7 @@ import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.storage.AbstractStorageAlert.ReportFetcherParam;
 import com.dianping.cat.report.page.storage.StorageConstants;
 
-public class StorageGraphBuilder {
+public class StorageAlertInfoBuilder {
 
 	@Inject
 	private StorageAlertInfoRTContainer m_container;
@@ -41,7 +41,7 @@ public class StorageGraphBuilder {
 
 		for (Alert alert : alerts) {
 			long time = alert.getAlertTime().getTime();
-			long current = time - time % TimeHelper.ONE_MINUTE;
+			long current = time - time % TimeHelper.ONE_MINUTE - TimeHelper.ONE_MINUTE;
 			StorageAlertInfo alertInfo = alertInfos.get(current);
 
 			if (alertInfo == null) {

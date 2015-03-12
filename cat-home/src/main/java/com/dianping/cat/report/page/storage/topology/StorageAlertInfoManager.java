@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -41,12 +43,26 @@ public class StorageAlertInfoManager implements Initializable {
 	private AlertDao m_alertDao;
 
 	@Inject
-	private StorageGraphBuilder m_builder;
+	private StorageAlertInfoBuilder m_builder;
 
 	@Inject
 	private StorageAlertInfoRTContainer m_alertInfoRTContainer;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
+
+	private void checkAlertInfos(Map<String, StorageAlertInfo> results, long start, long end, Payload payload) {
+		if (results.size() < payload.getMinuteCounts()) {
+			for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
+				String title = m_sdf.format(new Date(s));
+
+				if (!results.containsKey(title)) {
+					StorageAlertInfo blankAlertInfo = new StorageAlertInfo(payload.getType());
+
+					results.put(title, blankAlertInfo);
+				}
+			}
+		}
+	}
 
 	private Map<String, StorageAlertInfo> convertAlertInfo(Map<Long, StorageAlertInfo> alertInfos, int tops) {
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
@@ -81,14 +97,15 @@ public class StorageAlertInfoManager implements Initializable {
 
 	private Map<String, StorageAlertInfo> queryAlertInfos(long start, long end, int tops) {
 		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
-		Pair<Map<Long, StorageAlertInfo>, List<Long>> pair = m_alertInfoRTContainer.find(start, end);
+		Pair<Map<Long, StorageAlertInfo>, List<Long>> pair = queryFromMemory(start, end);
 		List<Long> historyTimes = pair.getValue();
 
 		alertInfos.putAll(pair.getKey());
 
 		if (historyTimes.size() > 0) {
-			Date historyStart = new Date(historyTimes.get(0));
-			Date historyEnd = new Date(historyTimes.get(historyTimes.size() - 1) + TimeHelper.ONE_MINUTE - 1000);
+			Date historyStart = new Date(historyTimes.get(0) + TimeHelper.ONE_MINUTE);
+			Date historyEnd = new Date(historyTimes.get(historyTimes.size() - 1) + 2 * TimeHelper.ONE_MINUTE
+			      - TimeHelper.ONE_SECOND);
 
 			try {
 				List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(historyStart, historyEnd,
@@ -105,19 +122,45 @@ public class StorageAlertInfoManager implements Initializable {
 	}
 
 	public Map<String, StorageAlertInfo> queryAlertInfos(Payload payload, Model model) {
+		int minuteCounts = payload.getMinuteCounts();
 		long end = payload.getDate() + model.getMinute() * TimeHelper.ONE_MINUTE;
-		long start = end - (payload.getMinuteCounts() - 1) * TimeHelper.ONE_MINUTE;
-
-		Map<String, StorageAlertInfo> alertInfos = queryAlertInfos(start, end, payload.getTopCounts());
+		long start = end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE;
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
-		List<String> keys = new ArrayList<String>(alertInfos.keySet());
+		Map<String, StorageAlertInfo> alertInfos = queryAlertInfos(start, end, payload.getTopCounts());
 
+		checkAlertInfos(alertInfos, start, end, payload);
+
+		List<String> keys = new ArrayList<String>(alertInfos.keySet());
 		Collections.sort(keys, new StringCompartor());
 
 		for (String key : keys) {
 			results.put(key, alertInfos.get(key));
 		}
 		return results;
+	}
+
+	public Pair<Map<Long, StorageAlertInfo>, List<Long>> queryFromMemory(long start, long end) {
+		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
+		List<Long> historyMinutes = new LinkedList<Long>();
+		Set<Long> timeKeys = m_alertInfoRTContainer.getTimeKeys();
+		long earliest = Long.MAX_VALUE;
+
+		if (!timeKeys.isEmpty()) {
+			earliest = Collections.min(timeKeys);
+		}
+
+		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
+			StorageAlertInfo alertInfo = m_alertInfoRTContainer.find(s);
+
+			if (alertInfo != null) {
+				alertInfos.put(s, alertInfo);
+			} else {
+				if (s < earliest) {
+					historyMinutes.add(s);
+				}
+			}
+		}
+		return new Pair<Map<Long, StorageAlertInfo>, List<Long>>(alertInfos, historyMinutes);
 	}
 
 	public static class AlertInfoStorageComparator implements Comparator<Entry<String, Storage>> {
@@ -140,28 +183,24 @@ public class StorageAlertInfoManager implements Initializable {
 
 		@Override
 		public void run() {
-			long endTime = TimeHelper.getCurrentMinute().getTime() - TimeHelper.ONE_MINUTE;
-			long startTime = endTime - TimeHelper.ONE_MINUTE * StorageConstants.DEFAULT_MINUTE_COUNT;
+			long current = TimeHelper.getCurrentMinute().getTime();
+			Date start = new Date(current + (1 - StorageConstants.DEFAULT_MINUTE_COUNT) * TimeHelper.ONE_MINUTE);
+			Date end = new Date(current + TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND);
 			Transaction t = Cat.newTransaction("ReloadTask", "StorageAlertRecover");
 
 			try {
-				for (long current = startTime; current <= endTime; current += TimeHelper.ONE_MINUTE) {
-					try {
-						Date start = new Date(current);
-						Date end = new Date(current + TimeHelper.ONE_MINUTE - 1000);
-						StorageAlertInfo alertInfo = m_alertInfoRTContainer.makeAlertInfo(StorageConstants.SQL_TYPE, start);
-						List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end,
-						      AlertType.STORAGE_SQL.getName(), AlertEntity.READSET_FULL);
+				try {
+					List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.STORAGE_SQL.getName(),
+					      AlertEntity.READSET_FULL);
+					Map<Long, StorageAlertInfo> alertInfos = m_builder.buildStorageAlertInfos(alerts);
 
-						for (Alert alert : alerts) {
-							m_builder.parseAlertEntity(alert, alertInfo);
-						}
-						m_alertInfoRTContainer.offer(alertInfo);
-					} catch (DalNotFoundException e) {
-						// ignore
-					} catch (Exception e) {
-						Cat.logError(e);
+					for (Entry<Long, StorageAlertInfo> entry : alertInfos.entrySet()) {
+						m_alertInfoRTContainer.offer(entry.getValue());
 					}
+				} catch (DalNotFoundException e) {
+					// ignore
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
