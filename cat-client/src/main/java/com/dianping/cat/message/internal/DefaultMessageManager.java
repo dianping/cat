@@ -97,6 +97,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	public void flush(MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(nextMessageId());
+		}
+
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {
@@ -160,6 +164,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public MessageTree getThreadLocalMessageTree() {
 		Context ctx = m_context.get();
+
+		if (ctx == null) {
+			setup();
+		}
+		ctx = m_context.get();
 
 		if (ctx != null) {
 			return ctx.m_tree;
@@ -336,10 +345,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				if (tree.getMessageId() == null) {
-					tree.setMessageId(nextMessageId());
-				}
-
 				tree.setMessage(message);
 				flush(tree);
 			} else {
@@ -455,10 +460,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					addTransactionChild(transaction, parent);
 				}
 			} else {
-				if (m_tree.getMessageId() == null) {
-					m_tree.setMessageId(nextMessageId());
-				}
-
 				m_tree.setMessage(transaction);
 			}
 

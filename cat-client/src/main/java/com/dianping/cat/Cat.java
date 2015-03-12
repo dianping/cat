@@ -20,13 +20,12 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 /**
  * This is the main entry point to the system.
@@ -220,14 +219,44 @@ public class Cat {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
 	}
 
-	public static String logRemoteLink() {
-		String childId = createMessageId();
-		DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
+	public static void logRemoteCallClient(Context ctx) {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		String messageId = tree.getMessageId();
 
-		next.addData(childId);
-		next.setStatus(Message.SUCCESS);
-		next.complete();
-		return childId;
+		if (messageId == null) {
+			messageId = Cat.createMessageId();
+			tree.setMessageId(messageId);
+		}
+
+		String childId = Cat.createMessageId();
+		Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+
+		String root = tree.getRootMessageId();
+		
+		if (root == null) {
+			root = messageId;
+		}
+		
+		ctx.addProperty(Context.ROOT, root);
+		ctx.addProperty(Context.PARENT, messageId);
+		ctx.addProperty(Context.CHILD, childId);
+	}
+
+	public static void logRemoteCallServer(Context ctx) {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		String messageId = ctx.getProperty(Context.CHILD);
+		String rootId = ctx.getProperty(Context.ROOT);
+		String parentId = ctx.getProperty(Context.PARENT);
+
+		if (messageId != null) {
+			tree.setMessageId(messageId);
+		}
+		if (parentId != null) {
+			tree.setParentMessageId(parentId);
+		}
+		if (rootId != null) {
+			tree.setRootMessageId(rootId);
+		}
 	}
 
 	public static void logTrace(String type, String name) {
@@ -277,10 +306,20 @@ public class Cat {
 
 	// this should be called when a thread starts to create some thread local data
 	public static void setup(String sessionToken) {
-		// remove me
+		Cat.getManager().setup();
 	}
 
 	private Cat() {
+	}
+
+	public String getCurrentMessageId() {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+
+		if (tree != null) {
+			return tree.getMessageId();
+		} else {
+			return null;
+		}
 	}
 
 	void setContainer(PlexusContainer container) {
@@ -292,6 +331,19 @@ public class Cat {
 			throw new RuntimeException("Unable to get instance of MessageManager, "
 			      + "please make sure the environment was setup correctly!", e);
 		}
+	}
+
+	public static interface Context {
+
+		public final String ROOT = "_catRootMessageId";
+
+		public final String PARENT = "_catParentMessageId";
+
+		public final String CHILD = "_catChildMessageId";
+
+		public void addProperty(String key, String value);
+
+		public String getProperty(String key);
 	}
 
 }

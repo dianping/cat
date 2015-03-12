@@ -42,7 +42,9 @@ ToolsTest.class,
 
 NetworkInterfaceManagerTest.class,
 
-CatTest.class
+CatTest.class,
+
+ApiTest.class
 
 })
 public class AllTests {
