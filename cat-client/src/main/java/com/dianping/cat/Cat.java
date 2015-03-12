@@ -68,6 +68,22 @@ public class Cat {
 		return catHome;
 	}
 
+	public static String getCurrentMessageId() {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+
+		if (tree != null) {
+			String messageId = tree.getMessageId();
+
+			if (messageId == null) {
+				messageId = createMessageId();
+				tree.setMessageId(messageId);
+			}
+			return messageId;
+		} else {
+			return null;
+		}
+	}
+
 	public static Cat getInstance() {
 		return s_instance;
 	}
@@ -232,11 +248,11 @@ public class Cat {
 		Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 		String root = tree.getRootMessageId();
-		
+
 		if (root == null) {
 			root = messageId;
 		}
-		
+
 		ctx.addProperty(Context.ROOT, root);
 		ctx.addProperty(Context.PARENT, messageId);
 		ctx.addProperty(Context.CHILD, childId);
@@ -310,16 +326,6 @@ public class Cat {
 	}
 
 	private Cat() {
-	}
-
-	public String getCurrentMessageId() {
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
-
-		if (tree != null) {
-			return tree.getMessageId();
-		} else {
-			return null;
-		}
 	}
 
 	void setContainer(PlexusContainer container) {
