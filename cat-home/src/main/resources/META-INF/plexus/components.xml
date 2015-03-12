@@ -6542,6 +6542,9 @@
 					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.service.impl.EventReportService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>

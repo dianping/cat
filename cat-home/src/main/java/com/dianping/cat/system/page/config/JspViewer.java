@@ -165,6 +165,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.APP_RULE_UPDATE.getPath();
 		case APP_CONFIG_UPDATE:
 			return JspFile.APP_CONFIG_UPDATE.getPath();
+		case APP_RULE_BATCH_UPDATE:
+			return JspFile.APP_LIST.getPath();
 		case APP_COMPARISON_CONFIG_UPDATE:
 			return JspFile.APP_COMPARISON_CONFIG_UPDATE.getPath();
 		case TRANSACTION_RULE:
