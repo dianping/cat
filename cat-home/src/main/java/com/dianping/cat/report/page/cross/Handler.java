@@ -20,7 +20,7 @@ import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.CrossReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -30,7 +30,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private CrossReportService m_reportService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryCrossReport(domain, start, end);
+		return m_reportService.queryReport(domain, start, end);
 	}
 
 	@Override

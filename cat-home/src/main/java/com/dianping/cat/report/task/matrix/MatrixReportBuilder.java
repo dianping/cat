@@ -16,7 +16,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -25,7 +25,7 @@ public class MatrixReportBuilder implements TaskBuilder {
 	public static final String ID = MatrixAnalyzer.ID;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected MatrixReportService m_reportService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -85,7 +85,7 @@ public class MatrixReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				MatrixReport reportModel = m_reportService.queryMatrixReport(domain, new Date(startTime), new Date(
+				MatrixReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(
 				      startTime + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
@@ -109,7 +109,7 @@ public class MatrixReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			MatrixReport reportModel = m_reportService.queryMatrixReport(domain, date, new Date(date.getTime()
+			MatrixReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

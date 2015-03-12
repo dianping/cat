@@ -15,7 +15,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.BugReportService;
 import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -30,7 +30,7 @@ public class ExceptionConfigProcessor {
 	private ExceptionRuleConfigManager m_exceptionRuleConfigManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private BugReportService m_reportService;
 
 	private void deleteExceptionExclude(Payload payload) {
 		m_exceptionRuleConfigManager.deleteExceptionExclude(payload.getDomain(), payload.getException());
@@ -92,7 +92,7 @@ public class ExceptionConfigProcessor {
 		long current = System.currentTimeMillis();
 		Date start = new Date(current - current % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR - TimeHelper.ONE_DAY);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
-		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
+		BugReport report = m_reportService.queryReport(Constants.CAT, start, end);
 		Set<String> keys = new HashSet<String>();
 		List<String> exceptions = new ArrayList<String>();
 

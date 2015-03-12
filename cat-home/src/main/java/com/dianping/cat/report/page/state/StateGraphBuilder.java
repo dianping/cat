@@ -15,12 +15,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
 
 public class StateGraphBuilder {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StateReportService m_reportService;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -54,7 +54,7 @@ public class StateGraphBuilder {
 			step = TimeHelper.ONE_DAY;
 		}
 		for (long date = start.getTime(); date < end.getTime(); date += step) {
-			StateReport report = m_reportService.queryStateReport(domain, new Date(date), new Date(date + step));
+			StateReport report = m_reportService.queryReport(domain, new Date(date), new Date(date + step));
 
 			report.accept(builder);
 			report.accept(visitor);

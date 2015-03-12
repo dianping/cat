@@ -24,14 +24,18 @@ import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.home.highload.entity.Name;
 import com.dianping.cat.home.highload.entity.Type;
 import com.dianping.cat.home.highload.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HighloadReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
 public class HighLoadReportBuilder implements TaskBuilder {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private HighloadReportService m_reportService;
+	
+	@Inject
+	private TransactionReportService m_transactionReportService;
 
 	@Inject
 	private ProjectService m_projectService;
@@ -114,7 +118,7 @@ public class HighLoadReportBuilder implements TaskBuilder {
 
 		TransactionReportVisitor visitor = new TransactionReportVisitor(types, heaps);
 		for (String domain : domains) {
-			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, startTime, endTime);
+			TransactionReport transactionReport = m_transactionReportService.queryReport(domain, startTime, endTime);
 
 			visitor.visitTransactionReport(transactionReport);
 		}

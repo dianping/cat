@@ -16,7 +16,7 @@ import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.DependencyReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
 public class DependencyReportBuilder implements TaskBuilder {
@@ -24,7 +24,7 @@ public class DependencyReportBuilder implements TaskBuilder {
 	public static final String ID = DependencyAnalyzer.ID;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private DependencyReportService m_reportService;
 
 	@Inject
 	private TopologyGraphBuilder m_graphBuilder;
@@ -45,7 +45,7 @@ public class DependencyReportBuilder implements TaskBuilder {
 
 		m_graphBuilder.getGraphs().clear();
 		for (String domain : domains) {
-			DependencyReport report = m_reportService.queryDependencyReport(domain, reportPeriod, end);
+			DependencyReport report = m_reportService.queryReport(domain, reportPeriod, end);
 
 			m_graphBuilder.visitDependencyReport(report);
 		}

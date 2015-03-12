@@ -26,7 +26,10 @@ import com.dianping.cat.home.utilization.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.CrossReportService;
+import com.dianping.cat.report.service.impl.HeartbeatReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.service.impl.UtilizationReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -35,7 +38,16 @@ public class UtilizationReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_UTILIZATION;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected UtilizationReportService m_reportService;
+	
+	@Inject
+	protected TransactionReportService m_transactionReportService;
+	
+	@Inject
+	protected HeartbeatReportService m_heartbeatReportService;
+	
+	@Inject
+	protected CrossReportService m_crossReportService;
 
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;
@@ -71,7 +83,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
+				TransactionReport transactionReport = m_transactionReportService.queryReport(domainName, start, end);
 				int size = transactionReport.getMachines().size();
 
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
@@ -82,7 +94,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domainName, start, end);
+				HeartbeatReport heartbeatReport = m_heartbeatReportService.queryReport(domainName, start, end);
 
 				heartbeatVisitor.visitHeartbeatReport(heartbeatReport);
 			}
@@ -90,7 +102,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				CrossReport crossReport = m_crossReportService.queryReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 				projectInfo.setClientIp(Constants.ALL);
@@ -175,7 +187,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, new Date(startTime),
+				UtilizationReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
 				      new Date(startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -196,7 +208,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, date, new Date(date.getTime()
+			UtilizationReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

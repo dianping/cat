@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.CrossReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -24,7 +24,7 @@ public class CrossReportBuilder implements TaskBuilder {
 	public static final String ID = CrossAnalyzer.ID;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected CrossReportService m_reportService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -84,7 +84,7 @@ public class CrossReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				CrossReport reportModel = m_reportService.queryCrossReport(domain, new Date(startTime), new Date(startTime
+				CrossReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -105,7 +105,7 @@ public class CrossReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
+			CrossReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

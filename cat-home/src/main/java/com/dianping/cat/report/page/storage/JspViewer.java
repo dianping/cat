@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.storage;
 
-import com.dianping.cat.report.ReportPage;
-
 import org.unidal.web.mvc.view.BaseJspViewer;
+
+import com.dianping.cat.report.ReportPage;
 
 public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
 	@Override

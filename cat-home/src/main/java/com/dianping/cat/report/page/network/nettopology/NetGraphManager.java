@@ -33,7 +33,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.NetTopologyReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -48,7 +48,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private NetTopologyReportService m_reportService;
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
@@ -85,7 +85,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		} else if (startTime == currentHours - TimeHelper.ONE_HOUR) {
 			netGraphSet = m_lastNetGraphSet;
 		} else {
-			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, new Date(start.getTime()
+			netGraphSet = m_reportService.queryReport(Constants.CAT, start, new Date(start.getTime()
 			      + TimeHelper.ONE_HOUR));
 		}
 

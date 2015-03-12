@@ -16,7 +16,8 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.alert.report.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.AlertReportService;
+import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.system.config.ExceptionRuleConfigManager;
@@ -26,8 +27,11 @@ public class AlertReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_ALERT;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected AlertReportService m_alertReportService;
 
+	@Inject
+	protected TopReportService m_topReportService;
+	
 	@Inject
 	private ExceptionRuleConfigManager m_exceptionRuleConfigManager;
 
@@ -46,7 +50,7 @@ public class AlertReportBuilder implements TaskBuilder {
 		report.setPeriod(period);
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
-		return m_reportService.insertDailyReport(report, binaryContent);
+		return m_alertReportService.insertDailyReport(report, binaryContent);
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class AlertReportBuilder implements TaskBuilder {
 		alertReport.setStartTime(start);
 		alertReport.setEndTime(end);
 
-		TopReport topReport = m_reportService.queryTopReport(Constants.CAT, start, end);
+		TopReport topReport = m_topReportService.queryReport(Constants.CAT, start, end);
 		visitor.visitTopReport(topReport);
 
 		HourlyReport report = new HourlyReport();
@@ -72,7 +76,7 @@ public class AlertReportBuilder implements TaskBuilder {
 
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
 
-		return m_reportService.insertHourlyReport(report, binaryContent);
+		return m_alertReportService.insertHourlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -89,7 +93,7 @@ public class AlertReportBuilder implements TaskBuilder {
 
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
 
-		return m_reportService.insertMonthlyReport(report, binaryContent);
+		return m_alertReportService.insertMonthlyReport(report, binaryContent);
 	}
 
 	@Override
@@ -107,7 +111,7 @@ public class AlertReportBuilder implements TaskBuilder {
 
 		byte[] binaryContent = DefaultNativeBuilder.build(alertReport);
 
-		return m_reportService.insertWeeklyReport(report, binaryContent);
+		return m_alertReportService.insertWeeklyReport(report, binaryContent);
 	}
 
 	private AlertReport queryDailyReportsByDuration(String domain, Date start, Date end) {
@@ -117,7 +121,7 @@ public class AlertReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				AlertReport reportModel = m_reportService.queryAlertReport(domain, new Date(startTime), new Date(startTime
+				AlertReport reportModel = m_alertReportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -137,7 +141,7 @@ public class AlertReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			AlertReport reportModel = m_reportService.queryAlertReport(domain, date, new Date(date.getTime()
+			AlertReport reportModel = m_alertReportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

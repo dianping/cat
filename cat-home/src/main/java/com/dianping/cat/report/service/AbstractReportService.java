@@ -13,19 +13,29 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReport;
+import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
+import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.dal.report.DailyReportContent;
 import com.dianping.cat.home.dal.report.DailyReportContentDao;
+import com.dianping.cat.home.dal.report.MonthlyReportContent;
 import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
+import com.dianping.cat.home.dal.report.WeeklyReportContent;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
 import com.dianping.cat.message.Event;
 
@@ -54,6 +64,114 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
+	
+	@Override
+	public boolean insertDailyReport(DailyReport report, byte[] content) {
+		try {
+			m_dailyReportDao.insert(report);
+
+			int id = report.getId();
+			DailyReportContent proto = m_dailyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_dailyReportContentDao.insert(proto);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean insertHourlyReport(HourlyReport report, byte[] content) {
+		try {
+			m_hourlyReportDao.insert(report);
+
+			int id = report.getId();
+			HourlyReportContent proto = m_hourlyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_hourlyReportContentDao.insert(proto);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean insertMonthlyReport(MonthlyReport report, byte[] content) {
+		try {
+			MonthlyReport monthReport = m_monthlyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
+			      report.getDomain(), report.getName(), MonthlyReportEntity.READSET_FULL);
+
+			if (monthReport != null) {
+				MonthlyReportContent reportContent = m_monthlyReportContentDao.createLocal();
+
+				reportContent.setKeyReportId(monthReport.getId());
+				reportContent.setReportId(monthReport.getId());
+				m_monthlyReportDao.deleteReportByDomainNamePeriod(report);
+				m_monthlyReportContentDao.deleteByPK(reportContent);
+			}
+		} catch (DalNotFoundException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		try {
+			m_monthlyReportDao.insert(report);
+
+			int id = report.getId();
+			MonthlyReportContent proto = m_monthlyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_monthlyReportContentDao.insert(proto);
+
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean insertWeeklyReport(WeeklyReport report, byte[] content) {
+		try {
+			WeeklyReport weeklyReport = m_weeklyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
+			      report.getDomain(), report.getName(), WeeklyReportEntity.READSET_FULL);
+
+			if (weeklyReport != null) {
+				WeeklyReportContent reportContent = m_weeklyReportContentDao.createLocal();
+
+				reportContent.setKeyReportId(weeklyReport.getId());
+				reportContent.setReportId(weeklyReport.getId());
+				m_weeklyReportContentDao.deleteByPK(reportContent);
+				m_weeklyReportDao.deleteReportByDomainNamePeriod(report);
+			}
+		} catch (DalNotFoundException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		try {
+			m_weeklyReportDao.insert(report);
+
+			int id = report.getId();
+			WeeklyReportContent proto = m_weeklyReportContentDao.createLocal();
+
+			proto.setReportId(id);
+			proto.setContent(content);
+			m_weeklyReportContentDao.insert(proto);
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
 
 	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
 

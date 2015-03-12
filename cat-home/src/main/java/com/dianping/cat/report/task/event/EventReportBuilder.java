@@ -22,7 +22,7 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.EventReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -37,7 +37,7 @@ public class EventReportBuilder implements TaskBuilder {
 	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected EventReportService m_reportService;
 
 	@Inject
 	private EventGraphCreator m_eventGraphCreator;
@@ -83,7 +83,7 @@ public class EventReportBuilder implements TaskBuilder {
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
-		EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
+		EventReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
 
 		return m_eventGraphCreator.splitReportToGraphs(period, domain, EventAnalyzer.ID, report);
@@ -159,7 +159,7 @@ public class EventReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				EventReport reportModel = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
+				EventReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -184,7 +184,7 @@ public class EventReportBuilder implements TaskBuilder {
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			EventReport report = m_reportService.queryEventReport(domain, new Date(startTime), new Date(startTime
+			EventReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
 
 			reports.add(report);

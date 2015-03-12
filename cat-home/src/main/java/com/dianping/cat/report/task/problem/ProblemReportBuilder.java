@@ -11,8 +11,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.ProblemReportFilter;
+import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -23,7 +23,7 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -38,7 +38,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected ProblemReportService m_reportService;
 
 	@Inject
 	private ProblemGraphCreator m_problemGraphCreator;
@@ -73,7 +73,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
-		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
+		ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
 
 		return m_problemGraphCreator.splitReportToGraphs(period, domain, ProblemAnalyzer.ID, report);
@@ -152,7 +152,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ProblemReport reportModel = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(
+				ProblemReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(
 				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -174,7 +174,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
+			ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
 
 			reports.add(report);

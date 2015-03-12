@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HeartbeatReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -25,7 +25,7 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 	protected GraphDao m_graphDao;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected HeartbeatReportService m_reportService;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -71,7 +71,7 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_HOUR) {
-			HeartbeatReport report = m_reportService.queryHeartbeatReport(domain, new Date(startTime), new Date(startTime
+			HeartbeatReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
 
 			report.accept(merger);

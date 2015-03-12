@@ -27,7 +27,8 @@ import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.transaction.AllMachineMerger;
 import com.dianping.cat.report.page.transaction.AllNameMerger;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.EventReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -40,7 +41,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_transactionReportService;
+	
+	@Inject
+	private EventReportService m_eventReportService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -82,7 +86,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryEventReport(domain, start, end);
+		return m_eventReportService.queryReport(domain, start, end);
 	}
 
 	private TransactionReport getHistoryTransactionReport(Payload payload) {
@@ -90,7 +94,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryTransactionReport(domain, start, end);
+		return m_transactionReportService.queryReport(domain, start, end);
 	}
 
 	private EventReport getHourlyEventReport(Payload payload) {
