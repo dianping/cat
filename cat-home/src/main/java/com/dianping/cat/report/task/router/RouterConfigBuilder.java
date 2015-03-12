@@ -46,7 +46,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_DAY);
-		StateReport report = m_reportService.queryStateReport(Constants.CAT, period, end);
+		StateReport report = m_reportService.queryReport(Constants.CAT, period, end);
 		RouterConfig routerConfig = new RouterConfig(Constants.CAT);
 		StateReportVisitor visitor = new StateReportVisitor();
 

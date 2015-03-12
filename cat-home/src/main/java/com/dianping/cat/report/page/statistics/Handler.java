@@ -280,7 +280,7 @@ public class Handler implements PageHandler<Context> {
 	private void buildSystemReport(Model model, Payload payload) {
 		Date startDate = payload.getDay();
 		Date endDate = TimeHelper.addDays(startDate, 1);
-		SystemReport systemReport = m_reportService.querySystemReport(Constants.CAT, startDate, endDate);
+		SystemReport systemReport = m_reportService.queryReport(Constants.CAT, startDate, endDate);
 
 		model.setSystemReport(systemReport);
 		model.setKeys(SystemReportBuilder.KEYS);
@@ -295,31 +295,31 @@ public class Handler implements PageHandler<Context> {
 	private AlertReport queryAlertReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryAlertReport(Constants.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private BugReport queryBugReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryBugReport(Constants.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private HeavyReport queryHeavyReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryHeavyReport(Constants.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private JarReport queryJarReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryJarReport(Constants.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private ServiceReport queryServiceReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
 
-		return m_reportService.queryServiceReport(Constants.CAT, pair.getKey(), pair.getValue());
+		return m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 	}
 
 	private Pair<Date, Date> queryStartEndTime(Payload payload) {
@@ -344,7 +344,7 @@ public class Handler implements PageHandler<Context> {
 
 	private UtilizationReport queryUtilizationReport(Payload payload) {
 		Pair<Date, Date> pair = queryStartEndTime(payload);
-		UtilizationReport report = m_reportService.queryUtilizationReport(Constants.CAT, pair.getKey(), pair.getValue());
+		UtilizationReport report = m_reportService.queryReport(Constants.CAT, pair.getKey(), pair.getValue());
 		Collection<com.dianping.cat.home.utilization.entity.Domain> domains = report.getDomains().values();
 
 		for (com.dianping.cat.home.utilization.entity.Domain d : domains) {

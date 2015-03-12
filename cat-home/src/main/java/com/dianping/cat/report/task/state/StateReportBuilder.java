@@ -58,7 +58,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		StateReport stateReport = m_reportService.queryStateReport(domain, period, new Date(period.getTime()
+		StateReport stateReport = m_reportService.queryReport(domain, period, new Date(period.getTime()
 		      + TimeHelper.ONE_HOUR));
 
 		new StateReportVisitor().visitStateReport(stateReport);
@@ -106,7 +106,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				StateReport reportModel = m_reportService.queryStateReport(domain, new Date(startTime), new Date(startTime
+				StateReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
@@ -129,7 +129,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			StateReport reportModel = m_reportService.queryStateReport(domain, date, new Date(date.getTime()
+			StateReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

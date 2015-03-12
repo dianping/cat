@@ -231,7 +231,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStorageReport(buildReportId(payload), start, end);
+		return m_reportService.queryReport(buildReportId(payload), start, end);
 	}
 
 	private StorageReport queryHourlyReport(Payload payload) {

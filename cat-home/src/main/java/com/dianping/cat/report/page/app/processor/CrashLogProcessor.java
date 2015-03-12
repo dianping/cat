@@ -23,14 +23,14 @@ import com.dianping.cat.report.page.app.Model;
 import com.dianping.cat.report.page.app.Payload;
 import com.dianping.cat.report.page.app.ProblemStatistics;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
 public class CrashLogProcessor {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private ProblemReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -157,7 +157,7 @@ public class CrashLogProcessor {
 	private ProblemReport showSummarizeReport(Model model, Payload payload, String domain) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+		ProblemReport problemReport = m_reportService.queryReport(domain, start, end);
 
 		return problemReport;
 	}

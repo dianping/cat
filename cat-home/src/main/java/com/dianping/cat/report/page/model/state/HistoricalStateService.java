@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StateReportService m_reportService;
 
 	public HistoricalStateService() {
 		super(StateAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	}
 
 	private StateReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryStateReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

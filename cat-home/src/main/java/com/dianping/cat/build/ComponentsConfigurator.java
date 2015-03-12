@@ -31,6 +31,7 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.UserDefineRuleDao;
+import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.graph.metric.DataExtractor;
 import com.dianping.cat.report.graph.metric.MetricDataFetcher;
@@ -48,14 +49,14 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
 import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
-import com.dianping.cat.report.alert.AlertInfo;
+import com.dianping.cat.report.service.impl.MetricReportService;
+import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
@@ -74,8 +75,8 @@ import com.dianping.cat.system.config.NetworkRuleConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 import com.dianping.cat.system.config.SenderConfigManager;
 import com.dianping.cat.system.config.StorageCacheRuleConfigManager;
-import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
+import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.SystemRuleConfigManager;
 import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
@@ -100,7 +101,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
 		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
-		      req(ReportServiceManager.class, ServerConfigManager.class));
+		      req(StateReportService.class, ServerConfigManager.class));
 
 		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
@@ -207,7 +208,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class)
-		      .req(ModelService.class, MetricAnalyzer.ID).req(ReportServiceManager.class).req(IpService.class));
+		      .req(ModelService.class, MetricAnalyzer.ID).req(MetricReportService.class).req(IpService.class));
 		all.add(C(DataExtractor.class, DataExtractorImpl.class));
 		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
 		all.add(C(AlertInfo.class).req(MetricConfigManager.class));

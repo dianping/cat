@@ -54,7 +54,7 @@ public class JarReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domainName, period, end);
+				HeartbeatReport heartbeatReport = m_reportService.queryReport(domainName, period, end);
 
 				visitor.visitHeartbeatReport(heartbeatReport);
 			}

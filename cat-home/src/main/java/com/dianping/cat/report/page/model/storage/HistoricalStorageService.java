@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StorageReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalStorageService extends BaseHistoricalModelService<Storage
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StorageReportService m_reportService;
 
 	public HistoricalStorageService() {
 		super(StorageAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalStorageService extends BaseHistoricalModelService<Storage
 	}
 
 	private StorageReport getReportFromDatabase(long timestamp, String id) throws Exception {
-		return m_reportService.queryStorageReport(id, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(id, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private StorageReport getReportFromLocalDisk(long timestamp, String id) throws Exception {

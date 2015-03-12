@@ -92,7 +92,7 @@ public class ExceptionConfigProcessor {
 		long current = System.currentTimeMillis();
 		Date start = new Date(current - current % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR - TimeHelper.ONE_DAY);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
-		BugReport report = m_reportService.queryBugReport(Constants.CAT, start, end);
+		BugReport report = m_reportService.queryReport(Constants.CAT, start, end);
 		Set<String> keys = new HashSet<String>();
 		List<String> exceptions = new ArrayList<String>();
 

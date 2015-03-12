@@ -67,7 +67,7 @@ public class SystemReportBuilder implements TaskBuilder {
 				Date eDate = new Date(s + TimeHelper.ONE_HOUR);
 
 				try {
-					MetricReport r = m_reportService.queryMetricReport(productLine, sDate, eDate);
+					MetricReport r = m_reportService.queryReport(productLine, sDate, eDate);
 
 					statistics.visitMetricReport(r);
 				} catch (Exception e) {
@@ -81,7 +81,7 @@ public class SystemReportBuilder implements TaskBuilder {
 	public MetricReport querySystemReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
 		Date end = new Date(time + TimeHelper.ONE_HOUR);
-		MetricReport report = m_reportService.queryMetricReport(product, start, end);
+		MetricReport report = m_reportService.queryReport(product, start, end);
 
 		return report;
 	}

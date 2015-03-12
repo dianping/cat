@@ -54,7 +54,7 @@ public class StateGraphBuilder {
 			step = TimeHelper.ONE_DAY;
 		}
 		for (long date = start.getTime(); date < end.getTime(); date += step) {
-			StateReport report = m_reportService.queryStateReport(domain, new Date(date), new Date(date + step));
+			StateReport report = m_reportService.queryReport(domain, new Date(date), new Date(date + step));
 
 			report.accept(builder);
 			report.accept(visitor);

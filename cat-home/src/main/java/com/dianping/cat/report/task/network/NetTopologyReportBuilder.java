@@ -61,7 +61,7 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 
 		for (String group : groups) {
 			Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
-			MetricReport report = m_reportService.queryMetricReport(group, period, end);
+			MetricReport report = m_reportService.queryReport(group, period, end);
 
 			reports.put(group, report);
 		}

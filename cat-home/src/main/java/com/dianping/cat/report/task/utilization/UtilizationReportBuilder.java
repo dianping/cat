@@ -71,7 +71,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				TransactionReport transactionReport = m_reportService.queryTransactionReport(domainName, start, end);
+				TransactionReport transactionReport = m_reportService.queryReport(domainName, start, end);
 				int size = transactionReport.getMachines().size();
 
 				utilizationReport.findOrCreateDomain(domainName).setMachineNumber(size);
@@ -82,7 +82,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				HeartbeatReport heartbeatReport = m_reportService.queryHeartbeatReport(domainName, start, end);
+				HeartbeatReport heartbeatReport = m_reportService.queryReport(domainName, start, end);
 
 				heartbeatVisitor.visitHeartbeatReport(heartbeatReport);
 			}
@@ -90,7 +90,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				CrossReport crossReport = m_reportService.queryReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 				projectInfo.setClientIp(Constants.ALL);
@@ -175,7 +175,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, new Date(startTime),
+				UtilizationReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
 				      new Date(startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -196,7 +196,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			UtilizationReport reportModel = m_reportService.queryUtilizationReport(domain, date, new Date(date.getTime()
+			UtilizationReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

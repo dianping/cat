@@ -19,7 +19,7 @@ import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.web.graph.WebReportConvertor;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.MetricReportService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -28,7 +28,7 @@ import com.dianping.cat.service.ModelResponse;
 public class CachedMetricReportServiceImpl implements CachedMetricReportService {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private MetricReportService m_reportService;
 
 	@Inject
 	private ModelService<MetricReport> m_service;
@@ -55,7 +55,7 @@ public class CachedMetricReportServiceImpl implements CachedMetricReportService 
 			Date end = new Date(date + TimeHelper.ONE_HOUR);
 
 			try {
-				result = m_reportService.queryMetricReport(product, start, end);
+				result = m_reportService.queryReport(product, start, end);
 				m_metricReports.put(key, result);
 			} catch (Exception e) {
 				Cat.logError(e);

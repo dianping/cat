@@ -45,7 +45,7 @@ public class DependencyReportBuilder implements TaskBuilder {
 
 		m_graphBuilder.getGraphs().clear();
 		for (String domain : domains) {
-			DependencyReport report = m_reportService.queryDependencyReport(domain, reportPeriod, end);
+			DependencyReport report = m_reportService.queryReport(domain, reportPeriod, end);
 
 			m_graphBuilder.visitDependencyReport(report);
 		}

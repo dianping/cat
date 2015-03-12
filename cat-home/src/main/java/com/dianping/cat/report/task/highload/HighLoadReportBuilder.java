@@ -114,7 +114,7 @@ public class HighLoadReportBuilder implements TaskBuilder {
 
 		TransactionReportVisitor visitor = new TransactionReportVisitor(types, heaps);
 		for (String domain : domains) {
-			TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, startTime, endTime);
+			TransactionReport transactionReport = m_reportService.queryReport(domain, startTime, endTime);
 
 			visitor.visitTransactionReport(transactionReport);
 		}

@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStateReport(domain, start, end);
+		return m_reportService.queryReport(domain, start, end);
 	}
 
 	private StateReport getHourlyReport(Payload payload) {

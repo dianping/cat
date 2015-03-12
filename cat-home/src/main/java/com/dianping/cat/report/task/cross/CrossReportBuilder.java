@@ -84,7 +84,7 @@ public class CrossReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				CrossReport reportModel = m_reportService.queryCrossReport(domain, new Date(startTime), new Date(startTime
+				CrossReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -105,7 +105,7 @@ public class CrossReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			CrossReport reportModel = m_reportService.queryCrossReport(domain, date, new Date(date.getTime()
+			CrossReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

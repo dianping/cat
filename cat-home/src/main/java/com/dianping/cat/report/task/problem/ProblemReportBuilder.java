@@ -73,7 +73,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
-		ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
+		ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
 
 		return m_problemGraphCreator.splitReportToGraphs(period, domain, ProblemAnalyzer.ID, report);
@@ -152,7 +152,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ProblemReport reportModel = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(
+				ProblemReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(
 				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -174,7 +174,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			ProblemReport report = m_reportService.queryProblemReport(domain, new Date(startTime), new Date(startTime
+			ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 			      + TimeHelper.ONE_HOUR));
 
 			reports.add(report);

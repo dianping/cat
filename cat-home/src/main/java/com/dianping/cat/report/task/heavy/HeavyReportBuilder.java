@@ -58,7 +58,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 		heavyReport.setEndTime(end);
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				MatrixReport matrixReport = m_reportService.queryMatrixReport(domainName, start, end);
+				MatrixReport matrixReport = m_reportService.queryReport(domainName, start, end);
 
 				visitor.visitMatrixReport(matrixReport);
 			}
@@ -114,7 +114,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				HeavyReport reportModel = m_reportService.queryHeavyReport(domain, new Date(startTime), new Date(startTime
+				HeavyReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -134,7 +134,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			HeavyReport reportModel = m_reportService.queryHeavyReport(domain, date, new Date(date.getTime()
+			HeavyReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

@@ -89,7 +89,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
-		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
+		TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
 
 		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
@@ -172,7 +172,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
+				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
 				      new Date(startTime + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
@@ -197,7 +197,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
+			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(
 			      startTime + TimeHelper.ONE_HOUR));
 
 			reports.add(report);

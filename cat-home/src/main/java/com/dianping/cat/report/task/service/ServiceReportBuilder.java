@@ -64,7 +64,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				CrossReport crossReport = m_reportService.queryReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 				projectInfo.setClientIp(Constants.ALL);
@@ -139,7 +139,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ServiceReport reportModel = m_reportService.queryServiceReport(domain, new Date(startTime), new Date(
+				ServiceReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(
 				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -160,7 +160,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			ServiceReport reportModel = m_reportService.queryServiceReport(domain, date, new Date(date.getTime()
+			ServiceReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

@@ -52,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		Date start = payload.getDate();
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, start, end);
+		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
 
 		switch (action) {
 		case API:

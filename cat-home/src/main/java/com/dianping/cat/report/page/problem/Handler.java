@@ -360,7 +360,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = model.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+		ProblemReport problemReport = m_reportService.queryReport(domain, start, end);
 
 		return problemReport;
 	}

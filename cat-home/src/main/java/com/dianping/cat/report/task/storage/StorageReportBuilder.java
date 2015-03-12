@@ -113,7 +113,7 @@ public class StorageReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				StorageReport reportModel = m_reportService.queryStorageReport(reportId, new Date(startTime), new Date(
+				StorageReport reportModel = m_reportService.queryReport(reportId, new Date(startTime), new Date(
 				      startTime + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -137,7 +137,7 @@ public class StorageReportBuilder implements TaskBuilder {
 		HistoryStorageReportMerger merger = new HistoryStorageReportMerger(report);
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			StorageReport reportModel = m_reportService.queryStorageReport(reportId, new Date(startTime), new Date(
+			StorageReport reportModel = m_reportService.queryReport(reportId, new Date(startTime), new Date(
 			      startTime + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

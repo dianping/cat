@@ -52,9 +52,9 @@ public class NotifyTaskBuilder implements TaskBuilder {
 
 	private String renderContent(String domain, Date start) {
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
+		TransactionReport transactionReport = m_reportService.queryReport(domain, start, end);
 		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+		ProblemReport problemReport = m_reportService.queryReport(domain, start, end);
 
 		StringBuilder sb = new StringBuilder(10240);
 

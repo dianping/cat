@@ -68,7 +68,7 @@ public class BugReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				ProblemReport problemReport = m_reportService.queryProblemReport(domainName, start, end);
+				ProblemReport problemReport = m_reportService.queryReport(domainName, start, end);
 				visitor.visitProblemReport(problemReport);
 			}
 		}
@@ -142,7 +142,7 @@ public class BugReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				BugReport reportModel = m_reportService.queryBugReport(domain, new Date(startTime), new Date(startTime
+				BugReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -162,7 +162,7 @@ public class BugReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			BugReport reportModel = m_reportService.queryBugReport(domain, date, new Date(date.getTime()
+			BugReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

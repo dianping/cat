@@ -78,7 +78,7 @@ public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 					MetricReport report = reports.get(metricReportKey);
 
 					if (report == null) {
-						report = m_reportService.queryMetricReport(productLine, start, end);
+						report = m_reportService.queryReport(productLine, start, end);
 
 						reports.put(metricReportKey, report);
 					}
