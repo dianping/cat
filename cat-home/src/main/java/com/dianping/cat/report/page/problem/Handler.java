@@ -28,7 +28,7 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -50,7 +50,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfigManager m_manager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private ProblemReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;

@@ -23,6 +23,11 @@
 	<c:forEach var="entry" items="${model.alertInfos}">
 		<table  class="smallTable" style="float:left" border=1>
 		<tr><th class="text-danger center">${entry.key}</th></tr>
+		<c:if test="${empty entry.value.storages}">
+			<tr><td>
+				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">访问正常</button>
+			</td></tr>
+		</c:if>
 		<c:forEach var="storage" items="${entry.value.storages}">
 		<tr><td>
 			<c:set var="storageInfo" value="${storage.value}" />
@@ -91,10 +96,10 @@
 			</c:if>
 		<c:choose>
 			<c:when test="${storageInfo != null && storageInfo.level == 1}">
-				<button class="btn btn-app btn-sm radius-4 btn-warning alert-modal" data-id="${storageInfo.id}" data-hour="${hour}" data-minute="${minute}" style="height: 40px; min-width: 130px; width: auto">${w:shorten(storageInfo.id, 20)}<span class="label label-inverse arrowed-in">${storageInfo.count}</span></button>
+				<button class="btn btn-app btn-sm radius-4 btn-warning alert-modal" data-id="${storageInfo.id}" data-hour="${hour}" data-minute="${minute}" style="height: 40px; min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count}</span></button>
 			</c:when>
 			<c:when test="${storageInfo != null && storageInfo.level == 2}">
-				<button class="btn btn-app btn-sm radius-4 btn-danger alert-modal" data-id="${storageInfo.id}"  data-hour="${hour}" data-minute="${minute}" style="height: 40px;  min-width: 130px; width: auto">${w:shorten(storageInfo.id, 20)}<span class="label label-inverse arrowed-in">${storageInfo.count }</span></button>
+				<button class="btn btn-app btn-sm radius-4 btn-danger alert-modal" data-id="${storageInfo.id}"  data-hour="${hour}" data-minute="${minute}" style="height: 40px;  min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count }</span></button>
 			</c:when>
 		</c:choose>
 		</td></tr>

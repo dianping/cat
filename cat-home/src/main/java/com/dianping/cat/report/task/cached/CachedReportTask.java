@@ -21,7 +21,8 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
@@ -31,8 +32,11 @@ import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 public class CachedReportTask implements Task {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_transactionReportService;
 
+	@Inject
+	private StateReportService m_stateReportService;
+	
 	@Inject
 	private ServerConfigManager m_configManger;
 
@@ -83,7 +87,7 @@ public class CachedReportTask implements Task {
 	private void reloadCurrentMonthly() {
 		Date start = TimeHelper.getCurrentMonth();
 		Date end = TimeHelper.getCurrentDay();
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
 			if (m_configManger.validateDomain(domain)) {
@@ -101,15 +105,15 @@ public class CachedReportTask implements Task {
 		}
 		String domain = Constants.CAT;
 
-		StateReport stateReport = m_reportService.queryReport(domain, start, end);
-		m_reportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
+		StateReport stateReport = m_stateReportService.queryReport(domain, start, end);
+		m_stateReportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
 		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
 	}
 
 	private void reloadCurrentWeekly() {
 		Date start = TimeHelper.getCurrentWeek();
 		Date end = TimeHelper.getCurrentDay();
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
 			if (m_configManger.validateDomain(domain)) {
@@ -127,8 +131,8 @@ public class CachedReportTask implements Task {
 		}
 		String domain = Constants.CAT;
 
-		StateReport stateReport = m_reportService.queryReport(domain, start, end);
-		m_reportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID),
+		StateReport stateReport = m_stateReportService.queryReport(domain, start, end);
+		m_stateReportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID),
 		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
 	}
 

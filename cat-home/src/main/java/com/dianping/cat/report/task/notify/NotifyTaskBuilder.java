@@ -17,11 +17,13 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.alert.sender.AlertChannel;
 import com.dianping.cat.report.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.service.impl.EventReportService;
+import com.dianping.cat.report.service.impl.ProblemReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
 public class NotifyTaskBuilder implements TaskBuilder {
@@ -29,7 +31,13 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_NOTIFY;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_transactionReportService;
+	
+	@Inject
+	private EventReportService m_eventReportService;
+	
+	@Inject
+	private ProblemReportService m_problemReportService;
 
 	@Inject
 	private SenderManager m_sendManager;
@@ -52,9 +60,9 @@ public class NotifyTaskBuilder implements TaskBuilder {
 
 	private String renderContent(String domain, Date start) {
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		TransactionReport transactionReport = m_reportService.queryReport(domain, start, end);
-		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-		ProblemReport problemReport = m_reportService.queryReport(domain, start, end);
+		TransactionReport transactionReport = m_transactionReportService.queryReport(domain, start, end);
+		EventReport eventReport = m_eventReportService.queryReport(domain, start, end);
+		ProblemReport problemReport = m_problemReportService.queryReport(domain, start, end);
 
 		StringBuilder sb = new StringBuilder(10240);
 
@@ -83,7 +91,7 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	private void sendDailyReport(Date period) {
 		Date start = TimeHelper.getCurrentDay();
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
 			if (m_serverConfigManager.validateDomain(domain) && m_active) {

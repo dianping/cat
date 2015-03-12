@@ -23,7 +23,8 @@ import com.dianping.cat.home.jar.entity.Domain;
 import com.dianping.cat.home.jar.entity.Jar;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.jar.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HeartbeatReportService;
+import com.dianping.cat.report.service.impl.JarReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
 public class JarReportBuilder implements TaskBuilder {
@@ -31,7 +32,10 @@ public class JarReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_JAR;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private JarReportService m_reportService;
+
+	@Inject
+	private HeartbeatReportService m_heartbeatReportService;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -54,7 +58,7 @@ public class JarReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				HeartbeatReport heartbeatReport = m_reportService.queryReport(domainName, period, end);
+				HeartbeatReport heartbeatReport = m_heartbeatReportService.queryReport(domainName, period, end);
 
 				visitor.visitHeartbeatReport(heartbeatReport);
 			}

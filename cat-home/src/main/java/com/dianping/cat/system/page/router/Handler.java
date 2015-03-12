@@ -17,13 +17,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.RouterConfigService;
 import com.dianping.cat.system.config.RouterConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private RouterConfigService m_reportService;
 
 	@Inject
 	private RouterConfigManager m_configManager;

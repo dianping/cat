@@ -20,7 +20,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.BugReportService;
+import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -29,7 +30,10 @@ public class BugReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_BUG;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected BugReportService m_reportService;
+	
+	@Inject
+	protected ProblemReportService m_problemReportService;
 	
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -68,7 +72,7 @@ public class BugReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				ProblemReport problemReport = m_reportService.queryReport(domainName, start, end);
+				ProblemReport problemReport = m_problemReportService.queryReport(domainName, start, end);
 				visitor.visitProblemReport(problemReport);
 			}
 		}

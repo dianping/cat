@@ -2,12 +2,9 @@ package com.dianping.cat.report.page.storage.topology;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import org.unidal.tuple.Pair;
+import java.util.Set;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
@@ -28,24 +25,12 @@ public class StorageAlertInfoRTContainer {
 
 	};
 
-	public StorageAlertInfo find(long time, int minute) {
-		return m_alertInfos.get(time + minute * TimeHelper.ONE_MINUTE);
+	public StorageAlertInfo find(long time) {
+		return m_alertInfos.get(time);
 	}
 
-	public Pair<Map<Long, StorageAlertInfo>, List<Long>> find(long start, long end) {
-		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
-		List<Long> historyMinutes = new LinkedList<Long>();
-
-		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
-			StorageAlertInfo alertInfo = m_alertInfos.get(s);
-
-			if (alertInfo != null) {
-				alertInfos.put(s, alertInfo);
-			} else {
-				historyMinutes.add(s);
-			}
-		}
-		return new Pair<Map<Long, StorageAlertInfo>, List<Long>>(alertInfos, historyMinutes);
+	public Set<Long> getTimeKeys() {
+		return m_alertInfos.keySet();
 	}
 
 	public StorageAlertInfo findOrCreate(long time) {

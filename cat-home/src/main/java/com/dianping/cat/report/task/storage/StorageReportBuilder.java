@@ -16,7 +16,7 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StorageReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -25,7 +25,7 @@ public class StorageReportBuilder implements TaskBuilder {
 	public static final String ID = StorageAnalyzer.ID;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected StorageReportService m_reportService;
 
 	@Inject
 	private StorageMergeHelper m_storageMergerHelper;

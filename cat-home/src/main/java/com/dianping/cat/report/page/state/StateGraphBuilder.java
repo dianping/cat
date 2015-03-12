@@ -15,12 +15,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
 
 public class StateGraphBuilder {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StateReportService m_reportService;
 
 	@Inject
 	private ServerConfigManager m_configManager;

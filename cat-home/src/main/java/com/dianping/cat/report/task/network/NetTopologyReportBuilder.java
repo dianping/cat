@@ -20,10 +20,11 @@ import com.dianping.cat.home.network.entity.NetGraph;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
+import com.dianping.cat.report.service.impl.MetricReportService;
+import com.dianping.cat.report.service.impl.NetTopologyReportService;
+import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 
 public class NetTopologyReportBuilder implements TaskBuilder {
@@ -31,7 +32,10 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_NET_TOPOLOGY;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected NetTopologyReportService m_reportService;
+
+	@Inject
+	protected MetricReportService m_metricReportService;
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
@@ -61,7 +65,7 @@ public class NetTopologyReportBuilder implements TaskBuilder {
 
 		for (String group : groups) {
 			Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
-			MetricReport report = m_reportService.queryReport(group, period, end);
+			MetricReport report = m_metricReportService.queryReport(group, period, end);
 
 			reports.put(group, report);
 		}

@@ -19,7 +19,7 @@ import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.service.HostinfoService;
@@ -30,7 +30,7 @@ public class StateReportBuilder implements TaskBuilder {
 	public static final String ID = StateAnalyzer.ID;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected StateReportService m_reportService;
 
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;

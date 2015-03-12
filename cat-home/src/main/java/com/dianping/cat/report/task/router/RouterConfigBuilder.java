@@ -27,7 +27,8 @@ import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
 import com.dianping.cat.home.router.transform.DefaultNativeBuilder;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.RouterConfigService;
+import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.system.config.RouterConfigManager;
 
@@ -36,7 +37,10 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 	public static final String ID = Constants.REPORT_ROUTER;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private RouterConfigService m_reportService;
+	
+	@Inject
+	private StateReportService m_stateReportService;
 
 	@Inject
 	private RouterConfigManager m_configManager;
@@ -46,7 +50,7 @@ public class RouterConfigBuilder implements TaskBuilder, LogEnabled {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_DAY);
-		StateReport report = m_reportService.queryReport(Constants.CAT, period, end);
+		StateReport report = m_stateReportService.queryReport(Constants.CAT, period, end);
 		RouterConfig routerConfig = new RouterConfig(Constants.CAT);
 		StateReportVisitor visitor = new StateReportVisitor();
 

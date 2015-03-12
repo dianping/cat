@@ -31,7 +31,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 	private XmlViewer m_xmlViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_reportService;
 
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;

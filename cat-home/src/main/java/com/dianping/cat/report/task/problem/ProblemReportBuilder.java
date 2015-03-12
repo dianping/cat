@@ -11,8 +11,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.ProblemReportFilter;
+import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyGraph;
@@ -23,7 +23,7 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.ProblemReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -38,7 +38,7 @@ public class ProblemReportBuilder implements TaskBuilder {
 	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected ProblemReportService m_reportService;
 
 	@Inject
 	private ProblemGraphCreator m_problemGraphCreator;

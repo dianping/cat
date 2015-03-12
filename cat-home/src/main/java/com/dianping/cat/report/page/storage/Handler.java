@@ -30,7 +30,7 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StorageReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StorageReportService m_reportService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
