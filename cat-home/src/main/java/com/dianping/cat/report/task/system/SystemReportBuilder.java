@@ -23,12 +23,12 @@ public class SystemReportBuilder implements TaskBuilder {
 
 	@Inject
 	private SystemReportService m_reportService;
-	
-	@Inject
-	private ProductLineConfigManager m_configManager;
 
 	@Inject
 	protected MetricReportService m_metricReportService;
+	
+	@Inject
+	private ProductLineConfigManager m_configManager;
 
 	public static final String ID = Constants.REPORT_SYSTEM;
 

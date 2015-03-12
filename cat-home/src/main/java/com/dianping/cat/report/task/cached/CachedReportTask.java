@@ -7,21 +7,14 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.state.StateAnalyzer;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -34,9 +27,6 @@ public class CachedReportTask implements Task {
 	@Inject
 	private TransactionReportService m_transactionReportService;
 
-	@Inject
-	private StateReportService m_stateReportService;
-	
 	@Inject
 	private ServerConfigManager m_configManger;
 
@@ -54,30 +44,6 @@ public class CachedReportTask implements Task {
 
 	@Inject
 	private MatrixReportBuilder m_matrixReportBuilder;
-
-	private MonthlyReport buildMonthlyReport(String domain, Date period, String name) {
-		MonthlyReport report = new MonthlyReport();
-
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-		return report;
-	}
-
-	private WeeklyReport buildWeeklyReport(String domain, Date period, String name) {
-		WeeklyReport report = new WeeklyReport();
-
-		report.setCreationDate(new Date());
-		report.setDomain(domain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(name);
-		report.setPeriod(period);
-		report.setType(1);
-		return report;
-	}
 
 	@Override
 	public String getName() {
@@ -103,11 +69,6 @@ public class CachedReportTask implements Task {
 				t.complete();
 			}
 		}
-		String domain = Constants.CAT;
-
-		StateReport stateReport = m_stateReportService.queryReport(domain, start, end);
-		m_stateReportService.insertMonthlyReport(buildMonthlyReport(domain, start, StateAnalyzer.ID),
-		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
 	}
 
 	private void reloadCurrentWeekly() {
@@ -129,11 +90,6 @@ public class CachedReportTask implements Task {
 				t.complete();
 			}
 		}
-		String domain = Constants.CAT;
-
-		StateReport stateReport = m_stateReportService.queryReport(domain, start, end);
-		m_stateReportService.insertWeeklyReport(buildWeeklyReport(domain, start, StateAnalyzer.ID),
-		      com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder.build(stateReport));
 	}
 
 	@Override

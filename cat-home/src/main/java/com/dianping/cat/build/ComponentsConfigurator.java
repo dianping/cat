@@ -25,7 +25,6 @@ import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.AlertDao;
@@ -49,14 +48,14 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphBuilder;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.service.impl.MetricReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
@@ -114,7 +113,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// update project database
 		all.add(C(ProjectUpdateTask.class).req(ProjectService.class, HostinfoService.class)//
-		      .req(ReportService.class, TransactionAnalyzer.ID));
+		      .req(TransactionReportService.class));
 
 		all.add(C(StorageAlertInfoRTContainer.class));
 		all.add(C(StorageAlertInfoBuilder.class).req(StorageAlertInfoRTContainer.class));

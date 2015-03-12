@@ -249,8 +249,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class));
 
-		all.add(C(CachedReportTask.class).req(ServerConfigManager.class)
-		      .req(StateReportService.class, TransactionReportService.class)
+		all.add(C(CachedReportTask.class).req(ServerConfigManager.class).req(TransactionReportService.class)
 		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
 		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
 		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")

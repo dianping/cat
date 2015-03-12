@@ -96,8 +96,7 @@
 					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ReportService</role>
-					<role-hint>transaction</role-hint>
+					<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1738,9 +1737,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.impl.StateReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
