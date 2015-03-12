@@ -72,10 +72,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (t != null) {
 			MessageTree tree = getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
 
+			if (messageId == null) {
+				messageId = nextMessageId();
+				tree.setMessageId(messageId);
+			}
 			if (tree != null) {
 				t.start();
-				t.bind(tag, tree.getMessageId(), title);
+				t.bind(tag, messageId, title);
 			}
 		}
 	}
@@ -541,6 +546,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (message instanceof DefaultTransaction) {
 				String id = tree.getMessageId();
+
+				if (id == null) {
+					id = nextMessageId();
+					tree.setMessageId(id);
+				}
+
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
