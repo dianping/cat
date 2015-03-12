@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -24,6 +26,7 @@ import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -61,6 +64,39 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
+	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
+		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
+		String format = m_storageGroupConfigManager.queryStorageLinkFormat(type);
+
+		for (Entry<String, StorageAlertInfo> alertInfo : alertInfos.entrySet()) {
+			String key = alertInfo.getKey();
+			Map<String, List<String>> linkMap = links.get(key);
+
+			if (linkMap == null) {
+				linkMap = new LinkedHashMap<String, List<String>>();
+				links.put(key, linkMap);
+			}
+			for (Entry<String, Storage> entry : alertInfo.getValue().getStorages().entrySet()) {
+				String id = entry.getKey();
+				Storage storage = entry.getValue();
+				List<String> ls = linkMap.get(id);
+
+				if (ls == null) {
+					ls = new ArrayList<String>();
+					linkMap.put(id, ls);
+				}
+				for (String ip : storage.getMachines().keySet()) {
+					String url = m_storageGroupConfigManager.buildUrl(format, id, ip);
+
+					if (url != null) {
+						ls.add(url);
+					}
+				}
+			}
+		}
+		return links;
+	}
+
 	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
 		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(ipAddress, payload.getProject(),
 		      model.getOperations(), storageReport.getStartTime());
@@ -72,10 +108,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAvgTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.AVG)));
 		model.setErrorTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.ERROR)));
 		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.LONG)));
-	}
-
-	private String buildOperationStr(List<String> ops) {
-		return StringUtils.join(ops, ";");
 	}
 
 	private Pair<Boolean, Set<String>> buildOperations(Payload payload, Model model, Set<String> defaultValue) {
@@ -94,6 +126,10 @@ public class Handler implements PageHandler<Context> {
 			ops.addAll(defaultValue);
 		}
 		return new Pair<Boolean, Set<String>>(filter, ops);
+	}
+
+	private String buildOperationStr(List<String> ops) {
+		return StringUtils.join(ops, ";");
 	}
 
 	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
@@ -150,8 +186,8 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HOURLY_STORAGE_GRAPH:
 			storageReport = queryHourlyReport(payload);
-
 			storageReport = buildReport(payload, model, storageReport);
+
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
 		case HISTORY_STORAGE:
@@ -160,9 +196,10 @@ public class Handler implements PageHandler<Context> {
 			buildReport(payload, model, storageReport);
 			break;
 		case DASHBOARD:
-			Map<String, StorageAlertInfo> alertInfo = m_alertInfoManager.queryAlertInfos(payload, model);
+			Map<String, StorageAlertInfo> alertInfos = m_alertInfoManager.queryAlertInfos(payload, model);
 
-			model.setAlertInfos(alertInfo);
+			model.setLinks(buildAlertLinks(alertInfos, payload.getType()));
+			model.setAlertInfos(alertInfos);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 			break;

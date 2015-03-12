@@ -19,10 +19,12 @@
 	<div class="report">
 		<div class="text-center"><%@ include file="dependencyTimeNavTab.jsp"%> </div>
   	</div>
+  	
+  	<c:set var="linkMap" value="${model.links}" />
   
 	<c:forEach var="entry" items="${model.alertInfos}">
 		<table  class="smallTable" style="float:left" border=1>
-		<tr><th class="text-danger center">${entry.key}</th></tr>
+		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
 		<c:if test="${empty entry.value.storages}">
 			<tr><td>
 				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">访问正常</button>
@@ -102,7 +104,13 @@
 				<button class="btn btn-app btn-sm radius-4 btn-danger alert-modal" data-id="${storageInfo.id}"  data-hour="${hour}" data-minute="${minute}" style="height: 40px;  min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count }</span></button>
 			</c:when>
 		</c:choose>
-		</td></tr>
+		</td>
+		<td>
+		<c:forEach var="link" items="${linkMap[entry.key][storageInfo.id]}">
+			<a href="${link}" target="_blank">切</a>
+		</c:forEach>
+		</td>
+		</tr>
 		</c:forEach>
 		</table>
 	</c:forEach>

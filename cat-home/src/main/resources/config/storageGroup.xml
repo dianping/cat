@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <storage-group-config>
 	<storage-group id="SQL">
-		<storage id="cat" department="arch" productline="cat" title="cat" />
+		<link url="test">
+			<par>a=b</par>
+			<par>c=d</par>
+		</link>
+		<storage id="cat" department="arch" productline="cat" title="cat"/>
 		<storage id="shop-web" department="arch" productline="cat" title="cat" />
 	</storage-group>
 	<storage-group id="Cache">

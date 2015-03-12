@@ -44,12 +44,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, Department> m_departments;
 
+	private Map<String, Map<String, List<String>>> m_links;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public Map<String, StorageAlertInfo> getAlertInfos() {
 		return m_alertInfos;
+	}
+
+	public String getAvgTrend() {
+		return m_avgTrend;
+	}
+
+	public String getCountTrend() {
+		return m_countTrend;
 	}
 
 	public List<String> getCurrentOperations() {
@@ -61,14 +71,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return new ArrayList<String>();
 		}
-	}
-
-	public String getAvgTrend() {
-		return m_avgTrend;
-	}
-
-	public String getCountTrend() {
-		return m_countTrend;
 	}
 
 	@Override
@@ -100,6 +102,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return SortHelper.sortIpAddress(m_report.getIps());
 		}
+	}
+
+	public Map<String, Map<String, List<String>>> getLinks() {
+		return m_links;
 	}
 
 	public String getLongTrend() {
@@ -168,6 +174,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setErrorTrend(String errorTrend) {
 		m_errorTrend = errorTrend;
+	}
+
+	public void setLinks(Map<String, Map<String, List<String>>> links) {
+		m_links = links;
 	}
 
 	public void setLongTrend(String longTrend) {

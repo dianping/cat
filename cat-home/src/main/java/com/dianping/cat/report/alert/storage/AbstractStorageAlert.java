@@ -95,7 +95,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 				long count = entry.getValue().getCount();
 
 				if (count > 0) {
-					datas[entry.getKey()] = entry.getValue().getError() / count;
+					datas[entry.getKey()] = (double) entry.getValue().getError() / count;
 				} else {
 					datas[entry.getKey()] = 0;
 				}

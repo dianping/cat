@@ -31,4 +31,8 @@ public class StorageConstants {
 
 	public static final String FIELD_SEPARATOR = ";";
 
+	public static final String IP_FORMAT = "${ip}";
+
+	public static final String ID_FORMAT = "${id}";
+
 }

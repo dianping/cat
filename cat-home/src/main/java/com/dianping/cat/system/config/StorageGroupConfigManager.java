@@ -1,5 +1,6 @@
 package com.dianping.cat.system.config;
 
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,12 +10,14 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.storage.entity.Link;
 import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
@@ -89,6 +92,30 @@ public class StorageGroupConfigManager implements Initializable {
 			return group;
 		} else {
 			return new StorageGroup();
+		}
+	}
+
+	public String queryStorageLinkFormat(String type) {
+		StorageGroup group = queryStorageGroup(type);
+		Link link = group.getLink();
+
+		if (link != null) {
+			String url = link.getUrl();
+			List<String> pars = link.getPars();
+
+			return url + "?" + StringUtils.join(pars, "&");
+		} else {
+			return null;
+		}
+	}
+
+	public String buildUrl(String format, String id, String ip) {
+		try {
+			return format.replace(StorageConstants.ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(
+			      StorageConstants.IP_FORMAT, URLEncoder.encode(ip, "utf-8"));
+		} catch (Exception e) {
+			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
+			return null;
 		}
 	}
 
