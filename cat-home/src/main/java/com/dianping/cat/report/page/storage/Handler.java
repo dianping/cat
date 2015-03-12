@@ -83,45 +83,29 @@ public class Handler implements PageHandler<Context> {
 		Set<String> ops = new HashSet<String>();
 		boolean filter = false;
 
-		if (operations != null) {
-			if (operations.length() > 0) {
-				filter = true;
-				String[] op = operations.split(";");
+		if (operations.length() > 0) {
+			filter = true;
+			String[] op = operations.split(";");
 
-				for (int i = 0; i < op.length; i++) {
-					ops.add(op[i]);
-				}
-			} else {
-				ops.addAll(defaultValue);
+			for (int i = 0; i < op.length; i++) {
+				ops.add(op[i]);
 			}
 		} else {
-			String type = payload.getType();
-			List<String> defaultMethods = new ArrayList<String>();
-
-			if (StorageConstants.CACHE_TYPE.equals(type)) {
-				defaultMethods = StorageConstants.CACHE_METHODS;
-			} else if (StorageConstants.SQL_TYPE.equals(type)) {
-				defaultMethods = StorageConstants.SQL_METHODS;
-			}
-
-			for (String method : defaultMethods) {
-				if (defaultValue.contains(method)) {
-					ops.add(method);
-				}
-			}
-			payload.setOperations(buildOperationStr(defaultMethods));
+			ops.addAll(defaultValue);
 		}
 		return new Pair<Boolean, Set<String>>(filter, ops);
 	}
 
 	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
-			Pair<Boolean, Set<String>> pair = buildOperations(payload, model, storageReport.getOps());
+			Set<String> allOps = storageReport.getOps();
+			model.setOperations(allOps);
+
+			Pair<Boolean, Set<String>> pair = buildOperations(payload, model, allOps);
 			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
-			Set<String> ops = pair.getValue();
 
 			if (pair.getKey()) {
-				StorageOperationFilter filter = new StorageOperationFilter(ops);
+				StorageOperationFilter filter = new StorageOperationFilter(pair.getValue());
 				filter.visitStorageReport(storageReport);
 
 				storageReport = filter.getStorageReport();
@@ -130,11 +114,11 @@ public class Handler implements PageHandler<Context> {
 			storageReport = sorter.getSortedReport();
 
 			model.setReport(storageReport);
-			model.setOperations(ops);
 
 			Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
 			      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
 			model.setDepartments(departments);
+
 		}
 		return storageReport;
 	}
@@ -210,6 +194,19 @@ public class Handler implements PageHandler<Context> {
 			model.setMinute(minute);
 			model.setMaxMinute(maxMinute);
 			model.setMinutes(minutes);
+		} else {
+			if (payload.getOperations() == null) {
+				String type = payload.getType();
+				List<String> defaultMethods = new ArrayList<String>();
+
+				if (StorageConstants.CACHE_TYPE.equals(type)) {
+					defaultMethods = StorageConstants.CACHE_METHODS;
+				} else if (StorageConstants.SQL_TYPE.equals(type)) {
+					defaultMethods = StorageConstants.SQL_METHODS;
+				}
+
+				payload.setOperations(buildOperationStr(defaultMethods));
+			}
 		}
 	}
 

@@ -29,7 +29,7 @@ public class StorageAlertInfoRTContainer {
 		return m_alertInfos.get(time);
 	}
 
-	public Set<Long> getTimeKeys() {
+	public Set<Long> queryExistingMinutes() {
 		return m_alertInfos.keySet();
 	}
 

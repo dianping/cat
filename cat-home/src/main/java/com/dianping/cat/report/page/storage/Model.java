@@ -52,7 +52,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_alertInfos;
 	}
 
-	public List<String> getAllOperations() {
+	public List<String> getCurrentOperations() {
 		if (m_report != null) {
 			ArrayList<String> ops = new ArrayList<String>(m_report.getOps());
 

@@ -13,6 +13,8 @@ public class StorageConstants {
 
 	public static final String ERROR = "error";
 
+	public static final String ERROR_PERCENT = "errorPercent";
+
 	public static final String AVG = "avg";
 
 	public static final String LONG = "long";
@@ -26,5 +28,7 @@ public class StorageConstants {
 	public static final List<String> CACHE_METHODS = Arrays.asList("add", "get", "mGet", "remove");
 
 	public static final List<String> SQL_METHODS = Arrays.asList("select", "delete", "insert", "update");
+
+	public static final String FIELD_SEPARATOR = ";";
 
 }

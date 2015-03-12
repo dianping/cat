@@ -68,6 +68,7 @@ public class StorageOperationFilter extends BaseVisitor {
 		if (m_operations.contains(operation.getId())) {
 			m_currentOperation = operation.getId();
 
+			m_storageReport.getOps().add(m_currentOperation);
 			mergeOperation(operation);
 			super.visitOperation(operation);
 		}
@@ -87,7 +88,6 @@ public class StorageOperationFilter extends BaseVisitor {
 		      .setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
-		m_storageReport.getOps().addAll(storageReport.getOps());
 		super.visitStorageReport(storageReport);
 	}
 

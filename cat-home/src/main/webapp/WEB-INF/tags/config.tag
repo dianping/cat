@@ -134,7 +134,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>数据库系统告警</a>
 								<b class="arrow"></b></li>
 							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>数据库分组</a>
+								<i class="menu-icon fa fa-caret-right"></i>存储分组</a>
 								<b class="arrow"></b></li>
 							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>

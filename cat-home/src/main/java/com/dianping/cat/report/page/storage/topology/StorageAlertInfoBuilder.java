@@ -59,7 +59,7 @@ public class StorageAlertInfoBuilder {
 		List<String> fields = Splitters.by(";").split(alert.getMetric());
 		String ip = fields.get(0);
 		String operation = fields.get(1);
-		String target = queryTarget(fields.get(2));
+		String target = queryTargetTitle(fields.get(2));
 		int level = queryLevel(alert.getType());
 
 		Storage storage = alertInfo.findOrCreateStorage(name);
@@ -85,7 +85,7 @@ public class StorageAlertInfoBuilder {
 		String name = param.getName();
 		String ip = param.getMachine();
 		String opertaion = param.getMethod();
-		String target = queryTarget(param.getTarget());
+		String target = queryTargetTitle(param.getTarget());
 
 		Storage storage = getAlertInfo(minute).findOrCreateStorage(name);
 		storage.incCount();
@@ -115,10 +115,12 @@ public class StorageAlertInfoBuilder {
 		}
 	}
 
-	private String queryTarget(String target) {
+	private String queryTargetTitle(String target) {
 		if (StorageConstants.AVG.equals(target)) {
 			return "响应时间";
 		} else if (StorageConstants.ERROR.equals(target)) {
+			return "错误数";
+		} else if (StorageConstants.ERROR_PERCENT.equals(target)) {
 			return "错误率";
 		} else {
 			return target;
