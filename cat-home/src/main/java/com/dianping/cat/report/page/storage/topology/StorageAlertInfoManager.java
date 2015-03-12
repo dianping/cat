@@ -142,7 +142,7 @@ public class StorageAlertInfoManager implements Initializable {
 	public Pair<Map<Long, StorageAlertInfo>, List<Long>> queryFromMemory(long start, long end) {
 		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
 		List<Long> historyMinutes = new LinkedList<Long>();
-		Set<Long> timeKeys = m_alertInfoRTContainer.getTimeKeys();
+		Set<Long> timeKeys = m_alertInfoRTContainer.queryExistingMinutes();
 		long earliest = Long.MAX_VALUE;
 
 		if (!timeKeys.isEmpty()) {

@@ -88,10 +88,20 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			}
 		} else if (StorageConstants.ERROR.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
-				datas[entry.getKey()] = entry.getValue().getError() / entry.getValue().getCount();
+				datas[entry.getKey()] = entry.getValue().getError();
+			}
+		} else if (StorageConstants.ERROR_PERCENT.equals(target)) {
+			for (Entry<Integer, Segment> entry : segments.entrySet()) {
+				long count = entry.getValue().getCount();
+
+				if (count > 0) {
+					datas[entry.getKey()] = entry.getValue().getError() / count;
+				} else {
+					datas[entry.getKey()] = 0;
+				}
 			}
 		} else {
-			Cat.logError(new RuntimeException("Unrecognized storage databse alert attribute: " + target));
+			Cat.logError(new RuntimeException("Unrecognized storage databse alert target field: " + target));
 		}
 		System.arraycopy(datas, start, result, 0, length);
 

@@ -47,7 +47,7 @@
 	<td>
 		<div>
 		<label class="btn btn-info btn-sm">
- 			<input type="checkbox" id="operation_All" onclick="clickAll()" unchecked>All</label><c:forEach var="item" items="${model.allOperations}"><label class="btn btn-info btn-sm"><input type="checkbox" id="operation_${item}" value="${item}" onclick="clickMe()" unchecked>${item}</label></c:forEach>
+ 			<input type="checkbox" id="operation_All" onclick="clickAll()" unchecked>All</label><c:forEach var="item" items="${model.operations}"><label class="btn btn-info btn-sm"><input type="checkbox" id="operation_${item}" value="${item}" onclick="clickMe()" unchecked>${item}</label></c:forEach>
  		</div>
 	</td>
 	<td><input class="btn btn-primary btn-sm "
@@ -59,12 +59,12 @@
 
 	<tr>
 		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
-		<c:forEach var="item" items="${model.operations}">
+		<c:forEach var="item" items="${model.currentOperations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
 	</tr>
 	<tr>
-		<c:forEach var="item" items="${model.operations}">
+		<c:forEach var="item" items="${model.currentOperations}">
 			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
 			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
@@ -77,7 +77,7 @@
 		<td><a href="?op=hourlyGraph&type=${payload.type}&domain=${model.domain}&date=${model.date}&id=${payload.id}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
 		</td>
 		<td class="left">${domain.key}</td>
-		<c:forEach var="item" items="${model.operations}">
+		<c:forEach var="item" items="${model.currentOperations}">
 			<td class="right">${w:format(domain.value.operations[item].count,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].longCount,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].avg,'###,##0.0')}</td>
@@ -93,13 +93,15 @@
 </a:storage_report>
 
 <script type="text/javascript">
-	var fs = "${model.allOperations}";
+	var fs = "${model.currentOperations}";
 	fs = fs.replace(/[\[\]]/g,'').split(', ');
+	var allfs = '${model.operations}';
+	allfs = allfs.replace(/[\[\]]/g,'').split(', ');
 
 	function clickMe() {
 		var num = 0;
-		for( var i=0; i<fs.length; i++){
-		 	var f = "operation_" + fs[i];
+		for( var i=0; i<allfs.length; i++){
+		 	var f = "operation_" + allfs[i];
 			if(document.getElementById(f).checked){
 				num ++;
 			}else{
@@ -107,14 +109,14 @@
 				break;
 			} 
 		}
-		if(num > 0 && num == fs.length) {
+		if(num > 0 && num == allfs.length) {
 			document.getElementById("operation_All").checked = true;
 		}
 	}
 	
 	function clickAll(fields) {
-		for( var i=0; i<fs.length; i++){
-		 	var f = "operation_" + fs[i];
+		for( var i=0; i<allfs.length; i++){
+		 	var f = "operation_" + allfs[i];
 		 	if(document.getElementById(f) != undefined) {
 				document.getElementById(f).checked = document.getElementById("operation_All").checked;
 		 	}
@@ -123,38 +125,30 @@
 	
 	function query() {
 		var url = "";
-		if(document.getElementById("operation_All").checked == false && fs.length > 0) {
-			for( var i=0; i<fs.length; i++){
-			 	var f = "operation_" + fs[i];
+		if(document.getElementById("operation_All").checked == false && allfs.length > 0) {
+			for( var i=0; i<allfs.length; i++){
+			 	var f = "operation_" + allfs[i];
 				if(document.getElementById(f) != undefined 
 						&& document.getElementById(f).checked){
-					url += fs[i] + ";";
+					url += allfs[i] + ";";
 				} 
 			}
 			url = url.substring(0, url.length-1);
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${model.reportType}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){
-		var fields = '${model.operations}';
-		var ffs = [];
-		if(fields != "[]") {
-			ffs = fields.replace(/[\[\]]/g,'').split(', ');
-		}
-		
 		var num = 0;
-		for( var i=0; i<ffs.length; i++){
-		 	var f = "operation_" + ffs[i];
+		for( var i=0; i<fs.length; i++){
+		 	var f = "operation_" + fs[i];
 		 	if(document.getElementById(f) != undefined) { 
 				document.getElementById(f).checked = true;
 			}
 		}
-		console.log(ffs);
-		console.log(fs);
-		if(ffs.length >= fs.length || ffs.length == 0){
+		if(allfs.length == fs.length){
 			document.getElementById("operation_All").checked = true;
 		}
 	}
