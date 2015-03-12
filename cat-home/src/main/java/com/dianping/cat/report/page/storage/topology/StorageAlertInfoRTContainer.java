@@ -2,8 +2,12 @@ package com.dianping.cat.report.page.storage.topology;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
@@ -28,6 +32,22 @@ public class StorageAlertInfoRTContainer {
 		return m_alertInfos.get(time + minute * TimeHelper.ONE_MINUTE);
 	}
 
+	public Pair<Map<Long, StorageAlertInfo>, List<Long>> find(long start, long end) {
+		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
+		List<Long> historyMinutes = new LinkedList<Long>();
+
+		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
+			StorageAlertInfo alertInfo = m_alertInfos.get(s);
+
+			if (alertInfo != null) {
+				alertInfos.put(s, alertInfo);
+			} else {
+				historyMinutes.add(s);
+			}
+		}
+		return new Pair<Map<Long, StorageAlertInfo>, List<Long>>(alertInfos, historyMinutes);
+	}
+
 	public StorageAlertInfo findOrCreate(long time) {
 		StorageAlertInfo report = m_alertInfos.get(time);
 
@@ -50,11 +70,11 @@ public class StorageAlertInfoRTContainer {
 	}
 
 	public StorageAlertInfo makeAlertInfo(String id, Date start) {
-		StorageAlertInfo report = new StorageAlertInfo(id);
+		StorageAlertInfo alertInfo = new StorageAlertInfo(id);
 
-		report.setStartTime(start);
-		report.setEndTime(new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1));
-		return report;
+		alertInfo.setStartTime(start);
+		alertInfo.setEndTime(new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1));
+		return alertInfo;
 	}
 
 }

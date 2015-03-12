@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <a:storage_report title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&operations=${payload.operations}"
+	navUrlPrefix="op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&operations=${payload.operations}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -21,21 +21,21 @@
 	<tr style="text-align:left"> 
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
+					<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+						<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -58,31 +58,23 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
+		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
 		<c:forEach var="item" items="${model.operations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.operations}">
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
-	<c:choose>
-		<c:when test="${payload.action.name eq 'database' }">
-			<c:set var="action" value="hourlyDatabaseGraph" />
-		</c:when>
-	<c:otherwise>
-		<c:set var="action" value="hourlyCacheGraph" />
-	</c:otherwise>
-	</c:choose>
 	<c:forEach var="domain" items="${model.machine.domains}"
 		varStatus="index">
 		<tr>
-		<td><a href="?op=${action}&domain=${model.domain}&date=${model.date}&id=${payload.id}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
+		<td><a href="?op=hourlyGraph&type=${payload.type}&domain=${model.domain}&date=${model.date}&id=${payload.id}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
 		</td>
 		<td class="left">${domain.key}</td>
 		<c:forEach var="item" items="${model.operations}">
@@ -143,7 +135,7 @@
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&step=${payload.step}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){
@@ -160,16 +152,18 @@
 				document.getElementById(f).checked = true;
 			}
 		}
-		if(ffs.length == fs.length || ffs.length == 0){
+		console.log(ffs);
+		console.log(fs);
+		if(ffs.length >= fs.length || ffs.length == 0){
 			document.getElementById("operation_All").checked = true;
 		}
 	}
 	
 	$(document).ready(function() {
-		if('${payload.action.name}' == 'database'){
+		if('${payload.type}' == 'SQL'){
 			$('#Database_report').addClass('active open');
 			$('#database_operation').addClass('active');
-		}else{
+		}else if('${payload.type}' == 'Cache'){
 			$('#Cache_report').addClass('active open');
 			$('#cache_operation').addClass('active');
 		}

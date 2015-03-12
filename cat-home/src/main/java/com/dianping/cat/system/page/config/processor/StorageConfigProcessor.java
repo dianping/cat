@@ -3,7 +3,7 @@ package com.dianping.cat.system.page.config.processor;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.system.config.StorageCacheRuleConfigManager;
-import com.dianping.cat.system.config.StorageDatabaseRuleConfigManager;
+import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.config.StorageRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -12,7 +12,7 @@ import com.dianping.cat.system.page.config.Payload;
 public class StorageConfigProcessor extends BaseProcesser {
 
 	@Inject
-	private StorageDatabaseRuleConfigManager m_databaseConfigManager;
+	private StorageSQLRuleConfigManager m_SQLConfigManager;
 
 	@Inject
 	private StorageCacheRuleConfigManager m_cacheConfigManager;
@@ -24,7 +24,7 @@ public class StorageConfigProcessor extends BaseProcesser {
 		if ("cache".equals(type)) {
 			configManager = m_cacheConfigManager;
 		} else {
-			configManager = m_databaseConfigManager;
+			configManager = m_SQLConfigManager;
 		}
 
 		switch (action) {

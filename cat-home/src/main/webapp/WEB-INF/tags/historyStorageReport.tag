@@ -11,7 +11,7 @@
 <a:storage_body>
 <script>
 	function buildHref(id){
-		var href = '<a href="?op=${payload.action.name}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
+		var href = '<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
 		return href;
 	}
 	$(document).ready(function() {
@@ -26,12 +26,12 @@
 		}
 		$('#frequentNavbar').html(html);
 		$("#search_go").bind("click",function(e){
-			var newUrl = '${model.baseUri}?op=${payload.action.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+			var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 			window.location.href = newUrl;
 		});
 		$('#wrap_search').submit(
 			function(){
-				var newUrl = '${model.baseUri}?op=${payload.action.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+				var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
 				return false;
 			}		
@@ -82,16 +82,16 @@
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
-								<span>&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]</span>
+								<span>&nbsp;[ <a href="?op=history&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]</span>
 						</c:when>
 						<c:otherwise>
-								<span>&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]</span>
+								<span>&nbsp;[ <a href="?op=history&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]</span>
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
-				&nbsp;[ <a href="?op=historyDatabase&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
 		</div><!-- /.nav-search -->
 	</div>
 	<jsp:doBody />

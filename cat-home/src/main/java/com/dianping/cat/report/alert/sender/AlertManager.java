@@ -100,7 +100,7 @@ public class AlertManager implements Initializable {
 			return "transaction告警";
 		case DataBase:
 			return "数据库系统告警";
-		case StorageDatabase:
+		case STORAGE_SQL:
 			return "数据库访问告警";
 		}
 		return type;

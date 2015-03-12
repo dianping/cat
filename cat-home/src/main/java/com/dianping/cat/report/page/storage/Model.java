@@ -9,15 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.unidal.lookup.ContainerLoader;
-
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -46,15 +42,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, StorageAlertInfo> m_alertInfos;
 
-	private StorageGroupConfigManager m_configManager;
+	private Map<String, Department> m_departments;
 
 	public Model(Context ctx) {
 		super(ctx);
-		try {
-			m_configManager = ContainerLoader.getDefaultContainer().lookup(StorageGroupConfigManager.class);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	public Map<String, StorageAlertInfo> getAlertInfos() {
@@ -82,11 +73,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.HOURLY_DATABASE;
+		return Action.HOURLY_STORAGE;
 	}
 
 	public Map<String, Department> getDepartments() {
-		return m_configManager.queryStorageDepartments(SortHelper.sortDomain(m_report.getIds()));
+		return m_departments;
 	}
 
 	@Override
@@ -169,6 +160,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setCountTrend(String countTrend) {
 		m_countTrend = countTrend;
+	}
+
+	public void setDepartments(Map<String, Department> departments) {
+		m_departments = departments;
 	}
 
 	public void setErrorTrend(String errorTrend) {

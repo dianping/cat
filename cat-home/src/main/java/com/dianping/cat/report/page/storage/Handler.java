@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -21,6 +22,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.ReportPage;
@@ -32,6 +34,7 @@ import com.dianping.cat.report.service.ReportServiceManager;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.StorageGroupConfigManager;
+import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -71,31 +74,73 @@ public class Handler implements PageHandler<Context> {
 		model.setLongTrend(m_jsonBuilder.toJson(lineCharts.get(StorageConstants.LONG)));
 	}
 
-	private void buildOperations(Payload payload, Model model) {
+	private String buildOperationStr(List<String> ops) {
+		return StringUtils.join(ops, ";");
+	}
+
+	private Pair<Boolean, Set<String>> buildOperations(Payload payload, Model model, Set<String> defaultValue) {
 		String operations = payload.getOperations();
+		Set<String> ops = new HashSet<String>();
+		boolean filter = false;
 
-		if (StringUtils.isNotEmpty(operations)) {
-			String[] op = operations.split(";");
-			Set<String> ops = new HashSet<String>();
+		if (operations != null) {
+			if (operations.length() > 0) {
+				filter = true;
+				String[] op = operations.split(";");
 
-			for (int i = 0; i < op.length; i++) {
-				ops.add(op[i]);
+				for (int i = 0; i < op.length; i++) {
+					ops.add(op[i]);
+				}
+			} else {
+				ops.addAll(defaultValue);
 			}
-			model.setOperations(ops);
+		} else {
+			String type = payload.getType();
+			List<String> defaultMethods = new ArrayList<String>();
+
+			if (StorageConstants.CACHE_TYPE.equals(type)) {
+				defaultMethods = StorageConstants.CACHE_METHODS;
+			} else if (StorageConstants.SQL_TYPE.equals(type)) {
+				defaultMethods = StorageConstants.SQL_METHODS;
+			}
+
+			for (String method : defaultMethods) {
+				if (defaultValue.contains(method)) {
+					ops.add(method);
+				}
+			}
+			payload.setOperations(buildOperationStr(defaultMethods));
 		}
+		return new Pair<Boolean, Set<String>>(filter, ops);
 	}
 
 	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
+			Pair<Boolean, Set<String>> pair = buildOperations(payload, model, storageReport.getOps());
 			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+			Set<String> ops = pair.getValue();
+
+			if (pair.getKey()) {
+				StorageOperationFilter filter = new StorageOperationFilter(ops);
+				filter.visitStorageReport(storageReport);
+
+				storageReport = filter.getStorageReport();
+			}
 			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
 			storageReport = sorter.getSortedReport();
 
 			model.setReport(storageReport);
-			model.setOperations(storageReport.getOps());
+			model.setOperations(ops);
+
+			Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
+			      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
+			model.setDepartments(departments);
 		}
-		buildOperations(payload, model);
 		return storageReport;
+	}
+
+	private String buildReportId(Payload payload) {
+		return payload.getId() + "-" + payload.getType();
 	}
 
 	@Override
@@ -114,35 +159,19 @@ public class Handler implements PageHandler<Context> {
 		StorageReport storageReport = null;
 
 		switch (payload.getAction()) {
-		case HOURLY_DATABASE:
-			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
+		case HOURLY_STORAGE:
+			storageReport = queryHourlyReport(payload);
 
 			buildReport(payload, model, storageReport);
 			break;
-		case HOURLY_CACHE:
-			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
-
-			buildReport(payload, model, storageReport);
-			break;
-		case HOURLY_DATABASE_GRAPH:
-			storageReport = queryHourlyReport(payload, StorageConstants.SQL_TYPE);
+		case HOURLY_STORAGE_GRAPH:
+			storageReport = queryHourlyReport(payload);
 
 			storageReport = buildReport(payload, model, storageReport);
 			buildLineCharts(model, payload, ipAddress, storageReport);
 			break;
-		case HOURLY_CACHE_GRAPH:
-			storageReport = queryHourlyReport(payload, StorageConstants.CACHE_TYPE);
-
-			buildReport(payload, model, storageReport);
-			buildLineCharts(model, payload, ipAddress, storageReport);
-			break;
-		case HISTORY_DATABASE:
-			storageReport = queryHistoryReport(payload, StorageConstants.SQL_TYPE);
-
-			buildReport(payload, model, storageReport);
-			break;
-		case HISTORY_CACHE:
-			storageReport = queryHistoryReport(payload, StorageConstants.CACHE_TYPE);
+		case HISTORY_STORAGE:
+			storageReport = queryHistoryReport(payload);
 
 			buildReport(payload, model, storageReport);
 			break;
@@ -154,6 +183,7 @@ public class Handler implements PageHandler<Context> {
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 			break;
 		}
+
 		model.setPage(ReportPage.STORAGE);
 
 		if (!ctx.isProcessStopped()) {
@@ -197,16 +227,15 @@ public class Handler implements PageHandler<Context> {
 		return minute;
 	}
 
-	public StorageReport queryHistoryReport(Payload payload, String type) {
-		String id = payload.getId();
+	public StorageReport queryHistoryReport(Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStorageReport(id + "-" + type, start, end);
+		return m_reportService.queryStorageReport(buildReportId(payload), start, end);
 	}
 
-	private StorageReport queryHourlyReport(Payload payload, String type) {
-		ModelRequest request = new ModelRequest(payload.getId() + "-" + type, payload.getDate()).setProperty("ip",
+	private StorageReport queryHourlyReport(Payload payload) {
+		ModelRequest request = new ModelRequest(buildReportId(payload), payload.getDate()).setProperty("ip",
 		      payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
