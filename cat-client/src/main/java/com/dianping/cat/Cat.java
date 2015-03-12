@@ -75,7 +75,7 @@ public class Cat {
 			String messageId = tree.getMessageId();
 
 			if (messageId == null) {
-				messageId = createMessageId();
+				messageId = Cat.createMessageId();
 				tree.setMessageId(messageId);
 			}
 			return messageId;

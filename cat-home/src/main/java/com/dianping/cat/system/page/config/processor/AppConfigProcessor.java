@@ -1,6 +1,12 @@
 package com.dianping.cat.system.page.config.processor;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
@@ -13,6 +19,12 @@ import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.consumer.event.model.entity.EventName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.service.impl.EventReportService;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
@@ -32,6 +44,45 @@ public class AppConfigProcessor extends BaseProcesser {
 	@Inject
 	private AppComparisonConfigManager m_appComparisonConfigManager;
 
+	@Inject
+	private EventReportService m_eventReportService;
+
+	public void buildBatchApiConfig(Payload payload, Model model) {
+		Date start = TimeHelper.getCurrentDay(-1);
+		Date end = TimeHelper.getCurrentDay();
+		EventReport report = m_eventReportService.queryReport("broker-service", start, end);
+		EventReportVisitor visitor = new EventReportVisitor();
+		
+		visitor.visitEventReport(report);
+		Set<String> validatePaths = visitor.getPaths();
+		Set<String> invalidatePaths = visitor.getInvalidatePaths();
+
+		Map<String, Integer> commands = m_appConfigManager.getCommands();
+
+		for (Entry<String, Integer> entry : commands.entrySet()) {
+			validatePaths.remove(entry.getKey());
+			invalidatePaths.remove(entry.getKey());
+		}
+
+		model.setValidatePaths(new ArrayList<String>(validatePaths));
+		model.setInvalidatePaths(new ArrayList<String>(invalidatePaths));
+	}
+
+	public void appRuleBatchUpdate(Payload payload, Model model) {
+		String content = payload.getContent();
+		String[] paths = content.split(",");
+
+		for (String path : paths) {
+			try {
+				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
+					m_appConfigManager.addCommand("", path, path, "api");
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	private void buildAppConfigInfo(AppConfigManager appConfigManager, Model model) {
 		model.setConnectionTypes(appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
 		model.setCities(appConfigManager.queryConfigItem(AppConfigManager.CITY));
@@ -40,6 +91,31 @@ public class AppConfigProcessor extends BaseProcesser {
 		model.setPlatforms(appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(appConfigManager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(appConfigManager.queryCommands());
+	}
+
+	private void buildListInfo(Model model, Payload payload) {
+		List<Command> commands = m_appConfigManager.queryCommands();
+		model.setCommands(commands);
+		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCodes(m_appConfigManager.getCodes());
+
+		int id = 0;
+
+		if ("code".equals(payload.getType()) && payload.getId() > 0) {
+			id = payload.getId();
+		} else {
+			if (!m_appConfigManager.getRawCommands().isEmpty()) {
+				id = m_appConfigManager.getRawCommands().keySet().iterator().next();
+			}
+		}
+		Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+		if (cmd != null) {
+			model.setUpdateCommand(cmd);
+			model.setId(String.valueOf(id));
+		}
+
+		buildBatchApiConfig(payload, model);
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -216,31 +292,48 @@ public class AppConfigProcessor extends BaseProcesser {
 			}
 			model.setContent(m_appComparisonConfigManager.getConfig().toString());
 			break;
+		case APP_RULE_BATCH_UPDATE:
+			appRuleBatchUpdate(payload, model);
+			buildListInfo(model, payload);
+			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
 
-	private void buildListInfo(Model model, Payload payload) {
-		List<Command> commands = m_appConfigManager.queryCommands();
-		model.setCommands(commands);
-		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
-		model.setCodes(m_appConfigManager.getCodes());
+	public static class EventReportVisitor extends BaseVisitor {
+		private Set<String> paths = new HashSet<String>();
 
-		int id = 0;
+		private Set<String> invalidatePaths = new HashSet<String>();
 
-		if ("code".equals(payload.getType()) && payload.getId() > 0) {
-			id = payload.getId();
-		} else {
-			if (!m_appConfigManager.getRawCommands().isEmpty()) {
-				id = m_appConfigManager.getRawCommands().keySet().iterator().next();
+		public Set<String> getInvalidatePaths() {
+			return invalidatePaths;
+		}
+
+		public Set<String> getPaths() {
+			return paths;
+		}
+
+		public void setInvalidatePaths(Set<String> invalidatePaths) {
+			this.invalidatePaths = invalidatePaths;
+		}
+
+		@Override
+		public void visitName(EventName name) {
+			String id = name.getId();
+
+			if (id.indexOf(".") > 0 && id.indexOf("/") == -1 && id.indexOf(".jpg") == -1) {
+				paths.add(id);
+			} else {
+				invalidatePaths.add(id);
 			}
 		}
-		Command cmd = m_appConfigManager.getRawCommands().get(id);
 
-		if (cmd != null) {
-			model.setUpdateCommand(cmd);
-			model.setId(String.valueOf(id));
+		@Override
+		public void visitType(EventType type) {
+			if (type.getId().equals("UnknownCommand")) {
+				super.visitType(type);
+			}
 		}
 	}
 }

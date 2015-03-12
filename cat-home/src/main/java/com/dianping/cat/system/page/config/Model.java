@@ -148,6 +148,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private DomainGroup m_domainGroup;
 
 	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
+	
+	private List<String> m_validatePaths;
+	
+	private List<String> m_invalidatePaths;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -377,6 +381,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_id;
 	}
 
+	public List<String> getInvalidatePaths() {
+		return m_invalidatePaths;
+	}
+
 	public String getIpAddress() {
 		return "";
 	}
@@ -479,6 +487,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Command getUpdateCommand() {
 		return m_updateCommand;
+	}
+
+	public List<String> getValidatePaths() {
+		return m_validatePaths;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -597,6 +609,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_id = id;
 	}
 
+	public void setInvalidatePaths(List<String> invalidatePaths) {
+		m_invalidatePaths = invalidatePaths;
+	}
+
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
 		m_metricItemConfig = metricItemConfig;
 	}
@@ -695,6 +711,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setUpdateCommand(Command updateCommand) {
 		m_updateCommand = updateCommand;
+	}
+	
+	public void setValidatePaths(List<String> validatePaths) {
+		m_validatePaths = validatePaths;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {
