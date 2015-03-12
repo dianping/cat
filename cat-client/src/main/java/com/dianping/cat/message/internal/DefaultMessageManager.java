@@ -72,10 +72,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (t != null) {
 			MessageTree tree = getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
 
+			if (messageId == null) {
+				messageId = nextMessageId();
+				tree.setMessageId(messageId);
+			}
 			if (tree != null) {
 				t.start();
-				t.bind(tag, tree.getMessageId(), title);
+				t.bind(tag, messageId, title);
 			}
 		}
 	}
@@ -97,6 +102,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	public void flush(MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(nextMessageId());
+		}
+
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {
@@ -160,6 +169,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public MessageTree getThreadLocalMessageTree() {
 		Context ctx = m_context.get();
+
+		if (ctx == null) {
+			setup();
+		}
+		ctx = m_context.get();
 
 		if (ctx != null) {
 			return ctx.m_tree;
@@ -336,10 +350,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				if (tree.getMessageId() == null) {
-					tree.setMessageId(nextMessageId());
-				}
-
 				tree.setMessage(message);
 				flush(tree);
 			} else {
@@ -455,10 +465,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					addTransactionChild(transaction, parent);
 				}
 			} else {
-				if (m_tree.getMessageId() == null) {
-					m_tree.setMessageId(nextMessageId());
-				}
-
 				m_tree.setMessage(transaction);
 			}
 
@@ -540,6 +546,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (message instanceof DefaultTransaction) {
 				String id = tree.getMessageId();
+
+				if (id == null) {
+					id = nextMessageId();
+					tree.setMessageId(id);
+				}
+
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
