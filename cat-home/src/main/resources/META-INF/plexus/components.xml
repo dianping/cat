@@ -2810,11 +2810,8 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageDatabaseContactor</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.AlertConfigManager</role>
 				</requirement>

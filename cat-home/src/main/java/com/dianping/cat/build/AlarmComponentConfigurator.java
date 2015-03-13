@@ -59,7 +59,7 @@ import com.dianping.cat.report.alert.sender.receiver.ExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor;
 import com.dianping.cat.report.alert.sender.receiver.NetworkContactor;
-import com.dianping.cat.report.alert.sender.receiver.StorageDatabaseContactor;
+import com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor;
 import com.dianping.cat.report.alert.sender.receiver.SystemContactor;
 import com.dianping.cat.report.alert.sender.receiver.ThirdpartyContactor;
 import com.dianping.cat.report.alert.sender.receiver.TransactionContactor;
@@ -157,8 +157,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
 
-		all.add(C(Contactor.class, StorageDatabaseContactor.ID, StorageDatabaseContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 
 		all.add(C(ContactorManager.class));
 
@@ -270,21 +269,19 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AlertSummaryService.class).req(AlertSummaryDao.class));
 
-		all.add(C(SummaryBuilder.class, RelatedSummaryBuilder.ID, RelatedSummaryBuilder.class)
-		      .req(AlertInfoBuilder.class, AlertSummaryService.class));
+		all.add(C(SummaryBuilder.class, RelatedSummaryBuilder.ID, RelatedSummaryBuilder.class).req(
+		      AlertInfoBuilder.class, AlertSummaryService.class));
 
-		all.add(C(SummaryBuilder.class, FailureSummaryBuilder.ID, FailureSummaryBuilder.class)
-		      .req(ModelService.class, ProblemAnalyzer.ID));
+		all.add(C(SummaryBuilder.class, FailureSummaryBuilder.ID, FailureSummaryBuilder.class).req(ModelService.class,
+		      ProblemAnalyzer.ID));
 
-		all.add(C(SummaryBuilder.class, AlterationSummaryBuilder.ID,
-		      AlterationSummaryBuilder.class).req(AlterationDao.class));
+		all.add(C(SummaryBuilder.class, AlterationSummaryBuilder.ID, AlterationSummaryBuilder.class).req(
+		      AlterationDao.class));
 
-		all.add(C(AlertSummaryExecutor.class)
-		      .req(SenderManager.class)
+		all.add(C(AlertSummaryExecutor.class).req(SenderManager.class)
 		      .req(SummaryBuilder.class, RelatedSummaryBuilder.ID, "m_relatedBuilder")
 		      .req(SummaryBuilder.class, FailureSummaryBuilder.ID, "m_failureBuilder")
-		      .req(SummaryBuilder.class, AlterationSummaryBuilder.ID,
-		            "m_alterationBuilder"));
+		      .req(SummaryBuilder.class, AlterationSummaryBuilder.ID, "m_alterationBuilder"));
 
 		return all;
 	}

@@ -5,21 +5,16 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.aggregation.AggregationConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.system.config.AlertConfigManager;
 
-public class FrontEndExceptionContactor extends DefaultContactor implements Contactor {
-
-	@Inject
-	private AggregationConfigManager m_aggConfigManager;
+public class StorageSQLContactor extends DefaultContactor implements Contactor {
 
 	@Inject
 	protected AlertConfigManager m_alertConfigManager;
 
-	public static final String ID = AlertType.FrontEndException.getName();
+	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String getId() {
@@ -37,11 +32,21 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 		} else {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
-			AggregationRule rule = m_aggConfigManager.queryAggration(id);
-			if (rule != null) {
-				mailReceivers.addAll(split(rule.getMails()));
-			}
 			return mailReceivers;
+		}
+	}
+
+	@Override
+	public List<String> queryWeiXinContactors(String id) {
+		List<String> weixinReceivers = new ArrayList<String>();
+		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return weixinReceivers;
+		} else {
+			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			return weixinReceivers;
 		}
 	}
 
@@ -59,17 +64,4 @@ public class FrontEndExceptionContactor extends DefaultContactor implements Cont
 		}
 	}
 
-	@Override
-	public List<String> queryWeiXinContactors(String id) {
-		List<String> weixinReceivers = new ArrayList<String>();
-		Receiver receiver = m_alertConfigManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return weixinReceivers;
-		} else {
-			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
-
-			return weixinReceivers;
-		}
-	}
 }

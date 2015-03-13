@@ -66,30 +66,32 @@ public class Handler implements PageHandler<Context> {
 
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
-		String format = m_storageGroupConfigManager.queryStorageLinkFormat(type);
+		String format = m_storageGroupConfigManager.getSqlLinkFormat();
+		
+		if (format != null) {
+			for (Entry<String, StorageAlertInfo> alertInfo : alertInfos.entrySet()) {
+				String key = alertInfo.getKey();
+				Map<String, List<String>> linkMap = links.get(key);
 
-		for (Entry<String, StorageAlertInfo> alertInfo : alertInfos.entrySet()) {
-			String key = alertInfo.getKey();
-			Map<String, List<String>> linkMap = links.get(key);
-
-			if (linkMap == null) {
-				linkMap = new LinkedHashMap<String, List<String>>();
-				links.put(key, linkMap);
-			}
-			for (Entry<String, Storage> entry : alertInfo.getValue().getStorages().entrySet()) {
-				String id = entry.getKey();
-				Storage storage = entry.getValue();
-				List<String> ls = linkMap.get(id);
-
-				if (ls == null) {
-					ls = new ArrayList<String>();
-					linkMap.put(id, ls);
+				if (linkMap == null) {
+					linkMap = new LinkedHashMap<String, List<String>>();
+					links.put(key, linkMap);
 				}
-				for (String ip : storage.getMachines().keySet()) {
-					String url = m_storageGroupConfigManager.buildUrl(format, id, ip);
+				for (Entry<String, Storage> entry : alertInfo.getValue().getStorages().entrySet()) {
+					String id = entry.getKey();
+					Storage storage = entry.getValue();
+					List<String> ls = linkMap.get(id);
 
-					if (url != null) {
-						ls.add(url);
+					if (ls == null) {
+						ls = new ArrayList<String>();
+						linkMap.put(id, ls);
+					}
+					for (String ip : storage.getMachines().keySet()) {
+						String url = m_storageGroupConfigManager.buildUrl(format, id, ip);
+
+						if (url != null) {
+							ls.add(url);
+						}
 					}
 				}
 			}
@@ -99,7 +101,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
 		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(ipAddress, payload.getProject(),
-		      model.getOperations(), storageReport.getStartTime());
+		      storageReport.getOps(), storageReport.getStartTime());
 
 		visitor.visitStorageReport(storageReport);
 		Map<String, LineChart> lineCharts = visitor.getLineChart();

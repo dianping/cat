@@ -40,8 +40,14 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String DEFAULT = "Default";
 
+	private String m_sqlLinkFormat;
+
 	public StorageGroupConfig getConfig() {
 		return m_config;
+	}
+
+	public String getSqlLinkFormat() {
+		return m_sqlLinkFormat;
 	}
 
 	@Override
@@ -72,6 +78,7 @@ public class StorageGroupConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new StorageGroupConfig();
 		}
+		refreshData();
 	}
 
 	public boolean insert(String xml) {
@@ -95,7 +102,11 @@ public class StorageGroupConfigManager implements Initializable {
 		}
 	}
 
-	public String queryStorageLinkFormat(String type) {
+	private void refreshData() {
+		m_sqlLinkFormat = refreshLinkFormat(StorageConstants.SQL_TYPE);
+	}
+
+	private String refreshLinkFormat(String type) {
 		StorageGroup group = queryStorageGroup(type);
 		Link link = group.getLink();
 
@@ -134,27 +145,8 @@ public class StorageGroupConfigManager implements Initializable {
 				return false;
 			}
 		}
+		refreshData();
 		return true;
-	}
-
-	public Map<String, Department> queryStorageDepartments() {
-		Map<String, Department> departments = new LinkedHashMap<String, Department>();
-
-		for (Storage storage : queryStorageGroup(StorageConstants.SQL_TYPE).getStorages().values()) {
-			String id = storage.getId();
-			String department = storage.getDepartment();
-			String product = storage.getProductline();
-			Department depart = departments.get(department);
-
-			if (depart == null) {
-				depart = new Department(department);
-
-				departments.put(department, depart);
-			}
-
-			depart.findOrCreateProductline(product).addStorage(id);
-		}
-		return departments;
 	}
 
 	public Map<String, Department> queryStorageDepartments(List<String> ids, String type) {

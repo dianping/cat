@@ -49,7 +49,7 @@
 							<tr>
 							<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${machine_entry.value.level == 1}">
-									<span class="text-warning">${machine_entry.key}</span>
+									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
 									<span class="text-danger"><strong>${machine_entry.key}</strong></span>
@@ -134,7 +134,7 @@
 			var dialog = $("#dialog-message-"+targetId+"-"+hour+"-"+minute).removeClass('hide').dialog({
 				width:'auto',
 				modal: true,
-				title: "<div class='widget-header widget-header-small'><h4><i class='ace-icon fa fa-check'></i><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain="+targetId+"&ip=All'>"+targetId+"</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>"+hour+" : "+ minute +"</span></strong></h4></div>",
+				title: "<div class='widget-header widget-header-small'><h4><i class='ace-icon fa fa-check'></i><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id="+targetId+"&ip=All' target='_blank'>"+targetId+"</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>"+hour+" : "+ minute +"</span></strong></h4></div>",
 				title_html: true,
 				buttons: [ 
 					{
