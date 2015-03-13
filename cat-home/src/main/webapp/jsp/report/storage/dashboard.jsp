@@ -23,7 +23,7 @@
   	<c:set var="linkMap" value="${model.links}" />
   
 	<c:forEach var="entry" items="${model.alertInfos}">
-		<table  class="smallTable" style="float:left" border=1>
+		<table  class="smallTable" style="float:left" border="1">
 		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
 		<c:if test="${empty entry.value.storages}">
 			<tr><td>
@@ -107,7 +107,7 @@
 		</td>
 		<td>
 		<c:forEach var="link" items="${linkMap[entry.key][storageInfo.id]}">
-			<a href="${link}" target="_blank">切</a>
+			<a href="${link}" target="_blank"><i class="ace-icon fa fa-bolt bigger-120"></i></a>
 		</c:forEach>
 		</td>
 		</tr>
