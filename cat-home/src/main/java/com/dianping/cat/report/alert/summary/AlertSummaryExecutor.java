@@ -81,6 +81,7 @@ public class AlertSummaryExecutor {
 
 	public String execute(String domain, Date date, String receiverStr) {
 		String content = execute(domain, date);
+		
 		if (content == null || "".equals(content)) {
 			return null;
 		} else {
