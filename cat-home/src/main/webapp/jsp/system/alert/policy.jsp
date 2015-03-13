@@ -33,7 +33,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#alert_config').addClass('active open');
+		$('#overall_config').addClass('active open');
 		$('#alertPolicy').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {

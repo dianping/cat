@@ -29,7 +29,6 @@ import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
-import com.dianping.cat.report.alert.exception.AlertReportBuilder;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
@@ -37,7 +36,6 @@ import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.impl.AlertReportService;
 import com.dianping.cat.report.service.impl.BugReportService;
 import com.dianping.cat.report.service.impl.CrossReportService;
 import com.dianping.cat.report.service.impl.DefaultBaselineService;
@@ -56,7 +54,6 @@ import com.dianping.cat.report.service.impl.ServiceReportService;
 import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.report.service.impl.StorageReportService;
 import com.dianping.cat.report.service.impl.SystemReportService;
-import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.service.impl.UtilizationReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -111,7 +108,6 @@ import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 import com.dianping.cat.system.config.RouterConfigManager;
 
@@ -172,9 +168,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(StateReportService.class,
 		      RouterConfigService.class, RouterConfigManager.class));
-
-		all.add(C(TaskBuilder.class, AlertReportBuilder.ID, AlertReportBuilder.class).req(TopReportService.class,
-		      AlertReportService.class, ExceptionRuleConfigManager.class, ServerConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
 		      HeavyReportService.class, ServerConfigManager.class));
