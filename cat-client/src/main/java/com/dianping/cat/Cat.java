@@ -46,8 +46,8 @@ public class Cat {
 			synchronized (s_instance) {
 				if (!s_init) {
 					initialize(new File(getCatHome(), "client.xml"));
-					s_init = true;
 					log("WARN", "Cat is lazy initialized!");
+					s_init = true;
 				}
 			}
 		}

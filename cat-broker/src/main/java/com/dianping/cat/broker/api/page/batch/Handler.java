@@ -41,6 +41,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	@Inject
 	private RequestUtils m_util;
 
+	@Inject
+	private UrlParser m_parser;
+
 	private Logger m_logger;
 
 	private volatile int m_error;
@@ -90,6 +93,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
 		boolean success = false;
+		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
 
 		if (VERSION_TWO.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
@@ -113,8 +117,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				processVersion3Content(cityId, operatorId, content, version);
 				success = true;
 			}
-		} else {
-			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -146,6 +148,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					url = url.substring(0, index);
 				}
 				Integer command = m_appConfigManager.getCommands().get(url);
+
+				if (command == null) {
+					url = m_parser.parse(url);
+
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
+					}
+				}
 
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
@@ -207,6 +217,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 				Integer command = m_appConfigManager.getCommands().get(url);
 
+				if (command == null) {
+					url = m_parser.parse(url);
+
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
+					}
+				}
+				
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());
