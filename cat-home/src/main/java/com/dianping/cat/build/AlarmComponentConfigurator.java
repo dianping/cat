@@ -45,7 +45,7 @@ import com.dianping.cat.report.alert.sender.decorator.ExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator;
 import com.dianping.cat.report.alert.sender.decorator.NetworkDecorator;
-import com.dianping.cat.report.alert.sender.decorator.StorageDatabaseDecorator;
+import com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator;
 import com.dianping.cat.report.alert.sender.decorator.SystemDecorator;
 import com.dianping.cat.report.alert.sender.decorator.ThirdpartyDecorator;
 import com.dianping.cat.report.alert.sender.decorator.TransactionDecorator;
@@ -185,7 +185,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 
-		all.add(C(Decorator.class, StorageDatabaseDecorator.ID, StorageDatabaseDecorator.class));
+		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
 
 		all.add(C(DecoratorManager.class));
 
