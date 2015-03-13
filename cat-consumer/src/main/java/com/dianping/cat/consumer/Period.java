@@ -59,7 +59,7 @@ public class Period {
 		for (String name : names) {
 			MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
 			MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
-			PeriodTask task = new PeriodTask(m_serverStateManager, analyzer, queue, startTime);
+			PeriodTask task = new PeriodTask(analyzer, queue, startTime);
 
 			analyzers.put(name, analyzer);
 			task.enableLogging(m_logger);
@@ -79,9 +79,18 @@ public class Period {
 
 	public void distribute(MessageTree tree) {
 		m_serverStateManager.addMessageTotal(tree.getDomain(), 1);
+		boolean success = true;
 
 		for (PeriodTask task : m_tasks) {
-			task.enqueue(tree);
+			boolean enqueue = task.enqueue(tree);
+
+			if (enqueue == false) {
+				success = false;
+			}
+		}
+
+		if (!success) {
+			m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
 		}
 	}
 
