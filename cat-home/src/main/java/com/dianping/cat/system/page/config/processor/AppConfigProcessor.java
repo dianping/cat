@@ -52,7 +52,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		Date end = TimeHelper.getCurrentDay();
 		EventReport report = m_eventReportService.queryReport("broker-service", start, end);
 		EventReportVisitor visitor = new EventReportVisitor();
-		
+
 		visitor.visitEventReport(report);
 		Set<String> validatePaths = visitor.getPaths();
 		Set<String> invalidatePaths = visitor.getInvalidatePaths();
@@ -322,7 +322,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		public void visitName(EventName name) {
 			String id = name.getId();
 
-			if (id.indexOf(".") > 0 && id.indexOf("/") == -1 && id.indexOf(".jpg") == -1) {
+			if (id.indexOf(".") > 0 && id.indexOf("/") == -1 && id.indexOf(".jpg") == -1 && id.indexOf(".zip") == -1) {
 				paths.add(id);
 			} else {
 				invalidatePaths.add(id);

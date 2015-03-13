@@ -67,14 +67,6 @@
 					</li>
 				</ul>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="alert_report" >
-						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">
-							<i class="menu-icon  fa fa-exclamation-circle"></i>
-							<span class="menu-text">异常告警排行</span>
-						</a>
-					</li>
-				</ul>
-				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="service_report" >
 						<a href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">
 							<i class="menu-icon glyphicon glyphicon-check"></i>

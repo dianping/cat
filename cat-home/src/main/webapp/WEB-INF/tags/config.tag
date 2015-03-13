@@ -142,6 +142,17 @@
 							<li id="systemRuleConfigList"><a href="/cat/s/config?op=systemRuleConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>系统告警</a>
 								<b class="arrow"></b></li>
+							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>框架异常</a>
+								<b class="arrow"></b></li>
+							</li>
+						</ul>
+					</li>
+					<li id="overall_config" class="hsub">
+					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-cog"></i> <span class="menu-text">全局告警配置</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+						<ul class="submenu">
 							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
 								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
 								<b class="arrow"></b></li>
@@ -151,17 +162,13 @@
 							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
 								<b class="arrow"></b></li>
-							<li id="bugConfigUpdate" style="display:none"><a href="/cat/s/config?op=bugConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>框架异常</a>
-								<b class="arrow"></b></li>
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
 							<li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>全局黑名单</a>
 								<b class="arrow"></b></li>
-						</ul>
-					</li>
+								</ul></li>
 					</ul>
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
