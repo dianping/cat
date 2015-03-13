@@ -1,9 +1,11 @@
 package com.dianping.cat.report.alert.storage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -229,9 +231,8 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		}
 	}
 
-	private List<String> queryCurrentStorages() {
-		List<String> ids = new ArrayList<String>(m_storageConfigManager.queryStorageGroup(getType()).getStorages()
-		      .keySet());
+	private Set<String> queryCurrentStorages() {
+		Set<String> ids = new HashSet<String>(m_storageConfigManager.queryStorageGroup(getType()).getStorages().keySet());
 		ModelRequest request = new ModelRequest("*-" + getType(), ModelPeriod.CURRENT.getStartTime()) //
 		      .setProperty("ip", Constants.ALL);
 		ModelResponse<StorageReport> response = m_service.invoke(request);
@@ -255,7 +256,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				List<String> storages = queryCurrentStorages();
+				Set<String> storages = queryCurrentStorages();
 
 				for (String storage : storages) {
 					try {

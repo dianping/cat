@@ -51,7 +51,7 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#application_config').addClass('active open');
 			<c:if test="${empty payload.type or payload.type eq 'database'}">
 				$('#storageDatabaseRule').addClass('active');
 			</c:if>

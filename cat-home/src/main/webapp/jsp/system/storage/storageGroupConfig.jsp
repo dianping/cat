@@ -21,7 +21,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#application_config').addClass('active open');
 			$('#storageGroupConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

@@ -52,7 +52,7 @@
 									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
-									<span class="text-danger"><strong>${machine_entry.key}</strong></span>
+									<span class="text-danger"><strong><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></strong></span>
 								</c:if>
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
