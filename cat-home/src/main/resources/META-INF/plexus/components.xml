@@ -2854,7 +2854,7 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>SQL</role-hint>
-			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageDatabaseDecorator</implementation>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
