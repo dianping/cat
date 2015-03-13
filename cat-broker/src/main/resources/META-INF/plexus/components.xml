@@ -176,6 +176,9 @@
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.batch.UrlParser</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -193,6 +196,10 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.batch.UrlParser</role>
+			<implementation>com.dianping.cat.broker.api.page.batch.UrlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.broker.api.page.speed.Handler</role>
