@@ -8,12 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.report.alert.AlertReportBuilderTest;
 import com.dianping.cat.report.alert.ExtractDataTest;
 import com.dianping.cat.report.alert.JudgeTimeTest;
 import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
-import com.dianping.cat.report.alert.TopReportVisitorTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
@@ -127,10 +125,6 @@ HistoryStorageReportMergerTest.class,
 AlertConfigTest.class,
 
 HeavyReportBuilderTest.class,
-
-AlertReportBuilderTest.class,
-
-TopReportVisitorTest.class,
 
 RuleConfigTest.class,
 
