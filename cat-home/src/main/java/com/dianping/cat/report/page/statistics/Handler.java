@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -62,19 +63,19 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SystemReportService m_systemReportService;
-	
+
 	@Inject
 	private BugReportService m_bugReportService;
-	
+
 	@Inject
 	private HeavyReportService m_heavyReportService;
-	
+
 	@Inject
 	private UtilizationReportService m_utilizationReportService;
-	
+
 	@Inject
 	private ServiceReportService m_serviceReportService;
-	
+
 	@Inject
 	private JarReportService m_jarReportService;
 
@@ -125,7 +126,6 @@ public class Handler implements PageHandler<Context> {
 		model.setServiceList(dHisList);
 		model.setServiceReport(serviceReport);
 	}
-
 
 	private void buildSortedHeavyInfo(Model model, HeavyReport heavyReport) {
 		HeavyCall heavyCall = heavyReport.getHeavyCall();
@@ -214,9 +214,12 @@ public class Handler implements PageHandler<Context> {
 			buildUtilizationInfo(model, payload);
 			break;
 		case ALERT_SUMMARY:
-			String summaryContent = m_executor.execute(payload.getSummarydomain(), payload.getSummarytime(),
-			      payload.getSummaryemails());
-			model.setSummaryContent(summaryContent);
+			String domain = payload.getSummarydomain();
+
+			if (StringUtils.isNotEmpty(domain)) {
+				String summaryContent = m_executor.execute(domain, payload.getSummarytime(), payload.getSummaryemails());
+				model.setSummaryContent(summaryContent);
+			}
 			break;
 		case JAR_REPORT:
 			buildJarInfo(model, payload);
