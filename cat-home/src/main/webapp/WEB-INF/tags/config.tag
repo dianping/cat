@@ -36,7 +36,7 @@
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="projects_config" class="hsub">
-					<a href="/cat/s/config?op=projects" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">项目配置</span>
+					<a href="/cat/s/config?op=projects" class="dropdown-toggle"> <i class="menu-icon fa fa-cogs"></i> <span class="menu-text">项目配置信息</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
