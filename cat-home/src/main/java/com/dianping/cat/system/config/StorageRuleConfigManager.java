@@ -69,7 +69,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 			String ruleId = entry.getValue().getId();
 			String[] conditions = ruleId.split(StorageConstants.FIELD_SEPARATOR);
 
-			if (conditions.length == 4) {
+			if (conditions.length >= 4) {
 				String name = conditions[0];
 				String machine = conditions[1];
 				String operation = conditions[2];

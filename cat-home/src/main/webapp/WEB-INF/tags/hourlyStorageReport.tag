@@ -11,7 +11,7 @@
 <a:storage_body>
 <script>
 	function buildHref(id){
-		var href = '<a href="?op=${payload.action.name}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
+		var href = '<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+id+'&date=${model.date}">&nbsp;[&nbsp;'+id+'&nbsp;]&nbsp;</a>';
 		return href;
 	}
 	$(document).ready(function() {
@@ -26,12 +26,12 @@
 		}
 		$('#frequentNavbar').html(html);
 		$("#search_go").bind("click",function(e){
-			var newUrl = '${model.baseUri}?op=${payload.action.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+			var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 			window.location.href = newUrl;
 		});
 		$('#wrap_search').submit(
 			function(){
-				var newUrl = '${model.baseUri}?op=${payload.action.name}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
+				var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
 				return false;
 			}		
@@ -51,10 +51,10 @@
 							</c:if>
 							<td class="department">${productline.key}</td>
 							<td><div class="domain"><c:forEach var="id" items="${productline.value.storages}">&nbsp;<c:choose><c:when test="${payload.id eq id}"><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}"
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}"
 													class="current">[&nbsp;${id}&nbsp;]</a></c:when>
 													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}">[&nbsp;${id}&nbsp;]</a>
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}">[&nbsp;${id}&nbsp;]</a>
 											</c:otherwise></c:choose>&nbsp;
 									</c:forEach>
 								</div>
