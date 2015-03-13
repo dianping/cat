@@ -66,10 +66,14 @@
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.currentOperations}">
-			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};count">Count</a>
+			<i class="glyphicon glyphicon-question-sign" data-rel="tooltip" data-placement="left" title="一分钟内操作总量"></i></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a>
+			<i class="glyphicon glyphicon-question-sign" data-rel="tooltip" data-placement="left" title="一分钟内长时间(超过一秒)操作总量"></i></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a>
+			<i class="glyphicon glyphicon-question-sign" data-rel="tooltip" data-placement="left" title="一分钟内操作平均响应时间"></i></th>
+			<th class="right"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};error">Error</a>
+			<i class="glyphicon glyphicon-question-sign" data-rel="tooltip" data-placement="left" title="一分钟内错误操作总数"></i></th>
 		</c:forEach>
 	</tr>
 	<c:forEach var="domain" items="${model.machine.domains}"
@@ -150,6 +154,8 @@
 	}
 	
 	$(document).ready(function() {
+		$('[data-rel=tooltip]').tooltip();
+		
 		if('${payload.type}' == 'SQL'){
 			$('#Database_report').addClass('active open');
 			$('#database_operation').addClass('active');
