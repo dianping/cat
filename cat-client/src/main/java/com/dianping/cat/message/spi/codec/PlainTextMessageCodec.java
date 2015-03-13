@@ -105,7 +105,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			throw new RuntimeException(String.format("Unrecognized id(%s) for plain text message codec!", id));
 		}
 	}
-
+	
 	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
 	      MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;

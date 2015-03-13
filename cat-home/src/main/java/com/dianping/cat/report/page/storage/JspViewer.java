@@ -19,6 +19,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		case HISTORY_DATABASE:
 		case HISTORY_CACHE:
 			return JspFile.HISTORY_REPORT.getPath();
+		case DASHBOARD:
+			return JspFile.DASHBOARD.getPath();
 		}
 		throw new RuntimeException("Unknown action: " + action);
 	}

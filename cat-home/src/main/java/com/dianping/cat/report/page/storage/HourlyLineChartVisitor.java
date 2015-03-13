@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.storage;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,15 +35,13 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private String m_currentOperation;
 
-	private List<String> m_titles = Arrays.asList("count", "avg", "error", "long");
-
 	public HourlyLineChartVisitor(String ip, String domain, List<String> operations, Date start) {
 		m_ip = ip;
 		m_domain = domain;
 		m_operations = operations;
 		m_start = start;
 
-		for (String title : m_titles) {
+		for (String title : StorageConstants.TITLES) {
 			LineChart linechart = new LineChart();
 
 			linechart.setSize(SIZE);
@@ -106,10 +103,10 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 			String key = entry.getKey();
 			LineChartData data = entry.getValue();
 
-			buildLineChart(size, key, "count", data.getCounts());
-			buildLineChart(size, key, "avg", buildAvgData(data.getCounts(), data.getSums()));
-			buildLineChart(size, key, "error", data.getErrors());
-			buildLineChart(size, key, "long", data.getLongs());
+			buildLineChart(size, key, StorageConstants.COUNT, data.getCounts());
+			buildLineChart(size, key, StorageConstants.AVG, buildAvgData(data.getCounts(), data.getSums()));
+			buildLineChart(size, key, StorageConstants.ERROR, data.getErrors());
+			buildLineChart(size, key, StorageConstants.LONG, data.getLongs());
 		}
 		return m_lineCharts;
 	}
@@ -148,7 +145,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		data.incLongs(minute, segment.getLongCount());
 	}
 
-	public class LineChartData {
+	public static class LineChartData {
 
 		private String m_operation;
 
@@ -224,4 +221,5 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 			}
 		}
 	}
+
 }

@@ -29,6 +29,7 @@ import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
 import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
+import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
@@ -40,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GlobalConfigProcessor m_globalConfigProcessor;
-	
+
 	@Inject
 	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
@@ -76,6 +77,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TransactionConfigProcessor m_transactionConfigProcessor;
+
+	@Inject
+	private StorageConfigProcessor m_storageConfigProcessor;
 
 	@Inject
 	private DisplayConfigProcessor m_displayConfigProfessor;
@@ -114,9 +118,10 @@ public class Handler implements PageHandler<Context> {
 		case ROUTER_CONFIG_UPDATE:
 		case ALERT_SENDER_CONFIG_UPDATE:
 		case BLACK_CONFIG_UPDATE:
+		case STORAGE_GROUP_CONFIG_UPDATE:
 			m_globalConfigProcessor.process(action, payload, model);
 			break;
-			
+
 		case THIRD_PARTY_RULE_CONFIGS:
 		case THIRD_PARTY_RULE_UPDATE:
 		case THIRD_PARTY_RULE_SUBMIT:
@@ -203,6 +208,13 @@ public class Handler implements PageHandler<Context> {
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
 		case HEARTBEAT_RULE_DELETE:
 			m_heartbeatConfigProcessor.process(action, payload, model);
+			break;
+
+		case STORAGE_RULE:
+		case STORAGE_RULE_ADD_OR_UPDATE:
+		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
+		case STORAGE_RULE_DELETE:
+			m_storageConfigProcessor.process(action, payload, model);
 			break;
 
 		case APP_NAME_CHECK:

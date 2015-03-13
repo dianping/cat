@@ -22,6 +22,28 @@ public class AllDomainMerger extends BaseVisitor {
 		return m_storageReport;
 	}
 
+	private void mergeOperation(Operation operation, String domain) {
+		Operation to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
+		      .findOrCreateOperation(m_currentOperation);
+
+		to.setCount(to.getCount() + operation.getCount());
+		to.setLongCount(to.getLongCount() + operation.getLongCount());
+		to.setError(to.getError() + operation.getError());
+		to.setSum(to.getSum() + operation.getSum());
+		to.setAvg(to.getSum() / to.getCount());
+	}
+
+	private void mergeSegment(Segment segment, String domain) {
+		Segment to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
+		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
+
+		to.setCount(to.getCount() + segment.getCount());
+		to.setLongCount(to.getLongCount() + segment.getLongCount());
+		to.setError(to.getError() + segment.getError());
+		to.setSum(to.getSum() + segment.getSum());
+		to.setAvg(to.getSum() / to.getCount());
+	}
+
 	@Override
 	public void visitDomain(Domain domain) {
 		m_currentDomain = domain.getId();
@@ -44,33 +66,11 @@ public class AllDomainMerger extends BaseVisitor {
 		super.visitOperation(operation);
 	}
 
-	private void mergeOperation(Operation operation, String domain) {
-		Operation to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
-		      .findOrCreateOperation(m_currentOperation);
-
-		to.setCount(to.getCount() + operation.getCount());
-		to.setLongCount(to.getLongCount() + operation.getLongCount());
-		to.setError(to.getError() + operation.getError());
-		to.setSum(to.getSum() + operation.getSum());
-		to.setAvg(to.getSum() / to.getCount());
-	}
-
 	@Override
 	public void visitSegment(Segment segment) {
 		mergeSegment(segment, Constants.ALL);
 		mergeSegment(segment, m_currentDomain);
 		super.visitSegment(segment);
-	}
-
-	private void mergeSegment(Segment segment, String domain) {
-		Segment to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
-		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
-
-		to.setCount(to.getCount() + segment.getCount());
-		to.setLongCount(to.getLongCount() + segment.getLongCount());
-		to.setError(to.getError() + segment.getError());
-		to.setSum(to.getSum() + segment.getSum());
-		to.setAvg(to.getSum() / to.getCount());
 	}
 
 	@Override

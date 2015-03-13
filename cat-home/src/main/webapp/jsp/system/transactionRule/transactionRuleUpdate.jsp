@@ -38,21 +38,21 @@
 <script type="text/javascript">
 function update() {
     var configStr = generateConfigsJsonString();
-    var domain = $("#domain").val();
+    var domain = $("#domain").val().trim();
     if(domain == "undefined" || domain == ""){
 		if($("#errorMessage").length == 0){
 			$("#domain").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var type = $("#type").val();
+    var type = $("#type").val().trim();
     if(type == "undefined" || type == ""){
 		if($("#errorMessage").length == 0){
 			$("#type").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var name = $("#name").val();
+    var name = $("#name").val().trim();
     if(name == "undefined" || name == ""){
 		name = "All";
 		$("#domain").val("All");
@@ -75,7 +75,7 @@ function update() {
 			var monitor = ruleId.split(';')[3];
 			$('#monitor').val(monitor);
 		}
-		var name = $("#name").val();
+		var name = $("#name").val().trim();
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}

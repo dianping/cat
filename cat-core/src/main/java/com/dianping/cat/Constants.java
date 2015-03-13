@@ -59,6 +59,8 @@ public class Constants {
 
 	public static final String REPORT_DATABASE_CAPACITY = "databaseCapacity";
 
+	public static final String REPORT_STORAGE_ALERT_DATABASE = "storageDatabaseAlert";
+
 	public static final String REPORT_NOTIFY = "dailyNotify";
 
 	public static final String HIGH_LOAD_REPORT = "highLoad";

@@ -20,10 +20,12 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.spi.MessageManager;
 
 /**
@@ -32,6 +34,8 @@ import com.dianping.cat.message.spi.MessageManager;
 public class Cat {
 	private static Cat s_instance = new Cat();
 
+	private static volatile boolean s_init = false;
+
 	private MessageProducer m_producer;
 
 	private MessageManager m_manager;
@@ -39,10 +43,11 @@ public class Cat {
 	private PlexusContainer m_container;
 
 	private static void checkAndInitialize() {
-		if (s_instance.m_container == null) {
+		if (!s_init) {
 			synchronized (s_instance) {
-				if (s_instance.m_container == null) {
+				if (!s_init) {
 					initialize(new File(getCatHome(), "client.xml"));
+					s_init = true;
 					log("WARN", "Cat is lazy initialized!");
 				}
 			}
@@ -150,7 +155,7 @@ public class Cat {
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
-		//TO REMOVE ME
+		// TO REMOVE ME
 	}
 
 	/**
@@ -215,6 +220,16 @@ public class Cat {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
 	}
 
+	public static String logRemoteLink() {
+		String childId = createMessageId();
+		DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
+
+		next.addData(childId);
+		next.setStatus(Message.SUCCESS);
+		next.complete();
+		return childId;
+	}
+
 	public static void logTrace(String type, String name) {
 		Cat.getProducer().logTrace(type, name);
 	}
@@ -269,21 +284,14 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
-		m_container = container;
-
 		try {
+			m_container = container;
 			m_manager = container.lookup(MessageManager.class);
+			m_producer = container.lookup(MessageProducer.class);
 		} catch (ComponentLookupException e) {
 			throw new RuntimeException("Unable to get instance of MessageManager, "
 			      + "please make sure the environment was setup correctly!", e);
 		}
-
-		try {
-			m_producer = container.lookup(MessageProducer.class);
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageProducer, "
-			      + "please make sure the environment was setup correctly!", e);
-		}
 	}
-	
+
 }

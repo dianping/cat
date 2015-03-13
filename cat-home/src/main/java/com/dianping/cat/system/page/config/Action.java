@@ -171,6 +171,16 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TRANSACTION_RULE_DELETE("transactionRuleDelete"),
 
+	STORAGE_RULE("storageRule"),
+
+	STORAGE_RULE_ADD_OR_UPDATE("storageRuleUpdate"),
+
+	STORAGE_RULE_ADD_OR_UPDATE_SUBMIT("storageRuleSubmit"),
+
+	STORAGE_RULE_DELETE("storageRuleDelete"),
+
+	STORAGE_GROUP_CONFIG_UPDATE("storageGroupConfigUpdate"),
+
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
 	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
@@ -194,9 +204,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
 
 	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
-	
+
 	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
-	
+
 	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 
 	private String m_name;

@@ -52,6 +52,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		if (period == current) {
 			report.accept(m_computer.setDuration(remainder / 1000));
+		} else if (period < current) {
+			report.accept(m_computer.setDuration(3600));
 		}
 		return report;
 	}

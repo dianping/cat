@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="storage-group-config-codegen.xml" />
+  <file path="storage-group-config-model.xml" />
+</manifest>
+
