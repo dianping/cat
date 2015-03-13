@@ -30,16 +30,16 @@
 				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">访问正常</button>
 			</td></tr>
 		</c:if>
-		
-		<tr><td>
 		<c:forEach var="storage" items="${entry.value.storages}">
-		<c:set var="storageInfo" value="${storage.value}" />
-		<c:set var="times" value="${fn:split(entry.key,':')}" />
-		<c:set var="hour" value="${times[0]}" />
-		<c:set var="minute" value="${times[1]}" />
+			<tr><td>
+			<c:set var="storageInfo" value="${storage.value}" />
+			<c:set var="times" value="${fn:split(entry.key,':')}" />
+			<c:set var="hour" value="${times[0]}" />
+			<c:set var="minute" value="${times[1]}" />
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id="+targetId+"&ip=All' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -102,7 +102,7 @@
 				<button class="btn btn-app btn-sm radius-4 btn-warning alert-modal" data-id="${storageInfo.id}" data-hour="${hour}" data-minute="${minute}" style="height: 40px; min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count}</span></button>
 			</c:when>
 			<c:when test="${storageInfo != null && storageInfo.level == 2}">
-				<button class="btn btn-app btn-sm radius-4 btn-danger alert-modal" data-id="${storageInfo.id}" data-hour="${hour}" data-minute="${minute}" data-id="${storageInfo.id}"  data-hour="${hour}" data-minute="${minute}" style="height: 40px;  min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count }</span></button>
+				<button class="btn btn-app btn-sm radius-4 btn-danger alert-modal" data-id="${storageInfo.id}"  data-hour="${hour}" data-minute="${minute}" style="height: 40px;  min-width: 130px; width: auto">${w:shorten(storageInfo.id, 15)}<span class="label label-inverse arrowed-in">${storageInfo.count }</span></button>
 			</c:when>
 		</c:choose>
 		</td>
@@ -135,22 +135,10 @@
 				minute = "0" + minute;
 			}
 			e.preventDefault();
-			console.log("mousein");
-	
 			var dialog = $("#dialog-message-"+targetId+"-"+hour+"-"+minute).removeClass('hide').dialog({
 				width:'auto',
 				modal: true,
-				title: "<div class='widget-header widget-header-small'><h4><i class='ace-icon fa fa-check'></i><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id="+targetId+"&ip=All' target='_blank'>"+targetId+"</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>"+hour+" : "+ minute +"</span></strong></h4></div>",
 				title_html: true,
-				buttons: [ 
-					{
-						text: "Close",
-						"class" : "btn btn-primary btn-xs",
-						click: function() {
-							$( this ).dialog( "close" ); 
-						} 
-					}
-				]
 			});
 		});
 		
