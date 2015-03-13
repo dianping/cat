@@ -159,7 +159,6 @@
 	
 	$(document).ready(function() {
 		$('[data-rel=tooltip]').tooltip();
-		$('[data-rel=popover]').popover({html:true});
 
 		if('${payload.type}' == 'SQL'){
 			$('#Database_report').addClass('active open');

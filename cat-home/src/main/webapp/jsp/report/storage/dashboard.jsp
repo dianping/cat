@@ -39,7 +39,7 @@
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id="+targetId+"&ip=All' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
