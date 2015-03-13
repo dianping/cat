@@ -108,7 +108,7 @@
 		</td>
 		<td>
 		<c:forEach var="link" items="${linkMap[entry.key][storageInfo.id]}">
-			<a href="${link}" target="_blank"><i class="ace-icon fa fa-bolt bigger-120"></i></a>
+			<a href="${link}" target="_blank"><i class="ace-icon fa fa-bolt bigger-200"></i></a>
 		</c:forEach>
 		</td>
 		</tr>
@@ -124,7 +124,7 @@
 	}
 
 	$(document).ready(function() {
-		$( ".alert-modal" ).on('hover', function(e) {
+		$( ".alert-modal" ).on('click', function(e) {
 			var targetId = $(this).data("id");
 			var hour = $(this).data("hour");
 			var minute = $(this).data("minute");
