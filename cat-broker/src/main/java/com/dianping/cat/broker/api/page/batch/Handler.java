@@ -150,10 +150,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					url = m_parser.parse(url);
+					String subUrl = m_parser.parse(url);
 
-					if (url != null) {
-						command = m_appConfigManager.getCommands().get(url);
+					if (subUrl != null) {
+						command = m_appConfigManager.getCommands().get(subUrl);
 					}
 				}
 
@@ -218,10 +218,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					url = m_parser.parse(url);
+					String subUrl = m_parser.parse(url);
 
-					if (url != null) {
-						command = m_appConfigManager.getCommands().get(url);
+					if (subUrl != null) {
+						command = m_appConfigManager.getCommands().get(subUrl);
 					}
 				}
 				
