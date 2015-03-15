@@ -30,7 +30,7 @@ public class AllDomainMerger extends BaseVisitor {
 		to.setLongCount(to.getLongCount() + operation.getLongCount());
 		to.setError(to.getError() + operation.getError());
 		to.setSum(to.getSum() + operation.getSum());
-		to.setAvg(to.getSum() / to.getCount());
+		to.setAvg(to.getCount() > 0 ? to.getSum() / to.getCount() : 0);
 	}
 
 	private void mergeSegment(Segment segment, String domain) {
@@ -41,7 +41,7 @@ public class AllDomainMerger extends BaseVisitor {
 		to.setLongCount(to.getLongCount() + segment.getLongCount());
 		to.setError(to.getError() + segment.getError());
 		to.setSum(to.getSum() + segment.getSum());
-		to.setAvg(to.getSum() / to.getCount());
+		to.setAvg(to.getCount() > 0 ? to.getSum() / to.getCount() : 0);
 	}
 
 	@Override
@@ -82,7 +82,7 @@ public class AllDomainMerger extends BaseVisitor {
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
 		m_storageReport.getOps().addAll(storageReport.getOps());
-		
+
 		super.visitStorageReport(storageReport);
 	}
 

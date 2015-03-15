@@ -1,9 +1,11 @@
 package com.dianping.cat.report.alert.storage;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -22,8 +24,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.storage.entity.Storage;
-import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.DataChecker;
@@ -32,7 +32,7 @@ import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
-import com.dianping.cat.report.page.storage.topology.StorageGraphBuilder;
+import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
@@ -57,7 +57,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	protected StorageGroupConfigManager m_storageConfigManager;
 
 	@Inject
-	protected StorageGraphBuilder m_graphBuilder;
+	protected StorageAlertInfoBuilder m_alertBuilder;
 
 	protected Logger m_logger;
 
@@ -90,10 +90,20 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			}
 		} else if (StorageConstants.ERROR.equals(target)) {
 			for (Entry<Integer, Segment> entry : segments.entrySet()) {
-				datas[entry.getKey()] = entry.getValue().getError() / entry.getValue().getCount();
+				datas[entry.getKey()] = entry.getValue().getError();
+			}
+		} else if (StorageConstants.ERROR_PERCENT.equals(target)) {
+			for (Entry<Integer, Segment> entry : segments.entrySet()) {
+				long count = entry.getValue().getCount();
+
+				if (count > 0) {
+					datas[entry.getKey()] = (double) entry.getValue().getError() / count;
+				} else {
+					datas[entry.getKey()] = 0;
+				}
 			}
 		} else {
-			Cat.logError(new RuntimeException("Unrecognized storage databse alert attribute: " + target));
+			Cat.logError(new RuntimeException("Unrecognized storage databse alert target field: " + target));
 		}
 		System.arraycopy(datas, start, result, 0, length);
 
@@ -203,21 +213,38 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
 
-			m_graphBuilder.processAlertEntity(minute, entity, param);
+			m_alertBuilder.processAlertEntity(minute, entity, param);
 		}
 	}
 
 	private void processStorage(String id) {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
 
-		for (String ip : currentReport.getIps()) {
-			List<Rule> rules = getRuleConfigManager().findRule(id, ip);
+		if (currentReport != null) {
+			for (String ip : currentReport.getIps()) {
+				List<Rule> rules = getRuleConfigManager().findRule(id, ip);
 
-			for (Rule rule : rules) {
-				processRule(rule, id, ip, currentReport);
+				for (Rule rule : rules) {
+					processRule(rule, id, ip, currentReport);
+				}
 			}
 		}
+	}
 
+	private Set<String> queryCurrentStorages() {
+		Set<String> ids = new HashSet<String>(m_storageConfigManager.queryStorageGroup(getType()).getStorages().keySet());
+		ModelRequest request = new ModelRequest("*-" + getType(), ModelPeriod.CURRENT.getStartTime()) //
+		      .setProperty("ip", Constants.ALL);
+		ModelResponse<StorageReport> response = m_service.invoke(request);
+
+		if (response != null) {
+			StorageReport report = response.getModel();
+
+			if (report != null) {
+				ids.addAll(report.getIds());
+			}
+		}
+		return ids;
 	}
 
 	@Override
@@ -229,11 +256,11 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			long current = System.currentTimeMillis();
 
 			try {
-				StorageGroup groups = m_storageConfigManager.queryStorageGroup(StorageGroupConfigManager.DATABASE_TYPE);
+				Set<String> storages = queryCurrentStorages();
 
-				for (Entry<String, Storage> entry : groups.getStorages().entrySet()) {
+				for (String storage : storages) {
 					try {
-						processStorage(entry.getValue().getId());
+						processStorage(storage);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -242,6 +269,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
+				Cat.logError(e);
 			} finally {
 				t.complete();
 			}

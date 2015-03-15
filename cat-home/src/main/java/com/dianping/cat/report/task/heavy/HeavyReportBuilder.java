@@ -18,7 +18,8 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HeavyReportService;
+import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -27,7 +28,10 @@ public class HeavyReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_HEAVY;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected HeavyReportService m_reportService;
+
+	@Inject
+	protected MatrixReportService m_matrixReportService;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -58,7 +62,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 		heavyReport.setEndTime(end);
 		for (String domainName : domains) {
 			if (m_configManager.validateDomain(domainName)) {
-				MatrixReport matrixReport = m_reportService.queryMatrixReport(domainName, start, end);
+				MatrixReport matrixReport = m_matrixReportService.queryReport(domainName, start, end);
 
 				visitor.visitMatrixReport(matrixReport);
 			}
@@ -114,7 +118,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				HeavyReport reportModel = m_reportService.queryHeavyReport(domain, new Date(startTime), new Date(startTime
+				HeavyReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -134,7 +138,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			HeavyReport reportModel = m_reportService.queryHeavyReport(domain, date, new Date(date.getTime()
+			HeavyReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

@@ -26,7 +26,7 @@
 		</c:forEach>
 	</c:forEach>
 	</table>
-	<h4 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h4>
+	<%-- <h4 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h4>
 	<table class="table table-striped table-condensed   table-hover">
 	<tr>
 			<th width="10%">部门</th>
@@ -52,4 +52,4 @@
 				</tr>
 			</c:if>
 		</c:forEach></c:forEach>
-	</table>
+	</table> --%>

@@ -13,9 +13,26 @@ public class StorageConstants {
 
 	public static final String ERROR = "error";
 
+	public static final String ERROR_PERCENT = "errorPercent";
+
 	public static final String AVG = "avg";
 
 	public static final String LONG = "long";
 
-	public static final List<String> TITLES = Arrays.asList("count", "avg", "error", "long");
+	public static final List<String> TITLES = Arrays.asList(COUNT, AVG, ERROR, LONG);
+
+	public static final int DEFAULT_MINUTE_COUNT = 8;
+
+	public static final int DEFAULT_TOP_COUNT = 10;
+
+	public static final List<String> CACHE_METHODS = Arrays.asList("add", "get", "mGet", "remove");
+
+	public static final List<String> SQL_METHODS = Arrays.asList("select", "delete", "insert", "update");
+
+	public static final String FIELD_SEPARATOR = ";";
+
+	public static final String IP_FORMAT = "${ip}";
+
+	public static final String ID_FORMAT = "${id}";
+
 }

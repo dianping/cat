@@ -118,6 +118,8 @@ public enum JspFile {
 	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
+	
+	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
 
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
 

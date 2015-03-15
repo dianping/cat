@@ -24,7 +24,7 @@ import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -39,7 +39,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected TransactionReportService m_reportService;
 
 	@Inject
 	private TransactionGraphCreator m_transactionGraphCreator;
@@ -89,7 +89,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
 		long startTime = period.getTime();
-		TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(startTime
+		TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
 		      + TimeHelper.ONE_HOUR));
 
 		return m_transactionGraphCreator.splitReportToGraphs(period, domain, TransactionAnalyzer.ID, report);
@@ -172,7 +172,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				TransactionReport reportModel = m_reportService.queryTransactionReport(domain, new Date(startTime),
+				TransactionReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
 				      new Date(startTime + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
@@ -197,7 +197,7 @@ public class TransactionReportBuilder implements TaskBuilder, LogEnabled {
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(startTime), new Date(
+			TransactionReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(
 			      startTime + TimeHelper.ONE_HOUR));
 
 			reports.add(report);

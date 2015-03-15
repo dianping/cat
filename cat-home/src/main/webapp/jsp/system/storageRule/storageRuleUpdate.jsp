@@ -23,8 +23,9 @@
 					&nbsp;&nbsp;机器&nbsp;&nbsp;<input name="machine" id="machine" value="${machine}"/>
 					&nbsp;&nbsp;方法&nbsp;&nbsp;<input name="method" id="method" value="${method}"/>（默认为All）
 					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="target" id="target" style="width:200px;">
-													<option value="error">错误率</option>
-								                	<option value="avg">响应时间</option>
+													<option value="avg">响应时间</option>
+													<option value="errorPercent">错误率</option>
+													<option value="error">错误数</option>
 								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>
@@ -87,7 +88,7 @@ function update() {
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}
-		$('#alert_config').addClass('active open');
+		$('#application_config').addClass('active open');
 		<c:if test="${empty payload.type or payload.type eq 'database'}">
 			$('#storageDatabaseRule').addClass('active');
 		</c:if>

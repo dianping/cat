@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private MatrixReportService m_reportService;
 
 	public HistoricalMatrixService() {
 		super(MatrixAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	}
 
 	private MatrixReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryMatrixReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private MatrixReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

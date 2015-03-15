@@ -3,9 +3,9 @@ package com.dianping.cat.report.alert.sender.decorator;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 
-public class StorageDatabaseDecorator extends Decorator {
+public class StorageSQLDecorator extends Decorator {
 
-	public static final String ID = AlertType.StorageDatabase.getName();
+	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -16,7 +16,7 @@ public class StorageDatabaseDecorator extends Decorator {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT StorageDatabase告警] [数据库: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
+		sb.append("[CAT StorageSQL告警] [数据库: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
 		      .append("]");
 		return sb.toString();
 	}

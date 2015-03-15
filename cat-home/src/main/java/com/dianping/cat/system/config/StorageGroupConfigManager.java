@@ -1,5 +1,6 @@
 package com.dianping.cat.system.config;
 
+import java.net.URLEncoder;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,16 +10,19 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.home.storage.entity.Link;
 import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
 import com.dianping.cat.home.storage.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class StorageGroupConfigManager implements Initializable {
 
@@ -34,14 +38,16 @@ public class StorageGroupConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "storageGroup";
 
-	public static final String DATABASE_TYPE = "database";
-
-	public static final String CACHE_TYPE = "cache";
-
 	public static final String DEFAULT = "Default";
+
+	private String m_sqlLinkFormat;
 
 	public StorageGroupConfig getConfig() {
 		return m_config;
+	}
+
+	public String getSqlLinkFormat() {
+		return m_sqlLinkFormat;
 	}
 
 	@Override
@@ -72,6 +78,7 @@ public class StorageGroupConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new StorageGroupConfig();
 		}
+		refreshData();
 	}
 
 	public boolean insert(String xml) {
@@ -95,6 +102,34 @@ public class StorageGroupConfigManager implements Initializable {
 		}
 	}
 
+	private void refreshData() {
+		m_sqlLinkFormat = refreshLinkFormat(StorageConstants.SQL_TYPE);
+	}
+
+	private String refreshLinkFormat(String type) {
+		StorageGroup group = queryStorageGroup(type);
+		Link link = group.getLink();
+
+		if (link != null) {
+			String url = link.getUrl();
+			List<String> pars = link.getPars();
+
+			return url + "?" + StringUtils.join(pars, "&");
+		} else {
+			return null;
+		}
+	}
+
+	public String buildUrl(String format, String id, String ip) {
+		try {
+			return format.replace(StorageConstants.ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(
+			      StorageConstants.IP_FORMAT, URLEncoder.encode(ip, "utf-8"));
+		} catch (Exception e) {
+			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
+			return null;
+		}
+	}
+
 	private boolean storeConfig() {
 		synchronized (this) {
 			try {
@@ -110,34 +145,15 @@ public class StorageGroupConfigManager implements Initializable {
 				return false;
 			}
 		}
+		refreshData();
 		return true;
 	}
 
-	public Map<String, Department> queryStorageDepartments() {
-		Map<String, Department> departments = new LinkedHashMap<String, Department>();
-
-		for (Storage storage : queryStorageGroup(DATABASE_TYPE).getStorages().values()) {
-			String id = storage.getId();
-			String department = storage.getDepartment();
-			String product = storage.getProductline();
-			Department depart = departments.get(department);
-
-			if (depart == null) {
-				depart = new Department(department);
-
-				departments.put(department, depart);
-			}
-
-			depart.findOrCreateProductline(product).addStorage(id);
-		}
-		return departments;
-	}
-
-	public Map<String, Department> queryStorageDepartments(List<String> ids) {
+	public Map<String, Department> queryStorageDepartments(List<String> ids, String type) {
 		Map<String, Department> departments = new LinkedHashMap<String, Department>();
 
 		for (String id : ids) {
-			Storage storage = queryStorageGroup(DATABASE_TYPE).getStorages().get(id);
+			Storage storage = queryStorageGroup(type).getStorages().get(id);
 			String department;
 			String product;
 

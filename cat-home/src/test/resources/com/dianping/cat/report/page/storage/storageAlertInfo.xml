@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <storage-alert-info id="SQL"  start-time="2014-05-06 21:00:00" end-time="2014-05-06 21:01:00">
 	  <storage id="cat" level="1" count="1">
-	 	<machine id="10.10.10.1" level="1" count="1">
+	 	<machine id="10.10.10.1" level="1" count="1" >
 	 		<operation id="select" level="1" count="1">
 	 			<target id="avg" title="响应时间" level="1" count="1">
 	 				<detail content="[实际值:15.0 ] [最大阈值: 1.0 ][告警时间:2015-02-28 21:05:00]" level="1" />

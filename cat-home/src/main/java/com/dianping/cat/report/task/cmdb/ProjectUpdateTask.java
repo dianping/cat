@@ -20,13 +20,12 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
@@ -38,8 +37,8 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	@Inject
 	private ProjectService m_projectService;
 
-	@Inject(type = ReportService.class, value = TransactionAnalyzer.ID)
-	private ReportService<TransactionReport> m_reportService;
+	@Inject
+	private TransactionReportService m_reportService;
 
 	protected Logger m_logger;
 

@@ -18,7 +18,7 @@ public class TestStorageMessage {
 		String serverIp = "10.10.10.1";
 
 		while (true) {
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 2; i++) {
 				sendCacheMsg("cache-1", "user-" + i, "get", serverIp + i);
 				sendCacheMsg("cache-1", "user-" + i, "remove", serverIp + i);
 				sendCacheMsg("cache-1", "user-" + i, "add", serverIp + i);
@@ -28,7 +28,7 @@ public class TestStorageMessage {
 				sendSQLMsg("sql-1", "user-" + i, "insert", serverIp + i);
 				sendSQLMsg("sql-1", "user-" + i, "delete", serverIp + i);
 				sendSQLMsg("sql-1", "user-" + i, "update", serverIp + i);
-				
+
 				sendCacheMsg("cache-2", "user-" + i, "get", serverIp + i);
 				sendCacheMsg("cache-2", "user-" + i, "add", serverIp + i);
 				sendCacheMsg("cache-2", "user-" + i, "remove", serverIp + i);
@@ -39,7 +39,7 @@ public class TestStorageMessage {
 				sendSQLMsg("sql-2", "user-" + i, "delete", serverIp + i);
 				sendSQLMsg("sql-2", "user-" + i, "insert", serverIp + i);
 			}
-			Thread.sleep(50);
+			Thread.sleep(5);
 		}
 	}
 
@@ -65,7 +65,14 @@ public class TestStorageMessage {
 
 		((DefaultMessageTree) tree).setDomain(domain);
 		Thread.sleep(500 + new Random().nextInt(1000));
-		t.setStatus(Transaction.SUCCESS);
+		int nextInt = new Random().nextInt(3);
+
+		if (nextInt % 2 == 0) {
+			t.setStatus(Transaction.SUCCESS);
+		} else {
+			t.setStatus(String.valueOf(nextInt));
+		}
+
 		t.complete();
 	}
 }

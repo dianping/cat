@@ -37,7 +37,8 @@
 						<td>${machine}</td>
 						<td>${method}</td>
 						<td>
-						<c:if test="${attribute eq 'error'}">错误率</c:if>
+						<c:if test="${attribute eq 'error'}">错误数</c:if>
+						<c:if test="${attribute eq 'errorPercent'}">错误率</c:if>
 						<c:if test="${attribute eq 'avg'}">响应时间</c:if>
 						</td>
 						<td><a href="?op=storageRuleUpdate&ruleId=${item.id}" class="btn btn-primary btn-xs">
@@ -50,7 +51,7 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#application_config').addClass('active open');
 			<c:if test="${empty payload.type or payload.type eq 'database'}">
 				$('#storageDatabaseRule').addClass('active');
 			</c:if>

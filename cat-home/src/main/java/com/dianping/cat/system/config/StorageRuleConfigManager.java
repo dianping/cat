@@ -19,6 +19,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public abstract class StorageRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
@@ -26,10 +27,6 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	private ContentFetcher m_fetcher;
 
 	private Map<String, RuleMappingConfig> m_ruleMappings = new HashMap<String, RuleMappingConfig>();
-
-	public static final String ALL = Constants.ALL;
-
-	public static final String FIELD_SEPARATOR = ";";
 
 	protected abstract String getConfigName();
 
@@ -69,8 +66,10 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 		Map<String, RuleMappingConfig> mapping = new HashMap<String, RuleMappingConfig>();
 
 		for (Entry<String, Rule> entry : rules.entrySet()) {
-			String[] conditions = entry.getValue().getId().split(FIELD_SEPARATOR);
-			if (conditions.length == 4) {
+			String ruleId = entry.getValue().getId();
+			String[] conditions = ruleId.split(StorageConstants.FIELD_SEPARATOR);
+
+			if (conditions.length >= 4) {
 				String name = conditions[0];
 				String machine = conditions[1];
 				String operation = conditions[2];
@@ -85,6 +84,8 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 				IpMappingConfig ip = ruleMappingConfig.findOrCreate(machine);
 				OperationConfig op = ip.findOrCreate(operation);
 				op.addRule(attribute, entry.getValue());
+			} else {
+				Cat.logError(new RuntimeException("Unrecognized " + getConfigName() + " rule size != 4 : " + ruleId));
 			}
 		}
 		m_ruleMappings = mapping;
@@ -105,14 +106,14 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 		RuleMappingConfig ruleMapping = m_ruleMappings.get(name);
 
 		if (ruleMapping == null) {
-			ruleMapping = m_ruleMappings.get(ALL);
+			ruleMapping = m_ruleMappings.get(Constants.ALL);
 		}
 
 		if (ruleMapping != null) {
 			IpMappingConfig ipMapping = ruleMapping.find(machine);
 
 			if (ipMapping == null) {
-				ipMapping = ruleMapping.find(ALL);
+				ipMapping = ruleMapping.find(Constants.ALL);
 			}
 
 			if (ipMapping != null) {
@@ -123,7 +124,6 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 				}
 			}
 		}
-
 		return rules;
 	}
 

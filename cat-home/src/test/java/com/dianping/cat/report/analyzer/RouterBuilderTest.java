@@ -11,7 +11,7 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.home.router.entity.RouterConfig;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.RouterConfigService;
 import com.dianping.cat.report.task.ReportFacade;
 
 public class RouterBuilderTest extends ComponentTestCase {
@@ -42,11 +42,11 @@ public class RouterBuilderTest extends ComponentTestCase {
 
 	@Test
 	public void test1() throws Exception {
-		ReportServiceManager service = lookup(ReportServiceManager.class);
+		RouterConfigService service = lookup(RouterConfigService.class);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		RouterConfig report1 = service.queryRouterConfigReport(Constants.CAT, sdf.parse(day3), sdf.parse(day4));
+		RouterConfig report1 = service.queryReport(Constants.CAT, sdf.parse(day3), sdf.parse(day4));
 
-		RouterConfig report2 = service.queryRouterConfigReport(Constants.CAT, sdf.parse(day3), sdf.parse(day4));
+		RouterConfig report2 = service.queryReport(Constants.CAT, sdf.parse(day3), sdf.parse(day4));
 
 		Assert.assertEquals(report1.toString(), report2.toString());
 	}

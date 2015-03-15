@@ -14,14 +14,14 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.highload.entity.HighloadReport;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HighloadReportService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_manager;
+	private HighloadReportService m_manager;
 	
 	@Override
 	@PayloadMeta(Payload.class)
@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			Date startDate = payload.getDate();
 			Date endDate = TimeHelper.addDays(startDate, 1);
-			HighloadReport report = m_manager.queryHighloadReport("", startDate, endDate);
+			HighloadReport report = m_manager.queryReport("", startDate, endDate);
 
 			model.setReport(new DisplayTypes().display(payload.getSortBy(), report));
 			break;

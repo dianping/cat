@@ -10,7 +10,6 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.alert.report.entity.AlertReport;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
@@ -40,9 +39,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
 	private HeavyReport m_heavyReport;
-
-	@EntityMeta
-	private AlertReport m_alertReport;
 
 	@EntityMeta
 	private JarReport m_jarReport;
@@ -77,24 +73,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
 
-	private List<com.dianping.cat.home.alert.report.entity.Domain> m_alertDomains;
-
-	private List<com.dianping.cat.home.alert.report.entity.Exception> m_alertExceptions;
-
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public List<com.dianping.cat.home.alert.report.entity.Domain> getAlertDomains() {
-		return m_alertDomains;
-	}
-
-	public List<com.dianping.cat.home.alert.report.entity.Exception> getAlertExceptions() {
-		return m_alertExceptions;
-	}
-
-	public AlertReport getAlertReport() {
-		return m_alertReport;
 	}
 
 	public String getBrowserChart() {
@@ -202,18 +182,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public List<com.dianping.cat.home.utilization.entity.Domain> getUtilizationWebList() {
 		return m_utilizationWebList;
-	}
-
-	public void setAlertDomains(List<com.dianping.cat.home.alert.report.entity.Domain> alertDomains) {
-		m_alertDomains = alertDomains;
-	}
-
-	public void setAlertExceptions(List<com.dianping.cat.home.alert.report.entity.Exception> alertExceptions) {
-		m_alertExceptions = alertExceptions;
-	}
-
-	public void setAlertReport(AlertReport alertReport) {
-		m_alertReport = alertReport;
 	}
 
 	public void setBrowserChart(String browserChart) {

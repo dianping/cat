@@ -5,7 +5,12 @@
   </entity>
   <entity name="storage-group">
     <attribute name="id" value-type="String" />
+    <entity-ref name="link" />
     <entity-ref name="storage" type="list" names="storages" />
+  </entity>
+  <entity name="link">
+    <attribute name="url" value-type="String" />
+    <element name="par" value-type="String" type="list" names="pars" />
   </entity>
   <entity name="storage">
     <attribute name="id" value-type="String" />

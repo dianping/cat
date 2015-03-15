@@ -36,7 +36,7 @@ public class AllMachineMerger extends BaseVisitor {
 		to.setLongCount(to.getLongCount() + operation.getLongCount());
 		to.setError(to.getError() + operation.getError());
 		to.setSum(to.getSum() + operation.getSum());
-		to.setAvg(to.getSum() / to.getCount());
+		to.setAvg(to.getCount() > 0 ? to.getSum() / to.getCount() : 0);
 
 		super.visitOperation(operation);
 	}
@@ -50,7 +50,7 @@ public class AllMachineMerger extends BaseVisitor {
 		to.setLongCount(to.getLongCount() + segment.getLongCount());
 		to.setError(to.getError() + segment.getError());
 		to.setSum(to.getSum() + segment.getSum());
-		to.setAvg(to.getSum() / segment.getCount());
+		to.setAvg(to.getCount() > 0 ? to.getSum() / to.getCount() : 0);
 	}
 
 	@Override
