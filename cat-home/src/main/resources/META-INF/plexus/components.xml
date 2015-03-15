@@ -3393,6 +3393,9 @@
 					<role>com.dianping.cat.report.page.home.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
 				</requirement>
 			</requirements>
@@ -3405,6 +3408,41 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
+			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+					<field-name>m_codec</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+			<implementation>com.dianping.cat.message.spi.core.DomainValidator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
@@ -3420,10 +3458,6 @@
 					<role>com.dianping.cat.config.black.BlackListManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.black.BlackListManager</role>
@@ -3516,10 +3550,6 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.impl.ProblemReportService</role>

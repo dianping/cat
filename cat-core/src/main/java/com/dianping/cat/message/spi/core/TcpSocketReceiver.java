@@ -25,12 +25,13 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public final class TcpSocketReceiver implements LogEnabled {
 
-	@Inject
+	@Inject(type = MessageCodec.class, value = PlainTextMessageCodec.ID)
 	private MessageCodec m_codec;
 
 	@Inject
@@ -139,8 +140,6 @@ public final class TcpSocketReceiver implements LogEnabled {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
 					readBytes.markReaderIndex();
 					readBytes.readInt();
-					
-					System.out.println(m_codec.getClass().getSimpleName());
 
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
 					boolean valid = m_domainValidator.validate(tree.getDomain());

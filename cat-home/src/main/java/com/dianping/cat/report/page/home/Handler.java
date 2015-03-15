@@ -23,10 +23,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
+	@Inject
+	private TcpSocketReceiver m_receiver;
+	
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_realtimeConsumer;
-	
-	private TcpSocketReceiver m_receiver;
 
 	@Override
 	@PayloadMeta(Payload.class)
