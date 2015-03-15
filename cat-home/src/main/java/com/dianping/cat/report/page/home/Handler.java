@@ -16,6 +16,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.message.spi.core.TcpSocketReceiver;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
@@ -24,6 +25,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_realtimeConsumer;
+	
+	private TcpSocketReceiver m_receiver;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -44,6 +47,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			break;
 		case CHECKPOINT:
+			m_receiver.destory();
 			m_realtimeConsumer.doCheckpoint();
 			break;
 		default:

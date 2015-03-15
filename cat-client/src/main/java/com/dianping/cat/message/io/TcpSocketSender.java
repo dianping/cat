@@ -215,10 +215,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
-	public void setCodec(MessageCodec codec) {
-		m_codec = codec;
-	}
-
 	public void setServerAddresses(List<InetSocketAddress> serverAddresses) {
 		m_serverAddresses = serverAddresses;
 	}

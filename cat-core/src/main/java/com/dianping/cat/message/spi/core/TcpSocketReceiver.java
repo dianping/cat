@@ -3,6 +3,7 @@ package com.dianping.cat.message.spi.core;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -44,6 +45,12 @@ public final class TcpSocketReceiver implements LogEnabled {
 	@Inject
 	private DomainValidator m_domainValidator;
 
+	private ChannelFuture m_future;
+
+	private EventLoopGroup m_bossGroup;
+
+	private EventLoopGroup m_workerGroup;
+
 	private Logger m_logger;
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
@@ -72,13 +79,24 @@ public final class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
+	public void destory() {
+		try {
+			m_future.channel().closeFuture().sync();
+			m_bossGroup.shutdownGracefully();
+			m_workerGroup.shutdownGracefully();
+		} catch (Exception e) {
+			m_logger.warn(e.getMessage(), e);
+		}
+	}
+
 	public synchronized void startServer(int port) throws InterruptedException {
 		boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
 		int threads = 24;
-		EventLoopGroup bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
-		EventLoopGroup workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		bootstrap.group(bossGroup, workerGroup);
+
+		m_bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		m_workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		bootstrap.group(m_bossGroup, m_workerGroup);
 		bootstrap.channel(linux ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
 
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
@@ -96,7 +114,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
 		try {
-			bootstrap.bind(port).sync();
+			m_future = bootstrap.bind(port).sync();
 			m_logger.info("start netty server!");
 		} catch (Exception e) {
 			m_logger.error("Started Netty Server Failed:" + port, e);
@@ -121,6 +139,8 @@ public final class TcpSocketReceiver implements LogEnabled {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
 					readBytes.markReaderIndex();
 					readBytes.readInt();
+					
+					System.out.println(m_codec.getClass().getSimpleName());
 
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
 					boolean valid = m_domainValidator.validate(tree.getDomain());
