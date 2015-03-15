@@ -142,6 +142,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String urlBack = url;
 				int index = url.indexOf("?");
 
 				if (index > 0) {
@@ -150,10 +151,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					String subUrl = m_parser.parse(url);
+					 url = m_parser.parse(url);
 
-					if (subUrl != null) {
-						command = m_appConfigManager.getCommands().get(subUrl);
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
 					}
 				}
 
@@ -191,7 +192,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -210,6 +211,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String urlBack = url;
 				int index = url.indexOf("?");
 
 				if (index > 0) {
@@ -218,10 +220,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					String subUrl = m_parser.parse(url);
+					url = m_parser.parse(url);
 
-					if (subUrl != null) {
-						command = m_appConfigManager.getCommands().get(subUrl);
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
 					}
 				}
 				
@@ -259,7 +261,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
