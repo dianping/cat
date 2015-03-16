@@ -35,14 +35,6 @@
 					</div>
 				</div>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="highload_report" >
-						<a href="/cat/r/highload?&op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}">
-							<i class="menu-icon  fa fa-cogs"></i>
-							<span class="menu-text">全局资源消耗</span>
-						</a>
-					</li>
-				</ul>
-				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="system_report" >
 						<a href="/cat/r/statistics?domain=${model.domain}&op=system">
 							<i class="menu-icon  fa  fa-tachometer"></i>

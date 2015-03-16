@@ -27,7 +27,7 @@ import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.system.config.ConfigReloadTask;
 
-public class CatHomeModule extends AbstractModule {
+public class CatHomeModule extends AbstractModule{
 	public static final String ID = "cat-home";
 
 	@Override
@@ -74,6 +74,15 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(transactionAlert);
 			Threads.forGroup("cat").start(storageDatabaseAlert);
 		}
+
+		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				consumer.doCheckpoint();
+			}
+		});
 	}
 
 	@Override
@@ -85,10 +94,18 @@ public class CatHomeModule extends AbstractModule {
 	protected void setup(ModuleContext ctx) throws Exception {
 		File serverConfigFile = ctx.getAttribute("cat-server-config-file");
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-		TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
+		final TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
 
 		serverConfigManager.initialize(serverConfigFile);
 		messageReceiver.init();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				messageReceiver.destory();
+			}
+		});
 	}
 
 }
