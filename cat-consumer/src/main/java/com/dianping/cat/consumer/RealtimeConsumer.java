@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer;
 
-import java.io.IOException;
-
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -66,7 +64,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 	}
 
-	public void doCheckpoint() throws IOException {
+	public void doCheckpoint() {
+		m_logger.info("starting do checkpoint.");
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
@@ -95,6 +94,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		} finally {
 			t.complete();
 		}
+		m_logger.info("end do checkpoint.");
 	}
 
 	@Override
