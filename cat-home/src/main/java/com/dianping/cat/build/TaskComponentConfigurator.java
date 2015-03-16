@@ -43,7 +43,6 @@ import com.dianping.cat.report.service.impl.DependencyReportService;
 import com.dianping.cat.report.service.impl.EventReportService;
 import com.dianping.cat.report.service.impl.HeartbeatReportService;
 import com.dianping.cat.report.service.impl.HeavyReportService;
-import com.dianping.cat.report.service.impl.HighloadReportService;
 import com.dianping.cat.report.service.impl.JarReportService;
 import com.dianping.cat.report.service.impl.MatrixReportService;
 import com.dianping.cat.report.service.impl.MetricReportService;
@@ -72,7 +71,6 @@ import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilder;
-import com.dianping.cat.report.task.highload.HighLoadReportBuilder;
 import com.dianping.cat.report.task.jar.JarReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.metric.BaselineConfigManager;
@@ -218,9 +216,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(CapacityUpdater.class, DailyCapacityUpdater.ID, "m_dailyUpdater")
 		      .req(CapacityUpdater.class, WeeklyCapacityUpdater.ID, "m_weeklyUpdater")
 		      .req(CapacityUpdater.class, MonthlyCapacityUpdater.ID, "m_monthlyUpdater"));
-
-		all.add(C(TaskBuilder.class, HighLoadReportBuilder.ID, HighLoadReportBuilder.class)//
-		      .req(TransactionReportService.class, HighloadReportService.class, ProjectService.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 

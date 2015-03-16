@@ -80,9 +80,7 @@ public class CatHomeModule extends AbstractModule{
 
 			@Override
 			public void run() {
-				System.out.println("starting doCheckpoint auto!");
 				consumer.doCheckpoint();
-				System.out.println("doCheckpoint auto end!");
 			}
 		});
 	}
