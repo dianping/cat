@@ -897,36 +897,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.service.impl.HighloadReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.HighloadReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.service.impl.JarReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.JarReportService</implementation>
 			<requirements>
@@ -1568,22 +1538,6 @@
 					<role>com.dianping.cat.report.task.overload.CapacityUpdater</role>
 					<role-hint>monthly_capacity_updater</role-hint>
 					<field-name>m_monthlyUpdater</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>highLoad</role-hint>
-			<implementation>com.dianping.cat.report.task.highload.HighLoadReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.impl.HighloadReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5761,57 +5715,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.highload.Handler</role>
-			<implementation>com.dianping.cat.report.page.highload.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.highload.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.impl.HighloadReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.highload.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.highload.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.impl.HighloadReportService</role>
-			<implementation>com.dianping.cat.report.service.impl.HighloadReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
