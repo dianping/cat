@@ -18,7 +18,8 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.DependencyReportService;
+import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.ExceptionRuleConfigManager;
@@ -32,7 +33,10 @@ public class ExternalInfoBuilder {
 	private ModelService<TopReport> m_topService;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private DependencyReportService m_reportService;
+	
+	@Inject
+	private TopReportService m_topReportService;
 
 	@Inject
 	private ExceptionRuleConfigManager m_configManager;
@@ -134,7 +138,7 @@ public class ExternalInfoBuilder {
 			TopReport report = response.getModel();
 
 			if (report == null || report.getDomains().size() == 0) {
-				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
+				report = m_topReportService.queryReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
 				      + TimeHelper.ONE_HOUR));
 			}
 			report.accept(new TopExceptionExclude(m_configManager));

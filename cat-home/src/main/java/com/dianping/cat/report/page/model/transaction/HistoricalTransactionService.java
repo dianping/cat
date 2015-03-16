@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_reportService;
 
 	public HistoricalTransactionService() {
 		super(TransactionAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	}
 
 	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryTransactionReport(domain, new Date(timestamp),
+		return m_reportService.queryReport(domain, new Date(timestamp),
 		      new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 

@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.EventReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private EventReportService m_reportService;
 
 	public HistoricalEventService() {
 		super(EventAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	}
 
 	private EventReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryEventReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

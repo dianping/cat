@@ -3,6 +3,7 @@ package com.dianping.cat.message.spi.core;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -21,16 +22,16 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public final class TcpSocketReceiver implements LogEnabled {
 
-	@Inject
+	@Inject(type = MessageCodec.class, value = PlainTextMessageCodec.ID)
 	private MessageCodec m_codec;
 
 	@Inject
@@ -44,6 +45,12 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 	@Inject
 	private DomainValidator m_domainValidator;
+
+	private ChannelFuture m_future;
+
+	private EventLoopGroup m_bossGroup;
+
+	private EventLoopGroup m_workerGroup;
 
 	private Logger m_logger;
 
@@ -68,18 +75,31 @@ public final class TcpSocketReceiver implements LogEnabled {
 	public void init() {
 		try {
 			startServer(m_port);
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void destory() {
+		try {
+			m_logger.info("start shutdown socket, port " + m_port);
+			m_future.channel().closeFuture().sync();
+			m_bossGroup.shutdownGracefully();
+			m_workerGroup.shutdownGracefully();
+			m_logger.info("shutdown socket success"	);
+		} catch (Exception e) {
+			m_logger.warn(e.getMessage(), e);
 		}
 	}
 
 	public synchronized void startServer(int port) throws InterruptedException {
 		boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
 		int threads = 24;
-		EventLoopGroup bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
-		EventLoopGroup workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
 		ServerBootstrap bootstrap = new ServerBootstrap();
-		bootstrap.group(bossGroup, workerGroup);
+
+		m_bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		m_workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		bootstrap.group(m_bossGroup, m_workerGroup);
 		bootstrap.channel(linux ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
 
 		bootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
@@ -97,11 +117,11 @@ public final class TcpSocketReceiver implements LogEnabled {
 		bootstrap.childOption(ChannelOption.ALLOCATOR, PooledByteBufAllocator.DEFAULT);
 
 		try {
-			bootstrap.bind(port).sync();
+			m_future = bootstrap.bind(port).sync();
+			m_logger.info("start netty server!");
 		} catch (Exception e) {
-			Cat.logError("Started Netty Server Failed:" + port, e);
+			m_logger.error("Started Netty Server Failed:" + port, e);
 		}
-		m_logger.info("start netty server!");
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {

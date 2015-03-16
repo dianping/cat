@@ -9,15 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.unidal.lookup.ContainerLoader;
-
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -46,30 +42,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, StorageAlertInfo> m_alertInfos;
 
-	private StorageGroupConfigManager m_configManager;
+	private Map<String, Department> m_departments;
+
+	private Map<String, Map<String, List<String>>> m_links;
 
 	public Model(Context ctx) {
 		super(ctx);
-		try {
-			m_configManager = ContainerLoader.getDefaultContainer().lookup(StorageGroupConfigManager.class);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 
 	public Map<String, StorageAlertInfo> getAlertInfos() {
 		return m_alertInfos;
-	}
-
-	public List<String> getAllOperations() {
-		if (m_report != null) {
-			ArrayList<String> ops = new ArrayList<String>(m_report.getOps());
-
-			Collections.sort(ops);
-			return ops;
-		} else {
-			return new ArrayList<String>();
-		}
 	}
 
 	public String getAvgTrend() {
@@ -80,13 +62,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_countTrend;
 	}
 
+	public List<String> getCurrentOperations() {
+		if (m_report != null) {
+			ArrayList<String> ops = new ArrayList<String>(m_report.getOps());
+
+			Collections.sort(ops);
+			return ops;
+		} else {
+			return new ArrayList<String>();
+		}
+	}
+
 	@Override
 	public Action getDefaultAction() {
-		return Action.HOURLY_DATABASE;
+		return Action.HOURLY_STORAGE;
 	}
 
 	public Map<String, Department> getDepartments() {
-		return m_configManager.queryStorageDepartments(SortHelper.sortDomain(m_report.getIds()));
+		return m_departments;
 	}
 
 	@Override
@@ -109,6 +102,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return SortHelper.sortIpAddress(m_report.getIps());
 		}
+	}
+
+	public Map<String, Map<String, List<String>>> getLinks() {
+		return m_links;
 	}
 
 	public String getLongTrend() {
@@ -171,8 +168,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_countTrend = countTrend;
 	}
 
+	public void setDepartments(Map<String, Department> departments) {
+		m_departments = departments;
+	}
+
 	public void setErrorTrend(String errorTrend) {
 		m_errorTrend = errorTrend;
+	}
+
+	public void setLinks(Map<String, Map<String, List<String>>> links) {
+		m_links = links;
 	}
 
 	public void setLongTrend(String longTrend) {

@@ -15,6 +15,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
+	@FieldMeta("type")
+	private String m_type = StorageConstants.SQL_TYPE;
+
 	@FieldMeta("operations")
 	private String m_operations;
 
@@ -37,10 +40,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	private int m_frequency = 10;
 
 	@FieldMeta("count")
-	private int m_minuteCounts = 8;
+	private int m_minuteCounts = StorageConstants.DEFAULT_MINUTE_COUNT;
 
 	@FieldMeta("tops")
-	private int m_topCounts = 10;
+	private int m_topCounts = StorageConstants.DEFAULT_TOP_COUNT;
 
 	@FieldMeta("id")
 	private String m_id = Constants.CAT;
@@ -102,6 +105,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_topCounts;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public boolean isFullScreen() {
 		return m_fullScreen;
 	}
@@ -111,7 +118,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_DATABASE);
+		m_action = Action.getByName(action, Action.HOURLY_STORAGE);
 	}
 
 	public void setFrequency(int frequency) {
@@ -159,10 +166,14 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_topCounts = topCounts;
 	}
 
+	public void setType(String type) {
+		m_type = type;
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.HOURLY_DATABASE;
+			m_action = Action.HOURLY_STORAGE;
 		}
 	}
 }

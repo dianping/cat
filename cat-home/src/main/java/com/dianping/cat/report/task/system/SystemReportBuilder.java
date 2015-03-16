@@ -15,20 +15,20 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.graph.metric.CachedMetricReportService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.MetricReportService;
+import com.dianping.cat.report.service.impl.SystemReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
 public class SystemReportBuilder implements TaskBuilder {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private SystemReportService m_reportService;
 
+	@Inject
+	protected MetricReportService m_metricReportService;
+	
 	@Inject
 	private ProductLineConfigManager m_configManager;
-
-	@Inject
-	protected CachedMetricReportService m_metricReportService;
 
 	public static final String ID = Constants.REPORT_SYSTEM;
 
@@ -67,7 +67,7 @@ public class SystemReportBuilder implements TaskBuilder {
 				Date eDate = new Date(s + TimeHelper.ONE_HOUR);
 
 				try {
-					MetricReport r = m_reportService.queryMetricReport(productLine, sDate, eDate);
+					MetricReport r = m_metricReportService.queryReport(productLine, sDate, eDate);
 
 					statistics.visitMetricReport(r);
 				} catch (Exception e) {
@@ -81,7 +81,7 @@ public class SystemReportBuilder implements TaskBuilder {
 	public MetricReport querySystemReport(String product, Map<String, String> properties, Date start) {
 		long time = start.getTime();
 		Date end = new Date(time + TimeHelper.ONE_HOUR);
-		MetricReport report = m_reportService.queryMetricReport(product, start, end);
+		MetricReport report = m_metricReportService.queryReport(product, start, end);
 
 		return report;
 	}

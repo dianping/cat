@@ -35,6 +35,22 @@
 				$('#tabContent-api').addClass('active');
 			}
 			
+			$('#batchInsert').bind("click",function(e){
+				if (confirm("确认要进行批量删除吗？") == true){
+					var items = document.getElementsByClassName('deleteItem');
+					var content = "";
+					var length = items.length;
+					
+					for(var i=0;i<length;i++){
+						var item = items[i];
+						if(item.checked == true){
+							content = content + item.value + ",";
+						}
+					}
+					window.location.href = "?op=appRuleBatchUpdate&type=batch&content="+content;
+				}		
+			});
+			
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
 				var title = $("#commandTitle").val();
@@ -65,6 +81,7 @@
 				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
 				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <strong>API命令字</strong></a></li>
 				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <strong>活动命令字</strong></a></li>
+				    <li id="tab-batch" class="text-right"><a href="#tabContent-batch" data-toggle="tab"><strong>批量添加命令字</strong></a></li>
 				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
 				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"><strong>测速配置</strong></a></li>
 				</ul>
@@ -125,6 +142,23 @@
 							</tbody>
 						</table>
 					</div>
+					<div class="tab-pane"  id="tabContent-batch">
+						<h4 class="text-center text-danger">合法的命令字&nbsp;&nbsp;${w:size(model.validatePaths)}</h4>
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
+								<tr><td></td><td><button class="btn btn-xs btn-danger" id="batchInsert">批量添加</button></td></tr>
+							<c:forEach var="item" items="${model.validatePaths}">
+								<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}" checked></td><td>${item}</td><tr>
+							</c:forEach>
+						</table>
+						
+						<h4 class="text-center text-danger">非法命令字&nbsp;&nbsp;${w:size(model.invalidatePaths)}</h4>
+						
+						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
+							<c:forEach var="item" items="${model.invalidatePaths}">
+								<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}"></td><td>${item}</td><tr>
+							</c:forEach>
+						</table>
+					</div>
 					<div class="tab-pane" id="tabContent-code">
 						<%@include file="code.jsp"%>
 					</div>
@@ -144,10 +178,10 @@
 							<c:forEach var="entry" items="${model.speeds}">
 							<c:set var="item" value="${entry.value}"/>
 								<tr>
-									<td>${item.page }</td>
-									<td>${item.step }</td>
-									<td>${item.title }</td>
-									<td>${item.threshold }</td>
+									<td>${item.page}</td>
+									<td>${item.step}</td>
+									<td>${item.title}</td>
+									<td>${item.threshold}</td>
 									<td><a href="?op=appSpeedUpdate&id=${item.id}&type=speed" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 						<a href="?op=appSpeedDelete&id=${item.id}&type=speed" class="btn btn-danger btn-xs delete" >

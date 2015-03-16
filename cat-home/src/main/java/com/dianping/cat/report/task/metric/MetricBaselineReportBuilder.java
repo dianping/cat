@@ -19,17 +19,17 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
-import com.dianping.cat.report.service.BaselineService;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.service.BaselineService;
+import com.dianping.cat.report.service.impl.MetricReportService;
+import com.dianping.cat.report.task.TaskBuilder;
 
 public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 
 	public static final String ID = MetricAnalyzer.ID;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected MetricReportService m_reportService;
 
 	@Inject
 	protected MetricConfigManager m_configManager;
@@ -78,7 +78,7 @@ public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 					MetricReport report = reports.get(metricReportKey);
 
 					if (report == null) {
-						report = m_reportService.queryMetricReport(productLine, start, end);
+						report = m_reportService.queryReport(productLine, start, end);
 
 						reports.put(metricReportKey, report);
 					}

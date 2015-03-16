@@ -19,7 +19,7 @@ import com.dianping.cat.report.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.alert.network.NetworkAlert;
-import com.dianping.cat.report.alert.storage.StorageDatabaseAlert;
+import com.dianping.cat.report.alert.storage.StorageSQLAlert;
 import com.dianping.cat.report.alert.system.SystemAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
@@ -27,7 +27,7 @@ import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.system.config.ConfigReloadTask;
 
-public class CatHomeModule extends AbstractModule {
+public class CatHomeModule extends AbstractModule{
 	public static final String ID = "cat-home";
 
 	@Override
@@ -58,7 +58,7 @@ public class CatHomeModule extends AbstractModule {
 			AppAlert appAlert = ctx.lookup(AppAlert.class);
 			WebAlert webAlert = ctx.lookup(WebAlert.class);
 			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
-			StorageDatabaseAlert storageDatabaseAlert = ctx.lookup(StorageDatabaseAlert.class);
+			StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(databaseAlert);
@@ -74,6 +74,15 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(transactionAlert);
 			Threads.forGroup("cat").start(storageDatabaseAlert);
 		}
+
+		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				consumer.doCheckpoint();
+			}
+		});
 	}
 
 	@Override
@@ -85,10 +94,18 @@ public class CatHomeModule extends AbstractModule {
 	protected void setup(ModuleContext ctx) throws Exception {
 		File serverConfigFile = ctx.getAttribute("cat-server-config-file");
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
-		TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
+		final TcpSocketReceiver messageReceiver = ctx.lookup(TcpSocketReceiver.class);
 
 		serverConfigManager.initialize(serverConfigFile);
 		messageReceiver.init();
+
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				messageReceiver.destory();
+			}
+		});
 	}
 
 }

@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.DependencyReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private DependencyReportService m_reportService;
 
 	public HistoricalDependencyService() {
 		super(DependencyAnalyzer.ID);
@@ -42,7 +42,7 @@ public class HistoricalDependencyService extends BaseHistoricalModelService<Depe
 
 	private DependencyReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		return m_reportService
-		      .queryDependencyReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		      .queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

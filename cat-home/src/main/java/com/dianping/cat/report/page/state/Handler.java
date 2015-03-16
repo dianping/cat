@@ -23,7 +23,7 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.StateReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 
@@ -32,7 +32,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StateReportService m_reportService;
 
 	@Inject
 	private StateGraphBuilder m_stateGraphs;
@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStateReport(domain, start, end);
+		return m_reportService.queryReport(domain, start, end);
 	}
 
 	private StateReport getHourlyReport(Payload payload) {

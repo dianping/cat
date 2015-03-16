@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.TopReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TopReportService m_reportService;
 
 	public HistoricalTopService() {
 		super(TopAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	}
 
 	private TopReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryTopReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private TopReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

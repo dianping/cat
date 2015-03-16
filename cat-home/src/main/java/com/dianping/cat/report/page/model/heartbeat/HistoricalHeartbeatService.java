@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.HeartbeatReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;
@@ -19,7 +19,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private HeartbeatReportService m_reportService;
 
 	public HistoricalHeartbeatService() {
 		super(HeartbeatAnalyzer.ID);
@@ -41,7 +41,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	}
 
 	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		return m_reportService.queryHeartbeatReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
+		return m_reportService.queryReport(domain, new Date(timestamp), new Date(timestamp + TimeHelper.ONE_HOUR));
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

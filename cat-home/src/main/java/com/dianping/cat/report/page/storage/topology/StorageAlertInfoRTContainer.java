@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
@@ -24,8 +25,12 @@ public class StorageAlertInfoRTContainer {
 
 	};
 
-	public StorageAlertInfo find(long time, int minute) {
-		return m_alertInfos.get(time + minute * TimeHelper.ONE_MINUTE);
+	public StorageAlertInfo find(long time) {
+		return m_alertInfos.get(time);
+	}
+
+	public Set<Long> queryExistingMinutes() {
+		return m_alertInfos.keySet();
 	}
 
 	public StorageAlertInfo findOrCreate(long time) {
@@ -50,11 +55,11 @@ public class StorageAlertInfoRTContainer {
 	}
 
 	public StorageAlertInfo makeAlertInfo(String id, Date start) {
-		StorageAlertInfo report = new StorageAlertInfo(id);
+		StorageAlertInfo alertInfo = new StorageAlertInfo(id);
 
-		report.setStartTime(start);
-		report.setEndTime(new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1));
-		return report;
+		alertInfo.setStartTime(start);
+		alertInfo.setEndTime(new Date(start.getTime() + TimeHelper.ONE_MINUTE - 1));
+		return alertInfo;
 	}
 
 }

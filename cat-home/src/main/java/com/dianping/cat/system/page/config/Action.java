@@ -162,6 +162,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
 
 	APP_RULE_DELETE("appRuleDelete"),
+	
+	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
 
 	TRANSACTION_RULE("transactionRule"),
 

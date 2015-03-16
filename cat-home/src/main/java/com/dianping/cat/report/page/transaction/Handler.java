@@ -31,7 +31,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.TransactionReportService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.config.DomainGroupConfigManager;
@@ -51,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 	private XmlViewer m_xmlViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_reportService;
 
 	@Inject
 	private TransactionMergeHelper m_mergeHelper;
@@ -218,7 +218,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_REPORT:
-			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
 
 			if (report != null) {
@@ -228,7 +228,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GRAPH:
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
 				      payload.getHistoryEndDate());
 
 				buildDistributionInfo(model, type, name, report);
@@ -263,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GROUP_REPORT:
-			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
@@ -287,7 +287,7 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			report = m_reportService.queryTransactionReport(domain, payload.getHistoryStartDate(),
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
 

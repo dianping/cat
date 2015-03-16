@@ -6,6 +6,11 @@
   <entity name="storage-group">
     <attribute name="id" value-type="String" key="true" />
     <entity-ref name="storage" type="map" names="storages" />
+    <entity-ref name="link" />
+  </entity>
+   <entity name="link">
+    <attribute name="url" value-type="String" />
+    <element name="par" value-type="String" type="list" names="pars" />
   </entity>
   <entity name="storage">
     <attribute name="id" value-type="String" key="true" />

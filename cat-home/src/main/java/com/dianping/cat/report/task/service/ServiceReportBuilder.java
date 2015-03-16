@@ -24,7 +24,8 @@ import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
-import com.dianping.cat.report.service.ReportServiceManager;
+import com.dianping.cat.report.service.impl.CrossReportService;
+import com.dianping.cat.report.service.impl.ServiceReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
@@ -33,7 +34,10 @@ public class ServiceReportBuilder implements TaskBuilder {
 	public static final String ID = Constants.REPORT_SERVICE;
 
 	@Inject
-	protected ReportServiceManager m_reportService;
+	protected ServiceReportService m_reportService;
+
+	@Inject
+	protected CrossReportService m_crossReportService;
 
 	@Inject
 	private ServerConfigManager m_configManger;
@@ -64,7 +68,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (String domainName : domains) {
 			if (m_configManger.validateDomain(domainName)) {
-				CrossReport crossReport = m_reportService.queryCrossReport(domainName, start, end);
+				CrossReport crossReport = m_crossReportService.queryReport(domainName, start, end);
 				ProjectInfo projectInfo = new ProjectInfo(TimeHelper.ONE_HOUR);
 
 				projectInfo.setClientIp(Constants.ALL);
@@ -139,8 +143,8 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ServiceReport reportModel = m_reportService.queryServiceReport(domain, new Date(startTime), new Date(
-				      startTime + TimeHelper.ONE_DAY));
+				ServiceReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -160,7 +164,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			ServiceReport reportModel = m_reportService.queryServiceReport(domain, date, new Date(date.getTime()
+			ServiceReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
 			      + TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);

@@ -41,6 +41,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	@Inject
 	private RequestUtils m_util;
 
+	@Inject
+	private UrlParser m_parser;
+
 	private Logger m_logger;
 
 	private volatile int m_error;
@@ -90,6 +93,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
 		boolean success = false;
+		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
 
 		if (VERSION_TWO.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
@@ -113,8 +117,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				processVersion3Content(cityId, operatorId, content, version);
 				success = true;
 			}
-		} else {
-			Cat.logEvent("InvalidVersion", "batch:" + version, Event.SUCCESS, version);
 		}
 		return success;
 	}
@@ -140,12 +142,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String urlBack = url;
 				int index = url.indexOf("?");
 
 				if (index > 0) {
 					url = url.substring(0, index);
 				}
 				Integer command = m_appConfigManager.getCommands().get(url);
+
+				if (command == null) {
+					 url = m_parser.parse(url);
+
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
+					}
+				}
 
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
@@ -181,7 +192,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -200,6 +211,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			try {
 				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String urlBack = url;
 				int index = url.indexOf("?");
 
 				if (index > 0) {
@@ -207,6 +219,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 				Integer command = m_appConfigManager.getCommands().get(url);
 
+				if (command == null) {
+					url = m_parser.parse(url);
+
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
+					}
+				}
+				
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());
@@ -241,7 +261,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
-					Cat.logEvent("UnknownCommand", url, Event.SUCCESS, items[4]);
+					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
