@@ -74,12 +74,6 @@
 						<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
 							<b class="arrow"></b></li>
-						<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
-							<b class="arrow"></b></li>
-						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
-							<b class="arrow"></b></li>
 						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
 							<b class="arrow"></b></li>
@@ -88,6 +82,12 @@
 							<b class="arrow"></b></li>
 						<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
 							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
+							<b class="arrow"></b></li>
+						<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
+							<b class="arrow"></b></li>
+						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
 							<b class="arrow"></b></li>
 					</ul>
 				</li>
