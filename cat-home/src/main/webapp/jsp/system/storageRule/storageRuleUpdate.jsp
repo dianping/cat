@@ -18,19 +18,24 @@
 				<c:set var="machine" value="${conditions[1]}" />
 				<c:set var="method" value="${conditions[2]}" />
 				<c:set var="target" value="${conditions[3]}" />
+				<c:set var="andStr" value="${conditions[4]}" />
 				<tr>
-					<td>&nbsp;&nbsp;名字&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>
-					&nbsp;&nbsp;机器&nbsp;&nbsp;<input name="machine" id="machine" value="${machine}"/>
-					&nbsp;&nbsp;方法&nbsp;&nbsp;<input name="method" id="method" value="${method}"/>（默认为All）
-					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="target" id="target" style="width:200px;">
+					<td>名字&nbsp;&nbsp;<input name="name" id="name" value="${name}"/></td>
+					<td>机器&nbsp;&nbsp;<input name="machine" id="machine" value="${machine}"/></td>
+					<td>方法&nbsp;&nbsp;<input name="method" id="method" value="${method}"/></td>
+					<td>监控项&nbsp;&nbsp;<select name="target" id="target" style="width:200px;">
 													<option value="avg">响应时间</option>
 													<option value="errorPercent">错误率</option>
 													<option value="error">错误数</option>
-								            	</select>
+								            	</select></td>
+					<td>&nbsp;&nbsp;与条件&nbsp;&nbsp;<select name="and" id="and" style="width:200px;">
+													<option value="false">否</option>
+													<option value="true">是</option>
+								            	</select></td>
 				</tr>
-				<tr><th>${model.content}</th></tr>
+				<tr><th colspan="6">${model.content}</th></tr>
 					<tr>
-						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
+						<td style='text-align:center' colspan='6'><input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
 			</form>
@@ -67,9 +72,16 @@ function update() {
 		}
 		return;
 	}
+    var andStr = $("#and").val();
+    if(andStr == "undefined" || andStr == ""){
+    	if($("#errorMessage").length == 0){
+			$("#andStr").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+		}
+		return;
+	}
     
     var split = ";";
-    var id = name + split + machine + split + method + split + target;
+    var id = name + split + machine + split + method + split + target + split + andStr;
     window.location.href = "?op=storageRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
@@ -81,8 +93,10 @@ function update() {
 			document.getElementById("machine").disabled = true;
 			document.getElementById("method").disabled = true;
 			document.getElementById("target").disabled = true;
-			var target = ruleId.split(';')[3];
-			$('#target').val(target);
+			document.getElementById("and").disabled = true;
+			var conditions = ruleId.split(';');
+			$('#target').val(conditions[3]);
+			$('#and').val(conditions[4]);
 		}
 		var name = $("#name").val().trim();
 		if(name == "" || name.length == 0){
