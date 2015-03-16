@@ -218,7 +218,9 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		if (currentReport != null) {
 			for (String ip : currentReport.getIps()) {
-				processMachine(id, currentReport, ip);
+				if (m_storageConfigManager.isSQLAlertMachine(id, ip)) {
+					processMachine(id, currentReport, ip);
+				}
 			}
 		}
 	}

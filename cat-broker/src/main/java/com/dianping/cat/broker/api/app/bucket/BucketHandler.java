@@ -12,10 +12,13 @@ import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.AppConnectionData;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.broker.api.app.AppQueue;
+import com.dianping.cat.broker.api.app.bucket.impl.ConnectionBucketExecutor;
 import com.dianping.cat.broker.api.app.bucket.impl.DataBucketExecutor;
 import com.dianping.cat.broker.api.app.bucket.impl.SpeedBucketExecutor;
+import com.dianping.cat.broker.api.app.proto.AppConnectionProto;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
@@ -37,8 +40,13 @@ public class BucketHandler implements Task {
 	public BucketHandler(long startTime, Map<String, AppService> appDataServices) {
 		AppService appDataCommandService = appDataServices.get(AppCommandData.class.getName());
 		m_bucketExecutors.put(AppDataProto.class.getName(), new DataBucketExecutor(startTime, appDataCommandService));
+
 		AppService appSpeedDataService = appDataServices.get(AppSpeedData.class.getName());
 		m_bucketExecutors.put(AppSpeedProto.class.getName(), new SpeedBucketExecutor(startTime, appSpeedDataService));
+
+		AppService appConnectionService = appDataServices.get(AppConnectionData.class.getName());
+		m_bucketExecutors.put(AppConnectionProto.class.getName(), new ConnectionBucketExecutor(startTime,
+		      appConnectionService));
 	}
 
 	public boolean enqueue(ProtoData appData) {
@@ -110,12 +118,16 @@ public class BucketHandler implements Task {
 	@Override
 	public void run() {
 		while (true) {
-			ProtoData appData = m_appDataQueue.poll();
+			try {
+				ProtoData appData = m_appDataQueue.poll();
 
-			if (appData != null) {
-				processEntity(appData);
-			} else if (!m_active) {
-				break;
+				if (appData != null) {
+					processEntity(appData);
+				} else if (!m_active) {
+					break;
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 

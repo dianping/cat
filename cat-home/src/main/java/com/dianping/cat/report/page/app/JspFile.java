@@ -4,6 +4,10 @@ public enum JspFile {
 	VIEW("/jsp/report/app/linechart.jsp"),
 
 	PIECHART("/jsp/report/app/piechart.jsp"),
+	
+	CONN_LINECHART("/jsp/report/app/connLinechart.jsp"),
+
+	CONN_PIECHART("/jsp/report/app/connPiechart.jsp"),
 
 	APP_MODIFY_RESULT("/jsp/report/app/result.jsp"),
 

@@ -107,7 +107,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 	private void processSQLTransaction(MessageTree tree, Transaction t) {
 		String databaseName = null;
-		String method = null;
+		String method = "select";
 		String ip = null;
 		String domain = tree.getDomain();
 		List<Message> messages = t.getChildren();
@@ -129,7 +129,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 				}
 			}
 		}
-		if (databaseName != null && method != null && ip != null) {
+		if (databaseName != null && ip != null) {
 			String id = querySQLId(databaseName);
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();
@@ -148,7 +148,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		} else if (m_serverConfigManager.isCacheTransaction(type)) {
 			processCacheTransaction(tree, t);
 		}
-		
+
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
