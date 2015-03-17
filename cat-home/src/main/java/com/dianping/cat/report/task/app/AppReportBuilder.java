@@ -68,7 +68,9 @@ public class AppReportBuilder implements TaskBuilder {
 
 	private void processCommand(Date period, Command command, AppReport report) {
 		int commandId = command.getId();
-		com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(String.valueOf(commandId));
+		com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(String.valueOf(command.getName()));
+		cmd.setDomain(command.getDomain());
+		cmd.setTitle(command.getTitle());
 
 		try {
 			List<AppCommandData> datas = m_dao.findDailyDataByCode(commandId, period,
@@ -85,6 +87,7 @@ public class AppReportBuilder implements TaskBuilder {
 
 				Code code = cmd.findOrCreateCode(String.valueOf(codeId));
 
+				code.setTitle(code.getTitle());
 				code.incCount(count);
 				code.incSum(responseTime);
 

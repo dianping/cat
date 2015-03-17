@@ -19,6 +19,7 @@ public class AppReportMerger extends BaseVisitor {
 	private void mergeCode(Code code, String id) {
 		Code c = m_report.findOrCreateCommand(id).findOrCreateCode(code.getId());
 
+		c.setTitle(code.getTitle());
 		c.incCount(code.getCount());
 		c.incSum(code.getSum());
 		c.incErrors(code.getErrors());
@@ -32,6 +33,8 @@ public class AppReportMerger extends BaseVisitor {
 	private void mergeCommand(Command command, String id) {
 		Command c = m_report.findOrCreateCommand(id);
 
+		c.setDomain(command.getDomain());
+		c.setTitle(command.getTitle());
 		c.incCount(command.getCount());
 		c.incSum(command.getSum());
 		c.incErrors(command.getErrors());
