@@ -80,13 +80,13 @@ public final class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	public void destory() {
+	public synchronized void destory() {
 		try {
 			m_logger.info("start shutdown socket, port " + m_port);
-			m_future.channel().closeFuture().sync();
+			m_future.channel().closeFuture();
 			m_bossGroup.shutdownGracefully();
 			m_workerGroup.shutdownGracefully();
-			m_logger.info("shutdown socket success"	);
+			m_logger.info("shutdown socket success");
 		} catch (Exception e) {
 			m_logger.warn(e.getMessage(), e);
 		}

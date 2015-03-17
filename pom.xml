@@ -46,6 +46,21 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>dal-jdbc</artifactId>
+				<version>2.1.1</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>foundation-service</artifactId>
+				<version>2.1.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>web-framework</artifactId>
+				<version>2.0.5</version>
+			</dependency>
+			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.8.1</version>
