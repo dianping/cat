@@ -73,7 +73,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(name)) {
 					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
 
-					System.out.println(report);
 					transactionReportVisitor.visitTransactionReport(report);
 				}
 			} catch (ConcurrentModificationException e) {
