@@ -101,7 +101,7 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 		return success;
 	}
 
-	public List<Rule> findRule(String name, String machine) {
+	public List<Rule> findRules(String name, String machine) {
 		List<Rule> rules = new ArrayList<Rule>();
 		RuleMappingConfig ruleMapping = m_ruleMappings.get(name);
 

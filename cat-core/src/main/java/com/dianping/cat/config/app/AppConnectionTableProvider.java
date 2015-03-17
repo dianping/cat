@@ -5,13 +5,13 @@ import java.util.Map;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 
-import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.AppConnectionData;
 
-public class AppCommandDataTableProvider implements TableProvider {
+public class AppConnectionTableProvider implements TableProvider {
 
-	private String m_logicalTableName = "app-command-data";
+	private String m_logicalTableName = "app-connection-data";
 
-	private String m_physicalTableName = "app_command_data";
+	private String m_physicalTableName = "app_connection_data";
 
 	private String m_dataSourceName = "app";
 
@@ -27,9 +27,9 @@ public class AppCommandDataTableProvider implements TableProvider {
 
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
-		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		AppConnectionData data = (AppConnectionData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
-		return m_physicalTableName + "_" + command.getCommandId();
+		return m_physicalTableName + "_" + data.getCommandId();
 	}
 
 	public void setDataSourceName(String dataSourceName) {

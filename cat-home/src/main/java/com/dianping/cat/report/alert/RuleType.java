@@ -522,7 +522,7 @@ public enum RuleType {
 
 	protected static final long GbS = MbS * 1024;
 
-	protected DecimalFormat m_df = new DecimalFormat("0.0");
+	protected DecimalFormat m_df = new DecimalFormat("0.###");
 
 	public static RuleType getByTypeId(String typeId) {
 		return s_map.get(typeId);

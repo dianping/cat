@@ -29,12 +29,14 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.display.Sorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
+import com.dianping.cat.report.service.app.AppConnectionService;
 import com.dianping.cat.report.service.app.AppDataField;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
@@ -60,6 +62,12 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AppSpeedService m_appSpeedService;
+
+	@Inject
+	private AppConnectionGraphCreator m_appConnectionGraphCreator;
+
+	@Inject
+	private AppConnectionService m_appConnectionService;
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
@@ -91,10 +99,45 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
+	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload, AppDataField field,
+	      String sortBy) {
+		CommandQueryEntity entity1 = payload.getQueryEntity1();
+		CommandQueryEntity entity2 = payload.getQueryEntity2();
+		String type = payload.getType();
+		LineChart lineChart = new LineChart();
+		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
+
+		try {
+			filterCommands(model, payload.isShowActivity());
+
+			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
+			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, field);
+			Collections.sort(appDetails, new Sorter(sortBy).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
+
+	}
+
 	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataField field) {
 		try {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 			      field);
+			List<PieChartDetailInfo> infos = pair.getValue();
+			Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
+
+			return pair;
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload, AppDataField field) {
+		try {
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
+			      payload.getQueryEntity1(), field);
 			List<PieChartDetailInfo> infos = pair.getValue();
 			Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
 
@@ -264,6 +307,24 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 				e.printStackTrace();
 			}
+			break;
+		case CONN_LINECHART:
+			lineChartPair = buildConnLineChart(model, payload, field, sortBy);
+
+			model.setLineChart(lineChartPair.getKey());
+			model.setAppDataDetailInfos(lineChartPair.getValue());
+			break;
+		case CONN_PIECHART:
+			pieChartPair = buildConnPieChart(payload, field);
+
+			if (pieChartPair != null) {
+				model.setPieChart(pieChartPair.getKey());
+				model.setPieChartDetailInfos(pieChartPair.getValue());
+			}
+			commandId = payload.getQueryEntity1().getId();
+
+			model.setCommandId(commandId);
+			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		}
 

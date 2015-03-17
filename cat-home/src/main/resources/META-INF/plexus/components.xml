@@ -495,6 +495,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+			<implementation>com.dianping.cat.report.service.app.AppConnectionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppConnectionDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
@@ -2288,6 +2300,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
 		</component>
@@ -2519,6 +2536,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-connection-data</logical-table-name>
+				<physical-table-name>app_connection_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2530,6 +2557,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppConnectionDataDao</role>
+			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -5490,6 +5526,12 @@
 					<role>com.dianping.cat.report.service.app.AppSpeedService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -5578,6 +5620,39 @@
 		<component>
 			<role>com.dianping.cat.app.AppSpeedDataDao</role>
 			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+			<implementation>com.dianping.cat.report.service.app.AppConnectionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppConnectionDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppConnectionDataDao</role>
+			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

@@ -200,11 +200,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void processRule(Rule rule, String name, String ip, StorageReport report) {
-		ReportFetcherParam param = new ReportFetcherParam(name, ip, rule.getId());
-		int minute = calAlreadyMinute();
-
-		List<AlertResultEntity> alertResults = computeAlertForRule(minute, param, rule.getConfigs(), report);
+	private void handleAlertInfos(ReportFetcherParam param, int minute, List<AlertResultEntity> alertResults) {
 		for (AlertResultEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
@@ -222,11 +218,44 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		if (currentReport != null) {
 			for (String ip : currentReport.getIps()) {
-				List<Rule> rules = getRuleConfigManager().findRule(id, ip);
-
-				for (Rule rule : rules) {
-					processRule(rule, id, ip, currentReport);
+				if (m_storageConfigManager.isSQLAlertMachine(id, ip)) {
+					processMachine(id, currentReport, ip);
 				}
+			}
+		}
+	}
+
+	private void processMachine(String id, StorageReport currentReport, String ip) {
+		int minute = calAlreadyMinute();
+		boolean alert = true;
+		List<Rule> rules = getRuleConfigManager().findRules(id, ip);
+		List<Pair<ReportFetcherParam, List<AlertResultEntity>>> alertEntities = new ArrayList<Pair<ReportFetcherParam, List<AlertResultEntity>>>();
+
+		for (Rule rule : rules) {
+			ReportFetcherParam param = new ReportFetcherParam(id, ip, rule.getId());
+
+			if (param.getAnd()) {
+				if (alert) {
+					List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+
+					if (results.size() > 0) {
+						alertEntities.add(new Pair<ReportFetcherParam, List<AlertResultEntity>>(param, results));
+					} else {
+						alert = false;
+					}
+				} else {
+					continue;
+				}
+			} else {
+				List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+
+				handleAlertInfos(param, minute, results);
+			}
+		}
+
+		if (alert) {
+			for (Pair<ReportFetcherParam, List<AlertResultEntity>> entity : alertEntities) {
+				handleAlertInfos(entity.getKey(), minute, entity.getValue());
 			}
 		}
 	}
@@ -299,12 +328,18 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		private String m_target;
 
+		private boolean m_and = false;
+
 		public ReportFetcherParam(String name, String machine, String param) {
 			List<String> fields = Splitters.by(";").split(param);
 			m_name = name;
 			m_machine = machine;
 			m_method = fields.get(2);
 			m_target = fields.get(3);
+
+			if (fields.size() > 4) {
+				m_and = Boolean.parseBoolean(fields.get(4));
+			}
 		}
 
 		public String getMachine() {
@@ -321,6 +356,10 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		public String getTarget() {
 			return m_target;
+		}
+
+		public boolean getAnd() {
+			return m_and;
 		}
 
 		@Override

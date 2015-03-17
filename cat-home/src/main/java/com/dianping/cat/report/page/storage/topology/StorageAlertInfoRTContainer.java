@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.storage.topology;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,16 +15,17 @@ public class StorageAlertInfoRTContainer {
 
 	public static final int SIZE = 60;
 
-	private Map<Long, StorageAlertInfo> m_alertInfos = new LinkedHashMap<Long, StorageAlertInfo>() {
+	private Map<Long, StorageAlertInfo> m_alertInfos = Collections
+	      .synchronizedMap(new LinkedHashMap<Long, StorageAlertInfo>() {
 
-		private static final long serialVersionUID = 1L;
+		      private static final long serialVersionUID = 1L;
 
-		@Override
-		protected boolean removeEldestEntry(Entry<Long, StorageAlertInfo> eldest) {
-			return size() > SIZE;
-		}
+		      @Override
+		      protected boolean removeEldestEntry(Entry<Long, StorageAlertInfo> eldest) {
+			      return size() > SIZE;
+		      }
 
-	};
+	      });
 
 	public StorageAlertInfo find(long time) {
 		return m_alertInfos.get(time);

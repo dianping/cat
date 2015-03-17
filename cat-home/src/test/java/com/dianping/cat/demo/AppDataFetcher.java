@@ -21,7 +21,7 @@ import com.dianping.cat.configuration.app.entity.Command;
 
 public class AppDataFetcher extends ComponentTestCase {
 
-	private String format = "http://cat.dianpingoa.com/cat/r/app?op=piechartJson&query1=2015-03-10;%s;;;;1;;;;00:00;23:59&groupByField=code&domains=All";
+	private String format = "http://cat.dianpingoa.com/cat/r/app?op=piechartJson&query1=2015-03-15;%s;;;;1;;;;00:00;23:59&groupByField=code&domains=All";
 
 	@Test
 	public void test() {
