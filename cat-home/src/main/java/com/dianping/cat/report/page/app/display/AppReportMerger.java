@@ -24,9 +24,11 @@ public class AppReportMerger extends BaseVisitor {
 		c.incSum(code.getSum());
 		c.incErrors(code.getErrors());
 
-		if (c.getCount() > 0) {
-			c.setAvg(c.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		
+		if (count > 0) {
+			c.setAvg(c.getSum() / count);
+			c.setErrorPercent(c.getErrors() * 1.0 / count);
 		}
 	}
 
@@ -39,9 +41,11 @@ public class AppReportMerger extends BaseVisitor {
 		c.incSum(command.getSum());
 		c.incErrors(command.getErrors());
 
-		if (c.getCount() > 0) {
-			c.setAvg(command.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		
+		if (count > 0) {
+			c.setAvg(command.getSum() / count);
+			c.setErrorPercent(c.getErrors() * 1.0 / count);
 		}
 	}
 
