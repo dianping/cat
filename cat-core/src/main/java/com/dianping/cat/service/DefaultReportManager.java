@@ -265,7 +265,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 					bucket = m_bucketManager.getReportBucket(startTime, m_name);
 
 					try {
-						storFile(reports, bucket);
+						storeFile(reports, bucket);
 					} finally {
 						m_bucketManager.closeBucket(bucket);
 					}
@@ -281,7 +281,9 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
 		} finally {
-			cleanup(startTime);
+			if (policy.forDatabase()) {
+				cleanup(startTime);
+			}
 			t.complete();
 
 			if (bucket != null) {
@@ -289,8 +291,8 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			}
 		}
 	}
-	
-	private void storFile(Map<String, T> reports, ReportBucket<String> bucket) {
+
+	private void storeFile(Map<String, T> reports, ReportBucket<String> bucket) {
 		for (T report : reports.values()) {
 			try {
 				String domain = m_reportDelegate.getDomain(report);

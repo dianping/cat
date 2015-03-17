@@ -80,7 +80,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	public void destory() {
+	public synchronized void destory() {
 		try {
 			m_logger.info("start shutdown socket, port " + m_port);
 			m_future.channel().closeFuture();
