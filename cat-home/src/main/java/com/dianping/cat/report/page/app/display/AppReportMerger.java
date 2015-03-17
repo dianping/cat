@@ -19,26 +19,33 @@ public class AppReportMerger extends BaseVisitor {
 	private void mergeCode(Code code, String id) {
 		Code c = m_report.findOrCreateCommand(id).findOrCreateCode(code.getId());
 
+		c.setTitle(code.getTitle());
 		c.incCount(code.getCount());
 		c.incSum(code.getSum());
 		c.incErrors(code.getErrors());
 
-		if (c.getCount() > 0) {
-			c.setAvg(c.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		
+		if (count > 0) {
+			c.setAvg(c.getSum() / count);
+			c.setErrorPercent(c.getErrors() * 1.0 / count);
 		}
 	}
 
 	private void mergeCommand(Command command, String id) {
 		Command c = m_report.findOrCreateCommand(id);
 
+		c.setDomain(command.getDomain());
+		c.setTitle(command.getTitle());
 		c.incCount(command.getCount());
 		c.incSum(command.getSum());
 		c.incErrors(command.getErrors());
 
-		if (c.getCount() > 0) {
-			c.setAvg(command.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		
+		if (count > 0) {
+			c.setAvg(command.getSum() / count);
+			c.setErrorPercent(c.getErrors() * 1.0 / count);
 		}
 	}
 
