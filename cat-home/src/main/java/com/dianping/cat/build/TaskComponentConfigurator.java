@@ -36,6 +36,7 @@ import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.service.BaselineService;
 import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.service.impl.AppReportService;
 import com.dianping.cat.report.service.impl.BugReportService;
 import com.dianping.cat.report.service.impl.CrossReportService;
 import com.dianping.cat.report.service.impl.DefaultBaselineService;
@@ -58,6 +59,7 @@ import com.dianping.cat.report.service.impl.UtilizationReportService;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.report.task.app.AppReportBuilder;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
@@ -234,6 +236,9 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
+
+		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
+		      AppConfigManager.class, AppReportService.class));
 
 		all.add(C(ReportFacade.class));
 

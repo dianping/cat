@@ -99,4 +99,7 @@
    <model package="com.dianping.cat.home.storage.alert" name="storage-alert-info">
       <sample-model>src/test/resources/com/dianping/cat/report/page/storage/storageAlertInfo.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.home.app" name="app-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/app/appReport.xml</sample-model>
+   </model>
 </wizard>

@@ -87,7 +87,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (success) {
 			response.getWriter().write("OK");
 		} else {
-			response.getWriter().write("validate request!");
+			response.getWriter().write("ERROR");
 		}
 	}
 

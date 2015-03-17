@@ -56,7 +56,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private static final String METRIC = "Metric";
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
 	}
 

@@ -75,9 +75,9 @@ public class AppConfigManager implements Initializable {
 		int commandId = 0;
 
 		if ("activity".equals(type)) {
-			commandId = findAvailableId(1400, 1500);
+			commandId = findAvailableId(1100, 1200);
 		} else {
-			commandId = findAvailableId(1, 1399);
+			commandId = findAvailableId(1, 1099);
 		}
 		command.setId(commandId);
 
@@ -263,9 +263,9 @@ public class AppConfigManager implements Initializable {
 
 	public List<Command> queryCommands() {
 		try {
-			String xml = m_config.toString();
-			AppConfig config = DefaultSaxParser.parse(xml);
-			Map<Integer, Command> commands = config.getCommands();
+//			String xml = m_config.toString();
+//			AppConfig config = DefaultSaxParser.parse(xml);
+			Map<Integer, Command> commands = m_config.getCommands();
 
 			for (Entry<Integer, Command> entry : commands.entrySet()) {
 				Map<Integer, Code> codes = entry.getValue().getCodes();

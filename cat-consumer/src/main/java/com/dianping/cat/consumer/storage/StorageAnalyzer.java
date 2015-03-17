@@ -38,7 +38,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private static final long LONG_CACHE_THRESHOLD = 50;
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 			m_databaseParser.showErrorCon();

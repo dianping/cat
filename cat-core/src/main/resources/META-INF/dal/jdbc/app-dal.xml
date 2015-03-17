@@ -163,6 +163,14 @@
 		</IF>
         group by  <FIELD name='minute-order'/>  ]]></statement>
       </query>
+      <query name="find-daily-data-by-code" type="SELECT" multiple="true">
+        <param name="command-id" />
+        <param name="period" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        group by <FIELD name='code'/>  ]]></statement>
+      </query>
       <query name="find-data-by-minute-code" type="SELECT" multiple="true">
         <param name="command-id" />
         <param name="period" />
@@ -209,7 +217,7 @@
         <param name="connect-type" />
         <param name="code" />
         <param name="platform" />
-         <param name="start-minute-order" />
+        <param name="start-minute-order" />
         <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>

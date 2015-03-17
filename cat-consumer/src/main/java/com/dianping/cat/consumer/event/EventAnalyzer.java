@@ -28,7 +28,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private ReportManager<EventReport> m_reportManager;
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {

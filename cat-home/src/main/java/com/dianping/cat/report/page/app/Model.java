@@ -10,6 +10,7 @@ import java.util.Set;
 
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.app.entity.Code;
@@ -18,6 +19,7 @@ import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -27,6 +29,7 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
+@ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, Context> {
 
 	@EntityMeta
@@ -71,12 +74,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<Integer, Code> m_codes;
 
+	@EntityMeta
+	private AppReport m_appReport;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public List<AppDataDetail> getAppDataDetailInfos() {
 		return m_appDataDetailInfos;
+	}
+
+	public AppReport getAppReport() {
+		return m_appReport;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -249,6 +259,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setAppDataDetailInfos(List<AppDataDetail> appDataDetailInfos) {
 		m_appDataDetailInfos = appDataDetailInfos;
+	}
+
+	public void setAppReport(AppReport appReport) {
+		m_appReport = appReport;
 	}
 
 	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {

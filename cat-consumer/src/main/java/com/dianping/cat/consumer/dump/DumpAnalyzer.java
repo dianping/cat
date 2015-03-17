@@ -54,7 +54,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		try {
 			long startTime = getStartTime();
 
