@@ -77,6 +77,9 @@
 						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
 							<b class="arrow"></b></li>
+						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>报表统计</a>
+							<b class="arrow"></b></li>
 						<li id="connTrend"><a href="/cat/r/app?op=connLinechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>长连访问趋势</a>
 							<b class="arrow"></b></li>

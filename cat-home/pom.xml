@@ -169,6 +169,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/activity-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/app-report-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

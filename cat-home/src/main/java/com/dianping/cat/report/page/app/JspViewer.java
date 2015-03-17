@@ -30,6 +30,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.CRASH_LOG.getPath();
 		case SPEED:
 			return JspFile.SPEED.getPath();
+		case STATISTICS:
+			return JspFile.STATISTICS.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

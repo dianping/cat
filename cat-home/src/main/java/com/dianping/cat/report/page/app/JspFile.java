@@ -15,7 +15,9 @@ public enum JspFile {
 
 	CRASH_LOG("/jsp/report/app/crashLog.jsp"),
 	
-	SPEED("/jsp/report/app/speed.jsp");
+	SPEED("/jsp/report/app/speed.jsp"),
+	
+	STATISTICS("/jsp/report/app/statistics.jsp");
 
 	private String m_path;
 

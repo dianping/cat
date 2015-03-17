@@ -23,7 +23,9 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	CONN_LINECHART("connLinechart"),
 
-	CONN_PIECHART("connPiechart");
+	CONN_PIECHART("connPiechart"),
+
+	STATISTICS("statistics");
 
 	private String m_name;
 

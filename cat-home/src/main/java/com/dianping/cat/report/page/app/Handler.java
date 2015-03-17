@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -32,6 +36,7 @@ import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
+import com.dianping.cat.report.page.app.display.AppReportMerger;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.display.Sorter;
@@ -42,6 +47,7 @@ import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.service.app.CommandQueryEntity;
 import com.dianping.cat.report.service.app.SpeedQueryEntity;
+import com.dianping.cat.report.service.impl.AppReportService;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
@@ -77,6 +83,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private AppReportService m_appReportService;
 
 	private Pair<LineChart, List<AppDataDetail>> buildLineChart(Model model, Payload payload, AppDataField field,
 	      String sortBy) {
@@ -305,7 +314,6 @@ public class Handler implements PageHandler<Context> {
 				model.setAppSpeedDisplayInfo(info);
 			} catch (Exception e) {
 				Cat.logError(e);
-				e.printStackTrace();
 			}
 			break;
 		case CONN_LINECHART:
@@ -325,6 +333,15 @@ public class Handler implements PageHandler<Context> {
 
 			model.setCommandId(commandId);
 			model.setCodes(m_manager.queryInternalCodes(commandId));
+			break;
+		case STATISTICS:
+			Date startDate = payload.getDay();
+			Date endDate = TimeHelper.addDays(startDate, 1);
+			AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
+			AppReportMerger visitor = new AppReportMerger();
+			visitor.visitAppReport(report);
+			report = visitor.getReport();
+			model.setAppReport(report);
 			break;
 		}
 

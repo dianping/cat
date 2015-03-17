@@ -77,6 +77,9 @@
 						<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
 							<b class="arrow"></b></li>
+						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>报表统计</a>
+							<b class="arrow"></b></li>
 						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
 							<b class="arrow"></b></li>
