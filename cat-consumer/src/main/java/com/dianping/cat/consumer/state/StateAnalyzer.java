@@ -135,7 +135,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		long startTime = getStartTime();
 		StateReport stateReport = getReport(Constants.CAT);
 		Map<String, StateReport> reports = m_reportManager.getHourlyReports(startTime);

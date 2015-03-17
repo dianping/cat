@@ -40,7 +40,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	private ProblemAnalyzer m_problemAnalyzer;
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		long startTime = getStartTime();
 
 		if (atEnd && !isLocalMode()) {

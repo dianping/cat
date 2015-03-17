@@ -281,9 +281,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing %s reports of %s!", m_name, new Date(startTime)), e);
 		} finally {
-			if (policy.forDatabase()) {
-				cleanup(startTime);
-			}
+			cleanup(startTime);
 			t.complete();
 
 			if (bucket != null) {
