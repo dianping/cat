@@ -55,11 +55,11 @@
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
-		<tr><td>network</td><td>2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi,2=2G,3=3G,4=4G,0=Unknown</td><td>int</td></tr>
-		<tr><td>version</td><td>versionCode, eg. 6.8 = 680,只支持int类型</td><td>int</td></tr>
+		<tr><td>network</td><td>2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi, 2=2G, 3=3G, 4=4G, 0=Unknown</td><td>int</td></tr>
+		<tr><td>version</td><td>versionCode,比如6.8=680,只支持int类型</td><td>int</td></tr>
 		<tr><td>tunnel</td><td>0 or 1，默认是0表示短连接，1表示是长连</td><td>int</td></tr>
 		<tr><td>command</td><td>接口，一般为url path的最后一个单位(shop.bin)</td><td>String</td></tr>
-		<tr><td>code</td><td>status code,>1000为业务错误码,<1000为网络错误码,<0为自定义错误码</td><td>int</td></tr>
+		<tr><td>code</td><td>status code,建议区分http的返回码,比如>1000为业务错误码,<1000为网络错误码,<0为自定义错误码</td><td>int</td></tr>
 		<tr><td>platform</td><td>android=1,ios=2,Unknown=0</td><td>int</td></tr>
 		<tr><td>requestbyte</td><td>发送字节数</td><td>int</td></tr>
 		<tr><td>responsebyte</td><td>返回字节数</td><td>int</td></tr>
