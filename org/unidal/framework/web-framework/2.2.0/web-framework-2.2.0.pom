@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>2.0.6</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>web-framework</artifactId>
+   <version>2.2.0</version>
+   <name>Web Framework</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+         <version>2.2.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-client</artifactId>
+         <version>1.1.5</version>
+         <exclusions>
+            <exclusion>
+               <groupId>aspectj</groupId>
+               <artifactId>aspectjrt</artifactId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>test-framework</artifactId>
+         <version>2.1.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jsp-2.1</artifactId>
+         <version>6.1.14</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>commons-fileupload</groupId>
+         <artifactId>commons-fileupload</artifactId>
+         <version>1.2.2</version>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <version>2.1.2</version>
+            <executions>
+               <execution>
+                  <id>generate mvc model</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/mvc-manifest.xml</manifest>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>
