@@ -3411,14 +3411,12 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<modules>
-					<module default="true">com.dianping.cat.report.ReportModule</module>
-					<module>com.dianping.cat.system.SystemModule</module>
-				</modules>
+				<defaultModule>com.dianping.cat.report.ReportModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.report.ReportModule</role-hint>
 			<implementation>com.dianping.cat.report.ReportModule</implementation>
 		</component>
 		<component>
@@ -6086,7 +6084,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.SystemModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.system.SystemModule</role-hint>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
 		<component>

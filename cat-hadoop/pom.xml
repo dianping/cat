@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.3.2</version>
+		<version>1.3.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
@@ -73,8 +73,8 @@
 		<plugins>
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
-				<artifactId>codegen-maven-plugin</artifactId>
-				<version>2.0.14</version>
+				<artifactId>plexus-maven-plugin</artifactId>
+				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>generate plexus component descriptor</id>

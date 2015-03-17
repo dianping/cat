@@ -129,13 +129,12 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<modules>
-					<module default="true">com.dianping.cat.broker.api.ApiModule</module>
-				</modules>
+				<defaultModule>com.dianping.cat.broker.api.ApiModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.ApiModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.broker.api.ApiModule</role-hint>
 			<implementation>com.dianping.cat.broker.api.ApiModule</implementation>
 		</component>
 		<component>

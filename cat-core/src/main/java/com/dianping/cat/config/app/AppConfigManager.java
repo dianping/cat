@@ -320,9 +320,12 @@ public class AppConfigManager implements Initializable {
 		Map<String, Integer> cityMap = new HashMap<String, Integer>();
 		ConfigItem cities = m_config.findConfigItem(CITY);
 
-		for (Item item : cities.getItems().values()) {
-			cityMap.put(item.getName(), item.getId());
+		if (cities != null && cities.getItems() != null) {
+			for (Item item : cities.getItems().values()) {
+				cityMap.put(item.getName(), item.getId());
+			}
 		}
+		
 		m_cities = cityMap;
 
 		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
