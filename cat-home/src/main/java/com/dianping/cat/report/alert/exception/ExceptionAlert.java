@@ -19,7 +19,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.alert.sender.AlertEntity;

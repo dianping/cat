@@ -21,6 +21,10 @@
 		</dependency>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
+			<artifactId>web-framework</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
 			<artifactId>dal-jdbc</artifactId>
 		</dependency>
 		<dependency>

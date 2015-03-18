@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 
 public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 

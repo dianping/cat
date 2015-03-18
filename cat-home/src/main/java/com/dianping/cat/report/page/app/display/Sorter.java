@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.app.display;
 
 import java.util.Comparator;
 
-import com.dianping.cat.report.service.app.AppDataService;
+import com.dianping.cat.report.page.app.service.AppDataService;
 
 public class Sorter {
 

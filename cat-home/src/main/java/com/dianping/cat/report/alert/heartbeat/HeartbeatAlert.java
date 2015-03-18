@@ -28,7 +28,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;

@@ -11,7 +11,7 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.home.router.entity.RouterConfig;
-import com.dianping.cat.report.service.impl.RouterConfigService;
+import com.dianping.cat.report.page.statistics.service.RouterConfigService;
 import com.dianping.cat.report.task.ReportFacade;
 
 public class RouterBuilderTest extends ComponentTestCase {

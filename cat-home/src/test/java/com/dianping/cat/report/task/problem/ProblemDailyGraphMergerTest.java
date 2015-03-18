@@ -13,6 +13,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.problem.task.ProblemMerger;
 
 public class ProblemDailyGraphMergerTest {
 	private ProblemMerger m_meger = new ProblemMerger();

@@ -41,13 +41,13 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.display.Sorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
-import com.dianping.cat.report.service.app.AppConnectionService;
-import com.dianping.cat.report.service.app.AppDataField;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.AppSpeedService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
-import com.dianping.cat.report.service.app.SpeedQueryEntity;
-import com.dianping.cat.report.service.impl.AppReportService;
+import com.dianping.cat.report.page.app.service.AppConnectionService;
+import com.dianping.cat.report.page.app.service.AppDataField;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.AppReportService;
+import com.dianping.cat.report.page.app.service.AppSpeedService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {

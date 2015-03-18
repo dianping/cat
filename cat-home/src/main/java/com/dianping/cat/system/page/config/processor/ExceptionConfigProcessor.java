@@ -15,7 +15,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.service.impl.BugReportService;
+import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;

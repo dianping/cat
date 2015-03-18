@@ -13,6 +13,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.transaction.task.TransactionMerger;
 
 public class TransactionDailyGraphMergerTest {
 	private TransactionMerger m_meger = new TransactionMerger();

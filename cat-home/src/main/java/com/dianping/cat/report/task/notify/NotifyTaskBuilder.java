@@ -20,9 +20,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.sender.AlertChannel;
 import com.dianping.cat.report.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
-import com.dianping.cat.report.service.impl.EventReportService;
-import com.dianping.cat.report.service.impl.ProblemReportService;
-import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.page.event.service.EventReportService;
+import com.dianping.cat.report.page.problem.service.ProblemReportService;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
 
