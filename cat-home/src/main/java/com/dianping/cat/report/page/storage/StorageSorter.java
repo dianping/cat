@@ -51,7 +51,7 @@ public class StorageSorter {
 		List<Entry<String, Domain>> tmp = new LinkedList<Entry<String, Domain>>(domains.entrySet());
 		Map<String, Domain> results = new LinkedHashMap<String, Domain>();
 
-		Collections.sort(tmp, new DomainComparator());
+		Collections.sort(tmp, new StorageComparator());
 
 		for (Entry<String, Domain> entry : tmp) {
 			results.put(entry.getKey(), entry.getValue());
@@ -61,7 +61,7 @@ public class StorageSorter {
 		return m_report;
 	}
 
-	public class DomainComparator implements Comparator<Entry<String, Domain>> {
+	public class StorageComparator implements Comparator<Entry<String, Domain>> {
 
 		@Override
 		public int compare(Entry<String, Domain> o1, Entry<String, Domain> o2) {

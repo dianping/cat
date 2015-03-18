@@ -4,15 +4,15 @@ import java.util.Comparator;
 
 import com.dianping.cat.report.page.app.service.AppDataService;
 
-public class Sorter {
+public class ChartSorter {
 
 	private String m_sortBy;
 
-	public Sorter() {
+	public ChartSorter() {
 		this(AppDataService.REQUEST);
 	}
 
-	public Sorter(String sortBy) {
+	public ChartSorter(String sortBy) {
 		m_sortBy = sortBy;
 	}
 

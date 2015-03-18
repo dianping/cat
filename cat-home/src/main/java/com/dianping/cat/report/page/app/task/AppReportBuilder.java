@@ -89,11 +89,10 @@ public class AppReportBuilder implements TaskBuilder {
 				long count = data.getAccessNumberSum();
 				long responseTime = data.getResponseSumTimeSum();
 
-				cmd.incCount(count);
-				cmd.incSum(responseTime);
+				cmd.incCount(count).incSum(responseTime).incRequestSum(data.getRequestPackageSum())
+				      .incResponseSum(data.getResponsePackageSum());
 
 				Code code = cmd.findOrCreateCode(String.valueOf(codeId));
-
 				code.setTitle(code.getTitle());
 				code.incCount(count);
 				code.incSum(responseTime);
@@ -102,13 +101,17 @@ public class AppReportBuilder implements TaskBuilder {
 					cmd.incErrors(count);
 					code.incErrors(count);
 				}
-				if (cmd.getCount() > 0) {
-					cmd.setAvg(cmd.getSum() / cmd.getCount());
-					cmd.setSuccessRatio(100.0 - cmd.getErrors() * 100.0 / cmd.getCount());
+				long cmdCount = cmd.getCount();
+				if (cmdCount > 0) {
+					cmd.setAvg(cmd.getSum() / cmdCount);
+					cmd.setSuccessRatio(100.0 - cmd.getErrors() * 100.0 / cmdCount);
+					cmd.setRequestAvg(cmd.getRequestSum() * 1.0 / cmdCount);
+					cmd.setResponseAvg(cmd.getResponseSum() * 1.0 / cmdCount);
 				}
-				if (code.getCount() > 0) {
-					code.setAvg(code.getSum() / code.getCount());
-					code.setSuccessRatio(100.0 - code.getErrors() * 100.0 / code.getCount());
+				long codeCount = code.getCount();
+				if (codeCount > 0) {
+					code.setAvg(code.getSum() / codeCount);
+					code.setSuccessRatio(100.0 - code.getErrors() * 100.0 / codeCount);
 				}
 			}
 		} catch (DalException e) {
