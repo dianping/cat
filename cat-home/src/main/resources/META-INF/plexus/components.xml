@@ -1675,6 +1675,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.app.CommandAutoCompleter</role>
+			<implementation>com.dianping.cat.report.task.app.CommandAutoCompleter</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.TransactionReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.TaskBuilder</role>
 			<role-hint>app</role-hint>
 			<implementation>com.dianping.cat.report.task.app.AppReportBuilder</implementation>
@@ -1687,6 +1699,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.impl.AppReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.app.CommandAutoCompleter</role>
 				</requirement>
 			</requirements>
 		</component>

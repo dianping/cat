@@ -337,7 +337,7 @@ public class AppConfigManager implements Initializable {
 		m_operators = operatorMap;
 	}
 
-	private boolean storeConfig() {
+	public boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
 

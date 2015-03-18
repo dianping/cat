@@ -33,13 +33,20 @@ public class AppReportBuilder implements TaskBuilder {
 	@Inject
 	private AppReportService m_appReportService;
 
+	@Inject
+	private CommandAutoCompleter m_autoCompleter;
+
 	public static final String ID = Constants.APP;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
+			m_autoCompleter.autoCompleteDomain(period);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		try {
 			AppReport appReport = buildDailyReport(domain, period);
-			System.out.println(appReport);
 			DailyReport report = new DailyReport();
 
 			report.setCreationDate(new Date());
