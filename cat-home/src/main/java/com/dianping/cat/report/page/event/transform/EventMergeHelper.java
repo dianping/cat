@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.event;
+package com.dianping.cat.report.page.event.transform;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;

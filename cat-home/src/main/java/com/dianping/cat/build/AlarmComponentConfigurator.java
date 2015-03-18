@@ -95,7 +95,7 @@ import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.config.AlertConfigManager;

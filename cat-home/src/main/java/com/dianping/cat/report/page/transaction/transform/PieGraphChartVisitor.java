@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.event;
+package com.dianping.cat.report.page.transaction.transform;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 
@@ -51,12 +51,12 @@ public class PieGraphChartVisitor extends BaseVisitor {
 		if (!Constants.ALL.equalsIgnoreCase(machine.getIp())) {
 			m_ip = machine.getIp();
 
-			for (EventType type : machine.getTypes().values()) {
+			for (TransactionType type : machine.getTypes().values()) {
 				if (m_type != null && m_type.equals(type.getId())) {
 					if (StringUtils.isEmpty(m_name)) {
 						m_items.put(m_ip, type.getTotalCount());
 					} else {
-						for (EventName name : type.getNames().values()) {
+						for (TransactionName name : type.getNames().values()) {
 							if (m_name.equals(name.getId())) {
 								m_items.put(m_ip, name.getTotalCount());
 								break;

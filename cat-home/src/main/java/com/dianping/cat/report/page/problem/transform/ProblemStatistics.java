@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.problem;
+package com.dianping.cat.report.page.problem.transform;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.report.page.problem.LongConfig;
 
 public class ProblemStatistics extends BaseVisitor {
 

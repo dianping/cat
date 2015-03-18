@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.transaction.transform;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
