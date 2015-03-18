@@ -113,7 +113,6 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>generate dal model files</id>
@@ -167,7 +166,6 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>plexus-maven-plugin</artifactId>
-				<version>2.1.2</version>
 				<executions>
 					<execution>
 						<id>generate plexus component descriptor</id>
