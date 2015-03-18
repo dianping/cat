@@ -46,7 +46,7 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 		Calendar cal = Calendar.getInstance();
 		int minute = cal.get(Calendar.MINUTE);
 
-		if (minute > 15) {
+		if (minute > 10) {
 			return true;
 		} else {
 			return false;
