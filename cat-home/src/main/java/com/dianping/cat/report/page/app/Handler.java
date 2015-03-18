@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.app;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +12,6 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
-import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -21,7 +19,6 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -32,7 +29,6 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
-import com.dianping.cat.home.app.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -43,11 +39,10 @@ import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppReportMerger;
 import com.dianping.cat.report.page.app.display.AppReportSorter;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
-import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
-import com.dianping.cat.report.page.storage.StorageSorter;
 import com.dianping.cat.report.service.app.AppConnectionService;
 import com.dianping.cat.report.service.app.AppDataField;
 import com.dianping.cat.report.service.app.AppDataService;
