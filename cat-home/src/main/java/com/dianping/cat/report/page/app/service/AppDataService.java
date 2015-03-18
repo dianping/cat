@@ -55,6 +55,31 @@ public class AppDataService {
 		return infos;
 	}
 
+	private AppDataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
+		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
+		int max = -5;
+
+		for (AppCommandData from : fromDatas) {
+			int minute = from.getMinuteOrder();
+
+			if (max < 0 || max < minute) {
+				max = minute;
+			}
+			List<AppCommandData> data = dataMap.get(minute);
+
+			if (data == null) {
+				data = new LinkedList<AppCommandData>();
+
+				dataMap.put(minute, data);
+			}
+			data.add(from);
+		}
+		int n = max / 5 + 1;
+		int length = queryAppDataDuration(period, n);
+
+		return new AppDataSequence<AppCommandData>(length, dataMap);
+	}
+
 	private Map<Integer, List<AppCommandData>> buildFields2Datas(List<AppCommandData> datas, AppDataField field) {
 		Map<Integer, List<AppCommandData>> field2Datas = new HashMap<Integer, List<AppCommandData>>();
 
@@ -145,31 +170,6 @@ public class AppDataService {
 		return sum == 0 ? 0 : (double) success / sum * 100;
 	}
 
-	private AppDataSequence<AppCommandData> buildAppSequence(List<AppCommandData> fromDatas, Date period) {
-		Map<Integer, List<AppCommandData>> dataMap = new LinkedHashMap<Integer, List<AppCommandData>>();
-		int max = -5;
-
-		for (AppCommandData from : fromDatas) {
-			int minute = from.getMinuteOrder();
-
-			if (max < 0 || max < minute) {
-				max = minute;
-			}
-			List<AppCommandData> data = dataMap.get(minute);
-
-			if (data == null) {
-				data = new LinkedList<AppCommandData>();
-
-				dataMap.put(minute, data);
-			}
-			data.add(from);
-		}
-		int n = max / 5 + 1;
-		int length = queryAppDataDuration(period, n);
-
-		return new AppDataSequence<AppCommandData>(length, dataMap);
-	}
-
 	private int queryAppDataDuration(Date period, int defaultValue) {
 		Calendar cal = Calendar.getInstance();
 
@@ -186,93 +186,6 @@ public class AppDataService {
 			return length < 0 ? 0 : length;
 		}
 		return defaultValue;
-	}
-
-	private int queryFieldValue(AppCommandData data, AppDataField field) {
-		switch (field) {
-		case OPERATOR:
-			return data.getOperator();
-		case APP_VERSION:
-			return data.getAppVersion();
-		case CITY:
-			return data.getCity();
-		case CONNECT_TYPE:
-			return data.getConnectType();
-		case NETWORK:
-			return data.getNetwork();
-		case PLATFORM:
-			return data.getPlatform();
-		case CODE:
-		default:
-			return CommandQueryEntity.DEFAULT_VALUE;
-		}
-	}
-
-	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
-		Double[] values = queryValue(entity, AppDataService.DELAY);
-		double delaySum = 0;
-		int size = 0;
-
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] != null) {
-				delaySum += values[i];
-				size++;
-			}
-		}
-		return size > 0 ? delaySum / size : -1;
-	}
-
-	private void setFieldValue(AppDataDetail info, AppDataField field, int value) {
-		switch (field) {
-		case OPERATOR:
-			info.setOperator(value);
-			break;
-		case APP_VERSION:
-			info.setAppVersion(value);
-			break;
-		case CITY:
-			info.setCity(value);
-			break;
-		case CONNECT_TYPE:
-			info.setConnectType(value);
-			break;
-		case NETWORK:
-			info.setNetwork(value);
-			break;
-		case PLATFORM:
-			info.setPlatform(value);
-			break;
-		case CODE:
-			break;
-		}
-	}
-
-	private void updateAppDataDetailInfo(AppDataDetail info, Entry<Integer, List<AppCommandData>> entry,
-	      AppDataField field, CommandQueryEntity entity) {
-		int key = entry.getKey();
-		List<AppCommandData> datas = entry.getValue();
-		long accessNumberSum = 0;
-		long responseTimeSum = 0;
-		long responsePackageSum = 0;
-		long requestPackageSum = 0;
-
-		for (AppCommandData data : datas) {
-			accessNumberSum += data.getAccessNumberSum();
-			responseTimeSum += data.getResponseSumTimeSum();
-			responsePackageSum += data.getResponsePackageSum();
-			requestPackageSum += data.getRequestPackageSum();
-		}
-		double responseTimeAvg = accessNumberSum == 0 ? 0 : (double) responseTimeSum / accessNumberSum;
-		double responsePackageAvg = accessNumberSum == 0 ? 0 : (double) responsePackageSum / accessNumberSum;
-		double requestPackageAvg = accessNumberSum == 0 ? 0 : (double) requestPackageSum / accessNumberSum;
-
-		info.setAccessNumberSum(accessNumberSum).setResponseTimeAvg(responseTimeAvg)
-		      .setRequestPackageAvg(requestPackageAvg).setResponsePackageAvg(responsePackageAvg)
-		      .setOperator(entity.getOperator()).setCity(entity.getCity()).setNetwork(entity.getNetwork())
-		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom())
-		      .setConnectType(entity.getConnectType());
-
-		setFieldValue(info, field, key);
 	}
 
 	public List<AppCommandData> queryByField(CommandQueryEntity entity, AppDataField groupByField) {
@@ -376,6 +289,40 @@ public class AppDataService {
 		return datas;
 	}
 
+	private int queryFieldValue(AppCommandData data, AppDataField field) {
+		switch (field) {
+		case OPERATOR:
+			return data.getOperator();
+		case APP_VERSION:
+			return data.getAppVersion();
+		case CITY:
+			return data.getCity();
+		case CONNECT_TYPE:
+			return data.getConnectType();
+		case NETWORK:
+			return data.getNetwork();
+		case PLATFORM:
+			return data.getPlatform();
+		case CODE:
+		default:
+			return CommandQueryEntity.DEFAULT_VALUE;
+		}
+	}
+
+	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
+		Double[] values = queryValue(entity, AppDataService.DELAY);
+		double delaySum = 0;
+		int size = 0;
+
+		for (int i = 0; i < values.length; i++) {
+			if (values[i] != null) {
+				delaySum += values[i];
+				size++;
+			}
+		}
+		return size > 0 ? delaySum / size : -1;
+	}
+
 	public Double[] queryValue(CommandQueryEntity entity, String type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
@@ -414,6 +361,59 @@ public class AppDataService {
 			Cat.logError(e);
 		}
 		return null;
+	}
+
+	private void setFieldValue(AppDataDetail info, AppDataField field, int value) {
+		switch (field) {
+		case OPERATOR:
+			info.setOperator(value);
+			break;
+		case APP_VERSION:
+			info.setAppVersion(value);
+			break;
+		case CITY:
+			info.setCity(value);
+			break;
+		case CONNECT_TYPE:
+			info.setConnectType(value);
+			break;
+		case NETWORK:
+			info.setNetwork(value);
+			break;
+		case PLATFORM:
+			info.setPlatform(value);
+			break;
+		case CODE:
+			break;
+		}
+	}
+
+	private void updateAppDataDetailInfo(AppDataDetail info, Entry<Integer, List<AppCommandData>> entry,
+	      AppDataField field, CommandQueryEntity entity) {
+		int key = entry.getKey();
+		List<AppCommandData> datas = entry.getValue();
+		long accessNumberSum = 0;
+		long responseTimeSum = 0;
+		long responsePackageSum = 0;
+		long requestPackageSum = 0;
+
+		for (AppCommandData data : datas) {
+			accessNumberSum += data.getAccessNumberSum();
+			responseTimeSum += data.getResponseSumTimeSum();
+			responsePackageSum += data.getResponsePackageSum();
+			requestPackageSum += data.getRequestPackageSum();
+		}
+		double responseTimeAvg = accessNumberSum == 0 ? 0 : (double) responseTimeSum / accessNumberSum;
+		double responsePackageAvg = accessNumberSum == 0 ? 0 : (double) responsePackageSum / accessNumberSum;
+		double requestPackageAvg = accessNumberSum == 0 ? 0 : (double) requestPackageSum / accessNumberSum;
+
+		info.setAccessNumberSum(accessNumberSum).setResponseTimeAvg(responseTimeAvg)
+		      .setRequestPackageAvg(requestPackageAvg).setResponsePackageAvg(responsePackageAvg)
+		      .setOperator(entity.getOperator()).setCity(entity.getCity()).setNetwork(entity.getNetwork())
+		      .setAppVersion(entity.getVersion()).setPlatform(entity.getPlatfrom())
+		      .setConnectType(entity.getConnectType());
+
+		setFieldValue(info, field, key);
 	}
 
 }

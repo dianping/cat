@@ -52,31 +52,6 @@ public class BaseQueryEntity {
 		return current;
 	}
 
-	protected Date parseDate(String dateStr) throws Exception {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
-		if (StringUtils.isNotEmpty(dateStr)) {
-			return sdf.parse(dateStr);
-		} else {
-			Calendar cal = Calendar.getInstance();
-
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.SECOND, 0);
-			cal.set(Calendar.MILLISECOND, 0);
-
-			return cal.getTime();
-		}
-	}
-
-	protected int parseValue(String str) {
-		if (StringUtils.isEmpty(str)) {
-			return DEFAULT_VALUE;
-		} else {
-			return Integer.parseInt(str);
-		}
-	}
-
 	public int getCity() {
 		return m_city;
 	}
@@ -103,6 +78,31 @@ public class BaseQueryEntity {
 
 	public int getVersion() {
 		return m_version;
+	}
+
+	protected Date parseDate(String dateStr) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		if (StringUtils.isNotEmpty(dateStr)) {
+			return sdf.parse(dateStr);
+		} else {
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+
+			return cal.getTime();
+		}
+	}
+
+	protected int parseValue(String str) {
+		if (StringUtils.isEmpty(str)) {
+			return DEFAULT_VALUE;
+		} else {
+			return Integer.parseInt(str);
+		}
 	}
 
 	public void setId(int id) {

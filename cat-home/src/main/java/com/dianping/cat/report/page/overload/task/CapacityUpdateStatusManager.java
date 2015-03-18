@@ -49,20 +49,20 @@ public class CapacityUpdateStatusManager implements Initializable {
 		m_monthlyStatus = Integer.parseInt(content.split("Monthly:")[1].split(";")[0]);
 	}
 
-	public int getHourlyStatus() {
-		return m_hourlyStatus;
-	}
-
 	public int getDailyStatus() {
 		return m_dailyStatus;
 	}
 
-	public int getWeeklyStatus() {
-		return m_weeklyStatus;
+	public int getHourlyStatus() {
+		return m_hourlyStatus;
 	}
 
 	public int getMonthlyStatus() {
 		return m_monthlyStatus;
+	}
+
+	public int getWeeklyStatus() {
+		return m_weeklyStatus;
 	}
 
 	@Override
@@ -115,23 +115,23 @@ public class CapacityUpdateStatusManager implements Initializable {
 		return true;
 	}
 
-	public void updateHourlyStatus(int hourlyStatus) {
-		this.m_hourlyStatus = hourlyStatus;
-		storeConfig();
-	}
-
 	public void updateDailyStatus(int dailyStatus) {
 		this.m_dailyStatus = dailyStatus;
 		storeConfig();
 	}
 
-	public void updateWeeklyStatus(int weeklyStatus) {
-		this.m_weeklyStatus = weeklyStatus;
+	public void updateHourlyStatus(int hourlyStatus) {
+		this.m_hourlyStatus = hourlyStatus;
 		storeConfig();
 	}
 
 	public void updateMonthlyStatus(int monthlyStatus) {
 		this.m_monthlyStatus = monthlyStatus;
+		storeConfig();
+	}
+
+	public void updateWeeklyStatus(int weeklyStatus) {
+		this.m_weeklyStatus = weeklyStatus;
 		storeConfig();
 	}
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.problem;
+package com.dianping.cat.report.page.problem.transform;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;

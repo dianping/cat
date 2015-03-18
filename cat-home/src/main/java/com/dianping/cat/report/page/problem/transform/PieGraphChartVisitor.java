@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.problem;
+package com.dianping.cat.report.page.problem.transform;
 
 import java.util.ArrayList;
 import java.util.HashMap;

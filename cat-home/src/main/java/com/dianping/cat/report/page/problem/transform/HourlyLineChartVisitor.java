@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.problem;
+package com.dianping.cat.report.page.problem.transform;
 
 import java.util.Date;
 import java.util.LinkedHashMap;

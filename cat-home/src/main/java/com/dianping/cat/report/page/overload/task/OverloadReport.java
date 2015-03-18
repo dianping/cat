@@ -8,20 +8,20 @@ public class OverloadReport extends DailyReport {
 
 	private double m_reportLength;
 
-	public int getReportType() {
-		return m_reportType;
-	}
-
-	public void setReportType(int reportType) {
-		m_reportType = reportType;
-	}
-
 	public double getReportLength() {
 		return m_reportLength;
 	}
 
+	public int getReportType() {
+		return m_reportType;
+	}
+
 	public void setReportLength(double reportLength) {
 		m_reportLength = reportLength;
+	}
+
+	public void setReportType(int reportType) {
+		m_reportType = reportType;
 	}
 
 }

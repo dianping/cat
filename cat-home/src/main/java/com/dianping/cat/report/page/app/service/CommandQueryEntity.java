@@ -45,23 +45,23 @@ public class CommandQueryEntity extends BaseQueryEntity {
 		}
 	}
 
-	public int getStartMinuteOrder() {
-		return m_startMinuteOrder;
-	}
-
-	public int getEndMinuteOrder() {
-		return m_endMinuteOrder;
+	public int getCode() {
+		return m_code;
 	}
 
 	public int getConnectType() {
 		return m_connectType;
 	}
 
-	public int getCode() {
-		return m_code;
+	public int getEndMinuteOrder() {
+		return m_endMinuteOrder;
 	}
 
 	public int getId() {
 		return m_id;
+	}
+
+	public int getStartMinuteOrder() {
+		return m_startMinuteOrder;
 	}
 }

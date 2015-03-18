@@ -30,19 +30,6 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 		super(HeartbeatAnalyzer.ID);
 	}
 
-	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
-	      throws Exception {
-		HeartbeatReport report = super.getReport(period, domain);
-
-		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
-			long startTime = request.getStartTime();
-			report = getReportFromLocalDisk(startTime, domain);
-		}
-
-		return filterReport(payload, report);
-	}
-
 	private String filterReport(BasePayload payload, HeartbeatReport report) {
 		String ipAddress = payload.getIpAddress();
 
@@ -55,6 +42,19 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 		HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 		return filter.buildXml(report);
+	}
+
+	@Override
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	      throws Exception {
+		HeartbeatReport report = super.getReport(period, domain);
+
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+		}
+
+		return filterReport(payload, report);
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

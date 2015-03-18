@@ -32,28 +32,6 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 	}
 
 	@Override
-	public boolean isEligable(ModelRequest request) {
-		if (m_manager.isHdfsOn()) {
-			ModelPeriod period = request.getPeriod();
-
-			if (period.isHistorical()) {
-				long time = Long.parseLong(request.getProperty("timestamp"));
-				long current = System.currentTimeMillis();
-				long currentHour = current - current % TimeHelper.ONE_HOUR;
-
-				if (time == currentHour - 2 * TimeHelper.ONE_HOUR) {
-					return true;
-				}
-			} else {
-				return true;
-			}
-			return false;
-		} else {
-			return true;
-		}
-	}
-
-	@Override
 	public ModelResponse<String> invoke(ModelRequest request) {
 		ModelResponse<String> response = new ModelResponse<String>();
 		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
@@ -84,6 +62,28 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 			t.complete();
 		}
 		return response;
+	}
+
+	@Override
+	public boolean isEligable(ModelRequest request) {
+		if (m_manager.isHdfsOn()) {
+			ModelPeriod period = request.getPeriod();
+
+			if (period.isHistorical()) {
+				long time = Long.parseLong(request.getProperty("timestamp"));
+				long current = System.currentTimeMillis();
+				long currentHour = current - current % TimeHelper.ONE_HOUR;
+
+				if (time == currentHour - 2 * TimeHelper.ONE_HOUR) {
+					return true;
+				}
+			} else {
+				return true;
+			}
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	public void setManager(ServerConfigManager manager) {

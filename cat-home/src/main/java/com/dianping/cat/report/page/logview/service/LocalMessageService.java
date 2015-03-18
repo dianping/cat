@@ -69,24 +69,6 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	@Override
-	public boolean isEligable(ModelRequest request) {
-		if (m_manager.isHdfsOn()) {
-			boolean eligibale = request.getPeriod().isCurrent();
-
-			if (eligibale) {
-				String messageId = request.getProperty("messageId");
-				MessageId id = MessageId.parse(messageId);
-
-				return id.getVersion() == 2;
-			}
-
-			return eligibale;
-		} else {
-			return true;
-		}
-	}
-
-	@Override
 	public ModelResponse<String> invoke(ModelRequest request) {
 		ModelResponse<String> response = new ModelResponse<String>();
 		Transaction t = Cat.newTransaction("ModelService", getClass().getSimpleName());
@@ -114,6 +96,24 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			t.complete();
 		}
 		return response;
+	}
+
+	@Override
+	public boolean isEligable(ModelRequest request) {
+		if (m_manager.isHdfsOn()) {
+			boolean eligibale = request.getPeriod().isCurrent();
+
+			if (eligibale) {
+				String messageId = request.getProperty("messageId");
+				MessageId id = MessageId.parse(messageId);
+
+				return id.getVersion() == 2;
+			}
+
+			return eligibale;
+		} else {
+			return true;
+		}
 	}
 
 }

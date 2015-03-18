@@ -89,11 +89,11 @@ import com.dianping.cat.report.page.statistics.task.utilization.UtilizationRepor
 import com.dianping.cat.report.page.storage.StorageMergeHelper;
 import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.page.transaction.task.TransactionGraphCreator;
 import com.dianping.cat.report.page.transaction.task.TransactionMerger;
 import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskBuilder;

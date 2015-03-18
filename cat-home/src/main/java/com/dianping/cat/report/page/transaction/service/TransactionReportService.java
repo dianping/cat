@@ -39,6 +39,22 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
 
+	private TransactionReport convert(TransactionReport report) {
+		Date start = report.getStartTime();
+		Date end = report.getEndTime();
+
+		try {
+			if (start != null && end != null && end.before(m_sdf.parse("2015-01-05"))) {
+				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000.0);
+
+				report.accept(statistics);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return report;
+	}
+
 	@Override
 	public TransactionReport makeReport(String domain, Date start, Date end) {
 		TransactionReport report = new TransactionReport(domain);
@@ -184,22 +200,6 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 			Cat.logError(e);
 		}
 		return convert(transactionReport);
-	}
-
-	private TransactionReport convert(TransactionReport report) {
-		Date start = report.getStartTime();
-		Date end = report.getEndTime();
-
-		try {
-			if (start != null && end != null && end.before(m_sdf.parse("2015-01-05"))) {
-				TpsStatistics statistics = new TpsStatistics((end.getTime() - start.getTime()) / 1000.0);
-
-				report.accept(statistics);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return report;
 	}
 
 	public class TpsStatistics extends BaseVisitor {
