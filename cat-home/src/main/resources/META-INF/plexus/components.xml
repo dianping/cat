@@ -2300,6 +2300,7 @@
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>logview-historical</role-hint>
+						<role-hint>logview-local</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -2308,6 +2309,33 @@
 		<component>
 			<role>com.dianping.cat.report.service.LocalModelService</role>
 			<role-hint>logview</role-hint>
+			<implementation>com.dianping.cat.report.page.logview.service.LocalMessageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+					<field-name>m_html</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>waterfall</role-hint>
+					<field-name>m_waterfall</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.ModelService</role>
+			<role-hint>logview-local</role-hint>
 			<implementation>com.dianping.cat.report.page.logview.service.LocalMessageService</implementation>
 			<requirements>
 				<requirement>

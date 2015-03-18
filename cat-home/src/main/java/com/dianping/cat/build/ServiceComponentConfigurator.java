@@ -172,9 +172,14 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-historical", "logview-local" }, "m_services"));
 
 		all.add(C(LocalModelService.class, "logview", LocalMessageService.class) //
+		      .req(MessageConsumer.class, ServerConfigManager.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
+		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
+		all.add(C(ModelService.class, "logview-local", LocalMessageService.class) //
 		      .req(MessageConsumer.class, ServerConfigManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
 		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //

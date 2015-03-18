@@ -8,8 +8,10 @@ import java.nio.charset.Charset;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.BasePayload;
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -17,11 +19,13 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.storage.message.MessageBucketManager;
 
-public class LocalMessageService extends LocalModelService<String> {
+public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {
 
 	public static final String ID = DumpAnalyzer.ID;
 
@@ -80,6 +84,36 @@ public class LocalMessageService extends LocalModelService<String> {
 		} else {
 			return true;
 		}
+	}
+
+	@Override
+	public ModelResponse<String> invoke(ModelRequest request) {
+		ModelResponse<String> response = new ModelResponse<String>();
+		Transaction t = Cat.newTransaction("ModelService", getClass().getSimpleName());
+
+		try {
+			ModelPeriod period = request.getPeriod();
+			String domain = request.getDomain();
+			BasePayload payload = new BasePayload();
+
+			payload.setMessageId(request.getProperty("messageId"));
+			payload.setWaterfall(Boolean.valueOf(request.getProperty("waterfall", "false")));
+			
+			String report = getReport(request, period, domain, payload);
+
+			response.setModel(report);
+
+			t.addData("period", period);
+			t.addData("domain", domain);
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			response.setException(e);
+		} finally {
+			t.complete();
+		}
+		return response;
 	}
 
 }
