@@ -27,7 +27,7 @@ import com.dianping.cat.service.ModelRequest;
 @SuppressWarnings("rawtypes")
 public class Handler extends ContainerHolder implements Initializable, PageHandler<Context> {
 
-   public Map<String, LocalModelService> m_localService;
+   public Map<String, LocalModelService> m_localServices;
 
 	private byte[] compress(String str) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);
@@ -66,7 +66,7 @@ public class Handler extends ContainerHolder implements Initializable, PageHandl
 				request = new ModelRequest(domain, period.getStartTime());
 			}
 			String xml = "";
-			LocalModelService service = m_localService.get(report);
+			LocalModelService service = m_localServices.get(report);
 
 			if (service != null) {
 				xml = service.getReport(request, period, domain, payload);
@@ -89,7 +89,7 @@ public class Handler extends ContainerHolder implements Initializable, PageHandl
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_localService = lookupMap(LocalModelService.class);
+		m_localServices = lookupMap(LocalModelService.class);
 	}
 
 }

@@ -137,7 +137,7 @@
 						<li id="cache_operation"><a href="/cat/r/storage?id=memcached&type=Cache&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
 							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
 							<b class="arrow"></b></li>
-						<li id="cache_info"><a href="/cat/r/cache?cache=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+						<li id="cache_info"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
 							<i class="menu-icon fa fa-caret-right"></i>访问情况</a>
 							<b class="arrow"></b></li>
 					</ul>
