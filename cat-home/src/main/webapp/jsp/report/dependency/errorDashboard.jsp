@@ -63,7 +63,7 @@
 	</c:when>
 	<c:otherwise>
 		<a:report title="Dependency Report"
-		navUrlPrefix="domain=${model.domain}&op=metricDashboard">
+		navUrlPrefix="domain=${model.domain}&op=errorDashboard">
 		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
 		<div class="report">

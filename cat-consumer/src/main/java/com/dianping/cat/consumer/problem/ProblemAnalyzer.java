@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -37,6 +38,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public Set<String> getDomains() {
+		return m_reportManager.getDomains(getStartTime());
 	}
 
 	@Override

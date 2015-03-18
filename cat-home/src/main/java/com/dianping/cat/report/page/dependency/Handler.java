@@ -208,7 +208,7 @@ public class Handler implements PageHandler<Context> {
 			case DEPENDENCY_DASHBOARD:
 				buildDependencyDashboard(model, payload, reportTime);
 				break;
-			case EXCEPTION_DASHBOARD:
+			case ERROR_DASHBOARD:
 				buildExceptionDashboard(model, payload, date);
 				model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
 				break;
