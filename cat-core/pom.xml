@@ -45,7 +45,6 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>2.0.9</version>
 				<executions>
 					<execution>
 						<id>generate data model</id>
@@ -79,6 +78,12 @@
 							</manifest>
 						</configuration>
 					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.unidal.maven.plugins</groupId>
+				<artifactId>plexus-maven-plugin</artifactId>
+				<executions>
 					<execution>
 						<id>generate plexus component descriptor</id>
 						<phase>process-classes</phase>

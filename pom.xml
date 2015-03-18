@@ -180,6 +180,21 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 						</additionalConfig>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.unidal.maven.plugins</groupId>
+					<artifactId>codegen-maven-plugin</artifactId>
+					<version>2.1.3</version>
+				</plugin>
+				<plugin>
+					<groupId>org.unidal.maven.plugins</groupId>
+					<artifactId>plexus-maven-plugin</artifactId>
+					<version>2.1.2</version>
+				</plugin>
+				<plugin>
+					<groupId>com.dianping.cat</groupId>
+					<artifactId>cat-maven-plugin</artifactId>
+					<version>1.3.3</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -195,11 +210,6 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-maven-plugin</artifactId>
-				<version>1.3.3</version>
 			</plugin>
 		</plugins>
 	</build>
