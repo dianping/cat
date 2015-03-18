@@ -19,7 +19,6 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -30,7 +29,6 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
-import com.dianping.cat.home.app.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
