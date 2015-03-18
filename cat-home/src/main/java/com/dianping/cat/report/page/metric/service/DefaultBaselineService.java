@@ -48,12 +48,6 @@ public class DefaultBaselineService implements BaselineService {
 		}
 	};
 
-	private Map<String, String> getEmpties() {
-		synchronized (this) {
-			return m_empties;
-		}
-	}
-
 	private double[] decodeBaselines(byte[] datas) throws IOException {
 		double[] result;
 		ByteArrayInputStream input = new ByteArrayInputStream(datas);
@@ -76,6 +70,12 @@ public class DefaultBaselineService implements BaselineService {
 			output.writeDouble(dataItem);
 		}
 		return out.toByteArray();
+	}
+
+	private Map<String, String> getEmpties() {
+		synchronized (this) {
+			return m_empties;
+		}
 	}
 
 	@Override

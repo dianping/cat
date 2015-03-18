@@ -29,71 +29,6 @@ public class AppSpeedService {
 
 	private final static String COMPARISION = "对比值";
 
-	private AppSpeedDisplayInfo buildAppSpeedDisplayInfo(Map<String, AppSpeedSequence> datas) {
-		AppSpeedDisplayInfo info = new AppSpeedDisplayInfo();
-
-		info.setLineChart(buildLineChart(datas));
-		info.setAppSpeedDetails(buildSpeedDetail(datas));
-		info.setAppSpeedSummarys(buildOneDayData(datas));
-
-		return info;
-	}
-
-	public List<AppSpeedData> queryValue(BaseQueryEntity entity) {
-		int speedId = entity.getId();
-		Date period = entity.getDate();
-		int city = entity.getCity();
-		int operator = entity.getOperator();
-		int network = entity.getNetwork();
-		int appVersion = entity.getVersion();
-		int platform = entity.getPlatfrom();
-		List<AppSpeedData> datas = new ArrayList<AppSpeedData>();
-
-		try {
-			datas = m_dao.findDataByMinute(speedId, period, city, operator, network, appVersion, platform,
-			      AppSpeedDataEntity.READSET_AVG_DATA);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return datas;
-	}
-
-	public LineChart buildLineChart(final Map<String, AppSpeedSequence> datas) {
-		LineChart lineChart = new LineChart();
-		lineChart.setId("app");
-		lineChart.setUnit("");
-		lineChart.setHtmlTitle("延时平均值（毫秒/5分钟）");
-
-		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			Double[] data = computeDelayAvg(entry.getValue());
-
-			lineChart.add(entry.getKey(), data);
-		}
-		return lineChart;
-	}
-
-	private Map<String, List<AppSpeedDetail>> buildSpeedDetail(Map<String, AppSpeedSequence> datas) {
-		Map<String, List<AppSpeedDetail>> details = new LinkedHashMap<String, List<AppSpeedDetail>>();
-
-		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			Map<Integer, List<AppSpeedData>> appSpeedDataMap = entry.getValue().getRecords();
-			Date period = entry.getValue().getPeriod();
-			List<AppSpeedDetail> detail = new ArrayList<AppSpeedDetail>();
-
-			for (Entry<Integer, List<AppSpeedData>> e : appSpeedDataMap.entrySet()) {
-				int minute = e.getKey();
-				List<AppSpeedData> data = e.getValue();
-
-				if (!data.isEmpty()) {
-					detail.add(build5MinuteData(minute, data, period));
-				}
-			}
-			details.put(entry.getKey(), detail);
-		}
-
-		return details;
-	}
-
 	private AppSpeedDetail build5MinuteData(int minute, List<AppSpeedData> datas, Date period) {
 		long accessSum = 0, slowAccessSum = 0, sum = 0;
 		double responseSum = 0, responseAvg = 0, ratio = 0;
@@ -119,11 +54,53 @@ public class AppSpeedService {
 		return d;
 	}
 
-	public AppSpeedDisplayInfo buildSpeedDisplayInfo(SpeedQueryEntity queryEntity1, SpeedQueryEntity queryEntity2) {
-		Map<String, AppSpeedSequence> datas = queryRawData(queryEntity1, queryEntity2);
-		AppSpeedDisplayInfo appSpeedDisplayInfo = buildAppSpeedDisplayInfo(datas);
+	private AppSpeedSequence buildAppSequence(List<AppSpeedData> fromDatas, Date period) {
+		Map<Integer, List<AppSpeedData>> dataMap = new LinkedHashMap<Integer, List<AppSpeedData>>();
+		int max = -5;
 
-		return appSpeedDisplayInfo;
+		for (AppSpeedData from : fromDatas) {
+			int minute = from.getMinuteOrder();
+
+			if (max < 0 || max < minute) {
+				max = minute;
+			}
+			List<AppSpeedData> datas = dataMap.get(minute);
+
+			if (datas == null) {
+				datas = new LinkedList<AppSpeedData>();
+
+				dataMap.put(minute, datas);
+			}
+			datas.add(from);
+		}
+		int n = max / 5 + 1;
+		int length = queryAppDataDuration(period, n);
+
+		return new AppSpeedSequence(length, dataMap, period);
+	}
+
+	private AppSpeedDisplayInfo buildAppSpeedDisplayInfo(Map<String, AppSpeedSequence> datas) {
+		AppSpeedDisplayInfo info = new AppSpeedDisplayInfo();
+
+		info.setLineChart(buildLineChart(datas));
+		info.setAppSpeedDetails(buildSpeedDetail(datas));
+		info.setAppSpeedSummarys(buildOneDayData(datas));
+
+		return info;
+	}
+
+	public LineChart buildLineChart(final Map<String, AppSpeedSequence> datas) {
+		LineChart lineChart = new LineChart();
+		lineChart.setId("app");
+		lineChart.setUnit("");
+		lineChart.setHtmlTitle("延时平均值（毫秒/5分钟）");
+
+		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
+			Double[] data = computeDelayAvg(entry.getValue());
+
+			lineChart.add(entry.getKey(), data);
+		}
+		return lineChart;
 	}
 
 	private Map<String, AppSpeedDetail> buildOneDayData(Map<String, AppSpeedSequence> datas) {
@@ -163,6 +140,35 @@ public class AppSpeedService {
 		return summarys;
 	}
 
+	private Map<String, List<AppSpeedDetail>> buildSpeedDetail(Map<String, AppSpeedSequence> datas) {
+		Map<String, List<AppSpeedDetail>> details = new LinkedHashMap<String, List<AppSpeedDetail>>();
+
+		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
+			Map<Integer, List<AppSpeedData>> appSpeedDataMap = entry.getValue().getRecords();
+			Date period = entry.getValue().getPeriod();
+			List<AppSpeedDetail> detail = new ArrayList<AppSpeedDetail>();
+
+			for (Entry<Integer, List<AppSpeedData>> e : appSpeedDataMap.entrySet()) {
+				int minute = e.getKey();
+				List<AppSpeedData> data = e.getValue();
+
+				if (!data.isEmpty()) {
+					detail.add(build5MinuteData(minute, data, period));
+				}
+			}
+			details.put(entry.getKey(), detail);
+		}
+
+		return details;
+	}
+
+	public AppSpeedDisplayInfo buildSpeedDisplayInfo(SpeedQueryEntity queryEntity1, SpeedQueryEntity queryEntity2) {
+		Map<String, AppSpeedSequence> datas = queryRawData(queryEntity1, queryEntity2);
+		AppSpeedDisplayInfo appSpeedDisplayInfo = buildAppSpeedDisplayInfo(datas);
+
+		return appSpeedDisplayInfo;
+	}
+
 	public Double[] computeDelayAvg(AppSpeedSequence convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
@@ -197,31 +203,6 @@ public class AppSpeedService {
 			}
 		}
 		return value;
-	}
-
-	private AppSpeedSequence buildAppSequence(List<AppSpeedData> fromDatas, Date period) {
-		Map<Integer, List<AppSpeedData>> dataMap = new LinkedHashMap<Integer, List<AppSpeedData>>();
-		int max = -5;
-
-		for (AppSpeedData from : fromDatas) {
-			int minute = from.getMinuteOrder();
-
-			if (max < 0 || max < minute) {
-				max = minute;
-			}
-			List<AppSpeedData> datas = dataMap.get(minute);
-
-			if (datas == null) {
-				datas = new LinkedList<AppSpeedData>();
-
-				dataMap.put(minute, datas);
-			}
-			datas.add(from);
-		}
-		int n = max / 5 + 1;
-		int length = queryAppDataDuration(period, n);
-
-		return new AppSpeedSequence(length, dataMap, period);
 	}
 
 	private int queryAppDataDuration(Date period, int defaultValue) {
@@ -280,6 +261,25 @@ public class AppSpeedService {
 			if (data2.getDuration() > 0) {
 				datas.put(COMPARISION, data2);
 			}
+		}
+		return datas;
+	}
+
+	public List<AppSpeedData> queryValue(BaseQueryEntity entity) {
+		int speedId = entity.getId();
+		Date period = entity.getDate();
+		int city = entity.getCity();
+		int operator = entity.getOperator();
+		int network = entity.getNetwork();
+		int appVersion = entity.getVersion();
+		int platform = entity.getPlatfrom();
+		List<AppSpeedData> datas = new ArrayList<AppSpeedData>();
+
+		try {
+			datas = m_dao.findDataByMinute(speedId, period, city, operator, network, appVersion, platform,
+			      AppSpeedDataEntity.READSET_AVG_DATA);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 		return datas;
 	}

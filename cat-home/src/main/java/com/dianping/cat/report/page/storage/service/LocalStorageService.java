@@ -70,6 +70,11 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 
 		private String m_ipAddress;
 
+		public StorageReportFilter(String ip) {
+			super(true, new StringBuilder(DEFAULT_SIZE));
+			m_ipAddress = ip;
+		}
+
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.storage.model.entity.Machine machine) {
 			if (StringUtils.isEmpty(m_ipAddress) || m_ipAddress.equals(Constants.ALL)) {
@@ -77,11 +82,6 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 			} else if (machine.getId().equals(m_ipAddress)) {
 				super.visitMachine(machine);
 			}
-		}
-
-		public StorageReportFilter(String ip) {
-			super(true, new StringBuilder(DEFAULT_SIZE));
-			m_ipAddress = ip;
 		}
 	}
 }

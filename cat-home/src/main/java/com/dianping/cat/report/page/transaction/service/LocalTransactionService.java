@@ -32,18 +32,6 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		super(TransactionAnalyzer.ID);
 	}
 
-	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
-	      throws Exception {
-		TransactionReport report = super.getReport(period, domain);
-
-		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
-			long startTime = request.getStartTime();
-			report = getReportFromLocalDisk(startTime, domain);
-		}
-		return filterReport(payload, report);
-	}
-
 	private String filterReport(BasePayload payload, TransactionReport report) {
 		String type = payload.getType();
 		String name = payload.getName();
@@ -60,6 +48,18 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 			xml = filter.buildXml(report);
 		}
 		return xml;
+	}
+
+	@Override
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	      throws Exception {
+		TransactionReport report = super.getReport(period, domain);
+
+		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
+			long startTime = request.getStartTime();
+			report = getReportFromLocalDisk(startTime, domain);
+		}
+		return filterReport(payload, report);
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
