@@ -7,13 +7,14 @@
     <entity-ref name="command" type="list" names="commands" />
   </entity>
   <entity name="command">
-    <attribute name="int" value-type="String" />
+    <attribute name="id" value-type="String" />
     <attribute name="domain" value-type="String" />
     <attribute name="title" value-type="String" />
     <attribute name="count" value-type="int" />
     <attribute name="sum" value-type="int" />
     <attribute name="avg" value-type="int" />
     <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
     <entity-ref name="code" type="list" names="codes" />
   </entity>
   <entity name="code">
@@ -23,6 +24,7 @@
     <attribute name="sum" value-type="int" />
     <attribute name="avg" value-type="int" />
     <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
   </entity>
 </model>
 

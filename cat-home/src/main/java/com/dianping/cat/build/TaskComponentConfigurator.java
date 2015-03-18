@@ -60,6 +60,7 @@ import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.app.AppReportBuilder;
+import com.dianping.cat.report.task.app.CommandAutoCompleter;
 import com.dianping.cat.report.task.bug.BugReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
@@ -237,8 +238,10 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
 
+		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
+
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
-		      AppConfigManager.class, AppReportService.class));
+		      AppConfigManager.class, AppReportService.class, CommandAutoCompleter.class));
 
 		all.add(C(ReportFacade.class));
 

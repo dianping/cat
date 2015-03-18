@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemDelegate;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.top.Configurator.MockTransactionReportManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.consumer.transaction.Configurator.MockTransactionReportManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
@@ -26,19 +26,12 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.service.ReportDelegate;
 import com.dianping.cat.service.ReportManager;
 
 public class TopAnalyzerTest extends ComponentTestCase {
 
-	private long m_timestamp;
-
 	private TopAnalyzer m_analyzer;
-
-	private String m_domain = "group";
 
 	public void rebuildTransactionReport(TransactionReport report) {
 		int i = 0;
@@ -46,7 +39,7 @@ public class TopAnalyzerTest extends ComponentTestCase {
 			for (TransactionType type : machine.getTypes().values()) {
 				Range2 map = type.findOrCreateRange2(i);
 
-				map.setAvg(i+1);
+				map.setAvg(i + 1);
 				map.setCount(i);
 				map.setFails(1);
 				map.setSum(i * 10);
@@ -59,9 +52,6 @@ public class TopAnalyzerTest extends ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		long currentTimeMillis = System.currentTimeMillis();
-
-		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		try {
 			TransactionAnalyzer transactionAnalyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class,
@@ -98,55 +88,10 @@ public class TopAnalyzerTest extends ComponentTestCase {
 
 	@Test
 	public void testProcess() throws Exception {
-		TopReport report = m_analyzer.getReport(m_domain);
+		TopReport report = m_analyzer.getReport("cat");
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer_test.xml"), "utf-8");
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
-	}
-
-	protected MessageTree generateMessageTree(int i) {
-		MessageTree tree = new DefaultMessageTree();
-
-		tree.setMessageId("" + i);
-		tree.setDomain(m_domain);
-		tree.setHostName("group001");
-		tree.setIpAddress("192.168.1.1");
-		tree.setThreadGroupName("cat");
-		tree.setThreadName("Cat-ProblemAnalyzer-Test");
-
-		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
-
-		t.setTimestamp(m_timestamp);
-		t.setDurationInMillis(i * 50);
-
-		switch (i % 7) {
-		case 0:
-			t.setType("URL");
-			break;
-		case 1:
-			t.setType("Call");
-			break;
-		case 2:
-			t.setType("Cache.");
-			t.setDurationInMillis(i * 5);
-			break;
-		case 3:
-			t.setType("SQL");
-			break;
-		case 4:
-			t.setType("PigeonCall");
-			break;
-		case 5:
-			t.setType("Service");
-			break;
-		case 6:
-			t.setType("PigeonService");
-			break;
-		}
-
-		tree.setMessage(t);
-
-		return tree;
 	}
 
 }

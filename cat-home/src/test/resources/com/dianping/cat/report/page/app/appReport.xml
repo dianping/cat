@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <app-report id="app" start-time="2014-05-06 21:00:00" end-time="2014-05-06 21:01:00">
-	<command id="1" domain="cat" title="商户页" count="100" sum="10000" avg="100" error="10">
-		<code id="502" title="502 code" count="100"  sum="10000" avg="100" error="10"/>
-		<code id="502" title="502 code" count="100"  sum="10000" avg="100" error="10"/>
-		<code id="502" title="502 code" count="100"  sum="10000" avg="100" error="10"/>
+	<command id="shop.bin" domain="cat" title="商户页" count="100" sum="10000" avg="100" errors="10" successRatio="10.000">
+		<code id="502" title="502 code" count="100"  sum="10000" avg="100" errors="10"  successRatio="10.000"/>
+		<code id="502" title="502 code" count="100"  sum="10000" avg="100" errors="10"/>
+		<code id="502" title="502 code" count="100"  sum="10000" avg="100" errors="10"/>
 	</command>
-	<command id="1" domain="cat" title="商户页" count="100" sum="10000" avg="100" error="10">
-		<code id="502" title="502 code" count="100" sum="10000" avg="100" error="10"/>
-		<code id="502" title="502 code" count="100" sum="10000" avg="100" error="10"/>
-		<code id="502" title="502 code" count="100" sum="10000" avg="100" error="10"/>
+	<command id="shop.bin" domain="cat" title="商户页" count="100" sum="10000" avg="100" errors="10">
+		<code id="502" title="502 code" count="100" sum="10000" avg="100" errors="10"/>
+		<code id="502" title="502 code" count="100" sum="10000" avg="100" errors="10"/>
+		<code id="502" title="502 code" count="100" sum="10000" avg="100" errors="10"/>
 	</command>
 </app-report>

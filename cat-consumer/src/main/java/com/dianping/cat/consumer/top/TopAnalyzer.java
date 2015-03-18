@@ -22,6 +22,7 @@ import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Event;
@@ -321,9 +322,15 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		@Override
 		public void visitType(TransactionType type) {
 			m_type = type.getId();
-			super.visitType(type);
+			for (TransactionName name : type.getNames().values()) {
+				visitName(name);
+			}
+			for (Range2 range2 : type.getRange2s().values()) {
+				visitRange2(range2);
+				;
+			}
 		}
-		
+
 	}
 
 }

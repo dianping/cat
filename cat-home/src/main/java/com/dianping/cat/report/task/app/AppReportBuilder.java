@@ -33,13 +33,20 @@ public class AppReportBuilder implements TaskBuilder {
 	@Inject
 	private AppReportService m_appReportService;
 
+	@Inject
+	private CommandAutoCompleter m_autoCompleter;
+
 	public static final String ID = Constants.APP;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
+			m_autoCompleter.autoCompleteDomain(period);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		try {
 			AppReport appReport = buildDailyReport(domain, period);
-			System.out.println(appReport);
 			DailyReport report = new DailyReport();
 
 			report.setCreationDate(new Date());
@@ -68,7 +75,9 @@ public class AppReportBuilder implements TaskBuilder {
 
 	private void processCommand(Date period, Command command, AppReport report) {
 		int commandId = command.getId();
-		com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(String.valueOf(commandId));
+		com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(String.valueOf(command.getName()));
+		cmd.setDomain(command.getDomain());
+		cmd.setTitle(command.getTitle());
 
 		try {
 			List<AppCommandData> datas = m_dao.findDailyDataByCode(commandId, period,
@@ -85,6 +94,7 @@ public class AppReportBuilder implements TaskBuilder {
 
 				Code code = cmd.findOrCreateCode(String.valueOf(codeId));
 
+				code.setTitle(code.getTitle());
 				code.incCount(count);
 				code.incSum(responseTime);
 
@@ -94,11 +104,11 @@ public class AppReportBuilder implements TaskBuilder {
 				}
 				if (cmd.getCount() > 0) {
 					cmd.setAvg(cmd.getSum() / cmd.getCount());
-					cmd.setErrorPercent(cmd.getErrors() * 1.0 / cmd.getCount());
+					cmd.setSuccessRatio(100.0 - cmd.getErrors() * 100.0 / cmd.getCount());
 				}
 				if (code.getCount() > 0) {
 					code.setAvg(code.getSum() / code.getCount());
-					code.setErrorPercent(code.getErrors() * 1.0 / code.getCount());
+					code.setSuccessRatio(100.0 - code.getErrors() * 100.0 / code.getCount());
 				}
 			}
 		} catch (DalException e) {
