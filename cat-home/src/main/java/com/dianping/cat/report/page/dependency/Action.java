@@ -7,7 +7,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	DEPENDENCY_DASHBOARD("dashboard"),
 
-	EXCEPTION_DASHBOARD("metricDashboard");
+	ERROR_DASHBOARD("errorDashboard");
 
 	private String m_name;
 
