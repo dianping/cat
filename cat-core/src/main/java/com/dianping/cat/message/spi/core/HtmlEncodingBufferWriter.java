@@ -15,8 +15,10 @@ public class HtmlEncodingBufferWriter implements BufferWriter {
 
 	private static byte[] BR = "<br>".getBytes();
 
+	private static byte[] INDENT = "&nbsp;&nbsp;&nbsp;&nbsp;".getBytes();
+
 	@Override
-	public int writeTo(ByteBuf buffer, byte[] data) {
+	public int writeTo(ByteBuf buffer, byte[] data, boolean pretty) {
 		int len = data.length;
 		int count = len;
 		int offset = 0;
@@ -45,6 +47,14 @@ public class HtmlEncodingBufferWriter implements BufferWriter {
 				buffer.writeBytes(BR);
 				count += BR.length;
 				offset = i + 1;
+			} else if (pretty) {
+				if (b == '\t') {
+					// we want '\n' be output again for better format
+					buffer.writeBytes(data, offset, i - offset);
+					buffer.writeBytes(INDENT);
+					count += INDENT.length;
+					offset = i + 1;
+				}
 			}
 		}
 

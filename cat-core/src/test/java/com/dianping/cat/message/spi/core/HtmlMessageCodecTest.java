@@ -191,8 +191,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		check(tree,
 		      event,
 		      "<tr><td>E15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td class=\"error\">ERROR</td><td>java.lang.Exception\n<br>"
-		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n<br>"
-		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n<br>"
+		            + "&nbsp;&nbsp;&nbsp;&nbsp;at com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n<br>"
+		            + "&nbsp;&nbsp;&nbsp;&nbsp;at com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n<br>"
 		            + "</td></tr>\r\n");
 	}
 
@@ -249,8 +249,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		check(tree,
 		      trace,
 		      "<tr><td>L15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td class=\"error\">ERROR</td><td>java.lang.Exception\n<br>"
-		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\n<br>"
-		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:108)\n<br>"
+		            + "&nbsp;&nbsp;&nbsp;&nbsp;at com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:112)\n<br>"
+		            + "&nbsp;&nbsp;&nbsp;&nbsp;at com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testTraceForException(PlainTextMessageCodecTest.java:108)\n<br>"
 		            + "</td></tr>\r\n");
 	}
 

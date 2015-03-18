@@ -505,7 +505,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 				data = str.getBytes();
 			}
 
-			return m_writer.writeTo(buf, data);
+			return m_writer.writeTo(buf, data, false);
 		}
 	}
 
