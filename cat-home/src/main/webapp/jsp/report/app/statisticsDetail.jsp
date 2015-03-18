@@ -30,7 +30,7 @@
 			<td>${entry.value.title }</td>
 			<td>${w:format(entry.value.count,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.avg,'###,##0.000')}</td>
-			<td>${w:format(entry.value.errorPercent,'#0.000')}%</td>
+			<td>${w:format(entry.value.successRatio,'#0.000')}%</td>
 			</tr>
 		</c:forEach>
 		</tbody>

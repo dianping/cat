@@ -97,11 +97,11 @@ public class AppReportBuilder implements TaskBuilder {
 				}
 				if (cmd.getCount() > 0) {
 					cmd.setAvg(cmd.getSum() / cmd.getCount());
-					cmd.setErrorPercent(cmd.getErrors() * 1.0 / cmd.getCount());
+					cmd.setSuccessRatio(100.0 - cmd.getErrors() * 100.0 / cmd.getCount());
 				}
 				if (code.getCount() > 0) {
 					code.setAvg(code.getSum() / code.getCount());
-					code.setErrorPercent(code.getErrors() * 1.0 / code.getCount());
+					code.setSuccessRatio(100.0 - code.getErrors() * 100.0 / code.getCount());
 				}
 			}
 		} catch (DalException e) {

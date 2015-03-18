@@ -339,7 +339,7 @@ public class Handler implements PageHandler<Context> {
 			Date endDate = TimeHelper.addDays(startDate, 1);
 			AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 			AppReportMerger visitor = new AppReportMerger();
-			
+
 			visitor.visitAppReport(report);
 			report = visitor.getReport();
 			model.setAppReport(report);

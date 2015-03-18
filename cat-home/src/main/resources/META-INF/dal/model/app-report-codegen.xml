@@ -14,6 +14,7 @@
     <attribute name="sum" value-type="int" />
     <attribute name="avg" value-type="int" />
     <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
     <entity-ref name="code" type="list" names="codes" />
   </entity>
   <entity name="code">
@@ -23,6 +24,7 @@
     <attribute name="sum" value-type="int" />
     <attribute name="avg" value-type="int" />
     <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
   </entity>
 </model>
 
