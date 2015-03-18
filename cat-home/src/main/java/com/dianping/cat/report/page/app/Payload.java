@@ -71,7 +71,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.APP);
 	}
 
-	public Date getDay() {
+	public String getDay() {
+		return m_day;
+	}
+
+	public Date getDayDate() {
 		try {
 			if (m_day.length() == 10) {
 				return m_sdf.parse(m_day);
