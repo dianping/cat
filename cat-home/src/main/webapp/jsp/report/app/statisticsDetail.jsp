@@ -6,8 +6,8 @@
 </style>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;">
-	    <li class="text-right active"><a href="#tabContent-all" data-toggle="tab"><strong>综合</strong></a></li>
-   	    <li class="text-right"><a href="#tabContent-code" data-toggle="tab"><strong>返回码</strong></a></li>
+	    <li class="text-right active"><a href="#tabContent-all" data-toggle="tab"><strong>访问情况</strong></a></li>
+   	    <li class="text-right"><a href="#tabContent-code" data-toggle="tab"><strong>返回码统计</strong></a></li>
   </ul>
   <div class="tab-content">
   <div class="tab-pane active" id="tabContent-all">
