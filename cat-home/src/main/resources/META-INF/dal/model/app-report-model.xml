@@ -15,7 +15,7 @@
     <attribute name="sum" value-type="double" primitive="true" format="0.00"  method-inc="true" />
     <attribute name="avg" value-type="double" primitive="true" format="0.00" />
     <attribute name="errors" value-type="long" primitive="true"  method-inc="true" />
-    <attribute name="errorPercent" value-type="double" primitive="true" format="0.00000" />
+    <attribute name="successRatio" value-type="double" primitive="true" format="0.000" />
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true" />
   </entity>
   <entity name="code">
@@ -25,7 +25,7 @@
     <attribute name="sum" value-type="double" primitive="true" format="0.00" method-inc="true" />
     <attribute name="avg" value-type="double" primitive="true" format="0.00" />
     <attribute name="errors" value-type="long" primitive="true" method-inc="true" />
-    <attribute name="errorPercent" value-type="double" primitive="true" format="0.00000" />
+    <attribute name="successRatio" value-type="double" primitive="true" format="0.000" />
   </entity>
 </model>
 
