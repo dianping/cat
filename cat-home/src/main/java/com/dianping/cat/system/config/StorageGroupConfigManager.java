@@ -18,6 +18,7 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.storage.entity.Link;
+import com.dianping.cat.home.storage.entity.Machine;
 import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
@@ -79,6 +80,24 @@ public class StorageGroupConfigManager implements Initializable {
 			m_config = new StorageGroupConfig();
 		}
 		refreshData();
+	}
+
+	public boolean isSQLAlertMachine(String id, String ip) {
+		boolean result = true;
+		StorageGroup group = m_config.getStorageGroups().get(StorageConstants.SQL_TYPE);
+
+		if (group != null) {
+			Storage storage = group.getStorages().get(id);
+
+			if (storage != null) {
+				Machine machine = storage.getMachines().get(ip);
+
+				if (machine != null) {
+					return machine.getAlert();
+				}
+			}
+		}
+		return result;
 	}
 
 	public boolean insert(String xml) {

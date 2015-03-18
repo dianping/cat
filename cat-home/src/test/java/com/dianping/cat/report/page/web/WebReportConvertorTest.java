@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.eunit.helper.Files;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;

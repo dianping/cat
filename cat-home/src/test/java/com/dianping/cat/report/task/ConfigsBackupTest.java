@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.eunit.helper.Files;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.core.config.Config;

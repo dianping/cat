@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task.database;
+package com.dianping.cat.report.task.app;
 
 import java.util.Date;
 
@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.report.task.database.AppDatabasePruner;
 
 public class AppDatabasePrunerTest extends ComponentTestCase {
 

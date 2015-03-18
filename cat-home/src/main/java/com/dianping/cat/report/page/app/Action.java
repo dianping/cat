@@ -19,7 +19,13 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	HISTORY_CRASH_LOG("historyCrashLog"),
 
-	SPEED("speed");
+	SPEED("speed"),
+
+	CONN_LINECHART("connLinechart"),
+
+	CONN_PIECHART("connPiechart"),
+
+	STATISTICS("statistics");
 
 	private String m_name;
 

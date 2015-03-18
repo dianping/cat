@@ -13,9 +13,11 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
+import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.config.app.AppCommandDataTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -51,6 +53,7 @@ import com.dianping.cat.report.page.state.StateGraphBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
+import com.dianping.cat.report.service.app.AppConnectionService;
 import com.dianping.cat.report.service.app.AppDataService;
 import com.dianping.cat.report.service.app.AppSpeedService;
 import com.dianping.cat.report.service.impl.MetricReportService;
@@ -149,6 +152,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(TableProvider.class, "app-command-data", AppCommandDataTableProvider.class));
+		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
 
 		// database
@@ -214,6 +218,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
 		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
+		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
 
 		return all;
 	}

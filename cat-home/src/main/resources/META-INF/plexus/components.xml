@@ -495,6 +495,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+			<implementation>com.dianping.cat.report.service.app.AppConnectionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppConnectionDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
@@ -1007,6 +1019,36 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.AppReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.AppReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1629,6 +1671,22 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role-hint>app</role-hint>
+			<implementation>com.dianping.cat.report.task.app.AppReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppCommandDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.AppReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2288,6 +2346,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
 		</component>
@@ -2519,6 +2582,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-connection-data</logical-table-name>
+				<physical-table-name>app_connection_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -2530,6 +2603,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppConnectionDataDao</role>
+			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -3329,14 +3411,12 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<modules>
-					<module default="true">com.dianping.cat.report.ReportModule</module>
-					<module>com.dianping.cat.system.SystemModule</module>
-				</modules>
+				<defaultModule>com.dianping.cat.report.ReportModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ReportModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.report.ReportModule</role-hint>
 			<implementation>com.dianping.cat.report.ReportModule</implementation>
 		</component>
 		<component>
@@ -5490,6 +5570,12 @@
 					<role>com.dianping.cat.report.service.app.AppSpeedService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -5497,6 +5583,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.impl.AppReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5585,6 +5674,39 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
+			<implementation>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.app.AppConnectionService</role>
+			<implementation>com.dianping.cat.report.service.app.AppConnectionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppConnectionDataDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppConnectionDataDao</role>
+			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.config.AppRuleConfigManager</role>
 			<implementation>com.dianping.cat.system.config.AppRuleConfigManager</implementation>
 			<requirements>
@@ -5631,6 +5753,36 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.service.impl.AppReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.AppReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5932,7 +6084,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.SystemModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.system.SystemModule</role-hint>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>
 		<component>

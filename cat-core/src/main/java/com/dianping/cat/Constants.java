@@ -71,4 +71,6 @@ public class Constants {
 
 	public static final String CMDB = "cmdb";
 
+	public static final String APP = "app";
+
 }

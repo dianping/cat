@@ -80,7 +80,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {

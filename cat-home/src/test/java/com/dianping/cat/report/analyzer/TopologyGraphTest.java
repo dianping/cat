@@ -4,7 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 
 import org.junit.Test;
-import org.unidal.eunit.helper.Files;
+import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;

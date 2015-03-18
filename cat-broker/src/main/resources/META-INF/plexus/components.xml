@@ -28,6 +28,16 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.broker.api.app.service.AppService</role>
+			<role-hint>com.dianping.cat.app.AppConnectionData</role-hint>
+			<implementation>com.dianping.cat.broker.api.app.service.impl.AppConnectionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.app.AppConnectionDataDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.app.service.AppService</role>
 			<role-hint>com.dianping.cat.app.AppSpeedData</role-hint>
 			<implementation>com.dianping.cat.broker.api.app.service.impl.AppSpeedService</implementation>
 			<requirements>
@@ -40,6 +50,11 @@
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-command-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppCommandDataTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
@@ -65,6 +80,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>app-connection-data</logical-table-name>
+				<physical-table-name>app_connection_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -76,6 +101,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.AppConnectionDataDao</role>
+			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -95,13 +129,12 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<modules>
-					<module default="true">com.dianping.cat.broker.api.ApiModule</module>
-				</modules>
+				<defaultModule>com.dianping.cat.broker.api.ApiModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.ApiModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.broker.api.ApiModule</role-hint>
 			<implementation>com.dianping.cat.broker.api.ApiModule</implementation>
 		</component>
 		<component>
@@ -202,39 +235,6 @@
 			<implementation>com.dianping.cat.broker.api.page.batch.UrlParser</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.broker.api.page.speed.Handler</role>
-			<implementation>com.dianping.cat.broker.api.page.speed.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.broker.api.app.AppConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
-			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.broker.api.page.js.Handler</role>
 			<implementation>com.dianping.cat.broker.api.page.js.Handler</implementation>
 			<requirements>
@@ -288,6 +288,27 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.connection.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.connection.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.app.AppConsumer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.RequestUtils</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.batch.UrlParser</role>
 				</requirement>
 			</requirements>
 		</component>
