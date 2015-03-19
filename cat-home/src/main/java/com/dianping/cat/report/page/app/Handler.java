@@ -100,8 +100,6 @@ public class Handler implements PageHandler<Context> {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
-			filterCommands(model, payload.isShowActivity());
-
 			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
@@ -427,6 +425,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
+		Action action = payload.getAction();
+
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -435,7 +435,15 @@ public class Handler implements PageHandler<Context> {
 		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
 		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_manager.queryCommands());
+		model.setCommands(m_manager.queryCommands(payload.isShowActivity()));
+
+		if (Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
+		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action)) {
+			boolean activity = payload.isShowActivity();
+
+			model.setDomain2Commands(m_manager.queryDomain2Commands(activity));
+			model.setCommand2Codes(m_manager.queryCommand2Codes());
+		}
 
 		m_normalizePayload.normalize(model, payload);
 	}

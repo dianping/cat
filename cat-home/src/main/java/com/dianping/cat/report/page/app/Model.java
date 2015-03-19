@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
@@ -76,6 +75,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private List<String> m_codeDistributions;
 
+	private Map<String, List<Command>> m_domain2Commands;
+
+	private Map<Integer, List<Code>> m_command2Codes;
+
 	@EntityMeta
 	private AppReport m_appReport;
 
@@ -140,19 +143,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_codes;
 	}
 
-	public String getCommand() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
+	public Map<Integer, List<Code>> getCommand2Codes() {
+		return m_command2Codes;
+	}
 
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
-
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return new JsonBuilder().toJson(maps);
+	public String getCommand2CodesJson() {
+		return new JsonBuilder().toJson(m_command2Codes);
 	}
 
 	public int getCommandId() {
@@ -181,30 +177,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return getDisplayDomain();
 	}
 
+	public Map<String, List<Command>> getDomain2Commands() {
+		return m_domain2Commands;
+	}
+
+	public String getDomain2CommandsJson() {
+		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
+
+		results.put(Constants.ALL, m_commands);
+		results.putAll(m_domain2Commands);
+		return new JsonBuilder().toJson(results);
+	}
+
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
-	}
-
-	public String getDomainToCommandsJson() {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
-
-		map.put(Constants.ALL, m_commands);
-		for (Command command : m_commands) {
-			String domain = command.getDomain();
-			if (StringUtils.isEmpty(domain)) {
-				domain = "default";
-			}
-			List<Command> commands = map.get(domain);
-
-			if (commands == null) {
-				commands = new ArrayList<Command>();
-				map.put(domain, commands);
-			}
-			commands.add(command);
-		}
-
-		return new JsonBuilder().toJson(map);
 	}
 
 	public String getFetchData() {
@@ -287,6 +274,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_codes = codes;
 	}
 
+	public void setCommand2Codes(Map<Integer, List<Code>> command2Codes) {
+		m_command2Codes = command2Codes;
+	}
+
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
@@ -301,6 +292,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
+		m_domain2Commands = domain2Commands;
 	}
 
 	public void setFetchData(String fetchData) {

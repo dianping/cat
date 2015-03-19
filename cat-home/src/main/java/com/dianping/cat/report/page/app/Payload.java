@@ -36,7 +36,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_sort = AppDataService.SUCCESS;
 
 	@FieldMeta("showActivity")
-	private boolean m_showActivity;
+	private boolean m_showActivity = false;
 
 	@FieldMeta("codeId")
 	private int m_codeId;

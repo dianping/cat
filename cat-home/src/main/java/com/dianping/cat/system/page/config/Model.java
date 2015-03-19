@@ -215,7 +215,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getCommandJson() {
-		return new JsonBuilder().toJson(m_appConfigManager.quertCommand2Codes());
+		return new JsonBuilder().toJson(m_appConfigManager.queryCommand2Codes());
 	}
 
 	public List<Command> getCommands() {
@@ -249,6 +249,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getDomain() {
 		return m_domain;
+	}
+
+	public Map<String, List<Command>> getApiCommands() {
+		return m_appConfigManager.queryDomain2Commands(false);
+	}
+
+	public Map<String, List<Command>> getActivityCommands() {
+		return m_appConfigManager.queryDomain2Commands(true);
 	}
 
 	public String getDomain2CommandsJson() {

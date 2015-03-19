@@ -35,6 +35,11 @@
 				$('#tabContent-api').addClass('active');
 			}
 			
+			$("#tab-api-default").addClass('active');
+			$("#tabContent-api-default").addClass('active');
+			$("#tab-activity-default").addClass('active');
+			$("#tabContent-activity-default").addClass('active');
+			
 			$('#batchInsert').bind("click",function(e){
 				if (confirm("确认要进行批量删除吗？") == true){
 					var items = document.getElementsByClassName('deleteItem');
@@ -87,62 +92,74 @@
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
-						<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
-							<thead>
-							<tr >
-								<th width="30%">名称</th>
-								<th width="30%">项目</th>
-								<th width="32%">标题</th>
-								<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
-						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-							</tr>
-							</thead>
-							<tbody>
-							<c:forEach var="item" items="${model.domain2Commands}">
-								<c:forEach var="command" items="${item.value}">
-									<c:if test="${command.id lt 1000}">
-									<tr>
-										<td>${item.name }</td>
-										<td>${item.domain }</td>
-										<td>${item.title }</td>
-										<td><a href="?op=appUpdate&id=${item.id}&type=api" class="btn btn-primary btn-xs">
-											<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-											<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
-											<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
-									</tr>
-								</c:if>
-								</c:forEach>
+						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
+						
+						  <ul class="nav nav-tabs padding-12 ">
+						  	<c:forEach var="entry" items="${model.apiCommands}" varStatus="status">
+							    <li id="tab-api-${entry.key}" class="text-right"><a href="#tabContent-api-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
 							</c:forEach>
-							</tbody>
-						</table>
+						  </ul>
+						  <div class="tab-content">
+						  	<c:forEach var="entry" items="${model.apiCommands}" varStatus="status">
+							  	<div class="tab-pane" id="tabContent-api-${entry.key}">
+								    <table class="table table-striped table-condensed table-bordered table-hover">
+									    <thead><tr>
+												<th width="30%">名称</th>
+												<th width="32%">标题</th>
+												<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
+												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+											</tr>
+										</thead>
+										
+								    	<c:forEach var="command" items="${entry.value}">
+									    	<tr><td>${command.name}</td>
+											<td>${command.title}</td>
+											<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">
+												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+												<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >
+												<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td></tr>
+								    	</c:forEach>
+								    </table>
+							    </div>
+							</c:forEach>
+						  </div>
+						  
+						</div>
 					</div>
 					<div class="tab-pane" id="tabContent-activity">
-						<table class="table table-striped table-condensed  table-bordered table-hover" id="contents" width="100%">
-							<thead>
-							<tr >
-								<th width="40%">名称</th>
-								<th width="15%">项目</th>
-								<th width="27%">标题</th>
-								<th width="8%">操作 <a href="?op=appUpdate&type=activity" class="btn btn-primary btn-xs" >
-						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-							</tr></thead>
-							
-							<tbody>
-							<c:forEach var="item" items="${model.commands}">
-								<c:if test="${item.id ge 1000}">
-									<tr>
-										<td>${item.name }</td>
-										<td>${item.domain }</td>
-										<td>${item.title }</td>
-										<td><a href="?op=appUpdate&id=${item.id}&type=activity" class="btn btn-primary btn-xs">
-						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=appPageDelete&id=${item.id}&type=activity" class="btn btn-danger btn-xs delete" >
-						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
-									</tr>
-								</c:if>
+					
+						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
+						  <ul class="nav nav-tabs padding-12 ">
+						  	<c:forEach var="entry" items="${model.activityCommands}" varStatus="status">
+							    <li id="tab-activity-${entry.key}" class="text-right"><a href="#tabContent-activity-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
 							</c:forEach>
-							</tbody>
-						</table>
+						  </ul>
+						  <div class="tab-content">
+						  	<c:forEach var="entry" items="${model.activityCommands}" varStatus="status">
+							  	<div class="tab-pane" id="tabContent-activity-${entry.key}">
+								    <table class="table table-striped table-condensed table-bordered table-hover">
+									    <thead><tr>
+												<th width="30%">名称</th>
+												<th width="32%">标题</th>
+												<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
+												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+											</tr>
+										</thead>
+										
+								    	<c:forEach var="command" items="${entry.value}">
+									    	<tr><td>${command.name}</td>
+											<td>${command.title}</td>
+											<td><a href="?op=appUpdate&id=${item.id}&type=api" class="btn btn-primary btn-xs">
+												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+												<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
+												<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td></tr>
+								    	</c:forEach>
+								    </table>
+							    </div>
+							</c:forEach>
+						  </div>
+					  </div>
+						  
 					</div>
 					<div class="tab-pane"  id="tabContent-batch">
 						<h4 class="text-center text-danger">合法的命令字&nbsp;&nbsp;${w:size(model.validatePaths)}</h4>
