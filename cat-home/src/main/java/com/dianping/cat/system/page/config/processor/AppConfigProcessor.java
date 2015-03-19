@@ -30,7 +30,6 @@ import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import com.sun.jarsigner.ContentSigner;
 
 public class AppConfigProcessor extends BaseProcesser {
 
