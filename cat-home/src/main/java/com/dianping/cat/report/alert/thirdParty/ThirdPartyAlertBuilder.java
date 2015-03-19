@@ -14,7 +14,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.system.config.ThirdPartyConfigManager;
 
 public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 

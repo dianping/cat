@@ -56,6 +56,7 @@ import com.dianping.cat.report.page.metric.task.BaselineCreator;
 import com.dianping.cat.report.page.metric.task.DefaultBaselineCreator;
 import com.dianping.cat.report.page.metric.task.MetricBaselineReportBuilder;
 import com.dianping.cat.report.page.metric.task.MetricPointParser;
+import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.page.network.task.NetTopologyReportBuilder;
@@ -107,8 +108,7 @@ import com.dianping.cat.report.task.notify.ReportRenderImpl;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.NetGraphConfigManager;
-import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 

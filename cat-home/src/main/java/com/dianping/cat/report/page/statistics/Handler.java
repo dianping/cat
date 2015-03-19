@@ -44,6 +44,7 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
@@ -55,7 +56,6 @@ import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.UrlC
 import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
 import com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.BugConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

@@ -3,8 +3,6 @@ package com.dianping.cat.report.alert.storage;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.system.config.StorageSQLRuleConfigManager;
-import com.dianping.cat.system.config.StorageRuleConfigManager;
 
 public class StorageSQLAlert extends AbstractStorageAlert {
 

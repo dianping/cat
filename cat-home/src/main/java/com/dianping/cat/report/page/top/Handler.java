@@ -21,6 +21,7 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.ExternalInfoBuilder;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
@@ -30,7 +31,6 @@ import com.dianping.cat.report.page.top.service.TopReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

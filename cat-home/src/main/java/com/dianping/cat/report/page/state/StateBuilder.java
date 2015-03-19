@@ -15,7 +15,7 @@ import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class StateBuilder {
 

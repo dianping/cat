@@ -9,7 +9,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.system.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 
 public class MetricIdAndRuleMappingTest {
 

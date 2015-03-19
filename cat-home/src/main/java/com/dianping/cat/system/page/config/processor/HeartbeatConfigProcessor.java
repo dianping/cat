@@ -2,8 +2,8 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
-import com.dianping.cat.system.config.HeartbeatRuleConfigManager;
+import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
+import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;

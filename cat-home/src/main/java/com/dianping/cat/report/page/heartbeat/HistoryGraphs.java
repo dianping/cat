@@ -18,8 +18,8 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.BaseHistoryGraphs;
+import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
-import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 
 public class HistoryGraphs extends BaseHistoryGraphs {
 

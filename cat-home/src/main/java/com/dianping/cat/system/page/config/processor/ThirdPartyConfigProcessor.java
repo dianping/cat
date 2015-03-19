@@ -10,7 +10,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.home.alert.thirdparty.entity.Socket;
-import com.dianping.cat.system.config.ThirdPartyConfigManager;
+import com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
