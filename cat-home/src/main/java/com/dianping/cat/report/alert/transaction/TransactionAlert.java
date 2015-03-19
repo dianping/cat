@@ -36,7 +36,6 @@ import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.TransactionRuleConfigManager;
 
 public class TransactionAlert implements Task, LogEnabled {
 

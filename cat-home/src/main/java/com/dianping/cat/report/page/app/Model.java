@@ -23,9 +23,10 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
@@ -33,7 +34,7 @@ import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
 @ModelMeta(Constants.APP)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private LineChart m_lineChart;
@@ -109,22 +110,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return map;
 	}
 
-	public List<String> getCodeDistributions() {
-		List<String> ids = new LinkedList<String>();
-
-		if (m_appReport != null) {
-			Set<String> orgIds = m_appReport.findOrCreateCommand(Constants.ALL).getCodes().keySet();
-
-			for (String id : orgIds) {
-				if (id.contains("XX")) {
-					ids.add(id);
-				}
-			}
-			Collections.sort(ids, new CodeDistributionComparator());
-		}
-		return ids;
-	}
-
 	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
 		return m_appSpeedDisplayInfo;
 	}
@@ -147,6 +132,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
+	}
+
+	public List<String> getCodeDistributions() {
+		List<String> ids = new LinkedList<String>();
+
+		if (m_appReport != null) {
+			Set<String> orgIds = m_appReport.findOrCreateCommand(Constants.ALL).getCodes().keySet();
+
+			for (String id : orgIds) {
+				if (id.contains("XX")) {
+					ids.add(id);
+				}
+			}
+			Collections.sort(ids, new CodeDistributionComparator());
+		}
+		return ids;
 	}
 
 	public Map<Integer, Code> getCodes() {

@@ -34,6 +34,10 @@ public class StateDisplay extends BaseVisitor {
 		m_fakeDomains = fakeDomains;
 	}
 
+	public Machine getMachine() {
+		return m_stateReport.findOrCreateMachine(m_ip);
+	}
+
 	public Map<Long, Message> getMessages() {
 		return getMachine().getMessages();
 	}
@@ -68,10 +72,6 @@ public class StateDisplay extends BaseVisitor {
 		return m_stateReport;
 	}
 
-	public Machine getMachine() {
-		return m_stateReport.findOrCreateMachine(m_ip);
-	}
-
 	public int getTotalSize() {
 		Set<String> ips = new HashSet<String>();
 
@@ -87,6 +87,15 @@ public class StateDisplay extends BaseVisitor {
 		return ips.size();
 	}
 
+	protected Detail mergeDetail(ProcessDomain processDomain, Detail other) {
+		Detail old = processDomain.findOrCreateDetail(other.getId());
+
+		old.setSize(old.getSize() + other.getSize());
+		old.setTotal(old.getTotal() + other.getTotal());
+		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
+		return old;
+	}
+
 	protected ProcessDomain mergeProcessDomain(ProcessDomain other, String name) {
 		ProcessDomain old = getMachine().findOrCreateProcessDomain(name);
 
@@ -94,15 +103,6 @@ public class StateDisplay extends BaseVisitor {
 		old.setTotal(old.getTotal() + other.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
 		old.setAvg(old.getTotal() > 0 ? old.getSize() / old.getTotal() : 0);
-		return old;
-	}
-
-	protected Detail mergeDetail(ProcessDomain processDomain, Detail other) {
-		Detail old = processDomain.findOrCreateDetail(other.getId());
-
-		old.setSize(old.getSize() + other.getSize());
-		old.setTotal(old.getTotal() + other.getTotal());
-		old.setTotalLoss(old.getTotalLoss() + other.getTotalLoss());
 		return old;
 	}
 
@@ -291,5 +291,5 @@ public class StateDisplay extends BaseVisitor {
 			}
 		}
 	}
-	
+
 }

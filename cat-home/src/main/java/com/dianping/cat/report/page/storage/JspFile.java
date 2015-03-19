@@ -6,7 +6,7 @@ public enum JspFile {
 	HOURL_GRAPH("/jsp/report/storage/hourlyGraphs.jsp"),
 
 	HISTORY_REPORT("/jsp/report/storage/historyStorage.jsp"),
-	
+
 	DASHBOARD("/jsp/report/storage/dashboard.jsp");
 
 	private String m_path;

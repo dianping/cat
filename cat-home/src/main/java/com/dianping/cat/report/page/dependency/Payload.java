@@ -4,10 +4,10 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("minute")
 	private String m_minute;
 
@@ -25,26 +25,20 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("productLine")
 	private String productLine;
 
-	@FieldMeta("count")
-	private int m_minuteCounts = 8;
-
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
 
-	@FieldMeta("tops")
-	private int m_topCounts = 11;
-
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
-
-	@FieldMeta("tab")
-	private String m_tab = "tab1";
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
 
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
+
+	@FieldMeta("tab")
+	private String m_tab = "tab1";
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -55,16 +49,38 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public long getCurrentDate() {
+		long timestamp = getCurrentTimeMillis();
+
+		return timestamp - timestamp % TimeHelper.ONE_HOUR;
+	}
+
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
+	}
+
+	public long getDate() {
+		long current = getCurrentDate();
+		long extra = m_step * TimeHelper.ONE_HOUR;
+
+		if (m_date <= 0) {
+			return current + extra;
+		} else {
+			long result = m_date + extra;
+
+			if (result > current) {
+				return current;
+			}
+			return result;
+		}
+	}
+
 	public int getFrequency() {
 		return m_frequency;
 	}
 
 	public String getMinute() {
 		return m_minute;
-	}
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
 	}
 
 	@Override
@@ -82,10 +98,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getTab() {
 		return m_tab;
-	}
-
-	public int getTopCounts() {
-		return m_topCounts;
 	}
 
 	public boolean isAll() {
@@ -128,10 +140,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		this.m_minute = minute;
 	}
 
-	public void setMinuteCounts(int minuteCounts) {
-		m_minuteCounts = minuteCounts;
-	}
-
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.DEPENDENCY);
@@ -153,40 +161,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_tab = tab;
 	}
 
-	public void setTopCounts(int topCounts) {
-		m_topCounts = topCounts;
-	}
-
-	public long getCurrentTimeMillis() {
-		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
-	}
-
-	public long getCurrentDate() {
-		long timestamp = getCurrentTimeMillis();
-
-		return timestamp - timestamp % TimeHelper.ONE_HOUR;
-	}
-
-	public long getDate() {
-		long current = getCurrentDate();
-		long extra = m_step * TimeHelper.ONE_HOUR;
-
-		if (m_date <= 0) {
-			return current + extra;
-		} else {
-			long result = m_date + extra;
-
-			if (result > current) {
-				return current;
-			}
-			return result;
-		}
-	}
-
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.ERROR_DASHBOARD;
+			m_action = Action.LINE_CHART;
 		}
 	}
 

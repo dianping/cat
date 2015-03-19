@@ -6,10 +6,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.AbstractReportModel;
 
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private List<String> m_cities;
 
 	private Map<String, LineChart> m_lineCharts;
@@ -82,5 +83,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setStart(Date start) {
 		m_start = start;
 	}
-	
+
 }

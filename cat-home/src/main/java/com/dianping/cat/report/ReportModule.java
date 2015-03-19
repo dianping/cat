@@ -4,7 +4,7 @@ import org.unidal.web.mvc.AbstractModule;
 import org.unidal.web.mvc.annotation.ModuleMeta;
 import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
-@ModuleMeta(name = "r", defaultInboundAction = "dependency", defaultTransition = "default", defaultErrorAction = "default")
+@ModuleMeta(name = "r", defaultInboundAction = "top", defaultTransition = "default", defaultErrorAction = "default")
 @ModulePagesMeta({
 
 com.dianping.cat.report.page.home.Handler.class,
@@ -59,8 +59,9 @@ com.dianping.cat.report.page.database.Handler.class,
 
 com.dianping.cat.report.page.storage.Handler.class,
 
-com.dianping.cat.report.page.activity.Handler.class
+com.dianping.cat.report.page.activity.Handler.class,
 
+com.dianping.cat.report.page.top.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

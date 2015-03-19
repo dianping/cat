@@ -19,7 +19,7 @@ public class Payload extends BasePayload implements ActionPayload<ReportPage, Ac
 
 	@PathMeta("path")
 	private String[] m_path;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -62,7 +62,7 @@ public class Payload extends BasePayload implements ActionPayload<ReportPage, Ac
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.MODEL);
 	}
-	
+
 	public void setPath(String[] path) {
 		if (path == null) {
 			m_path = new String[0];
@@ -70,7 +70,7 @@ public class Payload extends BasePayload implements ActionPayload<ReportPage, Ac
 			m_path = Arrays.copyOf(path, path.length);
 		}
 	}
-	
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {

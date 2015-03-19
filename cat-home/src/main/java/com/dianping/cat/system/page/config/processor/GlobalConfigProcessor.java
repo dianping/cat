@@ -13,15 +13,15 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.group.entity.Domain;
+import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
+import com.dianping.cat.report.page.DomainGroupConfigManager;
+import com.dianping.cat.report.page.statistics.config.BugConfigManager;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.RouterConfigManager;
-import com.dianping.cat.system.config.SenderConfigManager;
-import com.dianping.cat.system.config.StorageGroupConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class GlobalConfigProcessor {
 

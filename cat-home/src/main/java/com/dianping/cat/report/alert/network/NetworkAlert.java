@@ -7,8 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;
-import com.dianping.cat.system.config.BaseRuleConfigManager;
-import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 
 public class NetworkAlert extends BaseAlert {
 

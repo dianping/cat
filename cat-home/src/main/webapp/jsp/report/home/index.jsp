@@ -2,7 +2,7 @@
 </br>
 <h4 class="text-danger">CAT监控大盘</h4>
 <div>
-	<a id="navmetricDashboard" class="btn btn-sm btn-primary" href="/cat/r/dependency?op=errorDashboard&domain=${model.domain}">系统报错大盘</a>
+	<a id="navmetricDashboard" class="btn btn-sm btn-primary" href="/cat/r/top?op=view&domain=${model.domain}">系统报错大盘</a>
 	<a id="navdashboard" class="btn btn-sm btn-primary" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控大盘</a>
 	<a id="navbussiness" class="btn btn-sm btn-primary" href="/cat/r/metric?op=dashboard&domain=${model.domain}">业务监控大盘</a>
 	<a id="navbussiness" class="btn btn-sm btn-primary" href="/cat/r/network?op=dashboard&domain=${model.domain}">网络监控大盘</a>

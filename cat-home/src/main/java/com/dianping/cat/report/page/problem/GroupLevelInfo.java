@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
-import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.helper.SortHelper;
@@ -49,7 +49,7 @@ public class GroupLevelInfo {
 		}
 		long currentTimeMillis = System.currentTimeMillis();
 		long currentHours = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
-		
+
 		if (currentHours == m_model.getLongDate()) {
 			for (int i = m_minutes; i >= 0; i--) {
 				m_datas.add(getShowDetailByMinte(i));

@@ -10,11 +10,12 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.transaction.transform.DistributionDetailVisitor.DistributionDetail;
 
 @ModelMeta(TransactionAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private DisplayNames m_displayNameReport;
 

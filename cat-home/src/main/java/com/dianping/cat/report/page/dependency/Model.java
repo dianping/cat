@@ -14,26 +14,20 @@ import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 
 @ModelMeta(DependencyAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private DependencyReport m_report;
 
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
-	
-	@EntityMeta
-	private TopReport m_topReport;
-
-	@EntityMeta
-	private TopReport m_lastTopReport;
 
 	public String m_message;
 
@@ -62,8 +56,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private Date m_reportStart;
 
 	private Date m_reportEnd;
-
-	private TopMetric m_topMetric;
 
 	private String m_format;
 
@@ -159,16 +151,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_segment;
 	}
 
-	public TopMetric getTopMetric() {
-		return m_topMetric;
-	}
-
 	public String getTopologyGraph() {
 		return m_topologyGraph;
-	}
-
-	public TopReport getTopReport() {
-		return m_topReport;
 	}
 
 	public void setDashboardGraph(String dashboardGraph) {
@@ -235,24 +219,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_segment = segment;
 	}
 
-	public void setTopMetric(TopMetric topMetric) {
-		m_topMetric = topMetric;
-	}
-
 	public void setTopologyGraph(String topologyGraph) {
 		m_topologyGraph = topologyGraph;
 	}
-
-	public void setTopReport(TopReport topReport) {
-		m_topReport = topReport;
-	}
-
-	public TopReport getLastTopReport() {
-   	return m_lastTopReport;
-   }
-
-	public void setLastTopReport(TopReport lastTopReport) {
-   	m_lastTopReport = lastTopReport;
-   }
 
 }

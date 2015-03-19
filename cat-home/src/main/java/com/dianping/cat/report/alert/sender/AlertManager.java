@@ -24,12 +24,12 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.report.alert.sender.config.AlertPolicyManager;
 import com.dianping.cat.report.alert.sender.decorator.DecoratorManager;
 import com.dianping.cat.report.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.alert.sender.spliter.SpliterManager;
 import com.dianping.cat.report.alert.service.AlertEntityService;
-import com.dianping.cat.system.config.AlertPolicyManager;
 
 public class AlertManager implements Initializable {
 

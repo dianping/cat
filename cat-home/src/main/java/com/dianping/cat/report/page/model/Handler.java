@@ -27,7 +27,7 @@ import com.dianping.cat.service.ModelRequest;
 @SuppressWarnings("rawtypes")
 public class Handler extends ContainerHolder implements Initializable, PageHandler<Context> {
 
-   public Map<String, LocalModelService> m_localServices;
+	public Map<String, LocalModelService> m_localServices;
 
 	private byte[] compress(String str) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);

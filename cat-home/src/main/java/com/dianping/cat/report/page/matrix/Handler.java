@@ -13,8 +13,8 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.matrix.service.MatrixReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
@@ -63,6 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
+		model.setAction(payload.getAction());
 		normalize(model, payload);
 		switch (payload.getAction()) {
 		case HISTORY_REPORT:

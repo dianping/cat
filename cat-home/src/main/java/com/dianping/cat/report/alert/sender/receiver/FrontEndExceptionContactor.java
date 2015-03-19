@@ -9,7 +9,7 @@ import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.system.config.AlertConfigManager;
+import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
 
 public class FrontEndExceptionContactor extends DefaultContactor implements Contactor {
 

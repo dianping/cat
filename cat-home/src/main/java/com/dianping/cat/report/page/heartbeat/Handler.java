@@ -23,15 +23,15 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -150,6 +150,7 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		String ipAddress = payload.getIpAddress();
 
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
 		if (StringUtils.isEmpty(ipAddress) || ipAddress.equals(Constants.ALL)) {
 			model.setIpAddress(Constants.ALL);

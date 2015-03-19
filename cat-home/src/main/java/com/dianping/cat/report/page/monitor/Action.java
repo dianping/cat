@@ -1,12 +1,12 @@
 package com.dianping.cat.report.page.monitor;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	COUNT_API("count"),//default action
-	
+	COUNT_API("count"), // default action
+
 	AVG_API("avg"),
-	
+
 	SUM_API("sum"),
-	
+
 	BATCH_API("batch");
 
 	private String m_name;

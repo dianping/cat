@@ -17,8 +17,8 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
-import com.dianping.cat.report.page.statistics.service.RouterConfigService;
-import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class Handler implements PageHandler<Context> {
 

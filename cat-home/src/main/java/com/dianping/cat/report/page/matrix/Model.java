@@ -10,10 +10,11 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 
 @ModelMeta(MatrixAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private DisplayMatrix m_matrix;
 
