@@ -13,17 +13,17 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.dal.IpService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.metric.CachedMetricReportService;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.web.graph.WebReportConvertor;
-import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class CachedMetricReportServiceImpl implements CachedMetricReportService {
 

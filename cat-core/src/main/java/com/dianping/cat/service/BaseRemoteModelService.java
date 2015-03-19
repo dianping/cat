@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,9 +16,6 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 

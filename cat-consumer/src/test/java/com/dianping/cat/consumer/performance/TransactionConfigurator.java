@@ -12,8 +12,8 @@ import com.dianping.cat.consumer.MockReportManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.ReportManager;
 
 public class TransactionConfigurator extends AbstractResourceConfigurator {
 

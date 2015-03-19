@@ -106,10 +106,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return m_serverConfigManager.isLocalMode();
 	}
 
-	public boolean isRawAnalyzer() {
-		return true;
-	}
-
 	protected boolean isTimeout() {
 		long currentTime = System.currentTimeMillis();
 		long endTime = m_startTime + m_duration + m_extraTime;

@@ -4,7 +4,6 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.BasePayload;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -13,7 +12,8 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;

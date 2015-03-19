@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 
 public class RemoteDependencyService extends BaseRemoteModelService<DependencyReport> {
 	public RemoteDependencyService() {

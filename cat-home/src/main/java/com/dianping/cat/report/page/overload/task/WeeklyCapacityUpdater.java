@@ -12,9 +12,9 @@ import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
-import com.dianping.cat.home.dal.report.WeeklyReportContent;
-import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
-import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
+import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 
 public class WeeklyCapacityUpdater implements CapacityUpdater {
 

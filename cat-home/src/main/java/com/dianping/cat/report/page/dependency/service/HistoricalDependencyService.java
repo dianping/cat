@@ -8,7 +8,7 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.BaseHistoricalModelService;
+import com.dianping.cat.service.BaseHistoricalModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;

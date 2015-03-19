@@ -12,9 +12,6 @@
          <table name="topologyGraph"/>
          <table name="baseline"/>
          <table name="alteration"/>
-         <table name="daily_report_content"/>
-         <table name="monthly_report_content"/>
-         <table name="weekly_report_content"/>
          <table name="alert"/>
          <table name="alert_summary"/>
          <table name="overload"/>

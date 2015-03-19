@@ -20,7 +20,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 

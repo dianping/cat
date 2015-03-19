@@ -206,87 +206,16 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="daily-report-content" table="daily_report_content" alias="drc">
-    <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" key="true" />
-    <member name="content" field="content" value-type="byte[]" length="2147483647" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-report-id" value-type="int" key-member="report-id" />
-    <primary-key name="PRIMARY" members="report_id" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-report-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-report-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-report-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="monthly-report-content" table="monthly_report_content" alias="mrc">
-    <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" key="true" />
-    <member name="content" field="content" value-type="byte[]" length="2147483647" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-report-id" value-type="int" key-member="report-id" />
-    <primary-key name="PRIMARY" members="report_id" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-report-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-report-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-report-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="overload" table="overload" alias="ot">
+  <entity name="overload" table="overload" alias="o">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" />
     <member name="report-type" field="report_type" value-type="int" length="3" nullable="false" />
-    <member name="report-size" field="report_size" value-type="double" length="5" decimal="3" nullable="false" />
+    <member name="report-size" field="report_size" value-type="double" length="22" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="period" members="period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -390,42 +319,6 @@
         <param name="key-id" />
         <statement><![CDATA[DELETE FROM <TABLE/>
         WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="weekly-report-content" table="weekly_report_content" alias="wrc">
-    <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" key="true" />
-    <member name="content" field="content" value-type="byte[]" length="2147483647" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-report-id" value-type="int" key-member="report-id" />
-    <primary-key name="PRIMARY" members="report_id" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-report-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-report-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-report-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
       </query>
     </query-defs>
   </entity>

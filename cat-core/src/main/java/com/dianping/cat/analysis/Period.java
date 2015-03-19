@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer;
+package com.dianping.cat.analysis;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,11 +12,6 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.analysis.PeriodTask;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -63,14 +58,6 @@ public class Period {
 			analyzers.put(name, analyzer);
 			task.enableLogging(m_logger);
 			m_tasks.add(task);
-		}
-
-		// hack for dependency
-		MessageAnalyzer top = analyzers.get(TopAnalyzer.ID);
-		MessageAnalyzer problem = analyzers.get(ProblemAnalyzer.ID);
-
-		if (top != null) {
-			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
 		}
 	}
 
@@ -152,9 +139,7 @@ public class Period {
 		      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 		for (PeriodTask task : m_tasks) {
-			if (task.getAnalyzer().isRawAnalyzer()) {
-				Threads.forGroup("Cat-RealtimeConsumer").start(task);
-			}
+			Threads.forGroup("Cat-RealtimeConsumer").start(task);
 		}
 	}
 }

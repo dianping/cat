@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.PathMeta;
 
-import com.dianping.cat.BasePayload;
+import com.dianping.cat.mvc.BasePayload;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.service.ModelPeriod;
 

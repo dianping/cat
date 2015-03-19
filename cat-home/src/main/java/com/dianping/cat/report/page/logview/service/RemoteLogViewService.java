@@ -13,7 +13,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;

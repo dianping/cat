@@ -28,9 +28,9 @@ import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.state.StateBuilder;
 import com.dianping.cat.report.page.top.service.TopReportService;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

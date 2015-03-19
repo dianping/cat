@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.dal.IpService;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
@@ -71,9 +72,8 @@ import com.dianping.cat.report.page.transaction.service.CompositeTransactionServ
 import com.dianping.cat.report.page.transaction.service.HistoricalTransactionService;
 import com.dianping.cat.report.page.transaction.service.LocalTransactionService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.service.LocalModelService;
-import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.LocalModelService;
+import com.dianping.cat.service.ModelService;
 import com.dianping.cat.storage.message.MessageBucketManager;
 import com.dianping.cat.storage.report.ReportBucketManager;
 

@@ -1,7 +1,5 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public interface ModelService<M> {
 	public String getName();

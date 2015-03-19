@@ -15,9 +15,9 @@ import com.dianping.cat.report.page.problem.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics.TypeStatistics;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class FailureSummaryBuilder extends SummaryBuilder {
 

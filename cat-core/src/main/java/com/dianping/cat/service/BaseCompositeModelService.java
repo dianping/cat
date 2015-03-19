@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,8 +18,6 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

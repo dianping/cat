@@ -1,9 +1,9 @@
-package com.dianping.cat.service;
+package com.dianping.cat.report;
 
 import java.util.Map;
 import java.util.Set;
 
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public interface ReportManager<T> {
 	public void cleanup(long startTime);

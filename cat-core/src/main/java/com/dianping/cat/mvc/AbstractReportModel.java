@@ -16,11 +16,11 @@ import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.dal.HostinfoService;
+import com.dianping.cat.dal.ProjectService;
+import com.dianping.cat.dal.ProjectService.Department;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer.ReportModel;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.service.ProjectService.Department;
 
 public abstract class AbstractReportModel<A extends Action, P extends Page,M extends ActionContext<?>> extends
       ViewModel<P, A, M> implements ReportModel{

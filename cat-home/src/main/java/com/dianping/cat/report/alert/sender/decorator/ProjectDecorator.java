@@ -4,7 +4,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.dal.ProjectService;
+
 import org.unidal.lookup.util.StringUtils;
 
 public abstract class ProjectDecorator extends Decorator {
