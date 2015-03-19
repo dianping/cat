@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.metric.config;
+package com.dianping.cat.report.alert.business;
 
 import java.util.ArrayList;
 import java.util.List;

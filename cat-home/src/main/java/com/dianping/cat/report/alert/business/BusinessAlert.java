@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.alert.AlarmRule;
 import com.dianping.cat.report.alert.AlertResultEntity;
