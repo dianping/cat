@@ -31,11 +31,10 @@ import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.system.config.BaseRuleConfigManager;
-import com.dianping.cat.system.config.WebRuleConfigManager;
 
 public class WebAlert extends BaseAlert {
 

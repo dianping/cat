@@ -12,7 +12,7 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.system.config.SenderConfigManager;
+import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
 
 public abstract class AbstractSender implements Sender, LogEnabled {
 

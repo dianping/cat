@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionRuleConfigManager;
+import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 
 public class TopMetric extends BaseVisitor {
 

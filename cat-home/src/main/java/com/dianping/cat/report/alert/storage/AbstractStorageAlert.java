@@ -30,14 +30,13 @@ import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.storage.StorageConstants;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.StorageGroupConfigManager;
-import com.dianping.cat.system.config.StorageRuleConfigManager;
 
 public abstract class AbstractStorageAlert implements Task, LogEnabled {
 

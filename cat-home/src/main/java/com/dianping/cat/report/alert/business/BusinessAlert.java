@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.metric.config.entity.Tag;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.alert.AlarmRule;
 import com.dianping.cat.report.alert.AlertResultEntity;
@@ -24,9 +25,8 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;
 import com.dianping.cat.report.alert.MetricReportGroup;
 import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.system.config.BaseRuleConfigManager;
-import com.dianping.cat.system.config.BusinessRuleConfigManager;
 
 public class BusinessAlert extends BaseAlert {
 

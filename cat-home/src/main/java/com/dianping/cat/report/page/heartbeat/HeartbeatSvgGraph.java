@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.home.heartbeat.entity.Metric;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.system.config.HeartbeatDisplayPolicyManager;
+import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 
 public class HeartbeatSvgGraph {
 

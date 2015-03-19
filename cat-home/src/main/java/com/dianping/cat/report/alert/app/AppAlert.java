@@ -30,7 +30,6 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.system.config.AppRuleConfigManager;
 
 public class AppAlert implements Task {
 

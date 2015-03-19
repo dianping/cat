@@ -31,6 +31,8 @@ import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.transform.HourlyLineChartVisitor;
@@ -39,8 +41,6 @@ import com.dianping.cat.report.page.storage.transform.StorageOperationFilter;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.StorageGroupConfigManager;
-import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

@@ -11,6 +11,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.alert.app.AppAlert;
 import com.dianping.cat.report.alert.business.BusinessAlert;
@@ -25,7 +26,6 @@ import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.web.WebAlert;
-import com.dianping.cat.system.config.ConfigReloadTask;
 
 public class CatHomeModule extends AbstractModule{
 	public static final String ID = "cat-home";

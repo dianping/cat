@@ -24,6 +24,7 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
+import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.event.DisplayNames.EventNameModel;
 import com.dianping.cat.report.page.event.service.EventReportService;
@@ -33,7 +34,6 @@ import com.dianping.cat.report.page.event.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
