@@ -40,11 +40,6 @@
          <artifactId>foundation-service</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.google.code.gson</groupId>
-         <artifactId>gson</artifactId>
-         <version>1.6</version>
-      </dependency>
-      <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>jstl</artifactId>
          <version>1.2</version>

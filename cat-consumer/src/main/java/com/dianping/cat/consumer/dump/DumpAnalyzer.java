@@ -85,6 +85,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
+   protected void loadReports() {
+		//do nothing
+   }
+
+	@Override
 	protected void process(MessageTree tree) {
 		MessageId messageId = MessageId.parse(tree.getMessageId());
 		String domain = tree.getDomain();
