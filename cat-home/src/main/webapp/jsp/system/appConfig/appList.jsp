@@ -141,7 +141,7 @@
 									    <thead><tr>
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
-												<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
+												<th width="8%">操作 <a href="?op=appUpdate&type=activity" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 											</tr>
 										</thead>
@@ -149,9 +149,9 @@
 								    	<c:forEach var="command" items="${entry.value}">
 									    	<tr><td>${command.name}</td>
 											<td>${command.title}</td>
-											<td><a href="?op=appUpdate&id=${item.id}&type=api" class="btn btn-primary btn-xs">
+											<td><a href="?op=appUpdate&id=${item.id}&type=activity" class="btn btn-primary btn-xs">
 												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-												<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
+												<a href="?op=appPageDelete&id=${item.id}&type=activity" class="btn btn-danger btn-xs delete" >
 												<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td></tr>
 								    	</c:forEach>
 								    </table>

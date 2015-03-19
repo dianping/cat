@@ -28,18 +28,28 @@
 		</thead>
 		<tbody>
 		<c:forEach var="entry" items="${model.appReport.commands}" varStatus="status">
-			<tr>
+			<tr><td><a href="/cat/r/app?query1=${payload.day};${entry.value.code};;;;;;;;;" target="_blank">
 			<c:choose>
 				<c:when test="${not empty entry.value.title }">
-					<td>${entry.value.title }</td>
+					<c:if test="${entry.value.title eq 'All'}" >
+						&nbsp;
+					</c:if>
+					${entry.value.title }
 				</c:when>
 			<c:otherwise>
-					<td>${entry.key }</td>
+					<c:if test="${entry.key eq 'All'}" >
+						&nbsp;
+					</c:if>
+					${entry.key}
 			</c:otherwise>
-			</c:choose>
+			</c:choose></a></td>
 			<c:choose>
 				<c:when test="${not empty entry.value.domain}">
-					<td>${entry.value.domain}</td>
+					<td>
+					<c:if test="${entry.value.domain eq 'All'}" >
+						&nbsp;
+					</c:if>
+					${entry.value.domain}</td>
 				</c:when>
 				<c:otherwise>
 					<td>无</td>
@@ -69,15 +79,15 @@
 		<tbody>
 		<c:forEach var="e" items="${model.appReport.commands}">
 		<c:set var="command" value="${model.appReport.commands[e.key]}" />
-		<tr>
+		<tr><td><a href="/cat/r/app?op=piechart&query1=${payload.day};${e.value.code};;;;;;;;00:00;23:59" target="_blank">
 			<c:choose>
 				<c:when test="${not empty e.value.title }">
-					<td>${e.value.title }</td>
+					${e.value.title }
 				</c:when>
 			<c:otherwise>
-					<td>${e.key }</td>
+					${e.key}
 			</c:otherwise>
-			</c:choose>
+			</c:choose></a></td>
 			<c:choose>
 				<c:when test="${not empty e.value.domain}">
 					<td>${e.value.domain}</td>

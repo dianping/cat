@@ -19,6 +19,7 @@
     <attribute name="requestAvg" value-type="int" />
     <attribute name="responseSum" value-type="int" />
     <attribute name="responseAvg" value-type="int" />
+    <attribute name="code" value-type="int" />
     <entity-ref name="code" type="list" names="codes" />
   </entity>
   <entity name="code">
