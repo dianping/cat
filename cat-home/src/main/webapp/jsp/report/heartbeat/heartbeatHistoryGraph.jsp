@@ -30,7 +30,7 @@
 	</tr>
 </table>
 <br>
-<table>
+<table style="width:100%">
 	<c:forEach var="extensionGroup" items="${model.extensionGroups}">
 		<tr>
 			<th colspan="3" style="text-align:left"><h5><a  data-status="${extensionGroup}" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=extension&extensionType=${extensionGroup}">${extensionGroup}</a></h5></th>
