@@ -72,6 +72,37 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ACTIVITY_END_INDEX = 1200;
 
+	public boolean addConstant(String type, int id, String value) {
+		ConfigItem item = m_config.getConfigItems().get(type);
+
+		if (item != null) {
+			Item data = item.getItems().get(id);
+
+			if (data != null) {
+				data.setName(value);
+			} else {
+				data = new Item(id);
+				data.setName(value);
+
+				item.getItems().put(id, data);
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public Item queryItem(String type, int id) {
+		ConfigItem itemConfig = m_config.getConfigItems().get(type);
+
+		if (itemConfig != null) {
+			Item item = itemConfig.getItems().get(id);
+
+			return item;
+		}
+		return null;
+	}
+
 	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
 		Command command = new Command();
 

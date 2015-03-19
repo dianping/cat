@@ -16,6 +16,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
@@ -157,6 +158,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private AppConfigManager m_appConfigManager;
 
+	private Item m_appItem;
+
 	public Model(Context ctx) {
 		super(ctx);
 		try {
@@ -182,12 +185,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public Map<String, List<Command>> getActivityCommands() {
+		return m_appConfigManager.queryDomain2Commands(true);
+	}
+
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
 	}
 
 	public List<AggregationRule> getAggregationRules() {
 		return m_aggregationRules;
+	}
+
+	public Map<String, List<Command>> getApiCommands() {
+		return m_appConfigManager.queryDomain2Commands(false);
+	}
+
+	public Item getAppItem() {
+		return m_appItem;
 	}
 
 	public String getBug() {
@@ -230,6 +245,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_configHeader;
 	}
 
+	public Map<String, ConfigItem> getConfigItems() {
+		return m_appConfigManager.getConfig().getConfigItems();
+	}
+
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
@@ -249,14 +268,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getDomain() {
 		return m_domain;
-	}
-
-	public Map<String, List<Command>> getApiCommands() {
-		return m_appConfigManager.queryDomain2Commands(false);
-	}
-
-	public Map<String, List<Command>> getActivityCommands() {
-		return m_appConfigManager.queryDomain2Commands(true);
 	}
 
 	public String getDomain2CommandsJson() {
@@ -479,6 +490,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setAggregationRules(List<AggregationRule> aggregationRules) {
 		m_aggregationRules = aggregationRules;
+	}
+
+	public void setAppItem(Item appItem) {
+		m_appItem = appItem;
 	}
 
 	public void setBug(String bug) {
@@ -715,5 +730,4 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			return m_nodeConfig;
 		}
 	}
-
 }
