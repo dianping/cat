@@ -18,7 +18,7 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 
 <div class="report">
-		<div class="text-center"><%@ include file="dependencyTimeNavTab1.jsp"%> </div>
+		<div class="text-center"><%@ include file="dependencyTimeNav.jsp"%> </div>
 		<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
   	</div>
   		

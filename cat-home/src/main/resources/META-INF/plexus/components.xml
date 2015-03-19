@@ -4523,9 +4523,6 @@
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.state.StateBuilder</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>
@@ -4608,18 +4605,7 @@
 					<field-name>m_problemservice</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>top</role-hint>
-					<field-name>m_topService</field-name>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.service.DependencyReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.top.service.TopReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4653,48 +4639,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.top.service.TopReportService</role>
-			<implementation>com.dianping.cat.report.page.top.service.TopReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
-			<implementation>com.dianping.cat.system.config.ExceptionRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5861,6 +5805,86 @@
 		<component>
 			<role>com.dianping.cat.system.config.ActivityConfigManager</role>
 			<implementation>com.dianping.cat.system.config.ActivityConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.top.Handler</role>
+			<implementation>com.dianping.cat.report.page.top.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.top.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.StateBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>top</role-hint>
+					<field-name>m_topService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.top.service.TopReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.top.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.top.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.top.service.TopReportService</role>
+			<implementation>com.dianping.cat.report.page.top.service.TopReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.config.ExceptionRuleConfigManager</role>
+			<implementation>com.dianping.cat.system.config.ExceptionRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

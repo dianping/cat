@@ -38,7 +38,7 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="dashbord_system"><a href="/cat/r/dependency?op=errorDashboard&domain=${model.domain}">
+						<li id="dashbord_system"><a href="/cat/r/top?op=view&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>报错大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">

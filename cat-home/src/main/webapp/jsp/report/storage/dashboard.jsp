@@ -17,7 +17,7 @@
 	<jsp:body>
 	
 	<div class="report">
-		<div class="text-center"><%@ include file="dependencyTimeNavTab.jsp"%> </div>
+		<div class="text-center"><%@ include file="timeNavTab.jsp"%> </div>
   	</div>
   	
   	<c:set var="linkMap" value="${model.links}" />
