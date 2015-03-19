@@ -204,8 +204,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3063,7 +3063,7 @@
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.DataChecker</role>
@@ -6183,7 +6183,7 @@
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</role>
+					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
@@ -6191,8 +6191,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</role>
-			<implementation>com.dianping.cat.report.page.metric.config.BusinessRuleConfigManager</implementation>
+			<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
