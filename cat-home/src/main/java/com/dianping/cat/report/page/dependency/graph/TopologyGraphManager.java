@@ -33,7 +33,7 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultNativeParser;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;

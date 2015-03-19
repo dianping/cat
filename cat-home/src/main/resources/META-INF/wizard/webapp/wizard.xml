@@ -41,7 +41,7 @@
          <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
          </page>
-         <page name="dependency" title="Dependency" default="true" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
+         <page name="dependency" title="Dependency" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
             <description>Dependency</description>
          </page>
          <page name="statistics" title="Statistics" path="statistics" view="/jsp/report/bug/bug.jsp" standalone="false" template="default">
@@ -82,6 +82,9 @@
          </page>
          <page name="activity" title="Activity" path="activity" template="default">
             <description>Activity</description>
+         </page>
+         <page name="top" title="Top" default="true" path="top" view="/jsp/report/top/top.jsp" template="default">
+            <description>Top</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
 import com.dianping.cat.report.task.TaskBuilder;
 
 public class JarReportBuilderTest  extends ComponentTestCase{

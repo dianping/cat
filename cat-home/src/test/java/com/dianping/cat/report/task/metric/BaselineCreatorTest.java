@@ -8,7 +8,8 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.task.metric.impl.DefaultBaselineCreator;
+import com.dianping.cat.report.page.metric.task.DefaultBaselineCreator;
+import com.dianping.cat.report.page.metric.task.MetricBaselineReportBuilder;
 
 public class BaselineCreatorTest extends ComponentTestCase {
 

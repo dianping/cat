@@ -14,9 +14,9 @@ import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.service.app.AppDataField;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.AppDataField;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 public class AppGraphCreator {
 

@@ -3,8 +3,8 @@ package com.dianping.cat.report.analyzer;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.report.page.overload.task.CapacityUpdateTask;
 import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.overload.CapacityUpdateTask;
 
 public class CapacityAnalyzer extends ComponentTestCase {
 

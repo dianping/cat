@@ -16,7 +16,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 

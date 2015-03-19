@@ -292,7 +292,7 @@ CREATE TABLE `app_speed_data_1` (
   `status` smallint NOT NULL COMMENT '数据状态',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY IX_condition (period,minute_order,city,operator,network,app_version,platform)
+  UNIQUE KEY `IX_condition` (period,minute_order,city,operator,network,app_version,platform)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app测速数据';
 
 CREATE TABLE `overload` (

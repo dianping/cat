@@ -25,26 +25,20 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("productLine")
 	private String productLine;
 
-	@FieldMeta("count")
-	private int m_minuteCounts = 8;
-
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
 
-	@FieldMeta("tops")
-	private int m_topCounts = 11;
-
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
-
-	@FieldMeta("tab")
-	private String m_tab = "tab1";
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
 
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
+
+	@FieldMeta("tab")
+	private String m_tab = "tab1";
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -63,10 +57,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_minute;
 	}
 
-	public int getMinuteCounts() {
-		return m_minuteCounts;
-	}
-
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -82,10 +72,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getTab() {
 		return m_tab;
-	}
-
-	public int getTopCounts() {
-		return m_topCounts;
 	}
 
 	public boolean isAll() {
@@ -128,10 +114,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		this.m_minute = minute;
 	}
 
-	public void setMinuteCounts(int minuteCounts) {
-		m_minuteCounts = minuteCounts;
-	}
-
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.DEPENDENCY);
@@ -151,10 +133,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTab(String tab) {
 		m_tab = tab;
-	}
-
-	public void setTopCounts(int topCounts) {
-		m_topCounts = topCounts;
 	}
 
 	public long getCurrentTimeMillis() {
@@ -186,7 +164,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.EXCEPTION_DASHBOARD;
+			m_action = Action.LINE_CHART;
 		}
 	}
 

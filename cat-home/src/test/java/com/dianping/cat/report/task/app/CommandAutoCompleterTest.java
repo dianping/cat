@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
+
 public class CommandAutoCompleterTest extends ComponentTestCase {
 
 	@Test

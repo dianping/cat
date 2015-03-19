@@ -25,7 +25,7 @@ import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.impl.TransactionReportService;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 

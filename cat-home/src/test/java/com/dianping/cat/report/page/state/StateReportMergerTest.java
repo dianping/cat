@@ -6,7 +6,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.state.HistoryStateReportMerger;
+import com.dianping.cat.report.page.state.task.HistoryStateReportMerger;
 
 public class StateReportMergerTest {
 	

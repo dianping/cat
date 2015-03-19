@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.system.config.ExceptionRuleConfigManager;
+import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 
 public class TopMetric extends BaseVisitor {
 
@@ -34,16 +34,6 @@ public class TopMetric extends BaseVisitor {
 
 	private MetricItem m_error;
 
-	private MetricItem m_url;
-
-	private MetricItem m_service;
-
-	private MetricItem m_call;
-
-	private MetricItem m_sql;
-
-	private MetricItem m_cache;
-
 	private long m_currentTime = System.currentTimeMillis();
 
 	private Integer m_currentMinute;
@@ -55,11 +45,6 @@ public class TopMetric extends BaseVisitor {
 	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager) {
 		m_configManager = configManager;
 		m_error = new MetricItem(count, tops, m_configManager);
-		m_url = new MetricItem(count, tops);
-		m_service = new MetricItem(count, tops);
-		m_call = new MetricItem(count, tops);
-		m_sql = new MetricItem(count, tops);
-		m_cache = new MetricItem(count, tops);
 	}
 
 	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager, List<String> excludedDomains) {
@@ -67,28 +52,8 @@ public class TopMetric extends BaseVisitor {
 		m_excludedDomains = excludedDomains;
 	}
 
-	public MetricItem getCache() {
-		return m_cache;
-	}
-
-	public MetricItem getCall() {
-		return m_call;
-	}
-
 	public MetricItem getError() {
 		return m_error;
-	}
-
-	public MetricItem getService() {
-		return m_service;
-	}
-
-	public MetricItem getSql() {
-		return m_sql;
-	}
-
-	public MetricItem getUrl() {
-		return m_url;
 	}
 
 	public TopMetric setEnd(Date end) {
@@ -140,11 +105,6 @@ public class TopMetric extends BaseVisitor {
 			String minuteStr = m_sdf.format(minute);
 
 			m_error.addIndex(minuteStr, m_currentDomain, segment.getError());
-			m_url.addIndex(minuteStr, m_currentDomain, segment.getUrlDuration());
-			m_service.addIndex(minuteStr, m_currentDomain, segment.getServiceDuration());
-			m_call.addIndex(minuteStr, m_currentDomain, segment.getCallDuration());
-			m_sql.addIndex(minuteStr, m_currentDomain, segment.getSqlDuration());
-			m_cache.addIndex(minuteStr, m_currentDomain, segment.getCacheDuration());
 			super.visitSegment(segment);
 		}
 	}
@@ -155,11 +115,6 @@ public class TopMetric extends BaseVisitor {
 		super.visitTopReport(topReport);
 
 		m_error.buildDisplayResult();
-		m_url.buildDisplayResult();
-		m_service.buildDisplayResult();
-		m_call.buildDisplayResult();
-		m_sql.buildDisplayResult();
-		m_cache.buildDisplayResult();
 	}
 
 	public static class Item {

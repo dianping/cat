@@ -12,16 +12,11 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.consumer.problem.Configurator.MockProblemReportManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemDelegate;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.top.Configurator.MockTransactionReportManager;
+import com.dianping.cat.consumer.top.Configurator.MockProblemReportManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -54,28 +49,14 @@ public class TopAnalyzerTest extends ComponentTestCase {
 		super.setUp();
 
 		try {
-			TransactionAnalyzer transactionAnalyzer = (TransactionAnalyzer) lookup(MessageAnalyzer.class,
-			      TransactionAnalyzer.ID);
-			TransactionDelegate transactionDelegate = (TransactionDelegate) lookup(ReportDelegate.class, "transaction");
-			MockTransactionReportManager transactionManager = (MockTransactionReportManager) lookup(ReportManager.class,
-			      "transaction");
-
-			String xml = Files.forIO().readFrom(TransactionAnalyzerTest.class.getResourceAsStream("transaction_real.xml"),
-			      "utf-8");
-			TransactionReport transactionReport = transactionDelegate.parseXml(xml);
-			rebuildTransactionReport(transactionReport);
-			transactionManager.setReport(transactionReport);
-
 			ProblemAnalyzer problemAnalyzer = (ProblemAnalyzer) lookup(MessageAnalyzer.class, ProblemAnalyzer.ID);
 			ProblemDelegate problemDelegate = (ProblemDelegate) lookup(ReportDelegate.class, "problem");
 			MockProblemReportManager problemManager = (MockProblemReportManager) lookup(ReportManager.class, "problem");
-			xml = Files.forIO().readFrom(ProblemAnalyzerTest.class.getResourceAsStream("problem-report.xml"), "utf-8");
+			String xml = Files.forIO().readFrom(TopAnalyzerTest.class.getResourceAsStream("problem-report.xml"), "utf-8");
 			ProblemReport problemReport = problemDelegate.parseXml(xml);
 			problemManager.setReport(problemReport);
 
 			m_analyzer = (TopAnalyzer) lookup(MessageAnalyzer.class, TopAnalyzer.ID);
-
-			m_analyzer.setTransactionAnalyzer(transactionAnalyzer);
 			m_analyzer.setProblemAnalyzer(problemAnalyzer);
 		} catch (Exception e) {
 			e.printStackTrace();

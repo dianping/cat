@@ -8,6 +8,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.heartbeat.task.HeartbeatDailyMerger;
 
 public class HeartbeatDailyMergerTest {
 

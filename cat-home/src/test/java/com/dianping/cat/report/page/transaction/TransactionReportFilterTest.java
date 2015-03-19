@@ -7,7 +7,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.Handler.TransactionReportFilter;
+import com.dianping.cat.report.page.transaction.service.LocalTransactionService.TransactionReportFilter;
 
 public class TransactionReportFilterTest {
 	@Test

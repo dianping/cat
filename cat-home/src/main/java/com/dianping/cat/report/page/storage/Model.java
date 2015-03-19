@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.system.config.StorageGroupConfigManager.Department;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
 
 public class Model extends AbstractReportModel<Action, Context> {
 

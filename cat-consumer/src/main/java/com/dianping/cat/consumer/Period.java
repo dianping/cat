@@ -17,7 +17,6 @@ import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.analysis.PeriodTask;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -68,11 +67,9 @@ public class Period {
 
 		// hack for dependency
 		MessageAnalyzer top = analyzers.get(TopAnalyzer.ID);
-		MessageAnalyzer transaction = analyzers.get(TransactionAnalyzer.ID);
 		MessageAnalyzer problem = analyzers.get(ProblemAnalyzer.ID);
 
 		if (top != null) {
-			((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
 			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
 		}
 	}

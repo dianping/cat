@@ -9,6 +9,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
 public class RouterReportBuilderTest  extends ComponentTestCase{
 

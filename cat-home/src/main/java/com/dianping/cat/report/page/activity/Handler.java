@@ -29,12 +29,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.activity.entity.Activity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
+import com.dianping.cat.report.page.activity.config.ActivityConfigManager;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.ActivityConfigManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

@@ -16,6 +16,10 @@
     <attribute name="avg" value-type="double" primitive="true" format="0.00" />
     <attribute name="errors" value-type="long" primitive="true"  method-inc="true" />
     <attribute name="successRatio" value-type="double" primitive="true" format="0.000" />
+    <attribute name="requestSum" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="requestAvg" value-type="double" primitive="true" format="0.00"  />
+    <attribute name="responseSum" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="responseAvg" value-type="double" primitive="true" format="0.00" />
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true" />
   </entity>
   <entity name="code">

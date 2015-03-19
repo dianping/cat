@@ -6,8 +6,8 @@ import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.database.AppDatabasePruner;
 
 public class AppDatabasePrunerTest extends ComponentTestCase {
 

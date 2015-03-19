@@ -36,7 +36,7 @@
 		<component>
 			<role>com.dianping.cat.service.ReportManager</role>
 			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.Configurator$MockProblemReportManager</implementation>
+			<implementation>com.dianping.cat.consumer.top.Configurator$MockProblemReportManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.service.ReportDelegate</role>

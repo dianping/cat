@@ -12,10 +12,10 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.home.router.entity.DefaultServer;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class StateBuilder {
 
@@ -24,7 +24,7 @@ public class StateBuilder {
 
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
-	
+
 	private static final int COUNT = 500 * 10000;
 
 	private List<String> queryAllServers() {
@@ -42,29 +42,30 @@ public class StateBuilder {
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
 
-		int realSize = report.getMachines().size();
-		List<String> servers = queryAllServers();
-		int excepeted = servers.size();
-		Set<String> errorServers = new HashSet<String>();
+		if (report != null) {
+			int realSize = report.getMachines().size();
+			List<String> servers = queryAllServers();
+			int excepeted = servers.size();
+			Set<String> errorServers = new HashSet<String>();
 
-		if (realSize != excepeted) {
-			for (String serverIp : servers) {
-				if (report.getMachines().get(serverIp) == null) {
-					errorServers.add(serverIp);
+			if (realSize != excepeted) {
+				for (String serverIp : servers) {
+					if (report.getMachines().get(serverIp) == null) {
+						errorServers.add(serverIp);
+					}
 				}
 			}
-		}
-		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > COUNT) {
-				errorServers.add(machine.getIp());
+			for (Machine machine : report.getMachines().values()) {
+				if (machine.getTotalLoss() > COUNT) {
+					errorServers.add(machine.getIp());
+				}
+			}
+
+			if (errorServers.size() > 0) {
+				return errorServers.toString();
 			}
 		}
-
-		if (errorServers.size() > 0) {
-			return errorServers.toString();
-		} else {
-			return null;
-		}
+		return null;
 	}
 
 	private StateReport queryHourlyReport(long date, String ip) {

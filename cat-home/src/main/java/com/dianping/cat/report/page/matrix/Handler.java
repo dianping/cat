@@ -15,8 +15,8 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.impl.MatrixReportService;
+import com.dianping.cat.report.page.matrix.service.MatrixReportService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 

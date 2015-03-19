@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.event.DistributionDetailVisitor.DistributionDetail;
+import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor.DistributionDetail;
 
 @ModelMeta(EventAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, Context> {

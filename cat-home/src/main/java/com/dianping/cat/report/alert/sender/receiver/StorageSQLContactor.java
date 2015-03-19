@@ -7,7 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.system.config.AlertConfigManager;
+import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
 
 public class StorageSQLContactor extends DefaultContactor implements Contactor {
 

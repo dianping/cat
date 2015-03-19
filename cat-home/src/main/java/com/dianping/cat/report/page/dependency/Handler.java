@@ -32,14 +32,13 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.state.StateBuilder;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.TopoGraphFormatConfigManager;
 
 public class Handler implements PageHandler<Context> {
 
@@ -54,9 +53,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ExternalInfoBuilder m_externalInfoBuilder;
-
-	@Inject
-	private StateBuilder m_stateBuilder;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -116,12 +112,6 @@ public class Handler implements PageHandler<Context> {
 		DependencyReport dependencyReport = queryDependencyReport(payload);
 		buildHourlyReport(dependencyReport, model, payload);
 		buildHourlyLineGraph(dependencyReport, model);
-	}
-
-	private void buildExceptionDashboard(Model model, Payload payload, long date) {
-		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
 	private void buildHourlyLineGraph(DependencyReport report, Model model) {
@@ -207,10 +197,6 @@ public class Handler implements PageHandler<Context> {
 				break;
 			case DEPENDENCY_DASHBOARD:
 				buildDependencyDashboard(model, payload, reportTime);
-				break;
-			case EXCEPTION_DASHBOARD:
-				buildExceptionDashboard(model, payload, date);
-				model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
 				break;
 			}
 			m_jspViewer.view(ctx, model);

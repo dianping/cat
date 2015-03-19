@@ -48,7 +48,7 @@
 		<div class="report">
 			<div class="row-fluid">
 				<div class="span12 text-center">
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
+			 		<%@ include file="dependencyTimeNav.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
 				<div class="text-center" id="container" style="width:100%;height:1600px;border:solid 1px #ccc;"></div>

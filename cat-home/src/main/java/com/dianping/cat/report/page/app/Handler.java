@@ -30,6 +30,7 @@ import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
@@ -37,18 +38,19 @@ import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppReportMerger;
+import com.dianping.cat.report.page.app.display.AppReportSorter;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.ChartSorter;
+import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
-import com.dianping.cat.report.page.app.display.Sorter;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
-import com.dianping.cat.report.service.app.AppConnectionService;
-import com.dianping.cat.report.service.app.AppDataField;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.AppSpeedService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
-import com.dianping.cat.report.service.app.SpeedQueryEntity;
-import com.dianping.cat.report.service.impl.AppReportService;
-import com.dianping.cat.system.config.AppRuleConfigManager;
+import com.dianping.cat.report.page.app.service.AppConnectionService;
+import com.dianping.cat.report.page.app.service.AppDataField;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.AppReportService;
+import com.dianping.cat.report.page.app.service.AppSpeedService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -100,7 +102,7 @@ public class Handler implements PageHandler<Context> {
 
 			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
-			Collections.sort(appDetails, new Sorter(sortBy).buildLineChartInfoComparator());
+			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -121,7 +123,7 @@ public class Handler implements PageHandler<Context> {
 
 			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, field);
-			Collections.sort(appDetails, new Sorter(sortBy).buildLineChartInfoComparator());
+			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -134,7 +136,7 @@ public class Handler implements PageHandler<Context> {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
 			      field);
 			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
+			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
 			return pair;
 		} catch (Exception e) {
@@ -148,7 +150,7 @@ public class Handler implements PageHandler<Context> {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
 			      payload.getQueryEntity1(), field);
 			List<PieChartDetailInfo> infos = pair.getValue();
-			Collections.sort(infos, new Sorter().buildPieChartInfoComparator());
+			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
 			return pair;
 		} catch (Exception e) {
@@ -164,7 +166,7 @@ public class Handler implements PageHandler<Context> {
 		if (isShowActivity) {
 			for (Command command : commands) {
 				int commandId = command.getId();
-				if (commandId >= 1000 && commandId <= 1500) {
+				if (commandId >= 1000 && commandId <= 1200) {
 					remainCommands.add(command);
 				}
 			}
@@ -335,13 +337,20 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			Date startDate = payload.getDay();
+			Date startDate = payload.getDayDate();
 			Date endDate = TimeHelper.addDays(startDate, 1);
 			AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 			AppReportMerger visitor = new AppReportMerger();
 
 			visitor.visitAppReport(report);
 			report = visitor.getReport();
+
+			CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
+			distributionVisitor.visitAppReport(report);
+			report = distributionVisitor.getReport();
+
+			AppReportSorter sorter = new AppReportSorter(report, "1XX");
+			report = sorter.getSortedReport();
 			model.setAppReport(report);
 			break;
 		}
@@ -424,4 +433,5 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 	}
+
 }

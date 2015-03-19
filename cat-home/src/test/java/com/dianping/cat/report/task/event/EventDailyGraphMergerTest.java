@@ -13,6 +13,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.event.task.EventMerger;
 
 public class EventDailyGraphMergerTest {
 	private EventMerger m_meger = new EventMerger();

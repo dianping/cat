@@ -31,12 +31,11 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.TransactionRuleConfigManager;
 
 public class TransactionAlert implements Task, LogEnabled {
 
