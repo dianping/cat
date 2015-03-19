@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.app.display;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
@@ -15,6 +18,8 @@ public class CodeDisplayVisitor extends BaseVisitor {
 	private String m_currentCommand;
 
 	private int[] m_distributions = new int[20];
+
+	public static final List<Integer> STANDALONES = Arrays.asList(450);
 
 	public CodeDisplayVisitor() {
 		init();
@@ -43,11 +48,13 @@ public class CodeDisplayVisitor extends BaseVisitor {
 
 	@Override
 	public void visitCode(Code code) {
-		String dist = queryCodeDistribution(Integer.valueOf(code.getId()));
+		String id = code.getId();
+		String distCode = queryCodeDistribution(Integer.valueOf(id));
 
-		buildDistributionInfo(code, dist);
-		mergeCode(code, code.getId());
-
+		if (!id.equals(distCode)) {
+			buildDistributionInfo(code, distCode);
+		}
+		mergeCode(code, id);
 		super.visitCode(code);
 	}
 
@@ -95,6 +102,7 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		} else {
 			c.setDomain(command.getDomain());
 			c.setTitle(command.getTitle());
+			c.setCode(command.getCode());
 		}
 		c.incCount(command.getCount()).incSum(command.getSum()).incErrors(command.getErrors())
 		      .incRequestSum(command.getRequestSum()).incResponseSum(command.getResponseSum());
@@ -108,19 +116,21 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		}
 	}
 
-	public String queryCodeDistribution(int code) {
-		if (code >= 0 && code < 100) {
-			return "0XX";
-		} else if (code > -100 && code < 0) {
-			return "-0XX";
-		} else {
-			for (int i = 0; i < m_distributions.length; i++) {
-				if (code / m_distributions[i] >= 1) {
-					return convertLable(m_distributions[i]);
+	private String queryCodeDistribution(int code) {
+		if (!STANDALONES.contains(code)) {
+			if (code >= 0 && code < 100) {
+				return "0XX";
+			} else if (code > -100 && code < 0) {
+				return "-0XX";
+			} else {
+				for (int i = 0; i < m_distributions.length; i++) {
+					if (code / m_distributions[i] >= 1) {
+						return convertLable(m_distributions[i]);
+					}
 				}
 			}
 		}
-		return null;
+		return String.valueOf(code);
 	}
 
 	private String convertLable(int i) {

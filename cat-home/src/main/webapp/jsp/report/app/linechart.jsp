@@ -12,7 +12,7 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
-		var commandInfo = ${model.command};
+		var commandInfo = ${model.command2CodesJson};
 		function check() {
 			var value = document.getElementById("checkbox").checked;
 
@@ -184,14 +184,14 @@
 			window.location.href = href;
 		}
 		
-		var domainToCommandsJson = ${model.domainToCommandsJson};
+		var domain2CommandsJson = ${model.domain2CommandsJson};
 
 		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
 			if(domainInitVal == ""){
 				domainInitVal = $("#"+domainId).val()
 			}
 			var commandSelect = $("#"+commandId);
-			var commands = domainToCommandsJson[domainInitVal];
+			var commands = domain2CommandsJson[domainInitVal];
 			
 			$("#"+domainId).val(domainInitVal);
 			commandSelect.empty();
@@ -216,7 +216,7 @@
 				var domain = $("#domains2").val();
 				var commandSelect = $("#command2");
 			}
-			var commands = domainToCommandsJson[domain];
+			var commands = domain2CommandsJson[domain];
 			commandSelect.empty();
 			
 			for(var cou in commands){
@@ -231,7 +231,7 @@
 		
 		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
 			var domainsSelect = $("#"+domainSelectId);
-			for(var domain in domainToCommandsJson){
+			for(var domain in domain2CommandsJson){
 				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 			}
 			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);

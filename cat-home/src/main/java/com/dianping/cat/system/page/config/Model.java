@@ -8,9 +8,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.lookup.util.StringUtils;
+import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -148,13 +150,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private DomainGroup m_domainGroup;
 
 	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
-	
+
 	private List<String> m_validatePaths;
-	
+
 	private List<String> m_invalidatePaths;
+
+	private AppConfigManager m_appConfigManager;
 
 	public Model(Context ctx) {
 		super(ctx);
+		try {
+			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public void buildEdgeInfo() {
@@ -205,34 +214,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_codes;
 	}
 
-	public Map<Integer, List<Code>> getCommand() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
-
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
-
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return maps;
-	}
-
 	public String getCommandJson() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
-
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
-
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return new JsonBuilder().toJson(maps);
+		return new JsonBuilder().toJson(m_appConfigManager.queryCommand2Codes());
 	}
 
 	public List<Command> getCommands() {
@@ -268,23 +251,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_domain;
 	}
 
+	public Map<String, List<Command>> getApiCommands() {
+		return m_appConfigManager.queryDomain2Commands(false);
+	}
+
+	public Map<String, List<Command>> getActivityCommands() {
+		return m_appConfigManager.queryDomain2Commands(true);
+	}
+
 	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
-
-		for (Command command : m_commands) {
-			String domain = command.getDomain();
-			if (StringUtils.isEmpty(domain)) {
-				domain = "default";
-			}
-			List<Command> commands = map.get(domain);
-
-			if (commands == null) {
-				commands = new ArrayList<Command>();
-				map.put(domain, commands);
-			}
-			commands.add(command);
-		}
-		return new JsonBuilder().toJson(map);
+		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
 	}
 
 	public DomainConfig getDomainConfig() {
@@ -712,7 +688,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setUpdateCommand(Command updateCommand) {
 		m_updateCommand = updateCommand;
 	}
-	
+
 	public void setValidatePaths(List<String> validatePaths) {
 		m_validatePaths = validatePaths;
 	}
