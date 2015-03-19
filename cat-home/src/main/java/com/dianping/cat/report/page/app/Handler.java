@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -337,27 +339,48 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			Date startDate = payload.getDayDate();
-			Date endDate = TimeHelper.addDays(startDate, 1);
-			AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-			AppReportMerger visitor = new AppReportMerger();
+			AppReport report = buildAppReport(payload);
 
-			visitor.visitAppReport(report);
-			report = visitor.getReport();
-
-			CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
-			distributionVisitor.visitAppReport(report);
-			report = distributionVisitor.getReport();
-
-			AppReportSorter sorter = new AppReportSorter(report, "1XX");
-			report = sorter.getSortedReport();
 			model.setAppReport(report);
+			model.setCodeDistributions(buildCodeDistributions(report));
 			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private AppReport buildAppReport(Payload payload) throws IOException {
+		Date startDate = payload.getDayDate();
+		Date endDate = TimeHelper.addDays(startDate, 1);
+		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
+
+		AppReportMerger visitor = new AppReportMerger();
+		visitor.visitAppReport(report);
+		report = visitor.getReport();
+
+		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
+		distributionVisitor.visitAppReport(report);
+		report = distributionVisitor.getReport();
+
+		AppReportSorter sorter = new AppReportSorter(report, payload.getSort());
+		report = sorter.getSortedReport();
+
+		return report;
+	}
+
+	public List<String> buildCodeDistributions(AppReport report) {
+		List<String> ids = new LinkedList<String>();
+		Set<String> orgIds = report.findOrCreateCommand(Constants.ALL).getCodes().keySet();
+
+		for (String id : orgIds) {
+			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
+				ids.add(id);
+			}
+		}
+		Collections.sort(ids, new CodeDistributionComparator());
+		return ids;
 	}
 
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
@@ -432,6 +455,18 @@ public class Handler implements PageHandler<Context> {
 			model.setContent("{\"status\":500, \"info\":\"name is duplicated.\"}");
 			break;
 		}
+	}
+
+	public class CodeDistributionComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
+			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
+
+			return id2 - id1;
+		}
+
 	}
 
 }

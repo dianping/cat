@@ -17,6 +17,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
@@ -66,6 +67,10 @@ public class AppConfigManager implements Initializable {
 
 	public static String CONNECT_TYPE = "连接类型";
 
+	public static final int COMMAND_END_INDEX = 1099;
+
+	public static final int ACTIVITY_END_INDEX = 1200;
+
 	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
 		Command command = new Command();
 
@@ -76,9 +81,9 @@ public class AppConfigManager implements Initializable {
 		int commandId = 0;
 
 		if ("activity".equals(type)) {
-			commandId = findAvailableId(1100, 1200);
+			commandId = findAvailableId(COMMAND_END_INDEX + 1, ACTIVITY_END_INDEX);
 		} else {
-			commandId = findAvailableId(1, 1099);
+			commandId = findAvailableId(1, COMMAND_END_INDEX);
 		}
 		command.setId(commandId);
 
@@ -244,6 +249,21 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
+	public Map<Integer, List<Code>> quertCommand2Codes() {
+		Map<Integer, List<Code>> codes = new LinkedHashMap<Integer, List<Code>>();
+
+		for (Command command : queryCommands()) {
+			List<Code> items = codes.get(command.getId());
+
+			if (items == null) {
+				items = new ArrayList<Code>();
+				codes.put(command.getId(), items);
+			}
+			items.addAll(command.getCodes().values());
+		}
+		return codes;
+	}
+
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 
@@ -288,6 +308,26 @@ public class AppConfigManager implements Initializable {
 		} else {
 			return new LinkedHashMap<Integer, Item>();
 		}
+	}
+
+	public Map<String, List<Command>> queryDomain2Commands() {
+		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+
+		for (Command command : queryCommands()) {
+			String domain = command.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = "default";
+			}
+			List<Command> commands = map.get(domain);
+
+			if (commands == null) {
+				commands = new ArrayList<Command>();
+				map.put(domain, commands);
+			}
+			commands.add(command);
+		}
+		return map;
 	}
 
 	public Map<Integer, Code> queryInternalCodes(int commandId) {

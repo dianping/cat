@@ -3,6 +3,9 @@
 .tab-content>.active {
   display: flex;
 }
+.dataTables_wrapper {
+  width: 100%;	
+}
 </style>
 <div class="tabbable"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;">
@@ -14,7 +17,7 @@
 	<table class="table table-striped table-condensed table-hover" id="contents-all" style="width:100%">
 		<thead>
 		<tr>
-			<th width="30%">命令字</th>
+			<th width="20%">命令字</th>
 			<th>项目</th>
 			<th>访问量</th>
 			<th>平均延时(ms)</th>
@@ -42,11 +45,11 @@
 					<td>无</td>
 				</c:otherwise>
 				</c:choose>
-			<td>${w:format(entry.value.count,'#0')}</td>
-			<td>${w:format(entry.value.avg,'#0.000')}</td>
-			<td>${w:format(entry.value.successRatio,'#0.000')}</td>
-			<td>${w:format(entry.value.requestAvg,'#0.00')}</td>
-			<td>${w:format(entry.value.responseAvg,'#0.00')}</td>
+			<td class="right">${w:format(entry.value.count,'#0')}</td>
+			<td class="right">${w:format(entry.value.avg,'#0.0')}</td>
+			<td class="right">${w:format(entry.value.successRatio,'#0.000')}</td>
+			<td class="right">${w:format(entry.value.requestAvg,'#0.0')}</td>
+			<td class="right">${w:format(entry.value.responseAvg,'#0.0')}</td>
 			</tr>
 		</c:forEach>
 		</tbody>
@@ -59,7 +62,7 @@
 			<th width="20%"><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=command&type=code">命令字</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=domain&type=code">项目</a></th>
 			<c:forEach var="code" items="${model.codeDistributions}">
-			<th style="width:50px;"><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=${code}&type=code">${code}</a></th>
+			<th style="width:50px;" class="right"><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=${code}&type=code">${code}</a></th>
 			</c:forEach>
 		</tr>
 		</thead>
@@ -87,10 +90,10 @@
 				<c:set var="data" value="${command.codes[code]}" />
 				<c:choose>
 				<c:when test="${data == null}">
-					<td>0</td>
+					<td class="right">0</td>
 				</c:when>
 				<c:otherwise>
-					<td data-rel="tooltip" data-placement="left" title="${command.codes[code].title}">${w:format(command.codes[code].count,'#,###,###,###,##0')}</td>
+					<td data-rel="tooltip" data-placement="left" title="${command.codes[code].title}"  class="right">${w:format(command.codes[code].count,'#,###,###,###,##0')}</td>
 				</c:otherwise>
 				</c:choose>
 			</c:forEach>

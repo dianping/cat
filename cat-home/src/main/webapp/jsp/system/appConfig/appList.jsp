@@ -98,18 +98,20 @@
 							</tr>
 							</thead>
 							<tbody>
-							<c:forEach var="item" items="${model.commands}">
-								<c:if test="${item.id lt 1000}">
+							<c:forEach var="item" items="${model.domain2Commands}">
+								<c:forEach var="command" items="${item.value}">
+									<c:if test="${command.id lt 1000}">
 									<tr>
 										<td>${item.name }</td>
 										<td>${item.domain }</td>
 										<td>${item.title }</td>
 										<td><a href="?op=appUpdate&id=${item.id}&type=api" class="btn btn-primary btn-xs">
-						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
-						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
+											<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+											<a href="?op=appPageDelete&id=${item.id}&type=api" class="btn btn-danger btn-xs delete" >
+											<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 									</tr>
 								</c:if>
+								</c:forEach>
 							</c:forEach>
 							</tbody>
 						</table>

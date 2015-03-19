@@ -2,10 +2,7 @@ package com.dianping.cat.report.page.app;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,6 +74,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<Integer, Code> m_codes;
 
+	private List<String> m_codeDistributions;
+
 	@EntityMeta
 	private AppReport m_appReport;
 
@@ -109,22 +108,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return map;
 	}
 
-	public List<String> getCodeDistributions() {
-		List<String> ids = new LinkedList<String>();
-
-		if (m_appReport != null) {
-			Set<String> orgIds = m_appReport.findOrCreateCommand(Constants.ALL).getCodes().keySet();
-
-			for (String id : orgIds) {
-				if (id.contains("XX")) {
-					ids.add(id);
-				}
-			}
-			Collections.sort(ids, new CodeDistributionComparator());
-		}
-		return ids;
-	}
-
 	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
 		return m_appSpeedDisplayInfo;
 	}
@@ -147,6 +130,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
+	}
+
+	public List<String> getCodeDistributions() {
+		return m_codeDistributions;
 	}
 
 	public Map<Integer, Code> getCodes() {
@@ -292,6 +279,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_cities = cities;
 	}
 
+	public void setCodeDistributions(List<String> codeDistributions) {
+		m_codeDistributions = codeDistributions;
+	}
+
 	public void setCodes(Map<Integer, Code> codes) {
 		m_codes = codes;
 	}
@@ -358,18 +349,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
-	}
-
-	public class CodeDistributionComparator implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
-			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
-
-			return id2 - id1;
-		}
-
 	}
 
 }
