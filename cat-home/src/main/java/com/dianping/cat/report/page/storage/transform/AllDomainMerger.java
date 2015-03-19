@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.storage;
+package com.dianping.cat.report.page.storage.transform;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.model.entity.Domain;

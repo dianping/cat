@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.statistics.service;
+package com.dianping.cat.system.page.router.service;
 
 import java.util.Date;
 import java.util.HashMap;

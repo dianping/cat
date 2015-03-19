@@ -23,7 +23,7 @@ import com.dianping.cat.home.network.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.nettopology.NetGraphBuilder;
-import com.dianping.cat.report.page.statistics.service.NetTopologyReportService;
+import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.system.config.NetGraphConfigManager;
 

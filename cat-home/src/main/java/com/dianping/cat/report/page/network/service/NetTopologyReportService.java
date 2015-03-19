@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.statistics.service;
+package com.dianping.cat.report.page.network.service;
 
 import java.util.Date;
 import java.util.List;

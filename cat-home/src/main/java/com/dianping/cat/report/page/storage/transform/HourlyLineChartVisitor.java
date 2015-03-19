@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.storage;
+package com.dianping.cat.report.page.storage.transform;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
 

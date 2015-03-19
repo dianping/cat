@@ -22,19 +22,19 @@ import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.matrix.service.MatrixReportService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
+import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
-import com.dianping.cat.report.page.statistics.service.NetTopologyReportService;
-import com.dianping.cat.report.page.statistics.service.RouterConfigService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
 import com.dianping.cat.report.page.statistics.service.SystemReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.top.service.TopReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ReportServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

@@ -849,8 +849,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</implementation>
+			<role>com.dianping.cat.report.page.network.service.NetTopologyReportService</role>
+			<implementation>com.dianping.cat.report.page.network.service.NetTopologyReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -879,8 +879,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.statistics.service.RouterConfigService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.RouterConfigService</implementation>
+			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -1299,7 +1299,7 @@
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.RouterConfigService</role>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
@@ -1340,7 +1340,7 @@
 					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1369,7 +1369,7 @@
 			<implementation>com.dianping.cat.report.page.network.task.NetTopologyReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</role>
+					<role>com.dianping.cat.report.page.network.service.NetTopologyReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
@@ -1433,7 +1433,7 @@
 					<role>com.dianping.cat.report.page.storage.task.StorageReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3241,7 +3241,7 @@
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.DataChecker</role>
@@ -3263,7 +3263,7 @@
 			<implementation>com.dianping.cat.report.alert.storage.StorageSQLAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.DataChecker</role>
@@ -3777,7 +3777,7 @@
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
@@ -3848,8 +3848,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
-			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeHelper</implementation>
+			<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
@@ -3868,7 +3868,7 @@
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
+					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -3935,8 +3935,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
-			<implementation>com.dianping.cat.report.page.event.EventMergeHelper</implementation>
+			<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.event.transform.EventMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
@@ -4068,10 +4068,10 @@
 					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.event.EventMergeHelper</role>
+					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -5089,7 +5089,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</role>
+					<role>com.dianping.cat.report.page.network.service.NetTopologyReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.nettopology.NetGraphBuilder</role>
@@ -5103,8 +5103,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.NetTopologyReportService</implementation>
+			<role>com.dianping.cat.report.page.network.service.NetTopologyReportService</role>
+			<implementation>com.dianping.cat.report.page.network.service.NetTopologyReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -5730,7 +5730,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
@@ -5783,8 +5783,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.storage.StorageMergeHelper</role>
-			<implementation>com.dianping.cat.report.page.storage.StorageMergeHelper</implementation>
+			<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
+			<implementation>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager</role>
@@ -5840,7 +5840,7 @@
 					<role>com.dianping.cat.system.config.ActivityConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeHelper</role>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -6501,7 +6501,7 @@
 			<implementation>com.dianping.cat.system.page.router.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.statistics.service.RouterConfigService</role>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.config.RouterConfigManager</role>
@@ -6509,8 +6509,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.statistics.service.RouterConfigService</role>
-			<implementation>com.dianping.cat.report.page.statistics.service.RouterConfigService</implementation>
+			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>

@@ -32,7 +32,7 @@ import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.page.statistics.service.NetTopologyReportService;
+import com.dianping.cat.report.page.network.service.NetTopologyReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
