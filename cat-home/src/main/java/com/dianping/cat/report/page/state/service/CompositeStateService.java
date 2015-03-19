@@ -5,8 +5,8 @@ import java.util.List;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.report.service.BaseCompositeModelService;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseCompositeModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 

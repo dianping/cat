@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -98,10 +100,8 @@ public class Handler implements PageHandler<Context> {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
-			filterCommands(model, payload.isShowActivity());
-
-			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
-			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, field);
+			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
+			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -365,21 +365,10 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_manager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			Date startDate = payload.getDayDate();
-			Date endDate = TimeHelper.addDays(startDate, 1);
-			AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-			AppReportMerger visitor = new AppReportMerger();
+			AppReport report = buildAppReport(payload);
 
-			visitor.visitAppReport(report);
-			report = visitor.getReport();
-
-			CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
-			distributionVisitor.visitAppReport(report);
-			report = distributionVisitor.getReport();
-
-			AppReportSorter sorter = new AppReportSorter(report, "1XX");
-			report = sorter.getSortedReport();
 			model.setAppReport(report);
+			model.setCodeDistributions(buildCodeDistributions(report));
 			break;
 		}
 
@@ -388,18 +377,36 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void normalize(Model model, Payload payload) {
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.APP);
-		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_manager.queryCommands());
+	private AppReport buildAppReport(Payload payload) throws IOException {
+		Date startDate = payload.getDayDate();
+		Date endDate = TimeHelper.addDays(startDate, 1);
+		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
 
-		m_normalizePayload.normalize(model, payload);
+		AppReportMerger visitor = new AppReportMerger();
+		visitor.visitAppReport(report);
+		report = visitor.getReport();
+
+		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
+		distributionVisitor.visitAppReport(report);
+		report = distributionVisitor.getReport();
+
+		AppReportSorter sorter = new AppReportSorter(report, payload.getSort());
+		report = sorter.getSortedReport();
+
+		return report;
+	}
+
+	public List<String> buildCodeDistributions(AppReport report) {
+		List<String> ids = new LinkedList<String>();
+		Set<String> orgIds = report.findOrCreateCommand(Constants.ALL).getCodes().keySet();
+
+		for (String id : orgIds) {
+			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
+				ids.add(id);
+			}
+		}
+		Collections.sort(ids, new CodeDistributionComparator());
+		return ids;
 	}
 
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
@@ -417,6 +424,30 @@ public class Handler implements PageHandler<Context> {
 		return query1;
 	}
 
+	private void normalize(Model model, Payload payload) {
+		Action action = payload.getAction();
+
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.APP);
+		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
+		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
+		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
+		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
+		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
+		model.setCommands(m_manager.queryCommands(payload.isShowActivity()));
+
+		if (Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
+		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action)) {
+			boolean activity = payload.isShowActivity();
+
+			model.setDomain2Commands(m_manager.queryDomain2Commands(activity));
+			model.setCommand2Codes(m_manager.queryCommand2Codes());
+		}
+
+		m_normalizePayload.normalize(model, payload);
+	}
+
 	private void setUpdateResult(Model model, int i) {
 		switch (i) {
 		case 0:
@@ -432,6 +463,18 @@ public class Handler implements PageHandler<Context> {
 			model.setContent("{\"status\":500, \"info\":\"name is duplicated.\"}");
 			break;
 		}
+	}
+
+	public class CodeDistributionComparator implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			int id1 = Integer.parseInt(o1.replaceAll("X", "0"));
+			int id2 = Integer.parseInt(o2.replaceAll("X", "0"));
+
+			return id2 - id1;
+		}
+
 	}
 
 }

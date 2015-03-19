@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.dal.HostinfoService;
 
 public class MethodInfo extends BaseVisitor {
 

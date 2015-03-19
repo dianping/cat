@@ -4,12 +4,12 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.BasePayload;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;

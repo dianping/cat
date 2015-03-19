@@ -1,32 +1,17 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.message.spi.core.MessageConsumer</role>
-			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.black.BlackListManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
@@ -35,15 +20,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>transaction</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
@@ -61,7 +46,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
 			<requirements>
@@ -80,7 +65,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
@@ -89,15 +74,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>event</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
@@ -115,7 +100,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.consumer.event.EventDelegate</implementation>
 			<requirements>
@@ -157,7 +142,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
@@ -174,15 +159,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>problem</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
@@ -200,7 +185,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.ProblemDelegate</implementation>
 			<requirements>
@@ -219,7 +204,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>heartbeat</role-hint>
 				</requirement>
 				<requirement>
@@ -228,15 +213,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>heartbeat</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>heartbeat</role-hint>
 				</requirement>
 				<requirement>
@@ -254,7 +239,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatDelegate</implementation>
 			<requirements>
@@ -271,9 +256,12 @@
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.consumer.top.TopAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<errorType>Error,RuntimeException,Exception</errorType>
+			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>top</role-hint>
 				</requirement>
 				<requirement>
@@ -282,15 +270,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>top</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>top</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>top</role-hint>
 				</requirement>
 				<requirement>
@@ -308,7 +296,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.consumer.top.TopDelegate</implementation>
 		</component>
@@ -350,8 +338,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ProjectService</role>
-			<implementation>com.dianping.cat.service.ProjectService</implementation>
+			<role>com.dianping.cat.dal.ProjectService</role>
+			<implementation>com.dianping.cat.dal.ProjectService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
@@ -368,7 +356,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>state</role-hint>
 				</requirement>
 				<requirement>
@@ -380,15 +368,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>state</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>state</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>state</role-hint>
 				</requirement>
 				<requirement>
@@ -406,7 +394,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.consumer.state.StateDelegate</implementation>
 			<requirements>
@@ -429,7 +417,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>cross</role-hint>
 				</requirement>
 				<requirement>
@@ -441,15 +429,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>cross</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>cross</role-hint>
 				</requirement>
 				<requirement>
@@ -467,7 +455,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.consumer.cross.CrossDelegate</implementation>
 			<requirements>
@@ -486,7 +474,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>matrix</role-hint>
 				</requirement>
 				<requirement>
@@ -495,15 +483,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>matrix</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>matrix</role-hint>
 				</requirement>
 				<requirement>
@@ -521,7 +509,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.consumer.matrix.MatrixDelegate</implementation>
 			<requirements>
@@ -544,7 +532,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
@@ -556,15 +544,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>dependency</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>dependency</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
@@ -582,7 +570,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.consumer.dependency.DependencyDelegate</implementation>
 			<requirements>
@@ -663,11 +651,11 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportManager</role>
+					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
@@ -682,15 +670,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportManager</role>
+			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>storage</role-hint>
-			<implementation>com.dianping.cat.service.DefaultReportManager</implementation>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
 			<configuration>
 				<name>storage</name>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.ReportDelegate</role>
+					<role>com.dianping.cat.report.ReportDelegate</role>
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
@@ -708,7 +696,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.service.ReportDelegate</role>
+			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.consumer.storage.StorageDelegate</implementation>
 			<requirements>

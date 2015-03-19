@@ -28,9 +28,9 @@ import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.page.transaction.transform.AllMachineMerger;
 import com.dianping.cat.report.page.transaction.transform.AllNameMerger;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 

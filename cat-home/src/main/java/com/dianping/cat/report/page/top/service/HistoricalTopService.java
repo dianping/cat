@@ -8,7 +8,7 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.BaseHistoricalModelService;
+import com.dianping.cat.service.BaseHistoricalModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.report.ReportBucket;
 import com.dianping.cat.storage.report.ReportBucketManager;

@@ -94,8 +94,6 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	private void buildListInfo(Model model, Payload payload) {
-		List<Command> commands = m_appConfigManager.queryCommands();
-		model.setCommands(commands);
 		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 		model.setCodes(m_appConfigManager.getCodes());
 

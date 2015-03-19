@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 
 public class RemoteTransactionService extends BaseRemoteModelService<TransactionReport> {
 	public RemoteTransactionService() {

@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.report;
 
 import java.util.Map;
 

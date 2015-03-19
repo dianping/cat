@@ -12,7 +12,8 @@ import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.dal.HostinfoService;
+
 import org.unidal.lookup.util.StringUtils;
 
 public class HostInfo extends BaseVisitor {

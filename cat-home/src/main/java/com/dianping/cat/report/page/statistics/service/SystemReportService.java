@@ -7,11 +7,11 @@ import org.unidal.dal.jdbc.DalException;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.home.dal.report.DailyReportContent;
-import com.dianping.cat.home.dal.report.DailyReportContentEntity;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeParser;
-import com.dianping.cat.report.service.AbstractReportService;
+import com.dianping.cat.service.AbstractReportService;
 
 public class SystemReportService extends AbstractReportService<SystemReport> {
 

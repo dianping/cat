@@ -23,9 +23,9 @@ import com.dianping.cat.report.page.app.Model;
 import com.dianping.cat.report.page.app.Payload;
 import com.dianping.cat.report.page.app.ProblemStatistics;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class CrashLogProcessor {
 

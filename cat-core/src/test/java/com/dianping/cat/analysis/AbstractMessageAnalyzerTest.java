@@ -107,5 +107,10 @@ public class AbstractMessageAnalyzerTest extends ComponentTestCase {
 			m_count++;
 			throw new RuntimeException("this is for test, Please ignore it");
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
+	
 }

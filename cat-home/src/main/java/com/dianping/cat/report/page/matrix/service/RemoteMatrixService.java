@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 
 public class RemoteMatrixService extends BaseRemoteModelService<MatrixReport> {
 	public RemoteMatrixService() {

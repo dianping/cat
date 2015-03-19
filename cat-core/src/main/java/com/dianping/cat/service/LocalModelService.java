@@ -1,18 +1,16 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.BasePayload;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.mvc.BasePayload;
 
 public abstract class LocalModelService<T> implements Initializable {
 	@Inject(type = MessageConsumer.class)

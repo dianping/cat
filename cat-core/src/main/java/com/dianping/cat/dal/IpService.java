@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.dal;
 
 import java.io.BufferedReader;
 import java.io.IOException;

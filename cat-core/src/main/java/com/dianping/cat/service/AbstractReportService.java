@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,12 +31,12 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.dal.report.DailyReportContent;
-import com.dianping.cat.home.dal.report.DailyReportContentDao;
-import com.dianping.cat.home.dal.report.MonthlyReportContent;
-import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
-import com.dianping.cat.home.dal.report.WeeklyReportContent;
-import com.dianping.cat.home.dal.report.WeeklyReportContentDao;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentDao;
+import com.dianping.cat.core.dal.MonthlyReportContent;
+import com.dianping.cat.core.dal.MonthlyReportContentDao;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.message.Event;
 
 public abstract class AbstractReportService<T> implements LogEnabled, ReportService<T> {

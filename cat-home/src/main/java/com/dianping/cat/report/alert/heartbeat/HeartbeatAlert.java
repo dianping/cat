@@ -29,7 +29,6 @@ import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.BaseAlert;
@@ -37,6 +36,7 @@ import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class HeartbeatAlert extends BaseAlert {
 

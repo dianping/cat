@@ -36,9 +36,9 @@ import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManag
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
