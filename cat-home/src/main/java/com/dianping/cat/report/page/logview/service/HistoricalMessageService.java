@@ -16,7 +16,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
-import com.dianping.cat.report.service.BaseHistoricalModelService;
+import com.dianping.cat.service.BaseHistoricalModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.storage.message.MessageBucketManager;
 

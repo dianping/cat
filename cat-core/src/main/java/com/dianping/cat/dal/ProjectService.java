@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.dal;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.report.service.BaseCompositeModelService;
-import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.service.BaseCompositeModelService;
+import com.dianping.cat.service.BaseRemoteModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 

@@ -3,8 +3,8 @@ package com.dianping.cat.broker;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.cat.dal.IpService;
+import com.dianping.cat.dal.IpService.IpInfo;
 
 public class IpServiceTest extends ComponentTestCase {
 	@Test

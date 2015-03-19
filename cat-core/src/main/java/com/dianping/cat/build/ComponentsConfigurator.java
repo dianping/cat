@@ -10,6 +10,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.aggregation.AggregationHandler;
 import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
@@ -26,16 +27,17 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.dal.HostinfoService;
+import com.dianping.cat.dal.IpService;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.core.DefaultMessageHandler;
 import com.dianping.cat.message.spi.core.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.core.DomainValidator;
+import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.message.spi.core.MessageHandler;
 import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.core.TcpSocketReceiver;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.task.TaskManager;
 
@@ -48,8 +50,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
+		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
+		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
 
+		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 		all.add(C(IpService.class));
 		all.add(C(TaskManager.class).req(TaskDao.class));
 		all.add(C(ServerConfigManager.class));

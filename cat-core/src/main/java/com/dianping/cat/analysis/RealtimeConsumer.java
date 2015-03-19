@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer;
+package com.dianping.cat.analysis;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -10,8 +10,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.analysis.MessageAnalyzerManager;
 import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;

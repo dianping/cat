@@ -7,7 +7,6 @@ import java.nio.charset.Charset;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.BasePayload;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
@@ -18,11 +17,12 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
-import com.dianping.cat.report.service.LocalModelService;
-import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.service.ModelService;
 import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {

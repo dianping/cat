@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -7,8 +7,6 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

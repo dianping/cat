@@ -185,73 +185,7 @@
 			</query>
 		</query-defs>
 	</entity>
-	<entity name="monthly-report-content" table="monthly_report_content" alias="mrc">
-	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
-	 <var name="capacity" value-type="double" />
-	 <var name="start-id" value-type="int" />
-	 <readsets>
-		<readset name="LENGTH">
-			<member name="report-id" />
-			<member name="content-length" />
-		</readset>
-	 </readsets>
-     <query-defs>
-     	<query name="find-overload-report" type="SELECT" multiple="true">
-			<param name="start-id" />
-			<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> > ${start-id}
-				ORDER BY <FIELD name='report-id'/> asc  limit 1000
-				]]></statement>
-		</query>
-     </query-defs>
-    </entity>
-    <entity name="weekly-report-content" table="weekly_report_content" alias="wrc">
-	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
-	 <var name="capacity" value-type="double" />
-	 <var name="start-id" value-type="int" />
-	 <readsets>
-		<readset name="LENGTH">
-			<member name="report-id" />
-			<member name="content-length" />
-		</readset>
-	 </readsets>
-     <query-defs>
-     	<query name="find-overload-report" type="SELECT" multiple="true">
-			<param name="start-id" />
-			<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> > ${start-id}
-				ORDER BY <FIELD name='report-id'/> asc  limit 1000
-				]]></statement>
-		</query>
-     </query-defs>
-    </entity>
-    <entity name="daily-report-content" table="daily_report_content" alias="drc">
-	 <member name="content-length" value-type="double" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
-	 <var name="start-id" value-type="int" />
-	 <var name="end-id" value-type="int" />
-	 <var name="capacity" value-type="double" />
-	 <readsets>
-		<readset name="LENGTH">
-			<member name="report-id" />
-			<member name="content-length" />
-		</readset>
-	 </readsets>
-     <query-defs>
-     	<query name="find-overload-report" type="SELECT" multiple="true">
-			<param name="start-id" />
-			<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				WHERE <FIELD name='report-id'/> > ${start-id}
-				ORDER BY <FIELD name='report-id'/> asc  limit 1000
-				]]></statement>
-		</query>
-     </query-defs>
-    </entity>
+	
     <entity name="overload" table="overload" alias="ot">
    		<var name="start-time" value-type="Date" />
 		<var name="end-time" value-type="Date" />

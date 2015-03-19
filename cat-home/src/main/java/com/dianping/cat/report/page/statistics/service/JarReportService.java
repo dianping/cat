@@ -14,7 +14,7 @@ import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.jar.transform.DefaultNativeParser;
-import com.dianping.cat.report.service.AbstractReportService;
+import com.dianping.cat.service.AbstractReportService;
 
 public class JarReportService extends AbstractReportService<JarReport> {
 

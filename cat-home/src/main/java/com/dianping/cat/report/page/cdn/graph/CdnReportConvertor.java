@@ -4,8 +4,8 @@ import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.cat.dal.IpService;
+import com.dianping.cat.dal.IpService.IpInfo;
 
 public class CdnReportConvertor extends BaseVisitor {
 	private IpService m_ipService;

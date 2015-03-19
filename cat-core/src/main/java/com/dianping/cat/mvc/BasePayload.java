@@ -1,4 +1,4 @@
-package com.dianping.cat;
+package com.dianping.cat.mvc;
 
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 

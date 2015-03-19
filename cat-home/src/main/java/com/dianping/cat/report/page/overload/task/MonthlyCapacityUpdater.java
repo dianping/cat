@@ -10,9 +10,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.home.dal.report.MonthlyReportContent;
-import com.dianping.cat.home.dal.report.MonthlyReportContentDao;
-import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportContent;
+import com.dianping.cat.core.dal.MonthlyReportContentDao;
+import com.dianping.cat.core.dal.MonthlyReportContentEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
 

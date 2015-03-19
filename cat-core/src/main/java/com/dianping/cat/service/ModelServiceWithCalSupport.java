@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
