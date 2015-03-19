@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.matrix;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -18,7 +18,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public Payload() {
 		super(ReportPage.MATRIX);
 	}
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;

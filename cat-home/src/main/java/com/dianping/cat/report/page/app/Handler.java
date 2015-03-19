@@ -29,11 +29,11 @@ import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
@@ -89,27 +89,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AppReportService m_appReportService;
 
-	private Pair<LineChart, List<AppDataDetail>> buildLineChart(Model model, Payload payload, AppDataField field,
-	      String sortBy) {
-		CommandQueryEntity entity1 = payload.getQueryEntity1();
-		CommandQueryEntity entity2 = payload.getQueryEntity2();
-		String type = payload.getType();
-		LineChart lineChart = new LineChart();
-		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
-
-		try {
-			filterCommands(model, payload.isShowActivity());
-
-			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
-			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
-
-	}
-
 	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload, AppDataField field,
 	      String sortBy) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
@@ -131,10 +110,10 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataField field) {
+	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload, AppDataField field) {
 		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
-			      field);
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
+			      payload.getQueryEntity1(), field);
 			List<PieChartDetailInfo> infos = pair.getValue();
 			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
@@ -145,10 +124,59 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload, AppDataField field) {
+	private Pair<LineChart, List<AppDataDetail>> buildLineChart(Model model, Payload payload, AppDataField field,
+	      String sortBy) {
+		CommandQueryEntity entity1 = payload.getQueryEntity1();
+		CommandQueryEntity entity2 = payload.getQueryEntity2();
+		String type = payload.getType();
+		LineChart lineChart = new LineChart();
+		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
+
 		try {
-			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
-			      payload.getQueryEntity1(), field);
+			filterCommands(model, payload.isShowActivity());
+
+			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
+			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
+			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
+
+	}
+
+	private Map<String, List<Speed>> buildPageStepInfo() {
+		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
+
+		for (Speed speed : m_appSpeedConfigManager.getConfig().getSpeeds().values()) {
+			String page = speed.getPage();
+			if (StringUtils.isEmpty(page)) {
+				page = "default";
+			}
+			List<Speed> steps = page2Steps.get(page);
+			if (steps == null) {
+				steps = new ArrayList<Speed>();
+				page2Steps.put(page, steps);
+			}
+			steps.add(speed);
+		}
+		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
+			List<Speed> speeds = entry.getValue();
+			Collections.sort(speeds, new Comparator<Speed>() {
+
+				@Override
+				public int compare(Speed o1, Speed o2) {
+					return o1.getStep() - o2.getStep();
+				}
+			});
+		}
+		return page2Steps;
+	}
+
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataField field) {
+		try {
+			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
+			      field);
 			List<PieChartDetailInfo> infos = pair.getValue();
 			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
@@ -360,6 +388,20 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void normalize(Model model, Payload payload) {
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.APP);
+		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
+		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
+		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
+		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
+		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
+		model.setCommands(m_manager.queryCommands());
+
+		m_normalizePayload.normalize(model, payload);
+	}
+
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
 		SpeedQueryEntity query1 = payload.getSpeedQueryEntity1();
 
@@ -373,48 +415,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return query1;
-	}
-
-	private Map<String, List<Speed>> buildPageStepInfo() {
-		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
-
-		for (Speed speed : m_appSpeedConfigManager.getConfig().getSpeeds().values()) {
-			String page = speed.getPage();
-			if (StringUtils.isEmpty(page)) {
-				page = "default";
-			}
-			List<Speed> steps = page2Steps.get(page);
-			if (steps == null) {
-				steps = new ArrayList<Speed>();
-				page2Steps.put(page, steps);
-			}
-			steps.add(speed);
-		}
-		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
-			List<Speed> speeds = entry.getValue();
-			Collections.sort(speeds, new Comparator<Speed>() {
-
-				@Override
-				public int compare(Speed o1, Speed o2) {
-					return o1.getStep() - o2.getStep();
-				}
-			});
-		}
-		return page2Steps;
-	}
-
-	private void normalize(Model model, Payload payload) {
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.APP);
-		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_manager.queryCommands());
-
-		m_normalizePayload.normalize(model, payload);
 	}
 
 	private void setUpdateResult(Model model, int i) {

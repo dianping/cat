@@ -7,17 +7,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.AbstractReportModel;
 
-public class Model  extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Date m_start;
 
 	private Date m_end;
-	
-	private Map<String,List<LineChart>> m_charts;
-	
+
+	private Map<String, List<LineChart>> m_charts;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -29,6 +30,16 @@ public class Model  extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	@Override
+	public String getDomain() {
+		return Constants.CAT;
+	}
+
+	@Override
+	public Collection<String> getDomains() {
+		return new HashSet<String>();
 	}
 
 	public Date getEnd() {
@@ -50,14 +61,4 @@ public class Model  extends AbstractReportModel<Action, Context> {
 	public void setStart(Date start) {
 		m_start = start;
 	}
-
-	@Override
-   public String getDomain() {
-	   return Constants.CAT;
-   }
-
-	@Override
-   public Collection<String> getDomains() {
-	   return new HashSet<String>();
-   }
 }

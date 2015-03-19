@@ -22,8 +22,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-			<implementation>com.dianping.cat.report.page.PayloadNormalizer</implementation>
+			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -3584,7 +3584,7 @@
 					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.helper.JsonBuilder</role>
@@ -3745,8 +3745,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.PayloadNormalizer</role>
-			<implementation>com.dianping.cat.report.page.PayloadNormalizer</implementation>
+			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -3780,7 +3780,7 @@
 					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
@@ -3876,7 +3876,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
@@ -3960,7 +3960,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
@@ -4113,7 +4113,7 @@
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -4172,7 +4172,7 @@
 					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.HostinfoService</role>
@@ -4263,7 +4263,7 @@
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -4303,7 +4303,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -4395,7 +4395,7 @@
 					<role>com.dianping.cat.report.page.metric.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -4526,7 +4526,7 @@
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4683,7 +4683,7 @@
 					<role>com.dianping.cat.report.page.statistics.config.BugConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.summary.AlertSummaryExecutor</role>
@@ -4971,7 +4971,7 @@
 					<role>com.dianping.cat.report.page.network.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -5106,7 +5106,7 @@
 					<role>com.dianping.cat.report.page.web.CityManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.web.graph.WebGraphCreator</role>
@@ -5181,7 +5181,7 @@
 					<role>com.dianping.cat.report.page.system.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.system.graph.SystemGraphCreator</role>
@@ -5313,7 +5313,7 @@
 					<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
@@ -5483,7 +5483,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5609,7 +5609,7 @@
 					<role>com.dianping.cat.report.page.database.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -5666,7 +5666,7 @@
 					<role>com.dianping.cat.report.page.storage.task.StorageReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -5822,7 +5822,7 @@
 					<role>com.dianping.cat.report.page.top.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>

@@ -23,7 +23,7 @@ public class ExternalInfoBuilder {
 
 	@Inject
 	private DependencyReportService m_reportService;
-	
+
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
 

@@ -20,9 +20,9 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.ExternalInfoBuilder;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
@@ -113,7 +113,6 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.TOP);
 		model.setAction(Action.VIEW);
-
 		m_normalizePayload.normalize(model, payload);
 
 		Integer minute = parseQueryMinute(payload);

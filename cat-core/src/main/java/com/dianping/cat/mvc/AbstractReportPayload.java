@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page;
+package com.dianping.cat.mvc;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,13 +7,15 @@ import java.util.Date;
 
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.mvc.PayloadNormalizer.ReportPayload;
 import com.dianping.cat.service.ModelPeriod;
 
-public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
+public abstract class AbstractReportPayload<A extends Action, P extends Page> implements ActionPayload<P, A>,
+      ReportPayload {
 
 	@FieldMeta("endDate")
 	protected String m_customEnd;
@@ -30,7 +32,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("ip")
 	private String m_ipAddress;
 
-	private ReportPage m_page;
+	protected P m_page;
 
 	@FieldMeta("reportType")
 	private String m_reportType;
@@ -45,9 +47,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
-	private ReportPage m_defaultPage;
+	protected P m_defaultPage;
 
-	public AbstractReportPayload(ReportPage defaultPage) {
+	public AbstractReportPayload(P defaultPage) {
 		m_defaultPage = defaultPage;
 	}
 
@@ -185,7 +187,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	@Override
-	public ReportPage getPage() {
+	public P getPage() {
 		return m_page;
 	}
 
@@ -244,13 +246,8 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		m_ipAddress = ipAddress;
 	}
 
-	public void setPage(ReportPage page) {
+	public void setPage(P page) {
 		m_page = page;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, m_defaultPage);
 	}
 
 	public void setReportType(String reportType) {

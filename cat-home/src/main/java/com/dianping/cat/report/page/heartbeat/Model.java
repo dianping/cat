@@ -12,11 +12,12 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.heartbeat.HeartbeatSvgGraph.ExtensionGroup;
 
 @ModelMeta(HeartbeatAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private int m_hour;
 
@@ -132,7 +133,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
-
 
 	public void setReport(HeartbeatReport report) {
 		m_report = report;

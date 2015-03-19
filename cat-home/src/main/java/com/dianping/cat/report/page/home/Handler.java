@@ -25,7 +25,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TcpSocketReceiver m_receiver;
-	
+
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_realtimeConsumer;
 

@@ -19,9 +19,9 @@ import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -98,6 +98,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.METRIC);
+		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
 
 		int timeRange = payload.getTimeRange();

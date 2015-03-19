@@ -21,7 +21,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>
@@ -39,7 +39,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>
@@ -57,7 +57,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>
@@ -75,7 +75,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>
@@ -93,7 +93,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>
@@ -111,7 +111,7 @@
 						<tr>
 							<td>${item.domain}</td>
 							<td>${item.name}</td>
-							<td><a href="${model.logViewBaseUri}/${item.logview}?domain=${model.domain}">Log View</a></td>
+							<td><a href="/cat/r/m/${item.logview}?domain=${model.domain}">Log View</a></td>
 							<td style="text-align:right">${item.count}</td>
 						</tr>
 					</c:forEach>

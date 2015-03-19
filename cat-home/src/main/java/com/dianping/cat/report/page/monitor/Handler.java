@@ -165,6 +165,10 @@ public class Handler implements PageHandler<Context> {
 		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
 	}
 
+	private boolean isDatabase(String group) {
+		return ProductLineConfig.DATABASE.isTypeOf(group);
+	}
+
 	private boolean isGenericMetric(String group) {
 		return !isNetwork(group) && !isSystem(group) && !isDatabase(group);
 	}
@@ -175,10 +179,6 @@ public class Handler implements PageHandler<Context> {
 
 	private boolean isSystem(String group) {
 		return ProductLineConfig.SYSTEM.isTypeOf(group);
-	}
-
-	private boolean isDatabase(String group) {
-		return ProductLineConfig.DATABASE.isTypeOf(group);
 	}
 
 }

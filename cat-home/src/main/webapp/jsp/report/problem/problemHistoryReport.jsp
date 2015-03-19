@@ -104,7 +104,7 @@
 				<td class="right"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
 				<td ><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
-						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+						<a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
 						
 				<c:if test="${index.index != 0}">

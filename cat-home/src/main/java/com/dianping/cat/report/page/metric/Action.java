@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.metric;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	METRIC("view"),
-	
+
 	JSON("json");
 
 	private String m_name;

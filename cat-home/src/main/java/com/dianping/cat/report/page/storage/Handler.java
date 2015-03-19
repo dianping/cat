@@ -28,9 +28,9 @@ import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
@@ -70,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
 		String format = m_storageGroupConfigManager.getSqlLinkFormat();
-		
+
 		if (format != null) {
 			for (Entry<String, StorageAlertInfo> alertInfo : alertInfos.entrySet()) {
 				String key = alertInfo.getKey();
@@ -219,6 +219,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STORAGE);
+		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
 
 		if (payload.getAction() == Action.DASHBOARD) {

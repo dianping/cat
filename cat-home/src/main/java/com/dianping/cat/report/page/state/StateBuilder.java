@@ -27,18 +27,6 @@ public class StateBuilder {
 
 	private static final int COUNT = 500 * 10000;
 
-	private List<String> queryAllServers() {
-		List<String> strs = new ArrayList<String>();
-		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
-		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
-
-		for (DefaultServer server : servers) {
-			strs.add(server.getId());
-		}
-		strs.add(backUpServer);
-		return strs;
-	}
-
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
 
@@ -66,6 +54,18 @@ public class StateBuilder {
 			}
 		}
 		return null;
+	}
+
+	private List<String> queryAllServers() {
+		List<String> strs = new ArrayList<String>();
+		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
+		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
+
+		for (DefaultServer server : servers) {
+			strs.add(server.getId());
+		}
+		strs.add(backUpServer);
+		return strs;
 	}
 
 	private StateReport queryHourlyReport(long date, String ip) {
