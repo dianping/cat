@@ -34,12 +34,15 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		long startTime = getStartTime();
 
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.getHourlyReport(startTime, Constants.CAT, true);
-			m_reportManager.getHourlyReports(startTime).put(Constants.CAT, getReport(Constants.CAT));
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
 		} else {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
 		}
+	}
+
+	@Override
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override

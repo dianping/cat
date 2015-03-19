@@ -184,6 +184,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
+   protected void loadReports() {
+		//do nothing
+   }
+	
+	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
 

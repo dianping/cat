@@ -113,9 +113,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return currentTime > endTime;
 	}
 
-	protected void loadReports() {
-		// to be overridden
-	}
+	protected abstract void loadReports();
 
 	protected abstract void process(MessageTree tree);
 
