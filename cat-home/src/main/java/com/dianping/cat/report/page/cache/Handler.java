@@ -19,10 +19,10 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
@@ -42,7 +42,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TransactionReportService m_transactionReportService;
-	
+
 	@Inject
 	private EventReportService m_eventReportService;
 
@@ -142,9 +142,9 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isNotEmpty(type)) {
 			request.setProperty("type", type);
 		}
-		
+
 		ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-		
+
 		transactionReport = response.getModel();
 
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
@@ -203,6 +203,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		m_normalizePayload.normalize(model, payload);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}

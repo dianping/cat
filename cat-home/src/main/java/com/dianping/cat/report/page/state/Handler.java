@@ -18,10 +18,10 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
@@ -130,6 +130,8 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STATE);
+		model.setAction(payload.getAction());
+
 		String ip = payload.getIpAddress();
 
 		if (StringUtils.isEmpty(ip)) {

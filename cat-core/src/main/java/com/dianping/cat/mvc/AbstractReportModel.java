@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page;
+package com.dianping.cat.mvc;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -12,19 +12,18 @@ import java.util.Map;
 import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.view.HistoryNav;
-import com.dianping.cat.report.view.UrlNav;
+import com.dianping.cat.mvc.PayloadNormalizer.ReportModel;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ProjectService.Department;
 
-public abstract class AbstractReportModel<A extends Action, M extends ActionContext<?>> extends
-      ViewModel<ReportPage, A, M> {
+public abstract class AbstractReportModel<A extends Action, P extends Page,M extends ActionContext<?>> extends
+      ViewModel<P, A, M> implements ReportModel{
 
 	private Date m_creatTime;
 
@@ -57,7 +56,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 			Cat.logError(e);
 		}
 	}
-
+	
 	public String getBaseUri() {
 		return buildPageUri(getPage().getPath(), null);
 	}
@@ -147,10 +146,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public String getIpToHostnameStr() {
 		return new JsonBuilder().toJson(getIpToHostname());
-	}
-
-	public String getLogViewBaseUri() {
-		return buildPageUri(ReportPage.LOGVIEW.getPath(), null);
 	}
 
 	public long getLongDate() {

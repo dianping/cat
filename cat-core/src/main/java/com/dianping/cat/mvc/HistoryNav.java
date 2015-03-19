@@ -1,4 +1,4 @@
-package com.dianping.cat.report.view;
+package com.dianping.cat.mvc;
 
 public enum HistoryNav {
 

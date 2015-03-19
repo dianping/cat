@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.system;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	SYSTEM("view"),
-	
+
 	;
 
 	private String m_name;

@@ -21,9 +21,9 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.config.ProductLineConfig;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
 
 public class Handler implements PageHandler<Context> {
@@ -102,6 +102,7 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setProductLines(buildProductlines());
 		model.setPage(ReportPage.SYSTEM);
+		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
 	}
 }

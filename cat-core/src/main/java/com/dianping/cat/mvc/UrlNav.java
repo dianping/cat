@@ -1,4 +1,4 @@
-package com.dianping.cat.report.view;
+package com.dianping.cat.mvc;
 
 public enum UrlNav {
 	SEVEN_DAY_BEFORE("-7d", -24 * 7),

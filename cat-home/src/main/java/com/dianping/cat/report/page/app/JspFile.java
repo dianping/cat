@@ -4,7 +4,7 @@ public enum JspFile {
 	VIEW("/jsp/report/app/linechart.jsp"),
 
 	PIECHART("/jsp/report/app/piechart.jsp"),
-	
+
 	CONN_LINECHART("/jsp/report/app/connLinechart.jsp"),
 
 	CONN_PIECHART("/jsp/report/app/connPiechart.jsp"),
@@ -14,9 +14,9 @@ public enum JspFile {
 	APP_FETCH_DATA("/jsp/report/app/fetchData.jsp"),
 
 	CRASH_LOG("/jsp/report/app/crashLog.jsp"),
-	
+
 	SPEED("/jsp/report/app/speed.jsp"),
-	
+
 	STATISTICS("/jsp/report/app/statistics.jsp");
 
 	private String m_path;

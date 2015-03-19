@@ -4,10 +4,10 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("minute")
 	private String m_minute;
 
@@ -47,6 +47,32 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public long getCurrentDate() {
+		long timestamp = getCurrentTimeMillis();
+
+		return timestamp - timestamp % TimeHelper.ONE_HOUR;
+	}
+
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
+	}
+
+	public long getDate() {
+		long current = getCurrentDate();
+		long extra = m_step * TimeHelper.ONE_HOUR;
+
+		if (m_date <= 0) {
+			return current + extra;
+		} else {
+			long result = m_date + extra;
+
+			if (result > current) {
+				return current;
+			}
+			return result;
+		}
 	}
 
 	public int getFrequency() {
@@ -133,32 +159,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTab(String tab) {
 		m_tab = tab;
-	}
-
-	public long getCurrentTimeMillis() {
-		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
-	}
-
-	public long getCurrentDate() {
-		long timestamp = getCurrentTimeMillis();
-
-		return timestamp - timestamp % TimeHelper.ONE_HOUR;
-	}
-
-	public long getDate() {
-		long current = getCurrentDate();
-		long extra = m_step * TimeHelper.ONE_HOUR;
-
-		if (m_date <= 0) {
-			return current + extra;
-		} else {
-			long result = m_date + extra;
-
-			if (result > current) {
-				return current;
-			}
-			return result;
-		}
 	}
 
 	@Override

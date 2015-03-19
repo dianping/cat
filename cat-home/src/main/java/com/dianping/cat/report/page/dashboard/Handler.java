@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_builder;
-	
+
 	private NumberFormat m_format = new DecimalFormat("#0.00");
 
 	private static final String COUNT = "Count";

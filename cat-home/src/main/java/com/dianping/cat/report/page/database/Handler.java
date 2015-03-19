@@ -18,9 +18,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -69,6 +69,8 @@ public class Handler implements PageHandler<Context> {
 
 		model.setPage(ReportPage.DATABASE);
 		model.setProductLines(databases);
+		model.setAction(payload.getAction());
+
 		m_normalizePayload.normalize(model, payload);
 
 		if (StringUtils.isEmpty(payload.getProduct())) {
