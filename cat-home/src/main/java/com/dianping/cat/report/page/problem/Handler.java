@@ -315,7 +315,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void showDetail(Model model, Payload payload) {
 		String ipAddress = payload.getIpAddress();
-		model.setLongDate(payload.getDate());
+		model.setDate(payload.getDate());
 		model.setIpAddress(ipAddress);
 		model.setGroupName(payload.getGroupName());
 		model.setCurrentMinute(payload.getMinute());
@@ -337,9 +337,9 @@ public class Handler implements PageHandler<Context> {
 	private ProblemReport showHourlyReport(Model model, Payload payload) {
 		ModelPeriod period = payload.getPeriod();
 		if (period.isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
+			model.setDate(payload.getCurrentDate());
 		} else {
-			model.setLongDate(payload.getDate());
+			model.setDate(payload.getDate());
 		}
 
 		if (period.isCurrent() || period.isFuture()) {

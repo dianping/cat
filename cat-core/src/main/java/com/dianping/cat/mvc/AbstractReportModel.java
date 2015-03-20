@@ -185,7 +185,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page,M ext
 		m_ipAddress = ipAddress;
 	}
 
-	public void setLongDate(long date) {
+	public void setDate(long date) {
 		m_date = date;
 	}
 

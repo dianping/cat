@@ -51,10 +51,10 @@
 							</c:if>
 							<td class="department">${productline.key}</td>
 							<td><div class="domain"><c:forEach var="domain" items="${productline.value.lineDomains}">&nbsp;<c:choose><c:when test="${model.domain eq domain}"><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${model.reportType}"
+													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}"
 													class="current">[&nbsp;${domain}&nbsp;]</a></c:when>
 													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${model.reportType}">[&nbsp;${domain}&nbsp;]</a>
+													href="?op=${payload.action.name}&domain=${domain}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${domain}&nbsp;]</a>
 											</c:otherwise></c:choose>&nbsp;
 									</c:forEach>
 								</div>
@@ -81,7 +81,7 @@
 			<span class="text-danger">【<a href="?domain=${model.domain}" class="switch"><span class="text-danger">切到小时模式</span></a>】</span>
 					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
-						<c:when test="${nav.title eq model.reportType}">
+						<c:when test="${nav.title eq payload.reportType}">
 								<span>&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]</span>
 						</c:when>
 						<c:otherwise>
@@ -89,9 +89,9 @@
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
-				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
-				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?op=history&domain=${model.domain}&ip=${model.ipAddress}&reportType=${payload.reportType}&nav=next&${navUrlPrefix}">now</a> ]
 		</div><!-- /.nav-search -->
 	</div>
 	<jsp:doBody />

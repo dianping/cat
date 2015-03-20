@@ -10,6 +10,7 @@ import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer.ReportPayload;
 import com.dianping.cat.service.ModelPeriod;
@@ -27,21 +28,18 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	protected long m_date;
 
 	@FieldMeta("domain")
-	private String m_domain;
+	private String m_domain = Constants.CAT;
 
 	@FieldMeta("ip")
-	private String m_ipAddress;
+	private String m_ipAddress = Constants.ALL;
 
 	protected P m_page;
 
 	@FieldMeta("reportType")
-	private String m_reportType;
+	private String m_reportType = "day";
 
 	@FieldMeta("step")
 	protected int m_step;
-
-	@FieldMeta("today")
-	private boolean m_today;
 
 	private SimpleDateFormat m_hourlyFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -53,9 +51,12 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		m_defaultPage = defaultPage;
 	}
 
-	public void computeStartDate() {
-		m_date = getDate();
+	public void computeHistoryDate() {
+		if (m_date <= 0) {
+			m_date = TimeHelper.getCurrentDay(-1).getTime();
+		}
 		Calendar cal = Calendar.getInstance();
+		
 		cal.setTimeInMillis(m_date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		m_date = cal.getTimeInMillis();
@@ -95,6 +96,8 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 				m_date = temp;
 			}
 		}
+
+		setYesterdayDefault();
 	}
 
 	public long getCurrentDate() {
@@ -114,12 +117,8 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 
 	public long getDate() {
 		long current = getCurrentDate();
-
 		long extra = m_step * TimeHelper.ONE_HOUR;
-		if (m_reportType != null
-		      && (m_reportType.equals("day") || m_reportType.equals("month") || m_reportType.equals("week"))) {
-			extra = 0;
-		}
+
 		if (m_date <= 0) {
 			return current + extra;
 		} else {
@@ -127,8 +126,9 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 
 			if (result > current) {
 				return current;
+			} else {
+				return result;
 			}
-			return result;
 		}
 	}
 
@@ -207,10 +207,6 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		return m_step;
 	}
 
-	public boolean isToday() {
-		return m_today;
-	}
-
 	public void setCustomEnd(String customEnd) {
 		m_customEnd = customEnd;
 	}
@@ -251,19 +247,15 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setReportType(String reportType) {
-		this.m_reportType = reportType;
+		m_reportType = reportType;
 	}
 
 	public void setStep(int nav) {
 		m_step = nav;
 	}
 
-	public void setToday(boolean today) {
-		m_today = today;
-	}
-
 	// yestoday is default
-	public void setYesterdayDefault() {
+	private void setYesterdayDefault() {
 		if ("day".equals(m_reportType)) {
 			Calendar today = Calendar.getInstance();
 			long current = getCurrentDate();

@@ -94,7 +94,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.LOGVIEW);
 		model.setDomain(payload.getDomain());
-		model.setLongDate(payload.getDate());
+		model.setDate(payload.getDate());
 
 		String messageId = getMessageId(payload);
 		String logView = null;
