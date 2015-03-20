@@ -18,6 +18,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -293,6 +294,28 @@ public class AppConfigProcessor extends BaseProcesser {
 		case APP_RULE_BATCH_UPDATE:
 			appRuleBatchUpdate(payload, model);
 			buildListInfo(model, payload);
+			break;
+		case APP_CONSTANT_ADD:
+			break;
+		case APP_CONSTANT_UPDATE:
+			Item item = m_appConfigManager.queryItem(payload.getType(), payload.getId());
+
+			model.setAppItem(item);
+			break;
+		case APP_CONSTATN_SUBMIT:
+			try {
+				id = payload.getId();
+				String content = payload.getContent();
+				String[] strs = content.split(":");
+				String type = strs[0];
+				int constantId = Integer.valueOf(strs[1]);
+				String value = strs[2];
+
+				model.setOpState(m_appConfigManager.addConstant(type, constantId, value));
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

@@ -148,6 +148,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_CODE_DELETE:
 		case APP_SPEED_DELETE:
 		case APP_SPEED_SUBMIT:
+		case APP_CONSTATN_DELETE:
+		case APP_CONSTATN_SUBMIT:
 			return JspFile.APP_LIST.getPath();
 		case APP_CODE_ADD:
 		case APP_CODE_UPDATE:
@@ -169,6 +171,9 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.APP_LIST.getPath();
 		case APP_COMPARISON_CONFIG_UPDATE:
 			return JspFile.APP_COMPARISON_CONFIG_UPDATE.getPath();
+		case APP_CONSTANT_ADD:
+		case APP_CONSTANT_UPDATE:
+			return JspFile.APP_CONSTANT_UPDATE.getPath();
 		case TRANSACTION_RULE:
 		case TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT:
 		case TRANSACTION_RULE_DELETE:
