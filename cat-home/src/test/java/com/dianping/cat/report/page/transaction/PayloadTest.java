@@ -100,13 +100,13 @@ public class PayloadTest {
 
 		payload.setStep(1);
 		payload.computeHistoryDate();
-		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
+		checkDate(lastOne, payload.getHistoryStartDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeHistoryDate();
-		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
+		checkDate(lastOne, payload.getHistoryStartDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 	}
 
 	@Test
