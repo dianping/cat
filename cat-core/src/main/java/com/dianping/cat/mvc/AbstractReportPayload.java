@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.Page;
@@ -56,7 +57,7 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 			m_date = TimeHelper.getCurrentDay(-1).getTime();
 		}
 		Calendar cal = Calendar.getInstance();
-		
+
 		cal.setTimeInMillis(m_date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		m_date = cal.getTimeInMillis();
@@ -239,7 +240,9 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
+		if (StringUtils.isNotEmpty(ipAddress)) {
+			m_ipAddress = ipAddress;
+		}
 	}
 
 	public void setPage(P page) {
