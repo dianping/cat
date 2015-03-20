@@ -95,16 +95,14 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	private void buildListInfo(Model model, Payload payload) {
-		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
-		model.setCodes(m_appConfigManager.getCodes());
-
 		int id = 0;
+		List<Command> commands = m_appConfigManager.queryCommands();
 
 		if ("code".equals(payload.getType()) && payload.getId() > 0) {
 			id = payload.getId();
 		} else {
-			if (!m_appConfigManager.getRawCommands().isEmpty()) {
-				id = m_appConfigManager.getRawCommands().keySet().iterator().next();
+			if (!commands.isEmpty()) {
+				id = commands.iterator().next().getId();
 			}
 		}
 		Command cmd = m_appConfigManager.getRawCommands().get(id);
@@ -115,6 +113,8 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 
 		buildBatchApiConfig(payload, model);
+		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCodes(m_appConfigManager.getCodes());
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -180,13 +180,20 @@ public class AppConfigProcessor extends BaseProcesser {
 		case APP_CODE_UPDATE:
 			id = payload.getId();
 			int codeId = payload.getCode();
-			Command cmd = m_appConfigManager.getRawCommands().get(id);
 
-			if (cmd != null) {
-				Code code = cmd.getCodes().get(codeId);
+			if (payload.isConstant()) {
+				Code code = m_appConfigManager.getConfig().getCodes().get(codeId);
 
 				model.setCode(code);
-				model.setUpdateCommand(cmd);
+			} else {
+				Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+				if (cmd != null) {
+					Code code = cmd.getCodes().get(codeId);
+
+					model.setCode(code);
+					model.setUpdateCommand(cmd);
+				}
 			}
 			break;
 		case APP_CODE_SUBMIT:
@@ -197,9 +204,15 @@ public class AppConfigProcessor extends BaseProcesser {
 				codeId = Integer.parseInt(strs.get(0));
 				name = strs.get(1);
 				int status = Integer.parseInt(strs.get(2));
+
 				Code code = new Code(codeId);
 				code.setName(name).setStatus(status);
-				m_appConfigManager.updateCode(id, code);
+
+				if (payload.isConstant()) {
+					m_appConfigManager.updateCode(code);
+				} else {
+					m_appConfigManager.updateCode(id, code);
+				}
 				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -215,7 +228,11 @@ public class AppConfigProcessor extends BaseProcesser {
 				id = payload.getId();
 				codeId = payload.getCode();
 
-				m_appConfigManager.deleteCode(id, codeId);
+				if (payload.isConstant()) {
+					m_appConfigManager.getCodes().remove(codeId);
+				} else {
+					m_appConfigManager.deleteCode(id, codeId);
+				}
 				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);

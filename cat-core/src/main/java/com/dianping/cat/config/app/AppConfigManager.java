@@ -494,6 +494,12 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
+	public boolean updateCode(Code code) {
+		m_config.getCodes().put(code.getId(), code);
+
+		return true;
+	}
+
 	public boolean updateCommand(int id, String domain, String name, String title) {
 		Command command = m_config.findCommand(id);
 
