@@ -2,7 +2,7 @@
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" webres="true" plugin-management="false">
       <module name="report" path="r">
-         <page name="home" title="Home" view="/jsp/report/home/home.jsp">
+         <page name="home" title="Home" default="true" view="/jsp/report/home/home.jsp">
             <description>Home Page</description>
          </page>
          <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
@@ -83,7 +83,7 @@
          <page name="activity" title="Activity" path="activity" template="default">
             <description>Activity</description>
          </page>
-         <page name="top" title="Top" default="true" path="top" view="/jsp/report/top/top.jsp" template="default">
+         <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp" template="default">
             <description>Top</description>
          </page>
       </module>

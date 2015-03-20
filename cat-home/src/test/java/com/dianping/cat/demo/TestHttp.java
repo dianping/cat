@@ -16,7 +16,7 @@ public class TestHttp {
 	@Test
 	public void testManyThread() throws Exception {
 		System.setProperty("devMode", "true");
-		int size = 50;
+		int size = 20;
 		CountDownLatch latch = new CountDownLatch(size);
 		for (int i = 0; i < size; i++) {
 			Threads.forGroup("cat").start(new SendEvent(i, latch));
@@ -48,7 +48,7 @@ public class TestHttp {
 				for (int i = 0; i < 1000000000; i++) {
 					try {
 						InputStream in = Urls.forIO().readTimeout(3000).connectTimeout(3000)
-						      .openStream("http://ppe.cat.dp/cat/r/");
+						      .openStream("http://cat.qa.dianpingoa.com/cat/r/");
 
 						String content = Files.forIO().readFrom(in, "utf-8");
 						System.out.println(" id:" + m_index + " seq" + i + " length:" + content.length());
