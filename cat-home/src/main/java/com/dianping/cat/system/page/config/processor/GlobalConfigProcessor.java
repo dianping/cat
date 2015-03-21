@@ -148,7 +148,6 @@ public class GlobalConfigProcessor {
 			model.setContent(m_groupConfigManager.getConfig().toString());
 			break;
 		default:
-			System.out.println(action);
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}

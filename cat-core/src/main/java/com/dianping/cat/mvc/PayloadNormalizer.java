@@ -3,50 +3,44 @@ package com.dianping.cat.mvc;
 import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.Action;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.helper.TimeHelper;
 
 public class PayloadNormalizer {
 
 	@Inject
-	private ServerConfigManager m_manager;
+	protected ServerConfigManager m_manager;
 
 	public void normalize(ReportModel model, ReportPayload payload) {
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
-		if (StringUtils.isEmpty(payload.getIpAddress())) {
-			payload.setIpAddress(Constants.ALL);
-		}
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
+		long date = payload.getDate();
+		long current = System.currentTimeMillis();
+
+		if (date > current) {
+			date = current - current % TimeHelper.ONE_HOUR;
+			model.setDate(date);
 		} else {
-			model.setLongDate(payload.getDate());
+			model.setDate(date);
 		}
+		
 		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
 
 		if (payload.getAction().getName().startsWith("history")) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
+			payload.computeHistoryDate();
+
+			Date start = payload.getHistoryStartDate();
+			Date end = payload.getHistoryEndDate();
+			
 			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			model.setDate(start.getTime());
+			model.setCustomDate(start, end);
 		}
 	}
 
 	public interface ReportModel {
-		public void setLongDate(long date);
+		public void setDate(long date);
 
 		public void setIpAddress(String ip);
 
@@ -60,27 +54,13 @@ public class PayloadNormalizer {
 	public interface ReportPayload {
 		public String getDomain();
 
-		public void setDomain(String domain);
-
 		public String getIpAddress();
-
-		public void setIpAddress(String ip);
-
-		public ModelPeriod getPeriod();
-
-		public long getCurrentDate();
 
 		public long getDate();
 
 		public String getReportType();
 
-		public void setReportType(String reportType);
-
-		public void computeStartDate();
-
-		public void setYesterdayDefault();
-
-		public boolean isToday();
+		public void computeHistoryDate();
 
 		public Date getHistoryStartDate();
 
@@ -88,5 +68,5 @@ public class PayloadNormalizer {
 
 		public Action getAction();
 	}
-	
+
 }

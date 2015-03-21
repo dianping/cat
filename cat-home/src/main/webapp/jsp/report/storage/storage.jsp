@@ -142,7 +142,7 @@
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${model.reportType}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${payload.reportType}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){

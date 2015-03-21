@@ -63,7 +63,7 @@
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
-		<tr><td><strong><a href="/cat/r/p?op=hourlyGraph&domain=FrontEnd&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+		<tr><td><strong><a href="/cat/r/p?op=hourlyGraph&domain=FrontEnd&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 		Total</strong></td>
 		<td class="right">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
 		<tr class="graphs"><td colspan="5" style="display:none"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
@@ -73,7 +73,7 @@
 					<tr>
 				</c:if>
 				<td>
-					<a href="/cat/r/p?op=hourlyGraph&domain=FrontEnd&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
+					<a href="/cat/r/p?op=hourlyGraph&domain=FrontEnd&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
 				<td  class="right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>

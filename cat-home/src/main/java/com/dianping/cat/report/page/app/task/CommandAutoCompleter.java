@@ -29,6 +29,8 @@ public class CommandAutoCompleter {
 	@Inject
 	private TransactionReportService m_reportService;
 
+	private static String SERVER = "warp-connection-server";
+
 	public void autoCompleteDomain(Date period) {
 		Collection<Command> commands = m_configManager.getRawCommands().values();
 		Date end = new Date(period.getTime() + TimeHelper.ONE_DAY);
@@ -44,7 +46,9 @@ public class CommandAutoCompleter {
 				Map<String, String> urlToDomains = visitor.getUrlToDomains();
 
 				for (Command command : commands) {
-					if (StringUtils.isEmpty(command.getDomain())) {
+					String commandDomain = command.getDomain();
+
+					if (StringUtils.isEmpty(commandDomain) || SERVER.equals(commandDomain)) {
 						String commandUrl = command.getName();
 
 						for (Entry<String, String> entry : urlToDomains.entrySet()) {
@@ -88,7 +92,10 @@ public class CommandAutoCompleter {
 		@Override
 		public void visitTransactionReport(TransactionReport transactionReport) {
 			m_domain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
+
+			if (!SERVER.equals(m_domain)) {
+				super.visitTransactionReport(transactionReport);
+			}
 		}
 	}
 

@@ -58,7 +58,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HOME);
 		model.setDomain(payload.getDomain());
-		model.setLongDate(payload.getDate());
+		model.setDate(payload.getDate());
 		m_jspViewer.view(ctx, model);
 	}
 

@@ -39,6 +39,8 @@
 			$("#tabContent-api-default").addClass('active');
 			$("#tab-activity-default").addClass('active');
 			$("#tabContent-activity-default").addClass('active');
+			$("#tab-constant-版本").addClass('active');
+			$("#tabContent-constant-版本").addClass('active');
 			
 			$('#batchInsert').bind("click",function(e){
 				if (confirm("确认要进行批量删除吗？") == true){
@@ -89,6 +91,7 @@
 				    <li id="tab-batch" class="text-right"><a href="#tabContent-batch" data-toggle="tab"><strong>批量添加命令字</strong></a></li>
 				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
 				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"><strong>测速配置</strong></a></li>
+				    <li id="tab-constant" class="text-right"><a href="#tabContent-constant" data-toggle="tab"><strong>常量配置</strong></a></li>
 				</ul>
 				<div class="tab-content">
 					<div class="tab-pane" id="tabContent-api">
@@ -123,8 +126,8 @@
 							    </div>
 							</c:forEach>
 						  </div>
-						  
 						</div>
+						
 					</div>
 					<div class="tab-pane" id="tabContent-activity">
 					
@@ -210,6 +213,40 @@
 							</tbody>
 						</table>
 					</div>
+					
+					<div class="tab-pane" id="tabContent-constant">
+					
+						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
+							  <ul class="nav nav-tabs padding-12 ">
+							  	<c:forEach var="entry" items="${model.configItems}" varStatus="status">
+								    <li id="tab-constant-${entry.key}" class="text-right"><a href="#tabContent-constant-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
+								</c:forEach>
+							  </ul>
+							  <div class="tab-content">
+							  	<c:forEach var="entry" items="${model.configItems}" varStatus="status">
+								  	<div class="tab-pane" id="tabContent-constant-${entry.key}">
+									    <table class="table table-striped table-condensed table-bordered table-hover">
+										    <thead><tr>
+													<th>ID</th>
+													<th>值</th>
+													<th width="5%"><a href="?op=appConstantAdd&type=${entry.key}" class="btn btn-primary btn-xs" >
+													<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+												</tr>
+											</thead>
+											
+									    	<c:forEach var="e" items="${entry.value.items}">
+										    	<tr><td>${e.value.id}</td>
+												<td>${e.value.name}</td>
+												<td><a href="?op=appConstantUpdate&id=${e.key}&type=${entry.key}" class="btn btn-primary btn-xs">
+													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+									    	</c:forEach>
+									    </table>
+								    </div>
+								</c:forEach>
+							  </div>
+							</div>
+					</div>
+					
 				</div>
 			</div>
 </a:config>

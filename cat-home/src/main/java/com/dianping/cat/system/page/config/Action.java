@@ -155,6 +155,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_SPEED_DELETE("appSpeedDelete"),
 
+	APP_CONSTANT_ADD("appConstantAdd"),
+
+	APP_CONSTANT_UPDATE("appConstantUpdate"),
+
+	APP_CONSTATN_DELETE("appConstantDelete"),
+
+	APP_CONSTATN_SUBMIT("appConstantSubmit"),
+
 	APP_RULE("appRule"),
 
 	APP_RULE_ADD_OR_UPDATE("appRuleUpdate"),
@@ -162,7 +170,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
 
 	APP_RULE_DELETE("appRuleDelete"),
-	
+
 	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
 
 	TRANSACTION_RULE("transactionRule"),

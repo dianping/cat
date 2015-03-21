@@ -21,21 +21,21 @@
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
+					<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${payload.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
+					<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${payload.reportType}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
+						<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${payload.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${model.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
+						<a href="?op=${payload.action.name}&type=${payload.type}&reportType=${payload.reportType}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -66,15 +66,15 @@
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.currentOperations}">
-			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
 			<c:if test="${payload.type eq 'SQL'}">
-				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过1s)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过1s)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
 			<c:if test="${payload.type eq 'Cache'}">
-				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过50ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过50ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
-			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作平均响应时间" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
-			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内错误操作总数" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
+			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作平均响应时间" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内错误操作总数" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>
 	<c:forEach var="domain" items="${model.machine.domains}"
@@ -138,7 +138,7 @@
 		}else{
 			url = "";
 		}
-		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${model.reportType}&date=${model.date}&operations=" + url;
+		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${payload.reportType}&date=${model.date}&operations=" + url;
 	}
 	
 	function init(){

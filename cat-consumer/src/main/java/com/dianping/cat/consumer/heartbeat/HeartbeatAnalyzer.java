@@ -46,7 +46,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			transalteHearbeat(info);
 		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
 			return null;
 		}
 
