@@ -14,9 +14,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.RealtimeConsumer;
-import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {

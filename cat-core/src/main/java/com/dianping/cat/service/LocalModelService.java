@@ -7,9 +7,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.RealtimeConsumer;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.spi.core.MessageConsumer;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {

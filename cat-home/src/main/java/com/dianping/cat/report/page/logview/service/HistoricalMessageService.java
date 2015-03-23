@@ -11,14 +11,14 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.HtmlMessageCodec;
-import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.service.BaseHistoricalModelService;
 import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class HistoricalMessageService  extends BaseHistoricalModelService<String> {
 	@Inject(HdfsMessageBucketManager.ID)

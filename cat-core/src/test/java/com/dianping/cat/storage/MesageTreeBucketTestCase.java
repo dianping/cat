@@ -15,7 +15,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.report.ReportBucket;
 
 public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 

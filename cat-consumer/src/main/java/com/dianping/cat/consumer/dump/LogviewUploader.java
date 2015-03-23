@@ -14,12 +14,12 @@ import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.storage.message.LocalMessageBucket;
+import com.dianping.cat.message.storage.LocalMessageBucket;
 
 public class LogviewUploader implements Task {
 

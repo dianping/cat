@@ -9,7 +9,7 @@ import org.unidal.helper.Files;
 import org.unidal.helper.Urls;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
