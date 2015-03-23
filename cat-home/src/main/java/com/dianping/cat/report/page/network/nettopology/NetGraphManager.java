@@ -85,8 +85,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		} else if (startTime == currentHours - TimeHelper.ONE_HOUR) {
 			netGraphSet = m_lastNetGraphSet;
 		} else {
-			netGraphSet = m_reportService.queryReport(Constants.CAT, start, new Date(start.getTime()
-			      + TimeHelper.ONE_HOUR));
+			netGraphSet = m_reportService.queryReport(Constants.CAT, start,
+			      new Date(start.getTime() + TimeHelper.ONE_HOUR));
 		}
 
 		if (netGraphSet != null) {
@@ -147,7 +147,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			boolean active = true;
+			boolean active = TimeHelper.sleepToNextMinute();
 
 			while (active) {
 				Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
