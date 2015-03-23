@@ -85,11 +85,9 @@ public class AppReportBuilder implements TaskBuilder {
 		}
 
 		if (datas.size() > 0) {
-			com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(String.valueOf(command.getName()));
+			com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(command.getId());
 
-			cmd.setDomain(command.getDomain());
-			cmd.setTitle(command.getTitle());
-			cmd.setCode(commandId);
+			cmd.setName(command.getName());
 
 			for (AppCommandData data : datas) {
 				processRecord(commandId, cmd, data);
@@ -108,7 +106,7 @@ public class AppReportBuilder implements TaskBuilder {
 		      .incResponseSum(data.getResponsePackageSum());
 
 		Code code = cmd.findOrCreateCode(String.valueOf(codeId));
-		code.setTitle(code.getTitle());
+
 		code.incCount(count);
 		code.incSum(responseTime);
 

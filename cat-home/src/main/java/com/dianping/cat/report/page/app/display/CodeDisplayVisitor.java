@@ -6,27 +6,35 @@ import java.util.List;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.app.entity.AppReport;
+import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Command;
 import com.dianping.cat.home.app.transform.BaseVisitor;
 
 public class CodeDisplayVisitor extends BaseVisitor {
 
-	private AppReport m_appReport;
+	private DisplayCommands m_commands = new DisplayCommands();
 
-	private String m_currentCommand;
+	private int m_currentCommand;
 
 	private int[] m_distributions = new int[20];
 
 	public static final List<Integer> STANDALONES = Arrays.asList(450);
 
-	public CodeDisplayVisitor() {
+	private ProjectService m_projectService;
+
+	private AppConfigManager m_appConfigManager;
+
+	public CodeDisplayVisitor(ProjectService projectService, AppConfigManager appConfigManager) {
+		m_projectService = projectService;
+		m_appConfigManager = appConfigManager;
 		init();
 	}
 
-	public AppReport getReport() {
-		return m_appReport;
+	public DisplayCommands getCommands() {
+		return m_commands;
 	}
 
 	private void init() {
@@ -36,14 +44,6 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		for (int i = 10; i < 20; i++) {
 			m_distributions[i] = -m_distributions[i - 10];
 		}
-	}
-
-	@Override
-	public void visitAppReport(AppReport appReport) {
-		m_appReport = new AppReport(appReport.getId());
-		m_appReport.setStartTime(appReport.getStartTime()).setEndTime(appReport.getEndTime());
-
-		super.visitAppReport(appReport);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class CodeDisplayVisitor extends BaseVisitor {
 	}
 
 	private void buildDistributionInfo(Code code, String id) {
-		Code c = m_appReport.findOrCreateCommand(m_currentCommand).findOrCreateCode(id);
+		DisplayCode c = m_commands.findOrCreateCommand(m_currentCommand).findOrCreateCode(id);
 
 		c.incCount(code.getCount()).incErrors(code.getErrors()).incSum(code.getSum());
 		long count = c.getCount();
@@ -80,9 +80,8 @@ public class CodeDisplayVisitor extends BaseVisitor {
 	}
 
 	private void mergeCode(Code code, String id) {
-		Code c = m_appReport.findOrCreateCommand(m_currentCommand).findOrCreateCode(id);
+		DisplayCode c = m_commands.findOrCreateCommand(m_currentCommand).findOrCreateCode(id);
 
-		c.setTitle(code.getTitle());
 		c.incCount(code.getCount()).incErrors(code.getErrors()).incSum(code.getSum());
 
 		long count = c.getCount();
@@ -93,16 +92,25 @@ public class CodeDisplayVisitor extends BaseVisitor {
 	}
 
 	private void mergeCommand(Command command) {
-		String id = command.getId();
-		Command c = m_appReport.findOrCreateCommand(id);
+		int id = command.getId();
+		DisplayCommand c = m_commands.findOrCreateCommand(id);
 
-		if (Constants.ALL.equals(id)) {
+		if (AppReportMerger.ALL_COMMAND_ID == id) {
 			c.setDomain(Constants.ALL);
 			c.setTitle(Constants.ALL);
+			c.setDepartment(Constants.ALL);
+			c.setBu(Constants.ALL);
 		} else {
-			c.setDomain(command.getDomain());
-			c.setTitle(command.getTitle());
-			c.setCode(command.getCode());
+			com.dianping.cat.configuration.app.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
+			Project project = m_projectService.findProject(cmd.getDomain());
+
+			c.setDomain(cmd.getDomain());
+			c.setTitle(cmd.getTitle());
+
+			if (project != null) {
+				c.setBu(project.getBu());
+				c.setDepartment(project.getDepartment());
+			}
 		}
 		c.incCount(command.getCount()).incSum(command.getSum()).incErrors(command.getErrors())
 		      .incRequestSum(command.getRequestSum()).incResponseSum(command.getResponseSum());

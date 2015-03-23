@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
@@ -26,6 +27,7 @@ import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 
@@ -80,8 +82,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, List<Code>> m_command2Codes;
 
+	private Map<String, Pair<String, String>> m_domain2Departments;
+
 	@EntityMeta
 	private AppReport m_appReport;
+
+	private DisplayCommands m_displayCommands;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -173,6 +179,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return Action.LINECHART;
 	}
 
+	public DisplayCommands getDisplayCommands() {
+		return m_displayCommands;
+	}
+
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
@@ -188,6 +198,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		results.put(Constants.ALL, m_commands);
 		results.putAll(m_domain2Commands);
 		return new JsonBuilder().toJson(results);
+	}
+
+	public Map<String, Pair<String, String>> getDomain2Departments() {
+		return m_domain2Departments;
 	}
 
 	@Override
@@ -295,8 +309,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_content = content;
 	}
 
+	public void setDisplayCommands(DisplayCommands displayCommands) {
+		m_displayCommands = displayCommands;
+	}
+
 	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
 		m_domain2Commands = domain2Commands;
+	}
+
+	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {
+		m_domain2Departments = domain2Departments;
 	}
 
 	public void setFetchData(String fetchData) {

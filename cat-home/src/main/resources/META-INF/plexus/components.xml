@@ -5261,6 +5261,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.dal.ProjectService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

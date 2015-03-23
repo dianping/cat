@@ -97,7 +97,7 @@
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
+			var href = "?op=connPiechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
  			window.location.href = href;
  		}
 		

@@ -229,16 +229,21 @@
 										    <thead><tr>
 													<th>ID</th>
 													<th>值</th>
-													<th width="5%"><a href="?op=appConstantAdd&type=${entry.key}" class="btn btn-primary btn-xs" >
-													<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+													<c:if test="${entry.key eq '版本'}">
+														<th width="5%"><a href="?op=appConstantAdd&type=${entry.key}" class="btn btn-primary btn-xs" >
+														<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
+													</c:if>
 												</tr>
 											</thead>
 											
 									    	<c:forEach var="e" items="${entry.value.items}">
 										    	<tr><td>${e.value.id}</td>
 												<td>${e.value.name}</td>
-												<td><a href="?op=appConstantUpdate&id=${e.key}&type=${entry.key}" class="btn btn-primary btn-xs">
-													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+												<c:if test="${entry.key eq '版本'}">
+													<td><a href="?op=appConstantUpdate&id=${e.key}&type=${entry.key}" class="btn btn-primary btn-xs">
+														<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+													</td>
+												</c:if>
 									    	</c:forEach>
 									    </table>
 								    </div>

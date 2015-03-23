@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.app.display;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Command;
@@ -10,16 +9,17 @@ public class AppReportMerger extends BaseVisitor {
 
 	private AppReport m_report;
 
-	private String m_commandId;
+	private int m_commandId;
+
+	public static final int ALL_COMMAND_ID = 0;
 
 	public AppReport getReport() {
 		return m_report;
 	}
 
-	private void mergeCode(Code code, String id) {
+	private void mergeCode(Code code, int id) {
 		Code c = m_report.findOrCreateCommand(id).findOrCreateCode(code.getId());
 
-		c.setTitle(code.getTitle());
 		c.incCount(code.getCount()).incSum(code.getSum()).incErrors(code.getErrors());
 
 		long count = c.getCount();
@@ -29,17 +29,19 @@ public class AppReportMerger extends BaseVisitor {
 		}
 	}
 
-	private void mergeCommand(Command command, String id) {
+	private void mergeCommand(Command command, int id) {
 		Command c = m_report.findOrCreateCommand(id);
 
-		if (Constants.ALL.equals(id)) {
-			c.setDomain(Constants.ALL);
-			c.setTitle(Constants.ALL);
-		} else {
-			c.setDomain(command.getDomain());
-			c.setTitle(command.getTitle());
-			c.setCode(command.getCode());
-		}
+		c.setName(command.getName());
+
+		// if (ALL_COMMAND_ID == id) {
+		// c.setDomain(Constants.ALL);
+		// // c.setTitle(Constants.ALL);
+		// } else {
+		// c.setDomain(command.getDomain());
+		// c.setTitle(command.getTitle());
+		// c.setCode(command.getCode());
+		// }
 		c.incCount(command.getCount()).incSum(command.getSum()).incErrors(command.getErrors())
 		      .incRequestSum(command.getRequestSum()).incResponseSum(command.getResponseSum());
 
@@ -62,7 +64,7 @@ public class AppReportMerger extends BaseVisitor {
 
 	@Override
 	public void visitCode(Code code) {
-		mergeCode(code, Constants.ALL);
+		mergeCode(code, ALL_COMMAND_ID);
 		mergeCode(code, m_commandId);
 		super.visitCode(code);
 	}
@@ -71,8 +73,8 @@ public class AppReportMerger extends BaseVisitor {
 	public void visitCommand(Command command) {
 		m_commandId = command.getId();
 
-		mergeCommand(command, Constants.ALL);
-		mergeCommand(command, String.valueOf(command.getId()));
+		mergeCommand(command, ALL_COMMAND_ID);
+		mergeCommand(command, command.getId());
 
 		super.visitCommand(command);
 	}

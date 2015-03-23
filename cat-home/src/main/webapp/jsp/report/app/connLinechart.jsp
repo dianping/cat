@@ -177,7 +177,7 @@
 			var commandId = $('#command').val();
 			var domains2 = $('#domains2').val();
 			var commandId2 = $('#command2').val();
-			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
+			var href = "?op=${payload.action.name}&query1=" + query1 + "&query2=" + query2 + "&type="
 					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
 					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
 			window.location.href = href;
