@@ -234,7 +234,9 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setDomain(String domain) {
-		m_domain = domain;
+		if (StringUtils.isNotEmpty(domain)) {
+			m_domain = domain;
+		}
 	}
 
 	public void setIpAddress(String ipAddress) {
@@ -248,7 +250,9 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setReportType(String reportType) {
-		m_reportType = reportType;
+		if (StringUtils.isNotEmpty(reportType)) {
+			m_reportType = reportType;
+		}
 	}
 
 	public void setStep(int nav) {
