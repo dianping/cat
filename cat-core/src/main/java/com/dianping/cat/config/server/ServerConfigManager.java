@@ -49,6 +49,9 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	public static final String DUMP_DIR = "dump";
 
 	public boolean discardTransaction(String type, String name) {
+		if ("Cache.web".equals(type) || "ABTest".equals(type)) {
+			return true;
+		}
 		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
 			return true;
 		}
