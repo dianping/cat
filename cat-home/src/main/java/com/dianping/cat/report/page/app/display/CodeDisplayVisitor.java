@@ -8,10 +8,10 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Command;
 import com.dianping.cat.home.app.transform.BaseVisitor;
+import com.dianping.cat.service.ProjectService;
 
 public class CodeDisplayVisitor extends BaseVisitor {
 

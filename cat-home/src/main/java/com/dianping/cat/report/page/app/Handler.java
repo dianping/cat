@@ -28,7 +28,6 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -55,6 +54,7 @@ import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
+import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
