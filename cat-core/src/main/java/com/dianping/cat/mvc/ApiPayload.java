@@ -36,7 +36,7 @@ public class ApiPayload {
 
 	@FieldMeta("province")
 	private String m_province;
-	
+
 	@FieldMeta("queryType")
 	private String m_queryType;
 
@@ -48,17 +48,17 @@ public class ApiPayload {
 	}
 
 	public String getChannel() {
-   	return m_channel;
-   }
-	
+		return m_channel;
+	}
+
 	public String getCity() {
-   	return m_city;
-   }
-	
+		return m_city;
+	}
+
 	public String getDatabase() {
 		return m_database;
 	}
-	
+
 	public String getIpAddress() {
 		return m_ipAddress;
 	}
@@ -80,8 +80,8 @@ public class ApiPayload {
 	}
 
 	public String getQueryType() {
-   	return m_queryType;
-   }
+		return m_queryType;
+	}
 
 	public String getThreadId() {
 		return m_threadId;
@@ -90,7 +90,7 @@ public class ApiPayload {
 	public String getType() {
 		return m_type;
 	}
-	
+
 	public boolean isWaterfall() {
 		return m_waterfall;
 	}
@@ -100,12 +100,12 @@ public class ApiPayload {
 	}
 
 	public void setChannel(String channel) {
-   	m_channel = channel;
-   }
+		m_channel = channel;
+	}
 
 	public void setCity(String city) {
-   	m_city = city;
-   }
+		m_city = city;
+	}
 
 	public void setDatabase(String database) {
 		m_database = database;
@@ -126,14 +126,14 @@ public class ApiPayload {
 	public void setName(String name) {
 		m_name = name;
 	}
-	
+
 	public void setProvince(String province) {
 		m_province = province;
 	}
 
 	public void setQueryType(String queryType) {
-   	m_queryType = queryType;
-   }
+		m_queryType = queryType;
+	}
 
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;

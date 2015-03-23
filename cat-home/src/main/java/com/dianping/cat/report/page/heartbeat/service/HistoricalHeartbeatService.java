@@ -10,8 +10,8 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.report.ReportBucketManager;
-import com.dianping.cat.service.BaseHistoricalModelService;
-import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.report.service.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ModelRequest;
 
 public class HistoricalHeartbeatService extends BaseHistoricalModelService<HeartbeatReport> {
 	@Inject

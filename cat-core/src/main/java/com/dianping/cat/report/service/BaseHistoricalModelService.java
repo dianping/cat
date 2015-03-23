@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.report.service;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;

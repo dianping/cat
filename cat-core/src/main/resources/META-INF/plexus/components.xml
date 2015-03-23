@@ -16,8 +16,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.dal.HostinfoService</role>
-			<implementation>com.dianping.cat.dal.HostinfoService</implementation>
+			<role>com.dianping.cat.service.HostinfoService</role>
+			<implementation>com.dianping.cat.service.HostinfoService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
@@ -28,8 +28,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.dal.IpService</role>
-			<implementation>com.dianping.cat.dal.IpService</implementation>
+			<role>com.dianping.cat.service.IpService</role>
+			<implementation>com.dianping.cat.service.IpService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.task.TaskManager</role>

@@ -59,6 +59,18 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 	private volatile long m_processCount;
 
+	public synchronized void destory() {
+		try {
+			m_logger.info("start shutdown socket, port " + m_port);
+			m_future.channel().closeFuture();
+			m_bossGroup.shutdownGracefully();
+			m_workerGroup.shutdownGracefully();
+			m_logger.info("shutdown socket success");
+		} catch (Exception e) {
+			m_logger.warn(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -78,18 +90,6 @@ public final class TcpSocketReceiver implements LogEnabled {
 			startServer(m_port);
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
-		}
-	}
-
-	public synchronized void destory() {
-		try {
-			m_logger.info("start shutdown socket, port " + m_port);
-			m_future.channel().closeFuture();
-			m_bossGroup.shutdownGracefully();
-			m_workerGroup.shutdownGracefully();
-			m_logger.info("shutdown socket success");
-		} catch (Exception e) {
-			m_logger.warn(e.getMessage(), e);
 		}
 	}
 

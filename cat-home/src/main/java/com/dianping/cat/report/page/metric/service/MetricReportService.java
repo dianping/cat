@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class MetricReportService extends AbstractReportService<MetricReport> {
 

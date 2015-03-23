@@ -338,8 +338,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.dal.ProjectService</role>
-			<implementation>com.dianping.cat.dal.ProjectService</implementation>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>

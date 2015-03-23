@@ -23,7 +23,7 @@ import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelPeriod;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

@@ -34,10 +34,10 @@ import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class NetGraphManager implements Initializable, LogEnabled {
 

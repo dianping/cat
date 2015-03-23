@@ -15,7 +15,6 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.sender.AlertChannel;
@@ -25,6 +24,7 @@ import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.service.ProjectService;
 
 public class NotifyTaskBuilder implements TaskBuilder {
 

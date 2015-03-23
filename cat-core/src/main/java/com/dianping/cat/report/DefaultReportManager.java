@@ -25,7 +25,7 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelPeriod;
 
 /**
  * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in

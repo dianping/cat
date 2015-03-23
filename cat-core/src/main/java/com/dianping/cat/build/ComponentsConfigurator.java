@@ -31,13 +31,13 @@ import com.dianping.cat.config.url.UrlPatternHandler;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
-import com.dianping.cat.dal.HostinfoService;
-import com.dianping.cat.dal.IpService;
 import com.dianping.cat.message.DefaultPathBuilder;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.IpService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.task.TaskManager;
 

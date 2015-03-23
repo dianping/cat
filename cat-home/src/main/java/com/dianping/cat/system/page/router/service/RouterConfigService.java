@@ -15,7 +15,7 @@ import com.dianping.cat.core.dal.DailyReportContent;
 import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.transform.DefaultNativeParser;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class RouterConfigService extends AbstractReportService<RouterConfig> {
 

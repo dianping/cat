@@ -28,9 +28,6 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.dal.HostinfoService;
-import com.dianping.cat.dal.IpService;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -82,8 +79,11 @@ import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
-import com.dianping.cat.service.ModelService;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {

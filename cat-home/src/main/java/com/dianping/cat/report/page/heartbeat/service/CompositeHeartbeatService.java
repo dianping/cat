@@ -5,10 +5,10 @@ import java.util.List;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.service.BaseCompositeModelService;
-import com.dianping.cat.service.BaseRemoteModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.BaseCompositeModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 
 public class CompositeHeartbeatService extends BaseCompositeModelService<HeartbeatReport> {
 	public CompositeHeartbeatService() {

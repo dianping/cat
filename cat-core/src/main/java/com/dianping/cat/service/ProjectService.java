@@ -1,4 +1,4 @@
-package com.dianping.cat.dal;
+package com.dianping.cat.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -95,15 +95,6 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public Project findProject(String domain) {
-		Project project = m_domainToProjects.get(domain);
-
-		if (project == null) {
-			project = m_cmdbToProjects.get(domain);
-		}
-		return project;
-	}
-
 	public Map<String, Department> findDepartments(Collection<String> domains) {
 		Map<String, Department> departments = new TreeMap<String, Department>();
 
@@ -129,6 +120,15 @@ public class ProjectService implements Initializable {
 		}
 
 		return departments;
+	}
+
+	public Project findProject(String domain) {
+		Project project = m_domainToProjects.get(domain);
+
+		if (project == null) {
+			project = m_cmdbToProjects.get(domain);
+		}
+		return project;
 	}
 
 	@Override

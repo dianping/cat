@@ -25,7 +25,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.bug.entity.BugReport;
@@ -56,6 +55,7 @@ import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.Serv
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.UrlComparator;
 import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
 import com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder;
+import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.report.service;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -25,8 +25,6 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	private String m_name;
 	
-	public abstract String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception;
-
 	public LocalModelService(String name) {
 		m_name = name;
 	}
@@ -59,6 +57,8 @@ public abstract class LocalModelService<T> implements Initializable {
 
 		throw new RuntimeException("Internal error: this should not be reached!");
 	}
+
+	public abstract String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception;
 
 	@Override
 	public void initialize() throws InitializationException {

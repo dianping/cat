@@ -1,4 +1,4 @@
-package com.dianping.cat.service;
+package com.dianping.cat.report.service;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

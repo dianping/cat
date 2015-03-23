@@ -17,8 +17,8 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
-import com.dianping.cat.service.BaseHistoricalModelService;
-import com.dianping.cat.service.ModelRequest;
+import com.dianping.cat.report.service.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ModelRequest;
 
 public class HistoricalMessageService  extends BaseHistoricalModelService<String> {
 	@Inject(HdfsMessageBucketManager.ID)
