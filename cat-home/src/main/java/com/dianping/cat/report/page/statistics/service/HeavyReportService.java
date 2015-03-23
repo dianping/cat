@@ -28,7 +28,7 @@ import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultNativeParser;
 import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class HeavyReportService extends AbstractReportService<HeavyReport> {
 

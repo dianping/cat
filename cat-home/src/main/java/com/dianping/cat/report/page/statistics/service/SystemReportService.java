@@ -11,7 +11,7 @@ import com.dianping.cat.core.dal.DailyReportContent;
 import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeParser;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class SystemReportService extends AbstractReportService<SystemReport> {
 

@@ -25,21 +25,21 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.message.storage.MessageBlock;
+import com.dianping.cat.message.storage.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.LocalMessageBucket;
-import com.dianping.cat.storage.message.MessageBlock;
-import com.dianping.cat.storage.message.MessageBucket;
-import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
@@ -56,7 +56,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private ServerStatisticManager m_serverStateManager;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private PathBuilder m_pathBuilder;
 
 	@Inject
 	private HdfsUploader m_logviewUploader;

@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 
 public class PayloadNormalizer {

@@ -7,9 +7,9 @@ import java.util.concurrent.TimeUnit;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.message.storage.MessageBlock;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.LocalMessageBucket;
-import com.dianping.cat.storage.message.MessageBlock;
 
 public class BlockDumper implements Task {
 	private int m_errors;

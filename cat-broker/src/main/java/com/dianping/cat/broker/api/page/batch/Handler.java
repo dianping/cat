@@ -23,9 +23,9 @@ import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.dal.IpService;
-import com.dianping.cat.dal.IpService.IpInfo;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.IpService.IpInfo;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 

@@ -15,12 +15,12 @@ import org.apache.hadoop.fs.Path;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucket;
 
 public class HdfsMessageBucket implements MessageBucket {
 	public static final String ID = "hdfs";

@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
 
 public class RemoteCrossService extends BaseRemoteModelService<CrossReport> {
 	public RemoteCrossService() {

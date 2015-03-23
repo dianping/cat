@@ -2,6 +2,8 @@ package com.dianping.cat.service;
 
 import org.junit.Test;
 
+import com.dianping.cat.report.service.ModelResponse;
+
 import junit.framework.Assert;
 
 public class ModelResponseTest {

@@ -13,7 +13,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelPeriod;
 
 public abstract class AbstractReportPayload<A extends Action, P extends Page> implements ActionPayload<P, A> {
 
@@ -48,6 +48,19 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 
 	public AbstractReportPayload(P defaultPage) {
 		m_defaultPage = defaultPage;
+	}
+
+	private void checkFutureDate() {
+		if ("day".equals(m_reportType)) {
+			Calendar today = Calendar.getInstance();
+			long current = getCurrentDate();
+
+			today.setTimeInMillis(current);
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			if (m_date == today.getTimeInMillis()) {
+				m_date = m_date - 24 * TimeHelper.ONE_HOUR;
+			}
+		}
 	}
 
 	public void computeHistoryDate() {
@@ -96,7 +109,7 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 			}
 		}
 
-		setYesterdayDefault();
+		checkFutureDate();
 	}
 
 	public long getCurrentDate() {
@@ -234,7 +247,9 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setDomain(String domain) {
-		m_domain = domain;
+		if (StringUtils.isNotEmpty(domain)) {
+			m_domain = domain;
+		}
 	}
 
 	public void setIpAddress(String ipAddress) {
@@ -248,25 +263,13 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	}
 
 	public void setReportType(String reportType) {
-		m_reportType = reportType;
+		if (StringUtils.isNotEmpty(reportType)) {
+			m_reportType = reportType;
+		}
 	}
 
 	public void setStep(int nav) {
 		m_step = nav;
-	}
-
-	// yestoday is default
-	private void setYesterdayDefault() {
-		if ("day".equals(m_reportType)) {
-			Calendar today = Calendar.getInstance();
-			long current = getCurrentDate();
-
-			today.setTimeInMillis(current);
-			today.set(Calendar.HOUR_OF_DAY, 0);
-			if (m_date == today.getTimeInMillis()) {
-				m_date = m_date - 24 * TimeHelper.ONE_HOUR;
-			}
-		}
 	}
 
 }

@@ -19,7 +19,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.JsonBuilder;
@@ -34,10 +34,10 @@ import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class NetGraphManager implements Initializable, LogEnabled {
 

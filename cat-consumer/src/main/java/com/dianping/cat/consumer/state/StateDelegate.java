@@ -11,8 +11,8 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.ReportDelegate;
-import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 

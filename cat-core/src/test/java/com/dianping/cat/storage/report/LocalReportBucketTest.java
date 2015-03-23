@@ -6,6 +6,8 @@ import java.util.Date;
 
 import org.junit.After;
 
+import com.dianping.cat.report.LocalReportBucket;
+import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.storage.StringBucketTestCase;
 
 public class LocalReportBucketTest extends StringBucketTestCase {

@@ -12,18 +12,18 @@ import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.HtmlMessageCodec;
-import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.mvc.ApiPayload;
-import com.dianping.cat.service.LocalModelService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ModelService;
-import com.dianping.cat.storage.message.MessageBucketManager;
+import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {
 

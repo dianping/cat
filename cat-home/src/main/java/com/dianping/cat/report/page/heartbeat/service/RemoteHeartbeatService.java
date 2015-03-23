@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
 
 public class RemoteHeartbeatService extends BaseRemoteModelService<HeartbeatReport> {
 	public RemoteHeartbeatService() {

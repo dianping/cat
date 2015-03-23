@@ -6,7 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 

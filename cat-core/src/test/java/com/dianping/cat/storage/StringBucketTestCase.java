@@ -13,7 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.storage.report.ReportBucket;
+import com.dianping.cat.report.ReportBucket;
 
 public abstract class StringBucketTestCase extends ComponentTestCase {
 
