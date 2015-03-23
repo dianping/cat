@@ -50,6 +50,19 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		m_defaultPage = defaultPage;
 	}
 
+	private void checkFutureDate() {
+		if ("day".equals(m_reportType)) {
+			Calendar today = Calendar.getInstance();
+			long current = getCurrentDate();
+
+			today.setTimeInMillis(current);
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			if (m_date == today.getTimeInMillis()) {
+				m_date = m_date - 24 * TimeHelper.ONE_HOUR;
+			}
+		}
+	}
+
 	public void computeHistoryDate() {
 		if (m_date <= 0) {
 			m_date = TimeHelper.getCurrentDay(-1).getTime();
@@ -96,7 +109,7 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 			}
 		}
 
-		setYesterdayDefault();
+		checkFutureDate();
 	}
 
 	public long getCurrentDate() {
@@ -257,20 +270,6 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 
 	public void setStep(int nav) {
 		m_step = nav;
-	}
-
-	// yestoday is default
-	private void setYesterdayDefault() {
-		if ("day".equals(m_reportType)) {
-			Calendar today = Calendar.getInstance();
-			long current = getCurrentDate();
-
-			today.setTimeInMillis(current);
-			today.set(Calendar.HOUR_OF_DAY, 0);
-			if (m_date == today.getTimeInMillis()) {
-				m_date = m_date - 24 * TimeHelper.ONE_HOUR;
-			}
-		}
 	}
 
 }
