@@ -21,7 +21,7 @@ import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
-import com.dianping.cat.report.page.model.metric.MetricReportMerger;
+import com.dianping.cat.report.page.metric.service.MetricReportMerger;
 import com.dianping.cat.report.page.web.Handler.QueryEntity;
 
 public class WebGraphCreator extends AbstractGraphCreator {

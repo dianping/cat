@@ -26,13 +26,17 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.impl.ProblemReportService;
+import com.dianping.cat.report.page.problem.service.ProblemReportService;
+import com.dianping.cat.report.page.problem.transform.DetailStatistics;
+import com.dianping.cat.report.page.problem.transform.HourlyLineChartVisitor;
+import com.dianping.cat.report.page.problem.transform.PieGraphChartVisitor;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
 
 public class Handler implements PageHandler<Context> {
 

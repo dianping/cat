@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.storage.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.report.page.storage.task.HistoryStorageReportMerger;
 
 public class HistoryStorageReportMergerTest {
 	@Test

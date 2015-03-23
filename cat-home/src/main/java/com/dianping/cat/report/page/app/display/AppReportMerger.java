@@ -19,26 +19,35 @@ public class AppReportMerger extends BaseVisitor {
 	private void mergeCode(Code code, String id) {
 		Code c = m_report.findOrCreateCommand(id).findOrCreateCode(code.getId());
 
-		c.incCount(code.getCount());
-		c.incSum(code.getSum());
-		c.incErrors(code.getErrors());
+		c.setTitle(code.getTitle());
+		c.incCount(code.getCount()).incSum(code.getSum()).incErrors(code.getErrors());
 
-		if (c.getCount() > 0) {
-			c.setAvg(c.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		if (count > 0) {
+			c.setAvg(c.getSum() / count);
+			c.setSuccessRatio(100.0 - c.getErrors() * 100.0 / count);
 		}
 	}
 
 	private void mergeCommand(Command command, String id) {
 		Command c = m_report.findOrCreateCommand(id);
 
-		c.incCount(command.getCount());
-		c.incSum(command.getSum());
-		c.incErrors(command.getErrors());
+		if (Constants.ALL.equals(id)) {
+			c.setDomain(Constants.ALL);
+			c.setTitle(Constants.ALL);
+		} else {
+			c.setDomain(command.getDomain());
+			c.setTitle(command.getTitle());
+		}
+		c.incCount(command.getCount()).incSum(command.getSum()).incErrors(command.getErrors())
+		      .incRequestSum(command.getRequestSum()).incResponseSum(command.getResponseSum());
 
-		if (c.getCount() > 0) {
-			c.setAvg(command.getSum() / c.getCount());
-			c.setErrorPercent(c.getErrors() * 1.0 / c.getCount());
+		long count = c.getCount();
+		if (count > 0) {
+			c.setAvg(c.getSum() / count);
+			c.setSuccessRatio(100.0 - c.getErrors() * 100.0 / count);
+			c.setRequestAvg(c.getRequestSum() * 1.0 / count);
+			c.setResponseAvg(c.getResponseSum() * 1.0 / count);
 		}
 	}
 

@@ -38,7 +38,7 @@
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="dashbord_system"><a href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">
+						<li id="dashbord_system"><a href="/cat/r/top?op=view&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>报错大盘</a>
 							<b class="arrow"></b></li>
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
@@ -77,7 +77,7 @@
 						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
 							<b class="arrow"></b></li>
-						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}">
+						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
 							<i class="menu-icon fa fa-caret-right"></i>报表统计</a>
 							<b class="arrow"></b></li>
 						<li id="connTrend"><a href="/cat/r/app?op=connLinechart&domain=${model.domain}">
@@ -137,7 +137,7 @@
 						<li id="cache_operation"><a href="/cat/r/storage?id=memcached&type=Cache&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
 							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
 							<b class="arrow"></b></li>
-						<li id="cache_info"><a href="/cat/r/cache?cache=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+						<li id="cache_info"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
 							<i class="menu-icon fa fa-caret-right"></i>访问情况</a>
 							<b class="arrow"></b></li>
 					</ul>

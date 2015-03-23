@@ -12,6 +12,7 @@ import org.unidal.helper.Files;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.home.system.entity.SystemReport;
+import com.dianping.cat.report.page.statistics.task.system.SystemReportStatistics;
 
 public class SystemReportStatisticsTest {
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

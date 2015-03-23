@@ -33,6 +33,7 @@ import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
 public class AppConfigManager implements Initializable {
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -95,6 +96,12 @@ public class AppConfigManager implements Initializable {
 		}
 	}
 
+	private AppConfig copyAppConfig() throws SAXException, IOException {
+		String xml = m_config.toString();
+		AppConfig config = DefaultSaxParser.parse(xml);
+		return config;
+	}
+
 	public boolean deleteCode(int id, int codeId) {
 		Command command = m_config.getCommands().get(id);
 
@@ -107,15 +114,6 @@ public class AppConfigManager implements Initializable {
 	public boolean deleteCommand(int id) {
 		m_config.removeCommand(id);
 		return storeConfig();
-	}
-
-	public Map<Integer, Code> queryInternalCodes(int commandId) {
-		Command cmd = m_config.getCommands().get(commandId);
-
-		if (cmd != null) {
-			return cmd.getCodes();
-		}
-		return new HashMap<Integer, Code>();
 	}
 
 	public Pair<Boolean, List<Integer>> deleteCommand(String domain, String name) {
@@ -263,9 +261,8 @@ public class AppConfigManager implements Initializable {
 
 	public List<Command> queryCommands() {
 		try {
-//			String xml = m_config.toString();
-//			AppConfig config = DefaultSaxParser.parse(xml);
-			Map<Integer, Command> commands = m_config.getCommands();
+			AppConfig config = copyAppConfig();
+			Map<Integer, Command> commands = config.getCommands();
 
 			for (Entry<Integer, Command> entry : commands.entrySet()) {
 				Map<Integer, Code> codes = entry.getValue().getCodes();
@@ -278,6 +275,7 @@ public class AppConfigManager implements Initializable {
 			}
 			return new ArrayList<Command>(commands.values());
 		} catch (Exception e) {
+			Cat.logError(e);
 			return new ArrayList<Command>();
 		}
 	}
@@ -290,6 +288,15 @@ public class AppConfigManager implements Initializable {
 		} else {
 			return new LinkedHashMap<Integer, Item>();
 		}
+	}
+
+	public Map<Integer, Code> queryInternalCodes(int commandId) {
+		Command cmd = m_config.getCommands().get(commandId);
+
+		if (cmd != null) {
+			return cmd.getCodes();
+		}
+		return new HashMap<Integer, Code>();
 	}
 
 	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
@@ -325,7 +332,7 @@ public class AppConfigManager implements Initializable {
 				cityMap.put(item.getName(), item.getId());
 			}
 		}
-		
+
 		m_cities = cityMap;
 
 		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
@@ -337,7 +344,7 @@ public class AppConfigManager implements Initializable {
 		m_operators = operatorMap;
 	}
 
-	private boolean storeConfig() {
+	public boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
 

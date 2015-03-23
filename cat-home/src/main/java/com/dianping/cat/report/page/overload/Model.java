@@ -7,7 +7,7 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.overload.OverloadReport;
+import com.dianping.cat.report.page.overload.task.OverloadReport;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 

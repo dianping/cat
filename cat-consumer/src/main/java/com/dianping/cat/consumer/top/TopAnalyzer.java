@@ -2,8 +2,6 @@ package com.dianping.cat.consumer.top;
 
 import java.util.ConcurrentModificationException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -20,10 +18,6 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Range2;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
@@ -34,8 +28,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject(ID)
 	private ReportManager<TopReport> m_reportManager;
-
-	private TransactionAnalyzer m_transactionAnalyzer;
 
 	private ProblemAnalyzer m_problemAnalyzer;
 
@@ -59,33 +51,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	public TopReport getReport(String domain) {
-		Set<String> domains = m_transactionAnalyzer.getDomains();
+		Set<String> domains = m_problemAnalyzer.getDomains();
 		TopReport topReport = new TopReport(Constants.CAT);
 
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 
-		TransactionReportVisitor transactionReportVisitor = new TransactionReportVisitor(topReport);
-
-		for (String name : domains) {
-			try {
-				if (m_serverConfigManager.validateDomain(name) || Constants.FRONT_END.equals(name)) {
-					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
-
-					transactionReportVisitor.visitTransactionReport(report);
-				}
-			} catch (ConcurrentModificationException e) {
-				try {
-					TransactionReport report = m_transactionAnalyzer.getRawReport(name);
-
-					transactionReportVisitor.visitTransactionReport(report);
-				} catch (ConcurrentModificationException ce) {
-					Cat.logEvent("ConcurrentModificationException", name, Event.SUCCESS, null);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
 
 		ProblemReportVisitor problemReportVisitor = new ProblemReportVisitor(topReport);
 
@@ -122,10 +93,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	public void setProblemAnalyzer(ProblemAnalyzer problemAnalyzer) {
 		m_problemAnalyzer = problemAnalyzer;
-	}
-
-	public void setTransactionAnalyzer(TransactionAnalyzer transactionAnalyzer) {
-		m_transactionAnalyzer = transactionAnalyzer;
 	}
 
 	public static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
@@ -178,152 +145,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				segmentDetail.findOrCreateMachine(m_ip).incCount(count);
 			}
 		}
-	}
-
-	public static enum Range2Function {
-		URL {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setUrl(count + detail.getUrl());
-				detail.setUrlSum(sum + detail.getUrlSum());
-				detail.setUrlError(errorCount + detail.getUrlError());
-				detail.setUrlDuration(detail.getUrlSum() / detail.getUrl());
-			}
-		},
-
-		Service {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setService(count + detail.getService());
-				detail.setServiceSum(sum + detail.getServiceSum());
-				detail.setServiceError(errorCount + detail.getServiceError());
-				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
-			}
-		},
-
-		PigeonService {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setService(count + detail.getService());
-				detail.setServiceError(errorCount + detail.getServiceError());
-				detail.setServiceSum(sum + detail.getServiceSum());
-				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
-			}
-		},
-
-		Call {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setCall(count + detail.getCall());
-				detail.setCallError(errorCount + detail.getCallError());
-				detail.setCallSum(sum + detail.getCallSum());
-				detail.setCallDuration(detail.getCallSum() / detail.getCall());
-
-			}
-		},
-
-		PigeonCall {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setCall(count + detail.getCall());
-				detail.setCallError(errorCount + detail.getCallError());
-				detail.setCallSum(sum + detail.getCallSum());
-				detail.setCallDuration(detail.getCallSum() / detail.getCall());
-			}
-		},
-
-		SQL {
-			@Override
-			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
-				long count = range2.getCount();
-				long errorCount = range2.getFails();
-				double sum = range2.getSum();
-
-				detail.setSql(count + detail.getSql());
-				detail.setSqlError(errorCount + detail.getSqlError());
-				detail.setSqlSum(sum + detail.getSqlSum());
-				detail.setSqlDuration(detail.getSqlSum() / detail.getSql());
-			}
-		},
-		;
-
-		private static Map<String, Range2Function> s_map = new HashMap<String, Range2Function>();
-
-		static {
-			for (Range2Function f : values()) {
-				s_map.put(f.name(), f);
-			}
-		}
-
-		public static Range2Function getByName(String name) {
-			return s_map.get(name);
-		}
-
-		public abstract void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail);
-	}
-
-	static class TransactionReportVisitor extends com.dianping.cat.consumer.transaction.model.transform.BaseVisitor {
-
-		private String m_domain;
-
-		private String m_type;
-
-		private TopReport m_report;
-
-		public TransactionReportVisitor(TopReport report) {
-			m_report = report;
-		}
-
-		@Override
-		public void visitRange2(Range2 range2) {
-			int minute = range2.getValue();
-			long count = range2.getCount();
-			double sum = range2.getSum();
-			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain)
-			      .findOrCreateSegment(minute);
-			Range2Function function = Range2Function.getByName(m_type);
-
-			if (function != null) {
-				function.apply(range2, detail);
-			} else if (m_type.startsWith("Cache.memcached")) {
-				detail.setCache(count + detail.getCache());
-				detail.setCacheSum(sum + detail.getCacheSum());
-				detail.setCacheDuration(detail.getCacheSum() / detail.getCache());
-			}
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_domain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			m_type = type.getId();
-			super.visitType(type);
-		}
-		
 	}
 
 }

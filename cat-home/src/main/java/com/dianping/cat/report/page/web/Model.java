@@ -16,7 +16,7 @@ import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.problem.ProblemStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 
 public class Model extends AbstractReportModel<Action, Context> {
 

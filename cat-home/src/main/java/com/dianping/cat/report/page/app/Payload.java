@@ -9,10 +9,10 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-import com.dianping.cat.report.service.app.AppDataField;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
-import com.dianping.cat.report.service.app.SpeedQueryEntity;
+import com.dianping.cat.report.page.app.service.AppDataField;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
 public class Payload extends AbstractReportPayload<Action> {
 	private ReportPage m_page;
@@ -71,7 +71,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.APP);
 	}
 
-	public Date getDay() {
+	public String getDay() {
+		return m_day;
+	}
+
+	public Date getDayDate() {
 		try {
 			if (m_day.length() == 10) {
 				return m_sdf.parse(m_day);

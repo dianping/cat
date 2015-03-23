@@ -14,7 +14,6 @@ import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.alert.AlertLevel;
-import com.dianping.cat.system.config.ExceptionRuleConfigManager;
 
 public class AlertExceptionBuilder {
 

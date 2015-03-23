@@ -3,8 +3,8 @@ package com.dianping.cat.system.page.config.processor;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.system.config.NetGraphConfigManager;
-import com.dianping.cat.system.config.NetworkRuleConfigManager;
+import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
+import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;

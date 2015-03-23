@@ -15,7 +15,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
-import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.page.state.service.StateReportService;
 
 public class StateGraphBuilder {
 

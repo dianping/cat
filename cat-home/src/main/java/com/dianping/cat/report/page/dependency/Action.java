@@ -5,9 +5,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TOPOLOGY("dependencyGraph"),
 
-	DEPENDENCY_DASHBOARD("dashboard"),
-
-	EXCEPTION_DASHBOARD("metricDashboard");
+	DEPENDENCY_DASHBOARD("dashboard");
 
 	private String m_name;
 

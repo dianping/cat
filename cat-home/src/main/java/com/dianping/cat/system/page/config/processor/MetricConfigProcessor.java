@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
-import com.dianping.cat.system.config.BusinessRuleConfigManager;
+import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;

@@ -16,7 +16,7 @@
 		<div id="queryBar">
 	        <div style="float:left;">
 				&nbsp;日期
-			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.day}' pattern='yyyy-MM-dd'/>"/>
+			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.dayDate}' pattern='yyyy-MM-dd'/>"/>
 			</div>
 			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 			&nbsp;&nbsp;&nbsp;&nbsp;
@@ -71,18 +71,25 @@
 		}
 		  $(document).ready(function(){
 			  init("contents-all");
-			  init("contents-code");
+			  $('[data-rel=tooltip]').tooltip();
 			  $('#statistics').addClass("active");
 			  $('#time').datetimepicker({
 					format:'Y-m-d',
 					timepicker:false,
 					maxDate:0
 				});
+			  
+			  var type='${payload.type}';
+			  if(type == 'request' || type.length==0){
+				  type='all';
+			  }
+			  $("#li-"+type).addClass("active");
+			  $("#tabContent-"+type).addClass("active");
 	      });
 	      
 	      function queryNew(){
 	        var time=$("#time").val();
-	        window.location.href="?op=statistics&day="+time+"&domain=${model.domain}";
+	        window.location.href="?op=statistics&day="+time+"&domain=${model.domain}&type=${payload.type}";
 	      }
 		</script>
 </a:body>

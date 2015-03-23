@@ -22,8 +22,8 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.impl.StateReportService;
+import com.dianping.cat.report.page.state.service.StateReportService;
+import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ModelRequest;
 import com.dianping.cat.service.ModelResponse;
 

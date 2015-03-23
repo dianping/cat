@@ -15,12 +15,12 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.impl.TransactionReportService;
-import com.dianping.cat.report.task.cross.CrossReportBuilder;
-import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
-import com.dianping.cat.report.task.problem.ProblemReportBuilder;
-import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
+import com.dianping.cat.report.page.event.task.EventReportBuilder;
+import com.dianping.cat.report.page.matrix.task.MatrixReportBuilder;
+import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
 
 public class CachedReportTask implements Task {
 
