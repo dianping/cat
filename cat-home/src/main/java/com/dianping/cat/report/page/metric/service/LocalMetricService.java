@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.metric.service;
 
 import java.util.Arrays;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,21 +25,20 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.service.IpService;
 
 public class LocalMetricService extends LocalModelService<MetricReport> {
-	
+
 	public static final String ID = MetricAnalyzer.ID;
-	
+
 	@Inject
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private IpService m_ipService;
-	
+
 	public LocalMetricService() {
 		super(MetricAnalyzer.ID);
 	}
 
-	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	private String buildMetricReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		MetricReport report = super.getReport(period, domain);
 
@@ -54,12 +54,12 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 		}
 		String metricType = payload.getMetricType();
 		String type = payload.getType();
-		
+
 		if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
 			String city = payload.getCity();
 			String channel = payload.getChannel();
 			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
-			
+
 			convert.visitMetricReport(report);
 			report = convert.getReport();
 		} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
@@ -84,8 +84,18 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 			cdnReportConvertor.visitMetricReport(report);
 			report = cdnReportConvertor.getReport();
 		}
-		
+
 		return new MetricReportFilter().buildXml(report);
+	}
+
+	@Override
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		try {
+			return buildMetricReport(request, period, domain, payload);
+		} catch (ConcurrentModificationException e) {
+			return buildMetricReport(request, period, domain, payload);
+		}
 	}
 
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
