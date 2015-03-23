@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -29,7 +29,7 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String id, BasePayload payload) throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
 		StorageReport report = super.getReport(period, id);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

@@ -13,11 +13,9 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.PayloadNormalizer.ReportPayload;
 import com.dianping.cat.service.ModelPeriod;
 
-public abstract class AbstractReportPayload<A extends Action, P extends Page> implements ActionPayload<P, A>,
-      ReportPayload {
+public abstract class AbstractReportPayload<A extends Action, P extends Page> implements ActionPayload<P, A> {
 
 	@FieldMeta("endDate")
 	protected String m_customEnd;

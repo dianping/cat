@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -30,7 +30,7 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 		super(HeartbeatAnalyzer.ID);
 	}
 
-	private String filterReport(BasePayload payload, HeartbeatReport report) {
+	private String filterReport(ApiPayload payload, HeartbeatReport report) {
 		String ipAddress = payload.getIpAddress();
 
 		if (StringUtils.isEmpty(ipAddress)) {
@@ -45,7 +45,7 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		HeartbeatReport report = super.getReport(period, domain);
 

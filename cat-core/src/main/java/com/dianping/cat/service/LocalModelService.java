@@ -10,7 +10,7 @@ import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {
 	@Inject(type = MessageConsumer.class)
@@ -25,7 +25,7 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	private String m_name;
 	
-	public abstract String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload) throws Exception;
+	public abstract String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception;
 
 	public LocalModelService(String name) {
 		m_name = name;

@@ -2,7 +2,7 @@ package com.dianping.cat.mvc;
 
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-public class BasePayload {
+public class ApiPayload {
 
 	@FieldMeta("ip")
 	private String m_ipAddress;

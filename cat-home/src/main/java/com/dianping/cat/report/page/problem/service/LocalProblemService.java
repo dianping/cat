@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -30,7 +30,7 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 		super(ProblemAnalyzer.ID);
 	}
 
-	private String filterReport(BasePayload payload, ProblemReport report) {
+	private String filterReport(ApiPayload payload, ProblemReport report) {
 	   String ipAddress = payload.getIpAddress();;
 		String type = payload.getType();
 		String queryType = payload.getQueryType();
@@ -42,7 +42,7 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
    }
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain,BasePayload payload) throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
 		ProblemReport report = super.getReport( period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

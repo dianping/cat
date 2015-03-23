@@ -17,7 +17,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.core.HtmlMessageCodec;
 import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.service.LocalModelService;
 import com.dianping.cat.service.ModelPeriod;
 import com.dianping.cat.service.ModelRequest;
@@ -43,7 +43,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();
@@ -76,7 +76,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		try {
 			ModelPeriod period = request.getPeriod();
 			String domain = request.getDomain();
-			BasePayload payload = new BasePayload();
+			ApiPayload payload = new ApiPayload();
 
 			payload.setMessageId(request.getProperty("messageId"));
 			payload.setWaterfall(Boolean.valueOf(request.getProperty("waterfall", "false")));
