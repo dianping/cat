@@ -4904,6 +4904,9 @@
 				<requirement>
 					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
+				<requirement>
+					<role>org.codehaus.plexus.logging.Logger</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
