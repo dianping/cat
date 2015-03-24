@@ -14,11 +14,11 @@ public class AppDataSequence<T> {
 		m_records = reocords;
 	}
 
-	public Map<Integer, List<T>> getRecords() {
-		return m_records;
-	}
-
 	public int getDuration() {
 		return m_duration;
+	}
+
+	public Map<Integer, List<T>> getRecords() {
+		return m_records;
 	}
 }
