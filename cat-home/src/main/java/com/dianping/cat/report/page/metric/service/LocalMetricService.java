@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.metric.service;
 
 import java.util.Arrays;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +37,8 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 		super(MetricAnalyzer.ID);
 	}
 
-	private String buildMetricReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	@Override
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		MetricReport report = super.getReport(period, domain);
 
@@ -86,16 +86,6 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 		}
 
 		return new MetricReportFilter().buildXml(report);
-	}
-
-	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
-		try {
-			return buildMetricReport(request, period, domain, payload);
-		} catch (ConcurrentModificationException e) {
-			return buildMetricReport(request, period, domain, payload);
-		}
 	}
 
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -27,7 +27,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		DependencyReport report = super.getReport(period, domain);
 

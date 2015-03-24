@@ -27,7 +27,7 @@ public class LocalCrossService extends LocalModelService<CrossReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		CrossReport report = super.getReport(period, domain);
 

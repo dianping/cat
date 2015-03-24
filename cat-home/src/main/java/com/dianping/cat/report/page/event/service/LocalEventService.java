@@ -39,7 +39,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
    }
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
 		EventReport report = super.getReport( period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

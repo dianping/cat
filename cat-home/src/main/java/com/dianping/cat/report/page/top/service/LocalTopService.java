@@ -27,7 +27,7 @@ public class LocalTopService extends LocalModelService<TopReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		TopReport report = super.getReport(period, domain);
 

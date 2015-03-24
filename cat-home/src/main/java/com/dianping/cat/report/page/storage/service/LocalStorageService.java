@@ -29,7 +29,7 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
 		StorageReport report = super.getReport(period, id);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
