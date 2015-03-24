@@ -2,11 +2,9 @@ package com.dianping.cat.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -32,16 +30,16 @@ public class ProjectService implements Initializable {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private Set<String> m_domains = new HashSet<String>();
+	private ConcurrentHashMap<String, String> m_domains = new ConcurrentHashMap<String, String>();
 
-	private Map<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
+	private ConcurrentHashMap<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
 
-	private Map<String, Project> m_cmdbToProjects = new ConcurrentHashMap<String, Project>();
+	private ConcurrentHashMap<String, Project> m_cmdbToProjects = new ConcurrentHashMap<String, Project>();
 
 	public static final String DEFAULT = "Default";
 
 	public boolean contains(String domain) {
-		return m_domains.contains(domain);
+		return m_domains.containsKey(domain);
 	}
 
 	public Project create() {
@@ -159,7 +157,7 @@ public class ProjectService implements Initializable {
 
 		try {
 			insert(project);
-			m_domains.add(domain);
+			m_domains.put(domain, domain);
 
 			return true;
 		} catch (Exception ex) {
@@ -171,13 +169,15 @@ public class ProjectService implements Initializable {
 	public void refresh() {
 		try {
 			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-			Map<String, Project> tmpDomainProjects = new ConcurrentHashMap<String, Project>();
-			Map<String, Project> tmpCmdbProjects = new ConcurrentHashMap<String, Project>();
-			Set<String> tmpDomains = new HashSet<String>();
+			ConcurrentHashMap<String, Project> tmpDomainProjects = new ConcurrentHashMap<String, Project>();
+			ConcurrentHashMap<String, Project> tmpCmdbProjects = new ConcurrentHashMap<String, Project>();
+			ConcurrentHashMap<String, String> tmpDomains = new ConcurrentHashMap<String, String>();
 
 			for (Project project : projects) {
-				tmpDomains.add(project.getDomain());
-				tmpDomainProjects.put(project.getDomain(), project);
+				String domain = project.getDomain();
+
+				tmpDomains.put(domain, domain);
+				tmpDomainProjects.put(domain, project);
 
 				String cmdb = project.getCmdbDomain();
 
