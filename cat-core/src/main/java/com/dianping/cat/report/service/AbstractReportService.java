@@ -68,6 +68,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
+			report.setCreationDate(new Date());
 			m_dailyReportDao.insert(report);
 
 			int id = report.getId();
@@ -86,6 +87,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertHourlyReport(HourlyReport report, byte[] content) {
 		try {
+			report.setCreationDate(new Date());
 			m_hourlyReportDao.insert(report);
 
 			int id = report.getId();
@@ -104,6 +106,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertMonthlyReport(MonthlyReport report, byte[] content) {
 		try {
+			report.setCreationDate(new Date());
+			
 			MonthlyReport monthReport = m_monthlyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
 			      report.getDomain(), report.getName(), MonthlyReportEntity.READSET_FULL);
 
@@ -140,6 +144,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertWeeklyReport(WeeklyReport report, byte[] content) {
 		try {
+			report.setCreationDate(new Date());
+			
 			WeeklyReport weeklyReport = m_weeklyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
 			      report.getDomain(), report.getName(), WeeklyReportEntity.READSET_FULL);
 
