@@ -47,7 +47,6 @@ import com.dianping.cat.report.page.app.display.AppReportMerger;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
-import com.dianping.cat.report.page.app.display.DisplayCommand;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -350,17 +349,9 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			// AppReport report = queryAppReport(payload);
-			String xml = Files.forIO().readFrom(new FileInputStream("/Users/jialinsun/Downloads/appReport.xml"), "utf-8");
-			AppReport report = null;
-			try {
-				report = DefaultSaxParser.parse(xml);
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			AppReport report = queryAppReport(payload);
 			DisplayCommands displayCommands = buildDisplayCommands(report, payload.getSort());
-			
+
 			model.setDisplayCommands(displayCommands);
 			model.setAppReport(report);
 			model.setCodeDistributions(buildCodeDistributions(displayCommands));
