@@ -1,11 +1,10 @@
 package com.dianping.cat.report;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DomainValidator {
 
-	private Set<String> m_valids = new HashSet<String>();
+	private ConcurrentHashMap<String, String> m_valids = new ConcurrentHashMap<String, String>();
 
 	public boolean validate(String domain) {
 		boolean result = true;
@@ -21,7 +20,7 @@ public class DomainValidator {
 					return false;
 				}
 			}
-			m_valids.add(domain);
+			m_valids.put(domain, domain);
 		}
 		return result;
 	}
