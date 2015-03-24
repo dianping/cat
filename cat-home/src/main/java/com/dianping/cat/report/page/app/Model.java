@@ -30,6 +30,8 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -99,6 +101,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public AppReport getAppReport() {
 		return m_appReport;
+	}
+
+	public int getDefaultCommand() {
+		return CommandQueryEntity.DEFAULT_COMMAND;
+	}
+
+	public int getDefaultActivity() {
+		return CommandQueryEntity.DEFAULT_ACTIVITY;
+	}
+
+	public int getDefaultSpeedPage() {
+		return SpeedQueryEntity.DEFAULT_SPEED_PAGE;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {

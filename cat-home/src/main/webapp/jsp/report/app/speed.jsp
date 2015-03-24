@@ -139,6 +139,8 @@
 				}
 				if(typeof words[1] != "undefined"  && words[1].length > 0) {
 					$("#page").val(words[1]);
+				}else{
+					$("#page").val('${model.defaultSpeedPage}');
 				}
 				$("#page").change();
 				if(typeof words[2] != "undefined"  && words[2].length > 0) {

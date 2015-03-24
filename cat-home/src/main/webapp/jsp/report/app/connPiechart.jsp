@@ -196,6 +196,12 @@
 					}else{
 						$("#time2").val(words[10]);
 					}
+					
+					if(words[1] != undefined || words.length > 1){
+						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
+					}
 
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);

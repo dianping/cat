@@ -268,6 +268,8 @@
 					
 					if(typeof(words[1]) != undefined && words[0].length > 0 ){
 						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
 					}
 					
 					if (typeof(words[0]) != undefined && words[0].length == 0) {
