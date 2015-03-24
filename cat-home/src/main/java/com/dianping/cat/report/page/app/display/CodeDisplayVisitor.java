@@ -33,31 +33,6 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		init();
 	}
 
-	public DisplayCommands getCommands() {
-		return m_commands;
-	}
-
-	private void init() {
-		for (int i = 1000; i >= 100; i -= 100) {
-			m_distributions[10 - i / 100] = i;
-		}
-		for (int i = 10; i < 20; i++) {
-			m_distributions[i] = -m_distributions[i - 10];
-		}
-	}
-
-	@Override
-	public void visitCode(Code code) {
-		String id = code.getId();
-		String distCode = queryCodeDistribution(Integer.valueOf(id));
-
-		if (!id.equals(distCode)) {
-			buildDistributionInfo(code, distCode);
-		}
-		mergeCode(code, id);
-		super.visitCode(code);
-	}
-
 	private void buildDistributionInfo(Code code, String id) {
 		DisplayCode c = m_commands.findOrCreateCommand(m_currentCommand).findOrCreateCode(id);
 
@@ -77,6 +52,25 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		sb.append(code.getId() + "=" + code.getCount() + "; ");
 
 		c.setTitle(sb.toString());
+	}
+
+	private String convertLable(int i) {
+		String code = String.valueOf(i);
+
+		return code.replaceAll("0", "X");
+	}
+
+	public DisplayCommands getCommands() {
+		return m_commands;
+	}
+
+	private void init() {
+		for (int i = 1000; i >= 100; i -= 100) {
+			m_distributions[10 - i / 100] = i;
+		}
+		for (int i = 10; i < 20; i++) {
+			m_distributions[i] = -m_distributions[i - 10];
+		}
 	}
 
 	private void mergeCode(Code code, String id) {
@@ -146,10 +140,16 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		return String.valueOf(code);
 	}
 
-	private String convertLable(int i) {
-		String code = String.valueOf(i);
+	@Override
+	public void visitCode(Code code) {
+		String id = code.getId();
+		String distCode = queryCodeDistribution(Integer.valueOf(id));
 
-		return code.replaceAll("0", "X");
+		if (!id.equals(distCode)) {
+			buildDistributionInfo(code, distCode);
+		}
+		mergeCode(code, id);
+		super.visitCode(code);
 	}
 
 	@Override

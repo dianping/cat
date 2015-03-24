@@ -86,6 +86,41 @@ public class AppCommandsSorter {
 			}
 		}
 
+		private int sortCount(DisplayCode c1, DisplayCode c2) {
+			if (c1 == null && c2 == null) {
+				return 0;
+			} else if (c1 == null) {
+				return 1;
+			} else if (c2 == null) {
+				return -1;
+			} else {
+				long count1 = c1.getCount();
+				long count2 = c2.getCount();
+
+				return count2 > count1 ? 1 : (count2 < count1 ? -1 : 0);
+			}
+		}
+
+		private int sortStr(String o1, String o2) {
+			if (Constants.ALL.equals(o1)) {
+				return -1;
+			}
+			if (Constants.ALL.equals(o2)) {
+				return 1;
+			}
+			boolean o1Empty = StringUtils.isEmpty(o1);
+			boolean o2Empty = StringUtils.isEmpty(o2);
+
+			if (o1Empty && o2Empty) {
+				return 0;
+			} else if (o1Empty) {
+				return 1;
+			} else if (o2Empty) {
+				return -1;
+			}
+			return o1.compareTo(o2);
+		}
+
 		private int sortValue(DisplayCommand command1, DisplayCommand command2) {
 			if ("count".equals(m_sortBy)) {
 				long count1 = command1.getCount();
@@ -117,41 +152,6 @@ public class AppCommandsSorter {
 				DisplayCode code2 = command2.findOrCreateCode(m_sortBy);
 
 				return sortCount(code1, code2);
-			}
-		}
-
-		private int sortStr(String o1, String o2) {
-			if (Constants.ALL.equals(o1)) {
-				return -1;
-			}
-			if (Constants.ALL.equals(o2)) {
-				return 1;
-			}
-			boolean o1Empty = StringUtils.isEmpty(o1);
-			boolean o2Empty = StringUtils.isEmpty(o2);
-
-			if (o1Empty && o2Empty) {
-				return 0;
-			} else if (o1Empty) {
-				return 1;
-			} else if (o2Empty) {
-				return -1;
-			}
-			return o1.compareTo(o2);
-		}
-
-		private int sortCount(DisplayCode c1, DisplayCode c2) {
-			if (c1 == null && c2 == null) {
-				return 0;
-			} else if (c1 == null) {
-				return 1;
-			} else if (c2 == null) {
-				return -1;
-			} else {
-				long count1 = c1.getCount();
-				long count2 = c2.getCount();
-
-				return count2 > count1 ? 1 : (count2 < count1 ? -1 : 0);
 			}
 		}
 	}

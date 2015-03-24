@@ -71,6 +71,10 @@ public class DisplayCommand {
 		return m_avg;
 	}
 
+	public String getBu() {
+		return m_bu;
+	}
+
 	public Map<String, DisplayCode> getCodes() {
 		return m_codes;
 	}
@@ -97,10 +101,6 @@ public class DisplayCommand {
 
 	public String getName() {
 		return m_name;
-	}
-
-	public String getBu() {
-		return m_bu;
 	}
 
 	public double getRequestAvg() {
@@ -185,6 +185,10 @@ public class DisplayCommand {
 		m_avg = avg;
 	}
 
+	public void setBu(String bu) {
+		m_bu = bu;
+	}
+
 	public void setCodes(Map<String, DisplayCode> codes) {
 		m_codes = codes;
 	}
@@ -211,10 +215,6 @@ public class DisplayCommand {
 
 	public void setName(String name) {
 		m_name = name;
-	}
-
-	public void setBu(String bu) {
-		m_bu = bu;
 	}
 
 	public void setRequestAvg(double requestAvg) {

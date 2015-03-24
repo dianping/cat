@@ -20,6 +20,34 @@ public class DisplayCode {
 		m_id = id;
 	}
 
+	public double getAvg() {
+		return m_avg;
+	}
+
+	public long getCount() {
+		return m_count;
+	}
+
+	public long getErrors() {
+		return m_errors;
+	}
+
+	public String getId() {
+		return m_id;
+	}
+
+	public double getSuccessRatio() {
+		return m_successRatio;
+	}
+
+	public double getSum() {
+		return m_sum;
+	}
+
+	public String getTitle() {
+		return m_title;
+	}
+
 	public DisplayCode incCount() {
 		m_count++;
 		return this;
@@ -48,34 +76,6 @@ public class DisplayCode {
 	public DisplayCode incSum(double sum) {
 		m_sum += sum;
 		return this;
-	}
-
-	public double getAvg() {
-		return m_avg;
-	}
-
-	public long getCount() {
-		return m_count;
-	}
-
-	public long getErrors() {
-		return m_errors;
-	}
-
-	public String getId() {
-		return m_id;
-	}
-
-	public double getSuccessRatio() {
-		return m_successRatio;
-	}
-
-	public double getSum() {
-		return m_sum;
-	}
-
-	public String getTitle() {
-		return m_title;
 	}
 
 	public void setAvg(double avg) {
