@@ -68,6 +68,8 @@ public class AppConfigManager implements Initializable {
 
 	public static String CONNECT_TYPE = "连接类型";
 
+	public static final int TOO_LONG_COMMAND_ID = 23;
+
 	public static final int ALL_COMMAND_ID = 0;
 
 	public static final int COMMAND_END_INDEX = 1099;

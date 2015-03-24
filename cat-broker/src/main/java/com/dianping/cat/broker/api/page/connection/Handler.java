@@ -74,7 +74,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
-		String userIp = m_util.getRemoteIp(request);
+		// String userIp = m_util.getRemoteIp(request);
+		String userIp = "140.207.217.6";
 		String version = payload.getVersion();
 		boolean success = true;
 
@@ -190,6 +191,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
+			System.out.println(record);
 			Cat.logEvent("InvalidRecord", "batch:version2:" + String.valueOf(items.length), Event.SUCCESS, null);
 		}
 	}

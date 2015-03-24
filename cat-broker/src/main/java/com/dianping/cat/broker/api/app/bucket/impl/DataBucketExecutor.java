@@ -38,6 +38,8 @@ public class DataBucketExecutor implements BucketExecutor {
 
 	protected void batchInsert(List<AppCommandData> appDataCommands, List<AppDataProto> datas) {
 		int[] ret = null;
+		int id = 0;
+
 		try {
 			int length = appDataCommands.size();
 			AppCommandData[] array = new AppCommandData[length];
@@ -45,12 +47,20 @@ public class DataBucketExecutor implements BucketExecutor {
 
 			for (int i = 0; i < length; i++) {
 				AppCommandData appCommandData = appDataCommands.get(i);
-				AppCommandData copyData = copyAppCommandData(appCommandData);
 				array[i] = appCommandData;
-				all[i] = copyData;
+				id = appCommandData.getCommandId();
 			}
 			ret = m_appDataService.insert(array);
-			m_appDataService.insert(all);
+
+			if (validCommand(id)) {
+				for (int i = 0; i < length; i++) {
+					AppCommandData appCommandData = appDataCommands.get(i);
+					AppCommandData copyData = copyAppCommandData(appCommandData);
+					all[i] = copyData;
+				}
+				m_appDataService.insert(all);
+			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -60,6 +70,10 @@ public class DataBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
+	}
+
+	private boolean validCommand(int id) {
+		return id != AppConfigManager.TOO_LONG_COMMAND_ID;
 	}
 
 	private AppCommandData copyAppCommandData(AppCommandData appCommandData) {

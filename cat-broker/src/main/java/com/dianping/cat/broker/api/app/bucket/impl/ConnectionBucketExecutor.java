@@ -38,6 +38,8 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 
 	protected void batchInsert(List<AppConnectionData> appConnectionDatas, List<AppConnectionProto> datas) {
 		int[] ret = null;
+		int id = 0;
+
 		try {
 			int length = appConnectionDatas.size();
 			AppConnectionData[] array = new AppConnectionData[length];
@@ -45,12 +47,19 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 
 			for (int i = 0; i < length; i++) {
 				AppConnectionData appConnectionData = appConnectionDatas.get(i);
-				AppConnectionData copyData = copyAppConnectionData(appConnectionData);
 				array[i] = appConnectionData;
-				all[i] = copyData;
+				id = appConnectionData.getCommandId();
 			}
 			ret = m_appDataService.insert(array);
-			m_appDataService.insert(all);
+
+			if (validCommand(id)) {
+				for (int i = 0; i < length; i++) {
+					AppConnectionData appConnectionData = appConnectionDatas.get(i);
+					AppConnectionData copyData = copyAppConnectionData(appConnectionData);
+					all[i] = copyData;
+				}
+				m_appDataService.insert(all);
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -60,6 +69,10 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
+	}
+
+	private boolean validCommand(int id) {
+		return id != AppConfigManager.TOO_LONG_COMMAND_ID;
 	}
 
 	private AppConnectionData copyAppConnectionData(AppConnectionData appConnectionData) {
