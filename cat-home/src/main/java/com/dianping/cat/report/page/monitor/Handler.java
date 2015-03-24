@@ -4,8 +4,6 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
@@ -24,13 +22,10 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.alert.MetricType;
 
-public class Handler implements PageHandler<Context>, LogEnabled {
+public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_builder;
-
-	@Inject
-	private Logger m_logger;
 
 	private void buildBatchMetric(String content) {
 		if (content != null) {
@@ -184,11 +179,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private boolean isSystem(String group) {
 		return ProductLineConfig.SYSTEM.isTypeOf(group);
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }
