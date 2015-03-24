@@ -151,7 +151,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					 url = m_parser.parse(url);
+					url = m_parser.parse(url);
 
 					if (url != null) {
 						command = m_appConfigManager.getCommands().get(url);
@@ -226,7 +226,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						command = m_appConfigManager.getCommands().get(url);
 					}
 				}
-				
+
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());

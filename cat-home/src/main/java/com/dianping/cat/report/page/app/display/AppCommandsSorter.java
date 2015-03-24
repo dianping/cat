@@ -52,31 +52,37 @@ public class AppCommandsSorter {
 		public int compare(Entry<Integer, DisplayCommand> o1, Entry<Integer, DisplayCommand> o2) {
 			DisplayCommand command1 = o1.getValue();
 			DisplayCommand command2 = o2.getValue();
-			String domain1 = command1.getDomain();
-			String domain2 = command2.getDomain();
+			String str1 = command1.getDomain();
+			String str2 = command2.getDomain();
 
 			if (m_sortValue) {
-				if (Constants.ALL.equals(domain1)) {
+				if (Constants.ALL.equals(str1)) {
 					return -1;
-				} else if (Constants.ALL.equals(domain2)) {
+				} else if (Constants.ALL.equals(str2)) {
 					return 1;
 				} else {
 					return sortValue(command1, command2);
 				}
 			} else {
 				if ("command".equals(m_sortBy)) {
-					domain1 = command1.getTitle();
+					str1 = command1.getTitle();
 
-					if (StringUtils.isEmpty(domain1)) {
-						domain1 = command1.getName();
+					if (StringUtils.isEmpty(str1)) {
+						str1 = command1.getName();
 					}
 
-					domain2 = command2.getTitle();
-					if (StringUtils.isEmpty(domain2)) {
-						domain2 = command2.getName();
+					str2 = command2.getTitle();
+					if (StringUtils.isEmpty(str2)) {
+						str2 = command2.getName();
 					}
+				} else if ("bu".equals(m_sortBy)) {
+					str1 = command1.getBu();
+					str2 = command2.getBu();
+				} else if ("department".equals(m_sortBy)) {
+					str1 = command1.getDepartment();
+					str2 = command2.getDepartment();
 				}
-				return sortDomain(domain1, domain2);
+				return sortStr(str1, str2);
 			}
 		}
 
@@ -114,7 +120,7 @@ public class AppCommandsSorter {
 			}
 		}
 
-		private int sortDomain(String o1, String o2) {
+		private int sortStr(String o1, String o2) {
 			if (Constants.ALL.equals(o1)) {
 				return -1;
 			}

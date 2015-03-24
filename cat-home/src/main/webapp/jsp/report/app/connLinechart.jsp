@@ -303,7 +303,7 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						if(typeof(words[1]) != undefined && words[0].length > 0 ){
+						if(typeof(words[1]) != undefined && words[1].length > 0 ){
 							$("#command2").val(words[1]);
 						}
 						command2Change();

@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.app;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,6 +15,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -21,29 +23,31 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
+import com.dianping.cat.home.app.transform.DefaultSaxParser;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
 import com.dianping.cat.report.page.app.display.AppReportMerger;
-import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
+import com.dianping.cat.report.page.app.display.DisplayCommand;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
@@ -138,8 +142,6 @@ public class Handler implements PageHandler<Context> {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
-			filterCommands(model, payload.isShowActivity());
-
 			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
@@ -190,28 +192,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return null;
-	}
-
-	private void filterCommands(Model model, boolean isShowActivity) {
-		List<Command> commands = model.getCommands();
-		List<Command> remainCommands = new ArrayList<Command>();
-
-		if (isShowActivity) {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId >= 1000 && commandId <= 1200) {
-					remainCommands.add(command);
-				}
-			}
-		} else {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId > 0 && commandId < 1000) {
-					remainCommands.add(command);
-				}
-			}
-		}
-		model.setCommands(remainCommands);
 	}
 
 	@Override
@@ -370,9 +350,17 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			AppReport report = queryAppReport(payload);
+			// AppReport report = queryAppReport(payload);
+			String xml = Files.forIO().readFrom(new FileInputStream("/Users/jialinsun/Downloads/appReport.xml"), "utf-8");
+			AppReport report = null;
+			try {
+				report = DefaultSaxParser.parse(xml);
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			DisplayCommands displayCommands = buildDisplayCommands(report, payload.getSort());
-
+			
 			model.setDisplayCommands(displayCommands);
 			model.setAppReport(report);
 			model.setCodeDistributions(buildCodeDistributions(displayCommands));
@@ -436,6 +424,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		Action action = payload.getAction();
+		boolean activity = payload.isShowActivity();
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
@@ -445,11 +434,10 @@ public class Handler implements PageHandler<Context> {
 		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
 		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_appConfigManager.queryCommands(payload.isShowActivity()));
+		model.setCommands(m_appConfigManager.queryCommands(activity));
 
 		if (Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
 		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action)) {
-			boolean activity = payload.isShowActivity();
 
 			model.setDomain2Commands(m_appConfigManager.queryDomain2Commands(activity));
 			model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());

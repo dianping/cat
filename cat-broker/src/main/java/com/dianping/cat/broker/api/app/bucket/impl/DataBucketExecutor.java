@@ -19,6 +19,7 @@ import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.app.service.AppService;
+import com.dianping.cat.config.app.AppConfigManager;
 
 public class DataBucketExecutor implements BucketExecutor {
 
@@ -40,11 +41,16 @@ public class DataBucketExecutor implements BucketExecutor {
 		try {
 			int length = appDataCommands.size();
 			AppCommandData[] array = new AppCommandData[length];
+			AppCommandData[] all = new AppCommandData[length];
 
 			for (int i = 0; i < length; i++) {
-				array[i] = appDataCommands.get(i);
+				AppCommandData appCommandData = appDataCommands.get(i);
+				AppCommandData copyData = copyAppCommandData(appCommandData);
+				array[i] = appCommandData;
+				all[i] = copyData;
 			}
 			ret = m_appDataService.insert(array);
+			m_appDataService.insert(all);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -54,6 +60,30 @@ public class DataBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
+	}
+
+	private AppCommandData copyAppCommandData(AppCommandData appCommandData) {
+		AppCommandData data = new AppCommandData();
+
+		data.setAccessNumber(appCommandData.getAccessNumber());
+		data.setAppVersion(appCommandData.getAppVersion());
+		data.setCity(appCommandData.getCity());
+		data.setCode(appCommandData.getCode());
+		data.setConnectType(appCommandData.getConnectType());
+		data.setCreationDate(appCommandData.getCreationDate());
+		data.setId(appCommandData.getId());
+		data.setKeyId(appCommandData.getKeyId());
+		data.setMinuteOrder(appCommandData.getMinuteOrder());
+		data.setNetwork(appCommandData.getNetwork());
+		data.setOperator(appCommandData.getOperator());
+		data.setPeriod(appCommandData.getPeriod());
+		data.setPlatform(appCommandData.getPlatform());
+		data.setRequestPackage(appCommandData.getRequestPackage());
+		data.setResponsePackage(appCommandData.getResponsePackage());
+		data.setResponseSumTime(appCommandData.getResponseSumTime());
+		data.setStatus(appCommandData.getStatus());
+		data.setCommandId(AppConfigManager.ALL_COMMAND_ID);
+		return data;
 	}
 
 	@Override

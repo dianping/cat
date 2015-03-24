@@ -68,6 +68,8 @@ public class AppConfigManager implements Initializable {
 
 	public static String CONNECT_TYPE = "连接类型";
 
+	public static final int ALL_COMMAND_ID = 0;
+
 	public static final int COMMAND_END_INDEX = 1099;
 
 	public static final int ACTIVITY_END_INDEX = 1200;
@@ -365,7 +367,7 @@ public class AppConfigManager implements Initializable {
 		} else {
 			for (Command command : commands) {
 				int commandId = command.getId();
-				if (commandId > 0 && commandId <= COMMAND_END_INDEX) {
+				if (commandId >= ALL_COMMAND_ID && commandId <= COMMAND_END_INDEX) {
 					results.add(command);
 				}
 			}

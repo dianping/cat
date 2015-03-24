@@ -96,20 +96,25 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		DisplayCommand c = m_commands.findOrCreateCommand(id);
 
 		if (AppReportMerger.ALL_COMMAND_ID == id) {
+			c.setName(Constants.ALL);
 			c.setDomain(Constants.ALL);
 			c.setTitle(Constants.ALL);
 			c.setDepartment(Constants.ALL);
 			c.setBu(Constants.ALL);
 		} else {
 			com.dianping.cat.configuration.app.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
-			Project project = m_projectService.findProject(cmd.getDomain());
-
-			c.setDomain(cmd.getDomain());
+			c.setName(command.getName());
 			c.setTitle(cmd.getTitle());
+			String domain = cmd.getDomain();
 
-			if (project != null) {
-				c.setBu(project.getBu());
-				c.setDepartment(project.getDepartment());
+			if (StringUtils.isNotEmpty(domain)) {
+				Project project = m_projectService.findProject(domain);
+
+				c.setDomain(domain);
+				if (project != null) {
+					c.setBu(project.getBu());
+					c.setDepartment(project.getDepartment());
+				}
 			}
 		}
 		c.incCount(command.getCount()).incSum(command.getSum()).incErrors(command.getErrors())

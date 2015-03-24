@@ -8,8 +8,6 @@ import com.dianping.cat.Cat;
 
 public class SpeedQueryEntity extends BaseQueryEntity {
 
-	public static final int DEFAULT_SPEED_PAGE = 1;
-
 	public SpeedQueryEntity() {
 		super();
 	}

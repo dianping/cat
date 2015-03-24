@@ -19,6 +19,7 @@ import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
 import com.dianping.cat.broker.api.app.proto.AppConnectionProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.app.service.AppService;
+import com.dianping.cat.config.app.AppConfigManager;
 
 public class ConnectionBucketExecutor implements BucketExecutor {
 
@@ -35,16 +36,21 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 		m_appDataService = appDataService;
 	}
 
-	protected void batchInsert(List<AppConnectionData> appDataCommands, List<AppConnectionProto> datas) {
+	protected void batchInsert(List<AppConnectionData> appConnectionDatas, List<AppConnectionProto> datas) {
 		int[] ret = null;
 		try {
-			int length = appDataCommands.size();
+			int length = appConnectionDatas.size();
 			AppConnectionData[] array = new AppConnectionData[length];
+			AppConnectionData[] all = new AppConnectionData[length];
 
 			for (int i = 0; i < length; i++) {
-				array[i] = appDataCommands.get(i);
+				AppConnectionData appConnectionData = appConnectionDatas.get(i);
+				AppConnectionData copyData = copyAppConnectionData(appConnectionData);
+				array[i] = appConnectionData;
+				all[i] = copyData;
 			}
 			ret = m_appDataService.insert(array);
+			m_appDataService.insert(all);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -54,6 +60,30 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
+	}
+
+	private AppConnectionData copyAppConnectionData(AppConnectionData appConnectionData) {
+		AppConnectionData data = new AppConnectionData();
+
+		data.setAccessNumber(appConnectionData.getAccessNumber());
+		data.setAppVersion(appConnectionData.getAppVersion());
+		data.setCity(appConnectionData.getCity());
+		data.setCode(appConnectionData.getCode());
+		data.setConnectType(appConnectionData.getConnectType());
+		data.setCreationDate(appConnectionData.getCreationDate());
+		data.setId(appConnectionData.getId());
+		data.setKeyId(appConnectionData.getKeyId());
+		data.setMinuteOrder(appConnectionData.getMinuteOrder());
+		data.setNetwork(appConnectionData.getNetwork());
+		data.setOperator(appConnectionData.getOperator());
+		data.setPeriod(appConnectionData.getPeriod());
+		data.setPlatform(appConnectionData.getPlatform());
+		data.setRequestPackage(appConnectionData.getRequestPackage());
+		data.setResponsePackage(appConnectionData.getResponsePackage());
+		data.setResponseSumTime(appConnectionData.getResponseSumTime());
+		data.setStatus(appConnectionData.getStatus());
+		data.setCommandId(AppConfigManager.ALL_COMMAND_ID);
+		return data;
 	}
 
 	@Override

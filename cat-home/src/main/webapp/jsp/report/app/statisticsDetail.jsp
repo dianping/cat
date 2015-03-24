@@ -32,11 +32,11 @@
 		<c:forEach var="entry" items="${model.displayCommands.commands}" varStatus="status">
 			<tr><td><a href="/cat/r/app?query1=${payload.day};${entry.value.id};;;;;;;;;" target="_blank">
 			<c:choose>
-				<c:when test="${not empty entry.value.title }">
-					${entry.value.title }
+				<c:when test="${not empty entry.value.title}">
+					${entry.value.title}
 				</c:when>
 			<c:otherwise>
-					${entry.key}
+					${entry.value.name}
 			</c:otherwise>
 			</c:choose></a></td>
 			<c:choose>
@@ -66,11 +66,11 @@
 					<td>无</td>
 				</c:otherwise>
 			</c:choose>
-			<td class="right">${w:format(entry.value.count,'#0')}</td>
-			<td class="right">${w:format(entry.value.avg,'#0.0')}</td>
+			<td class="right">${w:format(entry.value.count,'#,###,###,###,##0')}</td>
+			<td class="right">${w:format(entry.value.avg,'#,###,###,###,##0.0')}</td>
 			<td class="right">${w:format(entry.value.successRatio,'#0.000')}</td>
-			<td class="right">${w:format(entry.value.requestAvg,'#0.0')}</td>
-			<td class="right">${w:format(entry.value.responseAvg,'#0.0')}</td>
+			<td class="right">${w:format(entry.value.requestAvg,'#,###,###,###,##0.0')}</td>
+			<td class="right">${w:format(entry.value.responseAvg,'#,###,###,###,##0.0')}</td>
 			</tr>
 		</c:forEach>
 		</tbody>
@@ -95,10 +95,10 @@
 		<tr><td><a href="/cat/r/app?op=piechart&query1=${payload.day};${e.value.id};;;;;;;;00:00;23:59" target="_blank">
 			<c:choose>
 				<c:when test="${not empty e.value.title }">
-					${e.value.title }
+					${e.value.title}
 				</c:when>
 			<c:otherwise>
-					${e.key}
+					${e.value.name}
 			</c:otherwise>
 			</c:choose></a></td>
 			<c:choose>
