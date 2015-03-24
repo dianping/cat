@@ -43,7 +43,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfull = payload.isWaterfall();

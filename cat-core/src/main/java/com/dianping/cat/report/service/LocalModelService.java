@@ -1,5 +1,7 @@
 package com.dianping.cat.report.service;
 
+import java.util.ConcurrentModificationException;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
@@ -24,10 +26,13 @@ public abstract class LocalModelService<T> implements Initializable {
 	private String m_defaultDomain = Constants.CAT;
 
 	private String m_name;
-	
+
 	public LocalModelService(String name) {
 		m_name = name;
 	}
+
+	public abstract String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception;
 
 	public String getName() {
 		return m_name;
@@ -58,7 +63,13 @@ public abstract class LocalModelService<T> implements Initializable {
 		throw new RuntimeException("Internal error: this should not be reached!");
 	}
 
-	public abstract String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception;
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception {
+		try {
+			return buildReport(request, period, domain, payload);
+		} catch (ConcurrentModificationException e) {
+			return buildReport(request, period, domain, payload);
+		}
+	}
 
 	@Override
 	public void initialize() throws InitializationException {

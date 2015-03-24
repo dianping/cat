@@ -27,7 +27,7 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
 		MatrixReport report = super.getReport( period, domain);
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {

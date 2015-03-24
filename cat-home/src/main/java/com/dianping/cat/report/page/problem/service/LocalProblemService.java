@@ -42,7 +42,7 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
    }
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
 		ProblemReport report = super.getReport( period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
