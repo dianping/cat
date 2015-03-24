@@ -113,7 +113,7 @@ public class CodeDisplayVisitor extends BaseVisitor {
 				c.setDomain(domain);
 				if (project != null) {
 					c.setBu(project.getBu());
-					c.setDepartment(project.getDepartment());
+					c.setDepartment(project.getCmdbProductline());
 				}
 			}
 		}
