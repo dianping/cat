@@ -155,23 +155,6 @@
                </connectors>
             </configuration>
          </plugin>
-         <plugin>
-            <groupId>org.unidal.maven.plugins</groupId>
-            <artifactId>codegen-maven-plugin</artifactId>
-            <version>2.1.0</version>
-            <executions>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.broker.build.ComponentsConfigurator</className>
-                  </configuration>
-               </execution>
-            </executions>
-         </plugin>
       </plugins>
    </build>
    <properties>
