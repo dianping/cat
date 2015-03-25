@@ -15,7 +15,9 @@ public enum ApiPage implements Page {
 
    SAVE("save", "save", "Save", "Save", true),
 
-   CONNECTION("connection", "connection", "Connection", "Connection", true);
+   CONNECTION("connection", "connection", "Connection", "Connection", true),
+
+   CRASH("crash", "crash", "Crash", "Crash", true);
 
    private String m_name;
 

@@ -312,5 +312,9 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.crash.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.crash.Handler</implementation>
+		</component>
 	</components>
 </plexus>
