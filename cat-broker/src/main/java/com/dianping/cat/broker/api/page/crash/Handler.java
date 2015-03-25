@@ -4,21 +4,18 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.ApiPage;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
 
 	public static final String ANDRIOD = "AndroidCrashLog";
 
@@ -46,7 +43,6 @@ public class Handler implements PageHandler<Context> {
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		Transaction t = Cat.newTransaction("CrashLog", domain);
 
-
 		Cat.logEvent("Error", payload.getMessage(), "ERROR", payload.getDetail());
 		((DefaultMessageTree) tree).setIpAddress(buildIp(payload));
 		((DefaultMessageTree) tree).setDomain(domain);
@@ -54,9 +50,7 @@ public class Handler implements PageHandler<Context> {
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
 
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
-		}
+		ctx.getHttpServletResponse().getWriter().write("OK");
 	}
 
 	public String buildIp(Payload payload) {
