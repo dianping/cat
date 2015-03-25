@@ -28,7 +28,7 @@ import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.home.utilization.transform.DefaultNativeParser;
 import com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportMerger;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class UtilizationReportService extends AbstractReportService<UtilizationReport> {
 

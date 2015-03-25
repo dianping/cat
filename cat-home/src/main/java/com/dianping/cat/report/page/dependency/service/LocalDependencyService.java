@@ -8,12 +8,12 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
-import com.dianping.cat.service.LocalModelService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.mvc.ApiPayload;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
 
 public class LocalDependencyService extends LocalModelService<DependencyReport> {
 
@@ -27,7 +27,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		DependencyReport report = super.getReport(period, domain);
 

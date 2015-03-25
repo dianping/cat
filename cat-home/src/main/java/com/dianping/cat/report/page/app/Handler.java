@@ -26,7 +26,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -36,14 +35,14 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
-import com.dianping.cat.report.page.app.display.AppReportMerger;
-import com.dianping.cat.report.page.app.display.AppReportSorter;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
+import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
@@ -53,13 +52,14 @@ import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.service.AppSpeedService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
+import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private AppConfigManager m_manager;
+	private AppConfigManager m_appConfigManager;
 
 	@Inject
 	private AppSpeedConfigManager m_appSpeedConfigManager;
@@ -91,6 +91,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AppReportService m_appReportService;
 
+	@Inject
+	private ProjectService m_projectService;
+
 	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload, AppDataField field,
 	      String sortBy) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
@@ -100,8 +103,8 @@ public class Handler implements PageHandler<Context> {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
-			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
+			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
+			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -133,8 +136,6 @@ public class Handler implements PageHandler<Context> {
 		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
-			filterCommands(model, payload.isShowActivity());
-
 			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
 			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
 			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
@@ -187,28 +188,6 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	private void filterCommands(Model model, boolean isShowActivity) {
-		List<Command> commands = model.getCommands();
-		List<Command> remainCommands = new ArrayList<Command>();
-
-		if (isShowActivity) {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId >= 1000 && commandId <= 1200) {
-					remainCommands.add(command);
-				}
-			}
-		} else {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId > 0 && commandId < 1000) {
-					remainCommands.add(command);
-				}
-			}
-		}
-		model.setCommands(remainCommands);
-	}
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "app")
@@ -244,7 +223,7 @@ public class Handler implements PageHandler<Context> {
 			int commandId = payload.getQueryEntity1().getId();
 
 			model.setCommandId(commandId);
-			model.setCodes(m_manager.queryInternalCodes(commandId));
+			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case LINECHART_JSON:
 			Pair<LineChart, List<AppDataDetail>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
@@ -277,11 +256,11 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
-				if (m_manager.isNameDuplicate(name)) {
+				if (m_appConfigManager.isNameDuplicate(name)) {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_manager.addCommand(domain, title, name, type);
+						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, type);
 
 						if (addCommandResult.getKey()) {
 							setUpdateResult(model, 1);
@@ -302,7 +281,7 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
 			} else {
-				Pair<Boolean, List<Integer>> deleteCommandResult = m_manager.deleteCommand(domain, name);
+				Pair<Boolean, List<Integer>> deleteCommandResult = m_appConfigManager.deleteCommand(domain, name);
 				if (deleteCommandResult.getKey()) {
 					setUpdateResult(model, 1);
 					m_appRuleConfigManager.deleteDefaultRule(name, deleteCommandResult.getValue());
@@ -316,9 +295,9 @@ public class Handler implements PageHandler<Context> {
 
 			try {
 				if ("xml".equalsIgnoreCase(type)) {
-					model.setFetchData(m_manager.getConfig().toString());
+					model.setFetchData(m_appConfigManager.getConfig().toString());
 				} else if (StringUtils.isEmpty(type) || "json".equalsIgnoreCase(type)) {
-					model.setFetchData(new JsonBuilder().toJson(m_manager.getConfig()));
+					model.setFetchData(new JsonBuilder().toJson(m_appConfigManager.getConfig()));
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -362,13 +341,15 @@ public class Handler implements PageHandler<Context> {
 			commandId = payload.getQueryEntity1().getId();
 
 			model.setCommandId(commandId);
-			model.setCodes(m_manager.queryInternalCodes(commandId));
+			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case STATISTICS:
-			AppReport report = buildAppReport(payload);
+			AppReport report = queryAppReport(payload);
+			DisplayCommands displayCommands = buildDisplayCommands(report, payload.getSort());
 
+			model.setDisplayCommands(displayCommands);
 			model.setAppReport(report);
-			model.setCodeDistributions(buildCodeDistributions(report));
+			model.setCodeDistributions(buildCodeDistributions(displayCommands));
 			break;
 		}
 
@@ -377,28 +358,27 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private AppReport buildAppReport(Payload payload) throws IOException {
+	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
+		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
+
+		distributionVisitor.visitAppReport(report);
+		DisplayCommands displayCommands = distributionVisitor.getCommands();
+
+		AppCommandsSorter sorter = new AppCommandsSorter(displayCommands, sort);
+		displayCommands = sorter.getSortedCommands();
+		return displayCommands;
+	}
+
+	private AppReport queryAppReport(Payload payload) {
 		Date startDate = payload.getDayDate();
 		Date endDate = TimeHelper.addDays(startDate, 1);
 		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-
-		AppReportMerger visitor = new AppReportMerger();
-		visitor.visitAppReport(report);
-		report = visitor.getReport();
-
-		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor();
-		distributionVisitor.visitAppReport(report);
-		report = distributionVisitor.getReport();
-
-		AppReportSorter sorter = new AppReportSorter(report, payload.getSort());
-		report = sorter.getSortedReport();
-
 		return report;
 	}
 
-	public List<String> buildCodeDistributions(AppReport report) {
+	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
 		List<String> ids = new LinkedList<String>();
-		Set<String> orgIds = report.findOrCreateCommand(Constants.ALL).getCodes().keySet();
+		Set<String> orgIds = displayCommands.findOrCreateCommand(AppConfigManager.ALL_COMMAND_ID).getCodes().keySet();
 
 		for (String id : orgIds) {
 			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
@@ -426,23 +406,23 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		Action action = payload.getAction();
+		boolean activity = payload.isShowActivity();
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
-		model.setConnectionTypes(m_manager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(m_manager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(m_manager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(m_manager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(m_manager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(m_manager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_manager.queryCommands(payload.isShowActivity()));
+		model.setConnectionTypes(m_appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
+		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
+		model.setNetworks(m_appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
+		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
+		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
+		model.setCommands(m_appConfigManager.queryCommands(activity));
 
 		if (Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
 		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action)) {
-			boolean activity = payload.isShowActivity();
 
-			model.setDomain2Commands(m_manager.queryDomain2Commands(activity));
-			model.setCommand2Codes(m_manager.queryCommand2Codes());
+			model.setDomain2Commands(m_appConfigManager.queryDomain2Commands(activity));
+			model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
 		}
 
 		m_normalizePayload.normalize(model, payload);

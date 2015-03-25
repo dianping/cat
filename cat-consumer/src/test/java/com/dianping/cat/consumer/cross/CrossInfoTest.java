@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;

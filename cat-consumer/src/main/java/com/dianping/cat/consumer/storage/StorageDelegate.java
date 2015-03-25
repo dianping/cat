@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeParser;

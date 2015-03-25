@@ -5,10 +5,10 @@ import java.util.List;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.service.BaseCompositeModelService;
-import com.dianping.cat.service.BaseRemoteModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.BaseCompositeModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 
 public class CompositeCrossService extends BaseCompositeModelService<CrossReport> {
 	public CompositeCrossService() {

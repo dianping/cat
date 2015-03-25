@@ -1,7 +1,0 @@
-require 'cucumber/rake/task'
-require 'rspec/core/rake_task'
-
-task :default => [:run]
-
-Cucumber::Rake::Task.new(:run) do |task|
-end

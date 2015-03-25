@@ -10,7 +10,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;

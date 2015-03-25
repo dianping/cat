@@ -270,12 +270,17 @@
 
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
-					
-					if(typeof(words[1]) != undefined && words[0].length > 0 ){
+					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 						$("#command").val(words[1]);
+					}else{
+						if('${payload.showActivity}' == 'true') {
+							$("#command").val('${model.defaultActivity}');
+						}else{
+							$("#command").val('${model.defaultCommand}');
+						}
 					}
 					
-					if (typeof(words[0]) != undefined && words[0].length == 0) {
+					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
 						$("#time").val(words[0]);
@@ -306,7 +311,7 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						if(typeof(words[1]) != undefined && words[0].length > 0 ){
+						if(typeof(words[1]) != 'undefined' && words[0].length > 0 ){
 							$("#command2").val(words[1]);
 						}
 						command2Change();

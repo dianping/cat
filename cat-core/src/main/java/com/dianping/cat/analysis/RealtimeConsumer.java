@@ -15,7 +15,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.MessageConsumer;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {

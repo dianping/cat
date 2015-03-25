@@ -19,7 +19,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -33,10 +33,10 @@ import com.dianping.cat.report.page.problem.transform.DetailStatistics;
 import com.dianping.cat.report.page.problem.transform.HourlyLineChartVisitor;
 import com.dianping.cat.report.page.problem.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.service.ModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 

@@ -6,9 +6,9 @@ import java.util.List;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
+import com.dianping.cat.service.ProjectService;
 
 import org.unidal.lookup.util.StringUtils;
 

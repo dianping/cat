@@ -17,6 +17,10 @@ public class AppSpeedDetail {
 
 	private double m_slowRatio;
 
+	public long getAccessNumberSum() {
+		return m_accessNumberSum;
+	}
+
 	public String getDateTime() {
 		long time = m_period.getTime() + m_minuteOrder * TimeHelper.ONE_MINUTE;
 
@@ -25,10 +29,6 @@ public class AppSpeedDetail {
 
 	public String getDayTime() {
 		return new SimpleDateFormat("yyyy-MM-dd").format(m_period);
-	}
-
-	public long getAccessNumberSum() {
-		return m_accessNumberSum;
 	}
 
 	public int getMinuteOrder() {

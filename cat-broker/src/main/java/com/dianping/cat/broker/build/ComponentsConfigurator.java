@@ -22,7 +22,7 @@ import com.dianping.cat.config.app.AppCommandDataTableProvider;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
-import com.dianping.cat.dal.IpService;
+import com.dianping.cat.service.IpService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

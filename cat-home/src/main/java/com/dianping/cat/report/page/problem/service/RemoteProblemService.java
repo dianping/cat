@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
 
 public class RemoteProblemService extends BaseRemoteModelService<ProblemReport> {
 	public RemoteProblemService() {

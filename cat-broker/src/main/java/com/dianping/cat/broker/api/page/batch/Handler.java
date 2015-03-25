@@ -23,9 +23,9 @@ import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.dal.IpService;
-import com.dianping.cat.dal.IpService.IpInfo;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.IpService.IpInfo;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -151,7 +151,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				Integer command = m_appConfigManager.getCommands().get(url);
 
 				if (command == null) {
-					 url = m_parser.parse(url);
+					url = m_parser.parse(url);
 
 					if (url != null) {
 						command = m_appConfigManager.getCommands().get(url);
@@ -226,7 +226,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						command = m_appConfigManager.getCommands().get(url);
 					}
 				}
-				
+
 				if (command != null) {
 					// appData.setTimestamp(Long.parseLong(items[0]));
 					appData.setTimestamp(System.currentTimeMillis());

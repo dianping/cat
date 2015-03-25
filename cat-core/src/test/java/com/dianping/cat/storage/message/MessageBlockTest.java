@@ -10,9 +10,9 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.storage.message.MessageBlock;
-import com.dianping.cat.storage.message.MessageBlockReader;
-import com.dianping.cat.storage.message.MessageBlockWriter;
+import com.dianping.cat.message.storage.MessageBlock;
+import com.dianping.cat.message.storage.MessageBlockReader;
+import com.dianping.cat.message.storage.MessageBlockWriter;
 
 public class MessageBlockTest {
 

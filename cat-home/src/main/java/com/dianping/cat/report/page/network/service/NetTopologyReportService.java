@@ -13,7 +13,7 @@ import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.home.network.entity.NetGraphSet;
 import com.dianping.cat.home.network.transform.DefaultNativeParser;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class NetTopologyReportService extends AbstractReportService<NetGraphSet> {
 

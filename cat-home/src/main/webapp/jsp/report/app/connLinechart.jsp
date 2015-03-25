@@ -177,7 +177,7 @@
 			var commandId = $('#command').val();
 			var domains2 = $('#domains2').val();
 			var commandId2 = $('#command2').val();
-			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
+			var href = "?op=${payload.action.name}&query1=" + query1 + "&query2=" + query2 + "&type="
 					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
 					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
 			window.location.href = href;
@@ -268,6 +268,8 @@
 					
 					if(typeof(words[1]) != undefined && words[0].length > 0 ){
 						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
 					}
 					
 					if (typeof(words[0]) != undefined && words[0].length == 0) {
@@ -301,7 +303,7 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						if(typeof(words[1]) != undefined && words[0].length > 0 ){
+						if(typeof(words[1]) != undefined && words[1].length > 0 ){
 							$("#command2").val(words[1]);
 						}
 						command2Change();

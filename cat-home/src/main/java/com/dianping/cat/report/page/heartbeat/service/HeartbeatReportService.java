@@ -25,7 +25,7 @@ import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.core.dal.DailyReportContent;
 import com.dianping.cat.core.dal.DailyReportContentEntity;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class HeartbeatReportService extends AbstractReportService<HeartbeatReport> {
 

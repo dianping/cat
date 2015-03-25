@@ -7,8 +7,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -18,12 +18,12 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.dal.HostinfoService;
-import com.dianping.cat.dal.ProjectService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.service.HostinfoService;
+import com.dianping.cat.service.ProjectService;
 
 public class StateReportBuilder implements TaskBuilder {
 

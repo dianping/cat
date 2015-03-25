@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
 
 public class RemoteStateService extends BaseRemoteModelService<StateReport> {
 	public RemoteStateService() {

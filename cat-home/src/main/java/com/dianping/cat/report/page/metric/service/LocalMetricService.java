@@ -11,34 +11,34 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
-import com.dianping.cat.dal.IpService;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
+import com.dianping.cat.mvc.ApiPayload;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.page.cdn.graph.CdnReportConvertor;
 import com.dianping.cat.report.page.system.graph.SystemReportConvertor;
 import com.dianping.cat.report.page.web.graph.WebReportConvertor;
-import com.dianping.cat.service.LocalModelService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.service.IpService;
 
 public class LocalMetricService extends LocalModelService<MetricReport> {
-	
+
 	public static final String ID = MetricAnalyzer.ID;
-	
+
 	@Inject
 	private ReportBucketManager m_bucketManager;
 
 	@Inject
 	private IpService m_ipService;
-	
+
 	public LocalMetricService() {
 		super(MetricAnalyzer.ID);
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, BasePayload payload)
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		MetricReport report = super.getReport(period, domain);
 
@@ -54,12 +54,12 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 		}
 		String metricType = payload.getMetricType();
 		String type = payload.getType();
-		
+
 		if (Constants.METRIC_USER_MONITOR.equals(metricType)) {
 			String city = payload.getCity();
 			String channel = payload.getChannel();
 			WebReportConvertor convert = new WebReportConvertor(type, city, channel);
-			
+
 			convert.visitMetricReport(report);
 			report = convert.getReport();
 		} else if (Constants.METRIC_SYSTEM_MONITOR.equals(metricType)) {
@@ -84,7 +84,7 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 			cdnReportConvertor.visitMetricReport(report);
 			report = cdnReportConvertor.getReport();
 		}
-		
+
 		return new MetricReportFilter().buildXml(report);
 	}
 

@@ -12,6 +12,7 @@ import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
@@ -271,7 +272,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getDomain2CommandsJson() {
-		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
+		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
+
+		results.put(Constants.ALL, m_appConfigManager.queryCommands());
+		results.putAll(m_appConfigManager.queryDomain2Commands());
+		return new JsonBuilder().toJson(results);
 	}
 
 	public DomainConfig getDomainConfig() {

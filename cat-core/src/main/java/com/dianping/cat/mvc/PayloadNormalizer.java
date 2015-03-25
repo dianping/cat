@@ -3,9 +3,8 @@ package com.dianping.cat.mvc;
 import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.Action;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 
 public class PayloadNormalizer {
@@ -13,7 +12,8 @@ public class PayloadNormalizer {
 	@Inject
 	protected ServerConfigManager m_manager;
 
-	public void normalize(ReportModel model, ReportPayload payload) {
+	@SuppressWarnings("rawtypes")
+   public void normalize(AbstractReportModel model, AbstractReportPayload payload) {
 		long date = payload.getDate();
 		long current = System.currentTimeMillis();
 
@@ -37,36 +37,6 @@ public class PayloadNormalizer {
 			model.setDate(start.getTime());
 			model.setCustomDate(start, end);
 		}
-	}
-
-	public interface ReportModel {
-		public void setDate(long date);
-
-		public void setIpAddress(String ip);
-
-		public void setDisplayDomain(String domian);
-
-		public void setCustomDate(Date start, Date end);
-
-		public void setReportType(String reportType);
-	}
-
-	public interface ReportPayload {
-		public String getDomain();
-
-		public String getIpAddress();
-
-		public long getDate();
-
-		public String getReportType();
-
-		public void computeHistoryDate();
-
-		public Date getHistoryStartDate();
-
-		public Date getHistoryEndDate();
-
-		public Action getAction();
 	}
 
 }

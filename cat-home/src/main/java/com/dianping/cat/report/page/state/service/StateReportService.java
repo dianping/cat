@@ -28,7 +28,7 @@ import com.dianping.cat.core.dal.MonthlyReportContent;
 import com.dianping.cat.core.dal.MonthlyReportContentEntity;
 import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
-import com.dianping.cat.service.AbstractReportService;
+import com.dianping.cat.report.service.AbstractReportService;
 
 public class StateReportService extends AbstractReportService<StateReport> {
 

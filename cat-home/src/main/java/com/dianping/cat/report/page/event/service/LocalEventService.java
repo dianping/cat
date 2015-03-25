@@ -11,12 +11,12 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.mvc.BasePayload;
-import com.dianping.cat.service.LocalModelService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.mvc.ApiPayload;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
 
 public class LocalEventService extends LocalModelService<EventReport> {
 
@@ -29,7 +29,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
 		super(EventAnalyzer.ID);
 	}
 
-	private String filterReport(BasePayload payload, EventReport report) {
+	private String filterReport(ApiPayload payload, EventReport report) {
 	   String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
@@ -39,7 +39,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
    }
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String domain,BasePayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
 		EventReport report = super.getReport( period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

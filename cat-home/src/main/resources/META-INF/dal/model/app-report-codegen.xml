@@ -7,9 +7,8 @@
     <entity-ref name="command" type="list" names="commands" />
   </entity>
   <entity name="command">
-    <attribute name="id" value-type="String" />
-    <attribute name="domain" value-type="String" />
-    <attribute name="title" value-type="String" />
+    <attribute name="id" value-type="int" />
+    <attribute name="name" value-type="String" />
     <attribute name="count" value-type="int" />
     <attribute name="sum" value-type="double" />
     <attribute name="avg" value-type="double" />
@@ -19,7 +18,6 @@
     <attribute name="requestAvg" value-type="int" />
     <attribute name="responseSum" value-type="int" />
     <attribute name="responseAvg" value-type="int" />
-    <attribute name="code" value-type="int" />
     <entity-ref name="code" type="list" names="codes" />
   </entity>
   <entity name="code">

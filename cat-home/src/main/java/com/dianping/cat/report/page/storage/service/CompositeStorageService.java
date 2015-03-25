@@ -5,10 +5,10 @@ import java.util.List;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
-import com.dianping.cat.service.BaseCompositeModelService;
-import com.dianping.cat.service.BaseRemoteModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.BaseCompositeModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 
 public class CompositeStorageService extends BaseCompositeModelService<StorageReport> {
 	public CompositeStorageService() {

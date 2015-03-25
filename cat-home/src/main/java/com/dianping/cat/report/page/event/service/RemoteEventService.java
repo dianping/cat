@@ -7,7 +7,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.BaseRemoteModelService;
+import com.dianping.cat.report.service.BaseRemoteModelService;
 
 public class RemoteEventService extends BaseRemoteModelService<EventReport> {
 	public RemoteEventService() {

@@ -97,7 +97,7 @@
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
+			var href = "?op=connPiechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
  			window.location.href = href;
  		}
 		
@@ -195,6 +195,12 @@
 						$("#time2").val(getTime());
 					}else{
 						$("#time2").val(words[10]);
+					}
+					
+					if(words[1] != undefined || words.length > 1){
+						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
 					}
 
 					$("#code").val(words[2]);

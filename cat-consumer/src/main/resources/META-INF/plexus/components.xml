@@ -15,7 +15,7 @@
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -32,7 +32,7 @@
 					<role-hint>transaction</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -41,7 +41,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -54,7 +54,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -69,7 +69,7 @@
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -86,7 +86,7 @@
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -95,7 +95,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -108,7 +108,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -121,7 +121,7 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -131,7 +131,7 @@
 			<implementation>com.dianping.cat.consumer.problem.LongExecutionProblemHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -146,7 +146,7 @@
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
@@ -171,7 +171,7 @@
 					<role-hint>problem</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -180,7 +180,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -193,7 +193,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -208,7 +208,7 @@
 					<role-hint>heartbeat</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -225,7 +225,7 @@
 					<role-hint>heartbeat</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -234,7 +234,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -247,7 +247,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -265,7 +265,7 @@
 					<role-hint>top</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -282,7 +282,7 @@
 					<role-hint>top</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -291,7 +291,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -310,24 +310,24 @@
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.message.MessageBucketManager</role>
+					<role>com.dianping.cat.message.storage.MessageBucketManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.message.MessageBucketManager</role>
+			<role>com.dianping.cat.message.storage.MessageBucketManager</role>
 			<role-hint>local</role-hint>
 			<implementation>com.dianping.cat.consumer.dump.LocalMessageBucketManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.PathBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
@@ -338,14 +338,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.dal.ProjectService</role>
-			<implementation>com.dianping.cat.dal.ProjectService</implementation>
+			<role>com.dianping.cat.service.ProjectService</role>
+			<implementation>com.dianping.cat.service.ProjectService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -363,7 +363,7 @@
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -380,7 +380,7 @@
 					<role-hint>state</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -389,7 +389,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -402,7 +402,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -421,7 +421,7 @@
 					<role-hint>cross</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
@@ -441,7 +441,7 @@
 					<role-hint>cross</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -450,7 +450,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -463,7 +463,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -478,7 +478,7 @@
 					<role-hint>matrix</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -495,7 +495,7 @@
 					<role-hint>matrix</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -504,7 +504,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -517,7 +517,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -536,7 +536,7 @@
 					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
@@ -556,7 +556,7 @@
 					<role-hint>dependency</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -565,7 +565,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -617,7 +617,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.dal.BusinessReportDao</role>
@@ -632,7 +632,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -659,7 +659,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.DatabaseParser</role>
@@ -682,7 +682,7 @@
 					<role-hint>storage</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.report.ReportBucketManager</role>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -691,7 +691,7 @@
 					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -704,7 +704,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
