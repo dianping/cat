@@ -9,9 +9,7 @@
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="report" package="com.dainping.cat.consumer.dal.report">
-         <table name="sqltable"/>
          <table name="businessReport"/>
-         <table name="user_agent"/>
       </group>
    </jdbc>
 </wizard>
