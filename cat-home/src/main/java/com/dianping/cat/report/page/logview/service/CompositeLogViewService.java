@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.dianping.cat.report.service.BaseCompositeModelService;
 import com.dianping.cat.report.service.BaseRemoteModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 
 public class CompositeLogViewService extends BaseCompositeModelService<String> {
 	public CompositeLogViewService() {

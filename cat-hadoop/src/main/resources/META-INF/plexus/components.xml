@@ -5,7 +5,7 @@
 			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -19,7 +19,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.message.MessageBucket</role>
+			<role>com.dianping.cat.message.storage.MessageBucket</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -34,7 +34,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.message.MessageBucketManager</role>
+			<role>com.dianping.cat.message.storage.MessageBucketManager</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager</implementation>
 			<requirements>
@@ -42,10 +42,10 @@
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.PathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

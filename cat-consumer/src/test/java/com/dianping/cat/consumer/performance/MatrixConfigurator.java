@@ -12,8 +12,8 @@ import com.dianping.cat.consumer.MockReportManager;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixDelegate;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.ReportManager;
 
 public class MatrixConfigurator extends AbstractResourceConfigurator {
 

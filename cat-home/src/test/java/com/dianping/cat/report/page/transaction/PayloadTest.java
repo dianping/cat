@@ -8,7 +8,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelPeriod;
 
 public class PayloadTest {
 	private static final long ONE_HOUR = 3600 * 1000L;
@@ -77,36 +77,34 @@ public class PayloadTest {
 		Date lastTwoDay = new Date(temp - 2 * ONE_DAY);
 		Date lastOneDay = new Date(temp - ONE_DAY);
 		Date currentDay = new Date(temp);
-		Date nextDay = new Date(temp + ONE_DAY);
 		String lastTwo = sdf.format(lastTwoDay);
 		String lastOne = sdf.format(lastOneDay);
 		String current = sdf.format(currentDay);
-		String next = sdf.format(nextDay);
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
 		checkDate(lastOne, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
-		payload.computeStartDate();
-		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
+		payload.computeHistoryDate();
+		checkDate(lastOne, payload.getHistoryStartDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
-		payload.computeStartDate();
-		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
+		payload.computeHistoryDate();
+		checkDate(lastOne, payload.getHistoryStartDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 	}
 
 	@Test
@@ -139,25 +137,25 @@ public class PayloadTest {
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
 		checkDate(sdf.format(new Date(lastTwoWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		payload.setStep(1);
 		checkDate(current, payload.getHistoryStartDate());
 		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), adjustEndDate(payload.getHistoryEndDate()));
 
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(current, payload.getHistoryStartDate());
 		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), adjustEndDate(payload.getHistoryEndDate()));
 	}
@@ -185,16 +183,16 @@ public class PayloadTest {
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
 		checkDate(lastOne, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
-		payload.computeStartDate();
+		payload.computeHistoryDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 	}

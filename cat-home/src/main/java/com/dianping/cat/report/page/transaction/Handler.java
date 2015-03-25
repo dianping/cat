@@ -20,12 +20,12 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
@@ -35,9 +35,9 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.report.page.transaction.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.transaction.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
@@ -221,8 +221,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_REPORT:
-			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 
 			if (report != null) {
 				model.setReport(report);
@@ -231,8 +230,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GRAPH:
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
-				      payload.getHistoryEndDate());
+				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 
 				buildDistributionInfo(model, type, name, report);
 			}
@@ -266,8 +264,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GROUP_REPORT:
-			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
 			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
@@ -290,8 +287,7 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
@@ -309,8 +305,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setPage(ReportPage.TRANSACTION);
 		m_normalizePayload.normalize(model, payload);
+		model.setPage(ReportPage.TRANSACTION);
+		model.setAction(payload.getAction());
 
 		if (StringUtils.isEmpty(payload.getType())) {
 			payload.setType(null);

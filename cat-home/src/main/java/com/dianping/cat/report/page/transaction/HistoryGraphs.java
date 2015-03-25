@@ -37,7 +37,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	private void appendArray(double[] src, int index, String str, int size) {
 		String[] values = str.split(",");
 		int valueSize = values.length;
-		
+
 		if (valueSize <= 12) {
 			for (int i = 0; i < valueSize; i++) {
 				for (int j = 0; j < 5; j++) {
@@ -111,10 +111,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_DAY);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
 						totalCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
 						failureCount[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
@@ -127,10 +127,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_DAY);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
 						totalCount[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
 						failureCount[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
@@ -165,10 +165,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
 						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 60);
 						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 60);
@@ -181,10 +181,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 60 / TimeHelper.ONE_HOUR);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
 						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 60);
 						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 60);

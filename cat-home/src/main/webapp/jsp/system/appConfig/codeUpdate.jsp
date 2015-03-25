@@ -43,12 +43,12 @@
 				return;
 			}
 			
-			window.location.href = "/cat/s/config?op=appCodeSubmit&type=code&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
+			window.location.href = "/cat/s/config?op=appCodeSubmit&type=code&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+codeStatus;
 		}) 
 	</script>
 	
 	<table class="table table-striped table-condensed table-bordered ">
-		<c:if test="${payload.action.name eq 'appCodeUpdate' }">
+		<c:if test="${payload.action.name eq 'appCodeUpdate' and model.updateCommand != null}">
 		<tr>
 			<td>命令字</td><td><input name="commandId" value="${model.updateCommand.name}" id="commandId" disabled /><br/>
 		</td>

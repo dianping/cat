@@ -29,7 +29,7 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.system.page.login.service.Token;

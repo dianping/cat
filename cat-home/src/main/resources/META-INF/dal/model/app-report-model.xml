@@ -8,9 +8,8 @@
     <entity-ref name="command" type="map" names="commands" method-find-or-create="true" />
   </entity>
   <entity name="command">
-    <attribute name="id" value-type="String" key="true" />
-    <attribute name="domain" value-type="String" />
-    <attribute name="title" value-type="String" />
+    <attribute name="id" value-type="int" primitive="true" key="true" />
+    <attribute name="name" value-type="String" />
     <attribute name="count" value-type="long" primitive="true" method-inc="true" />
     <attribute name="sum" value-type="double" primitive="true" format="0.00"  method-inc="true" />
     <attribute name="avg" value-type="double" primitive="true" format="0.00" />
@@ -24,7 +23,6 @@
   </entity>
   <entity name="code">
     <attribute name="id" value-type="String" key="true"/>
-    <attribute name="title" value-type="String" />
     <attribute name="count" value-type="long" primitive="true" method-inc="true" />
     <attribute name="sum" value-type="double" primitive="true" format="0.00" method-inc="true" />
     <attribute name="avg" value-type="double" primitive="true" format="0.00" />

@@ -51,10 +51,10 @@
 							</c:if>
 							<td class="department">${productline.key}</td>
 							<td><div class="domain"><c:forEach var="id" items="${productline.value.storages}">&nbsp;<c:choose><c:when test="${payload.id eq id}"><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}"
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}"
 													class="current">[&nbsp;${id}&nbsp;]</a></c:when>
 													<c:otherwise><a class='domainItem'
-													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${model.reportType}">[&nbsp;${id}&nbsp;]</a>
+													href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${id}&date=${model.date}&reportType=${payload.reportType}">[&nbsp;${id}&nbsp;]</a>
 											</c:otherwise></c:choose>&nbsp;
 									</c:forEach>
 								</div>

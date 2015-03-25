@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <top-report domain="cat" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
-   <domain name="Cat">
-      <segment id="2" error="0" url="0" url-duration="0.00" service="0" service-duration="0.00" sql="0" sql-duration="0.00" call="0" call-duration="0.00" cache="0" cache-duration="0.00" url-error="0" url-sum="0.00" service-error="0" service-sum="0.00" sql-error="0" sql-sum="0.00" call-error="0" call-sum="0.00" cache-error="0" cache-sum="0.00">
-         <error id="java.lang.npe" count="20"/>
+   <domain name="group">
+      <segment id="0" error="18" url="0" url-duration="0.00" service="0" service-duration="0.00" sql="0" sql-duration="0.00" call="0" call-duration="0.00" cache="0" cache-duration="0.00" url-error="0" url-sum="0.00" service-error="0" service-sum="0.00" sql-error="0" sql-sum="0.00" call-error="0" call-sum="0.00" cache-error="0" cache-sum="0.00">
+         <error id="Error" count="18"/>
+         <machine id="192.168.1.1" count="18"/>
       </segment>
-      <segment id="3" error="0" url="0" url-duration="0.00" service="0" service-duration="0.00" sql="0" sql-duration="0.00" call="0" call-duration="0.00" cache="0" cache-duration="0.00" url-error="0" url-sum="0.00" service-error="0" service-sum="0.00" sql-error="0" sql-sum="0.00" call-error="0" call-sum="0.00" cache-error="0" cache-sum="0.00">
-         <error id="java.lang.npe" count="20"/>
+      <segment id="1" error="162" url="0" url-duration="0.00" service="0" service-duration="0.00" sql="0" sql-duration="0.00" call="0" call-duration="0.00" cache="0" cache-duration="0.00" url-error="0" url-sum="0.00" service-error="0" service-sum="0.00" sql-error="0" sql-sum="0.00" call-error="0" call-sum="0.00" cache-error="0" cache-sum="0.00">
+         <error id="Error" count="162"/>
+         <machine id="192.168.1.1" count="162"/>
       </segment>
    </domain>
 </top-report>

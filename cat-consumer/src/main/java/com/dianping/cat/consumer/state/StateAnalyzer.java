@@ -18,8 +18,8 @@ import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
@@ -183,6 +183,11 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		return report;
 	}
 
+	@Override
+   protected void loadReports() {
+		//do nothing
+   }
+	
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();

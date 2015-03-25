@@ -8,13 +8,13 @@ public enum JspFile {
 	HISTORY_REPORT("/jsp/report/transaction/transactionHistoryReport.jsp"),
 
 	HOURLY_REPORT("/jsp/report/transaction/transaction.jsp"),
-	
-	GROUP_GRAPHS("/jsp/report/transaction/transactionGraphs.jsp"), 
-	
-	HISTORY_GROUP_GRAPH("/jsp/report/transaction/transactionHistoryGraphs.jsp"), 
-	
-	HISTORY_GROUP_REPORT("/jsp/report/transaction/transactionHistoryGroupReport.jsp"), 
-	
+
+	GROUP_GRAPHS("/jsp/report/transaction/transactionGraphs.jsp"),
+
+	HISTORY_GROUP_GRAPH("/jsp/report/transaction/transactionHistoryGraphs.jsp"),
+
+	HISTORY_GROUP_REPORT("/jsp/report/transaction/transactionHistoryGroupReport.jsp"),
+
 	HOURLY_GROUP_REPORT("/jsp/report/transaction/transactionGroup.jsp");
 
 	private String m_path;

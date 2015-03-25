@@ -19,11 +19,11 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.network.nettopology.NetGraphManager;
-import com.dianping.cat.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelPeriod;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -85,6 +85,7 @@ public class Handler implements PageHandler<Context> {
 			payload.setProduct(productLines.iterator().next().getId());
 		}
 
+		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
 
 		if (payload.getAction().equals(Action.NETTOPOLOGY)) {

@@ -15,11 +15,11 @@
 <table class="machines">
 	<tr style="text-align:left">
 		<th>&nbsp;[&nbsp; 
-					<a href="?op=history&domain=${model.domain}&date=${model.date}${payload.queryString}&ip=All&reportType=${model.reportType}${model.customDate}"
+					<a href="?op=history&domain=${model.domain}&date=${model.date}${payload.queryString}&ip=All&reportType=${payload.reportType}${model.customDate}"
 					>All</a>
 			&nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}${payload.queryString}&reportType=${model.reportType}${model.customDate}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}${payload.queryString}&reportType=${payload.reportType}${model.customDate}"
 						>${ip}</a>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
@@ -63,7 +63,7 @@
 		<script>
 			function longTimeChange(date,domain,ip){
 				var customDate ='${model.customDate}';
-				var reportType = '${model.reportType}';
+				var reportType = '${payload.reportType}';
 				var longUrlTime=$("#p_longUrl").val();
 				var longSqlTime=$("#p_longSql").val();
 				var longServiceTime=$("#p_longService").val();
@@ -89,7 +89,7 @@
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)*3}"
 				class=" top">
-				<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+				<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
@@ -101,13 +101,13 @@
 					<tr>
 				</c:if>
 				<td >
-					<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
+					<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
 				<td class="right"> ${w:format(status.value.count,'#,###,###,###,##0')}</td>
 				<td ><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
-						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+						<a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
 						
 				<c:if test="${index.index != 0}">

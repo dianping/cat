@@ -178,7 +178,7 @@ public class CacheReport {
 
 			if (!StringUtils.isEmpty(method)) {
 				long total = incMethodCount(method, transactionTotalCount);
-				
+
 				if ("get".equalsIgnoreCase(method)) {
 					m_missed = m_missed + eventName.getTotalCount();
 					m_hited = 1 - (double) m_missed / total;

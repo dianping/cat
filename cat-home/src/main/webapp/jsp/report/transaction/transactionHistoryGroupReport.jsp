@@ -19,7 +19,7 @@
 	<tr style="text-align: left">
 		<th>
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
-						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${model.reportType}${model.customDate}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
@@ -67,18 +67,18 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>
-			<th style="text-align: left;"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=type${model.customDate}">Type</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=total${model.customDate}">Total</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
+			<th style="text-align: left;"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=type${model.customDate}">Type</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">Total</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failure${model.customDate}">Failure</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=min${model.customDate}">Min</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=max${model.customDate}">Max</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=avg${model.customDate}">Avg</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=95line${model.customDate}">95Line</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=99line${model.customDate}">99Line</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=std${model.customDate}">Std</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&sort=total${model.customDate}">QPS</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=min${model.customDate}">Min</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=max${model.customDate}">Max</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=avg${model.customDate}">Avg</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=95line${model.customDate}">95Line</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=99line${model.customDate}">99Line</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=std${model.customDate}">Std</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">QPS</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -87,16 +87,16 @@
 				<tr class=" right">
 					<td style="text-align: left">
 							<a
-								href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}"
+								href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${item.type}${model.customDate}"
 								class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 							&nbsp;&nbsp;&nbsp;<a
-								href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${e.id}</a>
+								href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${item.type}${model.customDate}">${e.id}</a>
 							</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+								href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
@@ -125,7 +125,7 @@
 					<script>
 						function filterByName(date, domain, ip, type) {
 							var customDate = '${model.customDate}';
-							var reportType = '${model.reportType}';
+							var reportType = '${payload.reportType}';
 							var type = '${payload.type}';
 							var queryname = $("#queryname").val();
 							window.location.href = "?op=historyGroupReport&domain="
@@ -145,20 +145,20 @@
 					</script>
 			<tr>
 			<th style="text-align: left;">
-			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
+			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">Total</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">Total</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failure${model.customDate}&queryname=${model.queryName}">Failure</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failurePercent${model.customDate}&queryname=${model.queryName}">Failure%</a></th>
 			<th class="right">Sample Link</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=min${model.customDate}&queryname=${model.queryName}">Min</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=max${model.customDate}&queryname=${model.queryName}">Max</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=avg${model.customDate}&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=95line${model.customDate}&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=99line${model.customDate}&queryname=${model.queryName}">99.9Line</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=std${model.customDate}&queryname=${model.queryName}">Std</a>(ms)</th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=min${model.customDate}&queryname=${model.queryName}">Min</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=max${model.customDate}&queryname=${model.queryName}">Max</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=avg${model.customDate}&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=95line${model.customDate}&queryname=${model.queryName}">95Line</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=99line${model.customDate}&queryname=${model.queryName}">99.9Line</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=std${model.customDate}&queryname=${model.queryName}">Std</a>(ms)</th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -168,7 +168,7 @@
 					<td class="longText" style="text-align: left; white-space: normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${model.reportType}&type=${payload.encodedType}&name=${item.name}${model.customDate}"
+					<a href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&name=${item.name}${model.customDate}"
 											class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise>
@@ -178,7 +178,7 @@
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+								href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>

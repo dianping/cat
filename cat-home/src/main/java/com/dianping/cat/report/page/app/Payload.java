@@ -7,14 +7,14 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -36,7 +36,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private String m_sort = AppDataService.SUCCESS;
 
 	@FieldMeta("showActivity")
-	private boolean m_showActivity;
+	private boolean m_showActivity = false;
 
 	@FieldMeta("codeId")
 	private int m_codeId;
@@ -71,22 +71,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.APP);
 	}
 
-	public String getDay() {
-		return m_day;
-	}
-
-	public Date getDayDate() {
-		try {
-			if (m_day.length() == 10) {
-				return m_sdf.parse(m_day);
-			} else {
-				return TimeHelper.getYesterday();
-			}
-		} catch (Exception e) {
-			return TimeHelper.getYesterday();
-		}
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -102,6 +86,22 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getCommandId2() {
 		return m_commandId2;
+	}
+
+	public String getDay() {
+		return m_day;
+	}
+
+	public Date getDayDate() {
+		try {
+			if (m_day.length() == 10) {
+				return m_sdf.parse(m_day);
+			} else {
+				return TimeHelper.getYesterday();
+			}
+		} catch (Exception e) {
+			return TimeHelper.getYesterday();
+		}
 	}
 
 	public String getDomains() {
@@ -149,6 +149,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 	}
 
+	public String getSort() {
+		return m_sort;
+	}
+
 	public SpeedQueryEntity getSpeedQueryEntity1() {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new SpeedQueryEntity(m_query1);
@@ -163,10 +167,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		} else {
 			return null;
 		}
-	}
-
-	public String getSort() {
-		return m_sort;
 	}
 
 	public String getStatus() {

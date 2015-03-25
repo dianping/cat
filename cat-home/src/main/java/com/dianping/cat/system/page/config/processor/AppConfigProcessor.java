@@ -18,6 +18,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -94,18 +95,14 @@ public class AppConfigProcessor extends BaseProcesser {
 	}
 
 	private void buildListInfo(Model model, Payload payload) {
-		List<Command> commands = m_appConfigManager.queryCommands();
-		model.setCommands(commands);
-		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
-		model.setCodes(m_appConfigManager.getCodes());
-
 		int id = 0;
+		List<Command> commands = m_appConfigManager.queryCommands();
 
 		if ("code".equals(payload.getType()) && payload.getId() > 0) {
 			id = payload.getId();
 		} else {
-			if (!m_appConfigManager.getRawCommands().isEmpty()) {
-				id = m_appConfigManager.getRawCommands().keySet().iterator().next();
+			if (!commands.isEmpty()) {
+				id = commands.iterator().next().getId();
 			}
 		}
 		Command cmd = m_appConfigManager.getRawCommands().get(id);
@@ -116,6 +113,8 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 
 		buildBatchApiConfig(payload, model);
+		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
+		model.setCodes(m_appConfigManager.getCodes());
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -181,13 +180,20 @@ public class AppConfigProcessor extends BaseProcesser {
 		case APP_CODE_UPDATE:
 			id = payload.getId();
 			int codeId = payload.getCode();
-			Command cmd = m_appConfigManager.getRawCommands().get(id);
 
-			if (cmd != null) {
-				Code code = cmd.getCodes().get(codeId);
+			if (payload.isConstant()) {
+				Code code = m_appConfigManager.getConfig().getCodes().get(codeId);
 
 				model.setCode(code);
-				model.setUpdateCommand(cmd);
+			} else {
+				Command cmd = m_appConfigManager.getRawCommands().get(id);
+
+				if (cmd != null) {
+					Code code = cmd.getCodes().get(codeId);
+
+					model.setCode(code);
+					model.setUpdateCommand(cmd);
+				}
 			}
 			break;
 		case APP_CODE_SUBMIT:
@@ -198,9 +204,15 @@ public class AppConfigProcessor extends BaseProcesser {
 				codeId = Integer.parseInt(strs.get(0));
 				name = strs.get(1);
 				int status = Integer.parseInt(strs.get(2));
+
 				Code code = new Code(codeId);
 				code.setName(name).setStatus(status);
-				m_appConfigManager.updateCode(id, code);
+
+				if (payload.isConstant()) {
+					m_appConfigManager.updateCode(code);
+				} else {
+					m_appConfigManager.updateCode(id, code);
+				}
 				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -216,7 +228,11 @@ public class AppConfigProcessor extends BaseProcesser {
 				id = payload.getId();
 				codeId = payload.getCode();
 
-				m_appConfigManager.deleteCode(id, codeId);
+				if (payload.isConstant()) {
+					m_appConfigManager.getCodes().remove(codeId);
+				} else {
+					m_appConfigManager.deleteCode(id, codeId);
+				}
 				buildListInfo(model, payload);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -295,6 +311,28 @@ public class AppConfigProcessor extends BaseProcesser {
 		case APP_RULE_BATCH_UPDATE:
 			appRuleBatchUpdate(payload, model);
 			buildListInfo(model, payload);
+			break;
+		case APP_CONSTANT_ADD:
+			break;
+		case APP_CONSTANT_UPDATE:
+			Item item = m_appConfigManager.queryItem(payload.getType(), payload.getId());
+
+			model.setAppItem(item);
+			break;
+		case APP_CONSTATN_SUBMIT:
+			try {
+				id = payload.getId();
+				String content = payload.getContent();
+				String[] strs = content.split(":");
+				String type = strs[0];
+				int constantId = Integer.valueOf(strs[1]);
+				String value = strs[2];
+
+				model.setOpState(m_appConfigManager.addConstant(type, constantId, value));
+				buildListInfo(model, payload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

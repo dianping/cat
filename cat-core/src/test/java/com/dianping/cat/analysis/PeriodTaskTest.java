@@ -63,5 +63,10 @@ public class PeriodTaskTest extends ComponentTestCase {
 				throw new RuntimeException("this is for test, Please ignore it");
 			}
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
+	
 }

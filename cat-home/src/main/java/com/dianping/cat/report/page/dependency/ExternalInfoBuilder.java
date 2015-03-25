@@ -5,16 +5,16 @@ import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class ExternalInfoBuilder {
 
@@ -23,7 +23,7 @@ public class ExternalInfoBuilder {
 
 	@Inject
 	private DependencyReportService m_reportService;
-	
+
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
 

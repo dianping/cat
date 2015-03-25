@@ -17,11 +17,11 @@
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${payload.realIp eq ip}">
-						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}"
+						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${payload.reportType}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}">${ip}</a>
+						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${payload.reportType}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -30,10 +30,10 @@
 	</tr>
 </table>
 <br>
-<table>
+<table style="width:100%">
 	<c:forEach var="extensionGroup" items="${model.extensionGroups}">
 		<tr>
-			<th colspan="3" style="text-align:left"><h5><a  data-status="${extensionGroup}" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=extension&extensionType=${extensionGroup}">${extensionGroup}</a></h5></th>
+			<th colspan="3" style="text-align:left"><h5><a  data-status="${extensionGroup}" class="heartbeat_graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=extension&extensionType=${extensionGroup}">${extensionGroup}</a></h5></th>
 		</tr>
 		<tr>
 			<td colspan="3"><iframe id="${extensionGroup}" style="display:none;" width="100%" height="400px"></iframe></td>

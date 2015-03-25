@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
@@ -25,13 +25,6 @@ public class StateGraphBuilder {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	public Pair<LineChart, PieChart> buildGraph(Payload payload, String key, StateReport report) {
-		String domain = payload.getDomain();
-		String ips = payload.getIpAddress();
-
-		return buildHourlyGraph(report, domain, key, ips);
-	}
-
 	public Pair<LineChart, PieChart> buildGraph(Payload payload, String key) {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
@@ -39,6 +32,13 @@ public class StateGraphBuilder {
 		String ips = payload.getIpAddress();
 
 		return buildHistoryGraph(domain, start, end, key, ips);
+	}
+
+	public Pair<LineChart, PieChart> buildGraph(Payload payload, String key, StateReport report) {
+		String domain = payload.getDomain();
+		String ips = payload.getIpAddress();
+
+		return buildHourlyGraph(report, domain, key, ips);
 	}
 
 	private Pair<LineChart, PieChart> buildHistoryGraph(String domain, Date start, Date end, String key, String ip) {
@@ -82,7 +82,7 @@ public class StateGraphBuilder {
 		StateDistirbutionVisitor visitor = new StateDistirbutionVisitor(key);
 
 		visitor.visitStateReport(report);
-		
+
 		Map<String, Double> distributes = visitor.getDistribute();
 		PieChart piechart = buildPiechart(distributes);
 

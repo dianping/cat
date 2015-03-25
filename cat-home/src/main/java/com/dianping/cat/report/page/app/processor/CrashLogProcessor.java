@@ -17,15 +17,15 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.page.app.Action;
 import com.dianping.cat.report.page.app.Model;
 import com.dianping.cat.report.page.app.Payload;
 import com.dianping.cat.report.page.app.ProblemStatistics;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class CrashLogProcessor {
 

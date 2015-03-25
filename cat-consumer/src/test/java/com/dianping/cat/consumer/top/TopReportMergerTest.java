@@ -10,8 +10,8 @@ import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 public class TopReportMergerTest {
 	@Test
 	public void testTopReportMerge() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer.xml"), "utf-8");
-		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer_old.xml"), "utf-8");
+		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer_old.xml"), "utf-8");
 		TopReport reportOld = DefaultSaxParser.parse(oldXml);
 		TopReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("top_analyzer_merger.xml"), "utf-8");

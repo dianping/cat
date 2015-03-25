@@ -12,8 +12,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.MessageBucketManager;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements LogEnabled {
 	public static final String ID = "dump";
@@ -83,6 +83,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	public Object getReport(String domain) {
 		throw new UnsupportedOperationException("This should not be called!");
 	}
+
+	@Override
+   protected void loadReports() {
+		//do nothing
+   }
 
 	@Override
 	protected void process(MessageTree tree) {
