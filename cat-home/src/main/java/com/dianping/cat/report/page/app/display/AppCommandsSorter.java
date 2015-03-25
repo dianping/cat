@@ -43,7 +43,6 @@ public class AppCommandsSorter {
 		m_commands.getCommands().clear();
 		m_commands.getCommands().putAll(results);
 		return m_commands;
-
 	}
 
 	public class AppComparator implements Comparator<Entry<Integer, DisplayCommand>> {
@@ -64,25 +63,7 @@ public class AppCommandsSorter {
 					return sortValue(command1, command2);
 				}
 			} else {
-				if ("command".equals(m_sortBy)) {
-					str1 = command1.getTitle();
-
-					if (StringUtils.isEmpty(str1)) {
-						str1 = command1.getName();
-					}
-
-					str2 = command2.getTitle();
-					if (StringUtils.isEmpty(str2)) {
-						str2 = command2.getName();
-					}
-				} else if ("bu".equals(m_sortBy)) {
-					str1 = command1.getBu();
-					str2 = command2.getBu();
-				} else if ("department".equals(m_sortBy)) {
-					str1 = command1.getDepartment();
-					str2 = command2.getDepartment();
-				}
-				return sortStr(str1, str2);
+				return sortStr(command1, command2);
 			}
 		}
 
@@ -99,6 +80,35 @@ public class AppCommandsSorter {
 
 				return count2 > count1 ? 1 : (count2 < count1 ? -1 : 0);
 			}
+		}
+
+		private int sortStr(DisplayCommand command1, DisplayCommand command2) {
+			String str1 = command1.getDomain();
+			String str2 = command2.getDomain();
+
+			if ("command".equals(m_sortBy)) {
+				str1 = command1.getTitle();
+
+				if (StringUtils.isEmpty(str1)) {
+					str1 = command1.getName();
+				}
+
+				str2 = command2.getTitle();
+				if (StringUtils.isEmpty(str2)) {
+					str2 = command2.getName();
+				}
+			} else if ("bu".equals(m_sortBy) || "department".equals(m_sortBy)) {
+				str1 = command1.getDepartment();
+				str2 = command2.getDepartment();
+				String bu1 = command1.getBu();
+				String bu2 = command2.getBu();
+				int ret = sortStr(bu1, bu2);
+
+				if (ret == 0) {
+					return sortStr(str1, str2);
+				}
+			}
+			return sortStr(str1, str2);
 		}
 
 		private int sortStr(String o1, String o2) {
@@ -155,5 +165,4 @@ public class AppCommandsSorter {
 			}
 		}
 	}
-
 }

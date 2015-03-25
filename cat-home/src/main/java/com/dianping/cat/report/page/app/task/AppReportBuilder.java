@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.app.task;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -76,24 +76,20 @@ public class AppReportBuilder implements TaskBuilder {
 
 	private void processCommand(Date period, Command command, AppReport report) {
 		int commandId = command.getId();
-		List<AppCommandData> datas = Collections.emptyList();
+		List<AppCommandData> datas = new ArrayList<AppCommandData>();
+		com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(command.getId());
+
+		cmd.setName(command.getName());
 
 		try {
 			datas = m_dao.findDailyDataByCode(commandId, period, AppCommandDataEntity.READSET_CODE_DATA);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-
-		if (datas.size() > 0) {
-			com.dianping.cat.home.app.entity.Command cmd = report.findOrCreateCommand(command.getId());
-
-			cmd.setName(command.getName());
 
 			for (AppCommandData data : datas) {
 				processRecord(commandId, cmd, data);
 			}
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
-
 	}
 
 	private void processRecord(int commandId, com.dianping.cat.home.app.entity.Command cmd, AppCommandData data) {

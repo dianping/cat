@@ -89,7 +89,7 @@ public class CodeDisplayVisitor extends BaseVisitor {
 		int id = command.getId();
 		DisplayCommand c = m_commands.findOrCreateCommand(id);
 
-		if (AppReportMerger.ALL_COMMAND_ID == id) {
+		if (AppConfigManager.ALL_COMMAND_ID == id) {
 			c.setName(Constants.ALL);
 			c.setDomain(Constants.ALL);
 			c.setTitle(Constants.ALL);

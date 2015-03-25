@@ -39,7 +39,6 @@ import com.dianping.cat.report.page.app.display.AppCommandsSorter;
 import com.dianping.cat.report.page.app.display.AppConnectionGraphCreator;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppGraphCreator;
-import com.dianping.cat.report.page.app.display.AppReportMerger;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.ChartSorter;
 import com.dianping.cat.report.page.app.display.CodeDisplayVisitor;
@@ -360,13 +359,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
-		AppReportMerger visitor = new AppReportMerger();
-		visitor.visitAppReport(report);
-
-		AppReport appReport = visitor.getReport();
 		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
 
-		distributionVisitor.visitAppReport(appReport);
+		distributionVisitor.visitAppReport(report);
 		DisplayCommands displayCommands = distributionVisitor.getCommands();
 
 		AppCommandsSorter sorter = new AppCommandsSorter(displayCommands, sort);
@@ -383,7 +378,7 @@ public class Handler implements PageHandler<Context> {
 
 	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
 		List<String> ids = new LinkedList<String>();
-		Set<String> orgIds = displayCommands.findOrCreateCommand(AppReportMerger.ALL_COMMAND_ID).getCodes().keySet();
+		Set<String> orgIds = displayCommands.findOrCreateCommand(AppConfigManager.ALL_COMMAND_ID).getCodes().keySet();
 
 		for (String id : orgIds) {
 			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
