@@ -312,5 +312,23 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.crash.Handler</role>
+			<implementation>com.dianping.cat.broker.api.page.crash.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.broker.api.page.crash.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.page.crash.JspViewer</role>
+			<implementation>com.dianping.cat.broker.api.page.crash.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>

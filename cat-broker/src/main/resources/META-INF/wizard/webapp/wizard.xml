@@ -20,6 +20,9 @@
          <page name="connection" title="Connection" path="connection" template="default">
             <description>Connection</description>
          </page>
+         <page name="crash" title="Crash" path="crash" template="default">
+            <description>Crash</description>
+         </page>
       </module>
    </webapp>
 </wizard>
