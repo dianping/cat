@@ -9,13 +9,10 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
@@ -53,16 +50,15 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
-import com.dianping.cat.message.spi.core.DomainValidator;
-import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.message.spi.core.MessagePathBuilder;
-import com.dianping.cat.service.DefaultReportManager;
+import com.dianping.cat.message.PathBuilder;
+import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.report.DefaultReportManager;
+import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import com.dianping.cat.storage.message.MessageBucketManager;
-import com.dianping.cat.storage.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -73,9 +69,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
-		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
 
 		all.addAll(defineTransactionComponents());
 		all.addAll(defineEventComponents());
@@ -134,7 +127,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStatisticManager.class)//
+		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class)//
 		      .req(HdfsUploader.class));
 
 		return all;
@@ -244,7 +237,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = TopAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
+		      .req(ReportManager.class, ID).req(ServerConfigManager.class)
+		      .config(E("errorType").value("Error,RuntimeException,Exception")));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //

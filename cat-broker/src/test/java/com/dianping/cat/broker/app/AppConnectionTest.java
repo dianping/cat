@@ -27,7 +27,9 @@ public class AppConnectionTest {
 
 		for (int i = 0; i < 10; i++) {
 			urls.add(url_pre + "?v=1&c=" + timestamp
-			      + URLEncoder.encode("\t1\t2\tshop.bin\t4\t5\t10\t20\t30\n", "utf-8"));
+			      + URLEncoder.encode("\t1\t2\t3\tshop.bin\t4\t5\t10\t20\t30\n", "utf-8"));
+			urls.add(url_pre + "?v=1&c=" + timestamp
+			      + URLEncoder.encode("\t1\t2\t3\tsearchshop.api\t4\t5\t10\t20\t30\n", "utf-8"));
 		}
 
 		for (String url : urls) {

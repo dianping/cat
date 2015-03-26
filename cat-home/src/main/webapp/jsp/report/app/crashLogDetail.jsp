@@ -19,7 +19,7 @@
 				</td><td align="right"><span class="text-danger switch"><a class="switch" href="${model.baseUri}?op=crashLog&query1=AndroidCrashLog;;;;"><span class="text-danger">【切到小时模式】</span></a></span>
 				<c:forEach var="nav" items="${model.historyNavs}">
 				<c:choose>
-					<c:when test="${nav.title eq model.reportType}">
+					<c:when test="${nav.title eq payload.reportType}">
 							&nbsp;[ <a href="?${navUrlPrefix}&reportType=${nav.title}&date=${model.date}" class="current">${nav.title}</a> ]
 					</c:when>
 					<c:otherwise>
@@ -27,9 +27,9 @@
 					</c:otherwise>
 				</c:choose>
 				</c:forEach>
-				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]
-				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]
-				&nbsp;[ <a href="?${navUrlPrefix}&reportType=${model.reportType}&nav=next">now</a> ]
+				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${payload.reportType}&step=-1">${model.currentNav.last}</a> ]
+				&nbsp;[ <a href="?${navUrlPrefix}&date=${model.date}&reportType=${payload.reportType}&step=1">${model.currentNav.next}</a> ]
+				&nbsp;[ <a href="?${navUrlPrefix}&reportType=${payload.reportType}&nav=next">now</a> ]
 				 </td>
 			</c:if>
 		</c:otherwise>
@@ -96,7 +96,7 @@
 				<td class="right">${w:format(status.value.count,'#,###,###,###,##0')}&nbsp;</td>
 				<td>
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
-						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+						<a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
 						
 				<c:if test="${index.index != 0}">

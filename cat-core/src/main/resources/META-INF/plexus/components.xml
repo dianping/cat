@@ -1,6 +1,21 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.analysis.MessageConsumer</role>
+			<implementation>com.dianping.cat.analysis.RealtimeConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.black.BlackListManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.service.HostinfoService</role>
 			<implementation>com.dianping.cat.service.HostinfoService</implementation>
 			<requirements>
@@ -8,7 +23,7 @@
 					<role>com.dianping.cat.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -26,35 +41,35 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
+			<role>com.dianping.cat.config.server.ServerConfigManager</role>
+			<implementation>com.dianping.cat.config.server.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.DomainValidator</role>
-			<implementation>com.dianping.cat.message.spi.core.DomainValidator</implementation>
+			<role>com.dianping.cat.report.DomainValidator</role>
+			<implementation>com.dianping.cat.report.DomainValidator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.content.ContentFetcher</role>
 			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
-			<implementation>com.dianping.cat.message.spi.core.DefaultMessagePathBuilder</implementation>
+			<role>com.dianping.cat.message.PathBuilder</role>
+			<implementation>com.dianping.cat.message.DefaultPathBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzerManager</role>
 			<implementation>com.dianping.cat.analysis.DefaultMessageAnalyzerManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.TcpSocketReceiver</role>
-			<implementation>com.dianping.cat.message.spi.core.TcpSocketReceiver</implementation>
+			<role>com.dianping.cat.analysis.TcpSocketReceiver</role>
+			<implementation>com.dianping.cat.analysis.TcpSocketReceiver</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
@@ -64,16 +79,16 @@
 					<role-hint>plain-text</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessageHandler</role>
+					<role>com.dianping.cat.analysis.MessageHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.DomainValidator</role>
+					<role>com.dianping.cat.report.DomainValidator</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.core.MessageHandler</role>
-			<implementation>com.dianping.cat.message.spi.core.DefaultMessageHandler</implementation>
+			<role>com.dianping.cat.analysis.MessageHandler</role>
+			<implementation>com.dianping.cat.analysis.DefaultMessageHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
@@ -184,6 +199,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>daily-report-content</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>daily-report-content</logical-table-name>
+				<physical-table-name>daily_report_content</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>dailygraph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -219,6 +244,16 @@
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
 				<physical-table-name>hostinfo</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>monthly-report-content</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>monthly-report-content</logical-table-name>
+				<physical-table-name>monthly_report_content</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -274,6 +309,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>weekly-report-content</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>weekly-report-content</logical-table-name>
+				<physical-table-name>weekly_report_content</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>weeklyreport</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -281,6 +326,15 @@
 				<physical-table-name>weeklyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.DailyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
@@ -312,6 +366,15 @@
 		<component>
 			<role>com.dianping.cat.core.dal.HostinfoDao</role>
 			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.MonthlyReportContentDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -364,6 +427,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.WeeklyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
 			<requirements>
@@ -375,12 +447,12 @@
 		<component>
 			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
 			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.HtmlEncodingBufferWriter</implementation>
+			<implementation>com.dianping.cat.message.codec.HtmlEncodingBufferWriter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.HtmlMessageCodec</implementation>
+			<implementation>com.dianping.cat.message.codec.HtmlMessageCodec</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
@@ -391,7 +463,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>waterfall</role-hint>
-			<implementation>com.dianping.cat.message.spi.core.WaterfallMessageCodec</implementation>
+			<implementation>com.dianping.cat.message.codec.WaterfallMessageCodec</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
@@ -400,32 +472,32 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.report.ReportBucketManager</role>
-			<implementation>com.dianping.cat.storage.report.DefaultReportBucketManager</implementation>
+			<role>com.dianping.cat.report.ReportBucketManager</role>
+			<implementation>com.dianping.cat.report.DefaultReportBucketManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.report.ReportBucket</role>
+			<role>com.dianping.cat.report.ReportBucket</role>
 			<role-hint>java.lang.String-report</role-hint>
-			<implementation>com.dianping.cat.storage.report.LocalReportBucket</implementation>
+			<implementation>com.dianping.cat.report.LocalReportBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.core.MessagePathBuilder</role>
+					<role>com.dianping.cat.message.PathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.storage.message.MessageBucket</role>
+			<role>com.dianping.cat.message.storage.MessageBucket</role>
 			<role-hint>local</role-hint>
-			<implementation>com.dianping.cat.storage.message.LocalMessageBucket</implementation>
+			<implementation>com.dianping.cat.message.storage.LocalMessageBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>

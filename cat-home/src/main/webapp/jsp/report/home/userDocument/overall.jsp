@@ -1,17 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h4 class="text-success">CAT总体介绍</h4>
-<h5>CAT(Central Application Tracking)是基于Java开发的实时应用监控平台，为大众点评网提供了全面的监控服务和决策支持。
-</h5>
-<h5>CAT作为大众点评网基础监控组件，它已经在中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等）中得到广泛应用，为点评各业务线提供系统的性能指标、健康状况、基础告警等。</h5>
-<h4 class="text-success">CAT目前现状</h4>
-	<ul>
-		<li>集成中间件产品（RPC、SQL、Cache等）</li>
-		<li>5台CAT物理监控集群</li>
-		<li>200+ 业务应用（包括部分.net以及Job）</li>
-		<li>900+ 应用服务器</li>
-		<li>~6TB 消息大小，~50亿消息（每天）</li>
-		<li>~800GB 存储（每天，压缩后）</li>
-	</ul>
+
 <h4 class="text-success">实时导航介绍</h4>
 <img  class="img-polaroid"  src="${model.webapp}/images/overall01.png" style="width:520px;"/>
 <p>  CAT监控数据实时数据是以小时为单位，如果当前报表是表示5月7号10点- 11点的数据报表，导航链接表示为：</p>

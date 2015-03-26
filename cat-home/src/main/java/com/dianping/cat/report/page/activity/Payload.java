@@ -8,10 +8,10 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -32,17 +32,17 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public Date getEndDate() {
+		if (m_endTime != null) {
+			return parseDate(m_endTime);
+		} else {
+			return TimeHelper.getCurrentHour(1);
+		}
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
-	}
-
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
 	}
 
 	public Date getStartDate() {
@@ -50,14 +50,6 @@ public class Payload extends AbstractReportPayload<Action> {
 			return parseDate(m_startTime);
 		} else {
 			return TimeHelper.getCurrentHour(-1);
-		}
-	}
-
-	public Date getEndDate() {
-		if (m_endTime != null) {
-			return parseDate(m_endTime);
-		} else {
-			return TimeHelper.getCurrentHour(1);
 		}
 	}
 
@@ -88,9 +80,17 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.ACTIVITY);
+	}
+
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
 	}
 
 	@Override

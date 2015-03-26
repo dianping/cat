@@ -24,7 +24,7 @@
 			<a class="switch" href="?domain=${model.domain}&op=heavy"><span class="text-danger">【切到小时模式】</span></a>
 				<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
-						<c:when test="${nav.title eq model.reportType}">
+						<c:when test="${nav.title eq payload.reportType}">
 								&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
 						</c:when>
 						<c:otherwise>
@@ -32,9 +32,9 @@
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=historyHeavy&domain=${model.domain}&ip=${model.ipAddress}&reportType=${payload.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
 		</div>
 	</div>
 	<div class="row-fluid">

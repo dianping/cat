@@ -8,7 +8,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	HISTORY_REPORT("history"),
 
 	HOURLY_REPORT("view"),
-	
+
 	GROUP_GRAPHS("groupGraphs"),
 
 	HISTORY_GROUP_GRAPH("historyGroupGraph"),

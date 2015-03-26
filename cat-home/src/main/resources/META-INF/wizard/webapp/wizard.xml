@@ -83,7 +83,7 @@
          <page name="activity" title="Activity" path="activity" template="default">
             <description>Activity</description>
          </page>
-         <page name="top" title="Top" default="true" path="top" view="/jsp/report/top/top.jsp" template="default">
+         <page name="top" title="Top" path="top" default="true" view="/jsp/report/top/top.jsp" template="default">
             <description>Top</description>
          </page>
       </module>

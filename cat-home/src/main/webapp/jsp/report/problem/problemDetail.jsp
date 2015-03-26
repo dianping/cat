@@ -46,7 +46,7 @@
 				<td >${status.value.status}</td>
 				<td >${status.value.count}</td>
 				<td >
-					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex"><a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a></c:forEach>
+					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex"><a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a></c:forEach>
 				</td>
 				<c:if test="${index.index != 0}">
 				</tr>

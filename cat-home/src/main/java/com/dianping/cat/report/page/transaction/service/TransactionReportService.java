@@ -27,12 +27,12 @@ import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.dal.report.DailyReportContent;
-import com.dianping.cat.home.dal.report.DailyReportContentEntity;
-import com.dianping.cat.home.dal.report.MonthlyReportContent;
-import com.dianping.cat.home.dal.report.MonthlyReportContentEntity;
-import com.dianping.cat.home.dal.report.WeeklyReportContent;
-import com.dianping.cat.home.dal.report.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportContent;
+import com.dianping.cat.core.dal.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class TransactionReportService extends AbstractReportService<TransactionReport> {

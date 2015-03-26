@@ -10,7 +10,6 @@ public class SpeedQueryEntity extends BaseQueryEntity {
 
 	public SpeedQueryEntity() {
 		super();
-		m_id = 1;
 	}
 
 	public SpeedQueryEntity(String query) {

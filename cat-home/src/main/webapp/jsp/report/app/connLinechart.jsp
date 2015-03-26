@@ -12,7 +12,7 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
-		var commandInfo = ${model.command};
+		var commandInfo = ${model.command2CodesJson};
 		function check() {
 			var value = document.getElementById("checkbox").checked;
 
@@ -177,20 +177,20 @@
 			var commandId = $('#command').val();
 			var domains2 = $('#domains2').val();
 			var commandId2 = $('#command2').val();
-			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
+			var href = "?op=${payload.action.name}&query1=" + query1 + "&query2=" + query2 + "&type="
 					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
 					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
 			window.location.href = href;
 		}
 		
-		var domainToCommandsJson = ${model.domainToCommandsJson};
+		var domain2CommandsJson = ${model.domain2CommandsJson};
 
 		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
 			if(domainInitVal == ""){
 				domainInitVal = $("#"+domainId).val()
 			}
 			var commandSelect = $("#"+commandId);
-			var commands = domainToCommandsJson[domainInitVal];
+			var commands = domain2CommandsJson[domainInitVal];
 			
 			$("#"+domainId).val(domainInitVal);
 			commandSelect.empty();
@@ -215,7 +215,7 @@
 				var domain = $("#domains2").val();
 				var commandSelect = $("#command2");
 			}
-			var commands = domainToCommandsJson[domain];
+			var commands = domain2CommandsJson[domain];
 			commandSelect.empty();
 			
 			for(var cou in commands){
@@ -230,7 +230,7 @@
 		
 		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
 			var domainsSelect = $("#"+domainSelectId);
-			for(var domain in domainToCommandsJson){
+			for(var domain in domain2CommandsJson){
 				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
 			}
 			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
@@ -268,6 +268,8 @@
 					
 					if(typeof(words[1]) != undefined && words[0].length > 0 ){
 						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
 					}
 					
 					if (typeof(words[0]) != undefined && words[0].length == 0) {
@@ -301,7 +303,7 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						if(typeof(words[1]) != undefined && words[0].length > 0 ){
+						if(typeof(words[1]) != undefined && words[1].length > 0 ){
 							$("#command2").val(words[1]);
 						}
 						command2Change();

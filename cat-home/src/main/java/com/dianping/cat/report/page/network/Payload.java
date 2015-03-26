@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.network;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -125,5 +125,5 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.NETTOPOLOGY;
 		}
 	}
-	
+
 }

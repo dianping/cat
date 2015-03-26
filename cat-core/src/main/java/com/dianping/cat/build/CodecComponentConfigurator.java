@@ -6,11 +6,11 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.message.codec.HtmlEncodingBufferWriter;
+import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.BufferWriter;
-import com.dianping.cat.message.spi.core.HtmlEncodingBufferWriter;
-import com.dianping.cat.message.spi.core.HtmlMessageCodec;
-import com.dianping.cat.message.spi.core.WaterfallMessageCodec;
 
 class CodecComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

@@ -12,9 +12,9 @@ import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.home.router.entity.DefaultServer;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class StateBuilder {
@@ -26,18 +26,6 @@ public class StateBuilder {
 	private ModelService<StateReport> m_stateService;
 
 	private static final int COUNT = 500 * 10000;
-
-	private List<String> queryAllServers() {
-		List<String> strs = new ArrayList<String>();
-		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
-		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
-
-		for (DefaultServer server : servers) {
-			strs.add(server.getId());
-		}
-		strs.add(backUpServer);
-		return strs;
-	}
 
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
@@ -66,6 +54,18 @@ public class StateBuilder {
 			}
 		}
 		return null;
+	}
+
+	private List<String> queryAllServers() {
+		List<String> strs = new ArrayList<String>();
+		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
+		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
+
+		for (DefaultServer server : servers) {
+			strs.add(server.getId());
+		}
+		strs.add(backUpServer);
+		return strs;
 	}
 
 	private StateReport queryHourlyReport(long date, String ip) {

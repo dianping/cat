@@ -20,21 +20,21 @@
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}"
+					<a href="?op=history&show=${payload.show}&reportType=${payload.reportType}&domain=${model.domain}&date=${model.date}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&date=${model.date}">All</a>
+					<a href="?op=history&show=${payload.show}&reportType=${payload.reportType}&domain=${model.domain}&date=${model.date}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}"
+						<a href="?op=history&show=${payload.show}&reportType=${payload.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&show=${payload.show}&reportType=${model.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+						<a href="?op=history&show=${payload.show}&reportType=${payload.reportType}&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -50,7 +50,7 @@
 	</tr>
 	</tr>
 	<tr>
-		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=total"
+		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=total"
 					data-status="total" class="state_graph_link">[:: show ::]</a></td>
 		<td>处理消息总量</td>
 		<td class="right">${w:format(model.state.machine.total,'#,###,###,###,##0.#')}</td>
@@ -61,7 +61,7 @@
 				<td colspan="4" style="display: none"><div id="total" style="display: none"></div></td>
 			</tr>
 	<tr>
-		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=totalLoss"
+		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=totalLoss"
 					data-status="totalLoss" class="state_graph_link">[:: show ::]</a></td>
 		<td>丢失消息总量</td>
 		<c:choose>
@@ -79,7 +79,7 @@
 				<td colspan="4" style="display: none"><div id="totalLoss" style="display: none"></div></td>
 			</tr>
 	<tr>
-		<td><a	href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=avgTps"
+		<td><a	href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=avgTps"
 					data-status="avgTps" class="state_graph_link">[:: show ::]</a></td>
 		<td>每分钟平均处理数</td>
 		<td class="right">${w:format(model.state.machine.avgTps,'###,###,###,##0')}</td>
@@ -91,7 +91,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=maxTps"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=maxTps"
 					data-status="maxTps" class="state_graph_link">[:: show ::]</a></td>
 		<td>单台机器每分钟最大处理数</td>
 		<td class="right">${w:format(model.state.machine.maxTps,'###,###,###,##0')}</td>
@@ -103,7 +103,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=dump"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dump"
 					data-status="dump" class="state_graph_link">[:: show ::]</a></td>
 		<td>gzip压缩成功消息数量</td>
 		<td class="right">${w:format(model.state.machine.dump,'###,###,###,##0')}</td>
@@ -115,7 +115,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=dumpLoss"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dumpLoss"
 					data-status="dumpLoss" class="state_graph_link">[:: show ::]</a></td>
 		<td>gzip来不及压缩丢失消息数量</td>
 		<c:choose>
@@ -134,7 +134,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=pigeonTimeError"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=pigeonTimeError"
 					data-status="pigeonTimeError" class="state_graph_link">[:: show ::]</a></td>
 		<td>两台机器时钟不准导致消息存储丢失</td>
 		<td class="right">${w:format(model.state.machine.pigeonTimeError,'###,###,###,##0')}</td>
@@ -146,7 +146,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=networkTimeError"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=networkTimeError"
 					data-status="networkTimeError" class="state_graph_link">[:: show ::]</a></td>
 		<td>网络传输或者客户端延迟发送导致消息丢失</td>
 		<td class="right">${w:format(model.state.machine.networkTimeError,'###,###,###,##0')}</td>
@@ -159,7 +159,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockTotal"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=blockTotal"
 					data-status="blockTotal" class="state_graph_link">[:: show ::]</a></td>
 		<td>存储消息块数量</td>
 		<td class="right">${w:format(model.state.machine.blockTotal,'###,###,###,##0')}</td>
@@ -171,7 +171,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockLoss"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=blockLoss"
 					data-status="blockLoss" class="state_graph_link">[:: show ::]</a></td>
 		<td>存储消息块丢失数量</td>
 		<c:choose>
@@ -186,7 +186,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=blockTime"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=blockTime"
 					data-status="blockTime" class="state_graph_link">[:: show ::]</a></td>
 		<td>存储消息块花费时间(分钟)</td>
 		<td class="right">${w:format(model.state.machine.blockTime/1000/60,'###,###,###,##0')}</td>
@@ -198,7 +198,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=size"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=size"
 					data-status="size" class="state_graph_link">[:: show ::]</a></td>
 		<td>压缩前消息大小(GB)</td>
 		<td class="right">${w:format(model.state.machine.size/1024/1024/1024,'0.00#')}</td>
@@ -210,7 +210,7 @@
 			</tr>
 	<tr>
 		<td><a
-					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=delayAvg"
+					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=delayAvg"
 					data-status="delayAvg" class="state_graph_link">[:: show ::]</a></td>
 		<td>系统处理延迟(ms)</td>
 		<td class="right">${w:format(model.state.machine.delayAvg,'0.#')}</td>

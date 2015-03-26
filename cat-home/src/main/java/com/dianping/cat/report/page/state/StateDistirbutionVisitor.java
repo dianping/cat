@@ -20,10 +20,6 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 
 	private String m_attribute = "";
 
-	public Map<String, Double> getDistribute() {
-		return m_distribute;
-	}
-
 	public StateDistirbutionVisitor(String key) {
 		int index = key.indexOf(":");
 
@@ -32,6 +28,21 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 			m_attribute = key.substring(index + 1);
 		} else {
 			m_attribute = key;
+		}
+	}
+
+	public Map<String, Double> getDistribute() {
+		return m_distribute;
+	}
+
+	private void incDistribute(String ip, double value) {
+		if (value > 0) {
+			Double old = m_distribute.get(ip);
+
+			if (old == null) {
+				old = new Double(0);
+			}
+			m_distribute.put(ip, old + value);
 		}
 	}
 
@@ -67,17 +78,6 @@ public class StateDistirbutionVisitor extends BaseVisitor {
 			}
 		}
 		return value;
-	}
-
-	private void incDistribute(String ip, double value) {
-		if (value > 0) {
-			Double old = m_distribute.get(ip);
-
-			if (old == null) {
-				old = new Double(0);
-			}
-			m_distribute.put(ip, old + value);
-		}
 	}
 
 	private double queryValue(String key, ProcessDomain processDomain) {

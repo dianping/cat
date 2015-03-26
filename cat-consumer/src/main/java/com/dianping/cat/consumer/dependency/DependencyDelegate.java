@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeBuilder
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 

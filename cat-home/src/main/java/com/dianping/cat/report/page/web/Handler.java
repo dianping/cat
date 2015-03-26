@@ -30,15 +30,15 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
@@ -136,6 +136,25 @@ public class Handler implements PageHandler<Context> {
 		return queryEntity;
 	}
 
+	private ProblemReport getHourlyReport(Payload payload) {
+		ModelRequest request = new ModelRequest(Constants.FRONT_END, payload.getDate()) //
+		      .setProperty("queryType", "view");
+		if (!Constants.ALL.equals(payload.getIpAddress())) {
+			request.setProperty("ip", payload.getIpAddress());
+		}
+		if (!StringUtils.isEmpty(payload.getType())) {
+			request.setProperty("type", "error");
+		}
+		if (m_service.isEligable(request)) {
+			ModelResponse<ProblemReport> response = m_service.invoke(request);
+			ProblemReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
+		}
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "web")
@@ -222,27 +241,9 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private ProblemReport getHourlyReport(Payload payload) {
-		ModelRequest request = new ModelRequest(Constants.FRONT_END, payload.getDate()) //
-		      .setProperty("queryType", "view");
-		if (!Constants.ALL.equals(payload.getIpAddress())) {
-			request.setProperty("ip", payload.getIpAddress());
-		}
-		if (!StringUtils.isEmpty(payload.getType())) {
-			request.setProperty("type", "error");
-		}
-		if (m_service.isEligable(request)) {
-			ModelResponse<ProblemReport> response = m_service.invoke(request);
-			ProblemReport report = response.getModel();
-
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
-		}
-	}
-
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.WEB);
+		model.setAction(payload.getAction());
 		Collection<PatternItem> rules = m_patternManager.queryUrlPatternRules();
 		String url = payload.getUrl();
 

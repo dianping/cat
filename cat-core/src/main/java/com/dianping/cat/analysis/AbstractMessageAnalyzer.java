@@ -5,7 +5,7 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -106,10 +106,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return m_serverConfigManager.isLocalMode();
 	}
 
-	public boolean isRawAnalyzer() {
-		return true;
-	}
-
 	protected boolean isTimeout() {
 		long currentTime = System.currentTimeMillis();
 		long endTime = m_startTime + m_duration + m_extraTime;
@@ -117,9 +113,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return currentTime > endTime;
 	}
 
-	protected void loadReports() {
-		// to be overridden
-	}
+	protected abstract void loadReports();
 
 	protected abstract void process(MessageTree tree);
 

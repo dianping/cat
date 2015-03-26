@@ -9,15 +9,14 @@ public enum JspFile {
 
 	HOURLY_REPORT("/jsp/report/event/event.jsp"),
 
-	GROUP_GRAPHS("/jsp/report/event/event_graphs.jsp"), 
-	
-	HISTORY_GROUP_GRAPH("/jsp/report/event/eventHistoryGraphs.jsp"), 
-	
-	HISTORY_GROUP_REPORT("/jsp/report/event/eventHistoryGroupReport.jsp"), 
-	
+	GROUP_GRAPHS("/jsp/report/event/event_graphs.jsp"),
+
+	HISTORY_GROUP_GRAPH("/jsp/report/event/eventHistoryGraphs.jsp"),
+
+	HISTORY_GROUP_REPORT("/jsp/report/event/eventHistoryGroupReport.jsp"),
+
 	HOURLY_GROUP_REPORT("/jsp/report/event/eventGroup.jsp");
 
-	
 	private String m_path;
 
 	private JspFile(String path) {

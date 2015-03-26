@@ -237,6 +237,10 @@ public class Handler implements PageHandler<Context> {
 		case APP_RULE_DELETE:
 		case APP_COMPARISON_CONFIG_UPDATE:
 		case APP_RULE_BATCH_UPDATE:
+		case APP_CONSTANT_ADD:
+		case APP_CONSTANT_UPDATE:
+		case APP_CONSTATN_DELETE:
+		case APP_CONSTATN_SUBMIT:
 			m_appConfigProcessor.process(action, payload, model);
 			break;
 

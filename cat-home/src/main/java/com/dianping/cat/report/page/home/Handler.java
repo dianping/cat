@@ -14,9 +14,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.message.spi.core.TcpSocketReceiver;
+import com.dianping.cat.analysis.MessageConsumer;
+import com.dianping.cat.analysis.RealtimeConsumer;
+import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
@@ -25,7 +25,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TcpSocketReceiver m_receiver;
-	
+
 	@Inject(type = MessageConsumer.class)
 	private RealtimeConsumer m_realtimeConsumer;
 
@@ -58,7 +58,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HOME);
 		model.setDomain(payload.getDomain());
-		model.setLongDate(payload.getDate());
+		model.setDate(payload.getDate());
 		m_jspViewer.view(ctx, model);
 	}
 

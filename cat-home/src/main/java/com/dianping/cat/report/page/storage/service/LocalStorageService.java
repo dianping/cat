@@ -5,17 +5,17 @@ import java.util.Date;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.BasePayload;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.ApiPayload;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.service.LocalModelService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
 
 public class LocalStorageService extends LocalModelService<StorageReport> {
 
@@ -29,7 +29,7 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 	}
 
 	@Override
-	public String getReport(ModelRequest request, ModelPeriod period, String id, BasePayload payload) throws Exception {
+	public String buildReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
 		StorageReport report = super.getReport(period, id);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

@@ -52,7 +52,7 @@ public enum JspFile {
 	DATABASE_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/databaseRule/databaseConfigs.jsp"),
 
 	DATABASE_RULE_DELETE("/jsp/system/databaseRule/databaseConfigs.jsp"),
-	
+
 	STORAGE_GROUP_CONFIG_UPDATE("/jsp/system/storage/storageGroupConfig.jsp"),
 
 	SYSTEM_RULE_CONFIG_LIST("/jsp/system/systemRule/systemConfigs.jsp"),
@@ -118,8 +118,10 @@ public enum JspFile {
 	APP_RULE_UPDATE("/jsp/system/appRule/appRuleUpdate.jsp"),
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
-	
+
 	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
+
+	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
 

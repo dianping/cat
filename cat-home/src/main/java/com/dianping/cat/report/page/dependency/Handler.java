@@ -29,16 +29,16 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
 
 public class Handler implements PageHandler<Context> {
 
@@ -163,7 +163,7 @@ public class Handler implements PageHandler<Context> {
 		m_externalInfoBuilder.buildExceptionInfoOnGraph(payload, model, topologyGraph);
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
-		String build = new DefaultJsonBuilder().build(topologyGraph); 
+		String build = new DefaultJsonBuilder().build(topologyGraph);
 
 		model.setTopologyGraph(build);
 	}
@@ -203,16 +203,9 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private boolean validate(Context ctx) {
-		String url = ctx.getRequestContext().getActionUri();
-		String actionUrl = url.split("\\?")[0];
-
-		return NORMAL_URLS.contains(actionUrl);
-	}
-
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.DEPENDENCY);
-		model.setAction(Action.LINE_CHART);
+		model.setAction(payload.getAction());
 
 		m_normalizePayload.normalize(model, payload);
 
@@ -262,6 +255,13 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			throw new RuntimeException("Internal error: no eligable dependency service registered for " + request + "!");
 		}
+	}
+
+	private boolean validate(Context ctx) {
+		String url = ctx.getRequestContext().getActionUri();
+		String actionUrl = url.split("\\?")[0];
+
+		return NORMAL_URLS.contains(actionUrl);
 	}
 
 }

@@ -13,7 +13,7 @@
 	</entity>
 	<entity name="segment">
 		<attribute name="id" value-type="int" key="true" />
-		<attribute name="error" value-type="long" primitive="true" />
+		<attribute name="error" value-type="long" primitive="true" method-inc="true"/>
 		<attribute name="url" value-type="long" primitive="true" />
 		<attribute name="url-error" value-type="long" primitive="true" />
 		<attribute name="url-duration" value-type="double" primitive="true" format="0.00" />

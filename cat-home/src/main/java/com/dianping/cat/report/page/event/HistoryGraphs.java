@@ -117,10 +117,10 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeHelper.ONE_HOUR * 60);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
 						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 60);
 						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 60);
@@ -197,8 +197,8 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 			allDatas.add(lastWeekGraph);
 		} else if (queryType.equalsIgnoreCase("week")) {
 			Map<String, double[]> currentGraph = getGraphDatasForHour(start, end, domain, type, name, ip);
-			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeHelper.ONE_WEEK), new Date(
-			      end.getTime() - TimeHelper.ONE_WEEK), domain, type, name, ip);
+			Map<String, double[]> lastWeek = getGraphDatasForHour(new Date(start.getTime() - TimeHelper.ONE_WEEK),
+			      new Date(end.getTime() - TimeHelper.ONE_WEEK), domain, type, name, ip);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastWeek);

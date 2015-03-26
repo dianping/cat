@@ -19,6 +19,9 @@
          <table name="graph"/>
          <table name="dailygraph"/>
          <table name="report_content"/>
+         <table name="daily_report_content"/>
+         <table name="monthly_report_content"/>
+         <table name="weekly_report_content"/>
       </group>
       <group name="config" package="com.dianping.cat.core.config">
          <table name="config"/>

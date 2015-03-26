@@ -12,8 +12,8 @@ import com.dianping.cat.consumer.MockReportManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.ReportManager;
 
 public class CrossConfigurator extends AbstractResourceConfigurator {
 

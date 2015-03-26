@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.problem;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -42,7 +42,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
-	
+
 	@FieldMeta("group")
 	private String m_group;
 
@@ -64,8 +64,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public String getGroup() {
-   	return m_group;
-   }
+		return m_group;
+	}
 
 	public String getGroupName() {
 		return m_groupName;
@@ -130,8 +130,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroup(String group) {
-   	m_group = group;
-   }
+		m_group = group;
+	}
 
 	public void setGroupName(String groupName) {
 		m_groupName = groupName;
@@ -143,6 +143,11 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setMinute(int minute) {
 		m_minute = minute;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.PROBLEM);
 	}
 
 	public void setServiceThreshold(int serviceThreshold) {
@@ -160,7 +165,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
-	
+
 	public void setType(String type) {
 		m_type = type;
 	}
