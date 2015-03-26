@@ -52,7 +52,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	public static final String TOO_LONG = "toolongurl.bin";
 
-	private static final String VERSION_ONE = "1";
+	private static final String VERSION_THREE = "3";
 
 	private static final String API_TYPE = "connection";
 
@@ -89,7 +89,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (success) {
 			response.getWriter().write("OK");
 		} else {
-			response.getWriter().write("validate request!");
+			response.getWriter().write("ERROR");
 		}
 	}
 
@@ -97,7 +97,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		boolean success = false;
 		Cat.logEvent("Version", API_TYPE + ":" + version, Event.SUCCESS, version);
 
-		if (VERSION_ONE.equals(version)) {
+		if (VERSION_THREE.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
 
 			if (infoPair != null) {

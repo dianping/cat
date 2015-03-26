@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.consumer.dal" gen="true">
-	<entity name="sqltable">
-		<member name="creation-date" insert-expr="NOW()" />
-		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
-		<query-defs>
-			<query name="find-all-by-domain" type="SELECT" multiple="true">
-				<param name="domain" />
-				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='domain'/> = ${domain}]]></statement>
-			</query>
-		</query-defs>
-	</entity>
 	<entity name="business-report" table="businessReport" alias="b">
 		<member name="creation-date" insert-expr="NOW()" />
 		<var name="start-date" value-type="Date" />
@@ -34,14 +24,4 @@
 			</query>
 		</query-defs>
 	</entity>
-	<entity name="user-agent" table="user_agent" alias="ua">
-    	<query-defs>
-      		<query name="find-all" type="SELECT" multiple="true">
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					]]></statement>
-			</query>
-    	</query-defs>
-  	</entity>
 </entities>

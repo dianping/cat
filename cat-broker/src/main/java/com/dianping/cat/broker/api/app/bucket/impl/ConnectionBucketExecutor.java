@@ -27,13 +27,17 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 
 	private HashMap<Integer, HashMap<String, AppConnectionProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppConnectionProto>>();
 
+	private AppConfigManager m_appConfigManager;
+
 	private long m_startTime;
 
 	private static Semaphore m_semaphore = new Semaphore(1);
 
-	public ConnectionBucketExecutor(long startTime, AppService<AppConnectionData> appDataService) {
+	public ConnectionBucketExecutor(long startTime, AppService<AppConnectionData> appDataService,
+	      AppConfigManager appConfigManager) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
+		m_appConfigManager = appConfigManager;
 	}
 
 	protected void batchInsert(List<AppConnectionData> appConnectionDatas, List<AppConnectionProto> datas) {
@@ -52,7 +56,7 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 			}
 			ret = m_appDataService.insert(array);
 
-			if (validCommand(id)) {
+			if (m_appConfigManager.shouldAdd2AllCommands(id)) {
 				for (int i = 0; i < length; i++) {
 					AppConnectionData appConnectionData = appConnectionDatas.get(i);
 					AppConnectionData copyData = copyAppConnectionData(appConnectionData);
@@ -69,10 +73,6 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
-	}
-
-	private boolean validCommand(int id) {
-		return id != AppConfigManager.TOO_LONG_COMMAND_ID;
 	}
 
 	private AppConnectionData copyAppConnectionData(AppConnectionData appConnectionData) {

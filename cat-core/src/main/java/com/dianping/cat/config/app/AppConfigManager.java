@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -42,11 +43,11 @@ public class AppConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
+	private Map<String, Integer> m_commands = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_cities = new HashMap<String, Integer>();
+	private Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_operators = new HashMap<String, Integer>();
+	private Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
 
 	private int m_configId;
 
@@ -55,6 +56,8 @@ public class AppConfigManager implements Initializable {
 	private AppConfig m_config;
 
 	private long m_modifyTime;
+
+	private Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
 
 	public static String NETWORK = "网络类型";
 
@@ -76,6 +79,26 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ACTIVITY_END_INDEX = 1200;
 
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
+		Command command = new Command();
+
+		command.setDomain(domain);
+		command.setTitle(title);
+		command.setName(name);
+
+		int commandId = 0;
+
+		if ("activity".equals(type)) {
+			commandId = findAvailableId(COMMAND_END_INDEX + 1, ACTIVITY_END_INDEX);
+		} else {
+			commandId = findAvailableId(1, COMMAND_END_INDEX);
+		}
+		command.setId(commandId);
+		m_config.addCommand(command);
+
+		return new Pair<Boolean, Integer>(storeConfig(), commandId);
+	}
+
 	public boolean addConstant(String type, int id, String value) {
 		ConfigItem item = m_config.getConfigItems().get(type);
 
@@ -94,37 +117,6 @@ public class AppConfigManager implements Initializable {
 		} else {
 			return false;
 		}
-	}
-
-	public Item queryItem(String type, int id) {
-		ConfigItem itemConfig = m_config.getConfigItems().get(type);
-
-		if (itemConfig != null) {
-			Item item = itemConfig.getItems().get(id);
-
-			return item;
-		}
-		return null;
-	}
-
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
-		Command command = new Command();
-
-		command.setDomain(domain);
-		command.setTitle(title);
-		command.setName(name);
-
-		int commandId = 0;
-
-		if ("activity".equals(type)) {
-			commandId = findAvailableId(COMMAND_END_INDEX + 1, ACTIVITY_END_INDEX);
-		} else {
-			commandId = findAvailableId(1, COMMAND_END_INDEX);
-		}
-		command.setId(commandId);
-
-		m_config.addCommand(command);
-		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
 
 	private Map<String, List<Command>> buildSortedCommands(Map<String, List<Command>> commands) {
@@ -192,27 +184,41 @@ public class AppConfigManager implements Initializable {
 		return new Pair<Boolean, List<Integer>>(storeConfig(), needDeleteIds);
 	}
 
-	private int findAvailableId(int startIndex, int endIndex) throws Exception {
-		Set<Integer> keys = m_config.getCommands().keySet();
-		int maxKey = 0;
+	public int findAvailableId(int start, int end) throws Exception {
+		List<Integer> keys = new ArrayList<Integer>(m_config.getCommands().keySet());
+		Collections.sort(keys);
+		List<Integer> tmp = new ArrayList<Integer>();
 
-		for (int key : keys) {
-			if (key >= startIndex && key <= endIndex && key > maxKey) {
-				maxKey = key;
+		for (int i = 0; i < keys.size(); i++) {
+			int value = keys.get(i);
+
+			if (value >= start && value <= end) {
+				tmp.add(value);
 			}
 		}
-		if (maxKey < endIndex && maxKey >= startIndex) {
-			return maxKey + 1;
-		} else {
-			for (int i = startIndex; i <= endIndex; i++) {
-				if (!keys.contains(i)) {
-					return i;
-				}
-			}
+		int size = tmp.size();
 
+		if (size == 0) {
+			return start;
+		} else if (size == 1) {
+			return tmp.get(0) + 1;
+		} else if (size == end - start + 1) {
 			Exception ex = new RuntimeException();
-			Cat.logError("app config range is full: " + startIndex + " - " + endIndex, ex);
+			Cat.logError("app config range is full: " + start + " - " + end, ex);
 			throw ex;
+		} else {
+			int key = tmp.get(0), i = 0;
+			int last = key;
+
+			for (; i < size; i++) {
+				key = tmp.get(i);
+
+				if (key - last > 1) {
+					return last + 1;
+				}
+				last = key;
+			}
+			return last + 1;
 		}
 	}
 
@@ -230,6 +236,10 @@ public class AppConfigManager implements Initializable {
 
 	public AppConfig getConfig() {
 		return m_config;
+	}
+
+	public Map<Integer, String> getExcludedCommands() {
+		return m_excludedCommands;
 	}
 
 	public Map<String, Integer> getOperators() {
@@ -301,6 +311,10 @@ public class AppConfigManager implements Initializable {
 			}
 		}
 		return false;
+	}
+
+	public boolean shouldAdd2AllCommands(int id) {
+		return !m_excludedCommands.containsKey(id);
 	}
 
 	public Map<Integer, Code> queryCodeByCommand(int command) {
@@ -383,7 +397,7 @@ public class AppConfigManager implements Initializable {
 		if (config != null) {
 			return config.getItems();
 		} else {
-			return new LinkedHashMap<Integer, Item>();
+			return new ConcurrentHashMap<Integer, Item>();
 		}
 	}
 
@@ -424,6 +438,17 @@ public class AppConfigManager implements Initializable {
 		return new HashMap<Integer, Code>();
 	}
 
+	public Item queryItem(String type, int id) {
+		ConfigItem itemConfig = m_config.getConfigItems().get(type);
+
+		if (itemConfig != null) {
+			Item item = itemConfig.getItems().get(id);
+
+			return item;
+		}
+		return null;
+	}
+
 	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
@@ -441,15 +466,21 @@ public class AppConfigManager implements Initializable {
 	}
 
 	private void refreshData() {
+		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
-		Map<String, Integer> commandMap = new HashMap<String, Integer>();
+		Map<String, Integer> commandMap = new ConcurrentHashMap<String, Integer>();
 
 		for (Command c : commands) {
 			commandMap.put(c.getName(), c.getId());
+
+			if (!c.isAll()) {
+				excludedCommands.put(c.getId(), c.getName());
+			}
 		}
 		m_commands = commandMap;
+		m_excludedCommands = excludedCommands;
 
-		Map<String, Integer> cityMap = new HashMap<String, Integer>();
+		Map<String, Integer> cityMap = new ConcurrentHashMap<String, Integer>();
 		ConfigItem cities = m_config.findConfigItem(CITY);
 
 		if (cities != null && cities.getItems() != null) {
@@ -460,13 +491,31 @@ public class AppConfigManager implements Initializable {
 
 		m_cities = cityMap;
 
-		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
+		Map<String, Integer> operatorMap = new ConcurrentHashMap<String, Integer>();
 		ConfigItem operations = m_config.findConfigItem(OPERATOR);
 
 		for (Item item : operations.getItems().values()) {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+
+	}
+
+	private void sortCommands() {
+		Map<Integer, Command> commands = m_config.getCommands();
+		Map<Integer, Command> results = new LinkedHashMap<Integer, Command>();
+		List<Integer> ids = new ArrayList<Integer>(commands.keySet());
+		Collections.sort(ids);
+
+		for (int i = 0; i < ids.size(); i++) {
+			int id = ids.get(i);
+
+			results.put(id, commands.get(id));
+		}
+		synchronized (this) {
+			commands.clear();
+			commands.putAll(results);
+		}
 	}
 
 	public boolean storeConfig() {
@@ -479,11 +528,17 @@ public class AppConfigManager implements Initializable {
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 
+			sortCommands();
 			refreshData();
 		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
+		return true;
+	}
+
+	public boolean updateCode(Code code) {
+		m_config.getCodes().put(code.getId(), code);
 		return true;
 	}
 
@@ -498,18 +553,13 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean updateCode(Code code) {
-		m_config.getCodes().put(code.getId(), code);
-
-		return true;
-	}
-
-	public boolean updateCommand(int id, String domain, String name, String title) {
+	public boolean updateCommand(int id, String domain, String name, String title, boolean all) {
 		Command command = m_config.findCommand(id);
 
 		command.setDomain(domain);
 		command.setName(name);
 		command.setTitle(title);
+		command.setAll(all);
 		return storeConfig();
 	}
 
@@ -561,5 +611,4 @@ public class AppConfigManager implements Initializable {
 		public void shutdown() {
 		}
 	}
-
 }

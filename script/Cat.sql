@@ -121,25 +121,12 @@ CREATE TABLE `businessReport` (
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台机器',
   `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
-  `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
+  `period` timestamp NOT NULL COMMENT '报表时间段',
   `content` longblob COMMENT '用于存放报表的具体内容',
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
-
-CREATE TABLE `sqltable` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `domain` varchar(50) DEFAULT NULL COMMENT '这条sql语句的属于项目名',
-  `sql_name` varchar(100) DEFAULT NULL COMMENT 'sql 语句的简写',
-  `table_name` varchar(100) DEFAULT NULL COMMENT 'sql语句操作的表名',
-  `sql_statement` text,
-  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
-  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
-  PRIMARY KEY (`id`),
-  KEY `domain` (`domain`),
-  KEY `sql_name` (`sql_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放SQL和操作的表名的关系';
 
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

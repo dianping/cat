@@ -115,6 +115,28 @@
 	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page5<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
 	</pre>	
 </br>
+
+<h4 class="text-danger">APP Crash日志接口</h4>
+	<pre>	http://{ip}/broker-service/api/crash</pre>
+	<table class="table table-bordered table-striped table-condensed  ">
+		<tr><th>参数名</th><th>描述</th><th>类型</th></tr>
+		<tr><td>mt</td><td>手机类型，andriod传入1，ios传入2</td><td>int</td></tr>
+		<tr><td>av</td><td>APP的版本号，比如1.0.0</td><td>String</td></tr>
+		<tr><td>pv</td><td>平台版本，比如7.0.1</td><td>String</td></tr>
+		<tr><td>m</td><td>模块名，支持模块区分</td><td>String</td></tr>
+		<tr><td>msg</td><td>crash的简单原因，后续统计根据msg进行分类，比如NullPointException</td><td>String</td></tr>
+		<tr><td>l</td><td>错误等级，默认值可以传warning、error可以用来进行错误区分</td><td>String</td></tr>
+		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
+	</table>
+	
+	<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
+	<p class="text-danger">如下手机类型是ios，app版本号1.1，平台版本号1.2，模块是user，错误等级为error，错误原因为java.npe</p>
+	<pre>
+		http://{ip}/broker-service/api/crash?mt=2&av=1.1&pv=1.2&m=user&msg=java.npe&l=error&d=dddddsfsdfsdfsdf	
+	</pre>
+</br>
+
+
 <h4 class="text-danger">JS 错误接口</h4>
 	<pre>	http://{ip}/broker-service/api/js</pre>
 	
