@@ -44,11 +44,11 @@ public class AppConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Integer> m_commands = new HashMap<String, Integer>();
+	private Map<String, Integer> m_commands = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_cities = new HashMap<String, Integer>();
+	private Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_operators = new HashMap<String, Integer>();
+	private Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
 
 	private int m_configId;
 
@@ -395,7 +395,7 @@ public class AppConfigManager implements Initializable {
 		if (config != null) {
 			return config.getItems();
 		} else {
-			return new LinkedHashMap<Integer, Item>();
+			return new ConcurrentHashMap<Integer, Item>();
 		}
 	}
 
@@ -466,7 +466,7 @@ public class AppConfigManager implements Initializable {
 	private void refreshData() {
 		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
-		Map<String, Integer> commandMap = new HashMap<String, Integer>();
+		Map<String, Integer> commandMap = new ConcurrentHashMap<String, Integer>();
 
 		for (Command c : commands) {
 			commandMap.put(c.getName(), c.getId());
@@ -478,7 +478,7 @@ public class AppConfigManager implements Initializable {
 		m_commands = commandMap;
 		m_excludedCommands = excludedCommands;
 
-		Map<String, Integer> cityMap = new HashMap<String, Integer>();
+		Map<String, Integer> cityMap = new ConcurrentHashMap<String, Integer>();
 		ConfigItem cities = m_config.findConfigItem(CITY);
 
 		if (cities != null && cities.getItems() != null) {
@@ -489,7 +489,7 @@ public class AppConfigManager implements Initializable {
 
 		m_cities = cityMap;
 
-		Map<String, Integer> operatorMap = new HashMap<String, Integer>();
+		Map<String, Integer> operatorMap = new ConcurrentHashMap<String, Integer>();
 		ConfigItem operations = m_config.findConfigItem(OPERATOR);
 
 		for (Item item : operations.getItems().values()) {
