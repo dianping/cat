@@ -56,7 +56,7 @@ public class DataBucketExecutor implements BucketExecutor {
 			}
 			ret = m_appDataService.insert(array);
 
-			if (m_appConfigManager.add2AllCommands(id)) {
+			if (m_appConfigManager.shouldAdd2AllCommands(id)) {
 				for (int i = 0; i < length; i++) {
 					AppCommandData appCommandData = appDataCommands.get(i);
 					AppCommandData copyData = copyAppCommandData(appCommandData);

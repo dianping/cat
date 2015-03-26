@@ -2,7 +2,6 @@ package com.dianping.cat.config.app;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -95,8 +94,8 @@ public class AppConfigManager implements Initializable {
 			commandId = findAvailableId(1, COMMAND_END_INDEX);
 		}
 		command.setId(commandId);
-
 		m_config.addCommand(command);
+
 		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
 
@@ -154,10 +153,6 @@ public class AppConfigManager implements Initializable {
 		return config;
 	}
 
-	public boolean add2AllCommands(int id) {
-		return !m_excludedCommands.containsKey(id);
-	}
-
 	public boolean deleteCode(int id, int codeId) {
 		Command command = m_config.getCommands().get(id);
 
@@ -192,33 +187,38 @@ public class AppConfigManager implements Initializable {
 	public int findAvailableId(int start, int end) throws Exception {
 		List<Integer> keys = new ArrayList<Integer>(m_config.getCommands().keySet());
 		Collections.sort(keys);
-		int size = keys.size();
+		List<Integer> tmp = new ArrayList<Integer>();
+
+		for (int i = 0; i < keys.size(); i++) {
+			int value = keys.get(i);
+
+			if (value >= start && value <= end) {
+				tmp.add(value);
+			}
+		}
+		int size = tmp.size();
 
 		if (size == 0) {
 			return start;
+		} else if (size == 1) {
+			return tmp.get(0) + 1;
+		} else if (size == end - start + 1) {
+			Exception ex = new RuntimeException();
+			Cat.logError("app config range is full: " + start + " - " + end, ex);
+			throw ex;
 		} else {
-			int key = keys.get(0), i = 1;
+			int key = tmp.get(0), i = 0;
 			int last = key;
 
 			for (; i < size; i++) {
-				key = keys.get(i);
+				key = tmp.get(i);
 
-				if (key >= start && key <= end) {
-					if (key - last > 1) {
-						return last + 1;
-					}
+				if (key - last > 1) {
+					return last + 1;
 				}
 				last = key;
 			}
-			if (key <= start) {
-				return start;
-			} else if (key >= end) {
-				Exception ex = new RuntimeException();
-				Cat.logError("app config range is full: " + start + " - " + end, ex);
-				throw ex;
-			} else {
-				return key + 1;
-			}
+			return last + 1;
 		}
 	}
 
@@ -311,6 +311,10 @@ public class AppConfigManager implements Initializable {
 			}
 		}
 		return false;
+	}
+
+	public boolean shouldAdd2AllCommands(int id) {
+		return !m_excludedCommands.containsKey(id);
 	}
 
 	public Map<Integer, Code> queryCodeByCommand(int command) {
@@ -497,6 +501,23 @@ public class AppConfigManager implements Initializable {
 
 	}
 
+	private void sortCommands() {
+		Map<Integer, Command> commands = m_config.getCommands();
+		Map<Integer, Command> results = new LinkedHashMap<Integer, Command>();
+		List<Integer> ids = new ArrayList<Integer>(commands.keySet());
+		Collections.sort(ids);
+
+		for (int i = 0; i < ids.size(); i++) {
+			int id = ids.get(i);
+
+			results.put(id, commands.get(id));
+		}
+		synchronized (this) {
+			commands.clear();
+			commands.putAll(results);
+		}
+	}
+
 	public boolean storeConfig() {
 		try {
 			Config config = m_configDao.createLocal();
@@ -507,6 +528,7 @@ public class AppConfigManager implements Initializable {
 			config.setContent(m_config.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 
+			sortCommands();
 			refreshData();
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -517,7 +539,6 @@ public class AppConfigManager implements Initializable {
 
 	public boolean updateCode(Code code) {
 		m_config.getCodes().put(code.getId(), code);
-
 		return true;
 	}
 

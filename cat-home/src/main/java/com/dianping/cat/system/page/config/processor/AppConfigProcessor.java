@@ -131,16 +131,19 @@ public class AppConfigProcessor extends BaseProcesser {
 		case APP_LIST:
 			buildListInfo(model, payload);
 			break;
-		case APP_UPDATE:
+		case APP_COMMMAND_UPDATE:
 			id = payload.getId();
-			Command command = m_appConfigManager.getConfig().findCommand(id);
 
-			if (command == null) {
-				command = new Command();
+			if (m_appConfigManager.containCommand(id)) {
+				Command command = m_appConfigManager.getConfig().findCommand(id);
+
+				if (command == null) {
+					command = new Command();
+				}
+				model.setUpdateCommand(command);
 			}
-			model.setUpdateCommand(command);
 			break;
-		case APP_SUBMIT:
+		case APP_COMMAND_SUBMIT:
 			id = payload.getId();
 			String domain = payload.getDomain();
 			String name = payload.getName();
@@ -168,7 +171,7 @@ public class AppConfigProcessor extends BaseProcesser {
 			}
 			buildListInfo(model, payload);
 			break;
-		case APP_PAGE_DELETE:
+		case APP_COMMAND_DELETE:
 			id = payload.getId();
 
 			if (m_appConfigManager.deleteCommand(id)) {

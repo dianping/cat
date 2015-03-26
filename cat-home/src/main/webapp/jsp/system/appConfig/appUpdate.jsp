@@ -14,7 +14,9 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			$('#all').val('${model.updateCommand.all}');
+			if(${payload.id} >= 0) {
+				$('#all').val('${model.updateCommand.all}');
+			}
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
@@ -36,7 +38,7 @@
 				}
 				return;
 			}
-			if(${payload.id} == 0) {
+			if(${payload.id} <= 0) {
 				$.ajax({
 					async: false,
 					type: "get",
@@ -54,7 +56,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}";
+							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}";
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -89,10 +91,10 @@
 		</tr>
 		<tr><td>是否加入全量统计</td><td><select id="all" />
 									<option value='true'>是</option>
-									<option value='false'>否</option>^
+									<option value='false'>否</option>
 									</select><br/>
 		</td></tr>
-		<c:if test="${not empty payload.id}">
+		<c:if test="${payload.id gt 0}">
 			<input name="id" value="${payload.id}" id="commandId" style="display:none"/>
 		</c:if>
 		<tr>

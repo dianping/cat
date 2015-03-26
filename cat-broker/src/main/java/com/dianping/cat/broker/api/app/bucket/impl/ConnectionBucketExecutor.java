@@ -56,7 +56,7 @@ public class ConnectionBucketExecutor implements BucketExecutor {
 			}
 			ret = m_appDataService.insert(array);
 
-			if (m_appConfigManager.add2AllCommands(id)) {
+			if (m_appConfigManager.shouldAdd2AllCommands(id)) {
 				for (int i = 0; i < length; i++) {
 					AppConnectionData appConnectionData = appConnectionDatas.get(i);
 					AppConnectionData copyData = copyAppConnectionData(appConnectionData);

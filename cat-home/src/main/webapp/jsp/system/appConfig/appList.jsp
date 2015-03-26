@@ -110,7 +110,7 @@
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
 												<th width="10%">加入全量统计</th>
-												<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
+												<th width="8%">操作 <a href="?op=appUpdate&type=api&id=-1" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 											</tr>
 										</thead>
@@ -130,10 +130,13 @@
 												</c:otherwise>
 												</c:choose>
 											</td>
-											<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">
-												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-												<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >
-												<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td></tr>
+											<c:if test="${command.id ne 0 }">
+												<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">
+													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+													<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >
+													<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
+												
+											</c:if></tr>
 								    	</c:forEach>
 								    </table>
 							    </div>
@@ -157,7 +160,7 @@
 									    <thead><tr>
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
-												<th width="8%">操作 <a href="?op=appUpdate&type=activity" class="btn btn-primary btn-xs" >
+												<th width="8%">操作 <a href="?op=appUpdate&type=activity&id=-1" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 											</tr>
 										</thead>
