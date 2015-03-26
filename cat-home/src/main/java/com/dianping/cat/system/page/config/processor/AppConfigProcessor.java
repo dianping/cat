@@ -145,9 +145,10 @@ public class AppConfigProcessor extends BaseProcesser {
 			String domain = payload.getDomain();
 			String name = payload.getName();
 			String title = payload.getTitle();
+			boolean all = payload.isAll();
 
 			if (m_appConfigManager.containCommand(id)) {
-				if (m_appConfigManager.updateCommand(id, domain, name, title)) {
+				if (m_appConfigManager.updateCommand(id, domain, name, title, all)) {
 					model.setOpState(true);
 				} else {
 					model.setOpState(false);

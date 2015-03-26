@@ -27,13 +27,17 @@ public class DataBucketExecutor implements BucketExecutor {
 
 	private HashMap<Integer, HashMap<String, AppDataProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppDataProto>>();
 
+	private AppConfigManager m_appConfigManager;
+
 	private long m_startTime;
 
 	private static Semaphore m_semaphore = new Semaphore(1);
 
-	public DataBucketExecutor(long startTime, AppService<AppCommandData> appDataService) {
+	public DataBucketExecutor(long startTime, AppService<AppCommandData> appDataService,
+	      AppConfigManager appConfigManager) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
+		m_appConfigManager = appConfigManager;
 	}
 
 	protected void batchInsert(List<AppCommandData> appDataCommands, List<AppDataProto> datas) {
@@ -52,7 +56,7 @@ public class DataBucketExecutor implements BucketExecutor {
 			}
 			ret = m_appDataService.insert(array);
 
-			if (validCommand(id)) {
+			if (m_appConfigManager.add2AllCommands(id)) {
 				for (int i = 0; i < length; i++) {
 					AppCommandData appCommandData = appDataCommands.get(i);
 					AppCommandData copyData = copyAppCommandData(appCommandData);
@@ -70,10 +74,6 @@ public class DataBucketExecutor implements BucketExecutor {
 				datas.get(i).setFlushed();
 			}
 		}
-	}
-
-	private boolean validCommand(int id) {
-		return id != AppConfigManager.TOO_LONG_COMMAND_ID;
 	}
 
 	private AppCommandData copyAppCommandData(AppCommandData appCommandData) {

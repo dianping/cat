@@ -109,6 +109,7 @@
 									    <thead><tr>
 												<th width="30%">名称</th>
 												<th width="32%">标题</th>
+												<th width="10%">加入全量统计</th>
 												<th width="8%">操作 <a href="?op=appUpdate&type=api" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 											</tr>
@@ -117,6 +118,18 @@
 								    	<c:forEach var="command" items="${entry.value}">
 									    	<tr><td>${command.name}</td>
 											<td>${command.title}</td>
+											<td class="center">
+												<c:choose>
+												<c:when test="${command.all}">
+													<button class="btn btn-xs btn-success">
+													<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+													</button>
+												</c:when>
+												<c:otherwise>
+													<i class="ace-icon glyphicon glyphicon-remove bigger-120"></i>
+												</c:otherwise>
+												</c:choose>
+											</td>
 											<td><a href="?op=appUpdate&id=${command.id}&type=api" class="btn btn-primary btn-xs">
 												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 												<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >

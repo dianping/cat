@@ -140,6 +140,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("constant")
 	private boolean m_constant = false;
 
+	@FieldMeta("all")
+	private boolean m_all = true;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -342,12 +345,20 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_type;
 	}
 
+	public boolean isAll() {
+		return m_all;
+	}
+
 	public boolean isConstant() {
 		return m_constant;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
+	}
+
+	public void setAll(boolean all) {
+		m_all = all;
 	}
 
 	public void setAllOnOrOff(String allOnOrOff) {

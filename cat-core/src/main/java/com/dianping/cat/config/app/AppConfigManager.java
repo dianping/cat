@@ -2,6 +2,7 @@ package com.dianping.cat.config.app;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -56,6 +58,8 @@ public class AppConfigManager implements Initializable {
 
 	private long m_modifyTime;
 
+	private Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
+
 	public static String NETWORK = "网络类型";
 
 	public static String OPERATOR = "运营商";
@@ -76,37 +80,6 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ACTIVITY_END_INDEX = 1200;
 
-	public boolean addConstant(String type, int id, String value) {
-		ConfigItem item = m_config.getConfigItems().get(type);
-
-		if (item != null) {
-			Item data = item.getItems().get(id);
-
-			if (data != null) {
-				data.setName(value);
-			} else {
-				data = new Item(id);
-				data.setName(value);
-
-				item.getItems().put(id, data);
-			}
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	public Item queryItem(String type, int id) {
-		ConfigItem itemConfig = m_config.getConfigItems().get(type);
-
-		if (itemConfig != null) {
-			Item item = itemConfig.getItems().get(id);
-
-			return item;
-		}
-		return null;
-	}
-
 	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
 		Command command = new Command();
 
@@ -125,6 +98,26 @@ public class AppConfigManager implements Initializable {
 
 		m_config.addCommand(command);
 		return new Pair<Boolean, Integer>(storeConfig(), commandId);
+	}
+
+	public boolean addConstant(String type, int id, String value) {
+		ConfigItem item = m_config.getConfigItems().get(type);
+
+		if (item != null) {
+			Item data = item.getItems().get(id);
+
+			if (data != null) {
+				data.setName(value);
+			} else {
+				data = new Item(id);
+				data.setName(value);
+
+				item.getItems().put(id, data);
+			}
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private Map<String, List<Command>> buildSortedCommands(Map<String, List<Command>> commands) {
@@ -161,6 +154,10 @@ public class AppConfigManager implements Initializable {
 		return config;
 	}
 
+	public boolean add2AllCommands(int id) {
+		return !m_excludedCommands.containsKey(id);
+	}
+
 	public boolean deleteCode(int id, int codeId) {
 		Command command = m_config.getCommands().get(id);
 
@@ -192,27 +189,38 @@ public class AppConfigManager implements Initializable {
 		return new Pair<Boolean, List<Integer>>(storeConfig(), needDeleteIds);
 	}
 
-	private int findAvailableId(int startIndex, int endIndex) throws Exception {
-		Set<Integer> keys = m_config.getCommands().keySet();
-		int maxKey = 0;
+	public int findAvailableId(int start, int end) throws Exception {
+		List<Integer> keys = new ArrayList<Integer>(m_config.getCommands().keySet());
+		Collections.sort(keys);
+		keys = Arrays.asList(0, 1, 2, 3, 4, 6, 7, 8, 9, 10);
+		System.out.println(keys);
+		int size = keys.size();
 
-		for (int key : keys) {
-			if (key >= startIndex && key <= endIndex && key > maxKey) {
-				maxKey = key;
-			}
-		}
-		if (maxKey < endIndex && maxKey >= startIndex) {
-			return maxKey + 1;
+		if (size == 0) {
+			return start;
 		} else {
-			for (int i = startIndex; i <= endIndex; i++) {
-				if (!keys.contains(i)) {
-					return i;
-				}
-			}
+			int key = keys.get(0), i = 1;
+			int last = key;
 
-			Exception ex = new RuntimeException();
-			Cat.logError("app config range is full: " + startIndex + " - " + endIndex, ex);
-			throw ex;
+			for (; i < size; i++) {
+				key = keys.get(i);
+
+				if (key >= start && key <= end) {
+					if (key - last > 1) {
+						return last + 1;
+					}
+				}
+				last = key;
+			}
+			if (key <= start) {
+				return start;
+			} else if (key >= end) {
+				Exception ex = new RuntimeException();
+				Cat.logError("app config range is full: " + start + " - " + end, ex);
+				throw ex;
+			} else {
+				return key + 1;
+			}
 		}
 	}
 
@@ -230,6 +238,10 @@ public class AppConfigManager implements Initializable {
 
 	public AppConfig getConfig() {
 		return m_config;
+	}
+
+	public Map<Integer, String> getExcludedCommands() {
+		return m_excludedCommands;
 	}
 
 	public Map<String, Integer> getOperators() {
@@ -424,6 +436,17 @@ public class AppConfigManager implements Initializable {
 		return new HashMap<Integer, Code>();
 	}
 
+	public Item queryItem(String type, int id) {
+		ConfigItem itemConfig = m_config.getConfigItems().get(type);
+
+		if (itemConfig != null) {
+			Item item = itemConfig.getItems().get(id);
+
+			return item;
+		}
+		return null;
+	}
+
 	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
@@ -441,13 +464,19 @@ public class AppConfigManager implements Initializable {
 	}
 
 	private void refreshData() {
+		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
 		Map<String, Integer> commandMap = new HashMap<String, Integer>();
 
 		for (Command c : commands) {
 			commandMap.put(c.getName(), c.getId());
+
+			if (!c.isAll()) {
+				excludedCommands.put(c.getId(), c.getName());
+			}
 		}
 		m_commands = commandMap;
+		m_excludedCommands = excludedCommands;
 
 		Map<String, Integer> cityMap = new HashMap<String, Integer>();
 		ConfigItem cities = m_config.findConfigItem(CITY);
@@ -467,6 +496,7 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+
 	}
 
 	public boolean storeConfig() {
@@ -487,6 +517,12 @@ public class AppConfigManager implements Initializable {
 		return true;
 	}
 
+	public boolean updateCode(Code code) {
+		m_config.getCodes().put(code.getId(), code);
+
+		return true;
+	}
+
 	public boolean updateCode(int id, Code code) {
 		Command command = m_config.findCommand(id);
 
@@ -498,18 +534,13 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean updateCode(Code code) {
-		m_config.getCodes().put(code.getId(), code);
-
-		return true;
-	}
-
-	public boolean updateCommand(int id, String domain, String name, String title) {
+	public boolean updateCommand(int id, String domain, String name, String title, boolean all) {
 		Command command = m_config.findCommand(id);
 
 		command.setDomain(domain);
 		command.setName(name);
 		command.setTitle(title);
+		command.setAll(all);
 		return storeConfig();
 	}
 
@@ -561,5 +592,4 @@ public class AppConfigManager implements Initializable {
 		public void shutdown() {
 		}
 	}
-
 }

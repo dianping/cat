@@ -10,6 +10,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Command;
+import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.BaseVisitor;
 import com.dianping.cat.service.ProjectService;
 
@@ -96,18 +97,21 @@ public class CodeDisplayVisitor extends BaseVisitor {
 			c.setDepartment(Constants.ALL);
 			c.setBu(Constants.ALL);
 		} else {
-			com.dianping.cat.configuration.app.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
 			c.setName(command.getName());
-			c.setTitle(cmd.getTitle());
-			String domain = cmd.getDomain();
 
-			if (StringUtils.isNotEmpty(domain)) {
-				Project project = m_projectService.findProject(domain);
+			com.dianping.cat.configuration.app.entity.Command cmd = m_appConfigManager.getRawCommands().get(id);
+			if (cmd != null) {
+				c.setTitle(cmd.getTitle());
+				String domain = cmd.getDomain();
 
-				c.setDomain(domain);
-				if (project != null) {
-					c.setBu(project.getBu());
-					c.setDepartment(project.getCmdbProductline());
+				if (StringUtils.isNotEmpty(domain)) {
+					Project project = m_projectService.findProject(domain);
+
+					c.setDomain(domain);
+					if (project != null) {
+						c.setBu(project.getBu());
+						c.setDepartment(project.getCmdbProductline());
+					}
 				}
 			}
 		}
@@ -120,6 +124,26 @@ public class CodeDisplayVisitor extends BaseVisitor {
 			c.setSuccessRatio(100.0 - c.getErrors() * 100.0 / count);
 			c.setRequestAvg(c.getRequestSum() * 1.0 / count);
 			c.setResponseAvg(c.getResponseSum() * 1.0 / count);
+		}
+
+		Transaction transaction = command.getTransaction();
+
+		if (transaction != null) {
+			c.setTransactionCount(transaction.getCount());
+			c.setTransactionAvg(transaction.getAvg());
+
+			if (count > 0) {
+				c.setCountComparison((c.getTransactionCount() - count) * 1.0 / count * 100);
+			} else {
+				c.setCountComparison(100);
+			}
+
+			double avg = c.getAvg();
+			if (avg > 0) {
+				c.setAvgComparison((c.getTransactionAvg() - avg) / avg * 100);
+			} else {
+				c.setAvgComparison(100);
+			}
 		}
 	}
 
