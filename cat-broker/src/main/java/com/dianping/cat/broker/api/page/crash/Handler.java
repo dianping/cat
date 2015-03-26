@@ -23,6 +23,25 @@ public class Handler implements PageHandler<Context> {
 
 	public static final char SPIT = ':';
 
+	public String buildDomain(Payload payload) {
+		int type = payload.getMobileType();
+
+		if (type == Payload.ANDRIOD) {
+			return ANDRIOD;
+		} else {
+			return IPHONE;
+		}
+	}
+
+	public String buildIp(Payload payload) {
+		String appVerion = String.valueOf(payload.getAppVersion());
+		String plateformVersion = String.valueOf(payload.getPlateformVersion());
+		String module = String.valueOf(payload.getModule());
+		String level = String.valueOf(payload.getLevel());
+
+		return appVerion + SPIT + plateformVersion + SPIT + module + SPIT + level;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "crash")
@@ -51,24 +70,5 @@ public class Handler implements PageHandler<Context> {
 		t.complete();
 
 		ctx.getHttpServletResponse().getWriter().write("OK");
-	}
-
-	public String buildIp(Payload payload) {
-		String appVerion = String.valueOf(payload.getAppVersion());
-		String plateformVersion = String.valueOf(payload.getPlateformVersion());
-		String module = String.valueOf(payload.getModule());
-		String level = String.valueOf(payload.getLevel());
-
-		return appVerion + SPIT + plateformVersion + SPIT + module + SPIT + level;
-	}
-
-	public String buildDomain(Payload payload) {
-		int type = payload.getMobileType();
-
-		if (type == Payload.ANDRIOD) {
-			return ANDRIOD;
-		} else {
-			return IPHONE;
-		}
 	}
 }

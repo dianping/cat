@@ -1,6 +1,8 @@
 package com.dianping.cat.broker.api.page.crash;
 
 import com.dianping.cat.broker.api.ApiPage;
+
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -53,6 +55,10 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 		return m_level;
 	}
 
+	public String getMessage() {
+		return m_message;
+	}
+
 	public int getMobileType() {
 		return m_mobileType;
 	}
@@ -83,7 +89,15 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	}
 
 	public void setLevel(String level) {
-		m_level = level;
+		if (StringUtils.isNotEmpty(level)) {
+			m_level = level;
+		}
+	}
+
+	public void setMessage(String message) {
+		if (StringUtils.isNotEmpty(message)) {
+			m_message = message;
+		}
 	}
 
 	public void setMobileType(int mobileType) {
@@ -91,7 +105,9 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 	}
 
 	public void setModule(String module) {
-		m_module = module;
+		if (StringUtils.isNotEmpty(module)) {
+			m_module = module;
+		}
 	}
 
 	@Override
@@ -101,14 +117,6 @@ public class Payload implements ActionPayload<ApiPage, Action> {
 
 	public void setPlateformVersion(String plateformVersion) {
 		m_plateformVersion = plateformVersion;
-	}
-
-	public String getMessage() {
-		return m_message;
-	}
-
-	public void setMessage(String message) {
-		m_message = message;
 	}
 
 	@Override
