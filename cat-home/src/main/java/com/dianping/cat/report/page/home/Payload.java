@@ -11,7 +11,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private Action m_action;
 
 	@FieldMeta("docName")
-	private String m_docName = "userMonitor";
+	private String m_docName = "index";
 
 	@FieldMeta("subDocName")
 	private String m_subDocName;
