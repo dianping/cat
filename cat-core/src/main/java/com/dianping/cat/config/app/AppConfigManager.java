@@ -192,8 +192,6 @@ public class AppConfigManager implements Initializable {
 	public int findAvailableId(int start, int end) throws Exception {
 		List<Integer> keys = new ArrayList<Integer>(m_config.getCommands().keySet());
 		Collections.sort(keys);
-		keys = Arrays.asList(0, 1, 2, 3, 4, 6, 7, 8, 9, 10);
-		System.out.println(keys);
 		int size = keys.size();
 
 		if (size == 0) {

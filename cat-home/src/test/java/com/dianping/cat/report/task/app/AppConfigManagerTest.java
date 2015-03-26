@@ -12,7 +12,7 @@ public class AppConfigManagerTest extends ComponentTestCase {
 		AppConfigManager appconfigManger = lookup(AppConfigManager.class);
 
 		try {
-			int i = appconfigManger.findAvailableId(0, 8);
+			int i = appconfigManger.findAvailableId(0, 5);
 			System.out.println(i);
 		} catch (Exception e) {
 			e.printStackTrace();
