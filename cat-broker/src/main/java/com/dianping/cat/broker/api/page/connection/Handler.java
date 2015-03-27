@@ -224,7 +224,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 			}
 		} else {
-			Cat.logEvent("contentEmpty", "connection:3");
+			Cat.logEvent("contentEmpty", "connection:3", Event.SUCCESS, null);
 		}
 	}
 }
