@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.storage.task;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -144,10 +145,24 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 
 		storageReport.setStartTime(start);
 		storageReport.setEndTime(new Date(end.getTime() - 1));
-		Set<String> ids = queryAllDomainNames(start, end, name);
+		Set<String> ids = queryAllIds(start, end, name, reportId);
 
 		storageReport.getIds().addAll(ids);
 		return storageReport;
+	}
+
+	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
+		Set<String> ids = new HashSet<String>();
+		String type = reportId.substring(reportId.lastIndexOf("-"));
+
+		for (String myId : queryAllDomainNames(start, end, name)) {
+			if (myId.endsWith(type)) {
+				String prefix = myId.substring(0, myId.lastIndexOf("-"));
+
+				ids.add(prefix);
+			}
+		}
+		return ids;
 	}
 
 	@Override
