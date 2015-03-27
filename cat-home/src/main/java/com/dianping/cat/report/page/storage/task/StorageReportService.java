@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.storage.task;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
@@ -12,22 +13,22 @@ import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.MonthlyReportContent;
 import com.dianping.cat.core.dal.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
 public class StorageReportService extends AbstractReportService<StorageReport> {
@@ -143,7 +144,9 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 
 		storageReport.setStartTime(start);
 		storageReport.setEndTime(new Date(end.getTime() - 1));
+		Set<String> ids = queryAllDomainNames(start, end, name);
 
+		storageReport.getIds().addAll(ids);
 		return storageReport;
 	}
 
