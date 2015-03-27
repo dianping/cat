@@ -1,5 +1,5 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h4 class="text-success">Transaction实时报表</h4>
+<h4 class="text-success">Storage实时报表</h4>
 <h5>功能：监控一段代码运行情况：运行时间统计、次数、错误次数等等。系统默认的有URL、Cache、SQL、PigeonCall、PigeonService</h5>
 <p class="text-danger">由于计算95line需要数据较多，为了减少内存开销，系统做了一些优化，在单个小时内某一台机器，95Line误差是1ms，但是合并成1一天，1周，1个月误差较大（数据仅供参考）</p>
 <h5 class="text-sucess">a）Type统计界面</h5>
