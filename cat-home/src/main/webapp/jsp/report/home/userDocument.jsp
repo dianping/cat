@@ -12,6 +12,7 @@
     <li><a href="#userDocoument9" data-toggle="tab"><strong>Matrix</strong></a></a></li>
     <li><a href="#userDocoument10" data-toggle="tab"><strong>Metric</strong></a></a></li>
     <li><a href="#userDocoument11" data-toggle="tab"><strong>Dependency</strong></a></a></li>
+    <li><a href="#userDocoument12" data-toggle="tab"><strong>Storage</strong></a></a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane active" id="userDocoument1"><%@ include file="userDocument/overall.jsp"%></div>
@@ -25,5 +26,6 @@
     <div class="tab-pane" id="userDocoument9"><%@ include file="userDocument/matrix.jsp"%></div>
     <div class="tab-pane" id="userDocoument10"><%@ include file="userDocument/metric.jsp"%></div>
     <div class="tab-pane" id="userDocoument11"><%@ include file="userDocument/dependency.jsp"%></div>
+    <div class="tab-pane" id="userDocoument12"><%@ include file="userDocument/storage.jsp"%></div>
     </div>
 </div>

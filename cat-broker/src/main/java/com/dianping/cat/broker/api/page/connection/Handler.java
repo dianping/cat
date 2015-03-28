@@ -105,7 +105,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				int operatorId = infoPair.getValue();
 				String content = payload.getContent();
 
-				processVersion1Content(cityId, operatorId, content, version);
+				processVersion3Content(cityId, operatorId, content);
 				success = true;
 			}
 		}
@@ -125,7 +125,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void processVersion1Record(int cityId, int operatorId, String record) {
+	private void processVersion3Record(int cityId, int operatorId, String record) {
 		String[] items = record.split("\t");
 
 		if (items.length == 10) {
@@ -178,9 +178,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setCommand(tooLong);
 							offerQueue(appData);
 						}
-						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Connection.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
 					} else {
-						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+						Cat.logEvent("Connection.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
 					}
 				} else {
 					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
@@ -190,7 +190,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidRecord", "batch:version2:" + String.valueOf(items.length), Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "Connection:version3:" + String.valueOf(items.length), Event.SUCCESS, null);
 		}
 	}
 
@@ -210,17 +210,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		return null;
 	}
 
-	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
+	private void processVersion3Content(Integer cityId, Integer operatorId, String content) {
+		if (StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
 
-		for (String record : records) {
-			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion1Record(cityId, operatorId, record);
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						processVersion3Record(cityId, operatorId, record);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} else {
+			Cat.logEvent("contentEmpty", "connection:3", Event.SUCCESS, null);
 		}
 	}
 }
