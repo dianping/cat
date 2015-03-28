@@ -241,7 +241,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(CommandAutoCompleter.class).req(TransactionReportService.class, AppConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppReportBuilder.ID, AppReportBuilder.class).req(AppCommandDataDao.class,
-		      AppConfigManager.class, AppReportService.class, CommandAutoCompleter.class));
+		      AppConfigManager.class, AppReportService.class, TransactionReportService.class, CommandAutoCompleter.class));
 
 		all.add(C(ReportFacade.class));
 

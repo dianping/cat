@@ -219,9 +219,9 @@ public class Handler implements PageHandler<Context> {
 
 		case APP_NAME_CHECK:
 		case APP_LIST:
-		case APP_UPDATE:
-		case APP_SUBMIT:
-		case APP_PAGE_DELETE:
+		case APP_COMMMAND_UPDATE:
+		case APP_COMMAND_SUBMIT:
+		case APP_COMMAND_DELETE:
 		case APP_CODE_UPDATE:
 		case APP_CODE_SUBMIT:
 		case APP_CODE_ADD:

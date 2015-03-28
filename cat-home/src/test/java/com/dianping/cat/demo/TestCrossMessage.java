@@ -1,6 +1,12 @@
 package com.dianping.cat.demo;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.junit.Test;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
@@ -8,7 +14,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCrossMessage {
-	
+
 	@Test
 	public void testCross() throws Exception {
 		String serverIp = "10.10.10.1";
@@ -68,5 +74,62 @@ public class TestCrossMessage {
 		((DefaultMessageTree) tree).setIpAddress(clientIp);
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
+	}
+
+	@Test
+	public void test() throws InterruptedException {
+		Map<String, String> map = new HashMap<String, String>();
+
+		for (int i = 0; i < 100; i++) {
+			String key = String.valueOf(i);
+			map.put(key, key);
+		}
+		Threads.forGroup("f").start(new TestThread(map));
+
+		Thread.sleep(1000);
+
+		Map<String, String> map2 = new HashMap<String, String>();
+		for (int i = 100; i < 200; i++) {
+			String key = String.valueOf(i);
+			map2.put(key, key);
+		}
+		map = map2;
+
+		Thread.sleep(10000);
+	}
+
+	public static class TestThread implements Task {
+
+		public Map<String, String> m_map;
+
+		public TestThread(Map<String, String> map) {
+			m_map = map;
+		}
+
+		@Override
+		public void run() {
+			for (Entry<String, String> entry : m_map.entrySet()) {
+				System.out.println(entry.getKey() + " " + entry.getValue());
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+		}
+
+		@Override
+		public String getName() {
+			return null;
+		}
+
+		@Override
+		public void shutdown() {
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }

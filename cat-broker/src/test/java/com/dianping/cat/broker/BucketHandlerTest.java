@@ -18,6 +18,7 @@ import com.dianping.cat.broker.api.app.bucket.impl.DataBucketExecutor;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.app.service.AppService;
+import com.dianping.cat.config.app.AppConfigManager;
 
 public class BucketHandlerTest {
 
@@ -37,12 +38,13 @@ public class BucketHandlerTest {
 	@SuppressWarnings("rawtypes")
 	public void test() throws Exception {
 		Map<String, AppService> services = new HashMap<String, AppService>();
+		AppConfigManager appConfigManager = new AppConfigManager();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		long startTime = sdf.parse("2014-08-19 11:20").getTime();
-		BucketHandler handler = new BucketHandler(startTime, services);
+		BucketHandler handler = new BucketHandler(startTime, services, appConfigManager);
 
-		HashMap<Integer, HashMap<String, AppDataProto>> datas = ((DataBucketExecutor) handler.getBucketExecutors()
-		      .get(AppDataProto.class.getName())).getDatas();
+		HashMap<Integer, HashMap<String, AppDataProto>> datas = ((DataBucketExecutor) handler.getBucketExecutors().get(
+		      AppDataProto.class.getName())).getDatas();
 		HashMap<String, AppDataProto> data = new HashMap<String, AppDataProto>();
 
 		datas.put(1, data);
