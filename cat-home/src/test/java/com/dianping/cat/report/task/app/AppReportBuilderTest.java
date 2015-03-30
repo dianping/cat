@@ -18,7 +18,7 @@ public class AppReportBuilderTest extends ComponentTestCase {
 
 		try {
 			builder.buildDailyTask(AppReportBuilder.ID, Constants.CAT,
-			      new SimpleDateFormat("yyyy-MM-dd").parse("2015-03-23"));
+			      new SimpleDateFormat("yyyy-MM-dd").parse("2015-03-24"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

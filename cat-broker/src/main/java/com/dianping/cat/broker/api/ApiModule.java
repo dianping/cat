@@ -17,7 +17,9 @@ com.dianping.cat.broker.api.page.cdn.Handler.class,
 
 com.dianping.cat.broker.api.page.save.Handler.class,
 
-com.dianping.cat.broker.api.page.connection.Handler.class
+com.dianping.cat.broker.api.page.connection.Handler.class,
+
+com.dianping.cat.broker.api.page.crash.Handler.class
 })
 public class ApiModule extends AbstractModule {
 

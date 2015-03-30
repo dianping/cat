@@ -22,7 +22,11 @@
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=bu">BU</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=department">部门</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=count">访问量</a></th>
+			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=transactionCount">后端访问量</a></th>
+			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=countComparison">访问量对比(%)</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=avg">平均延时(ms)</a></th>
+			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=transactionAvg">后端平均延时(ms)</a></th>
+			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=avgComparison">延时对比(%)</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=success">平均成功率(%)</a></th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=request">平均发包(B)</th>
 			<th><a href="/cat/r/app?op=statistics&domain=${model.domain}&day=${payload.day}&sort=response">平均回包(B)</th>
@@ -67,7 +71,11 @@
 				</c:otherwise>
 			</c:choose>
 			<td class="right">${w:format(entry.value.count,'#,###,###,###,##0')}</td>
+			<td class="right">${w:format(entry.value.transactionCount,'#,###,###,###,##0')}</td>
+			<td class="right">${w:format(entry.value.countComparison,'#0.000')}</td>
 			<td class="right">${w:format(entry.value.avg,'#,###,###,###,##0.0')}</td>
+			<td class="right">${w:format(entry.value.transactionAvg,'#,###,###,###,##0.0')}</td>
+			<td class="right">${w:format(entry.value.avgComparison,'#0.000')}</td>
 			<td class="right">${w:format(entry.value.successRatio,'#0.000')}</td>
 			<td class="right">${w:format(entry.value.requestAvg,'#,###,###,###,##0.0')}</td>
 			<td class="right">${w:format(entry.value.responseAvg,'#,###,###,###,##0.0')}</td>

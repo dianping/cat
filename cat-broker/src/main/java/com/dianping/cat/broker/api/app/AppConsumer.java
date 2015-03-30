@@ -21,6 +21,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.bucket.BucketHandler;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.app.service.AppService;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
 
 @SuppressWarnings("rawtypes")
@@ -40,6 +41,8 @@ public class AppConsumer extends ContainerHolder implements Initializable, LogEn
 
 	private Map<String, AppService> m_appDataServices;
 
+	private AppConfigManager m_appConfigManager;
+
 	private SimpleDateFormat m_fileFormat = new SimpleDateFormat("yyyyMMddHHmm");
 
 	public final static String SAVE_PATH = "/data/appdatas/cat/app-data-save/";
@@ -56,6 +59,7 @@ public class AppConsumer extends ContainerHolder implements Initializable, LogEn
 	@Override
 	public void initialize() throws InitializationException {
 		m_appDataServices = lookupMap(AppService.class);
+		m_appConfigManager = lookup(AppConfigManager.class);
 		m_appDataQueue = new AppQueue();
 		m_tasks = new ConcurrentHashMap<Long, BucketHandler>();
 		AppDataDispatcherThread appDataDispatcherThread = new AppDataDispatcherThread();
@@ -75,7 +79,7 @@ public class AppConsumer extends ContainerHolder implements Initializable, LogEn
 			for (File file : files) {
 				try {
 					long timestamp = m_fileFormat.parse(file.getName()).getTime();
-					BucketHandler handler = new BucketHandler(timestamp, m_appDataServices);
+					BucketHandler handler = new BucketHandler(timestamp, m_appDataServices, m_appConfigManager);
 
 					handler.load(file);
 					Threads.forGroup("cat").start(handler);
@@ -246,7 +250,7 @@ public class AppConsumer extends ContainerHolder implements Initializable, LogEn
 
 		private void startCurrentTask(long currentDuration) {
 			if (m_tasks.get(currentDuration) == null) {
-				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataServices);
+				BucketHandler curBucketHandler = new BucketHandler(currentDuration, m_appDataServices, m_appConfigManager);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(currentDuration)));
 				Threads.forGroup("cat").start(curBucketHandler);
 
@@ -259,7 +263,7 @@ public class AppConsumer extends ContainerHolder implements Initializable, LogEn
 			Long next = new Long(currentDuration + DURATION);
 
 			if (m_tasks.get(next) == null) {
-				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataServices);
+				BucketHandler nextBucketHandler = new BucketHandler(next, m_appDataServices, m_appConfigManager);
 				m_logger.info("starting bucket handler ,time " + m_sdf.format(new Date(next)));
 				Threads.forGroup("cat").start(nextBucketHandler);
 

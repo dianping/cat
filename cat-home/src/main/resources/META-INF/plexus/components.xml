@@ -1701,6 +1701,9 @@
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.app.task.CommandAutoCompleter</role>
 				</requirement>
 			</requirements>

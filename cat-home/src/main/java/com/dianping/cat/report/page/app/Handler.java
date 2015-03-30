@@ -418,14 +418,16 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_appConfigManager.queryCommands(activity));
 
-		if (Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
-		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action)) {
-
+		if (checkAction(action)) {
 			model.setDomain2Commands(m_appConfigManager.queryDomain2Commands(activity));
 			model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
 		}
-
 		m_normalizePayload.normalize(model, payload);
+	}
+
+	private boolean checkAction(Action action) {
+		return Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
+		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action);
 	}
 
 	private void setUpdateResult(Model model, int i) {
