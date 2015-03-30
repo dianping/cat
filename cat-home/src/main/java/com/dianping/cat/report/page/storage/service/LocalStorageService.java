@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.storage.service;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -55,6 +57,18 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 				report = new StorageReport(id);
 				report.setStartTime(new Date(timestamp));
 				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+				String type = id.substring(id.lastIndexOf("-"));
+				Set<String> reportIds = new HashSet<String>();
+
+				for (String tmp : bucket.getIds()) {
+					if (tmp.endsWith(type)) {
+						String prefix = tmp.substring(0, tmp.lastIndexOf("-"));
+
+						reportIds.add(prefix);
+					}
+				}
+				report.getIds().addAll(reportIds);
 			}
 			return report;
 
