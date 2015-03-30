@@ -55,7 +55,6 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 				report = new StorageReport(id);
 				report.setStartTime(new Date(timestamp));
 				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getIds().addAll(bucket.getIds());
 			}
 			return report;
 
