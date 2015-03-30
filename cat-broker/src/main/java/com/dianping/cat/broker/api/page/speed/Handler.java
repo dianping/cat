@@ -204,16 +204,20 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
+		if (StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
 
-		for (String record : records) {
-			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion1Record(cityId, operatorId, record);
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						processVersion1Record(cityId, operatorId, record);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} else {
+			Cat.logEvent("contentEmpty", "speed:1", Event.SUCCESS, null);
 		}
 	}
 

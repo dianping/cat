@@ -66,33 +66,38 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (userIp != null) {
 			try {
 				String content = payload.getContent();
-				String[] lines = content.split("\n");
 
-				for (String line : lines) {
-					if (StringUtils.isNotEmpty(line)) {
-						String[] tabs = line.split("\t");
-						// timstampTABtargetUrlTABdnslookupTABtcpconnectTABrequestTABresponseENTER
-						if (tabs.length == 6) {
-							// long timestamp = Long.parseLong(tabs[0]);
-							long timestamp = System.currentTimeMillis();
-							MonitorEntity entity = createEntity(tabs[1] + "/dnsLookup", timestamp,
-							      Double.parseDouble(tabs[2]), userIp);
+				if (StringUtils.isNotEmpty(content)) {
+					String[] lines = content.split("\n");
 
-							m_manager.offer(entity);
+					for (String line : lines) {
+						if (StringUtils.isNotEmpty(line)) {
+							String[] tabs = line.split("\t");
+							// timstampTABtargetUrlTABdnslookupTABtcpconnectTABrequestTABresponseENTER
+							if (tabs.length == 6) {
+								// long timestamp = Long.parseLong(tabs[0]);
+								long timestamp = System.currentTimeMillis();
+								MonitorEntity entity = createEntity(tabs[1] + "/dnsLookup", timestamp,
+								      Double.parseDouble(tabs[2]), userIp);
 
-							entity = createEntity(tabs[1] + "/tcpConnect", timestamp, Double.parseDouble(tabs[3]), userIp);
-							m_manager.offer(entity);
+								m_manager.offer(entity);
 
-							entity = createEntity(tabs[1] + "/request", timestamp, Double.parseDouble(tabs[4]), userIp);
-							m_manager.offer(entity);
+								entity = createEntity(tabs[1] + "/tcpConnect", timestamp, Double.parseDouble(tabs[3]), userIp);
+								m_manager.offer(entity);
 
-							entity = createEntity(tabs[1] + "/response", timestamp, Double.parseDouble(tabs[5]), userIp);
-							m_manager.offer(entity);
-							Cat.logEvent("Cdn.Hit", tabs[1], Event.SUCCESS, userIp);
-						} else {
-							Cat.logEvent("InvalidRecord", "cdn", Event.SUCCESS, null);
+								entity = createEntity(tabs[1] + "/request", timestamp, Double.parseDouble(tabs[4]), userIp);
+								m_manager.offer(entity);
+
+								entity = createEntity(tabs[1] + "/response", timestamp, Double.parseDouble(tabs[5]), userIp);
+								m_manager.offer(entity);
+								Cat.logEvent("Cdn.Hit", tabs[1], Event.SUCCESS, userIp);
+							} else {
+								Cat.logEvent("InvalidRecord", "cdn", Event.SUCCESS, null);
+							}
 						}
 					}
+				} else {
+					Cat.logEvent("contentEmpty", "cdn", Event.SUCCESS, null);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);

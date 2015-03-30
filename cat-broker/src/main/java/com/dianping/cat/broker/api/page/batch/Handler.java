@@ -91,36 +91,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
-		boolean success = false;
-		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
-
-		if (VERSION_TWO.equals(version)) {
-			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
-
-			if (infoPair != null) {
-				int cityId = infoPair.getKey();
-				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
-
-				processVersion2Content(cityId, operatorId, content, version);
-				success = true;
-			}
-		} else if (VERSION_THREE.equals(version)) {
-			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
-
-			if (infoPair != null) {
-				int cityId = infoPair.getKey();
-				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
-
-				processVersion3Content(cityId, operatorId, content, version);
-				success = true;
-			}
-		}
-		return success;
-	}
-
 	private void offerQueue(ProtoData appData) {
 		boolean success = m_appDataConsumer.enqueue(appData);
 
@@ -134,72 +104,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void processVersion3Record(int cityId, int operatorId, String record) {
-		String[] items = record.split("\t");
+	private void processVersion2Content(Integer cityId, Integer operatorId, String content) {
+		if (StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
 
-		if (items.length >= 10) {
-			AppDataProto appData = new AppDataProto();
-
-			try {
-				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
-				String urlBack = url;
-				int index = url.indexOf("?");
-
-				if (index > 0) {
-					url = url.substring(0, index);
-				}
-				Integer command = m_appConfigManager.getCommands().get(url);
-
-				if (command == null) {
-					url = m_parser.parse(url);
-
-					if (url != null) {
-						command = m_appConfigManager.getCommands().get(url);
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						processVersion2Record(cityId, operatorId, record);
 					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-
-				if (command != null) {
-					// appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setTimestamp(System.currentTimeMillis());
-					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
-					appData.setCity(cityId);
-					appData.setOperator(operatorId);
-					appData.setCount(1);
-
-					int responseTime = appData.getResponseTime();
-
-					if (responseTime < 60 * 1000 && responseTime >= 0) {
-						offerQueue(appData);
-
-						Cat.logEvent("Command", url, Event.SUCCESS, null);
-					} else if (responseTime > 0) {
-						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
-
-						if (tooLong != null) {
-							appData.setCommand(tooLong);
-							offerQueue(appData);
-						}
-						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
-					} else {
-						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
-					}
-				} else {
-					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("InvalidRecord", "batch:version3:" + String.valueOf(items.length), Event.SUCCESS, null);
+			Cat.logEvent("contentEmpty", "batch:2");
 		}
 	}
 
@@ -272,6 +191,123 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
+	private void processVersion3Content(Integer cityId, Integer operatorId, String content) {
+		if (StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
+
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						processVersion3Record(cityId, operatorId, record);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		} else {
+			Cat.logEvent("contentEmpty", "batch:3");
+		}
+	}
+
+	private void processVersion3Record(int cityId, int operatorId, String record) {
+		String[] items = record.split("\t");
+
+		if (items.length >= 10) {
+			AppDataProto appData = new AppDataProto();
+
+			try {
+				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				String urlBack = url;
+				int index = url.indexOf("?");
+
+				if (index > 0) {
+					url = url.substring(0, index);
+				}
+				Integer command = m_appConfigManager.getCommands().get(url);
+
+				if (command == null) {
+					url = m_parser.parse(url);
+
+					if (url != null) {
+						command = m_appConfigManager.getCommands().get(url);
+					}
+				}
+
+				if (command != null) {
+					// appData.setTimestamp(Long.parseLong(items[0]));
+					appData.setTimestamp(System.currentTimeMillis());
+					appData.setCommand(command);
+					appData.setNetwork(Integer.parseInt(items[1]));
+					appData.setVersion(Integer.parseInt(items[2]));
+					appData.setConnectType(Integer.parseInt(items[3]));
+					appData.setCode(Integer.parseInt(items[5]));
+					appData.setPlatform(Integer.parseInt(items[6]));
+					appData.setRequestByte(Integer.parseInt(items[7]));
+					appData.setResponseByte(Integer.parseInt(items[8]));
+					appData.setResponseTime(Integer.parseInt(items[9]));
+					appData.setCity(cityId);
+					appData.setOperator(operatorId);
+					appData.setCount(1);
+
+					int responseTime = appData.getResponseTime();
+
+					if (responseTime < 60 * 1000 && responseTime >= 0) {
+						offerQueue(appData);
+
+						Cat.logEvent("Command", url, Event.SUCCESS, null);
+					} else if (responseTime > 0) {
+						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
+
+						if (tooLong != null) {
+							appData.setCommand(tooLong);
+							offerQueue(appData);
+						}
+						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
+					} else {
+						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
+					}
+				} else {
+					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				m_logger.error(e.getMessage(), e);
+			}
+		} else {
+			Cat.logEvent("InvalidRecord", "batch:version3:" + String.valueOf(items.length), Event.SUCCESS, null);
+		}
+	}
+
+	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
+		boolean success = false;
+		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
+
+		if (VERSION_TWO.equals(version)) {
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+
+			if (infoPair != null) {
+				int cityId = infoPair.getKey();
+				int operatorId = infoPair.getValue();
+				String content = payload.getContent();
+
+				processVersion2Content(cityId, operatorId, content);
+				success = true;
+			}
+		} else if (VERSION_THREE.equals(version)) {
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+
+			if (infoPair != null) {
+				int cityId = infoPair.getKey();
+				int operatorId = infoPair.getValue();
+				String content = payload.getContent();
+
+				processVersion3Content(cityId, operatorId, content);
+				success = true;
+			}
+		}
+		return success;
+	}
+
 	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
 		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
 
@@ -287,33 +323,4 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 		return null;
 	}
-
-	private void processVersion3Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
-
-		for (String record : records) {
-			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion3Record(cityId, operatorId, record);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
-	private void processVersion2Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
-
-		for (String record : records) {
-			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion2Record(cityId, operatorId, record);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
 }
