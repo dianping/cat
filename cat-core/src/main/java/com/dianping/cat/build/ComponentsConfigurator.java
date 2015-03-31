@@ -66,7 +66,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class).req(DomainValidator.class));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 

@@ -27,7 +27,6 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public final class TcpSocketReceiver implements LogEnabled {
@@ -43,9 +42,6 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
-
-	@Inject
-	private DomainValidator m_domainValidator;
 
 	private ChannelFuture m_future;
 
@@ -145,21 +141,16 @@ public final class TcpSocketReceiver implements LogEnabled {
 					readBytes.readInt();
 
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
-					boolean valid = m_domainValidator.validate(tree.getDomain());
 
-					if (valid) {
-						readBytes.resetReaderIndex();
-						tree.setBuffer(readBytes);
-						m_handler.handle(tree);
-						m_processCount++;
+					readBytes.resetReaderIndex();
+					tree.setBuffer(readBytes);
+					m_handler.handle(tree);
+					m_processCount++;
 
-						long flag = m_processCount % CatConstants.SUCCESS_COUNT;
+					long flag = m_processCount % CatConstants.SUCCESS_COUNT;
 
-						if (flag == 0) {
-							m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
-						}
-					} else {
-						m_logger.info("Invalid domain in TcpSocketReceiver found: " + tree.getDomain());
+					if (flag == 0) {
+						m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
 					}
 				} else {
 					// client message is error

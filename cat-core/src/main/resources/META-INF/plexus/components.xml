@@ -81,9 +81,6 @@
 				<requirement>
 					<role>com.dianping.cat.analysis.MessageHandler</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
