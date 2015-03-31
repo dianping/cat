@@ -19,6 +19,7 @@ import com.dianping.cat.agent.monitor.executors.system.SystemPerformanceExecutor
 import com.dianping.cat.agent.monitor.executors.system.SystemStateExecutor;
 import com.dianping.cat.agent.monitor.paas.DataBuilder;
 import com.dianping.cat.agent.monitor.paas.PaasTask;
+import com.dianping.cat.configuration.ClientConfigManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -33,7 +34,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DataBuilder.class).req(CommandUtils.class));
 
-		all.add(C(CatServers.class));
+		all.add(C(CatServers.class).req(ClientConfigManager.class));
 
 		all.add(C(DataSender.class).req(CatServers.class));
 
