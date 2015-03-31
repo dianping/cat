@@ -56,7 +56,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}";
+							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -72,7 +72,7 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&all="+all;
+				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all;
 			}
 		})
 	</script>
