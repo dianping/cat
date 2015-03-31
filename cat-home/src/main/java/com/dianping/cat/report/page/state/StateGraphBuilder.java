@@ -43,8 +43,7 @@ public class StateGraphBuilder {
 
 	private Pair<LineChart, PieChart> buildHistoryGraph(String domain, Date start, Date end, String key, String ip) {
 		List<StateReport> reports = new ArrayList<StateReport>();
-		StateHistoryGraphVisitor builder = new StateHistoryGraphVisitor(ip, m_configManager.getUnusedDomains(),
-		      start.getTime(), end.getTime(), key);
+		StateHistoryGraphVisitor builder = new StateHistoryGraphVisitor(ip, start.getTime(), end.getTime(), key);
 		StateDistirbutionVisitor visitor = new StateDistirbutionVisitor(key);
 		long step;
 
