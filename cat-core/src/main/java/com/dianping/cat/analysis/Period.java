@@ -11,10 +11,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
@@ -86,24 +82,12 @@ public class Period {
 		m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
 		      df.format(endDate)));
 
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("Checkpoint", "RealtimeConsumer");
-
-		try {
-			for (PeriodTask task : m_tasks) {
-				task.finish();
-			}
-
-			t.setStatus(Message.SUCCESS);
-		} catch (Throwable e) {
-			cat.logError(e);
-			t.setStatus(e);
-		} finally {
-			t.complete();
-
-			m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
-			      df.format(endDate)));
+		for (PeriodTask task : m_tasks) {
+			task.finish();
 		}
+
+		m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
+		      df.format(endDate)));
 	}
 
 	public MessageAnalyzer getAnalyzer(String name) {
@@ -128,8 +112,8 @@ public class Period {
 		return analyzers;
 	}
 
-	public boolean isIn(long timestamp) {
-		return timestamp >= m_startTime && timestamp < m_endTime;
+	public long getStartTime() {
+		return m_startTime;
 	}
 
 	public void start() {
