@@ -79,7 +79,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setPage(ReportPage.PAGE);
+		model.setPage(ReportPage.MATRIX);
 		m_normalizePayload.normalize(model, payload);
 	}
 

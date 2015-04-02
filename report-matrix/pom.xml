@@ -7,6 +7,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>report-matrix</artifactId>
+   <packaging>jar</packaging>
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
@@ -65,9 +66,7 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-                        ${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
-                     </manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -79,6 +78,22 @@
                   <configuration>
                      <className>com.dianping.cat.matrix.build.ComponentsConfigurator</className>
                      <env>dev</env>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>plexus-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>
