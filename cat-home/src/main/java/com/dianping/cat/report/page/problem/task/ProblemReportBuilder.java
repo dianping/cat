@@ -24,8 +24,8 @@ import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class ProblemReportBuilder implements TaskBuilder {
 	

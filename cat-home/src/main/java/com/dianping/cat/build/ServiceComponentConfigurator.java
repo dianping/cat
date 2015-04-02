@@ -13,7 +13,6 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
@@ -45,10 +44,6 @@ import com.dianping.cat.report.page.heartbeat.service.LocalHeartbeatService;
 import com.dianping.cat.report.page.logview.service.CompositeLogViewService;
 import com.dianping.cat.report.page.logview.service.HistoricalMessageService;
 import com.dianping.cat.report.page.logview.service.LocalMessageService;
-import com.dianping.cat.report.page.matrix.service.CompositeMatrixService;
-import com.dianping.cat.report.page.matrix.service.HistoricalMatrixService;
-import com.dianping.cat.report.page.matrix.service.LocalMatrixService;
-import com.dianping.cat.report.page.matrix.service.MatrixReportService;
 import com.dianping.cat.report.page.metric.service.CompositeMetricService;
 import com.dianping.cat.report.page.metric.service.HistoricalMetricService;
 import com.dianping.cat.report.page.metric.service.LocalMetricService;
@@ -114,13 +109,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
-		all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
-		      .req(ReportBucketManager.class, MatrixReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, MatrixAnalyzer.ID, CompositeMatrixService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalStateService.ID, LocalStateService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

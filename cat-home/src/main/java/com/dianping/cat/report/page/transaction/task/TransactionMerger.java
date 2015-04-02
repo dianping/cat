@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.TransactionReportCountFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskHelper;
 
 public class TransactionMerger {
 

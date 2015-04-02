@@ -30,6 +30,8 @@ import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.matrix.service.MatrixReportService;
+import com.dianping.cat.report.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
@@ -46,8 +48,6 @@ import com.dianping.cat.report.page.event.task.EventMerger;
 import com.dianping.cat.report.page.event.task.EventReportBuilder;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
-import com.dianping.cat.report.page.matrix.service.MatrixReportService;
-import com.dianping.cat.report.page.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.DefaultBaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
@@ -96,7 +96,6 @@ import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
-import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
 import com.dianping.cat.report.task.cached.CachedReportTask;
 import com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder;
@@ -111,6 +110,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -159,8 +159,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
 		      ServiceReportService.class, ServerConfigManager.class));
 
-		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(MatrixReportService.class));
-
+		
 		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(CrossReportService.class));
 
 		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //

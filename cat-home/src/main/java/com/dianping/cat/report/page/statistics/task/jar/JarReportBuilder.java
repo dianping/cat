@@ -25,7 +25,7 @@ import com.dianping.cat.home.jar.entity.JarReport;
 import com.dianping.cat.home.jar.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.statistics.service.JarReportService;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class JarReportBuilder implements TaskBuilder {
 

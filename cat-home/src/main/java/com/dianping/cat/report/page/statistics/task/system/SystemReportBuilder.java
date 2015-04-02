@@ -17,7 +17,7 @@ import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.system.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.statistics.service.SystemReportService;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class SystemReportBuilder implements TaskBuilder {
 

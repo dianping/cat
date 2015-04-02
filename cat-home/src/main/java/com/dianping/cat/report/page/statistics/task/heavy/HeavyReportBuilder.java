@@ -7,10 +7,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.analyzer.matrix.MatrixAnalyzer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
-import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
@@ -18,10 +17,11 @@ import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.transform.DefaultNativeBuilder;
-import com.dianping.cat.report.page.matrix.service.MatrixReportService;
+import com.dianping.cat.matrix.model.entity.MatrixReport;
+import com.dianping.cat.report.matrix.service.MatrixReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class HeavyReportBuilder implements TaskBuilder {
 

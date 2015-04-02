@@ -12,6 +12,10 @@
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
+         <artifactId>report-matrix</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
@@ -149,9 +153,17 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-                     		<![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]>
-                     </manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
                   </configuration>
                </execution>
             </executions>

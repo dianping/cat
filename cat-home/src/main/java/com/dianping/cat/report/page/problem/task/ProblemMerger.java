@@ -9,7 +9,7 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskHelper;
 
 public class ProblemMerger {
 

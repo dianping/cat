@@ -29,8 +29,8 @@ import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class AppReportBuilder implements TaskBuilder {
 

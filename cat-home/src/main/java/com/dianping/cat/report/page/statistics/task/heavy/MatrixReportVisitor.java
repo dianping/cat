@@ -1,15 +1,15 @@
 package com.dianping.cat.report.page.statistics.task.heavy;
 
-import com.dianping.cat.consumer.matrix.model.entity.Matrix;
-import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
-import com.dianping.cat.consumer.matrix.model.entity.Ratio;
-import com.dianping.cat.consumer.matrix.model.transform.BaseVisitor;
 import com.dianping.cat.home.heavy.entity.HeavyCache;
 import com.dianping.cat.home.heavy.entity.HeavyCall;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.entity.HeavySql;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
+import com.dianping.cat.matrix.model.entity.Matrix;
+import com.dianping.cat.matrix.model.entity.MatrixReport;
+import com.dianping.cat.matrix.model.entity.Ratio;
+import com.dianping.cat.matrix.model.transform.BaseVisitor;
 
 public class MatrixReportVisitor extends BaseVisitor {
 

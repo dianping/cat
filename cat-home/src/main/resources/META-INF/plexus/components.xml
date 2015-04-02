@@ -609,36 +609,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-			<implementation>com.dianping.cat.report.page.matrix.service.MatrixReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 			<implementation>com.dianping.cat.report.page.cross.service.CrossReportService</implementation>
 			<requirements>
@@ -1110,7 +1080,7 @@
 			<implementation>com.dianping.cat.report.page.metric.task.BaselineConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.report.page.metric.task.MetricBaselineReportBuilder</implementation>
 			<requirements>
@@ -1138,7 +1108,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.transaction.task.TransactionReportBuilder</implementation>
 			<requirements>
@@ -1160,7 +1130,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.page.event.task.EventReportBuilder</implementation>
 			<requirements>
@@ -1185,7 +1155,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemReportBuilder</implementation>
 			<requirements>
@@ -1207,7 +1177,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder</implementation>
 			<requirements>
@@ -1220,7 +1190,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>bug</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.bug.BugReportBuilder</implementation>
 			<requirements>
@@ -1236,7 +1206,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>service</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder</implementation>
 			<requirements>
@@ -1252,17 +1222,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.page.matrix.task.MatrixReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.page.cross.task.CrossReportBuilder</implementation>
 			<requirements>
@@ -1272,7 +1232,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.page.state.task.StateReportBuilder</implementation>
 			<requirements>
@@ -1291,7 +1251,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>router</role-hint>
 			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
 			<requirements>
@@ -1307,12 +1267,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>heavy</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
@@ -1323,7 +1283,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>utilization</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportBuilder</implementation>
 			<requirements>
@@ -1348,7 +1308,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.page.dependency.task.DependencyReportBuilder</implementation>
 			<requirements>
@@ -1364,7 +1324,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>NetTopology</role-hint>
 			<implementation>com.dianping.cat.report.page.network.task.NetTopologyReportBuilder</implementation>
 			<requirements>
@@ -1383,7 +1343,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>jar</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder</implementation>
 			<requirements>
@@ -1399,7 +1359,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>system</role-hint>
 			<implementation>com.dianping.cat.report.page.statistics.task.system.SystemReportBuilder</implementation>
 			<requirements>
@@ -1415,7 +1375,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>cachedReport</role-hint>
 			<implementation>com.dianping.cat.report.task.cached.CachedReportBuilder</implementation>
 			<requirements>
@@ -1425,7 +1385,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.page.storage.task.StorageReportBuilder</implementation>
 			<requirements>
@@ -1438,7 +1398,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>cmdb</role-hint>
 			<implementation>com.dianping.cat.report.task.cmdb.CmdbInfoReloadBuilder</implementation>
 			<requirements>
@@ -1557,7 +1517,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>databaseCapacity</role-hint>
 			<implementation>com.dianping.cat.report.page.overload.task.CapacityUpdateTask</implementation>
 			<requirements>
@@ -1625,7 +1585,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>dailyNotify</role-hint>
 			<implementation>com.dianping.cat.report.task.notify.NotifyTaskBuilder</implementation>
 			<requirements>
@@ -1656,7 +1616,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>appDatabasePruner</role-hint>
 			<implementation>com.dianping.cat.report.page.app.task.AppDatabasePruner</implementation>
 			<requirements>
@@ -1687,7 +1647,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskBuilder</role>
+			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>app</role-hint>
 			<implementation>com.dianping.cat.report.page.app.task.AppReportBuilder</implementation>
 			<requirements>
@@ -1723,27 +1683,27 @@
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_transactionReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>event</role-hint>
 					<field-name>m_eventReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_problemReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>cross</role-hint>
 					<field-name>m_crossReportBuilder</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.TaskBuilder</role>
+					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>matrix</role-hint>
 					<field-name>m_matrixReportBuilder</field-name>
 				</requirement>
@@ -1940,55 +1900,6 @@
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>heartbeat-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.LocalModelService</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.page.matrix.service.LocalMatrixService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>matrix-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.matrix.service.HistoricalMatrixService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.page.matrix.service.CompositeMatrixService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hints>
-						<role-hint>matrix-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -4035,65 +3946,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.matrix.Handler</role>
-			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>matrix</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
-			<implementation>com.dianping.cat.report.page.matrix.service.MatrixReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

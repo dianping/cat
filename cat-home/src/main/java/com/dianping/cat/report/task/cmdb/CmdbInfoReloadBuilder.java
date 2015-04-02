@@ -6,7 +6,7 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class CmdbInfoReloadBuilder implements TaskBuilder {
 

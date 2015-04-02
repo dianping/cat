@@ -22,7 +22,7 @@ import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.report.alert.MetricType;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class MetricBaselineReportBuilder implements TaskBuilder, LogEnabled {
 

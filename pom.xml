@@ -16,6 +16,7 @@
 		<module>cat-home</module>
 		<module>cat-broker</module>
 		<module>cat-agent</module>
+		<module>report-matrix</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -42,7 +43,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-consumer-advanced</artifactId>
+				<artifactId>report-matrix</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

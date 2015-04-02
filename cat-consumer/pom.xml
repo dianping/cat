@@ -56,7 +56,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,

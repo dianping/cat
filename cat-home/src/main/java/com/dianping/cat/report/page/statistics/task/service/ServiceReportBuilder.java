@@ -26,8 +26,8 @@ import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.statistics.service.ServiceReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class ServiceReportBuilder implements TaskBuilder {
 
