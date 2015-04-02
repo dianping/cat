@@ -8,7 +8,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class AppReportBuilderTest extends ComponentTestCase {
 

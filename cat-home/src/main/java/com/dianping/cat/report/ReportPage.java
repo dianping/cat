@@ -18,10 +18,10 @@ public enum ReportPage implements Page {
    LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
    MODEL("model", "model", "Model", "Service Model", false),
+   
+   MATRIX("matrix", "matrix", "Matrix", "Matrix", false),
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
-
-   MATRIX("matrix", "matrix", "Matrix", "Matrix", false),
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 

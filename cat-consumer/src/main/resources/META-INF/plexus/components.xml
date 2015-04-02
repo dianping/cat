@@ -468,60 +468,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.consumer.matrix.MatrixAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>matrix</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>matrix</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>matrix</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.consumer.matrix.MatrixDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
 		</component>

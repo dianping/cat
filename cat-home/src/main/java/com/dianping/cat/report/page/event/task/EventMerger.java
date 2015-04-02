@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.event.EventReportCountFilter;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskHelper;
 
 public class EventMerger {
 

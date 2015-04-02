@@ -14,8 +14,8 @@ import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class HeartbeatReportBuilder implements TaskBuilder {
 

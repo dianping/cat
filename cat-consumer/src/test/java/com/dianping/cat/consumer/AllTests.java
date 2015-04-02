@@ -19,9 +19,6 @@ import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
-import com.dianping.cat.consumer.matrix.MatrixModelTest;
-import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
 import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
@@ -111,13 +108,7 @@ CrossInfoTest.class,
 
 CrossReportMergerTest.class,
 
-MatrixModelTest.class,
-
-MatrixReportMergerTest.class,
-
 CrossAnalyzerTest.class,
-
-MatrixAnalyzerTest.class,
 
 DependencyAnalyzerTest.class,
 

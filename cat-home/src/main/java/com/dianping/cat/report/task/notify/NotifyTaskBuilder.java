@@ -23,8 +23,8 @@ import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.task.TaskBuilder;
 
 public class NotifyTaskBuilder implements TaskBuilder {
 

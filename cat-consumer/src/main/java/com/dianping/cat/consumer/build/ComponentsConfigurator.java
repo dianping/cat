@@ -27,8 +27,6 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventDelegate;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatDelegate;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
-import com.dianping.cat.consumer.matrix.MatrixDelegate;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.problem.DefaultProblemHandler;
@@ -78,7 +76,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineDumpComponents());
 		all.addAll(defineStateComponents());
 		all.addAll(defineCrossComponents());
-		all.addAll(defineMatrixComponents());
 		all.addAll(defineDependencyComponents());
 		all.addAll(defineMetricComponents());
 		all.addAll(defineStorageComponents());
@@ -159,21 +156,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class, ServerConfigManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineMatrixComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = MatrixAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, MatrixDelegate.class).req(TaskManager.class, ServerConfigManager.class));
 
 		return all;
 	}

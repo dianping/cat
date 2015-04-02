@@ -22,8 +22,8 @@ import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
-import com.dianping.cat.report.task.TaskBuilder;
-import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.task.TaskHelper;
 
 public class BugReportBuilder implements TaskBuilder {
 

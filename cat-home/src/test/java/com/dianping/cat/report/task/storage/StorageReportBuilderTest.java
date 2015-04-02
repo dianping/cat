@@ -4,7 +4,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
-import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.task.TaskBuilder;
 
 public class StorageReportBuilderTest extends ComponentTestCase {
 

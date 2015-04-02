@@ -23,8 +23,6 @@ com.dianping.cat.report.page.model.Handler.class,
 
 com.dianping.cat.report.page.dashboard.Handler.class,
 
-com.dianping.cat.report.page.matrix.Handler.class,
-
 com.dianping.cat.report.page.cross.Handler.class,
 
 com.dianping.cat.report.page.cache.Handler.class,

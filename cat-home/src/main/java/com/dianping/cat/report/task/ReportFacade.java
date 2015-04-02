@@ -12,6 +12,7 @@ import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Task;
+import com.dianping.cat.task.TaskBuilder;
 import com.dianping.cat.task.TaskManager;
 
 public class ReportFacade extends ContainerHolder implements LogEnabled, Initializable {

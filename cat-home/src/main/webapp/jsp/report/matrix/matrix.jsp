@@ -3,9 +3,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.matrix.Context"	scope="request" />
-<jsp:useBean id="payload"	type="com.dianping.cat.report.page.matrix.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.matrix.Model"	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.matrix.Context"	scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.matrix.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.matrix.Model"	scope="request" />
 
 <a:report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
