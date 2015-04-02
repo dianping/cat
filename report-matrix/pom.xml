@@ -82,6 +82,22 @@
                </execution>
             </executions>
          </plugin>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>plexus-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
       </plugins>
    </build>
    <properties>
