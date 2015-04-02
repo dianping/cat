@@ -3,6 +3,7 @@ package com.dianping.cat.broker.api.log;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.concurrent.BlockingQueue;
@@ -13,7 +14,9 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Transaction;
 
 public class LogManager {
 
@@ -22,6 +25,10 @@ public class LogManager {
 	private BlockingQueue<Entity> m_datas = new LinkedBlockingQueue<Entity>(2000);
 
 	private int m_error = -1;
+
+	private final static String LOG_BASE_PATH = "/data/appdatas/cat/app-error-log";
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
 
 	public static LogManager getInstance() {
 		if (s_manager == null) {
@@ -37,11 +44,11 @@ public class LogManager {
 
 	public void initialize() {
 		Threads.forGroup("cat").start(new Writer());
+		Threads.forGroup("cat").start(new LogPruner());
 	}
 
 	public void offer(byte[] data) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
-		String date = sdf.format(new Date());
+		String date = m_sdf.format(new Date());
 		boolean result = m_datas.offer(new Entity(date, data));
 
 		if (!result) {
@@ -82,15 +89,12 @@ public class LogManager {
 
 	private class Writer implements Task {
 
-		private String m_baseDir = "/data/appdatas/cat/app-error-log";
-
 		private LinkedHashMap<String, FileOutputStream> m_outs = new LinkedHashMap<String, FileOutputStream>();
 
 		private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 		private void closeLastHour() {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
-			String lastDate = sdf.format(new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000L));
+			String lastDate = m_sdf.format(new Date(System.currentTimeMillis() - 2 * 60 * 60 * 1000L));
 			FileOutputStream out = m_outs.remove(lastDate);
 
 			if (out != null) {
@@ -105,7 +109,7 @@ public class LogManager {
 
 		@Override
 		public String getName() {
-			return "writer-log";
+			return "log-writer";
 		}
 
 		@Override
@@ -134,7 +138,7 @@ public class LogManager {
 				FileOutputStream out = m_outs.get(fileName);
 
 				if (out == null) {
-					File file = new File(m_baseDir, fileName);
+					File file = new File(LOG_BASE_PATH, fileName);
 					File parentFile = file.getParentFile();
 
 					if (!parentFile.exists()) {
@@ -157,6 +161,73 @@ public class LogManager {
 				Cat.logError(e);
 			}
 		}
+	}
+
+	private class LogPruner implements Task {
+
+		private SimpleDateFormat m_fileNameFormat = new SimpleDateFormat("yyyyMMdd");
+
+		private final static long DURATION = TimeHelper.ONE_DAY;
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				long current = System.currentTimeMillis();
+				Date period = queryPeriod(-1);
+				String dayStr = m_fileNameFormat.format(TimeHelper.getCurrentDay());
+				Transaction t = Cat.newTransaction("LogPrune", dayStr);
+
+				try {
+					File dir = new File(LOG_BASE_PATH);
+					File[] files = dir.listFiles();
+
+					for (File file : files) {
+						Date date = m_fileNameFormat.parse(file.getName());
+
+						if (date.before(period)) {
+							file.delete();
+						}
+					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					t.setStatus(e);
+				} finally {
+					t.complete();
+				}
+
+				long duration = System.currentTimeMillis() - current;
+
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		public Date queryPeriod(int months) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			cal.add(Calendar.MONTH, months);
+			return cal.getTime();
+		}
+
+		@Override
+		public String getName() {
+			return "log-pruner";
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 
 }

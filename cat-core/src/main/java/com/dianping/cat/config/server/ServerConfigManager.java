@@ -366,16 +366,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isOffline() {
-		String address = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-		if (address.startsWith("192.168")) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	public boolean isRpcClient(String type) {
 		return "PigeonCall".equals(type) || "Call".equals(type);
 	}

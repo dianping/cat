@@ -246,7 +246,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(final MessageTree tree, final MessageId id) {
 		m_total++;
 		boolean errorFlag = true;
-		int hash = Math.abs((tree.getDomain() + tree.getIpAddress()).hashCode());
+		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress()).hashCode());
 		int index = (int) (hash % m_gzipThreads);
 		MessageItem messageItem = new MessageItem(tree, id);
 		int retryTime = 0;

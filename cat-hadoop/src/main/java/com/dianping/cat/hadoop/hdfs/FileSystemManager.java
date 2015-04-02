@@ -78,10 +78,7 @@ public class FileSystemManager implements Initializable {
 		String authentication = properties.get("hadoop.security.authentication");
 
 		config.setInt("io.file.buffer.size", 8192);
-
-		if (m_configManager.isOffline()) {
-			config.setInt("dfs.replication", 1);
-		}
+		config.setInt("dfs.replication", 1);
 
 		for (Map.Entry<String, String> property : properties.entrySet()) {
 			config.set(property.getKey(), property.getValue());
