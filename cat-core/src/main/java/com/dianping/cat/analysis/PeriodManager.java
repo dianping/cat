@@ -55,7 +55,7 @@ public class PeriodManager implements Task {
 
 	public Period findPeriod(long timestamp) {
 		for (Period period : m_periods) {
-			if (period.getStartTime() == timestamp) {
+			if (period.isIn(timestamp)) {
 				return period;
 			}
 		}

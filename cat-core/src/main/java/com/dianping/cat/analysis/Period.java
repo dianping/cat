@@ -116,6 +116,10 @@ public class Period {
 		return m_startTime;
 	}
 
+	public boolean isIn(long timestamp) {
+		return timestamp >= m_startTime && timestamp < m_endTime;
+	}
+
 	public void start() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
