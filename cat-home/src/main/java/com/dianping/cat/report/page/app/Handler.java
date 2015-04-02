@@ -260,7 +260,8 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, type);
+						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, type,
+						      true);
 
 						if (addCommandResult.getKey()) {
 							setUpdateResult(model, 1);

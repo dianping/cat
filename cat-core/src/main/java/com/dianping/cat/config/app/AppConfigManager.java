@@ -79,12 +79,13 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ACTIVITY_END_INDEX = 1200;
 
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all) throws Exception {
 		Command command = new Command();
 
 		command.setDomain(domain);
 		command.setTitle(title);
 		command.setName(name);
+		command.setAll(all);
 
 		int commandId = 0;
 
@@ -270,6 +271,7 @@ public class AppConfigManager implements Initializable {
 				m_configDao.insert(config);
 				m_configId = config.getId();
 				m_config = DefaultSaxParser.parse(content);
+				refreshData();
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}

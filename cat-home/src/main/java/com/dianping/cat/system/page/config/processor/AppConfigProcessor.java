@@ -13,6 +13,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
@@ -51,7 +52,7 @@ public class AppConfigProcessor extends BaseProcesser {
 	public void buildBatchApiConfig(Payload payload, Model model) {
 		Date start = TimeHelper.getCurrentDay(-1);
 		Date end = TimeHelper.getCurrentDay();
-		EventReport report = m_eventReportService.queryReport("broker-service", start, end);
+		EventReport report = m_eventReportService.queryReport(Constants.BROKER_SERVICE, start, end);
 		EventReportVisitor visitor = new EventReportVisitor();
 
 		visitor.visitEventReport(report);
@@ -76,7 +77,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		for (String path : paths) {
 			try {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
-					m_appConfigManager.addCommand("", path, path, "api");
+					m_appConfigManager.addCommand("", path, path, "api", true);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -160,7 +161,7 @@ public class AppConfigProcessor extends BaseProcesser {
 				try {
 					String type = payload.getType();
 
-					if (m_appConfigManager.addCommand(domain, title, name, type).getKey()) {
+					if (m_appConfigManager.addCommand(domain, title, name, type, payload.isAll()).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);

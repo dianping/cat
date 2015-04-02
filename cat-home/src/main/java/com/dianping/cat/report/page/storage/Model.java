@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
@@ -17,8 +21,10 @@ import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
 
+@ModelMeta(StorageAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
+	@EntityMeta
 	private StorageReport m_report;
 
 	private Set<String> m_operations = new HashSet<String>();

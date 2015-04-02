@@ -43,7 +43,7 @@
 			$("#tabContent-constant-版本").addClass('active');
 			
 			$('#batchInsert').bind("click",function(e){
-				if (confirm("确认要进行批量删除吗？") == true){
+				if (confirm("确认要进行批量添加吗？") == true){
 					var items = document.getElementsByClassName('deleteItem');
 					var content = "";
 					var length = items.length;
