@@ -2,6 +2,9 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
+	<listener>
+		<listener-class>com.dianping.cat.servlet.CatServerListener</listener-class>
+	</listener>
 	<filter>
 		<filter-name>cat-filter</filter-name>
 		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
@@ -10,14 +13,9 @@
 		<filter-name>domain-filter</filter-name>
 		<filter-class>com.dianping.cat.report.view.DomainFilter</filter-class>
 	</filter>
-	<servlet>
-		<servlet-name>cat-servlet</servlet-name>
-		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet>
-		<servlet-name>mvc-servlet</servlet-name>
-		<servlet-class>org.unidal.web.MVC</servlet-class>
+	<filter>
+		<filter-name>mvc-filter</filter-name>
+		<filter-class>org.unidal.web.MVCFilter</filter-class>
 		<init-param>
 			<param-name>cat-client-xml</param-name>
 			<param-value>client.xml</param-value>
@@ -26,8 +24,12 @@
 			<param-name>init-modules</param-name>
 			<param-value>false</param-value>
 		</init-param>
-		<load-on-startup>2</load-on-startup>
-	</servlet>
+		<init-param>
+			<param-name>excludes</param-name>
+			<param-value>/assets/*,/css/*,/doc/*,/img/*,/images/*,/js/*</param-value>
+		</init-param>
+	</filter>
+
 	<filter-mapping>
 		<filter-name>cat-filter</filter-name>
 		<url-pattern>/r/*</url-pattern>
@@ -48,14 +50,11 @@
 		<url-pattern>/jsp/*</url-pattern>
 		<dispatcher>FORWARD</dispatcher>
 	</filter-mapping>
-	<servlet-mapping>
-		<servlet-name>mvc-servlet</servlet-name>
-		<url-pattern>/r/*</url-pattern>
-	</servlet-mapping>
-	<servlet-mapping>
-		<servlet-name>mvc-servlet</servlet-name>
-		<url-pattern>/s/*</url-pattern>
-	</servlet-mapping>
+	<filter-mapping>
+		<filter-name>mvc-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
 	<jsp-config>
 		<taglib>
 			<taglib-uri>/WEB-INF/app.tld</taglib-uri>
