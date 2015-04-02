@@ -26,5 +26,8 @@
 <h4 class="text-success">State实时报表</h4>
 	CAT自身状态监控，包括处理消息数、丢失消息
 <br>
+<h4 class="text-success">Storage实时报表</h4>
+	数据库以及CACHE状态监控，包括访问量，访问延时，错误量，长时间访问量等
+<br>
 
 
