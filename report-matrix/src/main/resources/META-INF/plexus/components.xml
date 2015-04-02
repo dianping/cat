@@ -13,22 +13,148 @@
 			<implementation>com.dianping.cat.report.ReportModule</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.Handler</role>
-			<implementation>com.dianping.cat.report.page.Handler</implementation>
+			<role>com.dianping.cat.report.matrix.Handler</role>
+			<implementation>com.dianping.cat.report.matrix.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.JspViewer</role>
+					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.matrix.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>matrix</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.JspViewer</implementation>
+			<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+			<implementation>com.dianping.cat.report.matrix.service.MatrixReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.HourlyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.DailyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.DailyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.WeeklyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+			<implementation>com.dianping.cat.core.dal.MonthlyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+			<implementation>com.dianping.cat.core.dal.MonthlyReportContentDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.matrix.JspViewer</role>
+			<implementation>com.dianping.cat.report.matrix.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.server.ServerConfigManager</role>
+			<implementation>com.dianping.cat.config.server.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>

@@ -7,6 +7,7 @@
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>report-matrix</artifactId>
+   <packaging>jar</packaging>
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
@@ -65,9 +66,7 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-                        ${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
-                     </manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>

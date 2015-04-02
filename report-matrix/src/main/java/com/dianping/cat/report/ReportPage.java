@@ -5,7 +5,7 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   PAGE("page", "matrix", "Page", "Matrix", false);
+   MATRIX("matrix", "matrix", "Matrix", "Matrix", false);
 
    private String m_name;
 

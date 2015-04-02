@@ -2,7 +2,7 @@
 <wizard package="com.dianping.cat.matrix">
    <webapp package="com.dianping.cat" name="cat" module="false" webres="false" cat="true" plugin-management="false" jstl="true" layout="bootstrap">
       <module name="report" path="r" default="true">
-         <page name="page" title="Page" default="true" path="matrix" standalone="false" template="default">
+         <page name="matrix" title="Matrix" default="true" path="matrix" standalone="false" template="default">
             <description>Matrix</description>
          </page>
       </module>

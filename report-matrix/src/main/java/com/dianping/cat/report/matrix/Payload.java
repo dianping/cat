@@ -16,7 +16,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private String sortBy;
 
 	public Payload() {
-		super(ReportPage.PAGE);
+		super(ReportPage.MATRIX);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	@Override
 	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.PAGE);
+		m_page = ReportPage.getByName(page, ReportPage.MATRIX);
 	}
 
 	public void setSortBy(String sortBy) {

@@ -7,7 +7,7 @@ public class NavigationBar {
    public Page[] getVisiblePages() {
       return new Page[] {
    
-      ReportPage.PAGE
+      ReportPage.MATRIX
 
 		};
    }
