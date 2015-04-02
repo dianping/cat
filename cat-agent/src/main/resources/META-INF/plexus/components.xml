@@ -16,11 +16,6 @@
 		<component>
 			<role>com.dianping.cat.agent.monitor.CatServers</role>
 			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.DataSender</role>
@@ -174,11 +169,6 @@
 		<component>
 			<role>com.dianping.cat.agent.monitor.CatServers</role>
 			<implementation>com.dianping.cat.agent.monitor.CatServers</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.agent.monitor.executors.TaskExecutors</role>
