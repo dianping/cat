@@ -22,19 +22,19 @@ import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 
 public class TopMetric extends BaseVisitor {
 
-	private ExceptionRuleConfigManager m_configManager;
+	private transient ExceptionRuleConfigManager m_configManager;
 
-	private List<String> m_excludedDomains;
+	private transient List<String> m_excludedDomains;
 
-	private String m_currentDomain;
+	private transient String m_currentDomain;
 
-	private Date m_currentStart;
+	private transient Date m_currentStart;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
+	private transient SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
 
 	private MetricItem m_error;
 
-	private long m_currentTime = System.currentTimeMillis();
+	private transient long m_currentTime = System.currentTimeMillis();
 
 	private Integer m_currentMinute;
 
@@ -239,7 +239,7 @@ public class TopMetric extends BaseVisitor {
 
 		private int m_itemSize;
 
-		private Map<String, Map<String, Item>> m_items = new LinkedHashMap<String, Map<String, Item>>();
+		private transient Map<String, Map<String, Item>> m_items = new LinkedHashMap<String, Map<String, Item>>();
 
 		private Map<String, List<Item>> m_result;
 
