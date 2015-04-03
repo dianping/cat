@@ -44,7 +44,7 @@ public class TopMetric extends BaseVisitor {
 
 	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager) {
 		m_configManager = configManager;
-		m_error = new MetricItem(count, tops, m_configManager);
+		m_error = new MetricItem(count, tops);
 	}
 
 	public TopMetric(int count, int tops, ExceptionRuleConfigManager configManager, List<String> excludedDomains) {
@@ -117,7 +117,7 @@ public class TopMetric extends BaseVisitor {
 		m_error.buildDisplayResult();
 	}
 
-	public static class Item {
+	public class Item {
 
 		private static final String ERROR_COLOR = "red";
 
@@ -129,14 +129,11 @@ public class TopMetric extends BaseVisitor {
 
 		private int m_alert;
 
-		private transient ExceptionRuleConfigManager m_configManager;
-
 		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
-		public Item(String domain, double value, ExceptionRuleConfigManager configManager) {
+		public Item(String domain, double value) {
 			m_domain = domain;
 			m_value = value;
-			m_configManager = configManager;
 		}
 
 		private String buildErrorText(String str, String color) {
@@ -237,7 +234,7 @@ public class TopMetric extends BaseVisitor {
 		}
 	}
 
-	public static class MetricItem {
+	public class MetricItem {
 		private int m_minuteCount;
 
 		private int m_itemSize;
@@ -246,17 +243,9 @@ public class TopMetric extends BaseVisitor {
 
 		private Map<String, List<Item>> m_result;
 
-		private transient ExceptionRuleConfigManager m_configManager;
-
 		public MetricItem(int minuteCount, int itemSize) {
 			m_minuteCount = minuteCount;
 			m_itemSize = itemSize;
-		}
-
-		public MetricItem(int minuteCount, int itemSize, ExceptionRuleConfigManager configManager) {
-			m_minuteCount = minuteCount;
-			m_itemSize = itemSize;
-			m_configManager = configManager;
 		}
 
 		public void addError(String minute, String domain, String exception, long count) {
@@ -311,7 +300,7 @@ public class TopMetric extends BaseVisitor {
 			Item item = temp.get(domain);
 
 			if (item == null) {
-				item = new Item(domain, 0, m_configManager);
+				item = new Item(domain, 0);
 				temp.put(domain, item);
 			}
 
