@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.storage;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -20,12 +22,16 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.dal.report.Alteration;
+import com.dianping.cat.home.dal.report.AlterationDao;
+import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.mvc.PayloadNormalizer;
@@ -67,6 +73,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JsonBuilder m_jsonBuilder;
 
+	@Inject
+	private AlterationDao m_alterationDao;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
+
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
 		String format = m_storageGroupConfigManager.getSqlLinkFormat();
@@ -100,6 +111,37 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		return links;
+	}
+
+	private Map<String, List<Alteration>> buildAlterations(Payload payload, Model model) {
+		int minuteCounts = payload.getMinuteCounts();
+		int minute = model.getMinute();
+		long end = payload.getDate() + (minute + 1) * TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND;
+		long start = payload.getDate() + (minute + 1 - minuteCounts) * TimeHelper.ONE_MINUTE;
+		Map<String, List<Alteration>> results = new LinkedHashMap<String, List<Alteration>>();
+
+		try {
+			List<Alteration> alterations = m_alterationDao.findByTypeDruation(new Date(start), new Date(end),
+			      StorageConstants.SQL_TYPE, AlterationEntity.READSET_FULL);
+
+			for (Alteration alteration : alterations) {
+				String date = m_sdf.format(alteration.getDate());
+				List<Alteration> alts = results.get(date);
+
+				if (alts == null) {
+					alts = new ArrayList<Alteration>();
+
+					results.put(date, alts);
+				}
+				alts.add(alteration);
+			}
+		} catch (DalNotFoundException e) {
+			// ignore it
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return results;
 	}
 
 	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
@@ -201,12 +243,14 @@ public class Handler implements PageHandler<Context> {
 			buildReport(payload, model, storageReport);
 			break;
 		case DASHBOARD:
+
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoManager.queryAlertInfos(payload, model);
 
 			model.setLinks(buildAlertLinks(alertInfos, payload.getType()));
 			model.setAlertInfos(alertInfos);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
+			model.setAlterations(buildAlterations(payload, model));
 			break;
 		}
 

@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
@@ -53,12 +54,18 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Map<String, List<String>>> m_links;
 
+	private Map<String, List<Alteration>> m_alterations;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public Map<String, StorageAlertInfo> getAlertInfos() {
 		return m_alertInfos;
+	}
+
+	public Map<String, List<Alteration>> getAlterations() {
+		return m_alterations;
 	}
 
 	public String getAvgTrend() {
@@ -165,6 +172,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
 		m_alertInfos = alertInfos;
+	}
+
+	public void setAlterations(Map<String, List<Alteration>> alterations) {
+		m_alterations = alterations;
 	}
 
 	public void setAvgTrend(String avgTrend) {
