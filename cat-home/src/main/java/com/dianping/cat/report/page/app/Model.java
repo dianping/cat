@@ -21,7 +21,6 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
-import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
@@ -31,6 +30,7 @@ import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.ReportPage;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {

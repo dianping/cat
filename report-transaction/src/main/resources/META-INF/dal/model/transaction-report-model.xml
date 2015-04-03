@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.transaction.model" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true">
+	<entity name="transaction-report" root="true">
+		<attribute name="domain" key="true" />
+		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+	</entity>
+	<entity name="machine">
+		<attribute name="ip" value-type="String" key="true"/>
+		<entity-ref name="type" type="map" names="types" method-find-or-create="true" />
+	</entity>
+	<entity name="type" class-name="TransactionType" dynamic-attributes="true">
+		<attribute name="id" key="true" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+		<attribute name="min" value-type="double" primitive="true" format="0.00" default-value="86400000"/>
+		<attribute name="max" value-type="double" primitive="true" format="0.00" default-value="-1"/>
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
+		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
+		<attribute name="std" value-type="double" primitive="true" format="0.0" />
+		<entity-ref name="name" type="map" method-find-or-create="true" />
+		<entity-ref name="range2" type="map" names="range2s" method-find-or-create="true" render="false"/>
+		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" render="false"/>
+	</entity>
+	<entity name="name" class-name="TransactionName">
+		<attribute name="id" key="true" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" render="false"/>
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+		<attribute name="min" value-type="double" primitive="true" format="0.00" default-value="86400000"/>
+		<attribute name="max" value-type="double" primitive="true" format="0.00" default-value="-1"/>
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
+		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
+		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
+		<attribute name="std" value-type="double" primitive="true" format="0.0" />
+		<entity-ref name="range" type="map" names="ranges" method-find-or-create="true" />
+		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
+		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true"  render="false"/>
+	</entity>
+	<entity name="range">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="sum" value-type="double" primitive="true" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="range2">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="sum" value-type="double" primitive="true" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="duration">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="all-duration">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+</model>
+
