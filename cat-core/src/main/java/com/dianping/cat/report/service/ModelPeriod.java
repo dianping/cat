@@ -4,7 +4,7 @@ import com.dianping.cat.Constants;
 
 
 public enum ModelPeriod {
-	CURRENT, FUTURE, HISTORICAL, LAST;
+	CURRENT, HISTORICAL, LAST;
 
 	public static ModelPeriod getByName(String name, ModelPeriod defaultValue) {
 		for (ModelPeriod period : values()) {
@@ -21,9 +21,7 @@ public enum ModelPeriod {
 
 		current -= current % Constants.HOUR;
 
-		if (timestamp >= current + Constants.HOUR) {
-			return ModelPeriod.FUTURE;
-		} else if (timestamp >= current) {
+		if (timestamp >= current) {
 			return ModelPeriod.CURRENT;
 		} else if (timestamp >= current - Constants.HOUR) {
 			return ModelPeriod.LAST;
@@ -43,18 +41,12 @@ public enum ModelPeriod {
 		case LAST:
 			return current - Constants.HOUR;
 		default:
-			break;
+			return current;
 		}
-
-		throw new RuntimeException("Internal error: can't getStartTime() for historical or future period!");
 	}
 
 	public boolean isCurrent() {
 		return this == CURRENT;
-	}
-
-	public boolean isFuture() {
-		return this == FUTURE;
 	}
 
 	public boolean isHistorical() {

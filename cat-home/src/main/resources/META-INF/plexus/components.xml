@@ -5635,6 +5635,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

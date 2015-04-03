@@ -49,8 +49,7 @@ public class PeriodTask implements Task, LogEnabled {
 
 	public void finish() {
 		try {
-			m_analyzer.doCheckpoint(true);
-			m_analyzer.destroy();
+			m_analyzer.shutdown();
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

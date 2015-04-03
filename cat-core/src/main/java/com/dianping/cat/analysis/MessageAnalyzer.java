@@ -6,6 +6,8 @@ public interface MessageAnalyzer {
 	public void analyze(MessageQueue queue);
 
 	public void destroy();
+	
+	public void shutdown();
 
 	public void doCheckpoint(boolean atEnd);
 
