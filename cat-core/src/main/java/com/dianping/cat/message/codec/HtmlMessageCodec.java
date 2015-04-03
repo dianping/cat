@@ -489,7 +489,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				data = str.getBytes();
 			}
 
-			return m_writer.writeTo(buf, data);
+			return m_writer.writeTo(buf, data, true);
 		}
 	}
 

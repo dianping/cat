@@ -7,15 +7,15 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.analyzer.matrix.MatrixAnalyzer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.matrix.analyzer.MatrixAnalyzer;
+import com.dianping.cat.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.event.task.EventReportBuilder;
 import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;

@@ -495,7 +495,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				data = str.getBytes();
 			}
 
-			return m_writer.writeTo(buf, data);
+			return m_writer.writeTo(buf, data, false);
 		}
 	}
 

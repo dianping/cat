@@ -6,7 +6,7 @@ public class EscapingBufferWriter implements BufferWriter {
 	public static final String ID = "escape";
 
 	@Override
-	public int writeTo(ByteBuf buf, byte[] data) {
+	public int writeTo(ByteBuf buf, byte[] data, boolean pretty) {
 		int len = data.length;
 		int count = len;
 		int offset = 0;
