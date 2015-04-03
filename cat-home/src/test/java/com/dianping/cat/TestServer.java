@@ -43,7 +43,7 @@ public class TestServer extends JettyServer {
 	@Test
 	public void startWebApp() throws Exception {
 		// open the page in the default browser
-		display("/cat/r");
+		display("/cat/r/t");
 		waitForAnyKey();
 	}
 }

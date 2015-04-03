@@ -3,7 +3,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.report.ReportModule;
+import com.dianping.cat.matrix.report.ReportModule;
 
 import org.unidal.lookup.configuration.Component;
 import org.unidal.web.configuration.AbstractWebComponentsConfigurator;

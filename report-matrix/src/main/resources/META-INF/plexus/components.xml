@@ -4,23 +4,23 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<defaultModule>com.dianping.cat.report.ReportModule</defaultModule>
+				<defaultModule>com.dianping.cat.matrix.report.ReportModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.web.mvc.Module</role>
-			<role-hint>com.dianping.cat.report.ReportModule</role-hint>
-			<implementation>com.dianping.cat.report.ReportModule</implementation>
+			<role-hint>com.dianping.cat.matrix.report.ReportModule</role-hint>
+			<implementation>com.dianping.cat.matrix.report.ReportModule</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.matrix.Handler</role>
-			<implementation>com.dianping.cat.report.matrix.Handler</implementation>
+			<role>com.dianping.cat.matrix.Handler</role>
+			<implementation>com.dianping.cat.matrix.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.matrix.JspViewer</role>
+					<role>com.dianping.cat.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -33,8 +33,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
-			<implementation>com.dianping.cat.report.matrix.service.MatrixReportService</implementation>
+			<role>com.dianping.cat.matrix.service.MatrixReportService</role>
+			<implementation>com.dianping.cat.matrix.service.MatrixReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -135,8 +135,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.matrix.JspViewer</role>
-			<implementation>com.dianping.cat.report.matrix.JspViewer</implementation>
+			<role>com.dianping.cat.matrix.JspViewer</role>
+			<implementation>com.dianping.cat.matrix.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -159,7 +159,7 @@
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.analyzer.matrix.MatrixAnalyzer</implementation>
+			<implementation>com.dianping.cat.matrix.analyzer.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -200,7 +200,7 @@
 		<component>
 			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.analyzer.matrix.MatrixDelegate</implementation>
+			<implementation>com.dianping.cat.matrix.analyzer.MatrixDelegate</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.task.TaskManager</role>
@@ -211,8 +211,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
-			<implementation>com.dianping.cat.report.matrix.service.MatrixReportService</implementation>
+			<role>com.dianping.cat.matrix.service.MatrixReportService</role>
+			<implementation>com.dianping.cat.matrix.service.MatrixReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -243,7 +243,7 @@
 		<component>
 			<role>com.dianping.cat.report.service.LocalModelService</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.matrix.service.LocalMatrixService</implementation>
+			<implementation>com.dianping.cat.matrix.service.LocalMatrixService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.ReportBucketManager</role>
@@ -259,13 +259,13 @@
 		<component>
 			<role>com.dianping.cat.report.service.ModelService</role>
 			<role-hint>matrix-historical</role-hint>
-			<implementation>com.dianping.cat.report.matrix.service.HistoricalMatrixService</implementation>
+			<implementation>com.dianping.cat.matrix.service.HistoricalMatrixService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -275,7 +275,7 @@
 		<component>
 			<role>com.dianping.cat.report.service.ModelService</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.matrix.service.CompositeMatrixService</implementation>
+			<implementation>com.dianping.cat.matrix.service.CompositeMatrixService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -292,10 +292,10 @@
 		<component>
 			<role>com.dianping.cat.task.TaskBuilder</role>
 			<role-hint>matrix</role-hint>
-			<implementation>com.dianping.cat.report.matrix.task.MatrixReportBuilder</implementation>
+			<implementation>com.dianping.cat.matrix.task.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.matrix.service.MatrixReportService</role>
 				</requirement>
 			</requirements>
 		</component>

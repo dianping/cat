@@ -4,9 +4,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.analyzer.matrix.MatrixAnalyzerTest;
-import com.dianping.cat.analyzer.matrix.MatrixModelTest;
-import com.dianping.cat.analyzer.matrix.MatrixReportMergerTest;
+import com.dianping.cat.matrix.analyzer.MatrixAnalyzerTest;
+import com.dianping.cat.matrix.analyzer.MatrixModelTest;
+import com.dianping.cat.matrix.analyzer.MatrixReportMergerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({

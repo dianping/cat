@@ -1272,7 +1272,7 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.heavy.HeavyReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.matrix.service.MatrixReportService</role>
+					<role>com.dianping.cat.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
