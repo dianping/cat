@@ -46,7 +46,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMatrixComponents());
 		return all;
 	}
-	
+
 	private Collection<Component> defineMatrixComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = MatrixAnalyzer.ID;
@@ -63,7 +63,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 
-		      	all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
+		all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
 		      .req(ReportBucketManager.class, MatrixReportService.class, ServerConfigManager.class));
@@ -71,11 +71,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
+		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(MatrixReportService.class));
 
-		      all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(MatrixReportService.class));
-		
 		return all;
 	}
+
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
