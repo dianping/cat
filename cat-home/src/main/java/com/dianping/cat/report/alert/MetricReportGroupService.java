@@ -14,9 +14,12 @@ public class MetricReportGroupService {
 	@Inject
 	private ModelService<MetricReport> m_service;
 
-	public MetricReport fetchMetricReport(String product, ModelPeriod period) {
+	private MetricReport fetchMetricReport(String product, ModelPeriod period, int min, int max) {
 		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
 		ModelResponse<MetricReport> response = m_service.invoke(request);
+
+		request.setProperty("min", String.valueOf(min));
+		request.setProperty("max", String.valueOf(max));
 
 		if (response != null) {
 			return response.getModel();
@@ -44,23 +47,32 @@ public class MetricReportGroupService {
 		State type = null;
 
 		if (minute >= duration - 1) {
+			int min = minute - duration + 1;
+			int max = minute;
+
 			type = State.CURRENT;
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
+			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT, min, max);
 
 			if (currentReport != null) {
 				dataReady = true;
 			}
 		} else if (minute < 0) {
+			int min = minute + 60 - duration + 1;
+			int max = minute + 60;
+
 			type = State.LAST;
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+			lastReport = fetchMetricReport(product, ModelPeriod.LAST, min, max);
 
 			if (lastReport != null) {
 				dataReady = true;
 			}
 		} else {
+			int lastLength = duration - minute - 1;
+			int lastMin = 60 - lastLength;
+			
 			type = State.CURRENT_LAST;
-			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT);
-			lastReport = fetchMetricReport(product, ModelPeriod.LAST);
+			currentReport = fetchMetricReport(product, ModelPeriod.CURRENT, 0, minute);
+			lastReport = fetchMetricReport(product, ModelPeriod.LAST, lastMin, 59);
 
 			if (lastReport != null && currentReport != null) {
 				dataReady = true;

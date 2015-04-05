@@ -171,14 +171,14 @@ public class HeartbeatAlert extends BaseAlert {
 		return map;
 	}
 
-	private HeartbeatReport generateCurrentReport(String domain) {
+	private HeartbeatReport generateCurrentReport(String domain, int start, int end) {
 		long currentMill = System.currentTimeMillis();
 		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
 
 		return generateReport(domain, currentHourMill);
 	}
 
-	private HeartbeatReport generateLastReport(String domain) {
+	private HeartbeatReport generateLastReport(String domain, int start, int end) {
 		long currentMill = System.currentTimeMillis();
 		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 
@@ -226,20 +226,29 @@ public class HeartbeatAlert extends BaseAlert {
 		boolean isDataReady = false;
 
 		if (minute >= domainMaxMinute - 1) {
-			currentReport = generateCurrentReport(domain);
+			int min = minute - domainMaxMinute + 1;
+			int max = minute;
+
+			currentReport = generateCurrentReport(domain, min, max);
 
 			if (currentReport != null) {
 				isDataReady = true;
 			}
 		} else if (minute < 0) {
-			lastReport = generateLastReport(domain);
+			int min = minute + 60 - domainMaxMinute + 1;
+			int max = minute + 60;
+
+			lastReport = generateLastReport(domain, min, max);
 
 			if (lastReport != null) {
 				isDataReady = true;
 			}
 		} else {
-			currentReport = generateCurrentReport(domain);
-			lastReport = generateLastReport(domain);
+			int lastLength = domainMaxMinute - minute - 1;
+			int lastMin = 60 - lastLength;
+
+			currentReport = generateCurrentReport(domain, 0, minute);
+			lastReport = generateLastReport(domain, lastMin, 59);
 
 			if (lastReport != null && currentReport != null) {
 				isDataReady = true;
