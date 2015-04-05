@@ -81,7 +81,15 @@
 		<tr>
 		<td><a href="?op=hourlyGraph&type=${payload.type}&domain=${model.domain}&date=${model.date}&id=${payload.id}&ip=${model.ipAddress}&project=${domain.key}${model.customDate}&operations=${payload.operations}" class="storage_graph_link" data-status="${domain.key}">[:: show ::]</a>
 		</td>
-		<td class="left">${domain.key}</td>
+		<td class="left">
+		<c:choose>
+			<c:when test="${domain.key eq 'All'}">${domain.key}</c:when>
+			<c:otherwise>
+				<a href="/cat/r/p?op=view&domain=${domain.key}&ip=All&date=${model.date}&reportType=day" target="_blank">${domain.key}</a>
+			</c:otherwise>
+		</c:choose>
+		
+		</td>
 		<c:forEach var="item" items="${model.currentOperations}">
 			<td class="right">${w:format(domain.value.operations[item].count,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].longCount,'#,###,###,###,##0')}</td>

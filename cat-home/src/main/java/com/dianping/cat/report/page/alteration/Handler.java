@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
@@ -28,13 +29,19 @@ import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class Handler implements PageHandler<Context> {
+
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
 	private AlterationDao m_alterationDao;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	private final static String EMPTY = "N/A";
 
 	private Alteration buildAlteration(Payload payload) {
 		String type = payload.getType();
@@ -46,6 +53,7 @@ public class Handler implements PageHandler<Context> {
 		String group = payload.getGroup();
 		String content = payload.getContent();
 		String url = payload.getUrl();
+		int status = payload.getStatus();
 
 		Date date = payload.getAlterationDate();
 		Alteration alt = new Alteration();
@@ -59,6 +67,7 @@ public class Handler implements PageHandler<Context> {
 		alt.setContent(content);
 		alt.setHostname(hostname);
 		alt.setDate(date);
+		alt.setStatus(status);
 		try {
 			alt.setUrl(URLDecoder.decode(url, "UTF-8"));
 		} catch (UnsupportedEncodingException e) {
@@ -105,7 +114,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (action) {
 		case INSERT:
-			if (!isArguComplete(payload)) {
+			if (isIllegalArgs(payload)) {
 				setInsertResult(model, 2);
 			} else {
 				Alteration alt = buildAlteration(payload);
@@ -125,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case VIEW:
-			List<Alteration> alts;
+			List<Alteration> alts = new ArrayList<Alteration>();
 			Date startTime = payload.getStartTime();
 			Date endTime = payload.getEndTime();
 			String[] altTypes = payload.getAltTypeArray();
@@ -141,9 +150,10 @@ public class Handler implements PageHandler<Context> {
 					alts = m_alterationDao.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,
 					      AlterationEntity.READSET_FULL);
 				}
+			} catch (DalNotFoundException e) {
+				// ignore it
 			} catch (Exception e) {
 				Cat.logError(e);
-				break;
 			}
 			model.setAlterationMinuites(generateAlterationMinutes(alts));
 			break;
@@ -157,24 +167,67 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public boolean isArguComplete(Payload payload) {
+	public boolean isIllegalArgs(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {
-			return false;
+			return true;
+		} else if (StorageConstants.SQL_TYPE.equals(payload.getType())) {
+			boolean ret = normalizeArgs(payload);
+
+			if (!ret) {
+				return true;
+			}
+		} else {
+			if (StringUtils.isEmpty(payload.getTitle())) {
+				return true;
+			}
+			if (StringUtils.isEmpty(payload.getDomain())) {
+				return true;
+			}
+			if (StringUtils.isEmpty(payload.getHostname())) {
+				return true;
+			}
+			if (payload.getAlterationDate() == null) {
+				return true;
+			}
+			if (StringUtils.isEmpty(payload.getUser())) {
+				return true;
+			}
+			if (StringUtils.isEmpty(payload.getContent())) {
+				return true;
+			}
 		}
+		return false;
+	}
+
+	private boolean normalizeArgs(Payload payload) {
 		if (StringUtils.isEmpty(payload.getTitle())) {
 			return false;
 		}
-		if (StringUtils.isEmpty(payload.getDomain())) {
+		boolean domainEmpty = StringUtils.isEmpty(payload.getDomain());
+		boolean hostEmpty = StringUtils.isEmpty(payload.getHostname());
+		boolean ipEmpty = StringUtils.isEmpty(payload.getIp());
+
+		if (ipEmpty && domainEmpty && hostEmpty) {
 			return false;
-		}
-		if (StringUtils.isEmpty(payload.getHostname())) {
-			return false;
+		} else {
+			if (domainEmpty) {
+				payload.setDomain(EMPTY);
+			}
+			if (hostEmpty) {
+				payload.setHostname(EMPTY);
+			}
+			if (ipEmpty) {
+				payload.setIp(EMPTY);
+			}
 		}
 		if (payload.getAlterationDate() == null) {
-			return false;
+			payload.setAlterationDate(m_sdf.format(new Date()));
 		}
 		if (StringUtils.isEmpty(payload.getUser())) {
-			return false;
+			payload.setUrl(EMPTY);
+		}
+		if (StringUtils.isEmpty(payload.getUrl())) {
+			payload.setUrl(EMPTY);
 		}
 		if (StringUtils.isEmpty(payload.getContent())) {
 			return false;
@@ -198,7 +251,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public class AlterationDomain {
+	public static class AlterationDomain {
 
 		private String m_name;
 
@@ -239,7 +292,7 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
-	public class AlterationMinute {
+	public static class AlterationMinute {
 
 		private String m_date;
 
@@ -276,7 +329,5 @@ public class Handler implements PageHandler<Context> {
 		public String getDate() {
 			return m_date;
 		}
-
 	}
-
 }
