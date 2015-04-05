@@ -36,14 +36,16 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
+		int min = payload.getMin();
+		int max = payload.getMax();
 		String xml = null;
 
 		try {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip);
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
 
 			xml = filter.buildXml(report);
 		} catch (Exception e) {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip);
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
 
 			xml = filter.buildXml(report);
 		}
@@ -94,11 +96,17 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 
 		private String m_type;
 
-		public TransactionReportFilter(String type, String name, String ip) {
+		private int m_min;
+
+		private int m_max;
+
+		public TransactionReportFilter(String type, String name, String ip, int min, int max) {
 			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_type = type;
 			m_name = name;
 			m_ipAddress = ip;
+			m_min = min;
+			m_max = max;
 		}
 
 		@Override
@@ -133,7 +141,13 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		@Override
 		public void visitRange(Range range) {
 			if (m_type != null && m_name != null) {
-				super.visitRange(range);
+				int minute = range.getValue();
+
+				if (m_min == -1 && m_max == -1) {
+					super.visitRange(range);
+				} else if (minute <= m_max && minute >= m_min) {
+					super.visitRange(range);
+				}
 			}
 		}
 
@@ -156,6 +170,7 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 				super.visitType(type);
 			}
 		}
+
 	}
 
 }
