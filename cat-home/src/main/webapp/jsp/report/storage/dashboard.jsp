@@ -22,6 +22,7 @@
   	
   	<c:set var="linkMap" value="${model.links}" />
   
+  <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
 		<table  class="smallTable" style="float:left" border="1">
 		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
@@ -39,7 +40,7 @@
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -50,10 +51,10 @@
 							<tr>
 							<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${machine_entry.value.level == 1}">
-									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></span>
+									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
-									<span class="text-danger"><strong><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></strong></span>
+									<span class="text-danger"><strong><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}' target='_blank'>${machine_entry.key}</a></strong></span>
 								</c:if>
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
@@ -115,6 +116,53 @@
 		</c:forEach>
 		</table>
 	</c:forEach>
+	</span>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<table class="table table-hover table-striped table-condensed table-bordered center"  style="width:100%">
+		<c:if test="${w:size(model.alterations) > 0}">
+			<tr class="text-success">
+				<th class="center">时间</th>
+				<th class="center">数据库</th>
+				<th class="center">主机名</th>
+				<th class="center">IP</th>
+				<th class="center">标题</th>
+				<th class="center">内容</th>
+				<th class="center">状态</th>
+			</tr>
+			<c:forEach var="entry" items="${model.alterations}">
+				<tr><td rowspan="${w:size(entry.value)}" class="text-danger center" style="vertical-align:middle;">${entry.key}</td>
+				<c:forEach var="alt" items="${entry.value}" varStatus="index">
+					<c:if test="${index.index != 0 }">
+						<tr>
+					</c:if>
+						<td>${alt.domain}</td>
+						<td>${alt.hostname}</td>
+						<td>${alt.ip}</td>
+						<td>${alt.title}</td>
+						<td>${alt.content}</td>
+						<td>
+							<c:if test="${alt.status == 0}" >
+								<button class="btn btn-xs btn-success">
+									<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+								</button>
+							</c:if>
+							<c:if test="${alt.status != 0}" >
+								<button class="btn btn-xs btn-danger">
+									<i class="ace-icon glyphicon glyphicon-remove bigger-120 btn-danger"></i>
+								</button>
+							</c:if>
+						</td>
+					<c:if test="${index.index != 0 }">
+						</tr>
+					</c:if>	
+				</c:forEach>
+				</tr>
+			</c:forEach>
+		</c:if>
+	</table>
 </jsp:body>
 </a:report>
 

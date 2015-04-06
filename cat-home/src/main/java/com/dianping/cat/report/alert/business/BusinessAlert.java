@@ -157,20 +157,25 @@ public class BusinessAlert extends BaseAlert {
 		int nowMinute = calAlreadyMinute();
 		AlarmRule monitorConfigs = buildMonitorConfigs(productId, configs);
 		int maxMinute = monitorConfigs.calMaxRuleMinute();
-		MetricReportGroup reportGroup = m_service.prepareDatas(productId, nowMinute, maxMinute);
 
-		if (reportGroup.isDataReady()) {
-			for (MetricItemConfig config : configs) {
-				try {
-					Map<MetricType, List<Config>> itemConfig = monitorConfigs.getConfigs().get(config.getId());
+		if (maxMinute > 0) {
+			MetricReportGroup reportGroup = m_service.prepareDatas(productId, nowMinute, maxMinute);
 
-					processMetricItemConfig(config, nowMinute, itemConfig, productLine, reportGroup);
-				} catch (Exception e) {
-					Cat.logError(e);
+			if (reportGroup.isDataReady()) {
+				for (MetricItemConfig config : configs) {
+					try {
+						Map<MetricType, List<Config>> itemConfig = monitorConfigs.getConfigs().get(config.getId());
+
+						processMetricItemConfig(config, nowMinute, itemConfig, productLine, reportGroup);
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
 				}
+			} else {
+				Cat.logEvent("AlertDataNotFount", getName());
 			}
 		} else {
-			Cat.logEvent("AlertDataNotFount", getName(), Event.SUCCESS, null);
+			Cat.logEvent("NotAlertRule", productId);
 		}
 	}
 
