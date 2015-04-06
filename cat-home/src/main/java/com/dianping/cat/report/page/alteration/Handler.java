@@ -195,6 +195,10 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(payload.getContent())) {
 				return true;
 			}
+			if ("puppet".equals(payload.getType())) {
+				return true;
+			}
+
 		}
 		return false;
 	}
