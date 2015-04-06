@@ -16,10 +16,11 @@ public class MetricReportGroupService {
 
 	private MetricReport fetchMetricReport(String product, ModelPeriod period, int min, int max) {
 		ModelRequest request = new ModelRequest(product, period.getStartTime()).setProperty("requireAll", "ture");
-		ModelResponse<MetricReport> response = m_service.invoke(request);
 
 		request.setProperty("min", String.valueOf(min));
 		request.setProperty("max", String.valueOf(max));
+
+		ModelResponse<MetricReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			return response.getModel();

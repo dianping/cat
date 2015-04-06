@@ -175,19 +175,19 @@ public class HeartbeatAlert extends BaseAlert {
 		long currentMill = System.currentTimeMillis();
 		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
 
-		return generateReport(domain, currentHourMill);
+		return generateReport(domain, currentHourMill, start, end);
 	}
 
 	private HeartbeatReport generateLastReport(String domain, int start, int end) {
 		long currentMill = System.currentTimeMillis();
 		long lastHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR - TimeHelper.ONE_HOUR;
 
-		return generateReport(domain, lastHourMill);
+		return generateReport(domain, lastHourMill, start, end);
 	}
 
-	private HeartbeatReport generateReport(String domain, long date) {
-		ModelRequest request = new ModelRequest(domain, date)//
-		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+	private HeartbeatReport generateReport(String domain, long date, int start, int end) {
+		ModelRequest request = new ModelRequest(domain, date).setProperty("min", String.valueOf(start))
+		      .setProperty("max", String.valueOf(end)).setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 
 		if (m_heartbeatService.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
