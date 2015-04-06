@@ -10,7 +10,9 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <a:config>
-			<h3 class="text-center text-success">编辑Storage监控规则</h3>
+			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
+		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+			<h3 class="text-center text-success">编辑${name}监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
@@ -103,10 +105,10 @@ function update() {
 			$("#name").val("All");
 		}
 		$('#application_config').addClass('active open');
-		<c:if test="${empty payload.type or payload.type eq 'database'}">
+		<c:if test="${empty payload.type or payload.type eq 'SQL'}">
 			$('#storageDatabaseRule').addClass('active');
 		</c:if>
-		<c:if test="${payload.type eq 'cache'}">
+		<c:if test="${payload.type eq 'Cache'}">
 			$('#storageCacheRule').addClass('active');
 		</c:if>
 		$(document).delegate("#ruleSubmitButton","click",function(){
