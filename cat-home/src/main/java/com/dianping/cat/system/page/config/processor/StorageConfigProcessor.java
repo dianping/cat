@@ -5,6 +5,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
+import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -21,10 +22,12 @@ public class StorageConfigProcessor extends BaseProcesser {
 		String type = payload.getType();
 		StorageRuleConfigManager configManager = null;
 
-		if ("cache".equals(type)) {
+		if (StorageConstants.CACHE_TYPE.equals(type)) {
 			configManager = m_cacheConfigManager;
-		} else {
+		} else if (StorageConstants.SQL_TYPE.equals(type)) {
 			configManager = m_SQLConfigManager;
+		} else {
+			throw new RuntimeException("Error type: " + type);
 		}
 
 		switch (action) {

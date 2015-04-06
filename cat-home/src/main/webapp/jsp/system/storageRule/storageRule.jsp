@@ -10,20 +10,17 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 	
 <a:config>
+			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
+		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
 			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
 				<tr>
-					<c:if test="${empty payload.type or payload.type eq 'database'}">
-						<th width="20%"  class="center">数据库</th>
-					</c:if>
-					<c:if test="${payload.type eq 'cache'}">
-						<th width="20%"  class="center">缓存</th>
-					</c:if>
+					<th width="20%"  class="center">${name}</th>
 					<th width="20%"  class="center">机器</th>
 					<th width="20%"  class="center">方法</th>
 					<th width="20%" class="center">监控项</th>
 					<th width="10%" class="center">与条件</th>
-					<th width="10%" class="center">操作 <a href="?op=storageRuleUpdate" class="btn btn-primary btn-xs" >
+					<th width="10%" class="center">操作 <a href="?op=storageRuleUpdate&type=${payload.type}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
@@ -53,9 +50,9 @@
 						</c:otherwise>
 						</c:choose>
 						</td>
-						<td><a href="?op=storageRuleUpdate&ruleId=${item.id}" class="btn btn-primary btn-xs">
+						<td><a href="?op=storageRuleUpdate&ruleId=${item.id}&type=${payload.type}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=storageRuleDelete&ruleId=${item.id}" class="btn btn-danger btn-xs delete" >
+						<a href="?op=storageRuleDelete&ruleId=${item.id}&type=${payload.type}" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach></tbody>
@@ -64,10 +61,10 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
-			<c:if test="${empty payload.type or payload.type eq 'database'}">
+			<c:if test="${payload.type eq 'SQL'}">
 				$('#storageDatabaseRule').addClass('active');
 			</c:if>
-			<c:if test="${payload.type eq 'cache'}">
+			<c:if test="${payload.type eq 'Cache'}">
 				$('#storageCacheRule').addClass('active');
 			</c:if>
  		});

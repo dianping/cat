@@ -10,7 +10,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 
 <a:report title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&type=${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -21,6 +21,8 @@
   	</div>
   	
   	<c:set var="linkMap" value="${model.links}" />
+  	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
+  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
   
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
@@ -28,7 +30,7 @@
 		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
 		<c:if test="${empty entry.value.storages}">
 			<tr><td>
-				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">访问正常</button>
+				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">${name}访问正常</button>
 			</td></tr>
 		</c:if>
 		<c:forEach var="storage" items="${entry.value.storages}">
@@ -43,7 +45,7 @@
 					</c:if>
 					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if> --%>
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong><c:if test="${payload.type eq 'SQL'}">数据库</c:if><c:if test="${payload.type eq 'Cache'}">缓存集群</c:if>"：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>${name}：[&nbsp;<a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}&type=${payload.type}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -54,10 +56,10 @@
 							<tr>
 							<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${machine_entry.value.level == 1}">
-									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}' target='_blank'>${machine_entry.key}</a></span>
+									<span class="text-warning"><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
-									<span class="text-danger"><strong><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}' target='_blank'>${machine_entry.key}</a></strong></span>
+									<span class="text-danger"><strong><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></strong></span>
 								</c:if>
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
@@ -128,7 +130,7 @@
 		<c:if test="${w:size(model.alterations) > 0}">
 			<tr class="text-success">
 				<th class="center">时间</th>
-				<th class="center"><c:if test="${payload.type eq 'SQL'}">数据库</c:if><c:if test="${payload.type eq 'Cache'}">缓存集群</c:if></th>
+				<th class="center">${name}</th>
 				<th class="center">主机名</th>
 				<th class="center">IP</th>
 				<th class="center">标题</th>

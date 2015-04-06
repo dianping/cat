@@ -30,7 +30,6 @@ import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.storage.alert.entity.Storage;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.page.storage.Model;
 import com.dianping.cat.report.page.storage.Payload;
 import com.dianping.cat.report.page.storage.StorageConstants;
@@ -207,8 +206,7 @@ public class StorageAlertInfoManager implements Initializable {
 		}
 
 		private void buildAlertInfos(Date start, Date end, String type) throws DalException {
-			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.STORAGE_SQL.getName(),
-			      AlertEntity.READSET_FULL);
+			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type, AlertEntity.READSET_FULL);
 			Map<Long, StorageAlertInfo> alertInfos = m_builder.buildStorageAlertInfos(alerts);
 
 			for (Entry<Long, StorageAlertInfo> entry : alertInfos.entrySet()) {

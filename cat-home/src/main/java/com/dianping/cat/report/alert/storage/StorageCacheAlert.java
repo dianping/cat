@@ -9,7 +9,7 @@ public class StorageCacheAlert extends AbstractStorageAlert {
 	@Inject
 	private StorageCacheRuleConfigManager m_configManager;
 
-	public static final String ID = AlertType.STORAGE_SQL.getName();
+	public static final String ID = AlertType.STORAGE_CACHE.getName();
 
 	@Override
 	public String getName() {
