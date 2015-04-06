@@ -162,10 +162,8 @@ public class LogManager {
 			}
 		}
 	}
-
+	
 	private class LogPruner implements Task {
-
-		private SimpleDateFormat m_fileNameFormat = new SimpleDateFormat("yyyyMMdd");
 
 		private final static long DURATION = TimeHelper.ONE_DAY;
 
@@ -176,7 +174,7 @@ public class LogManager {
 			while (active) {
 				long current = System.currentTimeMillis();
 				Date period = queryPeriod(-1);
-				String dayStr = m_fileNameFormat.format(TimeHelper.getCurrentDay());
+				String dayStr = m_sdf.format(TimeHelper.getCurrentDay());
 				Transaction t = Cat.newTransaction("LogPrune", dayStr);
 
 				try {
@@ -184,7 +182,7 @@ public class LogManager {
 					File[] files = dir.listFiles();
 
 					for (File file : files) {
-						Date date = m_fileNameFormat.parse(file.getName());
+						Date date = m_sdf.parse(file.getName());
 
 						if (date.before(period)) {
 							file.delete();
@@ -227,7 +225,6 @@ public class LogManager {
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 }
