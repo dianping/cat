@@ -39,8 +39,11 @@
 			<c:set var="minute" value="${times[1]}" />
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
+					<%-- <c:if test="${payload.type eq 'SQL'}">
+					</c:if>
+					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if> --%>
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong><c:if test="${payload.type eq 'SQL'}">数据库</c:if><c:if test="${payload.type eq 'Cache'}">缓存集群</c:if>"：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -125,7 +128,7 @@
 		<c:if test="${w:size(model.alterations) > 0}">
 			<tr class="text-success">
 				<th class="center">时间</th>
-				<th class="center">数据库</th>
+				<th class="center"><c:if test="${payload.type eq 'SQL'}">数据库</c:if><c:if test="${payload.type eq 'Cache'}">缓存集群</c:if></th>
 				<th class="center">主机名</th>
 				<th class="center">IP</th>
 				<th class="center">标题</th>
@@ -194,6 +197,12 @@
 		$('.position').hide();
 		$('.switch').hide();
 		$('#Dashboard_report').addClass('active open');
-		$('#dashbord_database').addClass('active');
+		<c:if test="${payload.type eq 'SQL'}">
+			$('#dashbord_database').addClass('active');
+		</c:if>
+		<c:if test="${payload.type eq 'Cache'}">
+			$('#dashbord_cache').addClass('active');
+		</c:if>
+		
 	});
 </script>

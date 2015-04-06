@@ -2796,6 +2796,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageCacheContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.ContactorManager</implementation>
 		</component>
@@ -2884,6 +2894,11 @@
 			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageCacheDecorator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</implementation>
 		</component>
@@ -2917,14 +2932,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.spliter.SpliterManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
@@ -3223,6 +3230,34 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.storage.StorageCacheAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.StorageCacheAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -5687,9 +5722,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
 				</requirement>
 			</requirements>
 		</component>

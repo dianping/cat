@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -45,7 +46,6 @@ public class StorageAlertInfoManager implements Initializable {
 	@Inject
 	private StorageAlertInfoBuilder m_builder;
 
-	@Inject
 	private StorageAlertInfoRTContainer m_alertInfoRTContainer;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
@@ -95,9 +95,9 @@ public class StorageAlertInfoManager implements Initializable {
 		}
 	}
 
-	private Map<String, StorageAlertInfo> queryAlertInfos(long start, long end, int tops) {
+	private Map<String, StorageAlertInfo> queryAlertInfos(long start, long end, int tops, String type) {
 		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
-		Pair<Map<Long, StorageAlertInfo>, List<Long>> pair = queryFromMemory(start, end);
+		Pair<Map<Long, StorageAlertInfo>, List<Long>> pair = queryFromMemory(start, end, type);
 		List<Long> historyTimes = pair.getValue();
 
 		alertInfos.putAll(pair.getKey());
@@ -108,8 +108,8 @@ public class StorageAlertInfoManager implements Initializable {
 			      - TimeHelper.ONE_SECOND);
 
 			try {
-				List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(historyStart, historyEnd,
-				      AlertType.STORAGE_SQL.getName(), AlertEntity.READSET_FULL);
+				List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(historyStart, historyEnd, type,
+				      AlertEntity.READSET_FULL);
 
 				alertInfos.putAll(m_builder.buildStorageAlertInfos(alerts));
 			} catch (DalNotFoundException e) {
@@ -126,7 +126,7 @@ public class StorageAlertInfoManager implements Initializable {
 		long end = payload.getDate() + model.getMinute() * TimeHelper.ONE_MINUTE;
 		long start = end - (minuteCounts - 1) * TimeHelper.ONE_MINUTE;
 		Map<String, StorageAlertInfo> results = new LinkedHashMap<String, StorageAlertInfo>();
-		Map<String, StorageAlertInfo> alertInfos = queryAlertInfos(start, end, payload.getTopCounts());
+		Map<String, StorageAlertInfo> alertInfos = queryAlertInfos(start, end, payload.getTopCounts(), payload.getType());
 
 		checkAlertInfos(alertInfos, start, end, payload);
 
@@ -139,10 +139,10 @@ public class StorageAlertInfoManager implements Initializable {
 		return results;
 	}
 
-	public Pair<Map<Long, StorageAlertInfo>, List<Long>> queryFromMemory(long start, long end) {
+	public Pair<Map<Long, StorageAlertInfo>, List<Long>> queryFromMemory(long start, long end, String type) {
 		Map<Long, StorageAlertInfo> alertInfos = new LinkedHashMap<Long, StorageAlertInfo>();
 		List<Long> historyMinutes = new LinkedList<Long>();
-		Set<Long> timeKeys = m_alertInfoRTContainer.queryExistingMinutes();
+		Set<Long> timeKeys = m_alertInfoRTContainer.queryExistingMinutes(type);
 		long earliest = Long.MAX_VALUE;
 
 		if (!timeKeys.isEmpty()) {
@@ -150,7 +150,7 @@ public class StorageAlertInfoManager implements Initializable {
 		}
 
 		for (long s = start; s <= end; s += TimeHelper.ONE_MINUTE) {
-			StorageAlertInfo alertInfo = m_alertInfoRTContainer.find(s);
+			StorageAlertInfo alertInfo = m_alertInfoRTContainer.find(type, s);
 
 			if (alertInfo != null) {
 				alertInfos.put(s, alertInfo);
@@ -190,13 +190,8 @@ public class StorageAlertInfoManager implements Initializable {
 
 			try {
 				try {
-					List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.STORAGE_SQL.getName(),
-					      AlertEntity.READSET_FULL);
-					Map<Long, StorageAlertInfo> alertInfos = m_builder.buildStorageAlertInfos(alerts);
-
-					for (Entry<Long, StorageAlertInfo> entry : alertInfos.entrySet()) {
-						m_alertInfoRTContainer.offer(entry.getValue());
-					}
+					buildAlertInfos(start, end, StorageConstants.SQL_TYPE);
+					buildAlertInfos(start, end, StorageConstants.CACHE_TYPE);
 				} catch (DalNotFoundException e) {
 					// ignore
 				} catch (Exception e) {
@@ -208,6 +203,16 @@ public class StorageAlertInfoManager implements Initializable {
 				Cat.logError(e);
 			} finally {
 				t.complete();
+			}
+		}
+
+		private void buildAlertInfos(Date start, Date end, String type) throws DalException {
+			List<Alert> alerts = m_alertDao.queryAlertsByTimeCategory(start, end, AlertType.STORAGE_SQL.getName(),
+			      AlertEntity.READSET_FULL);
+			Map<Long, StorageAlertInfo> alertInfos = m_builder.buildStorageAlertInfos(alerts);
+
+			for (Entry<Long, StorageAlertInfo> entry : alertInfos.entrySet()) {
+				m_alertInfoRTContainer.offer(type, entry.getValue());
 			}
 		}
 

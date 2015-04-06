@@ -56,6 +56,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, List<Alteration>> m_alterations;
 
+	private String m_distributionChart;
+
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
