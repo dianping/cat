@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.app.processor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -15,6 +14,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
@@ -38,6 +38,9 @@ public class CrashLogProcessor {
 	@Inject
 	private PayloadNormalizer m_normalizer;
 
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
+
 	private String APP_VERSIONS = "appVersions";
 
 	private String LEVELS = "levels";
@@ -45,38 +48,6 @@ public class CrashLogProcessor {
 	private String MODULES = "modules";
 
 	private String PLATFORM_VERSIONS = "platformVersions";
-
-	private List<String> CRASH_LOG_DOMAINS = Arrays.asList("AndroidCrashLog", "iOSCrashLog", "MerchantAndroidCrashLog",
-	      "MerchantIOSCrashLog");
-
-	private Set<String> findOrCreate(String key, Map<String, Set<String>> map) {
-		Set<String> value = map.get(key);
-
-		if (value == null) {
-			value = new HashSet<String>();
-			map.put(key, value);
-		}
-		return value;
-	}
-
-	private void sortFields(Map<String, Set<String>> fieldsMap, FieldsInfo fieldsInfo) {
-
-		Comparator<String> comparator = new Comparator<String>() {
-			public int compare(String s1, String s2) {
-				return s2.compareTo(s1);
-			}
-		};
-		List<String> v = new ArrayList<String>(fieldsMap.get(APP_VERSIONS));
-		List<String> l = new ArrayList<String>(fieldsMap.get(LEVELS));
-		List<String> m = new ArrayList<String>(fieldsMap.get(MODULES));
-		List<String> p = new ArrayList<String>(fieldsMap.get(PLATFORM_VERSIONS));
-
-		Collections.sort(v, comparator);
-		Collections.sort(p, comparator);
-		Collections.sort(m);
-		Collections.sort(l);
-		fieldsInfo.setAppVersions(v).setPlatVersions(p).setModules(m).setLevels(l);
-	}
 
 	private FieldsInfo buildFeildsInfo(ProblemReport report) {
 		FieldsInfo fieldsInfo = new FieldsInfo();
@@ -97,20 +68,32 @@ public class CrashLogProcessor {
 		return fieldsInfo;
 	}
 
-	private String queryDomain(Payload payload) {
-		String domain = "";
+	private ProblemStatistics buildProblemStatistics(String query, ProblemReport report) {
+		ProblemStatistics problemStatistics = new ProblemStatistics();
 
-		if (StringUtils.isNotEmpty(payload.getQuery1())) {
-			domain = Splitters.by(";").split(payload.getQuery1()).get(0);
-		}
+		if (StringUtils.isNotEmpty(query)) {
+			List<String> querys = Splitters.by(";").split(query);
 
-		if (StringUtils.isEmpty(domain)) {
-			return CRASH_LOG_DOMAINS.get(0);
-		} else if (CRASH_LOG_DOMAINS.contains(domain)) {
-			return domain;
-		} else {
-			throw new RuntimeException("Unknown crash log domain: " + domain);
+			if (querys.size() == 5) {
+				problemStatistics.setAppVersions(Splitters.by(":").noEmptyItem().split(querys.get(1)));
+				problemStatistics.setPlatformVersions(Splitters.by(":").noEmptyItem().split(querys.get(2)));
+				problemStatistics.setModules(Splitters.by(":").noEmptyItem().split(querys.get(3)));
+				problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
+			}
 		}
+		problemStatistics.visitProblemReport(report);
+
+		return problemStatistics;
+	}
+
+	private Set<String> findOrCreate(String key, Map<String, Set<String>> map) {
+		Set<String> value = map.get(key);
+
+		if (value == null) {
+			value = new HashSet<String>();
+			map.put(key, value);
+		}
+		return value;
 	}
 
 	private ProblemReport getHourlyReport(Payload payload, String domain) {
@@ -154,6 +137,23 @@ public class CrashLogProcessor {
 		model.setProblemReport(report);
 	}
 
+	private String queryDomain(Payload payload) {
+		Set<String> crashLogDomains = m_serverConfigManager.getCrashLogs();
+		String domain = "";
+
+		if (StringUtils.isNotEmpty(payload.getQuery1())) {
+			domain = Splitters.by(";").split(payload.getQuery1()).get(0);
+		}
+
+		if (StringUtils.isEmpty(domain)) {
+			return crashLogDomains.iterator().next();
+		} else if (crashLogDomains.contains(domain)) {
+			return domain;
+		} else {
+			throw new RuntimeException("Unknown crash log domain: " + domain);
+		}
+	}
+
 	private ProblemReport showSummarizeReport(Model model, Payload payload, String domain) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
@@ -162,22 +162,23 @@ public class CrashLogProcessor {
 		return problemReport;
 	}
 
-	private ProblemStatistics buildProblemStatistics(String query, ProblemReport report) {
-		ProblemStatistics problemStatistics = new ProblemStatistics();
+	private void sortFields(Map<String, Set<String>> fieldsMap, FieldsInfo fieldsInfo) {
 
-		if (StringUtils.isNotEmpty(query)) {
-			List<String> querys = Splitters.by(";").split(query);
-
-			if (querys.size() == 5) {
-				problemStatistics.setAppVersions(Splitters.by(":").noEmptyItem().split(querys.get(1)));
-				problemStatistics.setPlatformVersions(Splitters.by(":").noEmptyItem().split(querys.get(2)));
-				problemStatistics.setModules(Splitters.by(":").noEmptyItem().split(querys.get(3)));
-				problemStatistics.setLevels(Splitters.by(":").noEmptyItem().split(querys.get(4)));
+		Comparator<String> comparator = new Comparator<String>() {
+			public int compare(String s1, String s2) {
+				return s2.compareTo(s1);
 			}
-		}
-		problemStatistics.visitProblemReport(report);
+		};
+		List<String> v = new ArrayList<String>(fieldsMap.get(APP_VERSIONS));
+		List<String> l = new ArrayList<String>(fieldsMap.get(LEVELS));
+		List<String> m = new ArrayList<String>(fieldsMap.get(MODULES));
+		List<String> p = new ArrayList<String>(fieldsMap.get(PLATFORM_VERSIONS));
 
-		return problemStatistics;
+		Collections.sort(v, comparator);
+		Collections.sort(p, comparator);
+		Collections.sort(m);
+		Collections.sort(l);
+		fieldsInfo.setAppVersions(v).setPlatVersions(p).setModules(m).setLevels(l);
 	}
 
 	public class FieldsInfo {
@@ -189,26 +190,6 @@ public class CrashLogProcessor {
 		private List<String> m_modules;
 
 		private List<String> m_levels;
-
-		public FieldsInfo setPlatVersions(List<String> platVersions) {
-			m_platVersions = platVersions;
-			return this;
-		}
-
-		public FieldsInfo setAppVersions(List<String> appVersions) {
-			m_appVersions = appVersions;
-			return this;
-		}
-
-		public FieldsInfo setModules(List<String> modules) {
-			m_modules = modules;
-			return this;
-		}
-
-		public FieldsInfo setLevels(List<String> levels) {
-			m_levels = levels;
-			return this;
-		}
 
 		public List<String> getAppVersions() {
 			return m_appVersions;
@@ -224,6 +205,26 @@ public class CrashLogProcessor {
 
 		public List<String> getPlatVersions() {
 			return m_platVersions;
+		}
+
+		public FieldsInfo setAppVersions(List<String> appVersions) {
+			m_appVersions = appVersions;
+			return this;
+		}
+
+		public FieldsInfo setLevels(List<String> levels) {
+			m_levels = levels;
+			return this;
+		}
+
+		public FieldsInfo setModules(List<String> modules) {
+			m_modules = modules;
+			return this;
+		}
+
+		public FieldsInfo setPlatVersions(List<String> platVersions) {
+			m_platVersions = platVersions;
+			return this;
 		}
 	}
 }
