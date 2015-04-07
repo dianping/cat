@@ -282,6 +282,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_crashLogs.add("iOSCrashLog");
 		m_crashLogs.add("MerchantAndroidCrashLog");
 		m_crashLogs.add("MerchantIOSCrashLog");
+		m_crashLogs.add("ApolloAndroidCrashLog");
+		m_crashLogs.add("ApolloIOSCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {

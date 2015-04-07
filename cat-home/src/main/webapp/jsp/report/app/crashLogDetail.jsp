@@ -41,6 +41,8 @@
 				平台类型</td><td><select id="platformType" style="width: 200px;">
 					<option value='AndroidCrashLog'>Android (主App)</option>
 					<option value='iOSCrashLog'>iOS (主App)</option>
+					<option value='ApolloAndroidCrashLog'>Android (阿波罗)</option>
+					<option value='ApolloIOSCrashLog'>iOS (阿波罗)</option>
 					<option value='MerchantAndroidCrashLog'>Android (点评管家)</option>
 					<option value='MerchantIOSCrashLog'>iOS (点评管家)</option>
 					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary btn-sm "
