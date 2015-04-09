@@ -61,6 +61,53 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		m_logger = logger;
 	}
 
+	private void handleCommand(int cityId, int operatorId, String[] items, String command) {
+		String urlBack = command;
+		List<Pair<Integer, String>> commands = queryCommands(command);
+
+		if (!commands.isEmpty()) {
+			for (Pair<Integer, String> entry : commands) {
+				AppDataProto appData = new AppDataProto();
+				int commandId = entry.getKey();
+				String formatCommand = entry.getValue();
+
+				appData.setTimestamp(System.currentTimeMillis());
+				appData.setCommand(commandId);
+				appData.setNetwork(Integer.parseInt(items[1]));
+				appData.setVersion(Integer.parseInt(items[2]));
+				appData.setConnectType(Integer.parseInt(items[3]));
+				appData.setCode(Integer.parseInt(items[5]));
+				appData.setPlatform(Integer.parseInt(items[6]));
+				appData.setRequestByte(Integer.parseInt(items[7]));
+				appData.setResponseByte(Integer.parseInt(items[8]));
+				appData.setResponseTime(Integer.parseInt(items[9]));
+				appData.setCity(cityId);
+				appData.setOperator(operatorId);
+				appData.setCount(1);
+
+				int responseTime = appData.getResponseTime();
+
+				if (responseTime < 60 * 1000 && responseTime >= 0) {
+					offerQueue(appData);
+
+					Cat.logEvent("Command", formatCommand, Event.SUCCESS, null);
+				} else if (responseTime > 0) {
+					Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
+
+					if (tooLong != null) {
+						appData.setCommand(tooLong);
+						offerQueue(appData);
+					}
+					Cat.logEvent("Batch.ResponseTooLong", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
+				} else {
+					Cat.logEvent("Batch.ResponseTimeError", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
+				}
+			}
+		} else {
+			Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
+		}
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "batch")
@@ -128,62 +175,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String[] items = record.split("\t");
 
 		if (items.length == 10) {
-			AppDataProto appData = new AppDataProto();
-
 			try {
-				String url = URLDecoder.decode(items[4], "utf-8").toLowerCase();
-				String urlBack = url;
-				int index = url.indexOf("?");
+				String command = URLDecoder.decode(items[4], "utf-8").toLowerCase();
+				int index = command.indexOf("?");
 
 				if (index > 0) {
-					url = url.substring(0, index);
+					command = command.substring(0, index);
 				}
-				Integer command = m_appConfigManager.getCommands().get(url);
-
-				if (command == null) {
-					url = m_parser.parse(url);
-
-					if (url != null) {
-						command = m_appConfigManager.getCommands().get(url);
-					}
-				}
-
-				if (command != null) {
-					// appData.setTimestamp(Long.parseLong(items[0]));
-					appData.setTimestamp(System.currentTimeMillis());
-					appData.setCommand(command);
-					appData.setNetwork(Integer.parseInt(items[1]));
-					appData.setVersion(Integer.parseInt(items[2]));
-					appData.setConnectType(Integer.parseInt(items[3]));
-					appData.setCode(Integer.parseInt(items[5]));
-					appData.setPlatform(Integer.parseInt(items[6]));
-					appData.setRequestByte(Integer.parseInt(items[7]));
-					appData.setResponseByte(Integer.parseInt(items[8]));
-					appData.setResponseTime(Integer.parseInt(items[9]));
-					appData.setCity(cityId);
-					appData.setOperator(operatorId);
-					appData.setCount(1);
-
-					int responseTime = appData.getResponseTime();
-
-					if (responseTime < 60 * 1000 && responseTime >= 0) {
-						offerQueue(appData);
-
-						Cat.logEvent("Command", url, Event.SUCCESS, null);
-					} else if (responseTime > 0) {
-						Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
-
-						if (tooLong != null) {
-							appData.setCommand(tooLong);
-							offerQueue(appData);
-						}
-						Cat.logEvent("Batch.ResponseTooLong", url, Event.SUCCESS, String.valueOf(responseTime));
-					} else {
-						Cat.logEvent("Batch.ResponseTimeError", url, Event.SUCCESS, String.valueOf(responseTime));
-					}
-				} else {
-					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
-				}
+				handleCommand(cityId, operatorId, items, command);
 			} catch (Exception e) {
 				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
@@ -211,83 +210,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private List<Pair<Integer, String>> queryCommands(String url) {
-		List<Pair<Integer, String>> ids = new ArrayList<Pair<Integer, String>>();
-		Integer command = m_appConfigManager.getCommands().get(url);
-
-		if (command != null) {
-			ids.add(new Pair<Integer, String>(command, url));
-		}
-
-		url = m_parser.parse(url);
-
-		if (url != null) {
-			command = m_appConfigManager.getCommands().get(url);
-
-			if (command != null) {
-				ids.add(new Pair<Integer, String>(command, url));
-			}
-		}
-
-		return ids;
-	}
-
 	private void processVersion3Record(int cityId, int operatorId, String record) {
 		String[] items = record.split("\t");
 
 		if (items.length >= 10) {
 			try {
 				String command = URLDecoder.decode(items[4], "utf-8").toLowerCase();
-				String urlBack = command;
 				int index = command.indexOf("?");
 
 				if (index > 0) {
 					command = command.substring(0, index);
 				}
-				List<Pair<Integer, String>> commands = queryCommands(command);
-
-				if (!commands.isEmpty()) {
-					for (Pair<Integer, String> entry : commands) {
-						AppDataProto appData = new AppDataProto();
-						int commandId = entry.getKey();
-						String formatCommand = entry.getValue();
-
-						appData.setTimestamp(System.currentTimeMillis());
-						appData.setCommand(commandId);
-						appData.setNetwork(Integer.parseInt(items[1]));
-						appData.setVersion(Integer.parseInt(items[2]));
-						appData.setConnectType(Integer.parseInt(items[3]));
-						appData.setCode(Integer.parseInt(items[5]));
-						appData.setPlatform(Integer.parseInt(items[6]));
-						appData.setRequestByte(Integer.parseInt(items[7]));
-						appData.setResponseByte(Integer.parseInt(items[8]));
-						appData.setResponseTime(Integer.parseInt(items[9]));
-						appData.setCity(cityId);
-						appData.setOperator(operatorId);
-						appData.setCount(1);
-
-						int responseTime = appData.getResponseTime();
-
-						if (responseTime < 60 * 1000 && responseTime >= 0) {
-							offerQueue(appData);
-
-							Cat.logEvent("Command", formatCommand, Event.SUCCESS, null);
-						} else if (responseTime > 0) {
-							Integer tooLong = m_appConfigManager.getCommands().get(TOO_LONG);
-
-							if (tooLong != null) {
-								appData.setCommand(tooLong);
-								offerQueue(appData);
-							}
-							Cat.logEvent("Batch.ResponseTooLong", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
-						} else {
-							Cat.logEvent("Batch.ResponseTimeError", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
-						}
-					}
-
-				} else {
-					Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
-				}
+				handleCommand(cityId, operatorId, items, command);
 			} catch (Exception e) {
 				Cat.logError(e);
 				m_logger.error(e.getMessage(), e);
@@ -325,6 +259,28 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 		return success;
+	}
+
+	private List<Pair<Integer, String>> queryCommands(String url) {
+		List<Pair<Integer, String>> ids = new ArrayList<Pair<Integer, String>>();
+		Integer command = m_appConfigManager.getCommands().get(url);
+
+		if (command != null) {
+			ids.add(new Pair<Integer, String>(command, url));
+		}
+
+		if (url.startsWith("http")) {
+			url = m_parser.parse(url);
+
+			if (url != null) {
+				command = m_appConfigManager.getCommands().get(url);
+
+				if (command != null) {
+					ids.add(new Pair<Integer, String>(command, url));
+				}
+			}
+		}
+		return ids;
 	}
 
 	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
