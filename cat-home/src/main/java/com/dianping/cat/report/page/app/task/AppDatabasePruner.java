@@ -36,7 +36,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	private static final int DURATION = -3;
+	private static final int DURATION = -2;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
