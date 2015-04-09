@@ -32,6 +32,7 @@ import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
 public class ServerConfigManager implements Initializable, LogEnabled {
+
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	private ServerConfig m_config;
@@ -103,6 +104,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 
 		return "";
+	}
+
+	public Set<String> getCrashLogs() {
+		return m_crashLogs;
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -332,12 +337,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isSendMachine() {
-		if (m_config != null) {
-			return m_config.isSendMachine();
-		} else {
-			return false;
-		}
+	public boolean isCacheTransaction(String type) {
+		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
 	}
 
 	public boolean isCrashLog(String domain) {
@@ -376,12 +377,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
-	public boolean isSQLTransaction(String type) {
-		return "SQL".equals(type);
+	public boolean isSendMachine() {
+		if (m_config != null) {
+			return m_config.isSendMachine();
+		} else {
+			return false;
+		}
 	}
 
-	public boolean isCacheTransaction(String type) {
-		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
+	public boolean isSQLTransaction(String type) {
+		return "SQL".equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {
