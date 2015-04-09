@@ -280,7 +280,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (url.startsWith("http")) {
 			String formatUrl = m_parser.parse(url);
 
-			if (url != null) {
+			if (formatUrl != null) {
 				command = m_appConfigManager.getCommands().get(formatUrl);
 
 				if (command != null) {
