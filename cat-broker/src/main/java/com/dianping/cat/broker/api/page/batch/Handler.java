@@ -62,6 +62,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void handleCommand(int cityId, int operatorId, String[] items, String command) {
+		//hack for some issue url
+		if (command.startsWith("http://m.dianping.com/shopping/mallshoplist/")) {
+			command = "http://m.dianping.com/shopping/mallshoplist/";
+		}
+		if (command.startsWith("http://m.dianping.com/shopping/mallpromolist/")) {
+			command = "http://m.dianping.com/shopping/mallpromolist/";
+		}
+
 		String urlBack = command;
 		List<Pair<Integer, String>> commands = queryCommands(command);
 
