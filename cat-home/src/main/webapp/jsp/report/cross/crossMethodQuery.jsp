@@ -16,8 +16,7 @@
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".title").hide();
-		$(".nav").hide();
+		$(".breadcrumbs .nav").hide();
 		$('#contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 100,
