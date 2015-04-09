@@ -151,15 +151,12 @@ public class Handler implements PageHandler<Context> {
 			model.setReport(historyMethodReport);
 			model.setMethodInfo(historyMethodInfo);
 			break;
-
 		case METHOD_QUERY:
 			String method = payload.getMethod();
 			CrossMethodVisitor info = new CrossMethodVisitor(method);
-			String reportType = payload.getReportType();
 			CrossReport queryReport = null;
 
-			if (reportType != null
-			      && (reportType.equals("day") || reportType.equals("week") || reportType.equals("month"))) {
+			if (isHistory(payload)) {
 				queryReport = getSummarizeReport(payload);
 			} else {
 				queryReport = getHourlyReport(payload);
@@ -170,6 +167,12 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean isHistory(Payload payload) {
+		String rawDate = payload.getRawDate();
+
+		return rawDate != null && rawDate.length() == 8;
 	}
 
 	private void normalize(Model model, Payload payload) {
