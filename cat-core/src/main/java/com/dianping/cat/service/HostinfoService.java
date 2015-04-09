@@ -76,6 +76,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
+		refresh();
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {

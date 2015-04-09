@@ -129,6 +129,7 @@ public class ProjectService implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
+			refresh();
 		}
 	}
 

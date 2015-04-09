@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private void handleCommand(int cityId, int operatorId, String[] items, String command) {
-		//hack for some issue url
+		// hack for some issue url
 		if (command.startsWith("http://m.dianping.com/shopping/mallshoplist/")) {
 			command = "http://m.dianping.com/shopping/mallshoplist/";
 		}
@@ -278,15 +278,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 
 		if (url.startsWith("http")) {
-			url = m_parser.parse(url);
+			String formatUrl = m_parser.parse(url);
 
 			if (url != null) {
-				command = m_appConfigManager.getCommands().get(url);
+				command = m_appConfigManager.getCommands().get(formatUrl);
 
 				if (command != null) {
-					ids.add(new Pair<Integer, String>(command, url));
+					ids.add(new Pair<Integer, String>(command, formatUrl));
 				}
 			}
+		}
+
+		if (ids.size() > 1) {
+			Cat.logEvent("ManyCommand", url);
 		}
 		return ids;
 	}
