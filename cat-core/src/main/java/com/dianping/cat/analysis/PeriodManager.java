@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -46,7 +47,8 @@ public class PeriodManager implements Task {
 			Period period = m_periods.get(i);
 
 			if (period.getStartTime() <= timestamp) {
-				period.finish();
+				Threads.forGroup("cat").start(new EndTaskThread(period));
+
 				m_periods.remove(i);
 				break;
 			}
@@ -115,6 +117,29 @@ public class PeriodManager implements Task {
 
 			m_periods.add(period);
 			period.start();
+		}
+	}
+
+	private class EndTaskThread implements Task {
+
+		private Period m_period;
+
+		public EndTaskThread(Period period) {
+			m_period = period;
+		}
+
+		@Override
+		public String getName() {
+			return "End-Consumer-Task";
+		}
+
+		@Override
+		public void run() {
+			m_period.finish();
+		}
+
+		@Override
+		public void shutdown() {
 		}
 	}
 

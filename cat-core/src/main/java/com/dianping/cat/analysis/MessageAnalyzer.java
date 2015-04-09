@@ -7,8 +7,6 @@ public interface MessageAnalyzer {
 
 	public void destroy();
 	
-	public void shutdown();
-
 	public void doCheckpoint(boolean atEnd);
 
 	public long getStartTime();

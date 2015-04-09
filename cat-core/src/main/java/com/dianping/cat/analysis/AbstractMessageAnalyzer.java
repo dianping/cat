@@ -66,8 +66,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 				break;
 			}
 		}
-		
-		doCheckpoint(true);
 	}
 
 	@Override
