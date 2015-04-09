@@ -271,6 +271,8 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 				if (policy.forDatabase()) {
 					storeDatabase(startTime, reports);
+					
+					Thread.sleep(100); // make database not busy
 				}
 			}
 			t.setStatus(Message.SUCCESS);
