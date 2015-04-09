@@ -133,6 +133,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		m_invalids.add("data:");
 		m_invalids.add(".js");
 		m_invalids.add("OTHERS");
+		m_invalids.add("hit-");
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -384,7 +385,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		}
 
 		public void setInvalidatePaths(Set<String> invalidatePaths) {
-			this.m_invalidatePaths = invalidatePaths;
+			m_invalidatePaths = invalidatePaths;
 		}
 
 		@Override
