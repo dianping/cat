@@ -365,7 +365,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		public void visitName(EventName name) {
 			String id = name.getId();
 
-			if (id.indexOf("jpg") > -1 && id.indexOf("http") > -1 && id.indexOf("file") > -1 && id.indexOf("zip") > -1) {
+			if (id.indexOf("jpg") > -1 || id.indexOf("http") > -1 || id.indexOf("file") > -1 || id.indexOf("zip") > -1) {
 				invalidatePaths.add(id);
 			} else {
 				paths.add(id);

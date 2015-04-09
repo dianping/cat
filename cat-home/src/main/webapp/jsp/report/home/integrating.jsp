@@ -36,33 +36,18 @@
        <dependency>
              <groupId>com.dianping.zebra</groupId>
              <artifactId>zebra-ds-monitor-client</artifactId>
-             <version>2.5.9</version>
+             <version>2.7.2</version>
        </dependency>
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-core</artifactId>   
-             <version>1.2.2</version>
+             <version>1.2.7</version>
              </dependency>
        <dependency>
              <groupId>com.dianping.cat</groupId>
              <artifactId>cat-client</artifactId>   
-             <version>1.2.2</version>
+             <version>1.2.7</version>
              </dependency>
-       <dependency>
-              <groupId>com.dianping</groupId>
-              <artifactId>avatar-dao</artifactId>
-             <version>2.1.7</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping.dpsf</groupId>
-              <artifactId>dpsf-net</artifactId>
-             <version>2.3.8</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping</groupId>
-              <artifactId>avatar-cache</artifactId>
-             <version>2.5.10</version>
-       </dependency> 
   </xmp>
   <p class="detailContent">      1、更新了这些JAR，默认就会URL，Pigeon，SQL的调用情况，业务可以根据项目需要选择是否升级这些JAR。  </p>
   <p  class="detailContent text-danger"> 2、SQL调用依赖需要加载一个配置文件 /config/spring/common/appcontext-ds-monitor.xml，这个文件是在zebra-ds-monitor-client这个jar包下。
