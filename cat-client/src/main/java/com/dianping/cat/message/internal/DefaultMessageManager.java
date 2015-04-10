@@ -253,13 +253,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx != null) {
-			if (ctx.m_totalDurationInMicros == 0) {
-				ctx.m_stack.clear();
-				ctx.m_knownExceptions.clear();
-				m_context.remove();
-			} else {
-				ctx.m_knownExceptions.clear();
-			}
+// yj.huang: for accuracy of log view, we do not remove context with zero duration.
+//			if (ctx.m_totalDurationInMicros == 0) {
+//				ctx.m_stack.clear();
+//				m_context.remove();
+//			}
+            ctx.m_knownExceptions.clear();
 		}
 	}
 
