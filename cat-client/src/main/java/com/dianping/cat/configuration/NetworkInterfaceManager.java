@@ -90,7 +90,7 @@ public enum NetworkInterfaceManager {
 
 			try {
 				for (NetworkInterface ni : nis) {
-					if (ni.isUp()) {
+					if (ni.isUp() && !ni.isLoopback()) {
 						addresses.addAll(Collections.list(ni.getInetAddresses()));
 					}
 				}
