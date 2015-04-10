@@ -69,7 +69,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
-	private int m_gzipThreads = 24;
+	private int m_gzipThreads = 36;
 
 	private int m_gzipMessageSize = 5000;
 
@@ -251,7 +251,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		MessageItem messageItem = new MessageItem(tree, id);
 		int retryTime = 0;
 
-		while (retryTime < m_gzipThreads) {
+		while (retryTime < 2) {
 			LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get((index + retryTime) % m_gzipThreads);
 			boolean result = queue.offer(messageItem);
 
