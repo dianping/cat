@@ -26,6 +26,7 @@ public class UrlParser implements Initializable {
 		m_domains.add("www.dianping.com");
 		m_domains.add("tgapp.dianping.com");
 		m_domains.add("evt.dianping.com");
+		m_domains.add("h5.dianping.com");
 	}
 
 }

@@ -56,6 +56,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private static final String VERSION_THREE = "3";
 
+	private int m_index = 0;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -261,6 +263,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
 				String content = payload.getContent();
+
+				if (content.contains("h5.dianping.com") && m_index < 100) {
+					m_logger.info(content);
+					m_index++;
+				}
 
 				processVersion3Content(cityId, operatorId, content);
 				success = true;
