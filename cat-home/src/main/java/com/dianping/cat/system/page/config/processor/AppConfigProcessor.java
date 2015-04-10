@@ -377,7 +377,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 		private boolean invalidate(String name) {
 			for (String str : m_invalids) {
-				if (name.indexOf(str) > -1) {
+				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
 					return true;
 				}
 			}

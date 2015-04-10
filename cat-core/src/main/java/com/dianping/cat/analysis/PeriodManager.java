@@ -9,9 +9,12 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.analysis.PeriodStrategy;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class PeriodManager implements Task {
+	private PeriodStrategy m_strategy;
 
 	private List<Period> m_periods = new ArrayList<Period>();
 
@@ -26,29 +29,25 @@ public class PeriodManager implements Task {
 	@Inject
 	private Logger m_logger;
 
-	public static long MINUTE = 60 * 1000L;
-
-	public static long DURATION = 60 * MINUTE;
-
-	public static long EXTRATIME = 2 * MINUTE;
+	public static long EXTRATIME = 3 * 60 * 1000L;
 
 	public PeriodManager(long duration, MessageAnalyzerManager analyzerManager,
 	      ServerStatisticManager serverStateManager, Logger logger) {
+		m_strategy = new PeriodStrategy(duration, EXTRATIME, EXTRATIME);
 		m_active = true;
 		m_analyzerManager = analyzerManager;
 		m_serverStateManager = serverStateManager;
 		m_logger = logger;
 	}
 
-	private void endPeriod(long timestamp) {
+	private void endPeriod(long startTime) {
 		int len = m_periods.size();
 
 		for (int i = 0; i < len; i++) {
 			Period period = m_periods.get(i);
 
-			if (period.getStartTime() <= timestamp) {
-				Threads.forGroup("cat").start(new EndTaskThread(period));
-
+			if (period.isIn(startTime)) {
+				period.finish();
 				m_periods.remove(i);
 				break;
 			}
@@ -71,27 +70,23 @@ public class PeriodManager implements Task {
 	}
 
 	public void init() {
-		long curTime = System.currentTimeMillis();
-		long currentDuration = curTime - curTime % DURATION;
+		long startTime = m_strategy.next(System.currentTimeMillis());
 
-		startPeriod(currentDuration);
+		startPeriod(startTime);
 	}
 
 	@Override
 	public void run() {
 		while (m_active) {
 			try {
-				long curTime = System.currentTimeMillis();
+				long now = System.currentTimeMillis();
+				long value = m_strategy.next(now);
 
-				try {
-					long currentDuration = curTime - curTime % DURATION;
-					long currentMinute = curTime - curTime % MINUTE;
-
-					startPeriod(currentDuration);
-					startPeriod(currentDuration + DURATION);
-					endPeriod(currentMinute - DURATION - EXTRATIME);
-				} catch (Exception e) {
-					Cat.logError(e);
+				if (value > 0) {
+					startPeriod(value);
+				} else if (value < 0) {
+					// last period is over,make it asynchronous
+					Threads.forGroup("cat").start(new EndTaskThread(-value));
 				}
 			} catch (Throwable e) {
 				Cat.logError(e);
@@ -111,21 +106,19 @@ public class PeriodManager implements Task {
 	}
 
 	private void startPeriod(long startTime) {
-		if (findPeriod(startTime) == null) {
-			long endTime = startTime + DURATION;
-			Period period = new Period(startTime, endTime, m_analyzerManager, m_serverStateManager, m_logger);
+		long endTime = startTime + m_strategy.getDuration();
+		Period period = new Period(startTime, endTime, m_analyzerManager, m_serverStateManager, m_logger);
 
-			m_periods.add(period);
-			period.start();
-		}
+		m_periods.add(period);
+		period.start();
 	}
 
 	private class EndTaskThread implements Task {
 
-		private Period m_period;
+		private long m_startTime;
 
-		public EndTaskThread(Period period) {
-			m_period = period;
+		public EndTaskThread(long startTime) {
+			m_startTime = startTime;
 		}
 
 		@Override
@@ -135,12 +128,11 @@ public class PeriodManager implements Task {
 
 		@Override
 		public void run() {
-			m_period.finish();
+			endPeriod(m_startTime);
 		}
 
 		@Override
 		public void shutdown() {
 		}
 	}
-
 }

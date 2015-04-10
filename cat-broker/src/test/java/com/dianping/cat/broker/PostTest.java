@@ -17,6 +17,14 @@ public class PostTest {
 
 	public String m_online = "114.80.165.63";
 
+	
+	@Test
+	public void testBatch3() throws UnsupportedEncodingException {
+		String content = "1428807825974	1	711	0	http://h5.dianping.com/tuan/wallet/user/mywallet.html?token=cc5a2a6ffdec74923138334b724bf48c633efdaa3c5ac4e57a0bfc44781b84a4&dpshare=0&product=dpapp	200	1	0	0	223";
+		System.out.println("http://114.80.165.63/broker-service/api/batch?v=3&c=" + URLEncoder.encode(content, "utf-8"));
+	}
+
+	
 	@Test
 	public void testBatch2() throws UnsupportedEncodingException {
 		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
@@ -94,8 +102,8 @@ public class PostTest {
 
 	private void read(String url) throws Exception {
 		InputStream input = Urls.forIO().connectTimeout(1000).openStream(url);
-		Files.forIO().readFrom(input);
-
+		String content = Files.forIO().readFrom(input,"utf-8");
+		System.out.println(content);
 	}
 
 	@Test
