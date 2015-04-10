@@ -124,28 +124,30 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 		return metrics;
 	}
 
-	public int queryUnit(String groupName, String metricName) {
-		Group group = m_config.findGroup(groupName);
+    public String queryUnitName(String groupName, String metricName, String defaultUnitName) {
+        Group group = m_config.findGroup(groupName);
+        if (group != null) {
+            Metric metric = group.findMetric(metricName);
+            if (metric != null) {
+                return metric.getUnit();
+            }
+        }
+        return defaultUnitName;
+    }
 
-		if (group != null) {
-			Metric metric = group.findMetric(metricName);
-
-			if (metric != null) {
-				String metricUnit = metric.getUnit();
-
-				if ("K".equals(metricUnit)) {
-					return K;
-				} else if ("M".equals(metricUnit)) {
-					return K * K;
-				} else if ("G".equals(metricUnit)) {
-					return K * K * K;
-				} else {
-					return Integer.parseInt(metricUnit);
-				}
-			}
-		}
-		return 1;
-	}
+    public int queryUnit(String groupName, String metricName) {
+        String unitName = queryUnitName(groupName, metricName, null);
+        if (null != unitName) {
+            if ("K".equals(unitName) || "KB".equals(unitName)) {
+                return K;
+            } else if ("M".equals(unitName) || "MB".equals(unitName)) {
+                return K * K;
+            } else if ("G".equals(unitName) || "GB".equals(unitName)) {
+                return K * K * K;
+            }
+        }
+        return 1;
+    }
 
 	public List<String> sortGroupNames(List<String> originGroupNames) {
 		List<Group> groups = new ArrayList<Group>();
