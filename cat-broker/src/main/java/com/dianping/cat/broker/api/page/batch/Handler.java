@@ -139,8 +139,15 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			StringBuffer sb = new StringBuffer("parameter ");
 
 			for (Entry<String, String[]> entry : maps.entrySet()) {
-				sb.append(entry.getKey()).append(":").append(entry.getValue()).append(",");
+				String[] value = entry.getValue();
+				sb.append(entry.getKey()).append(":").append(value[0]).append(",");
 				i++;
+
+				if (value.length > 1) {
+					for (int j = 0; j < value.length; i++) {
+						m_logger.info("more " + value[j]);
+					}
+				}
 			}
 
 			if (i > 2) {
