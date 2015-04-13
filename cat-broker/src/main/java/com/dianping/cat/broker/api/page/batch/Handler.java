@@ -140,13 +140,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			for (Entry<String, String[]> entry : maps.entrySet()) {
 				String[] value = entry.getValue();
-				StringBuilder values = new StringBuilder();
 
-				for (int j = 0; j < value.length; i++) {
-					sb.append(value[j]).append("$");
-				}
-
-				sb.append(entry.getKey()).append(":").append(values).append(",");
+				sb.append(entry.getKey()).append(":").append(value[0]).append(",");
+				i++;
 			}
 
 			if (i > 2) {
