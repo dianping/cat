@@ -145,7 +145,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				if (value.length > 1) {
 					for (int j = 0; j < value.length; i++) {
-						m_logger.info("more " + value[j]);
+						m_logger.info("more " + entry.getKey() + ":" + value[j]);
 					}
 				}
 			}
