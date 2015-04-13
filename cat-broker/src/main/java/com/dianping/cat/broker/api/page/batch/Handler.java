@@ -136,18 +136,17 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			int i = 0;
 			@SuppressWarnings("unchecked")
 			Map<String, String[]> maps = request.getParameterMap();
-			StringBuffer sb = new StringBuffer("parameter ");
+			StringBuffer sb = new StringBuffer();
 
 			for (Entry<String, String[]> entry : maps.entrySet()) {
 				String[] value = entry.getValue();
-				sb.append(entry.getKey()).append(":").append(value[0]).append(",");
-				i++;
+				StringBuilder values = new StringBuilder();
 
-				if (value.length > 1) {
-					for (int j = 0; j < value.length; i++) {
-						m_logger.info("more " + entry.getKey() + ":" + value[j]);
-					}
+				for (int j = 0; j < value.length; i++) {
+					sb.append(value[j]).append("$");
 				}
+
+				sb.append(entry.getKey()).append(":").append(values).append(",");
 			}
 
 			if (i > 2) {
