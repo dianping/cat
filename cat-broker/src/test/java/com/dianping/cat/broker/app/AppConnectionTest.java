@@ -19,7 +19,7 @@ public class AppConnectionTest {
 			Thread.sleep(5000);
 		}
 	}
-
+	
 	public void SendData(String host) throws Exception {
 		List<String> urls = new ArrayList<String>();
 		String url_pre = "http://" + host + "/broker-service/api/connection";

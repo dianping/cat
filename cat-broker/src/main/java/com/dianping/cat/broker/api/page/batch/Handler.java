@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -131,6 +133,21 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
+
+		try {
+			@SuppressWarnings("unchecked")
+			Map<String, String[]> maps = request.getParameterMap();
+			StringBuffer sb = new StringBuffer("parameter:");
+
+			for (Entry<String, String[]> entry : maps.entrySet()) {
+				sb.append(entry.getKey()).append(",");
+			}
+
+			m_logger.info("parameter:" + sb.toString());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 		boolean success = true;
