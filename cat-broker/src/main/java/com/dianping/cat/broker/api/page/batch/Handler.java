@@ -138,12 +138,16 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			@SuppressWarnings("unchecked")
 			Map<String, String[]> maps = request.getParameterMap();
 			StringBuffer sb = new StringBuffer("parameter:");
+			int i = 0;
 
 			for (Entry<String, String[]> entry : maps.entrySet()) {
 				sb.append(entry.getKey()).append(",");
+				i++;
 			}
 
-			m_logger.info("parameter:" + sb.toString());
+			if (i > 2) {
+				m_logger.info("parameter:" + sb.toString());
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
