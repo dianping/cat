@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -131,27 +129,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		HttpServletRequest request = ctx.getHttpServletRequest();
 		HttpServletResponse response = ctx.getHttpServletResponse();
-
-		try {
-			int i = 0;
-			@SuppressWarnings("unchecked")
-			Map<String, String[]> maps = request.getParameterMap();
-			StringBuffer sb = new StringBuffer();
-
-			for (Entry<String, String[]> entry : maps.entrySet()) {
-				String[] value = entry.getValue();
-
-				sb.append(entry.getKey()).append(":").append(value[0]).append(",");
-				i++;
-			}
-
-			if (i > 2) {
-				m_logger.info("parameter:" + sb.toString());
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 		boolean success = true;
@@ -262,9 +239,22 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
+	private String parseContent(Payload payload) {
+		String content = payload.getContent();
+		String product = payload.getProduct();
+
+		if (StringUtils.isNotEmpty(product) && product.startsWith("dpapp")) {
+			Cat.logEvent("ErrorLog", "fix-version-" + payload.getVersion());
+			return content + product.substring(5);
+		} else {
+			return content;
+		}
+	}
+
 	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
 		boolean success = false;
 		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
+		String content = parseContent(payload);
 
 		if (VERSION_TWO.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
@@ -272,7 +262,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
 
 				processVersion2Content(cityId, operatorId, content);
 				success = true;
@@ -283,7 +272,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
 
 				processVersion3Content(cityId, operatorId, content);
 				success = true;
