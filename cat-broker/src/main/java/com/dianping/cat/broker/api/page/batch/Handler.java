@@ -58,8 +58,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private static final String VERSION_THREE = "3";
 
-	private int m_index = 0;
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -135,13 +133,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		HttpServletResponse response = ctx.getHttpServletResponse();
 
 		try {
+			int i = 0;
 			@SuppressWarnings("unchecked")
 			Map<String, String[]> maps = request.getParameterMap();
-			StringBuffer sb = new StringBuffer("parameter:");
-			int i = 0;
+			StringBuffer sb = new StringBuffer("parameter ");
 
 			for (Entry<String, String[]> entry : maps.entrySet()) {
-				sb.append(entry.getKey()).append(",");
+				sb.append(entry.getKey()).append(":").append(entry.getValue()).append(",");
 				i++;
 			}
 
@@ -284,11 +282,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
 				String content = payload.getContent();
-
-				if (content.contains("h5.dianping.com") && m_index < 100) {
-					m_logger.info(content);
-					m_index++;
-				}
 
 				processVersion3Content(cityId, operatorId, content);
 				success = true;
