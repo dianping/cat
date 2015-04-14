@@ -56,8 +56,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private static final String VERSION_THREE = "3";
 
-	private int m_index = 0;
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -241,9 +239,22 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
+	private String parseContent(Payload payload) {
+		String content = payload.getContent();
+		String product = payload.getProduct();
+
+		if (StringUtils.isNotEmpty(product) && product.startsWith("dpapp")) {
+			Cat.logEvent("ErrorLog", "fix-version-" + payload.getVersion());
+			return content + product.substring(5);
+		} else {
+			return content;
+		}
+	}
+
 	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
 		boolean success = false;
 		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
+		String content = parseContent(payload);
 
 		if (VERSION_TWO.equals(version)) {
 			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
@@ -251,7 +262,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
 
 				processVersion2Content(cityId, operatorId, content);
 				success = true;
@@ -262,12 +272,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
 				int operatorId = infoPair.getValue();
-				String content = payload.getContent();
-
-				if (content.contains("h5.dianping.com") && m_index < 100) {
-					m_logger.info(content);
-					m_index++;
-				}
 
 				processVersion3Content(cityId, operatorId, content);
 				success = true;
