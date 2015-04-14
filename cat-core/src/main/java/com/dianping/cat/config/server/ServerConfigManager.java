@@ -274,14 +274,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 		m_invalidateDomains.add("PhoenixAgent");
 		m_invalidateDomains.add("cat-agent");
-		m_invalidateDomains.add("AndroidCrashLog");
-		m_invalidateDomains.add("iOSCrashLog");
 		m_invalidateDomains.add(Constants.ALL);
 		m_invalidateDomains.add(Constants.FRONT_END);
-		m_invalidateDomains.add("MerchantAndroidCrashLog");
-		m_invalidateDomains.add("MerchantIOSCrashLog");
 		m_invalidateDomains.add("paas");
 		m_invalidateDomains.add("SMS-RECEIVER");
+		m_invalidateDomains.add("AndroidCrashLog");
+		m_invalidateDomains.add("iOSCrashLog");
+		m_invalidateDomains.add("MerchantAndroidCrashLog");
+		m_invalidateDomains.add("MerchantIOSCrashLog");
+		m_invalidateDomains.add("ApolloAndroidCrashLog");
+		m_invalidateDomains.add("ApolloIOSCrashLog");
 
 		m_crashLogs.add("AndroidCrashLog");
 		m_crashLogs.add("iOSCrashLog");
