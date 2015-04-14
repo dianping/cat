@@ -65,6 +65,8 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+	private SimpleDateFormat m_secondFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	public Payload() {
 		super(ReportPage.ALTERATION);
 	}
@@ -80,7 +82,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public Date getAlterationDate() {
 		try {
-			return m_sdf.parse(m_alterationDate);
+			if (m_alterationDate.length() == 16) {
+				return m_sdf.parse(m_alterationDate);
+			} else {
+				return m_secondFormat.parse(m_alterationDate);
+			}
+
 		} catch (ParseException e) {
 			return new Date();
 		}

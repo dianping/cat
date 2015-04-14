@@ -39,7 +39,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlterationDao m_alterationDao;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private final static String EMPTY = "N/A";
 
