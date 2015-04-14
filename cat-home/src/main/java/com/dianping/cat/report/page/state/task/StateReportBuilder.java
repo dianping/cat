@@ -142,7 +142,7 @@ public class StateReportBuilder implements TaskBuilder {
 		return stateReport;
 	}
 
-	private void updateDomainInfo(String domain, String ip) {
+	private void updateProjectAndHost(String domain, String ip) {
 		if (m_serverConfigManager.validateDomain(domain)) {
 			if (!m_projectService.contains(domain)) {
 				m_projectService.insert(domain);
@@ -179,7 +179,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 			for (String ip : ips) {
 				if (m_serverConfigManager.validateDomain(domain) && m_serverConfigManager.validateIp(ip)) {
-					updateDomainInfo(domain, ip);
+					updateProjectAndHost(domain, ip);
 				}
 			}
 		}
