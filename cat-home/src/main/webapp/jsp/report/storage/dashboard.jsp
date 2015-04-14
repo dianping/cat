@@ -140,7 +140,7 @@
 			</tr>
 			<c:forEach var="alt" items="${model.alterations}">
 				<tr>
-					<td><fmt:formatDate value="${alt.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td><fmt:formatDate value="${alt.date}" pattern="HH:mm:ss"/></td>
 					<td>${alt.domain}</td>
 					<td>${alt.hostname}</td>
 					<td>${alt.ip}</td>
