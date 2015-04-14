@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.TransactionConfigurator$MockTransactionReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.TransactionConfigurator$ExtendedTransactionDelegate</implementation>
+		</component>
+	</components>
+</plexus>

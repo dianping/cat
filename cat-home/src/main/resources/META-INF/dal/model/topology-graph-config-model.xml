@@ -7,6 +7,7 @@
   </entity>
   <entity name="node-config">
     <attribute name="type" value-type="String"  key="true"/>
+    <attribute name="default-min-count-threshold" value-type="int" primitive="true" default-value="100"/>
     <attribute name="default-warning-threshold" value-type="int" />
     <attribute name="default-error-threshold" value-type="int" />
     <attribute name="default-warning-response-time" value-type="double" />
@@ -15,6 +16,7 @@
   </entity>
   <entity name="domain-config">
     <attribute name="id" value-type="String"  key="true"/>
+    <attribute name="min-count-threshold" value-type="int" primitive="true" default-value="100"/>
     <attribute name="warning-threshold" value-type="int" primitive="true" />
     <attribute name="error-threshold" value-type="int" primitive="true" />
     <attribute name="warning-response-time" value-type="double" primitive="true" />
@@ -25,6 +27,7 @@
     <attribute name="type" value-type="String" />
     <attribute name="from" value-type="String" />
     <attribute name="to" value-type="String" />
+    <attribute name="min-count-threshold" value-type="int" primitive="true" default-value="100"/>
     <attribute name="warning-threshold" value-type="int" primitive="true" />
     <attribute name="error-threshold" value-type="int" primitive="true" />
     <attribute name="warning-response-time" value-type="double" primitive="true" />

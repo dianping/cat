@@ -20,13 +20,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
@@ -38,12 +38,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	private TransportManager m_transportManager;
 
 	@Inject
-	private MessageStatistics m_statistics;
+	private MessageIdFactory m_factory;
 
 	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
-
-	private MessageIdFactory m_factory;
 
 	private long m_throttleTimes;
 
@@ -74,10 +72,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (t != null) {
 			MessageTree tree = getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
 
+			if (messageId == null) {
+				messageId = nextMessageId();
+				tree.setMessageId(messageId);
+			}
 			if (tree != null) {
 				t.start();
-				t.bind(tag, tree.getMessageId(), title);
+				t.bind(tag, messageId, title);
 			}
 		}
 	}
@@ -99,14 +102,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	public void flush(MessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(nextMessageId());
+		}
+
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
-			if (m_statistics != null) {
-				m_statistics.onSending(tree);
-			}
+			reset();
 		} else {
 			m_throttleTimes++;
 
@@ -120,11 +125,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_configManager;
 	}
 
-	Context getContext() {
+	private Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
 
 			if (ctx != null) {
+				return ctx;
+			} else {
+				if (m_domain != null) {
+					ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+				} else {
+					ctx = new Context("Unknown", m_hostName, "");
+				}
+
+				m_context.set(ctx);
 				return ctx;
 			}
 		}
@@ -156,6 +170,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public MessageTree getThreadLocalMessageTree() {
 		Context ctx = m_context.get();
 
+		if (ctx == null) {
+			setup();
+		}
+		ctx = m_context.get();
+
 		if (ctx != null) {
 			return ctx.m_tree;
 		} else {
@@ -179,7 +198,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		// initialize domain and IP address
 		try {
-			m_factory = lookup(MessageIdFactory.class);
 			m_factory.initialize(m_domain.getId());
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);
@@ -218,7 +236,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	private String nextMessageId() {
+	public void linkAsRunAway(DefaultForkedTransaction transaction) {
+		Context ctx = getContext();
+		if (ctx != null) {
+			ctx.linkAsRunAway(transaction);
+		}
+	}
+
+	public String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -228,10 +253,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx != null) {
-			ctx.m_stack.clear();
+			if (ctx.m_totalDurationInMicros == 0) {
+				ctx.m_stack.clear();
+				ctx.m_knownExceptions.clear();
+				m_context.remove();
+			} else {
+				ctx.m_knownExceptions.clear();
+			}
 		}
-
-		m_context.remove();
 	}
 
 	public void setMetricType(String metricType) {
@@ -314,15 +343,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
 			m_length = 1;
+			m_knownExceptions = new HashSet<Throwable>();
 		}
 
 		public void add(Message message) {
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
-
-				if (tree.getMessageId() == null) {
-					tree.setMessageId(nextMessageId());
-				}
 
 				tree.setMessage(message);
 				flush(tree);
@@ -399,6 +425,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
+		public void linkAsRunAway(DefaultForkedTransaction transaction) {
+			m_validator.linkAsRunAway(transaction);
+		}
+
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -426,14 +456,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public void start(Transaction transaction, boolean forked) {
 			if (!m_stack.isEmpty()) {
-				Transaction parent = m_stack.peek();
-
-				addTransactionChild(transaction, parent);
-			} else {
-				if (m_tree.getMessageId() == null) {
-					m_tree.setMessageId(nextMessageId());
+				// Do NOT make strong reference from parent transaction to forked transaction.
+				// Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
+				// By doing so, there is no need for synchronization between parent and child threads.
+				// Both threads can complete() anytime despite the other thread.
+				if (!(transaction instanceof ForkedTransaction)) {
+					Transaction parent = m_stack.peek();
+					addTransactionChild(transaction, parent);
 				}
-
+			} else {
 				m_tree.setMessage(transaction);
 			}
 
@@ -448,7 +479,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	class TransactionHelper {
-		private void linkAsRunAway(Transaction parent, DefaultForkedTransaction transaction) {
+		private void linkAsRunAway(DefaultForkedTransaction transaction) {
 			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
 
 			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
@@ -457,11 +488,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			event.setCompleted(true);
 			transaction.setStandalone(true);
 
-			if (parent instanceof DefaultTransaction) {
-				((DefaultTransaction) parent).replaceChild(transaction, event);
-			} else {
-				add(event);
-			}
+			add(event);
 		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {
@@ -519,6 +546,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (message instanceof DefaultTransaction) {
 				String id = tree.getMessageId();
+
+				if (id == null) {
+					id = nextMessageId();
+					tree.setMessageId(id);
+				}
+
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
@@ -536,6 +569,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					DefaultTransaction t = (DefaultTransaction) stack.get(i);
 
 					t.setTimestamp(timestamp);
+					t.setDurationStart(System.nanoTime());
 				}
 
 				DefaultEvent next = new DefaultEvent("RemoteCall", "Next");
@@ -555,6 +589,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
+
 				flush(t);
 			}
 		}
@@ -580,7 +615,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else if (!transaction.isCompleted()) {
 				if (transaction instanceof DefaultForkedTransaction) {
 					// link it as run away message since the forked transaction is not completed yet
-					linkAsRunAway(parent, (DefaultForkedTransaction) transaction);
+					linkAsRunAway((DefaultForkedTransaction) transaction);
 				} else if (transaction instanceof DefaultTaggedTransaction) {
 					// link it as run away message since the forked transaction is not completed yet
 					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);

@@ -7,7 +7,8 @@ import java.util.Set;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -19,22 +20,17 @@ public class DefaultProblemHandler extends ProblemHandler {
 	public static final String ID = "default-problem";
 
 	@Inject
-	private Set<String> m_errorTypes;
+	private ServerConfigManager m_configManager;
 
 	@Inject
-	private Set<String> m_failureTypes;
+	private Set<String> m_errorTypes;
 
 	@Override
 	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			String type = message.getType();
-
-			//TODO remove me
-			if (!"ABTest".equals(type)) {
-				processTransaction(machine, (Transaction) message, tree);
-			}
+			processTransaction(machine, (Transaction) message, tree);
 		} else if (message instanceof Event) {
 			processEvent(machine, (Event) message, tree);
 		} else if (message instanceof Heartbeat) {
@@ -47,8 +43,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			Entity entity = findOrCreateEntity(machine, type, status);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -57,9 +53,9 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if ("heartbeat".equals(type)) {
 			String status = heartbeat.getName();
-			Entry entry = findOrCreateEntry(machine, type, status);
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			updateEntry(tree, entry, 0);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -68,22 +64,10 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 		if (!transactionStatus.equals(Transaction.SUCCESS)) {
 			String type = transaction.getType();
-			String status = "";
-
-			if (m_failureTypes.contains(type)) {
-				type = transaction.getType();
-				// make it march for alarm
-				if (type.equals("PigeonCall") || type.equals("Call")) {
-					type = "call";
-				}
-				status = transaction.getName();
-			} else {
-				type = ProblemType.FAILURE.getName();
-				status = transaction.getType() + ":" + transaction.getName();
-			}
-
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			String name = transaction.getName();
+			Entity entity = findOrCreateEntity(machine, type, name);
+			
+			updateEntity(tree, entity, 0);
 		}
 
 		List<Message> children = transaction.getChildren();
@@ -103,7 +87,4 @@ public class DefaultProblemHandler extends ProblemHandler {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
 
-	public void setFailureType(String type) {
-		m_failureTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
-	}
 }

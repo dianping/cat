@@ -3,15 +3,15 @@ package com.dianping.cat.report.page.home;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
 	@FieldMeta("docName")
-	private String m_docName = "userMonitor";
+	private String m_docName = "user";
 
 	@FieldMeta("subDocName")
 	private String m_subDocName;
@@ -39,6 +39,11 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setDocName(String docName) {
 		m_docName = docName;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.HOME);
 	}
 
 	public void setSubDocName(String subDocName) {

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="activity-config" root="true">
+    <entity-ref name="activity" />
+  </entity>
+  <entity name="activity">
+    <attribute name="domain" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="name" value-type="String" />
+  </entity>
+</model>
+

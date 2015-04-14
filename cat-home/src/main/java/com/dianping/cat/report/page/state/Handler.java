@@ -2,9 +2,6 @@ package com.dianping.cat.report.page.state;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -17,28 +14,31 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
-import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.state.service.StateReportService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private StateReportService m_reportService;
 
 	@Inject
-	private StateGraphs m_stateGraphs;
+	private StateGraphBuilder m_stateGraphs;
+
+	@Inject
+	private StateBuilder m_stateBuilder;
 
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_service;
@@ -49,32 +49,13 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String buildCatInfoMessage(StateReport report) {
-		int realSize = report.getMachines().size();
-		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
-		int excepeted = servers.size();
-		Set<String> errorServers = new HashSet<String>();
+	private void buildDisplayInfo(Model model, Payload payload, StateReport report) {
+		StateDisplay display = new StateDisplay(payload.getIpAddress(), m_configManager.getUnusedDomains());
 
-		if (realSize != excepeted) {
-			for (Pair<String, Integer> server : servers) {
-				String serverIp = server.getKey();
-
-				if (report.getMachines().get(serverIp) == null) {
-					errorServers.add(serverIp);
-				}
-			}
-		}
-		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > 300 * 10000) {
-				errorServers.add(machine.getIp());
-			}
-		}
-
-		if (errorServers.size() > 0) {
-			return errorServers.toString();
-		} else {
-			return null;
-		}
+		display.setSortType(payload.getSort());
+		display.visitStateReport(report);
+		model.setState(display);
+		model.setReport(report);
 	}
 
 	public StateReport getHistoryReport(Payload payload) {
@@ -82,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryStateReport(domain, start, end);
+		return m_reportService.queryReport(domain, start, end);
 	}
 
 	private StateReport getHourlyReport(Payload payload) {
@@ -117,48 +98,44 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		String key = payload.getKey();
 		StateReport report = null;
-		LineChart item = null;
+		Pair<LineChart, PieChart> pair = null;
+
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);
-			model.setMessage(buildCatInfoMessage(report));
+			model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
+			buildDisplayInfo(model, payload, report);
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);
+
+			buildDisplayInfo(model, payload, report);
 			break;
 		case GRAPH:
 			report = getHourlyReport(payload);
-			item = m_stateGraphs.buildGraph(report, payload.getDomain(), payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate(), "graph", key, payload.getIpAddress());
+			pair = m_stateGraphs.buildGraph(payload, key, report);
+
+			model.setGraph(new JsonBuilder().toJson(pair.getKey()));
+			model.setPieChart(new JsonBuilder().toJson(pair.getValue()));
 			break;
 		case HISTORY_GRAPH:
-			item = m_stateGraphs.buildGraph(null, payload.getDomain(), payload.getHistoryStartDate(),
-			      payload.getHistoryEndDate(), "historyGraph", key, payload.getIpAddress());
+			pair = m_stateGraphs.buildGraph(payload, key);
+
+			model.setGraph(new JsonBuilder().toJson(pair.getKey()));
+			model.setPieChart(new JsonBuilder().toJson(pair.getValue()));
 			break;
-		}
-
-		if (action == Action.HOURLY || action == Action.HISTORY) {
-			StateShow show = new StateShow(payload.getIpAddress(),m_configManager);
-
-			show.setSortType(payload.getSort());
-			show.visitStateReport(report);
-			model.setState(show);
-			model.setReport(report);
-		} else {
-			model.setGraph(new JsonBuilder().toJson(item));
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STATE);
-		String ip = payload.getIpAddress();
-		Action action = payload.getAction();
+		model.setAction(payload.getAction());
 
-		if (action == Action.HOURLY || action == Action.HISTORY) {
-			if (!Constants.CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
-				payload.setIpAddress(Constants.ALL);
-			}
+		String ip = payload.getIpAddress();
+
+		if (StringUtils.isEmpty(ip)) {
+			payload.setIpAddress(Constants.ALL);
 		}
 		m_normalizePayload.normalize(model, payload);
 	}

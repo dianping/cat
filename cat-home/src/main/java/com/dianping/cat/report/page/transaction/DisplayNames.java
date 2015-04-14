@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,7 +22,7 @@ public class DisplayNames {
 	public DisplayNames display(String sorted, String type, String ip, TransactionReport report, String queryName) {
 		Map<String, TransactionType> types = report.findOrCreateMachine(ip).getTypes();
 		TransactionName all = new TransactionName("TOTAL");
-		
+
 		all.setTotalPercent(1);
 		if (types != null) {
 			TransactionType names = types.get(type);
@@ -125,7 +126,16 @@ public class DisplayNames {
 				return m1.getType().compareTo(m2.getType());
 			}
 			if (m_sorted.equals("total")) {
-				return (int) (m2.getDetail().getTotalCount() - m1.getDetail().getTotalCount());
+				long count2 = m2.getDetail().getTotalCount();
+				long count1 = m1.getDetail().getTotalCount();
+
+				if (count2 > count1) {
+					return 1;
+				} else if (count2 < count1) {
+					return -1;
+				} else {
+					return 0;
+				}
 			}
 			if (m_sorted.equals("failure")) {
 				return (int) (m2.getDetail().getFailCount() - m1.getDetail().getFailCount());
@@ -141,6 +151,15 @@ public class DisplayNames {
 			}
 			if (m_sorted.equals("99line")) {
 				return (int) (m2.getDetail().getLine99Value() * 100 - m1.getDetail().getLine99Value() * 100);
+			}
+			if (m_sorted.equals("min")) {
+				return (int) (m2.getDetail().getMin() * 100 - m1.getDetail().getMin() * 100);
+			}
+			if (m_sorted.equals("max")) {
+				return (int) (m2.getDetail().getMax() * 100 - m1.getDetail().getMax() * 100);
+			}
+			if (m_sorted.equals("std")) {
+				return (int) (m2.getDetail().getStd() * 100 - m1.getDetail().getStd() * 100);
 			}
 			return 0;
 		}
@@ -161,6 +180,16 @@ public class DisplayNames {
 
 		public TransactionName getDetail() {
 			return m_detail;
+		}
+
+		public String getName() {
+			String id = m_detail.getId();
+
+			try {
+				return URLEncoder.encode(id, "utf-8");
+			} catch (Exception e) {
+				return id;
+			}
 		}
 
 		public String getType() {

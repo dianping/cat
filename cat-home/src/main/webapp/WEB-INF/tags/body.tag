@@ -1,211 +1,247 @@
-<%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="navBar"
-	class="com.dianping.cat.report.view.NavigationBar" scope="page" />
-<res:bean id="res" />
-<html>
-<head>
-<title>CAT - ${model.page.description}</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-<res:cssSlot id="head-css" />
-<res:jsSlot id="head-js" />
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
-<res:useCss value='${res.css.local.tiny_css}' media="screen and (max-width: 1050px)"  target="head-css" />
-<res:useCss value='${res.css.local.large_css}' media="screen and (min-width: 1050px)"  target="head-css" />
-</head>
-	<div class="navbar navbar-inverse">
-      <div class="navbar-inner">
-        <div class="container-fluid">
-       	  <a class="brand" style="padding-right:20px" href="/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CAT</a>
-          <div class="nav-collapse collapse">
-          	<div class="nav pull-right">
-					<li id="loginInfo" ></li>
-          	</div>
-          	
-           <ul class="nav">
-            	<c:forEach var="page" items="${navBar.visiblePages}">
-					<c:if test="${page.standalone}">
-						<li ${model.page.name == page.name ? 'class="active"' : ''}><a
-							href="${model.webapp}/${page.moduleName}/${page.path}?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">${page.title}</a></li>
-					</c:if>
-					<c:if
-						test="${not page.standalone and model.page.name == page.name}">
-						<li class="active"><a href="#">${page.title}</a></li>
-					</c:if>
-				</c:forEach>
-            </ul> 
-            <ul class="nav">
-          		<li id="nav-reports"	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Monitors<b class="caret"></b></a>
-          			<ul class="dropdown-menu">
-					<li class="nav-header">监控大盘</li>
-					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=metricDashboard&domain=${model.domain}">系统报错大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/metric?op=dashboard&domain=${model.domain}">业务监控大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/network?op=dashboard&domain=${model.domain}">网络监控大盘</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控大盘</a></li>
-					<li class="nav-header">监控报表</li>
-					<li><a style="padding:1px 30px" href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">CDN监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/network?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">网络监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">数据库监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">PAAS系统监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">线上变更监控</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">告警信息查询</a></li>
-					<li class="nav-header">离线报表</li>
-					<li><a style="padding:1px 30px" href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">项目资源消耗</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/highload?&op=${payload.action.name}">全局资源消耗</a></li>
-	  				<li><a style="padding:1px 30px" href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">报表容量统计</a></li>
-					<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=view">全局异常统计</a></li>
-				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=alert">异常告警排行</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=service">服务可用性排行</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上容量规划</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?op=jar&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=utilization">线上JAR版本</a></li>
-				  	<li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=heavy">重量级访问排行</a></li>
-				    <li><a style="padding:1px 30px" href="/cat/r/statistics?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=summary">告警智能分析</a></li>
-					<li class="nav-header">订阅报表</li>
-				    <li><a style="padding:1px 30px" href="/cat/s/alarm?op=reportRecordList">报表邮件记录</a></li>
-	  				<li><a style="padding:1px 30px" href="/cat/s/alarm?op=scheduledReports">日常报表订阅</a></li>
-	          		</ul>
-          		</li>
-          	</ul>
-          	<ul class="nav">
-         	  <li	class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Configs<b class="caret"></b></a>
-          		<ul class="dropdown-menu">
-		           <li class='nav-header' style="margin-top:0px;">项目配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=projects">项目信息配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyProductLines">监控分组配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=domainGroupConfigUpdate">机器分组配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">端到端监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=aggregations">JS报错配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=urlPatterns">WEB监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=webRule">WEB告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appList">APP监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appRule">APP告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=appComparisonConfigUpdate">美团对比报表</a></li>
-		           <li class='nav-header' style="margin-top:0px;">应用监控配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=metricConfigList">业务监控配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=transactionRule">响应时间告警</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=exception">异常告警配置</a></li>
-			       <!-- <li><a style="padding:1px 30px" href="?op=bugConfigUpdate">框架异常配置</a></li> -->
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=displayPolicy">心跳报表配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=heartbeatRuleConfigList">心跳告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=thirdPartyConfigUpdate">第三方告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphNodeConfigList">应用阀值配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=topologyGraphEdgeConfigList">应用依赖配置</a></li>
-		           <li class='nav-header' style="margin-top:0px;">监控告警配置</li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=networkRuleConfigList">网络告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=netGraphConfigUpdate">网络拓扑配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=databaseRuleConfigList">数据库告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=systemRuleConfigList">系统告警配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertPolicy">告警策略配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=alertDefaultReceivers">默认告警人配置</a></li>
-			       <li><a style="padding:1px 30px" href="/cat/s/config?op=routerConfigUpdate">客户端路由配置</a></li>
-			      </ul>
-			     </li>
-        	 </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
-	<div id="loginModal" class="modal hide fade" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true" style="width:380px">
-		<form class="form-horizontal" name="login" method="post" action="/cat/s/login">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">×</button>
-				<h5 id="myModalLabel" class="text-success text-center">用户登录</h5>
-			</div>
-			<div class="control-group">
-				<label class="control-label text-success" for="account">用户名</label>
-				<div class="controls">
-					<input type="text" name="account" id="account" style="height:auto" class="input-xlarge"
-						placeholder="域账号（例如:yong.you）" />
+<%@ tag trimDirectiveWhitespaces="true" pageEncoding="UTF-8"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+
+<a:base>
+	<div class="main-container" id="main-container">
+		<script type="text/javascript">
+			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
+		</script>
+		<div id="sidebar" class="sidebar   responsive">
+			<script type="text/javascript">
+				try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
+			</script>
+			<div class="sidebar-shortcuts" id="sidebar-shortcuts">
+				<div class="sidebar-shortcuts-large" id="sidebar-shortcuts-large">
+					<button class="btn btn-success" id="tab_realtime">
+						<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
+					</button>
+					<button class="btn btn-grey" id="tab_offtime">
+						<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
+					</button>
+					<!-- #section:basics/sidebar.layout.shortcuts -->
+					<button class="btn btn-warning" id="tab_document">
+						<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
+					</button>
+					<button class="btn btn-danger" id="tab_config">
+						<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
+					</button>
+				</div>
+				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
+					<span class="btn btn-success"></span>
+					<span class="btn btn-info"></span>
+					<span class="btn btn-warning"></span>
+					<span class="btn btn-danger"></span>
 				</div>
 			</div>
-			<div class="control-group">
-				<label class="control-label text-success" for="password">密码</label>
-				<div class="controls">
-					<input type="password" name="password" id="password" onkeydown='if(event.keyCode==13){loginSubmit.click()}' style="height:auto" class="input-xlarge"
-						placeholder="域账号密码（例如:XXX）" />
+			<ul class="nav nav-list" style="top: 0px;">
+				<li id="Dashboard_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-tachometer"></i> <span class="menu-text">Dashboard</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="dashbord_system"><a href="/cat/r/top?op=view&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>报错大盘</a>
+							<b class="arrow"></b></li>
+						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
+							<b class="arrow"></b></li>
+						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
+							<b class="arrow"></b></li>
+						<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
+							<b class="arrow"></b></li>
+						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">App</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
+							<b class="arrow"></b></li>
+						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
+							<i class="menu-icon fa fa-caret-right"></i>报表统计</a>
+							<b class="arrow"></b></li>
+						<li id="connTrend"><a href="/cat/r/app?op=connLinechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>长连访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="connPiechart"><a href="/cat/r/app?op=connPiechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
+							<b class="arrow"></b></li>
+						<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
+							<b class="arrow"></b></li>
+						<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
+							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
+							<b class="arrow"></b></li>
+						<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
+							<b class="arrow"></b></li>
+						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="Transaction_report" >
+					<a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon glyphicon glyphicon-time"></i>
+						<span class="menu-text">Transaction</span>
+					</a>
+				</li>
+				<li id="Event_report" >
+					<a href="/cat/r/e?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon fa fa-flag"></i>
+						<span class="menu-text">Event</span>
+					</a>
+				</li>					
+				<li id="Problem_report" >
+					<a href="/cat/r/p?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon fa fa-bug"></i>
+						<span class="menu-text">Problem</span>
+					</a>
+				</li>			
+				<li id="Heartbeat_report" >
+					<a href="/cat/r/h?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon  fa fa-heart"></i>
+						<span class="menu-text">Heartbeat</span>
+					</a>
+				</li>		
+				<li id="Cross_report" >
+					<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon  glyphicon glyphicon-random"></i>
+						<span class="menu-text">Cross</span>
+					</a>
+				</li>		
+				<li id="Cache_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-flash"></i> <span class="menu-text">Cache</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="cache_operation"><a href="/cat/r/storage?id=memcached&type=Cache&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
+							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="cache_info"><a href="/cat/r/cache?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>访问情况</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="Database_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-lemon-o"></i> <span class="menu-text">Database</span>
+						<b class="arrow fa fa-angle-down"></b>
+					</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="database_operation"><a href="/cat/r/storage?id=cat&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}">
+							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="database_system"><a href="/cat/r/database?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=view">
+							<i class="menu-icon fa fa-caret-right"></i>系统指标</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				<li id="Dependency_report" class="hsub"><a href="/cat/r/dependency?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-road"></i> <span class="menu-text">Dependency</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="dependency_trend"><a href="/cat/r/dependency?op=lineChart&domain=${model.domain}&date=${model.date}">
+							<i class="menu-icon fa fa-caret-right"></i>趋势图</a>
+							<b class="arrow"></b></li>
+						<li id="dependency_topo"><a href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">
+							<i class="menu-icon fa fa-caret-right"></i>拓扑图</a>
+							<b class="arrow"></b></li>
+						
+					</ul>
+				</li>
+				<li id="Matrix_report" >
+					<a href="/cat/r/matrix?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon  fa  fa-flask"></i>
+						<span class="menu-text">Matrix</span>
+					</a>
+				</li>
+				<li id="State_report" >
+					<a href="/cat/r/state?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon fa fa-bar-chart-o"></i>
+						<span class="menu-text">State</span>
+					</a>
+				</li>
+				<li id="System_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-gavel"></i> <span class="menu-text">System</span>
+						<b class="arrow fa fa-angle-down"></b>
+				</a> <b class="arrow"></b>
+					<ul class="submenu">
+						<li id="system_cdn"><a href="/cat/r/cdn?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>CDN监控</a>
+							<b class="arrow"></b></li>
+						<li id="system_network"><a href="/cat/r/network?op=metric&product=&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>网络监控</a>
+							<b class="arrow"></b></li>
+						<li id="system_paas"><a href="/cat/r/system?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>PAAS监控</a>
+							<b class="arrow"></b></li>
+						<li id="system_alteration"><a href="/cat/r/alteration?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>线上变更</a>
+							<b class="arrow"></b></li>
+						<li id="system_alert"><a href="/cat/r/alert?domain=${model.domain}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>告警信息</a>
+							<b class="arrow"></b></li>
+						<li id="system_activity"><a href="/cat/r/activity?domain=${model.domain}&op=${payload.action.name}">
+							<i class="menu-icon fa fa-caret-right"></i>活动大盘</a>
+							<b class="arrow"></b></li>
+					</ul>
+				</li>
+				</ul>
+			</ul>
+			<!-- #section:basics/sidebar.layout.minimize -->
+			<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+				<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+			</div>
+
+			<!-- /section:basics/sidebar.layout.minimize -->
+			<script type="text/javascript">
+				try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
+			</script>
+		</div>
+		<div class="main-content">
+				<div id="dialog-message" class="hide">
+				<p>
+					你确定要删除吗？(不可恢复)
+				</p>
+			</div>
+				<div style="padding-top:2px;padding-left:2px;padding-right:8px;">
+				<jsp:doBody/>
 				</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">关闭</button>
-				<input id="loginSubmit" type="submit"  class="btn btn-primary" name="login" value="登录" />
-			</div>
-		</form>
+		</div>
 	</div>
-<style>
-	.nav-list  li  a{
-		padding:0px 15px;
-	}
-	.nav li  +.nav-header{
-		margin-top:2px;
-	}
-	.nav-header{
-		padding:1px 3px;
-	}
-	.row-fluid .span2{
-		width:12%;
-	}
-</style>
-	<script>
-		function getcookie(objname) {
-			var arrstr = document.cookie.split("; ");
-			for ( var i = 0; i < arrstr.length; i++) {
-				var temp = arrstr[i].split("=");
-				if (temp[0] == objname) {
-					return temp[1];
-				}
-			}
-			return "";
-		}
-		function showDomain() {
-			var b = $('#switch').html();
-			if (b == '切换') {
-				$('.domainNavbar').slideDown();
-				$('#switch').html("收起");
-			} else {
-				$('.domainNavbar').slideUp();
-				$('#switch').html("切换");
-			}
-		}
-		function showFrequent(){
-			var b = $('#frequent').html();
-			if (b == '常用') {
-				$('.frequentNavbar').slideDown();
-				$('#frequent').html("收起");
-			} else {
-				$('.frequentNavbar').slideUp();
-				$('#frequent').html("常用");
-			}
-		}
-		$(document).ready(function() {
-			var ct = getcookie("ct");
-			if (ct != "") {
-				var length = ct.length;
-				var realName = ct.split("|");
-				var temp = realName[0];
-				
-				if(temp.charAt(0)=='"'){
-					temp =temp.substring(1,temp.length);
-				}
-				var name = decodeURI(temp);
-				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="/cat/s/login?op=logout">'+name +'&nbsp;登出</a>';
-			}else{
-				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="#loginModal" data-toggle="modal">登录</a>';
-			}
+</a:base>
+<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#tab_realtime").click(function(){
+			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
 		});
-	</script>
-	<jsp:doBody />
-	<table class="footer" style="margin-top:5px;">
-		<tr><td>©2003-2014 dianping.com, All Rights Reserved.</td></tr>
-	</table>
-	<res:jsSlot id="bottom-js" />
-</body>
-</html>
+		$("#tab_offtime").click(function(){
+			window.location.href = "/cat/r/statistics?op=service&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#tab_document").click(function(){
+			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#tab_config").click(function(){
+			window.location.href = "/cat/s/config?op=projects";
+		});});
+		$("#tab_realtime").addClass("disabled");
+
+</script>
+

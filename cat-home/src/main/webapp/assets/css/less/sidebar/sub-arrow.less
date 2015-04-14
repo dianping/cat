@@ -1,0 +1,49 @@
+//the arrow connecting "LI" to ".SUBMENU"
+//-li > .arrow
+.nav-list li {
+ > .arrow {
+	display: none;
+
+	position: absolute;
+	top: 8px;
+	right: 1px;
+	
+	z-index: @zindex-submenu + 1;
+
+	&:before, &:after {
+		border: 1px solid transparent;
+		display: block;
+		height: 0;
+		width: 0;
+
+		position: absolute;
+		left: -20px;
+		top: 0;
+		right: auto;
+		bottom: auto;
+
+		content: "";
+		
+		border-width: 10px;
+	}
+	
+	&:before {
+		z-index: 1;//above .submenu
+		left: -21px;
+	}
+	&:after {
+		z-index: 2;//above .arrow:before
+	}
+ }
+
+ //don't display when there's no submenu
+ &:hover > a + .arrow {
+	display: none;
+ }
+ 
+ @media only screen and (min-width: @screen-hover-menu) {
+  &.hover:hover > a.dropdown-toggle + .arrow {
+	display: block;
+  }
+ }
+}

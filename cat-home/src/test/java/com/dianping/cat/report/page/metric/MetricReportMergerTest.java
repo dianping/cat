@@ -6,7 +6,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.metric.MetricReportMerger;
+import com.dianping.cat.report.page.metric.service.MetricReportMerger;
 
 public class MetricReportMergerTest {
 	

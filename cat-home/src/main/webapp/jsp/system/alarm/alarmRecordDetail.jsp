@@ -31,7 +31,7 @@
 		</div>
 		<div class="span10">
 			</br>
-			<table  class="alarm table table-striped table-bordered  table-condensed"  border="1" rules="all">
+			<table  class="alarm table table-striped table-condensed   "  border="1" rules="all">
 				<tr>
 					<th>&nbsp;&nbsp;收件人</th>
 					<td>${model.mailRecord.receivers}</td>

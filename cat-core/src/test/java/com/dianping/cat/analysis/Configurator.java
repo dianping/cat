@@ -49,6 +49,10 @@ public class Configurator extends AbstractResourceConfigurator {
 				throw new RuntimeException();
 			}
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
 
 	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<Object> {
@@ -71,6 +75,10 @@ public class Configurator extends AbstractResourceConfigurator {
 				throw new RuntimeException();
 			}
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
 
 	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<Object> {
@@ -93,5 +101,10 @@ public class Configurator extends AbstractResourceConfigurator {
 				throw new RuntimeException();
 			}
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
+	
 }

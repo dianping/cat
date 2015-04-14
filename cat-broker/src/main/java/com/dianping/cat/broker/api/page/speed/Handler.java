@@ -27,6 +27,7 @@ import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
+
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
 
@@ -79,14 +80,14 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			success = processVersions(payload, request, userIp, version);
 		} else {
 			success = false;
-			Cat.logEvent("UnknownIp", "Speed", Event.SUCCESS, null);
+			Cat.logEvent("UnknownIp", "speed", Event.SUCCESS, null);
 			m_logger.info("unknown http request, x-forwarded-for:" + request.getHeader("x-forwarded-for"));
 		}
 
 		if (success) {
 			response.getWriter().write("OK");
 		} else {
-			response.getWriter().write("validate request!");
+			response.getWriter().write("ERROR");
 		}
 	}
 
@@ -103,8 +104,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				processVersion1Content(cityId, operatorId, content, version);
 				success = true;
-			} else {
-				Cat.logEvent("InvalidIpInfo", "speed:" + userIp, Event.SUCCESS, userIp);
 			}
 		} else {
 			Cat.logEvent("InvalidVersion", "speed:" + version, Event.SUCCESS, version);
@@ -155,7 +154,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				m_logger.error(e.getMessage(), e);
 			}
 		} else {
-			Cat.logEvent("Speed.InvalidRecord", record, Event.SUCCESS, null);
+			Cat.logEvent("InvalidRecord", "speed", Event.SUCCESS, null);
 		}
 	}
 
@@ -199,24 +198,26 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			if (cityId != null && operatorId != null) {
 				return new Pair<Integer, Integer>(cityId, operatorId);
-			} else {
-				Cat.logEvent("UnknownCityOperator", "speed:" + province + ":" + operatorStr, Event.SUCCESS, null);
 			}
 		}
 		return null;
 	}
 
 	private void processVersion1Content(Integer cityId, Integer operatorId, String content, String version) {
-		String[] records = content.split("\n");
+		if (StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
 
-		for (String record : records) {
-			try {
-				if (StringUtils.isNotEmpty(record)) {
-					processVersion1Record(cityId, operatorId, record);
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						processVersion1Record(cityId, operatorId, record);
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
+		} else {
+			Cat.logEvent("contentEmpty", "speed:1", Event.SUCCESS, null);
 		}
 	}
 

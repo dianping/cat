@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <res:bean id="res"/>
-<table class="data">
+<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<td title="time\group">T\G</td>
 			<c:forEach var="group" items="${model.groupLevelInfo.groups}"
@@ -21,7 +21,7 @@
 		</c:forEach>
 	</tr>
 	<c:forEach var="minute" items="${model.groupLevelInfo.datas}"	varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'}">
+		<tr class="">
 			${minute}
 		</tr>
 	</c:forEach>

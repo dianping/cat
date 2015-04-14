@@ -7,11 +7,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:body>
+<a:offline>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#alert').addClass('active');
+		$('#alert_report').addClass('active');
 		
 		$(document).delegate('.detail', 'click', function(e){
 			var anchor = this,
@@ -39,28 +39,23 @@
 	});
 </script>
 <div class="report">
-	<table class="header">
-		<tr>
-			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(model.alertReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.alertReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span></td>
-			</td>
-			<td class="nav" >
-				<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-error">【切到历史模式】</span></a>
+	<div class="breadcrumbs" id="breadcrumbs">
+	<script type="text/javascript">
+		try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+	</script>
+	<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.alertReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.alertReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+	<div class="nav-search nav" id="nav-search">
+		<a href="?domain=${model.domain}&op=historyAlert" class="switch"><span class="text-danger">【切到历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?op=alert&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=alert">now</a> ]&nbsp;
-			</td>
-		</tr>
-	</table>
+	</div>
+</div>
 </div>
 <div class="row-fluid">
-    <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	</div>
-	<div class="span10">
 		<div class="report">
 			<%@ include file="detail.jsp"%>
 		</div>
-	</div>
 </div>
-</a:body>
+</a:offline>

@@ -3,8 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum Action implements org.unidal.web.mvc.Action {
 	PROJECT_ALL("projects"),
 
-	PROJECT_UPDATE("update"),
-
 	PROJECT_UPDATE_SUBMIT("updateSubmit"),
 
 	PROJECT_DELETE("projectDelete"),
@@ -49,6 +47,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE("topologyProductLineDelete"),
 
+	TOPO_GRAPH_FORMAT_CONFIG_UPDATE("topoGraphFormatUpdate"),
+
 	METRIC_CONFIG_LIST("metricConfigList"),
 
 	METRIC_CONFIG_ADD_OR_UPDATE("metricConfigAdd"),
@@ -72,11 +72,11 @@ public enum Action implements org.unidal.web.mvc.Action {
 	NETWORK_RULE_DELETE("networkRulDelete"),
 
 	DATABASE_RULE_CONFIG_LIST("databaseRuleConfigList"),
-	
+
 	DATABASE_RULE_ADD_OR_UPDATE("databaseRuleUpdate"),
-	
+
 	DATABASE_RULE_ADD_OR_UPDATE_SUBMIT("databaseRuleSubmit"),
-	
+
 	DATABASE_RULE_DELETE("databaseRulDelete"),
 
 	SYSTEM_RULE_CONFIG_LIST("systemRuleConfigList"),
@@ -111,8 +111,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	EXCEPTION_THRESHOLD_DELETE("exceptionThresholdDelete"),
 
-	EXCEPTION_EXCLUDE_UPDATE("exceptionExcludeUpdate"),
-
 	EXCEPTION_EXCLUDE_ADD("exceptionExcludeAdd"),
 
 	EXCEPTION_EXCLUDE_UPDATE_SUBMIT("exceptionExcludeUpdateSubmit"),
@@ -120,8 +118,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 	EXCEPTION_EXCLUDE_DELETE("exceptionExcludeDelete"),
 
 	BUG_CONFIG_UPDATE("bugConfigUpdate"),
-
-	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
 
 	NET_GRAPH_CONFIG_UPDATE("netGraphConfigUpdate"),
 
@@ -133,13 +129,15 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	WEB_RULE_DELETE("webRuleDelete"),
 
+	APP_NAME_CHECK("appNameCheck"),
+
 	APP_LIST("appList"),
 
-	APP_UPDATE("appUpdate"),
+	APP_COMMMAND_UPDATE("appUpdate"),
 
-	APP_SUBMIT("appSubmit"),
+	APP_COMMAND_SUBMIT("appSubmit"),
 
-	APP_PAGE_DELETE("appPageDelete"),
+	APP_COMMAND_DELETE("appPageDelete"),
 
 	APP_CODE_UPDATE("appCodeUpdate"),
 
@@ -157,6 +155,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_SPEED_DELETE("appSpeedDelete"),
 
+	APP_CONSTANT_ADD("appConstantAdd"),
+
+	APP_CONSTANT_UPDATE("appConstantUpdate"),
+
+	APP_CONSTATN_DELETE("appConstantDelete"),
+
+	APP_CONSTATN_SUBMIT("appConstantSubmit"),
+
 	APP_RULE("appRule"),
 
 	APP_RULE_ADD_OR_UPDATE("appRuleUpdate"),
@@ -164,6 +170,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_RULE_ADD_OR_UPDATE_SUBMIT("appRuleSubmit"),
 
 	APP_RULE_DELETE("appRuleDelete"),
+
+	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
 
 	TRANSACTION_RULE("transactionRule"),
 
@@ -173,13 +181,43 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TRANSACTION_RULE_DELETE("transactionRuleDelete"),
 
+	STORAGE_RULE("storageRule"),
+
+	STORAGE_RULE_ADD_OR_UPDATE("storageRuleUpdate"),
+
+	STORAGE_RULE_ADD_OR_UPDATE_SUBMIT("storageRuleSubmit"),
+
+	STORAGE_RULE_DELETE("storageRuleDelete"),
+
+	STORAGE_GROUP_CONFIG_UPDATE("storageGroupConfigUpdate"),
+
 	APP_CONFIG_UPDATE("appConfigUpdate"),
 
 	APP_COMPARISON_CONFIG_UPDATE("appComparisonConfigUpdate"),
 
-	THIRD_PARTY_CONFIG_UPDATE("thirdPartyConfigUpdate"),
+	THIRD_PARTY_RULE_CONFIGS("thirdPartyRuleConfigs"),
 
-	ROUTER_CONFIG_UPDATE("routerConfigUpdate");
+	THIRD_PARTY_RULE_UPDATE("thirdPartyRuleUpdate"),
+
+	THIRD_PARTY_RULE_SUBMIT("thirdPartyRuleSubmit"),
+
+	THIRD_PARTY_RULE_DELETE("thirdPartyRuleDelete"),
+
+	DOMAIN_GROUP_CONFIGS("domainGroupConfigs"),
+
+	DOMAIN_GROUP_CONFIG_UPDATE("domainGroupConfigUpdate"),
+
+	DOMAIN_GROUP_CONFIG_SUBMIT("domainGroupConfigSubmit"),
+
+	DOMAIN_GROUP_CONFIG_DELETE("domainGroupConfigDelete"),
+
+	ROUTER_CONFIG_UPDATE("routerConfigUpdate"),
+
+	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
+
+	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
+
+	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 
 	private String m_name;
 

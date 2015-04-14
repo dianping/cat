@@ -4,14 +4,15 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.1.8</version>
+		<version>1.3.3</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
 	<name>cat-hadoop</name>
 	<packaging>jar</packaging>
 	<dependencies>
-		<!--<dependency>
+		<!-- use hadoop 2 -->
+		<dependency>
 			 	<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-client</artifactId>
 				<version>2.4.1</version>
@@ -33,12 +34,13 @@
 						<artifactId>jetty-util</artifactId>
 					</exclusion>
 				</exclusions>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-core</artifactId>
 		</dependency>
-		<dependency>
+		<!-- use hadoop 1 -->
+		<!-- <dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
 			<version>0.20.203.0</version>
@@ -60,7 +62,7 @@
 					<artifactId>jetty-util</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -71,8 +73,7 @@
 		<plugins>
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
-				<artifactId>codegen-maven-plugin</artifactId>
-				<version>2.0.14</version>
+				<artifactId>plexus-maven-plugin</artifactId>
 				<executions>
 					<execution>
 						<id>generate plexus component descriptor</id>

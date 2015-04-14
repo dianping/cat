@@ -10,10 +10,13 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.problem.transform.DetailStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 
 @ModelMeta(ProblemAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private ProblemStatistics m_allStatistics;
@@ -82,8 +85,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getDistributionChart() {
-   	return m_distributionChart;
-   }
+		return m_distributionChart;
+	}
 
 	@Override
 	public String getDomain() {
@@ -191,8 +194,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setDistributionChart(String distributionChart) {
-   	m_distributionChart = distributionChart;
-   }
+		m_distributionChart = distributionChart;
+	}
 
 	public void setErrorsTrend(String errorsTrend) {
 		m_errorsTrend = errorsTrend;
@@ -233,5 +236,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
 		m_threadLevelInfo = threadLevelInfo;
 	}
-	
+
 }

@@ -9,75 +9,78 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		
-		</br>
+<a:config>
 			<h3 class="text-center text-success">编辑Transaction监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
 				<c:set var="domain" value="${conditions[0]}" />
 				<c:set var="type" value="${conditions[1]}" />
 				<c:set var="name" value="${conditions[2]}" />
+				<c:set var="monitor" value="${conditions[3]}" />
 				<tr>
 					<td>&nbsp;&nbsp;项目&nbsp;&nbsp;<input name="domain" id="domain" value="${domain}"/>
 					&nbsp;&nbsp;Type&nbsp;&nbsp;<input name="type" id="type" value="${type}"/>
-					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）</td>
+					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）
+					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="monitor" id="monitor" style="width:200px;">
+													<option value="count">执行次数</option>
+								                	<option value="avg">响应时间</option>
+								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
-						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-mini" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
+						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-sm" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
-			</form> </div></div></div>
-</a:body>
+			</form>
+</a:config>
 
 <script type="text/javascript">
 function update() {
     var configStr = generateConfigsJsonString();
-    var domain = $("#domain").val();
+    var domain = $("#domain").val().trim();
     if(domain == "undefined" || domain == ""){
 		if($("#errorMessage").length == 0){
-			$("#domain").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#domain").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var type = $("#type").val();
+    var type = $("#type").val().trim();
     if(type == "undefined" || type == ""){
 		if($("#errorMessage").length == 0){
-			$("#type").after($("<span class=\"text-error\" id=\"errorMessage\">  该字段不能为空</span>"));
+			$("#type").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 		}
 		return;
 	}
-    var name = $("#name").val();
+    var name = $("#name").val().trim();
     if(name == "undefined" || name == ""){
 		name = "All";
 		$("#domain").val("All");
 	}
+    
+    var monitor = $("#monitor").val();
     var split = ";";
-    var id = domain + split + type + split + name;
+    var id = domain + split + type + split + name + split + monitor;
     window.location.href = "?op=transactionRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
-		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer","FluAscPer", "FluDescPer", "MinVal", "SumMaxVal", "SumMinVal"]);
+		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		var ruleId = "${payload.ruleId}";
 		if(ruleId.length > 0){
 			document.getElementById("domain").disabled = true;
 			document.getElementById("type").disabled = true;
 			document.getElementById("name").disabled = true;
+			document.getElementById("monitor").disabled = true;
+			var monitor = ruleId.split(';')[3];
+			$('#monitor').val(monitor);
 		}
-		var name = $("#name").val();
+		var name = $("#name").val().trim();
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}
 		
+		$('#application_config').addClass('active open');
 		$('#transactionRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

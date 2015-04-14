@@ -7,11 +7,18 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:body>
+<a:offline>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#summary').addClass('active');
+		$('#summary_report').addClass('active');
+		$('#summarytime').datetimepicker({
+			format:'Y-m-d H:i',
+			step:30,
+			maxDate:0
+		});
 		
 		$(document).delegate('.detail', 'click', function(e){
 			var anchor = this,
@@ -38,29 +45,9 @@
 		});
 	});
 </script>
-<div class="report">
-	<table class="header">
-		<tr>
-			<td class="title"><span class="text-success"><span class="text-error">【报表时间】</span><span class="text-success">&nbsp;&nbsp;From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</span></td>
-			</td>
-			<td class="nav" >
-				<a href="?domain=${model.domain}&op=summary" class="switch"><span class="text-error">【切到历史模式】</span></a>
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?op=summary&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=alert">now</a> ]&nbsp;
-			</td>
-		</tr>
-	</table>
-</div>
 <div class="row-fluid">
-    <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	</div>
-	<div class="span10">
 		<div class="report">
 			<%@ include file="detail.jsp"%>
 		</div>
-	</div>
 </div>
-</a:body>
+</a:offline>

@@ -1,5 +1,8 @@
 package com.dianping.cat.storage.message;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -7,8 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,9 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.message.LocalMessageBucket;
-import com.dianping.cat.storage.message.MessageBlock;
-import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.message.storage.MessageBlock;
+import com.dianping.cat.message.storage.MessageBucket;
 
 @RunWith(JUnit4.class)
 public class LocalMessageBucketTest extends ComponentTestCase {
@@ -57,7 +58,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		MessageTree tree = new DefaultMessageTree();
 
 		for (i = 0; i < count; i++) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
 			MessageId id = buildChannelBuffer(factory, codec, tree, buf);
 
 			block = bucket.storeMessage(buf, id);
@@ -76,32 +77,10 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		}
 
 		bucket.close();
-
-		testArchive(bucket);
-	}
-
-	private void testArchive(LocalMessageBucket bucket) throws IOException {
-		File from = new File(m_baseDir, "dump");
-		File fromIdx = new File(m_baseDir, "dump.idx");
-
-		Assert.assertEquals(true, from.exists());
-		Assert.assertEquals(true, fromIdx.exists());
-
-		bucket.archive();
-
-		Assert.assertEquals(false, from.exists());
-		Assert.assertEquals(false, fromIdx.exists());
-
-		File outbox = new File(m_baseDir, "outbox" + File.separator + "dump");
-		File oubboxIdx = new File(m_baseDir, "outbox" + File.separator + "dump.idx");
-
-		Assert.assertEquals(true, outbox.exists());
-		Assert.assertEquals(true, oubboxIdx.exists());
-
 	}
 
 	private MessageId buildChannelBuffer(MessageIdFactory factory, MessageCodec codec, MessageTree tree,
-	      ChannelBuffer buf) {
+	      ByteBuf buf) {
 		String messageId = factory.getNextId();
 
 		tree.setMessageId(messageId);
@@ -132,7 +111,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		Map<Integer, Integer> maxIdForBucket = new HashMap<Integer, Integer>();
 
 		for (int i = 0; i < count; i++) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
 			MessageId id = buildChannelBuffer(factory, codec, tree, buf);
 
 			int pos = i % buckets.length;

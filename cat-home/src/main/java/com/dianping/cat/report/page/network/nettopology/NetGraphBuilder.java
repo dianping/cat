@@ -7,14 +7,14 @@ import java.util.Map;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.home.nettopo.entity.Anchor;
-import com.dianping.cat.home.nettopo.entity.Connection;
-import com.dianping.cat.home.nettopo.entity.Interface;
-import com.dianping.cat.home.nettopo.entity.NetGraph;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
-import com.dianping.cat.home.nettopo.entity.NetTopology;
-import com.dianping.cat.home.nettopo.entity.Switch;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.home.network.entity.Anchor;
+import com.dianping.cat.home.network.entity.Connection;
+import com.dianping.cat.home.network.entity.Interface;
+import com.dianping.cat.home.network.entity.NetGraph;
+import com.dianping.cat.home.network.entity.NetGraphSet;
+import com.dianping.cat.home.network.entity.NetTopology;
+import com.dianping.cat.home.network.entity.Switch;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
 
 public class NetGraphBuilder {
 

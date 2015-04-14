@@ -3,59 +3,53 @@ package com.dianping.cat.report.page.dependency;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.consumer.state.StateAnalyzer;
-import com.dianping.cat.consumer.state.model.entity.Machine;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.ProductLinesDashboard;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
 
-	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
-	private ModelService<StateReport> m_stateService;
-
 	@Inject
 	private TopologyGraphManager m_graphManager;
+
+	@Inject
+	private TopoGraphFormatConfigManager m_formatConfigManager;
 
 	@Inject
 	private ExternalInfoBuilder m_externalInfoBuilder;
@@ -66,8 +60,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject
-	private ServerConfigManager m_configManager;
+	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
 
 	public static final String TUAN_TOU = "TuanGou";
 
@@ -93,34 +86,6 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	private String buildCatInfoMessage(StateReport report) {
-		int realSize = report.getMachines().size();
-		List<Pair<String, Integer>> servers = m_configManager.getConsoleEndpoints();
-		int excepeted = servers.size();
-		Set<String> errorServers = new HashSet<String>();
-
-		if (realSize != excepeted) {
-			for (Pair<String, Integer> server : servers) {
-				String serverIp = server.getKey();
-
-				if (report.getMachines().get(serverIp) == null) {
-					errorServers.add(serverIp);
-				}
-			}
-		}
-		for (Machine machine : report.getMachines().values()) {
-			if (machine.getTotalLoss() > 100 * 10000) {
-				errorServers.add(machine.getIp());
-			}
-		}
-
-		if (errorServers.size() > 0) {
-			return errorServers.toString();
-		} else {
-			return null;
-		}
-	}
-
 	private void buildDependencyDashboard(Model model, Payload payload, Date reportTime) {
 		ProductLinesDashboard dashboardGraph = m_graphManager.buildDependencyDashboard(reportTime.getTime());
 		Map<String, List<TopologyNode>> nodes = dashboardGraph.getNodes();
@@ -135,22 +100,18 @@ public class Handler implements PageHandler<Context> {
 				node.setLink(link);
 			}
 		}
+
 		model.setReportStart(new Date(payload.getDate()));
 		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
 		model.setDashboardGraph(dashboardGraph.toJson());
 		model.setDashboardGraphData(dashboardGraph);
+		model.setFormat(m_formatConfigManager.buildFormatJson());
 	}
 
 	private void buildDependencyLineChart(Model model, Payload payload, Date reportTime) {
 		DependencyReport dependencyReport = queryDependencyReport(payload);
 		buildHourlyReport(dependencyReport, model, payload);
 		buildHourlyLineGraph(dependencyReport, model);
-	}
-
-	private void buildExceptionDashboard(Model model, Payload payload, long date) {
-		model.setReportStart(new Date(payload.getDate()));
-		model.setReportEnd(new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1));
-		m_externalInfoBuilder.buildTopErrorInfo(payload, model);
 	}
 
 	private void buildHourlyLineGraph(DependencyReport report, Model model) {
@@ -211,43 +172,40 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
 	}
 
 	@Override
 	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
-		Payload payload = ctx.getPayload();
+		if (validate(ctx)) {
+			Model model = new Model(ctx);
+			Payload payload = ctx.getPayload();
 
-		normalize(model, payload);
+			normalize(model, payload);
 
-		Action action = payload.getAction();
-		long date = payload.getDate();
-		Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
+			Action action = payload.getAction();
+			long date = payload.getDate();
+			Date reportTime = new Date(date + TimeHelper.ONE_MINUTE * model.getMinute());
 
-		switch (action) {
-		case TOPOLOGY:
-			buildProjectTopology(model, payload, reportTime);
-			break;
-		case LINE_CHART:
-			buildDependencyLineChart(model, payload, reportTime);
-			break;
-		case DEPENDENCY_DASHBOARD:
-			buildDependencyDashboard(model, payload, reportTime);
-			break;
-		case EXCEPTION_DASHBOARD:
-			buildExceptionDashboard(model, payload, date);
-
-			StateReport report = queryHourlyReport(payload);
-			model.setMessage(buildCatInfoMessage(report));
-			break;
+			switch (action) {
+			case LINE_CHART:
+				buildDependencyLineChart(model, payload, reportTime);
+				break;
+			case TOPOLOGY:
+				buildProjectTopology(model, payload, reportTime);
+				break;
+			case DEPENDENCY_DASHBOARD:
+				buildDependencyDashboard(model, payload, reportTime);
+				break;
+			}
+			m_jspViewer.view(ctx, model);
 		}
-		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.DEPENDENCY);
-		model.setAction(Action.LINE_CHART);
+		model.setAction(payload.getAction());
 
 		m_normalizePayload.normalize(model, payload);
 
@@ -256,7 +214,7 @@ public class Handler implements PageHandler<Context> {
 		List<Integer> minutes = new ArrayList<Integer>();
 
 		if (payload.getPeriod().isCurrent()) {
-			long current = System.currentTimeMillis() / 1000 / 60;
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
 			maxMinute = (int) (current % (60));
 		}
 		for (int i = 0; i < 60; i++) {
@@ -272,7 +230,7 @@ public class Handler implements PageHandler<Context> {
 		String min = payload.getMinute();
 
 		if (StringUtils.isEmpty(min)) {
-			long current = System.currentTimeMillis() / 1000 / 60;
+			long current = payload.getCurrentTimeMillis() / 1000 / 60;
 			minute = (int) (current % (60));
 		} else {
 			minute = Integer.parseInt(min);
@@ -299,18 +257,11 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private StateReport queryHourlyReport(Payload payload) {
-		String domain = Constants.CAT;
-		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", payload.getIpAddress());
+	private boolean validate(Context ctx) {
+		String url = ctx.getRequestContext().getActionUri();
+		String actionUrl = url.split("\\?")[0];
 
-		if (m_stateService.isEligable(request)) {
-			ModelResponse<StateReport> response = m_stateService.invoke(request);
-
-			return response.getModel();
-		} else {
-			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
-		}
+		return NORMAL_URLS.contains(actionUrl);
 	}
 
 }

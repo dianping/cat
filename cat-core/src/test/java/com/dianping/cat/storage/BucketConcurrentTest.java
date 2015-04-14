@@ -15,8 +15,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
 
 @RunWith(JUnit4.class)
 @Ignore

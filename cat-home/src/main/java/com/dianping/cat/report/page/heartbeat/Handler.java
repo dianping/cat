@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -17,17 +19,19 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
-import com.dianping.cat.system.config.DisplayPolicyManager;
+import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
+import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -40,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private HeartbeatReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_service;
@@ -49,39 +53,23 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private DisplayPolicyManager m_manager;
+	private HeartbeatDisplayPolicyManager m_manager;
 
-	private void buildHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
+	private void buildHeartbeatGraphInfo(Model model, HeartbeatSvgGraph displayHeartbeat) {
 		if (displayHeartbeat == null) {
 			return;
 		}
 		model.setResult(displayHeartbeat);
-		model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
-		model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
-		model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
-		model.setHttpThreadGraph(displayHeartbeat.getHttpTheadGraph());
-		model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
-		model.setCatThreadGraph(displayHeartbeat.getCatThreadGraph());
-		model.setPigeonThreadGraph(displayHeartbeat.getPigeonTheadGraph());
-		model.setCatMessageProducedGraph(displayHeartbeat.getCatMessageProducedGraph());
-		model.setCatMessageOverflowGraph(displayHeartbeat.getCatMessageOverflowGraph());
-		model.setCatMessageSizeGraph(displayHeartbeat.getCatMessageSizeGraph());
-		model.setNewGcCountGraph(displayHeartbeat.getNewGcCountGraph());
-		model.setOldGcCountGraph(displayHeartbeat.getOldGcCountGraph());
-		model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
-		model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
-		model.setDisks(displayHeartbeat.getDisks());
-		model.setDisksGraph(displayHeartbeat.getDisksGraph());
-		model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
-		model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 		model.setExtensionGraph(displayHeartbeat.getExtensionGraph());
 	}
 
 	private void buildHistoryGraph(Model model, Payload payload) {
 		Date start = new Date(payload.getDate() + 23 * TimeHelper.ONE_HOUR);
 		Date end = new Date(payload.getDate() + 24 * TimeHelper.ONE_HOUR);
-		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), start, end);
+		HeartbeatReport report = m_reportService.queryReport(payload.getDomain(), start, end);
+		List<String> extensionGroups = m_manager.sortGroupNames(extractExtensionGroups(report));
 
+		model.setExtensionGroups(extensionGroups);
 		model.setReport(report);
 		if (StringUtils.isEmpty(payload.getIpAddress()) || Constants.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
@@ -90,6 +78,19 @@ public class Handler implements PageHandler<Context> {
 			payload.setRealIp(ipAddress);
 		}
 		m_historyGraphs.showHeartBeatGraph(model, payload);
+	}
+
+	private Set<String> extractExtensionGroups(HeartbeatReport report) {
+		Set<String> groupNames = new HashSet<String>();
+
+		for (Machine machine : report.getMachines().values()) {
+			for (Period period : machine.getPeriods()) {
+				Set<String> tmpGroupNames = period.getExtensions().keySet();
+
+				groupNames.addAll(tmpGroupNames);
+			}
+		}
+		return groupNames;
 	}
 
 	private String getIpAddress(HeartbeatReport report, Payload payload) {
@@ -128,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		DisplayHeartbeat heartbeat = null;
+		HeartbeatSvgGraph heartbeat = null;
 
 		normalize(model, payload);
 		switch (payload.getAction()) {
@@ -149,6 +150,7 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		String ipAddress = payload.getIpAddress();
 
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
 		if (StringUtils.isEmpty(ipAddress) || ipAddress.equals(Constants.ALL)) {
 			model.setIpAddress(Constants.ALL);
@@ -170,7 +172,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private DisplayHeartbeat showReport(Model model, Payload payload) {
+	private HeartbeatSvgGraph showReport(Model model, Payload payload) {
 		try {
 			HeartbeatReport report = getReport(payload.getDomain(), payload.getIpAddress(), payload.getDate(),
 			      payload.getPeriod());
@@ -179,7 +181,7 @@ public class Handler implements PageHandler<Context> {
 				String displayIp = getIpAddress(report, payload);
 
 				payload.setRealIp(displayIp);
-				return new DisplayHeartbeat(m_builder, m_manager).display(report, displayIp);
+				return new HeartbeatSvgGraph(m_builder, m_manager).display(report, displayIp);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);

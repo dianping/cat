@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -22,14 +21,12 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.app.comparison.entity.Item;
-import com.dianping.cat.home.dal.alarm.MailRecord;
-import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 
 public class AppDataComparisonNotifier {
@@ -45,9 +42,6 @@ public class AppDataComparisonNotifier {
 
 	@Inject
 	private SenderManager m_sendManager;
-
-	@Inject
-	private MailRecordDao m_mailRecordDao;
 
 	@Inject
 	private AppDataComparisonRender m_render;
@@ -90,7 +84,6 @@ public class AppDataComparisonNotifier {
 		Map<String, String> user2Id = new HashMap<String, String>();
 
 		for (String user : allUsers) {
-
 			for (Entry<String, AppDataComparisonResult> entry : results.entrySet()) {
 				AppDataComparisonResult result = entry.getValue();
 				String id = result.getId();
@@ -159,31 +152,7 @@ public class AppDataComparisonNotifier {
 		String content = m_render.renderReport(yesterday, results);
 		AlertMessageEntity message = new AlertMessageEntity("", title, "AppDataComparison", content, emails);
 
-		try {
-			boolean result = m_sendManager.sendAlert(AlertChannel.MAIL, message);
-			int reportId = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(yesterday));
-
-			insertMailLog(reportId, content, title, result, emails);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-	}
-
-	private void insertMailLog(int reportId, String content, String title, boolean result, List<String> emails)
-	      throws DalException {
-		MailRecord entity = m_mailRecordDao.createLocal();
-
-		entity.setTitle(title);
-		entity.setContent(content);
-		entity.setRuleId(reportId);
-		entity.setType(2);
-		entity.setReceivers(emails.toString());
-		if (result) {
-			entity.setStatus(0);
-		} else {
-			entity.setStatus(1);
-		}
-		m_mailRecordDao.insert(entity);
+		m_sendManager.sendAlert(AlertChannel.MAIL, message);
 	}
 
 	private String renderTitle() {

@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -14,7 +13,6 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.event.DisplayTypes;
 
 public class EventRender extends BaseVisitor {
 	private Date m_date;
@@ -85,16 +83,12 @@ public class EventRender extends BaseVisitor {
 	@Override
 	public void visitType(EventType type) {
 		if (m_currentIp.equals(Constants.ALL)) {
-			Set<String> types = DisplayTypes.s_unusedTypes;
-			String id = type.getId();
-			if (!types.contains(id)) {
-				Type temp = new Type();
+			Type temp = new Type();
 
-				type.setTps(type.getTotalCount() * 1000d / TimeHelper.ONE_DAY / m_totalDays);
-				temp.setType(type);
-				temp.setUrl(buildGraphUrl(type));
-				m_types.add(temp);
-			}
+			type.setTps(type.getTotalCount() * 1000d / TimeHelper.ONE_DAY / m_totalDays);
+			temp.setType(type);
+			temp.setUrl(buildGraphUrl(type));
+			m_types.add(temp);
 		}
 	}
 

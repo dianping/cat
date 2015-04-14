@@ -11,8 +11,8 @@
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
 .graph {
-	width: 600px;
-	height: 400px;
+	width: 450px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>
@@ -22,10 +22,11 @@
 		<td>
 		<h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
 		<div id="errorTrend" class="graph"></div></td>
-		
+		<c:if test="${payload.ipAddress eq 'All' }">
 		<td>
 		<h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
 		<div id="distributionChart" class="graph"></div></td>
+		</c:if>
 		
 	</tr>
 	<tr><td  style="display:none">

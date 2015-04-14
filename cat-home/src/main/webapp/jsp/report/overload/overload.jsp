@@ -10,49 +10,23 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.overload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.overload.Model" scope="request" />
 
-<a:body>
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+<a:offline>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
-	<div style="height:24px"></div>
    <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
-		<div id="queryBar">
-			<div class="text-left"></div>
-			开始
-			<div id="startDatePicker" class="input-append date" >
-				<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
+		<div id="queryBar"">
+	    <div style="float:left;">
+			&nbsp;开始
+			<input type="text" id="startTime" style="width:150px;" value="<fmt:formatDate value='${payload.startTime}' pattern='yyyy-MM-dd HH:mm'/>"/>
 			结束
-			<div id="endDatePicker" class="input-append date" >
-				<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<%--<input type='hidden' id='fullScreenStr' value='${payload.fullScreen}'/>
-			<a id="fullScreen" class='btn btn-small btn-primary'>全屏</a>&nbsp;&nbsp;
-			 <div class="btn-group" data-toggle="buttons-checkbox">
-			  <button id="hourlyButton" type="button" class="btn btn-info">小时</button>
-			  <button id="dailyButton" type="button" class="btn btn-info">天报</button>
-			  <button id="weeklyButton" type="button" class="btn btn-info">周报</button>
-			  <button id="monthlyButton" type="button" class="btn btn-info">月报</button>
-			  <input type='hidden' id='hourlyStatus' value='${payload.showHourly}'/>
-			  <input type='hidden' id='dailyStatus' value='${payload.showDaily}'/>
-			  <input type='hidden' id='weeklyStatus' value='${payload.showWeekly}'/>
-			  <input type='hidden' id='monthlyStatus' value='${payload.showMonthly}' />
-			</div> --%>
-			<br><br>
+			<input type="text" id="endTime" style="width:150px;" value="<fmt:formatDate value='${payload.endTime}' pattern='yyyy-MM-dd HH:mm'/>"/></div>
+			&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
-		<div id="DatabaseReport">
-			<table	class="problem table table-striped table-bordered table-condensed table-hover" id="contents">
+		<div id="DatabaseReport" style="display:inline-flex;padding-top:3px;">
+			<table class="table table-striped table-condensed  table-hover" style="width:100%" id="contents">
 				<thead>
 				<tr class="text-success">
 					<th width="20%">日期</th>
@@ -104,11 +78,11 @@
 				</c:forEach>
 				</tbody>
 			</table>
-		</div></div></div>
+		</div></div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
 			  init();
-			  $('#overload').addClass("active");
+			  $('#overload_report').addClass("active");
 			  
 	        <c:if test="${payload.fullScreen}">
 	          $('#fullScreen').addClass('btn-danger');
@@ -129,8 +103,16 @@
 	          toggleButton("monthly", true);
 	        </c:if>
 	        
-	        $('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-	        $('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+	    	$('#startTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#endTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
 	        
 	        $("#fullScreen").click(clickFullScreen);
 	        
@@ -190,4 +172,4 @@
 	        window.location.href="?op=view&startTime="+startTime+"&endTime="+endTime;
 	      }
 		</script>
-</a:body>
+</a:offline>

@@ -6,8 +6,9 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.analysis.MessageConsumer;
+import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.message.spi.core.MessageConsumer;
 
 public class DefaultConsumerTest extends ComponentTestCase {
 

@@ -10,10 +10,10 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -38,23 +38,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public Payload() {
 		super(ReportPage.WEB);
-	}
-
-	@Override
-	public Action getAction() {
-		return m_action;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public String getCity() {
-		return m_city;
-	}
-
-	public String getGroup() {
-		return m_group;
 	}
 
 	private Date generateDate(String time, long start) {
@@ -84,6 +67,23 @@ public class Payload extends AbstractReportPayload<Action> {
 			date = new Date(date.getTime() - TimeHelper.ONE_MINUTE);
 		}
 		return date;
+	}
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public String getCity() {
+		return m_city;
+	}
+
+	public String getGroup() {
+		return m_group;
 	}
 
 	public Pair<Date, Date> getHistoryEndDatePair() {

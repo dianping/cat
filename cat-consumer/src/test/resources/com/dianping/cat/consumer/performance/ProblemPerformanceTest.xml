@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>problem</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.ProblemConfigurator$MockProblemReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>problem</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>problem</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.ProblemConfigurator$ExtendedProblemDelegate</implementation>
+		</component>
+	</components>
+</plexus>

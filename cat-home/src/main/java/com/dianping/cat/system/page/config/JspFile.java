@@ -3,8 +3,6 @@ package com.dianping.cat.system.page.config;
 public enum JspFile {
 	PROJECT_ALL("/jsp/system/project/project.jsp"),
 
-	PROJECT_UPATE("/jsp/system/project/projectUpdate.jsp"),
-
 	AGGREGATION_ALL("/jsp/system/aggregation/aggregation.jsp"),
 
 	AGGREGATION_UPATE("/jsp/system/aggregation/aggregationUpdate.jsp"),
@@ -24,6 +22,8 @@ public enum JspFile {
 	TOPOLOGY_GRAPH_PRODUCT_LINE("/jsp/system/productLine/topologyProductLines.jsp"),
 
 	TOPOLOGY_GRAPH_PRODUCT_ADD_OR_UPDATE("/jsp/system/productLine/topologyProductLineAdd.jsp"),
+
+	TOPO_GRAPH_CONFIG_UPDATE("/jsp/system/topology/topoGraphFormatConfig.jsp"),
 
 	METRIC_CONFIG_ADD_OR_UPDATE("/jsp/system/metric/metricConfigAdd.jsp"),
 
@@ -46,12 +46,14 @@ public enum JspFile {
 	NETWORK_RULE_DELETE("/jsp/system/networkRule/networkConfigs.jsp"),
 
 	DATABASE_RULE_CONFIG_LIST("/jsp/system/databaseRule/databaseConfigs.jsp"),
-	
+
 	DATABASE_RULE_ADD_OR_UPDATE("/jsp/system/databaseRule/databaseRuleAdd.jsp"),
-	
+
 	DATABASE_RULE_ADD_OR_UPDATE_SUBMIT("/jsp/system/databaseRule/databaseConfigs.jsp"),
-	
+
 	DATABASE_RULE_DELETE("/jsp/system/databaseRule/databaseConfigs.jsp"),
+
+	STORAGE_GROUP_CONFIG_UPDATE("/jsp/system/storage/storageGroupConfig.jsp"),
 
 	SYSTEM_RULE_CONFIG_LIST("/jsp/system/systemRule/systemConfigs.jsp"),
 
@@ -87,10 +89,6 @@ public enum JspFile {
 
 	UTILIZATION_CONFIG_UPDATE("/jsp/system/utilization/utilizationConfig.jsp"),
 
-	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfig.jsp"),
-
-	METRIC_GROUP_CONFIG_UPDATE("/jsp/system/metricGroup/metricGroupConfig.jsp"),
-
 	NET_GRAPH_CONFIG_UPDATE("/jsp/system/netGraphConfig/netGraphConfig.jsp"),
 
 	WEB_RULE("/jsp/system/webRule/webRule.jsp"),
@@ -100,6 +98,12 @@ public enum JspFile {
 	TRANSACTION_RULE("/jsp/system/transactionRule/transactionRule.jsp"),
 
 	TRANSACTION_RULE_UPDATE("/jsp/system/transactionRule/transactionRuleUpdate.jsp"),
+
+	STORAGE_RULE("/jsp/system/storageRule/storageRule.jsp"),
+
+	STORAGE_RULE_UPDATE("/jsp/system/storageRule/storageRuleUpdate.jsp"),
+
+	APP_NAME_CHECK("/jsp/system/appConfig/appNameCheck.jsp"),
 
 	APP_LIST("/jsp/system/appConfig/appList.jsp"),
 
@@ -115,11 +119,27 @@ public enum JspFile {
 
 	APP_CONFIG_UPDATE("/jsp/system/appConfig/appConfig.jsp"),
 
+	APP_RULE_BATCH("/jsp/system/appConfig/appConfigBatch.jsp"),
+
+	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
+
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
 
-	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfig.jsp");
+	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),
+
+	THIRD_PARTY_CONFIG_LIST("/jsp/system/thirdParty/thirdPartyConfig.jsp"),
+
+	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfigUpdate.jsp"),
+
+	DOMAIN_GROUP_CONFIG_LIST("/jsp/system/domainGroup/domainGroupConfig.jsp"),
+
+	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp"),
+
+	ACTIVITY_CONFIG_UPDATE("/jsp/system/activity/activityConfigUpdate.jsp"),
+
+	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp");
 
 	private String m_path;
 

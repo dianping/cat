@@ -8,10 +8,10 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -19,9 +19,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("domain")
 	private String m_domain = Constants.CAT;
-
-	@FieldMeta("productLine")
-	private String m_productLine = "All";
 
 	@FieldMeta("type")
 	private String m_type = "paasSystem";
@@ -78,10 +75,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
-	public String getProductLine() {
-		return m_productLine;
-	}
-
 	public String getType() {
 		return m_type;
 	}
@@ -101,10 +94,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.SYSTEM);
-	}
-
-	public void setProductLine(String productLine) {
-		m_productLine = productLine;
 	}
 
 	public void setType(String type) {

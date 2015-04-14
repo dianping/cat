@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.MatrixConfigurator$MockMatrixReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>matrix</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.MatrixConfigurator$ExtendedMatrixDelegate</implementation>
+		</component>
+	</components>
+</plexus>

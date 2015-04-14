@@ -72,18 +72,19 @@
 项目<select id="domain" style="width: 100px;"></select>
 	命令字 <select id="command" style="width: 240px;"></select>
 	&nbsp;&nbsp;
-	<input class="btn btn-primary "
+	<input class="btn btn-primary btn-xs"
 					value="&nbsp;&nbsp;&nbsp;返回码&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />
 	<br/>
 	<br/>
-<table class="table table-striped table-bordered table-condensed table-hover" id="contents" width="100%">
+<table class="table table-striped table-condensed  table-bordered table-hover" id="contents" width="100%">
 	<thead>
-	<tr class="odd">
-		<th width="10%">返回码</th>
-		<th width="20%">局部设置</th>
-		<th width="20%">局部状态</th>
-		<th width="15%">操作&nbsp;&nbsp;  <a class='btn btn-primary btn-small' href="?op=appCodeAdd&id=${payload.id}&domain=${payload.domain}&type=code">新增</a></th>
+	<tr >
+		<th width="20%" class="text-info">返回码</th>
+		<th width="50%" class="text-info">局部设置</th>
+		<th width="20%" class="text-info">局部状态</th>
+		<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	</tr></thead>
 	
 	<tbody>
@@ -91,42 +92,54 @@
 			<tr>
 				<td>${code.value.id}</td>
 				<td>${code.value.name}</td>
-				<td>
-				<c:choose>
-				<c:when test="${code.value.status eq 0}">
-					<span class="text-success">成功</span>
-				</c:when>
-				<c:otherwise>
-					<span class="text-error">失败</span>
-				</c:otherwise>
-				</c:choose>
+				<td class="center">
+					<c:choose>
+					<c:when test="${code.value.status eq 0}">
+						<button class="btn btn-xs btn-success">
+						<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+						</button>
+					</c:when>
+					<c:otherwise>
+						<i class="ace-icon glyphicon glyphicon-remove bigger-120"></i>
+					</c:otherwise>
+					</c:choose>
 				</td>
-				<td><a class='btn  btn-small btn-primary' href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">编辑</a>
-				<a class='delete btn  btn-small btn-danger' href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code">删除</a></td>
+				<td><a href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 			</tr>
 	</c:forEach>
 	
 	<tr><td colspan="4"></td></tr>
 	<thead>
-	<tr class="odd">
-		<th>返回码</th>
-		<th>全局设置</th>
-		<th colspan="2">全局状态</th>
+	<tr >
+		<th width="20%" class="text-info">返回码</th>
+		<th width="50%" class="text-info">全局设置</th>
+		<th width="20%" class="text-info">全局状态</th>
+		<th width="10%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code&constant=true" class="btn btn-primary btn-xs" >
+						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	</tr></thead>
 		<c:forEach var="code" items="${model.codes}">
 			<tr>
 				<td>${code.value.id}</td>
 				<td>${code.value.name}</td>
-				<td colspan="2">
-				<c:choose>
-				<c:when test="${code.value.status eq 0}">
-					<span class="text-success">成功</span>
-				</c:when>
-				<c:otherwise>
-					<span class="text-error">失败</span>
-				</c:otherwise>
-				</c:choose>
+				<td class="center">
+					<c:choose>
+					<c:when test="${code.value.status eq 0}">
+						<button class="btn btn-xs btn-success">
+						<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+						</button>
+					</c:when>
+					<c:otherwise>
+						<i class="ace-icon glyphicon glyphicon-remove bigger-120"></i>
+					</c:otherwise>
+					</c:choose>
 				</td>
+				<td><a href="?op=appCodeUpdate&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code&constant=true" class="btn btn-primary btn-xs">
+						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
+						<a href="?op=appCodeDelete&id=${model.id}&domain=${payload.domain}&code=${code.value.id}&type=code&constant=true" class="btn btn-danger btn-xs delete" >
+						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 			</tr>
 	</c:forEach>
 	</tbody>

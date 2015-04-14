@@ -4,26 +4,21 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
-	<div class="row-fluid">
-		<div class="span2">
-			<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
+	<link rel="stylesheet" href="${model.webapp}/assets/css/chosen.css" />
+	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
 			<form name="topologyGraphEdgeConfigAddSumbit" id="form" method="get"
 				action="${model.pageUri}?op=topologyProductLineAddSubmit">
-				<h4 class="text-center text-error" id="state">&nbsp;</h4>
-				<h4 class="text-center text-error">修改产品线配置信息</h4>
+				<h4 class="text-center text-danger">修改产品线配置信息</h4>
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
-				<table class="table table-striped table-bordered table-condensed">
+				<table class="table table-striped table-condensed table-border table-hover ">
 					<tr>
-						<td style="width:25%;text-align: right" class="text-success">产品线名称（全英文）</td>
+						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
 						<td><input name="productLine.id"
 							value="${model.productLine.id}" required />
 							<input name="type" value="${payload.type}" type="hidden"/>	
@@ -40,124 +35,55 @@
 							value="${model.productLine.order}" required /></td>
 					</tr>
 					<tr>
-						<td style="text-align: right" class="text-success">是否显示到监控依赖大盘</td>
-						<td><c:choose>
-								<c:when test="${model.productLine.applicationDashboard}">
-									<input type="radio" name="productLine.applicationDashboard" value="true" checked />是	
-									<input type="radio" name="productLine.applicationDashboard" value="false" />否
-							</c:when>
-								<c:otherwise>
-									<input type="radio" name="productLine.applicationDashboard" value="true" />是
-									<input type="radio" name="productLine.applicationDashboard" value="false" checked />否
-						</c:otherwise>
-							</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到业务监控大盘</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.metricDashboard}">
-								<input type="radio" name="productLine.metricDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.metricDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.metricDashboard" value="true" />是
-								<input type="radio" name="productLine.metricDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到网络监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.networkDashboard}">
-								<input type="radio" name="productLine.networkDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.networkDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.networkDashboard" value="true" />是
-								<input type="radio" name="productLine.networkDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到系统监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.systemMonitorDashboard}">
-								<input type="radio" name="productLine.systemMonitorDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.systemMonitorDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.systemMonitorDashboard" value="true" />是
-								<input type="radio" name="productLine.systemMonitorDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
-						<td style="text-align: right" class="text-success">是否显示到外部监控</td>
-						<td><c:choose>
-							<c:when test="${model.productLine.userMonitorDashboard}">
-								<input type="radio" name="productLine.userMonitorDashboard" value="true" checked />是	
-								<input type="radio" name="productLine.userMonitorDashboard" value="false" />否
-							</c:when>
-							<c:otherwise>
-								<input type="radio" name="productLine.userMonitorDashboard" value="true" />是
-								<input type="radio" name="productLine.userMonitorDashboard" value="false" checked />否
-							</c:otherwise>
-						</c:choose></td>
-					</tr>
-					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
-						<td>
-							<table>
-								<tr>
-								<c:forEach var="item" items="${model.projects}" varStatus="status">
-									<c:choose>
-										<c:when test="${status.index mod 3 ne 0}">
-											<td>
-												<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
-											</td>
-										</c:when>
-										<c:otherwise>
-											</tr>
-											<tr>
-												<td>
-													<input id="${item.domain}" type="checkbox" name="domains" value="${item.domain}" />&nbsp;&nbsp;&nbsp;&nbsp;${item.domain}
-												</td>
-										</c:otherwise>
-									</c:choose>											
-								</c:forEach>
-								</tr>
-							</table>
-						</td>
-						
-						<!-- <td><select style="width: 500px;" name="domains" multiple=""
-							id="domainSelect">
+						<td style="width:50%;">
+							<select multiple class="chosen-select tag-input-style" id="domain_select" name="domains" 
+								data-placeholder="Choose a State...">
 								<c:forEach var="item" items="${model.projects}">
-									<option value="${item.domain}">${item.domain}</option>
+									<c:set var="domains" value="${model.productLine.domains}" />
+									<c:choose>
+									<c:when test="${not empty domains[item.domain]}">
+										<option value="${item.domain}" selected>${item.domain}</option>
+									</c:when>
+									<c:otherwise>
+										<option value="${item.domain}">${item.domain}</option>
+									</c:otherwise>
+									</c:choose>
 								</c:forEach>
-						</select></td> -->
+							</select>
+						</td>
 					</tr>
 					<tr>
-						<td colspan='2' style="text-align:center;"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
+						<td colspan='2' style="text-align:center;"><input class='btn btn-primary btn-sm' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form>
-		</div>
-	</div>
-</a:body>
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
+			$('#projects_config').addClass('active open');
 			$('#topologyProductLines').addClass('active');
 			$("#domainSelect").select2({
 				placeholder : "选择属于这个产品线的项目",
 				allowClear : true
 			});
 			
-			var initDomains = [];
-			<c:forEach var="domain" items="${model.productLine.domains}">
-				initDomains.push("${domain.key}");
-				document.getElementById("${domain.key}").checked = true;
-			</c:forEach>
-			$("#domainSelect").val(initDomains).trigger("change");
+			$('.chosen-select').chosen({allow_single_deselect:true}); 
+			//resize the chosen on window resize
+		
+			$(window)
+			.off('resize.chosen')
+			.on('resize.chosen', function() {
+				$('.chosen-select').each(function() {
+					 var $this = $(this);
+					 $this.next().css({'width': $this.parent().width()});
+				})
+			}).trigger('resize.chosen');
 		});
-	</script>
+</script>
+<style>
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+background:inherit;
+}
+</style>

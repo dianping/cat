@@ -11,19 +11,20 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 
 @ModelMeta(CrossAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_callSort;
 
 	private String m_queryName;
-	
+
 	@EntityMeta
 	private HostInfo m_hostInfo;
 

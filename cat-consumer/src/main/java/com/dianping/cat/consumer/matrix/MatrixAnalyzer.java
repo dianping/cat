@@ -10,15 +10,14 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implements LogEnabled {
 	public static final String ID = "matrix";
@@ -26,11 +25,8 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	@Inject(ID)
 	private ReportManager<MatrixReport> m_reportManager;
 
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
@@ -65,9 +61,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
 
-			if (m_serverConfigManager.discardTransaction((Transaction) message)) {
-				return;
-			}
 			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
@@ -112,7 +105,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		String type = t.getType();
 		Ratio ratio = null;
 
-		if (type.equals("Call") || type.equals("PigeonCall")) {
+		if (m_serverConfigManager.isRpcClient(type)) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
 			ratio = ratios.get("SQL");

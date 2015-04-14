@@ -34,4 +34,34 @@
 	graphLineChart(document.getElementById('hitTrend'), hitTrendData);
 	var failureTrendData = ${model.failureTrend};
 	graphLineChart(document.getElementById('failureTrend'), failureTrendData);
+	
+	var distributionChartMeta = ${model.distributionChart};
+	if(distributionChartMeta!=null){
+		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
+	}
 </script>
+<c:if test="${payload.ipAddress eq 'All' }">
+<table  class='table table-hover table-striped table-condensed '  style="width:100%;">
+	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
+	<tr>
+		<th class="right">Ip</th>
+		<th class="right">Total</th>
+		<th class="right">Failure</th>
+		<th class="right">Failure%</th>
+	</tr>
+	<c:forEach var="item" items="${model.distributionDetails}" varStatus="status">
+	<tr class=" right">
+		<td>${item.ip}</td>
+		<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
+		<td>${w:format(item.failPercent/100,'0.0000%')}</td>
+	</tr>
+	</c:forEach>
+</table>
+<br>
+
+<div id="distributionChart" class="pieChart"></div>
+<div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
+</c:if>
+<br>
+

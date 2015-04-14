@@ -4,10 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.home.nettopo.entity.NetGraph;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
-import com.dianping.cat.home.nettopo.transform.DefaultXmlBuilder;
-import com.dianping.cat.home.nettopo.transform.DefaultSaxParser;
+import com.dianping.cat.home.network.entity.NetGraph;
+import com.dianping.cat.home.network.entity.NetGraphSet;
+import com.dianping.cat.home.network.transform.DefaultXmlBuilder;
+import com.dianping.cat.home.network.transform.DefaultSaxParser;
 
 @RunWith(JUnit4.class)
 public class NetTopoModelTest {

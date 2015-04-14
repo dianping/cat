@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
@@ -12,7 +13,6 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.ReportPage;
-import com.site.helper.Splitters;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	private ReportPage m_page;
@@ -74,6 +74,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("metric")
 	private String m_metric;
 
+	@FieldMeta("count")
+	private int m_count;
+
 	private DateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	@Override
@@ -120,6 +123,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			return "";
 		} else {
 			return m_content;
+		}
+	}
+
+	public int getCount() {
+		if (m_count == 0) {
+			return 10;
+		} else {
+			return m_count;
 		}
 	}
 
@@ -187,7 +198,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		try {
 			return m_format.parse(m_startTime);
 		} catch (Exception e) {
-			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR);
+			return new Date(System.currentTimeMillis() - 15 * TimeHelper.ONE_MINUTE);
 		}
 	}
 
@@ -237,6 +248,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	public void setDomain(String domain) {

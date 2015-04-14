@@ -24,8 +24,8 @@ public class EventPerformanceTest extends ComponentTestCase {
 		for (int i = 0; i < size; i++) {
 			analyzer.process(tree);
 		}
-		System.out.println(analyzer.getReport("cat"));
 		System.out.println("Cost " + (System.currentTimeMillis() - current) / 1000);
+		System.out.println(analyzer.getReport("cat"));
 		//cost 28
 	}
 

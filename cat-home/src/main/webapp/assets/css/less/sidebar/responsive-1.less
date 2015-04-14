@@ -1,0 +1,197 @@
+//side menu toggler in mobile view
+@sidebar-toggler-background: #444;
+@sidebar-toggler-color: #FFF;
+
+
+.main-container .menu-toggler {
+  display: none;
+}
+
+.enable_responsive_menu() when(@enable-responsive-menu = true) {
+@duration : 0.2s;
+
+//responsive sidebar
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+ .sidebar.responsive:before {
+	display: none;
+ }
+
+ .sidebar.responsive {
+	.box-shadow(~"2px 1px 2px 0 rgba(0,0,0,0.15)");
+
+	z-index: @zindex-sidebar-fixed;
+
+	overflow: hidden;
+	max-height: 0;
+
+	.transform(translateX(-@sidebar-width - 10));
+	//"left" or "margin-left" transition is slow on Chrome, so we use translateX
+	-webkit-transition: -webkit-transform @duration linear 0s, max-height 0s linear @duration;
+	-moz-transition: -moz-transform @duration linear 0s, max-height 0s linear @duration;
+	-o-transition: -o-transform @duration linear 0s, max-height 0s linear @duration;
+	transition: transform @duration linear 0s, max-height 0s linear @duration;
+	
+	
+	position: relative;
+	bottom: auto;
+	//top: auto has a problem with android default browser if sidebar is fixed
+	
+	left: @sidebar-width;
+	margin-left: -(@sidebar-width);
+	//why are we doing this?
+	//we don't use "position: absolute" so that our page's height is at least as tall as .sidebar
+	//and therefore our page background is white when sidebar is expanded (whitened by .main-container:before) (it won't happen on position: absolute)
+	//but "position: relative" will push ".main-content" to left
+	//so we use negative "margin-left" on .sidebar to get more space and bring back .main-content
+	//and then we move .sidebar again back to its place using "left" property
+	//so it will look like the "position: absolute" alternative, but it's not
+  }
+ }
+	
+ @media (min-width: @screen-compact-menu) and (max-width: @grid-float-breakpoint-max) {
+	.sidebar.responsive.compact {
+		.transform(translateX(-@sidebar-compact-width - 10));
+		
+		&.push_away.display + .main-content {
+			.transform(translateX(@sidebar-compact-width));
+		}
+		.navbar.navbar-fixed-top + .main-container & {
+			&.push_away.display ~ .footer .footer-inner {
+				.transform(translateX(@sidebar-compact-width));
+			}
+		}
+	}
+ }
+
+ @media only screen and (max-width: @grid-float-breakpoint-max) {
+  .sidebar.responsive {
+	&.menu-min {
+		.transform(translateX(-@sidebar-min-width - 10));
+	}
+
+	&.display {
+		.transform(none) !important;//to override .rtl's
+		overflow: visible;
+		max-height: 2000px;
+
+		-webkit-transition-delay: 0s;
+		-moz-transition-delay: 0s;
+		-o-transition-delay: 0s;
+		transition-delay: 0s;
+	}
+
+	//push .main-content to left
+	&.push_away {
+		.box-shadow(none) !important;//to override .RTL's
+		&:before {
+			display: block !important;
+		}
+
+		+ .main-content {
+			-webkit-transition: -webkit-transform @duration linear 0s;
+			-moz-transition: -moz-transform @duration linear 0s;
+			-o-transition: -o-transform @duration linear 0s;
+			transition: transform @duration linear 0s;
+		}
+		&.display + .main-content {
+			.transform(translateX(@sidebar-width));
+		}
+		&.display.menu-min + .main-content {
+			.transform(translateX(@sidebar-min-width));
+		}
+	}
+
+	.navbar.navbar-fixed-top + .main-container & {
+		&.push_away {
+			&:before {
+				height: 5000px;
+			}
+
+			.enable_footer_responsive_menu_push() when (@enable-footer = true) {
+				~ .footer .footer-inner {
+					-webkit-transition: -webkit-transform @duration linear 0s;
+					-moz-transition: -moz-transform @duration linear 0s;
+					-o-transition: -o-transform @duration linear 0s;
+					transition: transform @duration linear 0s;
+				}
+				&.display ~ .footer .footer-inner {
+					.transform(translateX(@sidebar-width));
+				}
+				&.display.menu-min ~ .footer .footer-inner {
+					.transform(translateX(@sidebar-min-width));
+				}
+			}
+			.enable_footer_responsive_menu_push();
+			
+		}
+	}
+	
+	
+	
+	
+	 .nav-list > li.active:after {
+		height: @nav-item-height + 2;
+	 }
+	 .nav-list li li.active > a:after {
+		display: none;
+	 }
+	 &.menu-min .nav-list > li.active:after {
+		display: block;
+	 }
+	 
+	 + .main-content {
+		margin-left: 0 !important;
+	 }
+ }
+
+}
+
+
+.enable_container_responsive_1() when(@enable-container = true) {
+//maybe disable transition when it is not good enough!
+@media only screen and (min-width: @screen-sm-min) and (max-width: @grid-float-breakpoint-max) {
+ .main-container.container .sidebar.responsive {
+	-webkit-transition: none;
+	-moz-transition: none;
+	-o-transition: none;
+	transition: none;
+	
+	display: none;
+	&.display {
+		display: block;
+	}
+	
+	&.push_away {
+		+ .main-content, ~ .footer .footer-inner {
+			-webkit-transition: none !important;
+			-moz-transition: none !important;
+			-o-transition: none !important;
+			transition: none !important;
+			
+			.transform(none) !important;
+		}
+	}
+ }
+}
+}
+.enable_container_responsive_1();
+
+}
+.enable_responsive_menu();
+
+
+
+//************************************************************************************
+//remove the following to disable fixed sidebar (style1 - default) on smaller devices
+//if you also want to disable fixed breadcrumbs on smalelr devices, refer to breadcrumbs.less
+@media only screen and (max-width: @grid-float-breakpoint-max) {
+ .responsive.sidebar-fixed {
+ 		position: fixed;
+ }
+ .main-container .menu-toggler.fixed {
+	position: fixed;
+	left: auto;
+	z-index: @zindex-sidebar-fixed - 1;
+	-moz-backface-visibility: hidden;
+ }
+}

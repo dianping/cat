@@ -8,9 +8,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -65,9 +65,6 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	public void handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 
-		 processLongUrl(machine, tree);
-		 processLongService(machine, tree);
-
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 
@@ -104,9 +101,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
 			String status = transaction.getName();
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, 0);
+			updateEntity(tree, entity, 0);
 		}
 	}
 
@@ -118,32 +115,24 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CALL.getName();
 			String status = transaction.getName();
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, (int) nomarizeDuration);
+			updateEntity(tree, entity, (int) nomarizeDuration);
 		}
 	}
 
-	private void processLongService(Machine machine, MessageTree tree) {
-		Message message = tree.getMessage();
+	private void processLongService(Machine machine, Transaction transaction, MessageTree tree) {
+		long duration = transaction.getDurationInMillis();
+		String domain = tree.getDomain();
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
+		      m_longServiceThresholds);
 
-		if (message instanceof Transaction) {
-			String messageType = message.getType();
+		if (nomarizeDuration > 0) {
+			String type = ProblemType.LONG_SERVICE.getName();
+			String status = transaction.getName();
+			Entity entity = findOrCreateEntity(machine, type, status);
 
-			if ("Service".equals(messageType) || "PigeonService".equals(messageType)) {
-				long duration = ((Transaction) message).getDurationInMillis();
-				String domain = tree.getDomain();
-				long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
-				      m_longServiceThresholds);
-
-				if (nomarizeDuration > 0) {
-					String type = ProblemType.LONG_SERVICE.getName();
-					String status = message.getName();
-
-					Entry entry = findOrCreateEntry(machine, type, status);
-					updateEntry(tree, entry, (int) nomarizeDuration);
-				}
-			}
+			updateEntity(tree, entity, (int) nomarizeDuration);
 		}
 	}
 
@@ -155,47 +144,46 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_SQL.getName();
 			String status = transaction.getName();
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			Entry entry = findOrCreateEntry(machine, type, status);
-			updateEntry(tree, entry, (int) nomarizeDuration);
+			updateEntity(tree, problem, (int) nomarizeDuration);
 		}
 	}
 
-	private void processLongUrl(Machine machine, MessageTree tree) {
-		Message message = tree.getMessage();
+	private void processLongUrl(Machine machine, Transaction transaction, MessageTree tree) {
+		long duration = (transaction).getDurationInMillis();
+		String domain = tree.getDomain();
 
-		if (message instanceof Transaction && "URL".equals(message.getType())) {
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongUrlDuration, m_longUrlThresholds);
+		if (nomarizeDuration > 0) {
+			String type = ProblemType.LONG_URL.getName();
+			String status = transaction.getName();
+			Entity problem = findOrCreateEntity(machine, type, status);
 
-			long duration = ((Transaction) message).getDurationInMillis();
-			String domain = tree.getDomain();
-
-			long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongUrlDuration, m_longUrlThresholds);
-			if (nomarizeDuration > 0) {
-				String type = ProblemType.LONG_URL.getName();
-				String status = message.getName();
-
-				Entry entry = findOrCreateEntry(machine, type, status);
-				updateEntry(tree, entry, (int) nomarizeDuration);
-			}
+			updateEntity(tree, problem, (int) nomarizeDuration);
 		}
 	}
 
 	private void processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
-		String transactionType = transaction.getType();
+		String type = transaction.getType();
 
-		if (transactionType.startsWith("Cache.")) {
+		if (type.startsWith("Cache.")) {
 			processLongCache(machine, transaction, tree);
-		} else if (transactionType.equals("SQL")) {
+		} else if (type.equals("SQL")) {
 			processLongSql(machine, transaction, tree);
-		} else if (transactionType.equals("Call") || transactionType.equals("PigeonCall")) {
+		} else if (m_configManager.isRpcClient(type)) {
 			processLongCall(machine, transaction, tree);
+		} else if (m_configManager.isRpcServer(type)) {
+			processLongService(machine, transaction, tree);
+		} else if ("URL".equals(type)) {
+			processLongUrl(machine, transaction, tree);
 		}
 
 		List<Message> messageList = transaction.getChildren();
 
 		for (Message message : messageList) {
 			if (message instanceof Transaction) {
-				 processTransaction(machine, (Transaction) message, tree);
+				processTransaction(machine, (Transaction) message, tree);
 			}
 		}
 	}

@@ -32,13 +32,6 @@
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 		<div class="report">
-			<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
-				<div class="opNav">
-				<div class="row-fluid">
-					<div class="span12 text-center">
-						<%@ include file="dependencyOpNav.jsp"%>
-				 		<%@ include file="dependencyTimeNavTab1.jsp"%>
-				</div></div></div>
 			<div id="fullScreenData">
 				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
@@ -50,16 +43,15 @@
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 			<a:report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=dashboard">
-		<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
 		<div class="report">
 			<div class="row-fluid">
 				<div class="span12 text-center">
-					<%@ include file="dependencyOpNav.jsp"%>
-			 		<%@ include file="dependencyTimeNavTab1.jsp"%>
+			 		<%@ include file="dependencyTimeNav.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
-				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
+				<div class="text-center" id="container" style="width:100%;height:1600px;border:solid 1px #ccc;"></div>
 				<br/>
 			</div>
 	    </div>
@@ -74,78 +66,45 @@
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		$('.position').hide();
 		$('.switch').hide();
-		var data = ${model.dashboardGraph};
-		
-		new  StarTopoList('container', data ,{
-			typeMap:{
-				database:'circle',
-				project:'rect',
-				service:'lozenge'
-			},
-			colorMap:{
-				 "1":'#2fbf2f',
-				 "2":'#bfa22f',
-				 "3":'#b94a48',
-				 "4":'#772fbf'
-                         },
-	            legendMap:{
-	            "1":"good",
-	            "2":"warning",
-	            "3":"error"
-	        },
-	        format: {
-	            团购: {
-	                "colInside": '5'
-	            },支付: {
-	                "colInside": '3'
-	            },会员卡: {
-	                "colInside": '2'
-	            },预约预定: {
-	                "colInside": '4'
-	            },商户: {
-	                "colInside": '4'
-	            },广告: {
-	                "colInside": '5'
-	            },用户中心: {
-	                "colInside": '4'
-	            },移动: {
-	                "colInside": '4'
-	            },账号中心: {
-	                "colInside": '4'
-	            },社区: {
-	                "colInside": '4'
-	            }
-	        }, 
-	        
-			paddingInside:10,
-			col:3,
-			colInside:5,
-			//模块距上沿距离
-			paddingUp: 10,
-			//小方块间的间隔比率
-			blockPaddingRatio: 0.2,
-            leftTitlePaddingRatio: 0.05,
-			showLeft: true,
-			showUp: false
-		});
+		$('#Dashboard_report').addClass("open active");
+		$('#dashbord_application').addClass("active");
+		$('#Dependency_report').removeClass("open active");
 
-		var hide =${payload.hideNav};
-		if(hide){
-			$('.opNav').slideUp();
-			$('#switch').html("显示");
-		}	
+		var data = ${model.dashboardGraph};
+		var format = ${model.format};
+		var option = {
+				typeMap:{
+					database:'circle',
+					project:'rect',
+					service:'lozenge'
+				},
+				colorMap:{
+					 "1":'#2fbf2f',
+					 "2":'#bfa22f',
+					 "3":'#b94a48',
+					 "4":'#772fbf'
+	                         },
+		            legendMap:{
+		            "1":"good",
+		            "2":"warning",
+		            "3":"error"
+		        },
+				paddingInside:5,
+				col:3,
+				colInside:5,
+				//模块距上沿距离
+				paddingUp: 10,
+				//小方块间的间隔比率
+				blockPaddingRatio: 0.2,
+	            leftTitlePaddingRatio: 0.05,
+				showLeft: false,
+				showUp: true
+			};
+		
+		option['format'] = format;
+		new  StarTopoList('container', data, option);
 	});
 
-	function showOpNav() {
-		var b = $('#switch').html();
-		if (b == '隐藏') {
-			$('.opNav').slideUp();
-			$('#switch').html("显示");
-		} else {
-			$('.opNav').slideDown();
-			$('#switch').html("隐藏");
-		}
-	}
 </script>
 <style>
 .pagination{

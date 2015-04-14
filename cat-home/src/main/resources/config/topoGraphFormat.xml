@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<topoGraph-format-config>
+	<productLine id="titile1" colInside='5' />
+	<productLine id="title2" colInside='3' />
+</topoGraph-format-config>

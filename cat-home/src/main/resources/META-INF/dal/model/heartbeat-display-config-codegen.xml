@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="heartbeat-display-policy" root="true">
+    <entity-ref name="group" type="list" names="groups" />
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" />
+    <attribute name="order" value-type="int" />
+    <entity-ref name="metric" type="list" names="metrics" />
+  </entity>
+  <entity name="metric">
+    <attribute name="id" value-type="String" />
+    <attribute name="unit" value-type="String" />
+    <attribute name="delta" value-type="boolean" />
+    <attribute name="order" value-type="int" />
+  </entity>
+</model>
+

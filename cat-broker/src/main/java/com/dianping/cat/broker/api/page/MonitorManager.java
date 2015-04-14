@@ -24,6 +24,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
+
 import org.unidal.lookup.util.StringUtils;
 
 public class MonitorManager implements Initializable, LogEnabled {
@@ -102,6 +103,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		defaultMetric.setTimestamp(timestamp);
 		defaultMetric.setStatus("S,C");
 		defaultMetric.addData(String.format("%s,%.2f", 1, duration));
+		defaultMetric.complete();
 	}
 
 	private void logMetricForCount(long timestamp, String group, String key, int count) {
@@ -112,6 +114,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 
 		defaultMetric.setStatus("C");
 		defaultMetric.addData(String.valueOf(count));
+		defaultMetric.complete();
 	}
 
 	public boolean offer(MonitorEntity entity) {
@@ -139,15 +142,9 @@ public class MonitorManager implements Initializable, LogEnabled {
 		return false;
 	}
 
-	private String parseFormatUrl(String url) {
-		String result = m_patternManger.handle(url);
-
-		return result;
-	}
-
 	private void processOneEntity(MonitorEntity entity) {
 		String targetUrl = entity.getTargetUrl();
-		String url = parseFormatUrl(targetUrl);
+		String url = m_patternManger.handle(targetUrl);
 
 		if (url != null) {
 			Transaction t = Cat.newTransaction("Monitor", url);

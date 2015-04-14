@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.app.display;
 
-import com.dianping.cat.report.service.app.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 public class AppDataDetail {
 

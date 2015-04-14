@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppSpeedData;
@@ -27,9 +28,7 @@ public class SpeedBucketExecutor implements BucketExecutor {
 
 	private long m_startTime;
 
-	private CountDownLatch m_flushCountDownLatch = new CountDownLatch(0);
-
-	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
+	private static Semaphore m_semaphore = new Semaphore(1);
 
 	public SpeedBucketExecutor(long startTime, AppService<AppSpeedData> appSpeedDataService) {
 		m_startTime = startTime;
@@ -120,10 +119,9 @@ public class SpeedBucketExecutor implements BucketExecutor {
 				List<AppSpeedProto> datas = new ArrayList<AppSpeedProto>();
 				HashMap<String, AppSpeedProto> value = outerEntry.getValue();
 
-				for (Entry<String, AppSpeedProto> entry : value.entrySet()) {
-					m_saveCountDownLatch.await();
+				m_semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);
 
-					m_flushCountDownLatch = new CountDownLatch(1);
+				for (Entry<String, AppSpeedProto> entry : value.entrySet()) {
 					try {
 						AppSpeedProto appData = entry.getValue();
 
@@ -151,6 +149,7 @@ public class SpeedBucketExecutor implements BucketExecutor {
 								batchInsert(commands, datas);
 
 								commands = new ArrayList<AppSpeedData>();
+								datas = new ArrayList<AppSpeedProto>();
 							}
 						}
 					} catch (Exception e) {
@@ -158,9 +157,10 @@ public class SpeedBucketExecutor implements BucketExecutor {
 					}
 				}
 				batchInsert(commands, datas);
-				m_flushCountDownLatch.countDown();
 			} catch (Exception e) {
 				Cat.logError(e);
+			} finally {
+				m_semaphore.release();
 			}
 		}
 		m_datas.clear();
@@ -178,30 +178,34 @@ public class SpeedBucketExecutor implements BucketExecutor {
 					HashMap<String, AppSpeedProto> value = outerEntry.getValue();
 
 					for (Entry<String, AppSpeedProto> entry : value.entrySet()) {
-						m_flushCountDownLatch.await();
+						try {
+							m_semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);
 
-						m_saveCountDownLatch = new CountDownLatch(1);
-						AppSpeedProto appData = entry.getValue();
+							AppSpeedProto appData = entry.getValue();
 
-						if (appData.notFlushed()) {
-							StringBuilder sb = new StringBuilder();
-							sb.append(appData.getClass().getName()).append(tab);
-							sb.append(appData.getSpeedId()).append(tab);
-							sb.append(appData.getTimestamp()).append(tab);
-							sb.append(appData.getCity()).append(tab);
-							sb.append(appData.getOperator()).append(tab);
-							sb.append(appData.getNetwork()).append(tab);
-							sb.append(appData.getVersion()).append(tab);
-							sb.append(appData.getPlatform()).append(tab);
-							sb.append(appData.getCount()).append(tab);
-							sb.append(appData.getResponseTime()).append(tab);
-							sb.append(appData.getSlowCount()).append(tab);
-							sb.append(appData.getSlowResponseTime()).append(enter);
+							if (appData.notFlushed()) {
+								StringBuilder sb = new StringBuilder();
+								sb.append(appData.getClass().getName()).append(tab);
+								sb.append(appData.getSpeedId()).append(tab);
+								sb.append(appData.getTimestamp()).append(tab);
+								sb.append(appData.getCity()).append(tab);
+								sb.append(appData.getOperator()).append(tab);
+								sb.append(appData.getNetwork()).append(tab);
+								sb.append(appData.getVersion()).append(tab);
+								sb.append(appData.getPlatform()).append(tab);
+								sb.append(appData.getCount()).append(tab);
+								sb.append(appData.getResponseTime()).append(tab);
+								sb.append(appData.getSlowCount()).append(tab);
+								sb.append(appData.getSlowResponseTime()).append(enter);
 
-							writer.append(sb.toString());
-							appData.setSaved();
+								writer.append(sb.toString());
+								appData.setSaved();
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+						} finally {
+							m_semaphore.release();
 						}
-						m_saveCountDownLatch.countDown();
 					}
 				}
 				writer.close();

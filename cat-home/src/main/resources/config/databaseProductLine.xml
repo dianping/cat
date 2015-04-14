@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<company>
+   <product-line id="db-mysql" order="0.0" title="db-mysql" >
+      <domain id="cat"/>
+   </product-line>
+</company>

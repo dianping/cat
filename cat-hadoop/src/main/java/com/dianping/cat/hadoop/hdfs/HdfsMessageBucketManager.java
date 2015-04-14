@@ -20,15 +20,15 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.core.MessagePathBuilder;
-import com.dianping.cat.storage.message.MessageBucket;
-import com.dianping.cat.storage.message.MessageBucketManager;
+import com.dianping.cat.message.storage.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucketManager;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 	public static final String ID = "hdfs";
@@ -37,7 +37,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	private FileSystemManager m_manager;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private PathBuilder m_pathBuilder;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
@@ -70,13 +70,13 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (m_serverConfigManager.isHdfsOn() && !m_serverConfigManager.isLocalMode()) {
+		if (m_serverConfigManager.isHdfsOn()) {
 			Threads.forGroup("cat").start(new IdleChecker());
 		}
 	}
 
 	@Override
-	public MessageTree loadMessage(String messageId) throws IOException {
+	public MessageTree loadMessage(String messageId) {
 		if (!m_serverConfigManager.isHdfsOn()) {
 			return null;
 		}
@@ -90,7 +90,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
 			final StringBuilder sb = new StringBuilder();
-			FileSystem fs = m_manager.getFileSystem("dump", sb);
+			FileSystem fs = m_manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 
 			sb.append('/').append(path);
 
@@ -135,12 +135,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					Cat.logError(e);
 				}
 			}
-
-			return null;
 		} catch (IOException e) {
 			t.setStatus(e);
 			cat.logError(e);
-			throw e;
 		} catch (RuntimeException e) {
 			t.setStatus(e);
 			cat.logError(e);
@@ -148,10 +145,11 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 		} finally {
 			t.complete();
 		}
+		return null;
 	}
 
 	@Override
-	public void storeMessage(MessageTree tree, MessageId id) throws IOException {
+	public void storeMessage(MessageTree tree, MessageId id) {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 

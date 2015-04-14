@@ -4,15 +4,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public abstract class MockReportManager<T> implements ReportManager<T> {
 
 	private Set<String> m_set;
 
 	@Override
-	public void cleanup() {
+	public void cleanup(long time) {
 	}
 
 	@Override

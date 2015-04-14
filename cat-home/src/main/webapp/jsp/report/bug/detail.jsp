@@ -1,6 +1,5 @@
-	<%@ page session="false" language="java" pageEncoding="UTF-8" %>
-	<h4 class='text-error'>项目Bug异常数据 <a class="btn  btn-small btn-danger" target='_blank' href="/cat/s/config?op=bugConfigUpdate">异常规范配置</a></h4>
-	<table class="table table-striped table-bordered table-condensed table-hover">
+<%@ page session="false" language="java" pageEncoding="UTF-8" %>
+	<table class="table table-striped table-condensed   table-hover">
 	<tr>
 			<th width="10%">部门</th>
 			<th width="10%">产品线</th>
@@ -27,8 +26,8 @@
 		</c:forEach>
 	</c:forEach>
 	</table>
-	<h4 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h4>
-	<table class="table table-striped table-bordered table-condensed table-hover">
+	<%-- <h4 class='text-info'>项目其他异常数据(比如框架类异常，超时等)</h4>
+	<table class="table table-striped table-condensed   table-hover">
 	<tr>
 			<th width="10%">部门</th>
 			<th width="10%">产品线</th>
@@ -53,4 +52,4 @@
 				</tr>
 			</c:if>
 		</c:forEach></c:forEach>
-	</table>
+	</table> --%>

@@ -9,10 +9,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.cdn.Model" scope="request"/>
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	
 	<script type="text/javascript">
@@ -22,7 +20,6 @@
 			var cdn = $("#cdn").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
-			
 			window.location.href="?province="+province+"&city="+city+"&cdn="+cdn+"&startDate="+start+"&endDate="+end;
 		}
 		
@@ -30,9 +27,9 @@
 			var start = "${w:format(model.start,'yyyy-MM-dd HH:mm')}";
 			var end = "${w:format(model.end,'yyyy-MM-dd HH:mm')}";
 			if ('${payload.cdn}' == 'ALL') {
-				window.location.href="?province=ALL&cdn="+id+"&startDate="+start+"&endDate="+end;
+				window.location.href="?province=${payload.province}&city=${payload.city}&cdn="+id+"&startDate="+start+"&endDate="+end;
 			} else if ('${payload.province}' == 'ALL') {
-				window.location.href="?province="+id+"&city=ALL&cdn=${payload.cdn}&startDate="+start+"&endDate="+end;
+				window.location.href="?province="+id+"&city=${payload.city}&cdn=${payload.cdn}&startDate="+start+"&endDate="+end;
 			} else if ('${payload.city}' == 'ALL') {
 				window.location.href="?province=${payload.province}&city="+id+"&cdn=${payload.cdn}&startDate="+start+"&endDate="+end;
 			}
@@ -42,50 +39,68 @@
 		
 		function provinceChange(){
 			var key = $("#province").val();
+			if(key == 'ALL'){
+				key = '';
+			}
 			var value = cityData[key];
 			
 			select = document.getElementById("city");
 			select.length=0;
+			
 			for (var prop in value) {
 			    var opt = $('<option />');
 		  		var city = value[prop].city;
-		  		
-		  		if(city==''){
-			  		city = 'ALL';
-		  		}
 			  	
-		  		opt.val(city).html(city);
+		  		if(city == ''){
+		  			opt.val('ALL').html('ALL');
+		  		}else{
+		  			opt.val(city).html(city);
+		  		}
 		  		opt.appendTo(select);
 			}
 		}
-		
-		function cdnChange(){
-			var key = $("#cdn").val();
-			
-			if (key == "ALL") {
-				document.getElementById("province").length = 0;
-				document.getElementById("city").length = 0;
-			} else if (document.getElementById("province").length == 0) {
-				for ( var prop in cityData) {
-					if (prop == '') prop = 'ALL';
+	
+		function init(){
+			for ( var prop in cityData) {
+				if (prop == '') {
+					$('#province').append("<option value='ALL'>ALL</option>");
+				}else{
 					$('#province').append("<option value='"+prop+"'>"+prop+"</option>");
 				}
 			}
 		}
-
+		
 		$(document).ready(function() {
-			$('.date').datetimepicker();
+			$('#startTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#endTime').datetimepicker({
+				format:'Y-m-d H:i',
+				step:30,
+				maxDate:0
+			});			
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'yyyy-MM-dd HH:mm')}");
-			
-			$('#cdn').on('change', cdnChange).val('${payload.cdn}');
-			cdnChange();
-			
+			init();
+			$('#System_report').addClass('active open');
+			$('#system_cdn').addClass('active');
 			$('#province').on('change',provinceChange);
 			
 			var province = '${payload.province}';
 			var city = '${payload.city}';
-			
+			var cdn = '${payload.cdn}';
+			if(cdn == '') {
+				cdn = 'ALL';
+			}
+			if(province == '') {
+				province = 'ALL';
+			}
+			if(city == '') {
+				city = 'ALL';
+			}
+			$('#cdn').val(cdn);
 			$('#province').val(province);
 			provinceChange();
 			
@@ -103,13 +118,12 @@
 		<table>
 			<tr>
 				<th class="left">
-					<select style="width: 120px;" name="innerorouter" id=""innerorouter"">
-						<option value="inner">内部cdn</option>
-						<option value="outer">外部cdn</option>
-					</select> 
-				</th>
-				<th class="left">
-				cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
+				<div style="float:left;">
+					&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+					结束
+					<input type="text" id="endTime" style="width:150px;"/></div>
+				&nbsp;cdn服务商 <select style="width: 120px;" name="cdn" id="cdn">
 						<option value="ALL">ALL</option>
 						<option value="WangSu">网宿</option>
 						<option value="DiLian">帝联</option>
@@ -119,25 +133,9 @@
 				</select> 城市 <select style="width: 100px;" name="city" id="city">
 				</select> 
 				</th>
-				<th class="right">开始时间
-					<div class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime"
-							style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> 结束时间
-					<div class="input-append date"
-						style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime"
-							style="height: 30px; width: 150px;"
-							data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-							class="add-on"> <i data-time-icon="icon-time"
-							data-date-icon="icon-calendar"> </i>
-						</span>
-					</div> <input class="btn btn-primary "
+				<th class="right">
+				 &nbsp;&nbsp;
+				 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 					onclick="query()" type="submit">
 				</div>
@@ -151,12 +149,5 @@
 						<div id="${item.id}" style="width:450px; height:380px;"></div>
 					</div>
 				</c:forEach></div>
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
 	</div>
-	
 </a:body>

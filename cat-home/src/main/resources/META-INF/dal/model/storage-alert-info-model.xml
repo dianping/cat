@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.storage.alert" >
+  <entity name="storage-alert-info" root="true">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="start-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="storage" type="map" names="storages"  method-find-or-create="true" />
+  </entity>
+  <entity name="storage">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="level" value-type="int" primitive="true" />
+    <attribute name="count" value-type="int" primitive="true"  method-inc="true"/>
+    <entity-ref name="machine" type="map" names="machines"  method-find-or-create="true" />
+  </entity>
+  <entity name="machine">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="level" value-type="int" primitive="true" />
+    <attribute name="count" value-type="int" primitive="true"  method-inc="true"/>
+    <entity-ref name="operation" type="map" names="operations"  method-find-or-create="true" />
+  </entity>
+  <entity name="operation">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="level" value-type="int" primitive="true" />
+    <attribute name="count" value-type="int" primitive="true"  method-inc="true"/>
+    <entity-ref name="target" type="map" names="targets"  method-find-or-create="true" />
+  </entity>
+  <entity name="target">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="title" value-type="String" />
+    <attribute name="level" value-type="int" primitive="true" />
+    <attribute name="count" value-type="int" primitive="true"  method-inc="true"/>
+    <entity-ref name="detail" type="list" names="details" />
+  </entity>
+  <entity name="detail">
+    <attribute name="content" value-type="String" key="true" />
+    <attribute name="level" value-type="int" primitive="true" />
+  </entity>
+</model>
+

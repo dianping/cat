@@ -4,10 +4,10 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.report.page.transaction.task.HistoryTransactionReportMerger;
 
 public class HistoryTransactionMergerTest {
 
@@ -18,7 +18,8 @@ public class HistoryTransactionMergerTest {
 		TransactionReport report2 = DefaultSaxParser.parse(oldXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryTransactionMergeResult.xml"),
 		      "utf-8");
-		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(report1.getDomain()));
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(report1.getDomain()))
+		      .setDuration(2);
 
 		report1.accept(merger);
 		report2.accept(merger);

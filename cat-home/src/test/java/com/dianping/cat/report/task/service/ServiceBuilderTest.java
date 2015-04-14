@@ -7,6 +7,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder;
 import com.dianping.cat.service.HostinfoService;
 
 public class ServiceBuilderTest  extends ComponentTestCase{

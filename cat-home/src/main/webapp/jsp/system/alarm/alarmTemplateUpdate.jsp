@@ -40,7 +40,7 @@
 						<td><textarea style="height:300px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea></td>
 					</tr>
 					<tr>
-						<td colspan="2" align="center"><input class="btn btn-primary" type="submit" name="submit" value="submit"></td>
+						<td colspan="2" align="center"><input class="btn btn-primary" type="submit" name="submit" value="提交"></td>
 					</tr>
 				</table>
 			</form>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.heartbeat" enable-sax-parser="true" >
+  <entity name="heartbeat-display-policy" root="true">
+    <entity-ref name="group" type="map" names="groups" />
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="order" value-type="int"  primitive="true" />
+    <entity-ref name="metric" type="map" names="metrics" />
+  </entity>
+  <entity name="metric">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="unit" value-type="String" default-value="1"/>
+    <attribute name="title" value-type="String" />
+    <attribute name="lable" value-type="String" default-value="MB"/>
+    <attribute name="delta" value-type="boolean"  primitive="true"  default-value="false"/>
+    <attribute name="order" value-type="int"  primitive="true" />
+    <attribute name="alert" value-type="boolean"  primitive="true"  default-value="false" />
+  </entity>
+</model>
+

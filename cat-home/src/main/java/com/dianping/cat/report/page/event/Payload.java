@@ -1,12 +1,14 @@
 package com.dianping.cat.report.page.event;
 
+import java.net.URLEncoder;
+
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -21,7 +23,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
-	
+
 	@FieldMeta("group")
 	private String m_group;
 
@@ -34,9 +36,17 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getEncodedType() {
+		try {
+			return URLEncoder.encode(m_type, "utf-8");
+		} catch (Exception e) {
+			return m_type;
+		}
+	}
+
 	public String getGroup() {
-   	return m_group;
-   }
+		return m_group;
+	}
 
 	public String getName() {
 		return m_name;
@@ -59,11 +69,16 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setGroup(String group) {
-   	m_group = group;
-   }
+		m_group = group;
+	}
 
 	public void setName(String name) {
 		m_name = name;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.EVENT);
 	}
 
 	public void setShowAll(boolean showAll) {
@@ -84,4 +99,5 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.HOURLY_REPORT;
 		}
 	}
+
 }

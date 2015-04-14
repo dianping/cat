@@ -8,13 +8,11 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
-		var commandInfo = ${model.command};
+		var commandInfo = ${model.command2CodesJson};
 		function check() {
 			var value = document.getElementById("checkbox").checked;
 
@@ -185,16 +183,84 @@
 					+"&showActivity=${payload.showActivity}";
 			window.location.href = href;
 		}
+		
+		var domain2CommandsJson = ${model.domain2CommandsJson};
+
+		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
+			if(domainInitVal == ""){
+				domainInitVal = $("#"+domainId).val()
+			}
+			var commandSelect = $("#"+commandId);
+			var commands = domain2CommandsJson[domainInitVal];
+			
+			$("#"+domainId).val(domainInitVal);
+			commandSelect.empty();
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+			if(commandInitVal != ''){
+				commandSelect.val(commandInitVal);
+			}
+		}
+		
+		function changeCommandByDomain(){
+			if($(this).attr("id")=="domains"){
+				var domain = $("#domains").val();
+				var commandSelect = $("#command");
+			}else{
+				var domain = $("#domains2").val();
+				var commandSelect = $("#command2");
+			}
+			var commands = domain2CommandsJson[domain];
+			commandSelect.empty();
+			
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+		}
+		
+		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
+			var domainsSelect = $("#"+domainSelectId);
+			for(var domain in domain2CommandsJson){
+				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+			}
+			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
+			domainsSelect.on('change', changeCommandByDomain);
+			domainsSelect.change();
+		}
 
 		$(document).ready(
 				function() {
+					initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
+					initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
+					command1Change();
+					command2Change();
+					
 					if(${payload.showActivity}){
 						$('#activity_trend').addClass('active');
 					} else {
 						$('#trend').addClass('active');
 					}
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker();
+					$('#time').datetimepicker({
+						format:'Y-m-d',
+						timepicker:false,
+						maxDate:0
+					});
+					$('#time2').datetimepicker({
+						format:'Y-m-d',
+						timepicker:false,
+						maxDate:0
+					});
 
 					var query1 = '${payload.query1}';
 					var query2 = '${payload.query2}';
@@ -204,10 +270,17 @@
 
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
+					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
+						$("#command").val(words[1]);
+					}else{
+						if('${payload.showActivity}' == 'true') {
+							$("#command").val('${model.defaultActivity}');
+						}else{
+							$("#command").val('${model.defaultCommand}');
+						}
+					}
 					
-					$("#command").val(words[1]);
-					
-					if (typeof(words[0]) != undefined && words[0].length == 0) {
+					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
 						$("#time").val(getDate());
 					} else {
 						$("#time").val(words[0]);
@@ -238,7 +311,9 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						$("#command2").val(words[1]);
+						if(typeof(words[1]) != 'undefined' && words[0].length > 0 ){
+							$("#command2").val(words[1]);
+						}
 						command2Change();
 						$("#code2").val(words[2]);
 						$("#network2").val(words[3]);
@@ -266,24 +341,5 @@
 				});
 	</script>
 	
-	<div class="row-fluid">
-		<%@include file="menu.jsp"%>
-	<div class="span10">
 		<%@include file="linechartDetail.jsp"%>
-	</div>
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
 </a:body>
-
-<style type="text/css">
-	.row-fluid .span2{
-		width:10%;
-	}
-	.row-fluid .span10{
-		width:87%;
-	}
-</style>

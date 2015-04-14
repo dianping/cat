@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -13,8 +14,8 @@ import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled, Initializable {
 	public static final String ID = "problem";
@@ -26,7 +27,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private List<ProblemHandler> m_handlers;
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
@@ -37,6 +38,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public Set<String> getDomains() {
+		return m_reportManager.getDomains(getStartTime());
 	}
 
 	@Override

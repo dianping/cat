@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.app" enable-merger="true" enable-sax-parser="true"   enable-native-parser="true"  enable-native-builder="true"
+	enable-base-visitor="true" >
+  <entity name="app-report" root="true">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="start-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="command" type="map" names="commands" method-find-or-create="true" />
+  </entity>
+  <entity name="command">
+    <attribute name="id" value-type="int" primitive="true" key="true" />
+    <attribute name="name" value-type="String" />
+    <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="sum" value-type="double" primitive="true" format="0.00"  method-inc="true" />
+    <attribute name="avg" value-type="double" primitive="true" format="0.00" />
+    <attribute name="errors" value-type="long" primitive="true"  method-inc="true" />
+    <attribute name="successRatio" value-type="double" primitive="true" format="0.000" />
+    <attribute name="requestSum" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="requestAvg" value-type="double" primitive="true" format="0.00"  />
+    <attribute name="responseSum" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="responseAvg" value-type="double" primitive="true" format="0.00" />
+    <entity-ref name="transaction" />
+    <entity-ref name="code" type="map" names="codes" method-find-or-create="true" />
+  </entity>
+  <entity name="transaction">
+    <attribute name="url" value-type="String" key="true"/>
+    <attribute name="count" value-type="long" primitive="true" />
+    <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
+  </entity>
+  <entity name="code">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="count" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="sum" value-type="double" primitive="true" format="0.00" method-inc="true" />
+    <attribute name="avg" value-type="double" primitive="true" format="0.00" />
+    <attribute name="errors" value-type="long" primitive="true" method-inc="true" />
+    <attribute name="successRatio" value-type="double" primitive="true" format="0.000" />
+  </entity>
+</model>
+

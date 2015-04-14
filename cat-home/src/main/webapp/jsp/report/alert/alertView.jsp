@@ -11,115 +11,157 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alert.Model" scope="request" />
 
 <a:body>
-	<jsp:body>
-		<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-		<res:useCss value="${res.css.local['alert.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 		<div id="queryBar">
-			<div class="text-left"></div>
-			开始
-			<div id="startDatePicker" class="input-append date" >
-				<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
-			结束
-			<div id="endDatePicker" class="input-append date" >
-				<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>
-			项目
-			<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen()">全屏</a>
-			<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-			<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-			<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
-			<br>
-			告警类型（可多选）&nbsp;&nbsp;
-			<div class="types">
-				<label class="checkbox inline">
+			 <div style="float:left;">
+		&nbsp;开始
+		<input type="text" id="startTime" style="width:150px;"/>
+		结束
+		<input type="text" id="endTime" style="width:150px;"/>
+		&nbsp;&nbsp;项目
+		<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
+		&nbsp;&nbsp;每分钟显示个数
+		<input type="text" id="count" value="${payload.count}" style="width:100px;" style="height:auto" class="input-small"/>
+		<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
+			<div style="float:left;" id="type-group">
+				<label class="btn btn-info btn-sm">
+				  <input id="select-all" type="checkbox"> All
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="business"> 业务告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="network"> 网络告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="system"> 系统告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="exception"> 异常告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="heartbeat"> 心跳告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="thirdParty"> 第三方告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="frontEnd"> 前端告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="app"> App告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="web"> Web告警
-				</label>
-				<label class="checkbox inline">
+				</label><label class="btn btn-info btn-sm">
 				  <input class="type" type="checkbox" value="zabbix"> Zabbix告警
+				</label><label class="btn btn-info btn-sm">
+				  <input class="type" type="checkbox" value="database"> DB告警
+				</label><label class="btn btn-info btn-sm">
+				  <input class="type" type="checkbox" value="transaction"> Transaction告警
 				</label>
 			</div>
-			<br><br>
 		</div>
-		<div id="alertReport">
-			<table	class="problem table table-striped table-bordered table-condensed table-hover">
-				<tr class="text-success">
-					<th width="10%">时间</th>
-					<th width="5%">类型</th>
-					<th width="5%">级别</th>
-					<th width="10%">项目</th>
-					<th width="10%">指标</th>
-					<th width="60%">内容</th>
-				</tr>
-				<c:forEach var="entry" items="${model.alerts}" varStatus="status">
-					<tr class="noter">
-						<td rowspan="${fn:length(entry.value)+1}">${entry.key}</td>
-						<td style="display:none" colspan="5"></td>
-					</tr>
-					<c:forEach var="alert" items="${entry.value}" varStatus="status">
-						<c:set var="category" value="${alert.category}"/>
-						<tr class="${category}">
-							<td>${category}</td>
-							<td>${alert.type}</td>
-							<td>${alert.domain}</td>
-							<td>${alert.metric}</td>
-							<td>${alert.content}</td>
-						</tr>
-					</c:forEach>
-				</c:forEach>
-			</table>
-		</div>
+		<br/><br/>
+		<div id="alert-minutes">
+		  <br/><br/>
+		  <c:set var="count" value="${payload.count}" />
+		  <c:set var="modalId" value="0" />
+		  <c:choose>
+		  	<c:when test="${fn:length(model.alertMinutes) == 0 }">
+		  		<h3 class="text-center text-danger">该项目在该时间段内状态正常，没有告警信息。</h3>
+		 	</c:when>
+		 	<c:otherwise>
+		 		<c:forEach var="minuteEntry" items="${model.alertMinutes}"  varStatus="itemStatus">
+				      <table class="smallTable" style="float:left" border=1>  
+				           <tr><th colspan="2" class="text-danger">${minuteEntry.key}</th></tr>
+				           <tr><th>项目名</th><th>个</th></tr>
+				           <c:set var="length" value="${fn:length(minuteEntry.value.alertDomains)}" />
+				           <c:forEach var="alertDomain" items="${minuteEntry.value.alertDomains}" end="${count-1}">
+				              <tr>
+								 <td style="background-color:red;color:white;">
+								 	<c:set var="id" value="modal${modalId}" />
+								 	<c:set var="modalId" value="${modalId+1}" />
+								 	<span data-id="${id}" class="alert-modal">
+								 		${w:shorten(alertDomain.name, 30)}
+								 	</span>
+								 	<div class="modal fade" id="${id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									  <div class="modal-dialog" style="width:1100px">
+									    <div class="modal-content">
+									      <div class="modal-body">
+									      	<h4 class="text-danger text-center">项目：${alertDomain.name}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：${minuteEntry.key}</h4>
+									      	<c:forEach var="alertCategory" items="${alertDomain.alertCategories}">
+									 			<h5 class="text-warning text-center">告警类型：${alertCategory.key}</h5>
+									 			<table	class="table table-striped table-condensed table-hover">
+													<tr class="text-success">
+														<th width="8%">级别</th>
+														<th width="72%">内容</th>
+													</tr>
+													<c:forEach var="alert" items="${alertCategory.value}">
+														<tr>
+															<td>${alert.type}</td>
+															<td><span class="text-primary">${alert.metric}</span><br/>${alert.content}</td>
+														</tr>
+													</c:forEach>
+												</table>
+									 		</c:forEach>
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+									      </div>
+									    </div>
+									  </div>
+									</div>
+								 </td>
+		                		 <td style="background-color:red;color:white;text-align:right">${w:format(alertDomain.count,'0')}</td>
+				              </tr>
+				           </c:forEach>
+				           <c:if test="${length lt count}">
+				           		<c:forEach begin="1" end="${count-length}">
+				           			<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+				           		</c:forEach>
+						   </c:if>
+				      </table>
+			      </c:forEach>
+			 	</c:otherwise>
+		  </c:choose>
+	    </div>
 		<script type="text/javascript">
 			$(document).ready(function(){
-				<c:if test="${payload.fullScreen}">
-					$('#fullScreen').addClass('btn-danger');
-					$('.navbar').hide();
-					$('.footer').hide();
-				</c:if>
-				
 				initType("${payload.alertType}");
+				$(".alert-modal").click(function(){
+					var targetId = $(this).data("id");
+					$("#"+targetId).modal();
+				});
+				checkIfAllChecked();
+				$('#type-group').click(checkIfAllChecked);
+				$("#select-all").click(function(){
+					var originVal = $(this).prop("checked");
+					
+					$(".type").each(function(){
+						$(this).prop("checked", originVal);
+					});
+				})
 				
-				$('#startDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
-				$('#endDatePicker').datetimepicker({format: 'yyyy-MM-dd hh:mm'});
+				$('#startTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
+				});
+				$('#endTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
+				});
+				$('#startTime').val("${w:format(payload.startTime,'yyyy-MM-dd HH:mm')}");
+				$('#endTime').val("${w:format(payload.endTime,'yyyy-MM-dd HH:mm')}");
 				
-				var refresh = ${payload.refresh};
-				var frequency = ${payload.frequency};
-				if(refresh){
-					$('#refresh'+frequency).addClass('btn-danger');
-					setTimeout(refreshPage,frequency*1000);
-				};
+				$('#System_report').addClass('active open');
+				$('#system_alert').addClass('active');
 			});
+			function checkIfAllChecked(){
+				var isAllChecked = true;
+				
+				$('.type').each(function(){
+					if($(this).prop('checked')==false){
+						isAllChecked = false;
+					}
+				});
+				$('#select-all').prop("checked", isAllChecked);
+			}
 			function initType(rawStr){
 				if(rawStr == null || rawStr == ""){
 					$(".type").each(function(){
@@ -150,21 +192,8 @@
 				var startTime=$("#startTime").val();
 				var endTime=$("#endTime").val();
 				var domain=$("#domain").val();
-				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen=${payload.fullScreen}&alertType="+getType();
-			}
-			function queryFullScreen(){
-				var domain=$("#domain").val();
-				var isFullScreen = ${payload.fullScreen};
-				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&refresh="+${payload.refresh}+"&frequency="+${payload.frequency}+"&fullScreen="+!isFullScreen+"&alertType="+getType();
-			}
-			function queryFrequency(frequency){
-				var domain=$("#domain").val();
-				window.location.href="?op=view&domain="+domain+"&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency+"&alertType="+getType();
-			}
-			function refreshPage(){
-				var domain=$("#domain").val();
-				window.location.href="?op=view&domain="+domain+"&fullScreen=${payload.fullScreen}&refresh=true&frequency="+${payload.frequency}+"&alertType="+getType();
+				var count=$("#count").val();
+				window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&fullScreen=${payload.fullScreen}&alertType="+getType()+"&count="+count;
 			}
 		</script>
-	</jsp:body>
 </a:body>

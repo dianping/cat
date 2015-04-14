@@ -36,9 +36,9 @@ public class DomainFilter implements Filter {
 		if (length >= MAX_SIZE) {
 			int index = value.indexOf(SEPARATOR);
 
-			return domain + SEPARATOR + value.substring(index + 1);
+			return value.substring(index + 1) + SEPARATOR + domain;
 		} else {
-			return domain + SEPARATOR + value;
+			return value + SEPARATOR + domain;
 		}
 	}
 

@@ -7,13 +7,22 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
+import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-public class Model extends AbstractReportModel<Action, Context> {
+import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
+
+	@EntityMeta
+	private ProblemStatistics m_allStatistics;
 
 	private Collection<PatternItem> m_pattermItems;
 
@@ -39,8 +48,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_json;
 
+	private ProblemReport m_problemReport;
+
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public ProblemStatistics getAllStatistics() {
+		return m_allStatistics;
 	}
 
 	public List<String> getCities() {
@@ -76,6 +91,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public Date getEnd() {
 		return m_end;
+	}
+
+	public List<String> getIps() {
+		if (m_problemReport == null) {
+			return new ArrayList<String>();
+		} else {
+			return SortHelper.sortIpAddress(m_problemReport.getIps());
+		}
 	}
 
 	public String getItems() {
@@ -121,8 +144,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_pieCharts;
 	}
 
+	public ProblemReport getProblemReport() {
+		return m_problemReport;
+	}
+
 	public Date getStart() {
 		return m_start;
+	}
+
+	public void setAllStatistics(ProblemStatistics allStatistics) {
+		m_allStatistics = allStatistics;
 	}
 
 	public void setCities(List<String> cities) {
@@ -167,6 +198,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setPieCharts(List<PieChart> pieCharts) {
 		m_pieCharts = pieCharts;
+	}
+
+	public void setProblemReport(ProblemReport problemReport) {
+		m_problemReport = problemReport;
 	}
 
 	public void setStart(Date start) {

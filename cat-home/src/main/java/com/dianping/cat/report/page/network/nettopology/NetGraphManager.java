@@ -19,34 +19,36 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.nettopo.entity.Connection;
-import com.dianping.cat.home.nettopo.entity.Interface;
-import com.dianping.cat.home.nettopo.entity.NetGraph;
-import com.dianping.cat.home.nettopo.entity.NetGraphSet;
-import com.dianping.cat.home.nettopo.entity.NetTopology;
+import com.dianping.cat.home.network.entity.Connection;
+import com.dianping.cat.home.network.entity.Interface;
+import com.dianping.cat.home.network.entity.NetGraph;
+import com.dianping.cat.home.network.entity.NetGraphSet;
+import com.dianping.cat.home.network.entity.NetTopology;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.alert.AlertInfo;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.task.alert.RemoteMetricReportService;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.system.config.NetGraphConfigManager;
+import com.dianping.cat.report.alert.AlertInfo;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
+import com.dianping.cat.report.page.network.service.NetTopologyReportService;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class NetGraphManager implements Initializable, LogEnabled {
 
-	@Inject
-	private RemoteMetricReportService m_service;
+	@Inject(type = ModelService.class, value = MetricAnalyzer.ID)
+	private ModelService<MetricReport> m_service;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private NetTopologyReportService m_reportService;
 
 	@Inject
 	private NetGraphBuilder m_netGraphBuilder;
@@ -83,8 +85,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		} else if (startTime == currentHours - TimeHelper.ONE_HOUR) {
 			netGraphSet = m_lastNetGraphSet;
 		} else {
-			netGraphSet = m_reportService.queryNetTopologyReport(Constants.CAT, start, new Date(start.getTime()
-			      + TimeHelper.ONE_HOUR));
+			netGraphSet = m_reportService.queryReport(Constants.CAT, start,
+			      new Date(start.getTime() + TimeHelper.ONE_HOUR));
 		}
 
 		if (netGraphSet != null) {
@@ -128,7 +130,8 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 		for (String group : groups) {
 			ModelRequest request = new ModelRequest(group, period);
-			MetricReport report = m_service.invoke(request);
+			ModelResponse<MetricReport> response = m_service.invoke(request);
+			MetricReport report = response.getModel();
 
 			reports.put(group, report);
 		}
@@ -144,12 +147,12 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			boolean active = true;
+			boolean active = TimeHelper.sleepToNextMinute();
 
 			while (active) {
-				Transaction t = Cat.newTransaction("NetGraph", TimeHelper.getMinuteStr());
+				Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
 				long current = System.currentTimeMillis();
-				
+
 				try {
 					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
 					Set<String> groups = queryAllGroups(netGraphTemplate);

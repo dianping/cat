@@ -1,5 +1,8 @@
 package com.dianping.cat.hadoop.hdfs;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.EOFException;
@@ -9,16 +12,15 @@ import java.util.zip.GZIPInputStream;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.message.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucket;
 
 public class HdfsMessageBucket implements MessageBucket {
 	public static final String ID = "hdfs";
@@ -42,14 +44,9 @@ public class HdfsMessageBucket implements MessageBucket {
 	public MessageTree findById(String messageId) throws IOException {
 		int index = MessageId.parse(messageId).getIndex();
 
-		return findByIndex(index);
-	}
-
-	@Override
-	public MessageTree findByIndex(int index) throws IOException {
 		try {
 			byte[] data = m_reader.readMessage(index);
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(data.length);
+			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(data.length);
 			MessageTree tree = new DefaultMessageTree();
 
 			buf.writeBytes(data);
@@ -83,7 +80,7 @@ public class HdfsMessageBucket implements MessageBucket {
 
 		public MessageBlockReader(FileSystemManager manager, String dataFile) throws IOException {
 			StringBuilder sb = new StringBuilder();
-			FileSystem fs = manager.getFileSystem("dump", sb);
+			FileSystem fs = manager.getFileSystem(ServerConfigManager.DUMP_DIR, sb);
 			Path basePath = new Path(sb.toString());
 
 			m_indexFile = fs.open(new Path(basePath, dataFile + ".idx"));
@@ -134,4 +131,5 @@ public class HdfsMessageBucket implements MessageBucket {
 			}
 		}
 	}
+	
 }

@@ -16,11 +16,11 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.graph.LineChart;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -39,7 +39,6 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "database")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
 	}
 
 	@Override
@@ -61,15 +60,17 @@ public class Handler implements PageHandler<Context> {
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
 			break;
 		}
-
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void normalize(Model model, Payload payload) {
-		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabases().values());
+		List<ProductLine> databases = new ArrayList<ProductLine>(m_productLineConfigManager.queryDatabaseProductLines()
+		      .values());
 
 		model.setPage(ReportPage.DATABASE);
 		model.setProductLines(databases);
+		model.setAction(payload.getAction());
+
 		m_normalizePayload.normalize(model, payload);
 
 		if (StringUtils.isEmpty(payload.getProduct())) {

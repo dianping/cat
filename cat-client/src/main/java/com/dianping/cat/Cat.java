@@ -25,12 +25,15 @@ import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 /**
  * This is the main entry point to the system.
  */
 public class Cat {
 	private static Cat s_instance = new Cat();
+
+	private static volatile boolean s_init = false;
 
 	private MessageProducer m_producer;
 
@@ -39,11 +42,12 @@ public class Cat {
 	private PlexusContainer m_container;
 
 	private static void checkAndInitialize() {
-		if (s_instance.m_container == null) {
+		if (!s_init) {
 			synchronized (s_instance) {
-				if (s_instance.m_container == null) {
+				if (!s_init) {
 					initialize(new File(getCatHome(), "client.xml"));
 					log("WARN", "Cat is lazy initialized!");
+					s_init = true;
 				}
 			}
 		}
@@ -62,6 +66,22 @@ public class Cat {
 		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat");
 
 		return catHome;
+	}
+
+	public static String getCurrentMessageId() {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+
+		if (tree != null) {
+			String messageId = tree.getMessageId();
+
+			if (messageId == null) {
+				messageId = Cat.createMessageId();
+				tree.setMessageId(messageId);
+			}
+			return messageId;
+		} else {
+			return null;
+		}
 	}
 
 	public static Cat getInstance() {
@@ -150,7 +170,7 @@ public class Cat {
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
-		//TO REMOVE ME
+		// TO REMOVE ME
 	}
 
 	/**
@@ -208,11 +228,51 @@ public class Cat {
 	 *           the quantity to be accumulated
 	 */
 	public static void logMetricForSum(String name, double sum, int quantity) {
-		logMetricInternal(name, "S,C", String.format("%.2f,%s", sum, quantity));
+		logMetricInternal(name, "S,C", String.format("%s,%.2f", quantity, sum));
 	}
 
 	private static void logMetricInternal(String name, String status, String keyValuePairs) {
 		Cat.getProducer().logMetric(name, status, keyValuePairs);
+	}
+
+	public static void logRemoteCallClient(Context ctx) {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		String messageId = tree.getMessageId();
+
+		if (messageId == null) {
+			messageId = Cat.createMessageId();
+			tree.setMessageId(messageId);
+		}
+
+		String childId = Cat.createMessageId();
+		Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+
+		String root = tree.getRootMessageId();
+
+		if (root == null) {
+			root = messageId;
+		}
+
+		ctx.addProperty(Context.ROOT, root);
+		ctx.addProperty(Context.PARENT, messageId);
+		ctx.addProperty(Context.CHILD, childId);
+	}
+
+	public static void logRemoteCallServer(Context ctx) {
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		String messageId = ctx.getProperty(Context.CHILD);
+		String rootId = ctx.getProperty(Context.ROOT);
+		String parentId = ctx.getProperty(Context.PARENT);
+
+		if (messageId != null) {
+			tree.setMessageId(messageId);
+		}
+		if (parentId != null) {
+			tree.setParentMessageId(parentId);
+		}
+		if (rootId != null) {
+			tree.setRootMessageId(rootId);
+		}
 	}
 
 	public static void logTrace(String type, String name) {
@@ -257,40 +317,39 @@ public class Cat {
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
-		s_instance.m_manager.reset();
+		// remove me
 	}
 
-	// this should be called when a thread starts to create some thread local
-	// data
+	// this should be called when a thread starts to create some thread local data
 	public static void setup(String sessionToken) {
-		MessageManager manager = s_instance.m_manager;
-
-		if (manager == null) {
-			checkAndInitialize();
-		}
-		manager.setup();
-		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
+		Cat.getManager().setup();
 	}
 
 	private Cat() {
 	}
 
 	void setContainer(PlexusContainer container) {
-		m_container = container;
-
 		try {
+			m_container = container;
 			m_manager = container.lookup(MessageManager.class);
+			m_producer = container.lookup(MessageProducer.class);
 		} catch (ComponentLookupException e) {
 			throw new RuntimeException("Unable to get instance of MessageManager, "
 			      + "please make sure the environment was setup correctly!", e);
 		}
-
-		try {
-			m_producer = container.lookup(MessageProducer.class);
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageProducer, "
-			      + "please make sure the environment was setup correctly!", e);
-		}
 	}
-	
+
+	public static interface Context {
+
+		public final String ROOT = "_catRootMessageId";
+
+		public final String PARENT = "_catParentMessageId";
+
+		public final String CHILD = "_catChildMessageId";
+
+		public void addProperty(String key, String value);
+
+		public String getProperty(String key);
+	}
+
 }

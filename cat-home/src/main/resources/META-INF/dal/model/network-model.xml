@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.network" enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true" enable-native-parser="true"  enable-native-builder="true"
+	enable-xml-parser="false"  enable-xml-builder="false">
+  <entity name="netGraphSet" root="true">
+    <entity-ref name="netGraph" type="map" names="netGraphs" method-find-or-create='true' />
+  </entity>
+  <entity name="netGraph">
+    <attribute name="minute" value-type="int" key="true" />
+    <entity-ref name="netTopology" type="list" names="netTopologies" />
+  </entity>
+  <entity name="netTopology">
+    <attribute name="name" value-type="String" />
+    <entity-ref name="anchor" type="list" names="anchors" />
+    <entity-ref name="switch" type="list" names="switchs" />
+    <entity-ref name="connection" type="list" names="connections" />
+  </entity>
+  <entity name="anchor">
+    <attribute name="name" value-type="String" />
+    <attribute name="x" value-type="int" />
+    <attribute name="y" value-type="int" />
+  </entity>
+  <entity name="switch">
+    <attribute name="name" value-type="String" />
+    <attribute name="x" value-type="int" />
+    <attribute name="y" value-type="int" />
+    <attribute name="state" value-type="int" />
+  </entity>
+  <entity name="connection">
+    <attribute name="from" value-type="String" />
+    <attribute name="to" value-type="String" />
+    <attribute name="instate" value-type="int" />
+    <attribute name="outstate" value-type="int" />
+    <attribute name="inDiscardsState" value-type="int" />
+    <attribute name="outDiscardsState" value-type="int" />
+    <attribute name="inErrorsState" value-type="int" />
+    <attribute name="outErrorsState" value-type="int" />
+    <entity-ref name="interface" type="list" names="interfaces" />
+    <attribute name="insum" value-type="double" />
+    <attribute name="outsum" value-type="double" />
+    <attribute name="inDiscards" value-type="double" />
+    <attribute name="outDiscards" value-type="double" />
+    <attribute name="inErrors" value-type="double" />
+    <attribute name="outErrors" value-type="double" />
+  </entity>
+  <entity name="interface">
+    <attribute name="group" value-type="String" />
+    <attribute name="domain" value-type="String" />
+    <attribute name="key" value-type="String" />
+    <attribute name="instate" value-type="int" />
+    <attribute name="outstate" value-type="int" />
+    <attribute name="inDiscardsState" value-type="int" />
+    <attribute name="outDiscardsState" value-type="int" />
+    <attribute name="inErrorsState" value-type="int" />
+    <attribute name="outErrorsState" value-type="int" />
+    <attribute name="in" value-type="double" />
+    <attribute name="out" value-type="double" />
+    <attribute name="inDiscards" value-type="double" />
+    <attribute name="outDiscards" value-type="double" />
+    <attribute name="inErrors" value-type="double" />
+    <attribute name="outErrors" value-type="double" />
+  </entity>
+</model>

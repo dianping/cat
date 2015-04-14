@@ -13,7 +13,6 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -24,11 +23,10 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	@Inject
 	private TransactionDelegate m_delegate;
@@ -36,8 +34,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
 
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	public static final String ID = "transaction";
 
@@ -83,7 +80,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
@@ -168,20 +165,21 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	protected void processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t)) {
-			return;
-		} else if ("ABTest".equals(t.getType())) {
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_serverConfigManager.discardTransaction(type, name)) {
 			return;
 		} else {
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
 
 			if (pair.getKey().booleanValue()) {
 				String ip = tree.getIpAddress();
-				TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-				TransactionName name = type.findOrCreateName(t.getName());
+				TransactionType transactionType = report.findOrCreateMachine(ip).findOrCreateType(type);
+				TransactionName transactionName = transactionType.findOrCreateName(name);
 				String messageId = tree.getMessageId();
-				
-				processTypeAndName(t, type, name, messageId, pair.getValue().doubleValue() / 1000d);
+
+				processTypeAndName(t, transactionType, transactionName, messageId, pair.getValue().doubleValue() / 1000d);
 			}
 
 			List<Message> children = t.getChildren();
@@ -221,17 +219,18 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		int allDuration = ((int) computeDuration(duration));
+		double sum = duration * duration;
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));
 		name.setSum(name.getSum() + duration);
-		name.setSum2(name.getSum2() + duration * duration);
+		name.setSum2(name.getSum2() + sum);
 		name.findOrCreateAllDuration(allDuration).incCount();
 
 		type.setMax(Math.max(type.getMax(), duration));
 		type.setMin(Math.min(type.getMin(), duration));
 		type.setSum(type.getSum() + duration);
-		type.setSum2(type.getSum2() + duration * duration);
+		type.setSum2(type.getSum2() + sum);
 		type.findOrCreateAllDuration(allDuration).incCount();
 
 		long current = t.getTimestamp() / 1000 / 60;
@@ -253,10 +252,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private TransactionReport queryReport(String domain) {
-		TransactionReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+		long period = getStartTime();
+		long timestamp = System.currentTimeMillis();
+		long remainder = timestamp % ONE_HOUR;
+		long current = timestamp - remainder;
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		report.accept(m_computer);
+		TransactionReport report = m_reportManager.getHourlyReport(period, domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(period));
+
+		if (period == current) {
+			report.accept(m_computer.setDuration(remainder / 1000));
+		} else if (period < current) {
+			report.accept(m_computer.setDuration(3600));
+		}
 
 		return report;
 	}

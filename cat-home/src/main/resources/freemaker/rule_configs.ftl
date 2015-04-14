@@ -24,8 +24,8 @@
 
 <div id="configs">
     <div class="config" id="configSample">
-        <p class="text-success text-center">监控规则配置&nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="configTip"></i> 
-            <button class="btn btn-success btn-small" id="add-config-button" type="button">
+        <p class="text-success text-center">监控规则配置&nbsp;<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left" data-content="监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警"></i>
+            <button class="btn btn-success btn-xs" id="add-config-button" type="button">
                 添加监控规则<i class="icon-plus icon-white"></i>
             </button>
         </p>
@@ -34,7 +34,7 @@
         监控结束时间：<input name="endMinute" class="endMinute input-small" value="24:00" type=" text" placeholder="格式如 24:00"/>
         </div>
         <div class="condition">
-            <p class="text-center text-success">监控条件 &nbsp;&nbsp;&nbsp;<i class="icon-question-sign" id="conditionTip"></i></p>
+            <p class="text-center text-success">监控条件 &nbsp;<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left" data-content="监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"></i></p>
             持续分钟：<input name="configMinute" class="configMinute input-mini" type="text"/>
             告警级别：
             <select name="level" class="level span2">
@@ -49,37 +49,37 @@
                 <div class="subCondition">
                     &nbsp;&nbsp;&nbsp;规则类型：
                     <select name="ruleType" class="ruleType">
-                        <option value="DescVal">下降值</option>
-                        <option value="DescPer">下降百分比</option>
-                        <option value="AscVal">上升值</option>
-                        <option value="AscPer">上升百分比</option>
-                        <option value="MaxVal">最大值</option>
-                        <option value="MinVal">最小值</option>
-                        <option value="FluAscPer">波动上升百分比</option>
-                        <option value="FluDescPer">波动下降百分比</option>
-                        <option value="SumMaxVal">总和最大值</option>
-                        <option value="SumMinVal">总和最小值</option>
+                        <option value="DescVal">下降值(比基线)</option>
+                        <option value="DescPer">下降百分比(比基线)</option>
+                        <option value="AscVal">上升值(比基线)</option>
+                        <option value="AscPer">上升百分比(比基线)</option>
+                        <option value="MaxVal">最大值(当前值)</option>
+                        <option value="MinVal">最小值(当前值)</option>
+                        <option value="FluAscPer">波动上升百分比(当前值)</option>
+                        <option value="FluDescPer">波动下降百分比(当前值)</option>
+                        <option value="SumMaxVal">总和最大值(当前值)</option>
+                        <option value="SumMinVal">总和最小值(当前值)</option>
                     </select>
                     阈值：<input name="value" class="value input-mini" type="text"/>
-                    <button class="btn btn-danger btn-small delete-subcondition-button" type="button">
+                    <button class="btn btn-danger btn-xs delete-subcondition-button" type="button">
                         删除子条件<i class="icon-trash icon-white"></i>
                     </button>
                 </div>
             </div>
-            <button class="btn btn-success btn-small add-subCondition-button" type="button">
+            <button class="btn btn-success btn-xs add-subCondition-button" type="button">
                 添加子条件<i class="icon-plus icon-white"></i>
             </button>
-            <button class="btn btn-danger btn-small delete-condition-button" type="button">
+            <button class="btn btn-danger btn-xs delete-condition-button" type="button">
                 删除监控条件<i class="icon-trash icon-white"></i>
             </button>
-            <button class="btn btn-info btn-small define-button" type="button">
+            <button class="btn btn-info btn-xs define-button" type="button">
                 自定义监控规则<i class="icon-user icon-white"></i>
             </button>
         </div>
-        <button class="btn btn-success btn-small add-condition-button" type="button">
+        <button class="btn btn-success btn-xs add-condition-button" type="button">
             添加监控条件<i class="icon-plus icon-white"></i>
         </button>
-        <button class="btn btn-danger btn-small delete-config-button" type="button">
+        <button class="btn btn-danger btn-xs delete-config-button" type="button">
             删除监控规则<i class="icon-trash icon-white"></i>
         </button>
     </div>
@@ -129,15 +129,7 @@ function initRuleConfigs(filterList) {
 	newUserDefineCondition = $(".subCondition").last().clone();
 	newUserDefineCondition.css('display','block');
 
-    $("#configTip").tooltip({
-        "placement":"top",
-        "title":"监控规则代表一个时间段的规则配置。其下的任意一条监控条件触发则报警。"
-    });
-    
-    $("#conditionTip").tooltip({
-        "placement":"top",
-        "title":"监控条件由子条件组成。当其下的全部子条件都被触发时该监控条件才被触发。监控条件之间是并行的关系。"
-    });
+	$('i[tips]').popover();
     
     $("#configs").delegate(".add-subCondition-button", "click", function () {
         addSubCondition($(this), newSubCondition);
@@ -145,10 +137,12 @@ function initRuleConfigs(filterList) {
 
     $("#configs").delegate(".add-condition-button", "click", function () {
         addCondition($(this), newCondition);
+        $('i[tips]').popover();
     })
     
     $("#configs").delegate("#add-config-button","click", function () {
         addConfig(newConfig);
+        $('i[tips]').popover();
     })
     
     $("#configs").delegate(".define-button","click", function () {
@@ -192,7 +186,7 @@ function changeToUserDefine(currentElement){
 
 function initIntro(){
 	var context = $("#configSample").first();
-	var startButton = $('<button class="btn btn-info btn-small help" type="button">如何使用?</button>');
+	var startButton = $('<button class="btn btn-info btn-xs help" type="button">如何使用?</button>');
 	
 	context.find("button").first().after(startButton);
 	context.find(".configDuration").first().attr("data-step","1").attr("data-intro","定义一个时间段。一个时间段下可以有多个监控条件，只要有一个条件被触发，cat就会发出告警");

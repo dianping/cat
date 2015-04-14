@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage-report id="cat-sql" name="cat" type="sql" startTime="2012-09-06 20:00:00" endTime="2012-09-06 20:59:59">
+   <id>cat</id>
+   <id>shop-web</id>
+   <ip>10.10.10.1</ip>
+   <ip>10.10.10.2</ip>
+   <op>get</op>
+   <op>mget</op>
+   <op>add</op>
+   <op>delete</op>
+   <machine id="10.1.6.101">
+      <domain id="cat">
+         <operation id="get" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="mget" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="add" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="delete" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+      </domain>
+      <domain id="shop-web">
+         <operation id="get" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="mget" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="add" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="delete" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+      </domain>
+   </machine>
+   <machine id="10.1.6.102">
+      <domain id="cat">
+         <operation id="get" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="mget" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="add" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="delete" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+      </domain>
+      <domain id="shop-web">
+         <operation id="get" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="mget" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="add" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+         <operation id="delete" count="400" avg="100.0" sum="40000.0" error="400" long-count="400">
+         </operation>
+      </domain>
+   </machine>
+</storage-report>

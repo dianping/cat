@@ -9,18 +9,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:body>
-	<div>
-		<div class="row-fluid">
-        <div class="span2">
-		<%@include file="../configTree.jsp"%>
-		</div>
-		<div class="span10">
-		
-		</br>
+<a:config>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-bordered'>
+				<table style='width:100%' class='table table-striped table-condensed '>
 			<tr>
 			<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />
 			<c:set var="name" value="${strs[2]}" />
@@ -35,7 +27,7 @@
 								</c:otherwise>
 							</c:choose>
 						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;"><option value='-1'>All</option>
+				</select> 返回码 <select id="code" style="width: 120px;">
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value='-1'>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
@@ -83,8 +75,8 @@
 						<td style='text-align:center' colspan='2'><input class="btn btn-primary btn-mini" id="ruleSubmitButton" type="text" name="submit" value="提交"></button></td>
 					</tr>
 				</table>
-			</form> </div></div></div>
-</a:body>
+			</form>
+</a:config>
 
 <script type="text/javascript">
 var commandInfo = ${model.commandJson};
@@ -92,6 +84,11 @@ var commandChange = function commandChange() {
 	var key = $("#command").val();
 	var value = commandInfo[key];
 	var code = document.getElementById("code");
+	code.length = 0;
+	var opt = $('<option />');
+	opt.html("All");
+	opt.val("-1");
+	opt.appendTo(code);
 	for ( var prop in value) {
 		var opt = $('<option />');
 
@@ -135,26 +132,29 @@ function update() {
 			document.getElementById("metric").disabled = true;
 		}
 		var words = ruleId.split(":")[0].split(";");
-		var metric = ruleId.split(":")[1];
-		var command = words[0];
+		if(typeof words != "undefined" && words.length == 8){
+			var metric = ruleId.split(":")[1];
+			var command = words[0];
+			var code = words[1];
+			var network = words[2];
+			var version = words[3];
+			var connectionType = words[4];
+			var platform = words[5];
+			var city = words[6];
+			var operator = words[7];
+			$("#command").val(command);
+			commandChange();
+			$("#code").val(code);
+			$("#network").val(network);
+			$("#version").val(version);
+			$("#connectionType").val(connectionType);
+			$("#platform").val(platform);
+			$("#city").val(city);
+			$("#operator").val(operator);
+			$("#metric").val(metric);
+		}
 		commandChange();
-		var code = words[1];
-		var network = words[2];
-		var version = words[3];
-		var connectionType = words[4];
-		var platform = words[5];
-		var city = words[6];
-		var operator = words[7];
-		$("#command").val(command);
-		$("#code").val(code);
-		$("#network").val(network);
-		$("#version").val(version);
-		$("#connectionType").val(connectionType);
-		$("#platform").val(platform);
-		$("#city").val(city);
-		$("#operator").val(operator);
-		$("#metric").val(metric);
-		
+		$('#userMonitor_config').addClass('active open');
 		$('#appRule').addClass('active');
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){

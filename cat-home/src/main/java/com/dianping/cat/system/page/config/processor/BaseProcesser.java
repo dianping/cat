@@ -12,8 +12,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.rule.entity.MetricItem;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
-import com.dianping.cat.report.task.alert.RuleFTLDecorator;
-import com.dianping.cat.system.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.RuleFTLDecorator;
+import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
 import com.dianping.cat.system.page.config.Model;
 
 public class BaseProcesser {

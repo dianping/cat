@@ -1,82 +1,21 @@
-body {
-	font-family: arial, helvetica, sans-serif;
-	background: white;
-	color: black;
-}
-
-.report .header {
-	background: #f5f5f5;
-	font-weight: bold;
-	border: solid #ccc 1px;
-	border-radius: 4px;
-	width: 100%;
-}
-
-.report .header .nav {
-	text-align: right;
-	font-weight: bold;
-	color: black;
-}
-
-.footer {
-	background: #f5f5f5;
-	font-weight: bold;
-	border: solid #ccc 1px;
-	width: 100%;
-	text-align: center;
-	border-radius: 4px;
-}
-
 .current {
 	background-color: #3CB371;
 }
 
-table {
-	font-size: 14px;
+table{
+	font-size:14px;
 }
 
-.data{
-	border:1px solid #dddddd;
-	border-radius:4px;
-}
-
-.data tr.head th {
-	background-color: #f2f2f2;
-}
-
-.data tr th {
-	background-color: #f2f2f2;
-}
-
-.data tr.odd td {
-	background-color: #eee;
-}
-
-.data tr.even td {
-	background-color: white;
-}
-
-.data tr.odd th {
-	background-color: #eee;
-}
-
-.data tr.even th {
-	background-color: white;
-}
-
-.data td.odd {
-	background-color: #eee;
-}
-
-.data td.even {
-	background-color: white;
+.machines th{
+	font-size:14px;
 }
 
 th{
 	word-break: break-all;
 }
 td{
-	word-break: break-all;
+	word-break: break-all;c
+	padding-left:3px;
 }
 
 a.error {
@@ -120,6 +59,10 @@ a.sql {
 }
 
 a.call {
+	background-color: #9966ff;
+}
+
+a.PigeonCall {
 	background-color: #9966ff;
 }
 
@@ -182,10 +125,13 @@ a.heartbeat {
 .center {
 	text-align: center;
 }
+.breadcrumbs{
+	font-size:14px;
+}
 
 .department {
 	text-align: left;
-	font-size:15px;
+	font-size:14px;
 	width: 100px;
 }
 
@@ -218,8 +164,8 @@ a.heartbeat {
 
 .pieChart {
 	text-align: left;
-	width: 700px;
-	height: 450px;
+	width: 1000px;
+	height: 400px;
 	margin: 4px auto;
 }
 
@@ -229,24 +175,6 @@ a.heartbeat {
 
 .dashboard {
 	background: url('../img/checked.gif') no-repeat;
-}
-
-.navbar {
-	margin-bottom: 5px;
-}
-
-.navbar .navbar-inner {
-	padding-left: 5px;
-}
-
-.navbar-inner .container-fluid {
-	padding-left: 0px;
-	padding-right: 0px;
-}
-
-.navbar .brand {
-	padding: 10px 00px 00px;
-	margin-left: 0px;
 }
 
 select{
@@ -274,4 +202,37 @@ ul, ol{
 .table-condensed th, .table-condensed td{
 padding: 2px 3px;
 vertical-align:middle;
+}
+a{
+	color:rgb(0, 0, 238);
+}
+.header{
+	margin-top:0px;
+	margin-bottom:0px;
+}
+.user-info{
+	line-height:30px;
+}
+.sidebar{
+	width:148px;
+}
+.sidebar+.main-content{
+	margin-left:149px;
+}
+.sidebar .sidebar-shortcuts-large>.btn{
+	width:70px;
+	height:30px;
+}
+.checkbox input[type=checkbox], .checkbox-inline{
+	position:relative;
+	margin-left:0px;
+}
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover{
+	z-index:0;
+}
+.input-group .form-control{
+	z-index:0;
+}
+table{
+	margin-top:3px;
 }

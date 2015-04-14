@@ -12,15 +12,15 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.task.alert.MetricType;
+import com.dianping.cat.report.alert.MetricType;
 
 public class Handler implements PageHandler<Context> {
 
@@ -28,27 +28,29 @@ public class Handler implements PageHandler<Context> {
 	private JsonBuilder m_builder;
 
 	private void buildBatchMetric(String content) {
-		String[] lines = content.split("\n");
+		if (content != null) {
+			String[] lines = content.split("\n");
 
-		// group, domain, key, type, time, value
-		for (String line : lines) {
-			if (StringUtils.isNotEmpty(line)) {
-				String[] tabs = line.split("\t");
+			// group, domain, key, type, time, value
+			for (String line : lines) {
+				if (StringUtils.isNotEmpty(line)) {
+					String[] tabs = line.split("\t");
 
-				if (tabs.length == 6) {
-					try {
-						String group = tabs[0];
-						String domain = tabs[1];
-						String key = tabs[2];
-						String type = tabs[3];
-						long time = Long.parseLong(tabs[4]);
-						double value = Double.parseDouble(tabs[5]);
-						buildMetric(group, domain, key, type, time, value);
-					} catch (Exception e) {
-						Cat.logError("Unrecognized batch data: " + line, e);
+					if (tabs.length == 6) {
+						try {
+							String group = tabs[0];
+							String domain = tabs[1];
+							String key = tabs[2];
+							String type = tabs[3];
+							long time = Long.parseLong(tabs[4]);
+							double value = Double.parseDouble(tabs[5]);
+							buildMetric(group, domain, key, type, time, value);
+						} catch (Exception e) {
+							Cat.logError("Unrecognized batch data: " + line, e);
+						}
+					} else {
+						Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 					}
-				} else {
-					Cat.logError(new RuntimeException("Unrecognized batch data: " + line));
 				}
 			}
 		}
@@ -163,21 +165,20 @@ public class Handler implements PageHandler<Context> {
 		ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(status));
 	}
 
+	private boolean isDatabase(String group) {
+		return ProductLineConfig.DATABASE.isTypeOf(group);
+	}
+
 	private boolean isGenericMetric(String group) {
-		return !isNetwork(group) && !isSystem(group) && isDatabase(group);
+		return !isNetwork(group) && !isSystem(group) && !isDatabase(group);
 	}
 
 	private boolean isNetwork(String group) {
-		return group.startsWith(ProductLineConfigManager.NETWORK_F5_PREFIX)
-		      || group.startsWith(ProductLineConfigManager.NETWORK_SWITCH_PREFIX);
+		return ProductLineConfig.NETWORK.isTypeOf(group);
 	}
 
 	private boolean isSystem(String group) {
-		return group.startsWith(ProductLineConfigManager.SYSTEM_MONITOR_PREFIX);
-	}
-
-	private boolean isDatabase(String group) {
-		return group.startsWith(ProductLineConfigManager.DATABASE_PREFIX);
+		return ProductLineConfig.SYSTEM.isTypeOf(group);
 	}
 
 }

@@ -11,7 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.page.JsonBuilder;
+import com.dianping.cat.helper.JsonBuilder;
 
 public class CityManager implements Initializable {
 

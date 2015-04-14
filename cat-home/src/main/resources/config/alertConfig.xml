@@ -1,51 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <alert-config>
-   <receiver id="network" enable="true">
+   <receiver id="Network" enable="true">
       <email>leon.li@dianping.com</email>
-      <email>weiwei.zeng@dianping.com</email>
-      <email>hai.bo@dianping.com</email>
-      <email>argus@dianping.com</email>
-      <email>monitor@dianping.com</email>
-      <email>xiangtao.hu@dianping.com</email>
-      <email>shuangpeng.wu@dianping.com</email>
-      <phone>13918335704</phone>
-      <phone>18918052089</phone>
-      <phone>18611129230</phone>
-      <phone>15005812158</phone>
+      <phone>1520*****</phone>
    </receiver>
-   <receiver id="exception" enable="true">
+   <receiver id="Exception" enable="true">
       <phone>15201789489</phone>
    </receiver>
-   <receiver id="frontEndException" enable="true">
+   <receiver id="FrontEndException" enable="true">
       <email>jialin.sun@dianping.com</email>
    </receiver>
-   <receiver id="business" enable="true">
+   <receiver id="Business" enable="true">
       <email>argus@dianping.com</email>
       <email>monitor@dianping.com</email>
       <email>leon.li@dianping.com</email>
-      <phone>13916536843</phone>
    </receiver>
-   <receiver id="system" enable="true">
+   <receiver id="System" enable="true">
       <email>leon.li@dianping.com</email>
-      <email>jialin.tian@dianping.com</email>
-      <email>qing.gu@dianping.com</email>
-      <email>tong.song@dianping.com</email>
-      <phone>18662513308</phone>
       <weixin>leon.li@dianping.com</weixin>
    </receiver>
-   <receiver id="thirdParty" enable="true">
+   <receiver id="ThirdParty" enable="true">
       <email>jialin.sun@dianping.com</email>
    </receiver>
-   <receiver id="app" enable="true">
+   <receiver id="App" enable="true">
       <email>jialin.sun@dianping.com</email>
-      <email>yuanwei.xiong@dianping.com</email>
    </receiver>
-   <receiver id="web" enable="true">
+   <receiver id="Web" enable="true">
       <email>jialin.sun@dianping.com</email>
-      <phone>15201789489</phone>
+      <phone>1520*****</phone>
       <weixin>jialin.sun@dianping.com</weixin>
    </receiver>
-   <receiver id="heartbeat" enable="true">
+   <receiver id="Heartbeat" enable="true">
       <email>leon.li@dianping.com</email>
    </receiver>
 </alert-config>

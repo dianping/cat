@@ -3,7 +3,7 @@ package com.dianping.cat.consumer.problem;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -13,22 +13,12 @@ import com.dianping.cat.message.spi.MessageTree;
 public abstract class ProblemHandler {
 	public static final int MAX_LOG_SIZE = 60;
 
-	// TODO fix performance issue
-	protected Entry findOrCreateEntry(Machine machine, String type, String status) {
-		List<Entry> entries = machine.getEntries();
+	protected Entity findOrCreateEntity(Machine machine, String type, String status) {
+		String id = type + ":" + status;
+		Entity entity = machine.findOrCreateEntity(id);
+		entity.setType(type).setStatus(status);
 
-		for (Entry entry : entries) {
-			if (entry.getType().equals(type) && entry.getStatus().equals(status)) {
-				return entry;
-			}
-		}
-
-		Entry entry = new Entry();
-
-		entry.setStatus(status);
-		entry.setType(type);
-		entries.add(entry);
-		return entry;
+		return entity;
 	}
 
 	protected int getSegmentByMessage(MessageTree tree) {
@@ -41,8 +31,8 @@ public abstract class ProblemHandler {
 
 	public abstract void handle(Machine machine, MessageTree tree);
 
-	public void updateEntry(MessageTree tree, Entry entry, int value) {
-		Duration duration = entry.findOrCreateDuration(value);
+	public void updateEntity(MessageTree tree, Entity entity, int value) {
+		Duration duration = entity.findOrCreateDuration(value);
 		List<String> messages = duration.getMessages();
 
 		duration.incCount();
@@ -50,8 +40,8 @@ public abstract class ProblemHandler {
 			messages.add(tree.getMessageId());
 		}
 
-		//make problem thread id = thread group name, make report small
-		JavaThread thread = entry.findOrCreateThread(tree.getThreadGroupName());
+		// make problem thread id = thread group name, make report small
+		JavaThread thread = entity.findOrCreateThread(tree.getThreadGroupName());
 
 		if (thread.getGroupName() == null) {
 			thread.setGroupName(tree.getThreadGroupName());

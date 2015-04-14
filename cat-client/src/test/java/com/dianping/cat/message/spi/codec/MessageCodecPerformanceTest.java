@@ -1,7 +1,8 @@
 package com.dianping.cat.message.spi.codec;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.DynamicChannelBuffer;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+
 import org.junit.Test;
 
 import com.dianping.cat.message.CatTestCase;
@@ -18,7 +19,8 @@ public class MessageCodecPerformanceTest extends CatTestCase {
 	public void testCodePerformance() throws Exception {
 		MessageCodec codec = lookup(MessageCodec.class, ID);
 		MessageTree tree = buildMessage();
-		ChannelBuffer buf = new DynamicChannelBuffer(10240);
+		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(10240);
+		
 		codec.encode(tree, buf);
 
 		int count = 5000000;

@@ -3,18 +3,13 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.web.Context" scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.web.Payload" scope="request" />
-<jsp:useBean id="model"
-	type="com.dianping.cat.report.page.web.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.web.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.web.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		var urlData = ${model.items};
@@ -161,16 +156,32 @@
 		}
 		
 		$(document).ready(function() {
-			$('#datetimepicker1').datetimepicker();
-			$('#datetimepicker2').datetimepicker({
-				pickDate: false
+			$('#web_trend').addClass('active');
+			$('#startTime').datetimepicker({
+					format:'Y-m-d H:i',
+					step:30,
+					maxDate:0
 			});
+			$('#endTime').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:30,
+				maxDate:0
+			});
+			$('#startTime2').datetimepicker({
+				format:'Y-m-d H:i',
+				step:60,
+				maxDate:0
+			});
+			$('#endTime2').datetimepicker({
+				datepicker:false,
+				format:'H:i',
+				step:60,
+				maxDate:0
+			});
+
 			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
 			$('#endTime').val("${w:format(model.end,'HH:mm')}");
-			$('#datetimepicker3').datetimepicker();
-			$('#datetimepicker4').datetimepicker({
-				pickDate: false
-			});
 			
 			$('#group').on('change',groupChange);
 			$('#group2').on('change',groupChange);
@@ -264,8 +275,3 @@
 		</script>
 <%@include file="webDetail.jsp"%>
 </a:body>
-<style type="text/css">
-	.row-fluid .span6{
-		width:87%;
-	}
-</style>

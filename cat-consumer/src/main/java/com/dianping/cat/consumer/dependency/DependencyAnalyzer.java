@@ -10,7 +10,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -19,8 +18,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
@@ -31,16 +30,13 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Inject
 	private DatabaseParser m_parser;
 
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
 	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
 	      "PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		} else {
@@ -104,8 +100,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public void process(MessageTree tree) {
-		String domain = tree.getDomain();
-		DependencyReport report = findOrCreateReport(domain);
+		DependencyReport report = findOrCreateReport(tree.getDomain());
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -129,9 +124,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		String type = t.getType();
-
+	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t, String type) {
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String target = parseServerName(t);
 			String callType = "PigeonCall";
@@ -145,9 +138,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processSqlTransaction(DependencyReport report, Transaction t) {
-		String type = t.getType();
-
+	private void processSqlTransaction(DependencyReport report, Transaction t, String type) {
 		if ("SQL".equals(type)) {
 			String database = parseDatabase(t);
 
@@ -158,12 +149,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
-		if (m_serverConfigManager.discardTransaction(t)) {
+		String type = t.getType();
+		String name = t.getName();
+
+		if (m_serverConfigManager.discardTransaction(type, name)) {
 			return;
 		} else {
-			processTransactionType(report, t);
-			processSqlTransaction(report, t);
-			processPigeonTransaction(report, tree, t);
+			processTransactionType(report, t, type);
+			processSqlTransaction(report, t, type);
+			processPigeonTransaction(report, tree, t, type);
 
 			List<Message> children = t.getChildren();
 
@@ -177,9 +171,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	private void processTransactionType(DependencyReport report, Transaction t) {
-		String type = t.getType();
-
+	private void processTransactionType(DependencyReport report, Transaction t, String type) {
 		if (m_types.contains(type) || isCache(type)) {
 			long current = t.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));

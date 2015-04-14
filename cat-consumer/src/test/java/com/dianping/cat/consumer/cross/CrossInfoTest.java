@@ -5,7 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -47,7 +47,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
-		Assert.assertEquals(info.getRemoteAddress(), "Unknown");
+		Assert.assertEquals(info.getRemoteAddress(), null);
 
 		Message message = new DefaultEvent("PigeonCall.server", "10.1.1.1", null);
 		Message messageApp = new DefaultEvent("PigeonCall.app", "myDomain", null);
@@ -74,7 +74,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
-		Assert.assertEquals(info,null);
+		Assert.assertEquals(info.validate(), false);
 
 		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71", null);
 		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain", null);
@@ -109,7 +109,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		info = analyzer.parseCorssTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
-		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71");
+		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71:29987");
 		Assert.assertEquals(info.getDetailType(), "PigeonService");
 		Assert.assertEquals(info.getRemoteRole(), "Pigeon.Client");
 		Assert.assertEquals(info.getApp(), "myDomain");

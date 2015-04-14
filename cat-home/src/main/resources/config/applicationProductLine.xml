@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<company>
+   <product-line id="shop" order="5.0" title="商户" >
+      <domain id="domain1"/>
+      <domain id="domain2"/>
+      <domain id="domain3"/>
+   </product-line>
+</company>

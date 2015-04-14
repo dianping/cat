@@ -14,9 +14,10 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dal.BusinessReport;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Segment;
@@ -27,8 +28,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -55,7 +56,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private static final String METRIC = "Metric";
 
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
 	}
 
@@ -151,7 +152,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		String group = m_productLineConfigManager.queryProductLineByDomain(domain);
-		MetricReport report = findOrCreateReport(group);
+		MetricReport report = null;
+
+		if (group != null) {
+			report = findOrCreateReport(group);
+		}
 
 		Message message = tree.getMessage();
 
@@ -180,7 +185,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			report = findOrCreateReport(group);
 		}
-		if (config != null) {
+		if (config != null && report != null) {
 			long current = metric.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			String key = m_configManager.buildMetricKey(domain, METRIC, metricName);
@@ -191,10 +196,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			config.setTitle(metricName);
 
-			ProductLine productline = m_productLineConfigManager.queryProductLine(report.getProduct());
+			ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(report.getProduct());
 
-			if (productline != null && productline.getMetricDashboard()) {
-				boolean result = m_configManager.insertIfNotExist(domain, METRIC, metricName, config);
+			if (ProductLineConfig.METRIC.equals(productLineConfig)) {
+				boolean result = m_configManager.insertMetricIfNotExist(domain, METRIC, metricName, config);
 
 				if (!result) {
 					m_logger.error(String.format("error when insert metric config info, domain %s, metricName %s", domain,

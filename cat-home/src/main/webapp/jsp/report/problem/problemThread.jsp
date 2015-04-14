@@ -25,7 +25,7 @@
 		</c:forEach>
 	</tr>
 	<c:forEach var="minute" items="${model.threadLevelInfo.datas}" varStatus="status">
-		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'}">
+		<tr>
 			${minute}
 		</tr>
 	</c:forEach>

@@ -8,28 +8,35 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.unidal.lookup.util.StringUtils
-;
+import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
+import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.alert.thirdparty.entity.Http;
+import com.dianping.cat.home.alert.thirdparty.entity.Socket;
+import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionExclude;
-import com.dianping.cat.home.dependency.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.exception.entity.ExceptionExclude;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
+import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
@@ -132,16 +139,35 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Speed m_speed;
 
-	public Speed getSpeed() {
-		return m_speed;
-	}
+	private String m_nameUniqueResult;
 
-	public void setSpeed(Speed speed) {
-		m_speed = speed;
-	}
+	private ThirdPartyConfig m_thirdPartyConfig;
+
+	private List<String> m_heartbeatExtensionMetrics;
+
+	private Http m_http;
+
+	private Socket m_socket;
+
+	private DomainGroup m_domainGroup;
+
+	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
+
+	private List<String> m_validatePaths;
+
+	private List<String> m_invalidatePaths;
+
+	private AppConfigManager m_appConfigManager;
+
+	private Item m_appItem;
 
 	public Model(Context ctx) {
 		super(ctx);
+		try {
+			m_appConfigManager = ContainerLoader.getDefaultContainer().lookup(AppConfigManager.class);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 	}
 
 	public void buildEdgeInfo() {
@@ -160,12 +186,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
+	public Map<String, List<Command>> getActivityCommands() {
+		return m_appConfigManager.queryDomain2Commands(true);
+	}
+
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
 	}
 
 	public List<AggregationRule> getAggregationRules() {
 		return m_aggregationRules;
+	}
+
+	public Map<String, List<Command>> getApiCommands() {
+		return m_appConfigManager.queryDomain2Commands(false);
+	}
+
+	public Item getAppItem() {
+		return m_appItem;
 	}
 
 	public String getBug() {
@@ -192,34 +230,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_codes;
 	}
 
-	public Map<Integer, List<Code>> getCommand() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
-
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
-
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return maps;
-	}
-
 	public String getCommandJson() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
-
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
-
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return new JsonBuilder().toJson(maps);
+		return new JsonBuilder().toJson(m_appConfigManager.queryCommand2Codes());
 	}
 
 	public List<Command> getCommands() {
@@ -232,6 +244,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getConfigHeader() {
 		return m_configHeader;
+	}
+
+	public Map<String, ConfigItem> getConfigItems() {
+		return m_appConfigManager.getConfig().getConfigItems();
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -256,26 +272,19 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
+		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
 
-		for (Command command : m_commands) {
-			String domain = command.getDomain();
-			if (StringUtils.isEmpty(domain)) {
-				domain = "default";
-			}
-			List<Command> commands = map.get(domain);
-
-			if (commands == null) {
-				commands = new ArrayList<Command>();
-				map.put(domain, commands);
-			}
-			commands.add(command);
-		}
-		return new JsonBuilder().toJson(map);
+		results.put(Constants.ALL, m_appConfigManager.queryCommands());
+		results.putAll(m_appConfigManager.queryDomain2Commands());
+		return new JsonBuilder().toJson(results);
 	}
 
 	public DomainConfig getDomainConfig() {
 		return m_domainConfig;
+	}
+
+	public DomainGroup getDomainGroup() {
+		return m_domainGroup;
 	}
 
 	public List<String> getDomainList() {
@@ -348,8 +357,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return maps;
 	}
 
+	public com.dianping.cat.home.group.entity.Domain getGroupDomain() {
+		return m_groupDomain;
+	}
+
+	public List<String> getHeartbeatExtensionMetrics() {
+		return m_heartbeatExtensionMetrics;
+	}
+
+	public Http getHttp() {
+		return m_http;
+	}
+
 	public String getId() {
 		return m_id;
+	}
+
+	public List<String> getInvalidatePaths() {
+		return m_invalidatePaths;
 	}
 
 	public String getIpAddress() {
@@ -362,6 +387,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public String getMetricItemConfigRule() {
 		return m_metricItemConfigRule;
+	}
+
+	public String getNameUniqueResult() {
+		return m_nameUniqueResult;
 	}
 
 	public Map<Integer, Item> getNetworks() {
@@ -424,6 +453,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
+	public Socket getSocket() {
+		return m_socket;
+	}
+
+	public Speed getSpeed() {
+		return m_speed;
+	}
+
 	public Map<Integer, Speed> getSpeeds() {
 		return m_speeds;
 	}
@@ -432,12 +469,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_tags;
 	}
 
+	public ThirdPartyConfig getThirdPartyConfig() {
+		return m_thirdPartyConfig;
+	}
+
 	public Map<String, List<ProductLine>> getTypeToProductLines() {
 		return m_typeToProductLines;
 	}
 
 	public Command getUpdateCommand() {
 		return m_updateCommand;
+	}
+
+	public List<String> getValidatePaths() {
+		return m_validatePaths;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -450,6 +495,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setAggregationRules(List<AggregationRule> aggregationRules) {
 		m_aggregationRules = aggregationRules;
+	}
+
+	public void setAppItem(Item appItem) {
+		m_appItem = appItem;
 	}
 
 	public void setBug(String bug) {
@@ -500,6 +549,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_domainConfig = domainConfig;
 	}
 
+	public void setDomainGroup(DomainGroup domainGroup) {
+		m_domainGroup = domainGroup;
+	}
+
 	public void setDomainList(List<String> domainList) {
 		m_domainList = domainList;
 	}
@@ -536,8 +589,24 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
+	public void setGroupDomain(com.dianping.cat.home.group.entity.Domain groupDomain) {
+		m_groupDomain = groupDomain;
+	}
+
+	public void setHeartbeatExtensionMetrics(List<String> heartbeatExtensionMetrics) {
+		m_heartbeatExtensionMetrics = heartbeatExtensionMetrics;
+	}
+
+	public void setHttp(Http http) {
+		m_http = http;
+	}
+
 	public void setId(String id) {
 		m_id = id;
+	}
+
+	public void setInvalidatePaths(List<String> invalidatePaths) {
+		m_invalidatePaths = invalidatePaths;
 	}
 
 	public void setMetricItemConfig(MetricItemConfig metricItemConfig) {
@@ -546,6 +615,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setMetricItemConfigRule(String metricItemConfigRule) {
 		m_metricItemConfigRule = metricItemConfigRule;
+	}
+
+	public void setNameUniqueResult(String nameUniqueResult) {
+		m_nameUniqueResult = nameUniqueResult;
 	}
 
 	public void setNetworks(Map<Integer, Item> networks) {
@@ -608,6 +681,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
+	public void setSocket(Socket socket) {
+		m_socket = socket;
+	}
+
+	public void setSpeed(Speed speed) {
+		m_speed = speed;
+	}
+
 	public void setSpeeds(Map<Integer, Speed> speeds) {
 		m_speeds = speeds;
 	}
@@ -616,12 +697,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_tags = tags;
 	}
 
+	public void setThirdPartyConfig(ThirdPartyConfig thirdPartyConfig) {
+		m_thirdPartyConfig = thirdPartyConfig;
+	}
+
 	public void setTypeToProductLines(Map<String, List<ProductLine>> typeToProductLines) {
 		m_typeToProductLines = typeToProductLines;
 	}
 
 	public void setUpdateCommand(Command updateCommand) {
 		m_updateCommand = updateCommand;
+	}
+
+	public void setValidatePaths(List<String> validatePaths) {
+		m_validatePaths = validatePaths;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

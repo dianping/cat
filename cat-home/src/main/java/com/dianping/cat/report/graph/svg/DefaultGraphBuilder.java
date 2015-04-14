@@ -352,7 +352,6 @@ public class DefaultGraphBuilder implements GraphBuilder {
 	@Override
 	public void setGraphType(int GraphType) {
 		// TODO Auto-generated method stub
-
 	}
 
 	private String toCompactString(double value) {

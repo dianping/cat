@@ -8,8 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}">
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	navUrlPrefix="op=lineChart&domain=${model.domain}">
+	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
@@ -19,9 +19,8 @@
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	
 	<div class='report'>
-		<%@ include file="dependencyOpNav.jsp" %>
-		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
-	    			<%@ include file="dependencyLineGraph.jsp"%>
+		<div class="tabbable text-danger" id="content"> <!-- Only required for left/right tabs -->
+			<%@ include file="dependencyLineGraph.jsp"%>
 	  </div>
 </jsp:body>
 </a:report>

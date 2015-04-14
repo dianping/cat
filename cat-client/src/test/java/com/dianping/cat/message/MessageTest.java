@@ -1,5 +1,7 @@
 package com.dianping.cat.message;
 
+import io.netty.buffer.ByteBuf;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -9,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import junit.framework.Assert;
 
 import org.codehaus.plexus.PlexusContainer;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
@@ -66,16 +67,20 @@ public class MessageTest extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-
-		ClientConfigManager configManager = lookup(ClientConfigManager.class);
-		configManager.initialize(getConfigurationFile());
-
-		m_queue.clear();
+		
 		defineComponent(TransportManager.class, null, MockTransportManager.class);
 
 		MockTransportManager transportManager = (MockTransportManager) lookup(TransportManager.class);
 		transportManager.setQueue(m_queue);
 
+		File configurationFile = getConfigurationFile();
+		Cat.initialize(configurationFile);
+
+		ClientConfigManager configManager = lookup(ClientConfigManager.class);
+		configManager.initialize(configurationFile);
+
+		m_queue.clear();
+		
 		Reflects.forMethod().invokeDeclaredMethod(Cat.getInstance(), "setContainer", PlexusContainer.class, getContainer());
 	}
 
@@ -211,21 +216,21 @@ public class MessageTest extends ComponentTestCase {
 		}
 
 		@Override
-		public MessageTree decode(ChannelBuffer buf) {
+		public MessageTree decode(ByteBuf buf) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void decode(ChannelBuffer buf, MessageTree tree) {
+		public void decode(ByteBuf buf, MessageTree tree) {
 			throw new UnsupportedOperationException();
 		}
 
 		@Override
-		public void encode(MessageTree tree, ChannelBuffer buf) {
+		public void encode(MessageTree tree, ByteBuf buf) {
 			encodeMessage(tree.getMessage(), buf);
 		}
 
-		private void encodeEvent(Event e, ChannelBuffer buf) {
+		private void encodeEvent(Event e, ByteBuf buf) {
 			m_sb.append('E');
 			m_sb.append(' ').append(e.getType());
 			m_sb.append(' ').append(e.getName());
@@ -239,7 +244,7 @@ public class MessageTest extends ComponentTestCase {
 
 		}
 
-		private void encodeHeartbeat(Heartbeat h, ChannelBuffer buf) {
+		private void encodeHeartbeat(Heartbeat h, ByteBuf buf) {
 			m_sb.append('H');
 			m_sb.append(' ').append(h.getType());
 			m_sb.append(' ').append(h.getName());
@@ -248,7 +253,7 @@ public class MessageTest extends ComponentTestCase {
 			m_sb.append('\n');
 		}
 
-		private void encodeMessage(Message message, ChannelBuffer buf) {
+		private void encodeMessage(Message message, ByteBuf buf) {
 			if (message instanceof Transaction) {
 				encodeTransaction((Transaction) message, buf);
 			} else if (message instanceof Event) {
@@ -258,7 +263,7 @@ public class MessageTest extends ComponentTestCase {
 			}
 		}
 
-		private void encodeTransaction(Transaction t, ChannelBuffer buf) {
+		private void encodeTransaction(Transaction t, ByteBuf buf) {
 			List<Message> children = t.getChildren();
 
 			if (children.isEmpty()) {

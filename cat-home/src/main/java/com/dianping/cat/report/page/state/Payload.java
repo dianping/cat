@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.state;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	private ReportPage m_page;
 
@@ -18,6 +18,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("sort")
 	private String m_sort;
+
+	@FieldMeta("show")
+	private boolean m_show = true;
 
 	public Payload() {
 		super(ReportPage.STATE);
@@ -41,6 +44,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_sort;
 	}
 
+	public boolean isShow() {
+		return m_show;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY);
 	}
@@ -52,6 +59,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
+	}
+
+	public void setShow(boolean show) {
+		m_show = show;
 	}
 
 	public void setSort(String sort) {

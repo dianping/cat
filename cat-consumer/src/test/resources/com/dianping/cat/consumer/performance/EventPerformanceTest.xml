@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>event</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.EventConfigurator$MockEventReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>event</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>event</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.EventConfigurator$ExtendedEventDelegate</implementation>
+		</component>
+	</components>
+</plexus>

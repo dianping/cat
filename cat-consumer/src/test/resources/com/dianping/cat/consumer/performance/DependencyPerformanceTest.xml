@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.DependencyConfigurator$MockDependencyReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>dependency</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.consumer.performance.DependencyConfigurator$ExtendedDependencyDelegate</implementation>
+		</component>
+	</components>
+</plexus>

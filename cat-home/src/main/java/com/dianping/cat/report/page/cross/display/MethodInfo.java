@@ -50,24 +50,6 @@ public class MethodInfo extends BaseVisitor {
 		m_reportDuration = reportDuration;
 	}
 
-	private void addCallProject(String type, Name name) {
-		String id = name.getId();
-		NameDetailInfo all = m_callProjectsInfo.get(ALL_METHOD);
-
-		if (all == null) {
-			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
-			m_callProjectsInfo.put(ALL_METHOD, all);
-		}
-		NameDetailInfo info = m_callProjectsInfo.get(id);
-
-		if (info == null) {
-			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
-			m_callProjectsInfo.put(id, info);
-		}
-		info.mergeName(name);
-		all.mergeName(name);
-	}
-
 	private void addCallerProject(String type, Name name) {
 		String id = name.getId();
 		NameDetailInfo all = m_callerProjectsInfo.get(ALL_METHOD);
@@ -81,6 +63,24 @@ public class MethodInfo extends BaseVisitor {
 		if (info == null) {
 			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
 			m_callerProjectsInfo.put(id, info);
+		}
+		info.mergeName(name);
+		all.mergeName(name);
+	}
+
+	private void addCallProject(String type, Name name) {
+		String id = name.getId();
+		NameDetailInfo all = m_callProjectsInfo.get(ALL_METHOD);
+
+		if (all == null) {
+			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
+			m_callProjectsInfo.put(ALL_METHOD, all);
+		}
+		NameDetailInfo info = m_callProjectsInfo.get(id);
+
+		if (info == null) {
+			info = new NameDetailInfo(m_reportDuration, name.getId(), m_remoteIp, type);
+			m_callProjectsInfo.put(id, info);
 		}
 		info.mergeName(name);
 		all.mergeName(name);
@@ -104,15 +104,15 @@ public class MethodInfo extends BaseVisitor {
 		all.mergeName(name);
 	}
 
+	public Map<String, NameDetailInfo> getCallerProjectsInfo() {
+		return m_callerProjectsInfo;
+	}
+
 	public Collection<NameDetailInfo> getCallProjectsInfo() {
 		List<NameDetailInfo> values = new ArrayList<NameDetailInfo>(m_callProjectsInfo.values());
 
 		Collections.sort(values, new NameComparator(m_callSortBy));
 		return values;
-	}
-
-	public Map<String, NameDetailInfo> getCallerProjectsInfo() {
-		return m_callerProjectsInfo;
 	}
 
 	public String getQuery() {
@@ -226,12 +226,17 @@ public class MethodInfo extends BaseVisitor {
 	@Override
 	public void visitRemote(Remote remote) {
 		String role = remote.getRole();
-		String ip = remote.getId();
-		String app = remote.getApp();
+		String ip = remote.getIp();
 
-		if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
-			ip = ip.substring(0, ip.indexOf(":Caller"));
+		if (ip == null) {
+			ip = remote.getId();
+			
+			if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
+				ip = ip.substring(0, ip.indexOf(":Caller"));
+			}
 		}
+		String app = remote.getApp();
+		
 		if (projectContains(m_remoteProject, app, ip, role) || m_remoteIp.equals(ip)) {
 			m_currentRole = role;
 			super.visitRemote(remote);

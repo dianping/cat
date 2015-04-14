@@ -10,10 +10,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class PeriodTask implements Task, LogEnabled {
-	private ServerStatisticManager m_serverStateManager;
 
 	private MessageAnalyzer m_analyzer;
 
@@ -25,9 +23,7 @@ public class PeriodTask implements Task, LogEnabled {
 
 	private Logger m_logger;
 
-	public PeriodTask(ServerStatisticManager serverStateManager, MessageAnalyzer analyzer, MessageQueue queue,
-	      long startTime) {
-		m_serverStateManager = serverStateManager;
+	public PeriodTask(MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 		m_analyzer = analyzer;
 		m_queue = queue;
 		m_startTime = startTime;
@@ -39,21 +35,16 @@ public class PeriodTask implements Task, LogEnabled {
 	}
 
 	public boolean enqueue(MessageTree tree) {
-		if (m_analyzer.isRawAnalyzer()) {
-			boolean result = m_queue.offer(tree);
+		boolean result = m_queue.offer(tree);
 
-			if (!result) { // trace queue overflow
-				m_queueOverflow++;
-				m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
+		if (!result) { // trace queue overflow
+			m_queueOverflow++;
 
-				if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
-				}
+			if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
+				m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 			}
-			return result;
-		} else {
-			return true;
 		}
+		return result;
 	}
 
 	public void finish() {

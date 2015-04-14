@@ -6,10 +6,11 @@ import java.util.Date;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -30,7 +31,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("summaryemails")
 	private String m_summaryemails;
 
+	@FieldMeta("day")
+	private String m_day;
+
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	private SimpleDateFormat m_daySdf = new SimpleDateFormat("yyyy-MM-dd");
 
 	public Payload() {
 		super(ReportPage.STATISTICS);
@@ -39,6 +45,18 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public Date getDay() {
+		try {
+			if (m_day.length() == 10) {
+				return m_daySdf.parse(m_day);
+			} else {
+				return TimeHelper.getYesterday();
+			}
+		} catch (Exception e) {
+			return TimeHelper.getYesterday();
+		}
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.dianping.cat.config.content;
 
-import java.io.IOException;
-
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
@@ -16,7 +14,7 @@ public class DefaultContentFetcher implements ContentFetcher {
 
 		try {
 			content = Files.forIO().readFrom(this.getClass().getResourceAsStream(path), "utf-8");
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		return content;

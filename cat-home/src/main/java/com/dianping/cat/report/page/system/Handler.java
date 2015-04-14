@@ -11,32 +11,24 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
-import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.system.graph.SystemGraphCreator;
-import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ProjectService m_projectService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -47,30 +39,17 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProductLineConfigManager m_productLineManager;
 
-	public String buildProject2Domains() {
-		List<Project> projects = new ArrayList<Project>();
-		Map<String, Set<String>> project2Domains = new HashMap<String, Set<String>>();
+	public List<String> buildProductlines() {
+		List<String> productlines = new ArrayList<String>();
 
-		try {
-			projects = m_projectService.findAll();
-		} catch (DalException e) {
-			Cat.logError(e);
+		Set<String> keys = m_productLineManager.querySystemProductLines().keySet();
+		String prefix = ProductLineConfig.SYSTEM.getPrefix().get(0);
+		int index = prefix.length();
+
+		for (String productline : keys) {
+			productlines.add(productline.substring(index, productline.length()));
 		}
-		for (Project project : projects) {
-			String projectLine = project.getProjectLine();
-			Set<String> set = project2Domains.get(projectLine);
-
-			if (set == null) {
-				set = new HashSet<String>();
-				project2Domains.put(projectLine, set);
-			}
-			String cmdbDomain = project.getCmdbDomain();
-
-			if (StringUtils.isNotEmpty(cmdbDomain)) {
-				set.add(cmdbDomain);
-			}
-		}
-		return new JsonBuilder().toJson(project2Domains);
+		return productlines;
 	}
 
 	@Override
@@ -121,8 +100,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setProjectsInfo(buildProject2Domains());
+		model.setProductLines(buildProductlines());
 		model.setPage(ReportPage.SYSTEM);
+		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
 	}
 }

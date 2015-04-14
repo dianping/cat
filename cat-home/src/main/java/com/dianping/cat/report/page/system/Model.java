@@ -8,20 +8,18 @@ import java.util.List;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.LineChart;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.metric.Range;
 
 @ModelMeta("system")
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private List<LineChart> m_lineCharts;
 
-	private String m_projectsInfo;
-
-	private Collection<ProductLine> m_productLines;
+	private List<String> m_productLines;
 
 	private Collection<String> m_ipAddrs;
 
@@ -70,12 +68,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_metricGroups;
 	}
 
-	public Collection<ProductLine> getProductLines() {
+	public List<String> getProductLines() {
 		return m_productLines;
-	}
-
-	public String getProjectsInfo() {
-		return m_projectsInfo;
 	}
 
 	public Date getStartTime() {
@@ -98,12 +92,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_metricGroups = metricGroups;
 	}
 
-	public void setProductLines(Collection<ProductLine> productLines) {
+	public void setProductLines(List<String> productLines) {
 		m_productLines = productLines;
-	}
-
-	public void setProjectsInfo(String projectsInfo) {
-		m_projectsInfo = projectsInfo;
 	}
 
 	public void setStartTime(Date startTime) {

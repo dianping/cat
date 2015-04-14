@@ -9,10 +9,10 @@ import java.util.Map.Entry;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.alert.AlertInfo.AlertMetric;
+import com.dianping.cat.report.alert.MetricType;
+import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.task.alert.AlertInfo.AlertMetric;
-import com.dianping.cat.report.task.alert.MetricType;
 
 public class GraphCreator extends AbstractGraphCreator {
 
@@ -30,14 +30,14 @@ public class GraphCreator extends AbstractGraphCreator {
 			buildLineChartTitle(alertKeys, lineChart, key);
 			lineChart.setStart(startDate);
 			lineChart.setSize(value.length);
+			lineChart.setUnit("Value/秒");
+			lineChart.setMinYlable(lineChart.queryMinYlable(value));
 			lineChart.setStep(step * TimeHelper.ONE_MINUTE);
-			double[] baselines = queryBaseline(key, startDate, endDate);
 			Map<Long, Double> all = convertToMap(datas.get(key), startDate, 1);
 			Map<Long, Double> current = convertToMap(dataWithOutFutures.get(key), startDate, step);
 
 			addLastMinuteData(current, all, m_lastMinute, endDate);
 			lineChart.add(Chinese.CURRENT_VALUE, current);
-			lineChart.add(Chinese.BASELINE_VALUE, convertToMap(m_dataExtractor.extract(baselines), startDate, step));
 			charts.put(key, lineChart);
 		}
 		return charts;

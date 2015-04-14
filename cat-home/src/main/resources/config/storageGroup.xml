@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<storage-group-config>
+	<storage-group id="SQL">
+		<link url="test">
+			<par>a=b</par>
+			<par>c=d</par>
+		</link>
+		<storage id="cat" department="arch" productline="cat" title="cat">
+			<machine id="19.1.1.1" title="cat" alert="false" />
+			<machine id="19.1.1.2" title="cat" alert="false" />
+		</storage>
+		<storage id="shop-web" department="arch" productline="cat" title="cat" />
+	</storage-group>
+	<storage-group id="Cache">
+		<storage id="cat" department="arch" productline="cat" title="cat" />
+		<storage id="memcached" department="arch" productline="cat" title="cat" />
+	</storage-group>
+</storage-group-config>

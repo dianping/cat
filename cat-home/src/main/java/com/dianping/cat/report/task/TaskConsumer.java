@@ -1,5 +1,7 @@
 package com.dianping.cat.report.task;
 
+import java.util.Calendar;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
@@ -40,41 +42,59 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	protected abstract boolean processTask(Task doing);
 
+	public boolean checkTime() {
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+
+		if (minute > 15) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {
 			try {
-				Task task = findDoingTask(localIp);
-				if (task == null) {
-					task = findTodoTask();
-				}
-
-				boolean again = false;
-				if (task != null) {
-					try {
-						task.setConsumer(localIp);
-						if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
-							int retryTimes = 0;
-							while (!processTask(task)) {
-								retryTimes++;
-								if (retryTimes < MAX_TODO_RETRY_TIMES) {
-									taskRetryDuration();
-								} else {
-									updateDoingToFailure(task);
-									again = true;
-									break;
+				if (checkTime()) {
+					Task task = findDoingTask(localIp);
+					if (task == null) {
+						task = findTodoTask();
+					}
+					boolean again = false;
+					if (task != null) {
+						try {
+							task.setConsumer(localIp);
+							if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
+								int retryTimes = 0;
+								while (!processTask(task)) {
+									retryTimes++;
+									if (retryTimes < MAX_TODO_RETRY_TIMES) {
+										taskRetryDuration();
+									} else {
+										updateDoingToFailure(task);
+										again = true;
+										break;
+									}
+								}
+								if (!again) {
+									updateDoingToDone(task);
 								}
 							}
-							if (!again) {
-								updateDoingToDone(task);
-							}
+						} catch (Throwable e) {
+							Cat.logError(task.toString(), e);
 						}
-					} catch (Throwable e) {
-						Cat.logError(task.toString(), e);
+					} else {
+						taskNotFoundDuration();
 					}
 				} else {
-					taskNotFoundDuration();
+					try {
+						Thread.sleep(60 * 1000);
+					} catch (InterruptedException e) {
+						// Ignore
+					}
 				}
 			} catch (Throwable e) {
 				Cat.logError(e);

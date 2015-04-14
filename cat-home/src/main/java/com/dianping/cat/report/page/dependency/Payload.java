@@ -3,10 +3,11 @@ package com.dianping.cat.report.page.dependency;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("minute")
 	private String m_minute;
 
@@ -24,26 +25,20 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("productLine")
 	private String productLine;
 
-	@FieldMeta("count")
-	private int m_minuteCounts = 8;
-
 	@FieldMeta("frequency")
 	private int m_frequency = 10;
-
-	@FieldMeta("tops")
-	private int m_topCounts = 11;
 
 	@FieldMeta("refresh")
 	private boolean m_refresh = false;
 
-	@FieldMeta("tab")
-	private String m_tab = "tab1";
-
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
-	
+
 	@FieldMeta("hideNav")
 	private boolean m_hideNav = true;
+
+	@FieldMeta("tab")
+	private String m_tab = "tab1";
 
 	public Payload() {
 		super(ReportPage.DEPENDENCY);
@@ -54,16 +49,38 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public long getCurrentDate() {
+		long timestamp = getCurrentTimeMillis();
+
+		return timestamp - timestamp % TimeHelper.ONE_HOUR;
+	}
+
+	public long getCurrentTimeMillis() {
+		return System.currentTimeMillis() - TimeHelper.ONE_MINUTE * 1;
+	}
+
+	public long getDate() {
+		long current = getCurrentDate();
+		long extra = m_step * TimeHelper.ONE_HOUR;
+
+		if (m_date <= 0) {
+			return current + extra;
+		} else {
+			long result = m_date + extra;
+
+			if (result > current) {
+				return current;
+			}
+			return result;
+		}
+	}
+
 	public int getFrequency() {
 		return m_frequency;
 	}
 
 	public String getMinute() {
 		return m_minute;
-	}
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
 	}
 
 	@Override
@@ -83,10 +100,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_tab;
 	}
 
-	public int getTopCounts() {
-		return m_topCounts;
-	}
-
 	public boolean isAll() {
 		return m_all;
 	}
@@ -96,8 +109,8 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public boolean isHideNav() {
-   	return m_hideNav;
-   }
+		return m_hideNav;
+	}
 
 	public boolean isRefresh() {
 		return m_refresh;
@@ -120,15 +133,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setHideNav(boolean hideNav) {
-   	m_hideNav = hideNav;
-   }
+		m_hideNav = hideNav;
+	}
 
 	public void setMinute(String minute) {
 		this.m_minute = minute;
-	}
-
-	public void setMinuteCounts(int minuteCounts) {
-		m_minuteCounts = minuteCounts;
 	}
 
 	@Override
@@ -150,10 +159,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setTab(String tab) {
 		m_tab = tab;
-	}
-
-	public void setTopCounts(int topCounts) {
-		m_topCounts = topCounts;
 	}
 
 	@Override

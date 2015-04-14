@@ -10,10 +10,12 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.helper.SortHelper;
-import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor.DistributionDetail;
 
 @ModelMeta(EventAnalyzer.ID)
-public class Model extends AbstractReportModel<Action, Context> {
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private DisplayNames m_displayNameReport;
 
@@ -21,9 +23,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private DisplayTypes m_displayTypeReport;
 
 	private List<String> m_groups;
-	
+
 	private List<String> m_groupIps;
-	
+
 	private String m_failureTrend;
 
 	private String m_graph1;
@@ -38,13 +40,17 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_mobileResponse;
 
+	private String m_distributionChart;
+
 	@EntityMeta
 	private EventReport m_report;
 
 	private String m_type;
 
 	private String m_pieChart;
-	
+
+	private List<DistributionDetail> m_distributionDetails;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -60,6 +66,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public DisplayTypes getDisplayTypeReport() {
 		return m_displayTypeReport;
+	}
+
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public List<DistributionDetail> getDistributionDetails() {
+		return m_distributionDetails;
 	}
 
 	@Override
@@ -107,12 +121,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<String> getGroupIps() {
-   	return m_groupIps;
-   }
+		return m_groupIps;
+	}
 
 	public List<String> getGroups() {
-   	return m_groups;
-   }
+		return m_groups;
+	}
 
 	public String getHitTrend() {
 		return m_hitTrend;
@@ -150,6 +164,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_displayTypeReport = displayTypeReport;
 	}
 
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
+	public void setDistributionDetails(List<DistributionDetail> distributionDetails) {
+		m_distributionDetails = distributionDetails;
+	}
+
 	public void setFailureTrend(String failureTrend) {
 		m_failureTrend = failureTrend;
 	}
@@ -171,12 +193,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setGroupIps(List<String> groupIps) {
-   	m_groupIps = groupIps;
-   }
+		m_groupIps = groupIps;
+	}
 
 	public void setGroups(List<String> groups) {
-   	m_groups = groups;
-   }
+		m_groups = groups;
+	}
 
 	public void setHitTrend(String hitTrend) {
 		m_hitTrend = hitTrend;

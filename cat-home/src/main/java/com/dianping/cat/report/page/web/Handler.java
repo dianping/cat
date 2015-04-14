@@ -15,6 +15,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -25,13 +26,19 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 import com.dianping.cat.report.page.web.graph.WebGraphCreator;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
@@ -49,6 +56,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private WebGraphCreator m_graphCreator;
+
+	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
+	private ModelService<ProblemReport> m_service;
 
 	private Pair<Map<String, LineChart>, List<PieChart>> buildDisplayInfo(QueryEntity query, String title) {
 		Pair<Map<String, LineChart>, List<PieChart>> charts = m_graphCreator.queryBaseInfo(query, title);
@@ -86,7 +96,7 @@ public class Handler implements PageHandler<Context> {
 				if (WebGraphCreator.SUCESS_PERCENT.equals(entry.getKey())) {
 					LineChart linechart = entry.getValue();
 
-					linechart.setMinYlable(m_graphCreator.queryMinYlable(linechart.getValueObjects()));
+					linechart.setMinYlable(linechart.queryMinYlable(linechart.getValueObjects()));
 					linechart.setMaxYlabel(100.0);
 				}
 			}
@@ -124,6 +134,25 @@ public class Handler implements PageHandler<Context> {
 		queryEntity.addPar("metricType", Constants.METRIC_USER_MONITOR).addPar("type", type).addPar("channel", channel)
 		      .addPar("city", city);
 		return queryEntity;
+	}
+
+	private ProblemReport getHourlyReport(Payload payload) {
+		ModelRequest request = new ModelRequest(Constants.FRONT_END, payload.getDate()) //
+		      .setProperty("queryType", "view");
+		if (!Constants.ALL.equals(payload.getIpAddress())) {
+			request.setProperty("ip", payload.getIpAddress());
+		}
+		if (!StringUtils.isEmpty(payload.getType())) {
+			request.setProperty("type", "error");
+		}
+		if (m_service.isEligable(request)) {
+			ModelResponse<ProblemReport> response = m_service.invoke(request);
+			ProblemReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
+		}
 	}
 
 	@Override
@@ -191,6 +220,20 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case PROBLEM:
+			ProblemReport problemReport = getHourlyReport(payload);
+			ProblemStatistics problemStatistics = new ProblemStatistics();
+			String ip = payload.getIpAddress();
+
+			if (ip.equals(Constants.ALL)) {
+				problemStatistics.setAllIp(true);
+			} else {
+				problemStatistics.setIp(ip);
+			}
+			problemStatistics.visitProblemReport(problemReport);
+			model.setProblemReport(problemReport);
+			model.setAllStatistics(problemStatistics);
+			break;
 		}
 
 		if (!ctx.isProcessStopped()) {
@@ -200,6 +243,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.WEB);
+		model.setAction(payload.getAction());
 		Collection<PatternItem> rules = m_patternManager.queryUrlPatternRules();
 		String url = payload.getUrl();
 

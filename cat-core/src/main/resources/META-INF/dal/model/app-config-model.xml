@@ -19,6 +19,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="domain" value-type="String" />
     <attribute name="title" value-type="String" />
+    <attribute name="all" value-type="boolean" primitive="true" default-value="true"/>
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
   </entity>
   <entity name="code">

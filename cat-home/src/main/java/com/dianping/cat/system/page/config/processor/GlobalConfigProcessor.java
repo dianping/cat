@@ -5,20 +5,23 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.home.group.entity.Domain;
+import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
+import com.dianping.cat.report.page.DomainGroupConfigManager;
+import com.dianping.cat.report.page.statistics.config.BugConfigManager;
+import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.config.BugConfigManager;
-import com.dianping.cat.system.config.DomainGroupConfigManager;
-import com.dianping.cat.system.config.RouterConfigManager;
-import com.dianping.cat.system.config.ThirdPartyConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class GlobalConfigProcessor {
 
@@ -26,13 +29,7 @@ public class GlobalConfigProcessor {
 	public ProjectService m_projectService;
 
 	@Inject
-	public DomainNavManager m_manager;
-
-	@Inject
 	private BugConfigManager m_bugConfigManager;
-
-	@Inject
-	private ThirdPartyConfigManager m_thirdPartyConfigManager;
 
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
@@ -40,39 +37,75 @@ public class GlobalConfigProcessor {
 	@Inject
 	private DomainGroupConfigManager m_domainGroupConfigManger;
 
-	private void deleteProject(Payload payload) {
+	@Inject
+	private SenderConfigManager m_senderConfigManager;
+
+	@Inject
+	private BlackListManager m_blackListManager;
+
+	@Inject
+	private StorageGroupConfigManager m_groupConfigManager;
+
+	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
 		int id = payload.getProjectId();
 
 		proto.setId(id);
 		proto.setKeyId(id);
-		m_projectService.deleteProject(proto);
+		return m_projectService.delete(proto);
 	}
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
 		case PROJECT_ALL:
+			String domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = Constants.CAT;
+			}
 			model.setProjects(queryAllProjects());
-			break;
-		case PROJECT_UPDATE:
-			model.setProject(queryProjectById(payload.getProjectId()));
+			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_UPDATE_SUBMIT:
-			updateProject(payload);
+			model.setOpState(updateProject(payload));
+			domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = payload.getProject().getDomain();
+
+				if (StringUtils.isEmpty(domain)) {
+					domain = Constants.CAT;
+				}
+			}
 			model.setProjects(queryAllProjects());
+			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_DELETE:
-			deleteProject(payload);
+			model.setOpState(deleteProject(payload));
+			domain = payload.getDomain();
+
+			if (StringUtils.isEmpty(domain)) {
+				domain = Constants.CAT;
+			}
 			model.setProjects(queryAllProjects());
+			model.setProject(m_projectService.findByDomain(domain));
+			break;
+		case DOMAIN_GROUP_CONFIGS:
+			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
 			break;
 		case DOMAIN_GROUP_CONFIG_UPDATE:
-			String domainGroupContent = payload.getContent();
-			if (!StringUtils.isEmpty(domainGroupContent)) {
-				model.setOpState(m_domainGroupConfigManger.insert(domainGroupContent));
-			} else {
-				model.setOpState(true);
-			}
-			model.setContent(m_domainGroupConfigManger.getDomainGroup().toString());
+			domain = payload.getDomain();
+			Domain groupDomain = m_domainGroupConfigManger.queryGroupDomain(domain);
+
+			model.setGroupDomain(groupDomain);
+			break;
+		case DOMAIN_GROUP_CONFIG_DELETE:
+			m_domainGroupConfigManger.deleteGroup(payload.getDomain());
+			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
+			break;
+		case DOMAIN_GROUP_CONFIG_SUBMIT:
+			m_domainGroupConfigManger.insertFromJson(payload.getContent());
+			model.setDomainGroup(m_domainGroupConfigManger.getDomainGroup());
 			break;
 		case BUG_CONFIG_UPDATE:
 			String xml = payload.getBug();
@@ -83,19 +116,36 @@ public class GlobalConfigProcessor {
 			}
 			model.setBug(m_bugConfigManager.getBugConfig().toString());
 			break;
-		case THIRD_PARTY_CONFIG_UPDATE:
-			String thirdPartyConfig = payload.getContent();
-			if (!StringUtils.isEmpty(thirdPartyConfig)) {
-				model.setOpState(m_thirdPartyConfigManager.insert(thirdPartyConfig));
-			}
-			model.setContent(m_thirdPartyConfigManager.getConfig().toString());
-			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(routerConfig)) {
 				model.setOpState(m_routerConfigManager.insert(routerConfig));
 			}
 			model.setContent(m_routerConfigManager.getRouterConfig().toString());
+			break;
+		case ALERT_SENDER_CONFIG_UPDATE:
+			String senderConfig = payload.getContent();
+			if (!StringUtils.isEmpty(senderConfig)) {
+				model.setOpState(m_senderConfigManager.insert(senderConfig));
+			}
+			model.setContent(m_senderConfigManager.getConfig().toString());
+			break;
+		case BLACK_CONFIG_UPDATE:
+			String blackConfig = payload.getContent();
+
+			if (!StringUtils.isEmpty(blackConfig)) {
+				model.setOpState(m_blackListManager.insert(blackConfig));
+			} else {
+				model.setOpState(true);
+			}
+			model.setContent(m_blackListManager.getBlackList().toString());
+			break;
+		case STORAGE_GROUP_CONFIG_UPDATE:
+			String storageGroup = payload.getContent();
+			if (!StringUtils.isEmpty(storageGroup)) {
+				model.setOpState(m_groupConfigManager.insert(storageGroup));
+			}
+			model.setContent(m_groupConfigManager.getConfig().toString());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
@@ -125,32 +175,21 @@ public class GlobalConfigProcessor {
 		return result;
 	}
 
-	private Project queryProjectById(int projectId) {
-		Project project = null;
-		try {
-			project = m_projectService.findProject(projectId);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return project;
-	}
-
-	private void updateProject(Payload payload) {
+	private boolean updateProject(Payload payload) {
 		Project project = payload.getProject();
 		project.setKeyId(project.getId());
 
-		m_projectService.updateProject(project);
-		m_manager.getProjects().put(project.getDomain(), project);
+		return m_projectService.update(project);
 	}
 
 	public static class ProjectCompartor implements Comparator<Project> {
 
 		@Override
 		public int compare(Project o1, Project o2) {
-			String department1 = o1.getDepartment();
-			String department2 = o2.getDepartment();
-			String productLine1 = o1.getProjectLine();
-			String productLine2 = o2.getProjectLine();
+			String department1 = String.valueOf(o1.getBu());
+			String department2 = String.valueOf(o2.getBu());
+			String productLine1 = String.valueOf(o1.getCmdbProductline());
+			String productLine2 = String.valueOf(o2.getCmdbProductline());
 
 			if (department1.equalsIgnoreCase(department2)) {
 				if (productLine1.equalsIgnoreCase(productLine2)) {

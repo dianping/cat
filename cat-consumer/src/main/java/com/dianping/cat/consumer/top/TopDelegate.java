@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.top.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.top.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.report.ReportDelegate;
 
 public class TopDelegate implements ReportDelegate<TopReport> {
 

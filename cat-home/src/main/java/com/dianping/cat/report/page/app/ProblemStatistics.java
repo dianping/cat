@@ -11,7 +11,7 @@ import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
@@ -100,13 +100,13 @@ public class ProblemStatistics extends BaseVisitor {
 		m_types = types;
 	}
 
-	private void statisticsDuration(Entry entry) {
-		String type = entry.getType();
-		String status = entry.getStatus();
+	private void statisticsDuration(Entity entity) {
+		String type = entity.getType();
+		String status = entity.getStatus();
 		boolean flag = checkFlag(m_type, type) && checkFlag(m_status, status);
 
 		if (flag) {
-			Map<Integer, Duration> durations = entry.getDurations();
+			Map<Integer, Duration> durations = entity.getDurations();
 
 			for (Map.Entry<Integer, Duration> e : durations.entrySet()) {
 				TypeStatistics statusValue = m_types.get(type);
@@ -118,7 +118,6 @@ public class ProblemStatistics extends BaseVisitor {
 				statusValue.statics(status, e.getValue());
 			}
 		}
-
 	}
 
 	@Override
@@ -132,12 +131,10 @@ public class ProblemStatistics extends BaseVisitor {
 		      && checkFlag(m_modules, module) && checkFlag(m_levels, level);
 
 		if (flag) {
-			List<Entry> entries = machine.getEntries();
-			for (Entry entry : entries) {
-				statisticsDuration(entry);
+			for (Entity problem : machine.getEntities().values()) {
+				statisticsDuration(problem);
 			}
 		}
-		super.visitMachine(machine);
 	}
 
 	public static class StatusStatistics {

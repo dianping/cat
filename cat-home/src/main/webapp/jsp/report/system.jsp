@@ -8,15 +8,12 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.system.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
 		function query() {
-			var productLine = $("#productLine").val();
-			var domain = $("#domain").val();
+			var domain = $("#search").val();
 			var type = $("#type").val();
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
@@ -40,7 +37,7 @@
 				curIpAddrs = "All";
 			}
 			
-			window.location.href = "?productLine=" + productLine + "&domain=" + domain + "&type=" + type 
+			window.location.href = "?domain=" + domain + "&type=" + type 
 					+ "&ipAddrs=" + curIpAddrs + "&startDate=" + start + "&endDate="
 					+ end; 
 		}
@@ -80,26 +77,23 @@
 
 		$(document).ready(
 				function() {
-					$('#datetimepicker1').datetimepicker().on('hide', function(ev){
-						var timestamp = $("#datetimepicker2").data("datetimepicker").getDate().valueOf();
-						if (ev.date.valueOf() > timestamp){
-				        	alert("结束时间不能晚于结束时间！");
-				        	$("#startTime").val($("#endTime").val());
-				        	} 
+					$('#startTime').datetimepicker({
+						format:'Y-m-d H:i',
+						step:30,
+						maxDate:0
 					});
-					$('#datetimepicker2').datetimepicker().on('hide', function(ev){
-						var timestamp = $("#datetimepicker1").data("datetimepicker").getDate().valueOf();
-						if (ev.date.valueOf() < timestamp){
-				        	alert("结束时间不能早于开始时间！");
-				        	$("#endTime").val($("#startTime").val());
-				        	} 
+					$('#endTime').datetimepicker({
+						format:'Y-m-d H:i',
+						step:30,
+						maxDate:0
 					});
 					
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
 					$('#domain').val('${payload.domain}');
-					$('#productLine').val('${payload.productLine}');
+					$('#System_report').addClass('active open');
+					$('#system_paas').addClass('active');
 					
 					var curIpAddrs = '';
 					if("${payload.ipAddrs}" == ''){
@@ -117,66 +111,53 @@
 						document.getElementById("ip_" + curIpAddrs[i]).checked = true;
 					}
 					
-					var projectsInfo = ${model.projectsInfo};
-					var productSelect = $('#productLine');
-					function change() {
-						var productLine = $("#productLine").val();
-						var projects;
-						if(productLine == 'All') {
-							projects = new Array();
-							for(var key in projectsInfo) {
-								for(var subKey in projectsInfo[key]) {
-									projects.push(projectsInfo[key][subKey]);
+					$.widget( "custom.catcomplete", $.ui.autocomplete, {
+						_renderMenu: function( ul, items ) {
+							var that = this,
+							currentCategory = "";
+							$.each( items, function( index, item ) {
+								if ( item.category != currentCategory ) {
+									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+									currentCategory = item.category;
 								}
-							}
-						} else {
-							projects = projectsInfo[productLine];
+								that._renderItemData( ul, item );
+							});
 						}
-						select = document.getElementById("domain");
-						select.length = 0;
-
-						for ( var prop in projects) {
-							if (projects.hasOwnProperty(prop)) {
-								var opt = $('<option />');
-								var domain = projects[prop];
-								opt.html(domain);
-								opt.val(domain);
-								opt.appendTo(select);
-							}
-						}
-						$("#domain").select2();
-					}
-					productSelect.on('change', change);
-
-					for ( var prop in projectsInfo) {
-						if (projectsInfo.hasOwnProperty(prop)) {
-							var opt = $('<option />');
+					});
+					
+					var data = [];
+					<c:forEach var="item" items="${model.productLines}">
+								var item = {};
+								item['label'] = '${item}';
+								item['category'] = '产品线';
+								data.push(item);
+					</c:forEach>
 							
-							opt.html(prop);
-							opt.val(prop);
-							opt.appendTo(productSelect);
-						}
-					}
-
-					var productLine = '${payload.productLine}';
-					if(productLine != ''){
-						$('#productLine').val(productLine);
-					}
-					change();
+					$( "#search" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					
+					$("#search_go").bind("click",function(e){
+						query();
+					});
+					$('#wrap_search').submit(
+						function(){
+							query();
+							return false;
+						}		
+					);
+					
 					
 					var domain = '${payload.domain}';
 					if(domain != ''){
-						$('#domain').val(domain);
+						$('#search').val(domain);
 					}
 					
 					var type = '${payload.type}';
 					if(type != ''){
 						$('#type').val(type);
 					}
-					
-					$("#productLine").select2();
-					$("#domain").select2();
-					$("#type").select2();
 					
 					<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 						var data = ${item.jsonString};
@@ -185,59 +166,40 @@
 				
 			});
 	</script>
-
-	
-	<div class="report">
-	
 		<table>
 			<tr>
 				<th class="left">
-					业务线
-					<select style="width: 200px;" name="productLine" id="productLine" >
-					<option value="All">All</option>
-					</select>
-					项目
-					<select style="width: 200px;" name="domain" id="domain" ></select> 
-					查询类型
-					<select style="width: 100px;" name="type" id="type" >
+				<div style="float:left;">
+						&nbsp;开始
+					<input type="text" id="startTime" style="width:150px;"/>
+						结束
+						<input type="text" id="endTime" style="width:150px;"/></div>
+		        &nbsp;查询类型<select style="width: 100px;" name="type" id="type" >
 							<option value="paasSystem">Paas系统</option>
 							<!-- option value="system">系统</option>
 							<option value="jvm">JVM</option>
 							<option value="nginx">Nginx</option> -->
 					</select>
-				</th>
-
-				<th class="right">开始时间
-					<div id="datetimepicker1" class="input-append date" style="margin-bottom: 0px;">
-						<input id="startTime" name="startTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" >
-						</input>
-						<span class="add-on">
-							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+					</th>
+				<th>&nbsp;&nbsp;</th>
+		        <th>
+					<div class="navbar-header pull-left position" style="width:350px;">
+						<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+						<input id="search" type="text" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								Go
+							</button> 
 						</span>
+						</div>
+						</form>
 					</div>
-           
-					结束时间
-					<div id="datetimepicker2" class="input-append date" style="margin-bottom: 0px;">
-						<input id="endTime" name="endTime" style="height: 30px; width: 150px;" data-format="yyyy-MM-dd hh:mm" type="text" ></input> 
-						<span class="add-on" ondragleave="query()"> 
-							<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-						</span>
-					</div>
-					<input class="btn btn-primary " value="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" onclick="query()" type="submit">
-				</th>
+					</th>
 			</tr>
 		</table>
-	
-		<div class="btn-group" data-toggle="buttons">
-			<label class="btn btn-info">
-		    		<input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All
-		  	</label>
-	    	
-	    	<c:forEach var="item" items="${model.ipAddrs}" varStatus="status">
-      			<label class="btn btn-info">
-		    		<input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}
-		  		</label>
-			</c:forEach>
+		<div>
+	    	<label class="btn btn-sm btn-info"><input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All</label><c:forEach var="item" items="${model.ipAddrs}" varStatus="status"><label class="btn btn-sm btn-info"><input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}</label></c:forEach>
 		</div>
 		
 	 	<div>
@@ -247,11 +209,4 @@
        			</div>
 			</c:forEach>
 		</div>
-
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
 </a:body>

@@ -45,8 +45,6 @@ public class AppSimulator extends CatTestCase {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				Cat.setup(null);
-
 				MessageProducer cat = Cat.getProducer();
 				Transaction t = cat.newTransaction("Service", "service-" + (int) (Math.random() * 10));
 
@@ -73,7 +71,6 @@ public class AppSimulator extends CatTestCase {
 					t.setStatus(e);
 				} finally {
 					t.complete();
-					Cat.reset();
 				}
 			}
 		};

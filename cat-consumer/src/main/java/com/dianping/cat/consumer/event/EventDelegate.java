@@ -6,12 +6,12 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -22,7 +22,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Inject
 	private ServerConfigManager m_manager;
-	
+
+	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+
 	@Override
 	public void afterLoad(Map<String, EventReport> reports) {
 	}
@@ -44,6 +46,8 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public String buildXml(EventReport report) {
+		report.accept(m_computer);
+
 		String xml = new EventReportCountFilter().buildXml(report);
 
 		return xml;
@@ -52,10 +56,10 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Override
 	public boolean createHourlyTask(EventReport report) {
 		String domain = report.getDomain();
-		
+
 		if (m_manager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), EventAnalyzer.ID, TaskProlicy.ALL);
-		}else{
+		} else {
 			return true;
 		}
 	}

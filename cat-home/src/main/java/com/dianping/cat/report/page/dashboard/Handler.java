@@ -29,17 +29,17 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.event.EventMergeHelper;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.problem.ProblemStatistics;
-import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
-import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
-import com.dianping.cat.report.page.transaction.TransactionMergeHelper;
-import com.dianping.cat.service.ModelPeriod;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.page.event.transform.EventMergeHelper;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics.StatusStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemStatistics.TypeStatistics;
+import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.service.ModelPeriod;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_builder;
-	
+
 	private NumberFormat m_format = new DecimalFormat("#0.00");
 
 	private static final String COUNT = "Count";
@@ -281,7 +281,7 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
 			TransactionReport report = response.getModel();
 
-			report = m_transactionMergeManger.mergerAllIp(report, ip);
+			report = m_transactionMergeManger.mergeAllMachines(report, ip);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");

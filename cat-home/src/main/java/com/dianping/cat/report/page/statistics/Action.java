@@ -18,18 +18,12 @@ public enum Action implements org.unidal.web.mvc.Action {
 	HEAVY_HISTORY_REPORT("historyHeavy"),
 
 	UTILIZATION_REPORT(Constants.REPORT_UTILIZATION),
-	
+
 	JAR_REPORT(Constants.REPORT_JAR),
 
+	SYSTREM_REPORT(Constants.REPORT_SYSTEM),
+
 	UTILIZATION_HISTORY_REPORT("historyUtilization"),
-
-	ALERT_REPORT(Constants.REPORT_ALERT),
-
-	ALERT_REPORT_DETAIL("alertDetail"),
-
-	ALERT_HISTORY_REPORT_DETAIL("historyAlertDetail"),
-
-	ALERT_HISTORY_REPORT("historyAlert"),
 
 	ALERT_SUMMARY("summary");
 

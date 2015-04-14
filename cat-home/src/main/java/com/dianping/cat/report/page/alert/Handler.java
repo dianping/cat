@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,9 +28,9 @@ import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.home.dal.report.AlertDao;
 import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.alert.sender.AlertChannel;
-import com.dianping.cat.report.task.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.task.alert.sender.sender.SenderManager;
+import com.dianping.cat.report.alert.sender.AlertChannel;
+import com.dianping.cat.report.alert.sender.AlertMessageEntity;
+import com.dianping.cat.report.alert.sender.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -51,22 +54,23 @@ public class Handler implements PageHandler<Context> {
 		return alertEntity;
 	}
 
-	private Map<String, List<Alert>> generateAlertMap(List<Alert> alerts) {
-		DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		Map<String, List<Alert>> map = new LinkedHashMap<String, List<Alert>>();
+	private Map<String, AlertMinute> generateAlertMinutes(List<Alert> alerts) {
+		DateFormat format = new SimpleDateFormat("MM-dd HH:mm");
+		Map<String, AlertMinute> alertMinutes = new LinkedHashMap<String, AlertMinute>();
 
 		for (Alert alert : alerts) {
 			String time = format.format(alert.getAlertTime());
-			List<Alert> alertsInMinute = map.get(time);
-			if (alertsInMinute == null) {
-				alertsInMinute = new ArrayList<Alert>();
-				map.put(time, alertsInMinute);
-			}
+			AlertMinute alertMinute = alertMinutes.get(time);
 
-			alertsInMinute.add(alert);
+			if (alertMinute == null) {
+				alertMinute = new AlertMinute(time);
+
+				alertMinutes.put(time, alertMinute);
+			}
+			alertMinute.addAlert(alert);
 		}
 
-		return map;
+		return alertMinutes;
 	}
 
 	@Override
@@ -111,7 +115,6 @@ public class Handler implements PageHandler<Context> {
 				Alert alertEntity = buildAlertEntity(payload);
 
 				try {
-					System.out.println(alertEntity);
 					int count = m_alertDao.insert(alertEntity);
 
 					if (count == 0) {
@@ -121,7 +124,6 @@ public class Handler implements PageHandler<Context> {
 					}
 				} catch (DalException e) {
 					setAlertResult(model, 5);
-					e.printStackTrace();
 					Cat.logError(e);
 				}
 			}
@@ -143,7 +145,7 @@ public class Handler implements PageHandler<Context> {
 				alerts = new ArrayList<Alert>();
 				Cat.logError(e);
 			}
-			model.setAlerts(generateAlertMap(alerts));
+			model.setAlertMinutes(generateAlertMinutes(alerts));
 			break;
 		}
 
@@ -176,6 +178,88 @@ public class Handler implements PageHandler<Context> {
 			model.setAlertResult("{\"status\":500}");
 			break;
 		}
+	}
+
+	public class AlertDomain {
+
+		private String m_name;
+
+		private Map<String, List<Alert>> m_alertsByCategory = new HashMap<String, List<Alert>>();
+
+		public AlertDomain(String name) {
+			m_name = name;
+		}
+
+		public void addAlert(Alert alert) {
+			String category = alert.getCategory();
+			List<Alert> alerts = m_alertsByCategory.get(category);
+
+			if (alerts == null) {
+				alerts = new ArrayList<Alert>();
+
+				m_alertsByCategory.put(category, alerts);
+			}
+			alerts.add(alert);
+		}
+
+		public Map<String, List<Alert>> getAlertCategories() {
+			return m_alertsByCategory;
+		}
+
+		public int getCount() {
+			int count = 0;
+
+			for (List<Alert> alerts : m_alertsByCategory.values()) {
+				count += alerts.size();
+			}
+			return count;
+		}
+
+		public String getName() {
+			return m_name;
+		}
+
+	}
+
+	public class AlertMinute {
+
+		private String m_time;
+
+		private Map<String, AlertDomain> m_domains = new HashMap<String, AlertDomain>();
+
+		public AlertMinute(String time) {
+			m_time = time;
+		}
+
+		public void addAlert(Alert alert) {
+			String domain = alert.getDomain();
+			AlertDomain alertDomain = m_domains.get(domain);
+
+			if (alertDomain == null) {
+				alertDomain = new AlertDomain(domain);
+
+				m_domains.put(domain, alertDomain);
+			}
+
+			alertDomain.addAlert(alert);
+		}
+
+		public List<AlertDomain> getAlertDomains() {
+			List<AlertDomain> alertDomains = new ArrayList<Handler.AlertDomain>(m_domains.values());
+
+			Collections.sort(alertDomains, new Comparator<AlertDomain>() {
+				@Override
+				public int compare(AlertDomain domain1, AlertDomain domain2) {
+					return domain2.getCount() - domain1.getCount();
+				}
+			});
+			return alertDomains;
+		}
+
+		public String getTime() {
+			return m_time;
+		}
+
 	}
 
 }

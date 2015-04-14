@@ -6,6 +6,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.home.service.entity.ServiceReport;
 import com.dianping.cat.home.service.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.statistics.task.service.ServiceReportMerger;
 
 
 public class ServiceReportMergerTest {

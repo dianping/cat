@@ -14,6 +14,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
+import com.dianping.cat.report.page.transaction.task.TransactionGraphCreator;
 
 public class TransactionGraphCreatorTest {
 

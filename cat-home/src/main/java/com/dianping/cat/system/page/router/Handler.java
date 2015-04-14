@@ -17,13 +17,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.system.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private RouterConfigService m_reportService;
 
 	@Inject
 	private RouterConfigManager m_configManager;
@@ -52,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		Date start = payload.getDate();
 		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		RouterConfig report = m_reportService.queryRouterConfigReport(Constants.CAT, start, end);
+		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
 
 		switch (action) {
 		case API:

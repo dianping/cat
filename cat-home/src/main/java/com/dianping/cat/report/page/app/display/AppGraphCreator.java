@@ -1,8 +1,6 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +11,12 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
-import com.dianping.cat.report.service.app.AppDataField;
-import com.dianping.cat.report.service.app.AppDataService;
-import com.dianping.cat.report.service.app.CommandQueryEntity;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.page.app.service.AppDataField;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 public class AppGraphCreator {
 
@@ -28,20 +26,6 @@ public class AppGraphCreator {
 	@Inject
 	private AppConfigManager m_appConfigManager;
 
-	private double queryMinYlable(final List<Double[]> datas) {
-		double min = Double.MAX_VALUE;
-
-		for (Double[] data : datas) {
-			List<Double> dataList = Arrays.asList(data);
-			double tmp = Collections.min(dataList);
-
-			if (min > tmp) {
-				min = tmp;
-			}
-		}
-		return min;
-	}
-
 	public LineChart buildChartData(final List<Double[]> datas, String type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
@@ -49,7 +33,7 @@ public class AppGraphCreator {
 		lineChart.setHtmlTitle(queryType(type));
 
 		if (AppDataService.SUCCESS.equals(type)) {
-			lineChart.setMinYlable(queryMinYlable(datas));
+			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
 
@@ -177,9 +161,9 @@ public class AppGraphCreator {
 				title = code.getName();
 				int status = code.getStatus();
 				if (status == 0) {
-					title += "<span class='text-success'>【成功】</span>";
+					title = "<span class='text-success'>【成功】</span>" + title;
 				} else {
-					title += "<span class='text-error'>【失败】</span>";
+					title = "<span class='text-error'>【失败】</span>" + title;
 				}
 			}
 			break;

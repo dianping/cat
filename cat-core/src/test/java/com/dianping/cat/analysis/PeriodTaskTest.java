@@ -9,7 +9,6 @@ import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class PeriodTaskTest extends ComponentTestCase {
 
@@ -20,12 +19,11 @@ public class PeriodTaskTest extends ComponentTestCase {
 		int size = 100;
 		MessageQueue queue = new DefaultMessageQueue(size);
 		MockAnalyzer analyzer = new MockAnalyzer();
-		ServerStatisticManager serverStateManager = lookup(ServerStatisticManager.class);
 		String domain = "cat";
 
 		analyzer.initialize(start, 1000, 1000);
 
-		PeriodTask task = new PeriodTask(serverStateManager, analyzer, queue, start);
+		PeriodTask task = new PeriodTask(analyzer, queue, start);
 
 		for (int i = 0; i < 110; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
@@ -65,5 +63,10 @@ public class PeriodTaskTest extends ComponentTestCase {
 				throw new RuntimeException("this is for test, Please ignore it");
 			}
 		}
+
+		@Override
+      protected void loadReports() {
+      }
 	}
+	
 }

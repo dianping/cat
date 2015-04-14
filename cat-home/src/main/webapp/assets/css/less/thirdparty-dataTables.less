@@ -1,0 +1,232 @@
+.enable_plugin_datatables() when(@enable-plugin-datatables = true) {
+
+//dataTables
+.dataTables_length {
+  //margin-left:8px;
+  select {
+	width: 70px;
+	height: 25px;
+	padding: 2px 3px;
+  }
+  label {
+	font-weight:normal;
+  }
+}
+.dataTables_filter {
+ // margin-right:8px;
+  text-align:right;
+  input[type=text], input[type=search] {
+	width: 125px;
+	height: 18px;
+	line-height: 18px;
+	.box-sizing(content-box);
+	padding: 4px 6px;
+  }
+  label {
+	font-weight:normal;
+  }
+}
+
+.dataTables_info {
+ // margin:0 0 0 12px;
+  font-size: @baseFontSize + 1;
+}
+
+.dataTables_paginate {
+  text-align: right;
+  .pagination {
+	margin: 0 12px;
+  }
+}
+
+
+
+
+
+.dataTables_wrapper {
+  label {
+	display: inline-block;
+	font-size: @baseFontSize;
+  }
+  input[type=text] , input[type=search], select {
+	margin-bottom: 0 !important;
+	margin: 0 4px;
+  }
+
+  .row {
+	margin: 0 !important;//to override .rtl's
+	
+	&:first-child {
+		padding-top: 12px;
+		padding-bottom: 12px;
+		
+		background-color: #EFF3F8;
+
+		+ .dataTable {
+			border-top: 1px solid @table-border-color;
+			border-bottom: 1px solid @table-border-color;
+		}
+	}
+	&:last-child {
+		border-bottom: 1px solid lighten(@table-border-color , 1%);
+		padding-top: 12px;
+		padding-bottom: 12px;
+		
+		background-color: #EFF3F8;
+	}
+  }
+  
+  .dataTables_scroll + .row {
+	border-top: 1px solid lighten(@table-border-color , 1%);
+  }
+
+}
+
+
+
+
+.dataTable {
+  margin-bottom:0;
+  > thead > tr > th {
+    &[class*=sort] {
+		cursor:pointer;
+		&:after {
+			float: right;
+			display: inline;
+			
+			content: "\f0dc";
+			font-family: FontAwesome;
+			font-size: 13px;
+			font-weight: normal;
+			
+			color: #555;
+		}
+		
+		&:hover {
+			color:@table-sort-hover;
+		}
+	}
+
+	&[class*=sorting_] {
+		color:@table-sort-active;
+	}
+	
+	&.sorting_desc , &.sorting_asc {
+		#gradient > .vertical(#EFF3F8 , #E3E7ED);
+    }
+	
+	&.sorting_desc:after {
+		content:"\f0dd";
+		top:-6px;
+		color:@table-sort-active;
+	}
+	&.sorting_asc:after {
+		content:"\f0de";
+		top:4px;
+		color:@table-sort-active;
+	}
+
+	&.sorting_disabled {
+		cursor:inherit;
+		&:after { display:none; }
+	}
+
+  }
+
+}
+
+//scrollable dataTable
+.dataTables_scrollHead + .dataTables_scrollBody > .dataTable > thead > tr > th:after {
+	display: none;
+}
+.dataTables_scrollHeadInner {
+  width: auto !important;
+}
+.dataTables_scrollHeadInner > .dataTable > thead > tr > th {
+  border-bottom-width: 0 !important;
+}
+
+
+//some extra border because of scrolling horizontally
+.dataTables_borderWrap {
+ .dataTables_scrollBody , .dataTables_scrollHead {
+	border: 1px solid @table-border-color !important;
+	border-width: 0 1px !important;
+	
+	.table-bordered {
+		border-left-width: 0;
+		border-right-width: 0;
+		
+		> thead > tr > th:first-child,
+		> tbody > tr > td:first-child {
+			border-left-width: 0;
+		}
+		> thead > tr > th:last-child,
+		> tbody > tr > td:last-child {
+			border-right-width: 0;
+		}
+	}
+ }
+}
+
+
+
+
+
+//some extra from
+//https://github.com/DataTables/Plugins/tree/master/integration/bootstrap/3
+table.dataTable {
+	clear: both;
+	max-width: none !important;
+}
+
+table.dataTable th:active {
+	outline: none;
+}
+
+//Scrolling
+div.dataTables_scrollHead table {
+	margin-bottom: 0 !important;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+div.dataTables_scrollHead table thead tr:last-child th:first-child,
+div.dataTables_scrollHead table thead tr:last-child td:first-child {
+	border-bottom-left-radius: 0 !important;
+	border-bottom-right-radius: 0 !important;
+}
+
+div.dataTables_scrollBody table {
+	border-top: none;
+	margin-top: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+div.dataTables_scrollBody tbody tr:first-child th,
+div.dataTables_scrollBody tbody tr:first-child td {
+	border-top: none;
+}
+
+div.dataTables_scrollFoot table {
+	margin-top: 0 !important;
+	border-top: none;
+}
+
+
+
+///
+//for tableTools printing
+.DTTT_Print .main-content {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+
+
+
+
+
+
+}
+.enable_plugin_datatables();

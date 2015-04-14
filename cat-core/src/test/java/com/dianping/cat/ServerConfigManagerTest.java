@@ -7,9 +7,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.config.server.ServerConfigManager;
 
 public class ServerConfigManagerTest extends ComponentTestCase {
 
@@ -23,8 +21,6 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		manager.initialize();
 		String id = "logview";
 		Assert.assertEquals(true, manager.getServerConfig() != null);
-		Assert.assertEquals(null, manager.getBindHost());
-		Assert.assertEquals(2280, manager.getBindPort());
 		Assert.assertEquals("cat", manager.getConsoleDefaultDomain());
 		Assert.assertEquals("[Pair[key=127.0.0.1, value=2281]]", manager.getConsoleEndpoints().toString());
 		Assert.assertEquals("127.0.0.1:2281", manager.getConsoleRemoteServers());
@@ -35,16 +31,14 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(6, manager.getHdfsProperties().size());
 		Assert.assertEquals(0, manager.getLongConfigDomains().size());
 		Assert.assertEquals(100, manager.getLongUrlDefaultThreshold());
-		Assert.assertEquals(true, manager.isClientCall("PigeonCall"));
+		Assert.assertEquals(true, manager.isRpcClient("PigeonCall"));
 		Assert.assertEquals(true, manager.isHdfsOn());
-		Assert.assertEquals(true, manager.isInitialized());
 		Assert.assertEquals(false, manager.isJobMachine());
 		Assert.assertEquals(false, manager.isLocalMode());
-		Assert.assertEquals(true, manager.isServerService("PigeonService"));
+		Assert.assertEquals(true, manager.isRpcServer("PigeonService"));
 		Assert.assertEquals(false, manager.validateDomain("All"));
 		
-		Transaction t = new DefaultTransaction("Service", "piegonService:heartTaskService:heartBeat", null);
-		Assert.assertEquals(true, manager.discardTransaction(t));
+		Assert.assertEquals(true, manager.discardTransaction("Service", "piegonService:heartTaskService:heartBeat"));
 
 		manager.initialize(null);
 

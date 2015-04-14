@@ -16,6 +16,7 @@ import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject
@@ -163,8 +164,17 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
+			MessageTree tree = m_manager.getThreadLocalMessageTree();
+
+			if (tree.getMessageId() == null) {
+				tree.setMessageId(createMessageId());
+			}
+
 			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
 
+			if (m_manager instanceof DefaultMessageManager) {
+				((DefaultMessageManager) m_manager).linkAsRunAway(transaction);
+			}
 			m_manager.start(transaction, true);
 			return transaction;
 		} else {
@@ -179,7 +189,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name,m_manager);
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name, m_manager);
 
 			return heartbeat;
 		} else {
@@ -210,6 +220,11 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 
 		if (m_manager.isMessageEnabled()) {
+			MessageTree tree = m_manager.getThreadLocalMessageTree();
+
+			if (tree.getMessageId() == null) {
+				tree.setMessageId(createMessageId());
+			}
 			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
 
 			m_manager.start(transaction, true);

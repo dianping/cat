@@ -54,11 +54,9 @@ public abstract class CatTestCase extends ComponentTestCase {
 	@Before
 	public void setup() throws Exception {
 		Cat.initialize(getContainer(), getConfigurationFile());
-		Cat.setup(null);
 	}
 
 	@After
 	public void teardown() throws Exception {
-		Cat.reset();
 	}
 }

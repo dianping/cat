@@ -17,13 +17,13 @@ public enum JspFile {
 	MOBILE("/jsp/report/problem/problem_mobile.jsp"),
 
 	THREAD("/jsp/report/problem/problemThread.jsp"),
-	
-	GROUP_GRAPHS("/jsp/report/problem/problemHourlyGraphs.jsp"), 
-	
+
+	GROUP_GRAPHS("/jsp/report/problem/problemHourlyGraphs.jsp"),
+
 	HISTORY_GROUP_GRAPH("/jsp/report/problem/problemHistoryGraphs.jsp"),
-	
+
 	HISTORY_GROUP_REPORT("/jsp/report/problem/problemHistoryGroupReport.jsp"),
-	
+
 	HOURLY_GROUP_REPORT("/jsp/report/problem/problemGroupStatics.jsp");
 
 	private String m_path;

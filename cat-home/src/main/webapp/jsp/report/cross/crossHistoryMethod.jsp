@@ -9,28 +9,28 @@
 
 <a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
 	<tr style="text-align: left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}"
+					<a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}">All</a>
+					<a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}"
+						<a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}${model.customDate}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -38,8 +38,8 @@
 		</th>
 	</tr>
 </table>
-<table class='table table-striped table-condensed'>
-		<tr><th style="text-align: left" colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+<table class='table table-striped table-condensed '>
+		<tr><th style="text-align: left" colspan='17'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
@@ -56,7 +56,7 @@
 				var callSort='${model.callSort}';
 				var remote='${payload.remoteIp}';
 				var customDate = '${model.customDate}';
-				var reportType ='${model.reportType}';
+				var reportType ='${payload.reportType}';
 				var project = '${payload.projectName}';
 				window.location.href="?op=historyMethod&domain="+domain+"&project="+project+"&reportType="+reportType+"&ip="+ip+"&date="
 						+date+"&queryName="+queryName+"&remote="+remote+"&serviceSort="+serviceSort+"&callSort"+callSort+customDate;
@@ -66,16 +66,16 @@
 		<tr><td colspan="8" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
 		<tr>
 			<th class="left">Type</th>
-			<th class="left">RemoteIp</th>
+			<th class="left">RemoteId</th>
 			<th class="left">Method</th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
-			<th>QPS</th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
+			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+			<tr class=" right">
 		         	<td class="left">${callInfo.type}</td>
 					<td class="left">${callInfo.ip}</td>
 					<td class="left">${callInfo.id}</td>
@@ -97,27 +97,27 @@
 			</tr>
 		      <tr>
 		         <th class="left">Type</th>
-				 <th class="left">RemoteIp</th>
+				 <th class="left">RemoteId</th>
 				 <th class="left">Method</th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
-		         <th>QPS</th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
+		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.methodInfo.callerProjectsInfo}">
 		         	 <th></th>
 					 <th class="left">Type</th>
-					 <th class="left">RemoteIp</th>
+					 <th class="left">RemoteId</th>
 					 <th class="left">Method</th>
-			         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-			         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-			         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
-			         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
-			         <th>QPS</th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
+			         <th class="right">QPS</th>
 				</c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		         <tr class=" right">
 		            <td class="left">${serviceInfo.type}</td>
 					<td class="left">${serviceInfo.ip}</td>
 					<td class="left">${serviceInfo.id}</td>

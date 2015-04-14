@@ -8,17 +8,21 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
-		var commandInfo = ${model.command};
+		var commandInfo = ${model.command2CodesJson};
 		var command1Change = function command1Change() {
 			var key = $("#command").val();
 			var value = commandInfo[key];
 			var code = document.getElementById("code");
+			$(code).empty();
+			
+			var opt = $('<option />');
+			opt.html("All");
+			opt.val("");
+			opt.appendTo(code);
 			
 			for ( var prop in value) {
 				var opt = $('<option />');
@@ -86,13 +90,14 @@
 			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
+			var group = $("#group").val();
 			var split = ";";
 			var query1 = period + split + command + split + code + split
 					+ network + split + version + split + connectionType
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field;
+			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field + "&domains="+group;
  			window.location.href = href;
  		}
 		
@@ -106,21 +111,77 @@
 			document.getElementById("operator").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
 		}
+		
+		var domain2CommandsJson = ${model.domain2CommandsJson};
+
+		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
+			if(domainInitVal == ""){
+				domainInitVal = $("#"+domainId).val()
+			}
+			var commandSelect = $("#"+commandId);
+			var commands = domain2CommandsJson[domainInitVal];
+			
+			$("#"+domainId).val(domainInitVal);
+			commandSelect.empty();
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+			if(typeof commandInitVal != 'undefined' && commandInitVal.length > 0){
+				commandSelect.val(commandInitVal);
+			}
+		}
+		
+		function changeCommandByDomain(){
+			var domain = $("#group").val();
+			var commandSelect = $("#command");
+			var commands = domain2CommandsJson[domain];
+			commandSelect.empty();
+			
+			for(var cou in commands){
+				var command = commands[cou];
+				if(command['title'] != undefined && command['title'].length > 0){
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+				}else{
+					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+				}
+			}
+		}
+		
+		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
+			var domainsSelect = $("#"+domainSelectId);
+			for(var domain in domain2CommandsJson){
+				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+			}
+			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
+			command1Change();
+			domainsSelect.on('change', changeCommandByDomain);
+		}
 
 		$(document).ready(
 				function() {
 					$('#accessPiechart').addClass('active');
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker({
-						pickDate: false
-						});
-
+					$('#time').datetimepicker({
+						format:'Y-m-d H:i',
+						step:30,
+						maxDate:0
+					});
+					$('#time2').datetimepicker({
+						datepicker:false,
+						format:'H:i',
+						step:30,
+						maxDate:0
+					});
 					var query1 = '${payload.query1}';
 					var command1 = $('#command');
 					var words = query1.split(";");
 
 					command1.on('change', command1Change);
-					$("#command").val(words[1]);
+					initDomain('group', 'command', '${payload.domains}', words[1]);
 					
 					$("#piechartSelect").on('change', refreshDisabled);
 					
@@ -135,8 +196,13 @@
 					}else{
 						$("#time2").val(words[10]);
 					}
+					
+					if(words[1] != undefined || words.length > 1){
+						$("#command").val(words[1]);
+					}else{
+						$("#command").val('${model.defaultCommand}');
+					}
 
-					command1Change();
 					$("#code").val(words[2]);
 					$("#network").val(words[3]);
 					$("#app-version").val(words[4]);
@@ -151,17 +217,7 @@
 				});
 	</script>
 	
-	<div class="row-fluid">
-		<%@include file="menu.jsp"%>
-	<div class="span10">
 		<%@include file="piechartDetail.jsp"%>
-	</div>
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
 </a:body>
 
 <style type="text/css">

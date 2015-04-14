@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-	<jdbc package="com.dianping.cat.core" name="cat">
-		<datasource>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url>jdbc:mysql://127.0.0.1:3306/cat</url>
-			<user>root</user>
-			<password></password>
-			<properties>useUnicode=true&amp;autoReconnect=true</properties>
-		</datasource>
-		<group name="report" package="com.dianping.cat.core.dal">
-			<table name="hostinfo" />
-			<table name="task" />
-			<table name="project" />
-			<table name="report" />
-			<table name="dailyreport" />
-			<table name="weeklyreport" />
-			<table name="monthreport" />
-			<table name="graph" />
-			<table name="dailygraph" />
-			<table name="report_content" />
-		</group>
-		<group name="config" package="com.dianping.cat.core.config">
-			<table name="config" />
-		</group>
-	</jdbc>
-	<jdbc package="com.dianping.cat.app" name="app">
-		<datasource>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url>jdbc:mysql://127.0.0.1:3306/cat</url>
-			<user>root</user>
-			<password></password>
-			<properties>useUnicode=true&amp;autoReconnect=true</properties>
-		</datasource>
-		<group name="app" package="com.dianping.cat.app">
-			<table name="app_command_data" />
-			<table name="app_speed_data" />
-		</group>
-	</jdbc>
+   <jdbc package="com.dianping.cat.core" name="cat">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="report" package="com.dianping.cat.core.dal">
+         <table name="hostinfo"/>
+         <table name="task"/>
+         <table name="project"/>
+         <table name="report"/>
+         <table name="dailyreport"/>
+         <table name="weeklyreport"/>
+         <table name="monthreport"/>
+         <table name="graph"/>
+         <table name="dailygraph"/>
+         <table name="report_content"/>
+         <table name="daily_report_content"/>
+         <table name="monthly_report_content"/>
+         <table name="weekly_report_content"/>
+      </group>
+      <group name="config" package="com.dianping.cat.core.config">
+         <table name="config"/>
+      </group>
+   </jdbc>
+   <jdbc package="com.dianping.cat.app" name="app">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="app" package="com.dianping.cat.app">
+         <table name="app_command_data"/>
+         <table name="app_speed_data"/>
+         <table name="app_connection_data"/>
+      </group>
+   </jdbc>
 </wizard>

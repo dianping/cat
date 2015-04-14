@@ -2,9 +2,10 @@ package com.dianping.cat.analysis;
 
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -14,7 +15,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	public static final long ONE_DAY = 24 * ONE_HOUR;
-
+	
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
+	
 	private long m_extraTime;
 
 	protected long m_startTime;
@@ -99,13 +103,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 
 	protected boolean isLocalMode() {
-		ServerConfigManager manager = lookup(ServerConfigManager.class);
-
-		return manager.isLocalMode();
-	}
-
-	public boolean isRawAnalyzer() {
-		return true;
+		return m_serverConfigManager.isLocalMode();
 	}
 
 	protected boolean isTimeout() {
@@ -115,9 +113,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		return currentTime > endTime;
 	}
 
-	protected void loadReports() {
-		// to be overridden
-	}
+	protected abstract void loadReports();
 
 	protected abstract void process(MessageTree tree);
 

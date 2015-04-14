@@ -12,7 +12,6 @@
   </entity>
   <entity name="par">
     <attribute name="id" value-type="String" />
-    <attribute name="value" value-type="String" />
   </entity>
   <entity name="socket">
     <attribute name="ip" value-type="String" />

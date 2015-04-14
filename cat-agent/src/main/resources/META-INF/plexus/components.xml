@@ -122,13 +122,12 @@
 			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
 			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
-				<modules>
-					<module default="true">com.dianping.cat.agent.core.CoreModule</module>
-				</modules>
+				<defaultModule>com.dianping.cat.agent.core.CoreModule</defaultModule>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.agent.core.CoreModule</role>
+			<role>org.unidal.web.mvc.Module</role>
+			<role-hint>com.dianping.cat.agent.core.CoreModule</role-hint>
 			<implementation>com.dianping.cat.agent.core.CoreModule</implementation>
 		</component>
 		<component>

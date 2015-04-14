@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.config.processor;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,11 +13,11 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.ProductLineConfigManager;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
-import com.dianping.cat.system.config.BusinessRuleConfigManager;
+import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -57,23 +58,42 @@ public class MetricConfigProcessor extends BaseProcesser {
 	}
 
 	private void metricConfigList(Payload payload, Model model) {
-		Map<String, ProductLine> productLines = m_productLineConfigManger.queryAllProductLines();
+		Map<String, ProductLine> productLines = m_productLineConfigManger.queryMetricProductLines();
 		Map<ProductLine, List<MetricItemConfig>> metricConfigs = new LinkedHashMap<ProductLine, List<MetricItemConfig>>();
 		Set<String> exists = new HashSet<String>();
+		Set<String> knowDomains = new HashSet<String>();
 
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			ProductLine productLine = entry.getValue();
 
-			if (productLine.isMetricDashboard()) {
-				Set<String> domains = productLine.getDomains().keySet();
-				List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
+			Set<String> domains = productLine.getDomains().keySet();
+			List<MetricItemConfig> configs = m_metricConfigManager.queryMetricItemConfigs(domains);
 
-				for (MetricItemConfig config : configs) {
-					exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(),
-					      config.getMetricKey()));
-				}
-				metricConfigs.put(productLine, configs);
+			for (MetricItemConfig config : configs) {
+				exists.add(m_metricConfigManager.buildMetricKey(config.getDomain(), config.getType(), config.getMetricKey()));
 			}
+			metricConfigs.put(productLine, configs);
+			knowDomains.addAll(domains);
+
+		}
+		
+		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
+			payload.setProductLineName(entry.getKey());
+			break;
+		}
+		
+		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
+
+		for (MetricItemConfig config : m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values()) {
+			String domain = config.getDomain();
+
+			if (!knowDomains.contains(domain)) {
+				otherConfigs.add(config);
+			}
+		}
+
+		if (!otherConfigs.isEmpty()) {
+			metricConfigs.put(new ProductLine("Other").setTitle("Other"), otherConfigs);
 		}
 
 		model.setProductMetricConfigs(metricConfigs);

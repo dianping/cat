@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.task.problem.HistoryProblemReportMerger;
+import com.dianping.cat.report.page.problem.task.HistoryProblemReportMerger;
 
 public class ProblemReportMergerTest {
 
@@ -28,9 +28,12 @@ public class ProblemReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getProblemReport().toString()
-		      .replace("\r", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\r", ""), reportNew.toString().replaceAll("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getProblemReport()
+		      .toString().replace("\r", ""));
+		Assert.assertEquals("Source report is not changed!", newXml.replaceAll("\r", ""), reportNew.toString()
+		      .replaceAll("\r", ""));
+		Assert.assertEquals("Source report is not changed!", oldXml.replaceAll("\r", ""), reportOld.toString()
+		      .replaceAll("\r", ""));
 	}
 
 	@Test

@@ -9,12 +9,12 @@
 
 <a:report title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>
 <table class="machines">
 	<tr class="left">
-		<th>机器: &nbsp;[&nbsp; <c:choose>
+		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}" class="current">All</a>
 				</c:when>
@@ -48,14 +48,14 @@
 		<tr>
 			<th class="left">Type</th>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=name">RemoteProject</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
-			<th>QPS</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
+			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
-			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+			<tr class=" right">
 		         	<td class="left">${callInfo.type}</td>
 		         	<td class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${callInfo.projectName }">${callInfo.projectName}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
@@ -77,24 +77,24 @@
 		      <tr>
 		         <th class="left">Type</th>
 		         <th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=name">RemoteProject</a></th>
-		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
-		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
-		         <th>QPS</th>
+		         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
+		         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
+		         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+		         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.projectInfo.callerProjectsInfo}">
 		         	 <th></th>
 			         <th class="left">Type</th>
 			         <th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=name">RemoteProject</a></th>
-			         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-			         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-			         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
-			         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
-			         <th>QPS</th>
+			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
+			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
+			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+			         <th class="right">QPS</th>
 		         </c:if>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.serviceProjectsInfo}" varStatus="status">
-		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		         <tr class=" right">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName}">${serviceInfo.projectName}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>

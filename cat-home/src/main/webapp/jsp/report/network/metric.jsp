@@ -11,17 +11,15 @@
 	<c:when test="${payload.fullScreen}">
 		<res:bean id="res" />
 		<res:useCss value='${res.css.local.body_css}' target="head-css" />
-		<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-		<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-		<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
+		<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
 		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<a href="javascript:showOpNav()" id="switch" class="btn btn-small btn-success">隐藏</a>
+		<a href="javascript:showOpNav()" id="switch" class="btn btn-sm btn-success">隐藏</a>
 		<div class="opNav">
 		<%@ include file="metricOpNav.jsp" %>
 		<table>
 			<tr style="text-align: left">
-				<th>&nbsp;&nbsp;时间段选择: 
+				<th>&nbsp;&nbsp;时间段 
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
@@ -44,23 +42,36 @@
 	<c:otherwise>
 		<a:body>
 		<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-		<res:useJs value="${res.js.local['highcharts.js']}" target="head-js"/>
 		<div class="report">
-			<table class="header">
-				<tr>
-					<td class="title">&nbsp;&nbsp;From ${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-					<td class="nav">
-						<c:forEach var="nav" items="${model.navs}">
+			
+			<div class="breadcrumbs" id="breadcrumbs">
+			<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<div class="nav-search nav" id="nav-search">
+				<c:forEach var="nav" items="${model.navs}">
 							&nbsp;[ <a href="${model.baseUri}?op=metric&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 						</c:forEach>
 						&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=metric&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
-					</td>
-				</tr>
-			</table>	
-				<%@ include file="metricOpNav.jsp" %>
+			</div></div>
 			<table>
 				<tr style="text-align: left">
-					<th>&nbsp;&nbsp;时间段选择: 
+					<th>
+						<div class="navbar-header pull-left position" style="width:350px;">
+						<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<span class="input-icon" style="width:300px;">
+								<input type="text" placeholder="input device for search" value="${payload.product}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+								<span class="input-group-btn" style="width:50px">
+								<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								Go
+								</button>
+								</span>
+							</div>
+						</form>
+						</div>
+						</th><th>	
+						&nbsp;&nbsp;时间段 
 						<c:forEach var="range" items="${model.allRange}">
 							<c:choose>
 								<c:when test="${payload.timeRange eq range.duration}">
@@ -74,74 +85,83 @@
 					</th>
 				</tr>
 			</table>
-		      <div class="row-fluid">
-		        <div class="span2">
-		          <div class="well sidebar-nav">
-		            <ul class="nav nav-list">
-		            	 <li class='nav-header' id="${item.id}"></li>
-		            	<li class='nav-header' id="metric_nettopology"><a href="?op=view"><strong>核心拓扑</strong></a></li>
-		            	<c:forEach var="item" items="${model.productLines}" varStatus="status">
-			              <li class='nav-header' id="metric_${item.id}"><a href="?op=metric&date=${model.date}&domain=${model.domain}&product=${item.id}&timeRange=${payload.timeRange}"><strong>${item.id}</strong></a></li>
-			            </c:forEach>
-		              <li >&nbsp;</li>
-		            </ul>
-		          </div><!--/.well -->
-		        </div><!--/span-->
-		        <div class="span10">
+		      <div class="col-xs-12">
 		        	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 		       			<div style="float:left;">
 		       				<div id="${item.id}" class="metricGraph"></div>
 		       			</div>
 					</c:forEach>
-				</div>
 			</div>
 		</div>
 		</a:body>
 	</c:otherwise></c:choose>
 	
 	<script type="text/javascript">
+		function networkChange(){
+			var date='${model.date}';
+			var domain='${model.domain}';
+			var network=$("#search").val();
+			console.log(network);
+			var timeRange=${payload.timeRange};
+			var href = "?op=metric&date="+date+"&domain="+domain+"&product="+network+"&timeRange="+timeRange;
+			window.location.href=href;
+		}
+	
 		$(document).ready(function() {
 			var product = '${payload.product}';
-			$('#metric_'+product).addClass('active');
+			$('#network').val(product);
 			$('i[tips]').popover();
-
+			$('#System_report').addClass("open active");
+			$('#system_network').addClass("active");
+			
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
+			
+			var data = [];
+			<c:forEach var="item" items="${model.productLines}">
+				var item = {};
+				item['label'] = '${item.id}';
+				item['category'] = '网络监控设备';
+				data.push(item);
+			</c:forEach>
+					
+			$( "#search" ).catcomplete({
+				delay: 0,
+				source: data
+			});
+			
+			$("#search_go").bind("click",function(e){
+				networkChange();
+			});
+			$('#wrap_search').submit(
+				function(){
+					networkChange();
+					return false;
+				}		
+			);
 			
 			<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 				var data = ${item.jsonString};
 				graphMetricChart(document.getElementById('${item.id}'), data);
 			</c:forEach>
-
-			var hide =${payload.hideNav};
-			
-			if(hide){
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			}
 		});
-		
-		function showOpNav() {
-			var b = $('#switch').html();
-			if (b == '隐藏') {
-				$('.opNav').slideUp();
-				$('#switch').html("显示");
-			} else {
-				$('.opNav').slideDown();
-				$('#switch').html("隐藏");
-			}
-		}
 	</script>
-</script>
 <style type="text/css">
-.row-fluid .span2 {
-	width: 15%;
+.input-group .form-control {
+	position: static;
 }
-
-.row-fluid .span10 {
-	width: 82%;
-}
-
-.nav-list>li>a,.nav-list .nav-header {
-	margin-left: -19px;
-	margin-right: -19px;
+.input-icon>.ace-icon {
+	z-index: 0;
 }
 </style>

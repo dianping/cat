@@ -8,10 +8,10 @@
 <img class="img-polaroid" width='60%'
 	src="${model.webapp}/images/alert/thirdPartyAlert.png" />
 <p>具体配置如下</p>
-<p><span class="text-error">[url]</span>：监控的网址</p>
-<p><span class="text-error">[type]</span>：<span class="text-error">get</span> 或 <span class="text-error">post</span></p>
-<p><span class="text-error">[domain]</span>：依赖于该第三方的项目名，会向该项目组联系人发第三方告警</p>
-<p><span class="text-error">[par]</span>：请求中包含的参数，<span class="text-error">id</span>为参数名称，<span class="text-error">value</span>为参数值</p>
+<p><span class="text-danger">[url]</span>：监控的网址</p>
+<p><span class="text-danger">[type]</span>：<span class="text-danger">get</span> 或 <span class="text-danger">post</span></p>
+<p><span class="text-danger">[domain]</span>：依赖于该第三方的项目名，会向该项目组联系人发第三方告警</p>
+<p><span class="text-danger">[par]</span>：请求中包含的参数，<span class="text-danger">id</span>为参数名称，<span class="text-danger">value</span>为参数值</p>
 <p>以上参数名均为小写。监控周期为一分钟。</p>
 <br/>
 <h4 class="text-success">规则更新</h4>

@@ -13,17 +13,17 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.page.matrix.service.MatrixReportService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private MatrixReportService m_reportService;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -63,6 +63,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
+		model.setAction(payload.getAction());
 		normalize(model, payload);
 		switch (payload.getAction()) {
 		case HISTORY_REPORT:
@@ -87,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
+		MatrixReport matrixReport = m_reportService.queryReport(domain, start, end);
 
 		if (matrixReport == null) {
 			return;

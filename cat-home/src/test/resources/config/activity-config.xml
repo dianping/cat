@@ -1,0 +1,3 @@
+<activity-config>
+	<activity domain="cat" type="URL" name="/cat/r/monitor"></activity>
+</activity-config>

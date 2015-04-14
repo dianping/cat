@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -86,6 +87,15 @@ public class DisplayTypes {
 			if (m_sorted.equals("99line")) {
 				return (int) (m2.getDetail().getLine99Value() * 100 - m1.getDetail().getLine99Value() * 100);
 			}
+			if (m_sorted.equals("min")) {
+				return (int) (m2.getDetail().getMin() * 100 - m1.getDetail().getMin() * 100);
+			}
+			if (m_sorted.equals("max")) {
+				return (int) (m2.getDetail().getMax() * 100 - m1.getDetail().getMax() * 100);
+			}
+			if (m_sorted.equals("std")) {
+				return (int) (m2.getDetail().getStd() * 100 - m1.getDetail().getStd() * 100);
+			}
 			return 0;
 		}
 	}
@@ -108,7 +118,11 @@ public class DisplayTypes {
 		}
 
 		public String getType() {
-			return m_type;
+			try {
+				return URLEncoder.encode(m_type, "utf-8");
+			} catch (Exception e) {
+				return m_type;
+			}
 		}
 	}
 }

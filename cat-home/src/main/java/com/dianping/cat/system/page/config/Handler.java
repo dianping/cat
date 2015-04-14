@@ -15,9 +15,9 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.ConfigModification;
 import com.dianping.cat.home.dal.report.ConfigModificationDao;
-import com.dianping.cat.report.page.JsonBuilder;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
@@ -29,7 +29,9 @@ import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
 import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
 import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
+import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
+import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
@@ -39,6 +41,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GlobalConfigProcessor m_globalConfigProcessor;
+
+	@Inject
+	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
 	private PatternConfigProcessor m_patternConfigProcessor;
@@ -74,13 +79,15 @@ public class Handler implements PageHandler<Context> {
 	private TransactionConfigProcessor m_transactionConfigProcessor;
 
 	@Inject
+	private StorageConfigProcessor m_storageConfigProcessor;
+
+	@Inject
 	private DisplayConfigProcessor m_displayConfigProfessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
 
 	@Override
-	@PreInboundActionMeta("login")
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "config")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
@@ -88,6 +95,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@Override
+	@PreInboundActionMeta("login")
 	@OutboundActionMeta(name = "config")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
@@ -100,14 +108,25 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		switch (action) {
 		case PROJECT_ALL:
-		case PROJECT_UPDATE:
 		case PROJECT_UPDATE_SUBMIT:
 		case PROJECT_DELETE:
+		case DOMAIN_GROUP_CONFIGS:
 		case DOMAIN_GROUP_CONFIG_UPDATE:
+		case DOMAIN_GROUP_CONFIG_DELETE:
+		case DOMAIN_GROUP_CONFIG_SUBMIT:
 		case BUG_CONFIG_UPDATE:
-		case THIRD_PARTY_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
+		case ALERT_SENDER_CONFIG_UPDATE:
+		case BLACK_CONFIG_UPDATE:
+		case STORAGE_GROUP_CONFIG_UPDATE:
 			m_globalConfigProcessor.process(action, payload, model);
+			break;
+
+		case THIRD_PARTY_RULE_CONFIGS:
+		case THIRD_PARTY_RULE_UPDATE:
+		case THIRD_PARTY_RULE_SUBMIT:
+		case THIRD_PARTY_RULE_DELETE:
+			m_thirdPartyConfigProcessor.process(action, payload, model);
 			break;
 
 		case AGGREGATION_ALL:
@@ -137,6 +156,7 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
 		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
+		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
 			m_topologyConfigProcessor.process(action, payload, model);
 			break;
 
@@ -156,7 +176,6 @@ public class Handler implements PageHandler<Context> {
 		case EXCEPTION_THRESHOLD_ADD:
 		case EXCEPTION_THRESHOLD_UPDATE_SUBMIT:
 		case EXCEPTION_EXCLUDE_DELETE:
-		case EXCEPTION_EXCLUDE_UPDATE:
 		case EXCEPTION_EXCLUDE_ADD:
 		case EXCEPTION_EXCLUDE_UPDATE_SUBMIT:
 			m_exceptionConfigProcessor.process(action, payload, model);
@@ -191,10 +210,18 @@ public class Handler implements PageHandler<Context> {
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
+		case STORAGE_RULE:
+		case STORAGE_RULE_ADD_OR_UPDATE:
+		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
+		case STORAGE_RULE_DELETE:
+			m_storageConfigProcessor.process(action, payload, model);
+			break;
+
+		case APP_NAME_CHECK:
 		case APP_LIST:
-		case APP_UPDATE:
-		case APP_SUBMIT:
-		case APP_PAGE_DELETE:
+		case APP_COMMMAND_UPDATE:
+		case APP_COMMAND_SUBMIT:
+		case APP_COMMAND_DELETE:
 		case APP_CODE_UPDATE:
 		case APP_CODE_SUBMIT:
 		case APP_CODE_ADD:
@@ -209,6 +236,11 @@ public class Handler implements PageHandler<Context> {
 		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
 		case APP_RULE_DELETE:
 		case APP_COMPARISON_CONFIG_UPDATE:
+		case APP_RULE_BATCH_UPDATE:
+		case APP_CONSTANT_ADD:
+		case APP_CONSTANT_UPDATE:
+		case APP_CONSTATN_DELETE:
+		case APP_CONSTATN_SUBMIT:
 			m_appConfigProcessor.process(action, payload, model);
 			break;
 
@@ -225,6 +257,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 
 		case DISPLAY_POLICY:
+		case ACTIVITY_CONFIG_UPDATE:
 			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
@@ -267,8 +300,6 @@ public class Handler implements PageHandler<Context> {
 			} catch (Exception ex) {
 				Cat.logError("store cookie fail:" + cookieValue, new RuntimeException());
 			}
-		} else {
-			Cat.logError("cannot get cookie info", new RuntimeException());
 		}
 	}
 

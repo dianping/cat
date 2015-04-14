@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
+import com.dianping.cat.report.page.event.task.EventGraphCreator;
 
 public class EventGraphCreatorTest {
 

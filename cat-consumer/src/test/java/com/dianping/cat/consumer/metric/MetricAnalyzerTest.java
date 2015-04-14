@@ -24,6 +24,8 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dal.BusinessReport;
 import com.dianping.cat.consumer.dal.BusinessReportDao;
 import com.dianping.cat.consumer.metric.MetricAnalyzer.ConfigItem;
@@ -34,8 +36,8 @@ import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.task.TaskManager;
 
 public class MetricAnalyzerTest extends ComponentTestCase {
@@ -168,7 +170,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public boolean insertIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
+		public boolean insertMetricIfNotExist(String domain, String type, String metricKey, ConfigItem item) {
 			return true;
 		}
 
@@ -195,6 +197,10 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		@Override
 		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
 			return new MockStringBucket();
+		}
+
+		@Override
+		public void clearOldReports() {
 		}
 
 	}
@@ -266,7 +272,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 	public static class MockProductLineManager extends ProductLineConfigManager {
 
 		@Override
-		public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains) {
+		public Pair<Boolean, String> insertProductLine(ProductLine line, String[] domains, String title) {
 			return new Pair<Boolean, String>(true, null);
 		}
 
@@ -276,7 +282,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<String> queryDomainsByProductLine(String productLine) {
+		public List<String> queryDomainsByProductLine(String productLine, ProductLineConfig productLineConfig) {
 			return new ArrayList<String>();
 		}
 
@@ -286,7 +292,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public ProductLine queryProductLine(String id) {
+		public ProductLineConfig queryProductLine(String id) {
 			return null;
 		}
 

@@ -2,7 +2,7 @@
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" webres="true" plugin-management="false">
       <module name="report" path="r">
-         <page name="home" title="Home" default="true" view="/jsp/report/home/home.jsp">
+         <page name="home" title="Home" view="/jsp/report/home/home.jsp">
             <description>Home Page</description>
          </page>
          <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
@@ -37,9 +37,6 @@
          </page>
          <page name="state" title="State" path="state" view="/jsp/report/state/state.jsp">
             <description>State</description>
-         </page>
-         <page name="top" title="Top" path="top" view="/jsp/report/top/top.jsp">
-            <description>Top</description>
          </page>
          <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
             <description>Metric</description>
@@ -77,21 +74,24 @@
          <page name="overload" title="Overload" path="overload" template="default">
             <description>Overload</description>
          </page>
-         <page name="highload" title="Highload" path="highload" template="default">
-            <description>Highload</description>
-         </page>
          <page name="database" title="Database" path="database" template="default">
             <description>Database</description>
          </page>
+         <page name="storage" title="Storage" path="storage" template="default">
+            <description>Storage</description>
+         </page>
+         <page name="activity" title="Activity" path="activity" template="default">
+            <description>Activity</description>
+         </page>
+         <page name="top" title="Top" path="top" default="true" view="/jsp/report/top/top.jsp" template="default">
+            <description>Top</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
-         <page name="alarm" title="Alarm" default="true" path="alarm" view="/jsp/system/alarm/alarm.jsp" standalone="false">
-            <description>Alarm</description>
-         </page>
-         <page name="login" title="Login" default="true" path="login" standalone="false">
+         <page name="login" title="Login" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="config" title="Config" path="config" view="/jsp/system/project/project.jsp" standalone="false">
+         <page name="config" title="Config" default="true" path="config" view="/jsp/system/project/project.jsp" standalone="false">
             <description>Config</description>
          </page>
          <page name="plugin" title="Plugin" path="plugin" view="/jsp/system/plugin/plugin.jsp">

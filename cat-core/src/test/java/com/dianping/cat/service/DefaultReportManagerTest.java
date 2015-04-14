@@ -19,9 +19,12 @@ import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.storage.report.ReportBucket;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.report.DefaultReportManager;
+import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.ReportBucket;
+import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class DefaultReportManagerTest {
 
@@ -52,6 +55,7 @@ public class DefaultReportManagerTest {
 		m_manager.setReportContentDao(m_reportContentDao);
 		m_manager.setReportDao(m_hourlyReportDao);
 		m_manager.setReportDelegate(new MockReportDeletegate());
+		m_manager.setValidator(new DomainValidator());
 
 		long time = System.currentTimeMillis();
 		m_start = time - time % (3600 * 1000L);
@@ -63,10 +67,10 @@ public class DefaultReportManagerTest {
 		m_manager.getHourlyReport(m_start-3*hour, DOMAIN1, true);
 		m_manager.getHourlyReport(m_start-4*hour, DOMAIN2, true);
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
-		m_manager.cleanup();
+		m_manager.cleanup(m_start);
 
 		Map<String, String> reports = m_manager.getHourlyReports(m_start);
-		Assert.assertEquals(1, reports.size());
+		Assert.assertEquals(0, reports.size());
 	}
 
 	@Test
@@ -82,6 +86,7 @@ public class DefaultReportManagerTest {
 		Assert.assertEquals("[domain1]", domains.toString());
 
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
+		domains = m_manager.getDomains(m_start);
 		Assert.assertEquals("[domain3, domain1]", domains.toString());
 
 		Map<String, String> reports = m_manager.getHourlyReports(m_start);
@@ -126,6 +131,10 @@ public class DefaultReportManagerTest {
 		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
 			return new MockStringBucket();
 		}
+
+		@Override
+      public void clearOldReports() {
+      }
 
 	}
 

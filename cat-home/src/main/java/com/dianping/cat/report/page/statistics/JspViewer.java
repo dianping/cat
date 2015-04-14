@@ -28,17 +28,12 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.UTILIZATION_HISTORY_REPORT.getPath();
 		case UTILIZATION_REPORT:
 			return JspFile.UTILIZATION_REPORT.getPath();
-		case ALERT_HISTORY_REPORT:
-			return JspFile.ALERT_HISTORY_REPORT.getPath();
-		case ALERT_REPORT:
-			return JspFile.ALERT_REPORT.getPath();
-		case ALERT_REPORT_DETAIL:
-		case ALERT_HISTORY_REPORT_DETAIL:
-			return JspFile.ALERT_REPORT_DETAIL.getPath();
 		case ALERT_SUMMARY:
 			return JspFile.ALERT_SUMMARY.getPath();
 		case JAR_REPORT:
 			return JspFile.JAR_REPORT.getPath();
+		case SYSTREM_REPORT:
+			return JspFile.SYSTEM_REPORT.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

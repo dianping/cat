@@ -1,12 +1,38 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+<a:config>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#application_config').addClass('active open');
+			$('#topologyGraphEdgeConfigList').addClass('active');
+			
+			var action = '${payload.action.name}';
+			if(action=='topologyGraphEdgeConfigDelete'||action=='topologyGraphEdgeConfigAddSumbit'){
+				var state = '${model.opState}';
+				if(state=='Success'){
+					$('#state').html('操作成功');
+				}else{
+					$('#state').html('操作失败');
+				}
+				setInterval(function(){
+					$('#state').html('&nbsp;');
+				},3000);
+			}
+		});
+	</script>
 
 <form name="topologyGraphEdgeConfigAddSumbit" id="form" method="post"
 	action="${model.pageUri}?op=topologyGraphEdgeConfigAddSumbit">
-	<h4 class="text-center text-error" id="state">&nbsp;</h4>
-	<h4 class="text-center text-error">修改依赖关系配置信息</h4>
-	<table class="table table-striped table-bordered table-condensed">
+	<h4 class="text-center text-danger" id="state">&nbsp;</h4>
+	<h4 class="text-center text-danger">修改依赖关系配置信息</h4>
+	<table class="table table-striped table-condensed  ">
 		<tr>
 			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>
 			<td><select id="type" name="edgeConfig.type">
@@ -51,6 +77,11 @@
 			</td>
 		</tr>
 		<tr>
+			<td style="text-align: right" class="text-success">最少调用次数</td>
+			<td><input id="minCountThreshold" name="edgeConfig.minCountThreshold"
+				value="${model.edgeConfig.minCountThreshold}" required /></td>
+		</tr>
+		<tr>
 			<td style="text-align: right" class="text-success">一分钟异常数warning阈值</td>
 			<td><input id="warningThreshold" name="edgeConfig.warningThreshold"
 				value="${model.edgeConfig.warningThreshold}" required /></td>
@@ -72,8 +103,9 @@
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
-			<td><input class='btn btn-primary' id="addOrUpdateEdgeSubmit" type="submit"
+			<td><input class='btn btn-primary btn-sm' id="addOrUpdateEdgeSubmit" type="submit"
 				name="submit" value="提交"/></td>
 		</tr>
 	</table>
 </form>
+</a:config>

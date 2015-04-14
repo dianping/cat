@@ -10,34 +10,27 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.highload.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.highload.Model" scope="request" />
 
-<a:body>
-	<res:useCss value="${res.css.local['bootstrap-datetimepicker.min.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
-	<div style="height:24px"></div>
-   <div class="row-fluid">
-     <div class="span2">
-		<%@include file="../reportTree.jsp"%>
-	 </div>
-	 <div class="span10">
+<a:offline>
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 		<div id="queryBar">
-			<div class="text-left"></div>
-			日期： &nbsp;
-			<div id="datePicker" class="input-append date" >
-				<input name="time" id="time" style="height:auto; width: 150px;" 
-				value="<fmt:formatDate value="${payload.date}" pattern="yyyy-MM-dd"/>" type="text"></input> 
-				<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-			</div>&nbsp;&nbsp;
-			<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
+	        <div style="float:left;">
+				&nbsp;日期
+			<input type="text" id="time" style="width:100px;" value="<fmt:formatDate value='${payload.date}' pattern='yyyy-MM-dd'/>"/>
+			</div>
+			&nbsp;&nbsp;&nbsp;&nbsp;<input class="btn btn-primary  btn-sm"  value="查询" onclick="queryNew()" type="submit">
 		</div>
-		<div class="report">
+		<div class="report" >
 			<%@ include file="detail.jsp"%>
 		</div>
-	</div>
-  </div>
 		<script type="text/javascript">
 		  $(document).ready(function(){
-			  $('#highload').addClass("active");
-	          $('#datePicker').datetimepicker({format: 'yyyy-MM-dd'});
+			  $('#highload_report').addClass("active");
+			  $('#time').datetimepicker({
+					format:'Y-m-d',
+					timepicker:false,
+					maxDate:0
+				});
 	      });
 	      
 	      function queryNew(){
@@ -45,4 +38,4 @@
 	        window.location.href="?op=view&date="+time;
 	      }
 		</script>
-</a:body>
+</a:offline>

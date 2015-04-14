@@ -2,7 +2,10 @@ package com.dianping.cat.report.page.web;
 
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
-	JSON("json");
+
+	JSON("json"),
+
+	PROBLEM("problem");
 
 	private String m_name;
 

@@ -6,11 +6,12 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -18,6 +19,9 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	@Override
 	public void afterLoad(Map<String, MatrixReport> reports) {
@@ -47,8 +51,14 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 	@Override
 	public boolean createHourlyTask(MatrixReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), MatrixAnalyzer.ID,
-		      TaskProlicy.ALL_EXCLUED_HOURLY);
+		String domain = report.getDomain();
+
+		if (m_configManager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, MatrixAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
+		} else {
+			return true;
+		}
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -42,8 +43,8 @@ public class ThreadLevelInfo {
 			return null;
 		}
 
-		List<Entry> entries = machine.getEntries();
-		for (Entry temp : entries) {
+		Collection<Entity> entities = machine.getEntities().values();
+		for (Entity temp : entities) {
 			Map<String, JavaThread> threads = temp.getThreads();
 
 			for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {

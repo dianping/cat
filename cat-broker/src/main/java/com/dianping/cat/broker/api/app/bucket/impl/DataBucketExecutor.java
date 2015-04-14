@@ -10,7 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppCommandData;
@@ -18,6 +19,7 @@ import com.dianping.cat.broker.api.app.bucket.BucketExecutor;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
 import com.dianping.cat.broker.api.app.service.AppService;
+import com.dianping.cat.config.app.AppConfigManager;
 
 public class DataBucketExecutor implements BucketExecutor {
 
@@ -25,38 +27,77 @@ public class DataBucketExecutor implements BucketExecutor {
 
 	private HashMap<Integer, HashMap<String, AppDataProto>> m_datas = new LinkedHashMap<Integer, HashMap<String, AppDataProto>>();
 
+	private AppConfigManager m_appConfigManager;
+
 	private long m_startTime;
 
-	private CountDownLatch m_flushCountDownLatch = new CountDownLatch(0);
+	private static Semaphore m_semaphore = new Semaphore(1);
 
-	private CountDownLatch m_saveCountDownLatch = new CountDownLatch(0);
-
-	public DataBucketExecutor(long startTime, AppService<AppCommandData> appDataService) {
+	public DataBucketExecutor(long startTime, AppService<AppCommandData> appDataService,
+	      AppConfigManager appConfigManager) {
 		m_startTime = startTime;
 		m_appDataService = appDataService;
+		m_appConfigManager = appConfigManager;
 	}
 
 	protected void batchInsert(List<AppCommandData> appDataCommands, List<AppDataProto> datas) {
 		int[] ret = null;
+		int id = 0;
+
 		try {
 			int length = appDataCommands.size();
 			AppCommandData[] array = new AppCommandData[length];
+			AppCommandData[] all = new AppCommandData[length];
 
 			for (int i = 0; i < length; i++) {
-				array[i] = appDataCommands.get(i);
+				AppCommandData appCommandData = appDataCommands.get(i);
+				array[i] = appCommandData;
+				id = appCommandData.getCommandId();
 			}
 			ret = m_appDataService.insert(array);
+
+			if (m_appConfigManager.shouldAdd2AllCommands(id)) {
+				for (int i = 0; i < length; i++) {
+					AppCommandData appCommandData = appDataCommands.get(i);
+					AppCommandData copyData = copyAppCommandData(appCommandData);
+					all[i] = copyData;
+				}
+				m_appDataService.insert(all);
+			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
 		if (ret != null) {
-			int length = datas.size();
-
-			for (int i = 0; i < length; i++) {
+			for (int i = 0; i < datas.size(); i++) {
 				datas.get(i).setFlushed();
 			}
 		}
+	}
+
+	private AppCommandData copyAppCommandData(AppCommandData appCommandData) {
+		AppCommandData data = new AppCommandData();
+
+		data.setAccessNumber(appCommandData.getAccessNumber());
+		data.setAppVersion(appCommandData.getAppVersion());
+		data.setCity(appCommandData.getCity());
+		data.setCode(appCommandData.getCode());
+		data.setConnectType(appCommandData.getConnectType());
+		data.setCreationDate(appCommandData.getCreationDate());
+		data.setId(appCommandData.getId());
+		data.setKeyId(appCommandData.getKeyId());
+		data.setMinuteOrder(appCommandData.getMinuteOrder());
+		data.setNetwork(appCommandData.getNetwork());
+		data.setOperator(appCommandData.getOperator());
+		data.setPeriod(appCommandData.getPeriod());
+		data.setPlatform(appCommandData.getPlatform());
+		data.setRequestPackage(appCommandData.getRequestPackage());
+		data.setResponsePackage(appCommandData.getResponsePackage());
+		data.setResponseSumTime(appCommandData.getResponseSumTime());
+		data.setStatus(appCommandData.getStatus());
+		data.setCommandId(AppConfigManager.ALL_COMMAND_ID);
+		return data;
 	}
 
 	@Override
@@ -80,10 +121,9 @@ public class DataBucketExecutor implements BucketExecutor {
 				List<AppDataProto> datas = new ArrayList<AppDataProto>();
 				HashMap<String, AppDataProto> value = outerEntry.getValue();
 
-				for (Entry<String, AppDataProto> entry : value.entrySet()) {
-					m_saveCountDownLatch.await();
+				m_semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);
 
-					m_flushCountDownLatch = new CountDownLatch(1);
+				for (Entry<String, AppDataProto> entry : value.entrySet()) {
 					try {
 						AppDataProto appData = entry.getValue();
 
@@ -113,16 +153,20 @@ public class DataBucketExecutor implements BucketExecutor {
 								batchInsert(commands, datas);
 
 								commands = new ArrayList<AppCommandData>();
+								datas = new ArrayList<AppDataProto>();
 							}
 						}
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}
-				batchInsert(commands, datas);
-				m_flushCountDownLatch.countDown();
+				if (commands.size() > 0 && datas.size() > 0) {
+					batchInsert(commands, datas);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
+			} finally {
+				m_semaphore.release();
 			}
 		}
 		m_datas.clear();
@@ -213,32 +257,36 @@ public class DataBucketExecutor implements BucketExecutor {
 					HashMap<String, AppDataProto> value = outerEntry.getValue();
 
 					for (Entry<String, AppDataProto> entry : value.entrySet()) {
-						m_flushCountDownLatch.await();
+						try {
+							AppDataProto appData = entry.getValue();
 
-						m_saveCountDownLatch = new CountDownLatch(1);
-						AppDataProto appData = entry.getValue();
+							m_semaphore.tryAcquire(500, TimeUnit.MILLISECONDS);
 
-						if (appData.notFlushed()) {
-							StringBuilder sb = new StringBuilder();
-							sb.append(appData.getClass().getName()).append(tab);
-							sb.append(appData.getCommand()).append(tab);
-							sb.append(appData.getTimestamp()).append(tab);
-							sb.append(appData.getCity()).append(tab);
-							sb.append(appData.getOperator()).append(tab);
-							sb.append(appData.getNetwork()).append(tab);
-							sb.append(appData.getVersion()).append(tab);
-							sb.append(appData.getConnectType()).append(tab);
-							sb.append(appData.getCode()).append(tab);
-							sb.append(appData.getPlatform()).append(tab);
-							sb.append(appData.getCount()).append(tab);
-							sb.append(appData.getResponseTime()).append(tab);
-							sb.append(appData.getRequestByte()).append(tab);
-							sb.append(appData.getResponseByte()).append(enter);
+							if (appData.notFlushed()) {
+								StringBuilder sb = new StringBuilder();
+								sb.append(appData.getClass().getName()).append(tab);
+								sb.append(appData.getCommand()).append(tab);
+								sb.append(appData.getTimestamp()).append(tab);
+								sb.append(appData.getCity()).append(tab);
+								sb.append(appData.getOperator()).append(tab);
+								sb.append(appData.getNetwork()).append(tab);
+								sb.append(appData.getVersion()).append(tab);
+								sb.append(appData.getConnectType()).append(tab);
+								sb.append(appData.getCode()).append(tab);
+								sb.append(appData.getPlatform()).append(tab);
+								sb.append(appData.getCount()).append(tab);
+								sb.append(appData.getResponseTime()).append(tab);
+								sb.append(appData.getRequestByte()).append(tab);
+								sb.append(appData.getResponseByte()).append(enter);
 
-							writer.append(sb.toString());
-							appData.setSaved();
+								writer.append(sb.toString());
+								appData.setSaved();
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+						} finally {
+							m_semaphore.release();
 						}
-						m_saveCountDownLatch.countDown();
 					}
 				}
 				writer.close();

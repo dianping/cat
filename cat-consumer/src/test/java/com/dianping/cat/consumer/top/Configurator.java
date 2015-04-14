@@ -9,13 +9,9 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.MockReportManager;
-import com.dianping.cat.consumer.problem.Configurator.ExtendedProblemDelegate;
-import com.dianping.cat.consumer.problem.Configurator.MockProblemReportManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.consumer.transaction.Configurator.ExtendedTransactionDelegate;
-import com.dianping.cat.consumer.transaction.Configurator.MockTransactionReportManager;
-import com.dianping.cat.service.ReportDelegate;
-import com.dianping.cat.service.ReportManager;
+import com.dianping.cat.report.ReportDelegate;
+import com.dianping.cat.report.ReportManager;
 
 public class Configurator extends AbstractResourceConfigurator {
 
@@ -35,14 +31,6 @@ public class Configurator extends AbstractResourceConfigurator {
 		all.add(C(ReportManager.class, ID, MockTopReportManager.class)//
 		      .req(ReportDelegate.class, ID).is(PER_LOOKUP));
 		all.add(C(ReportDelegate.class, ID, ExtendedTopDelegate.class));
-
-		all.add(C(ReportManager.class, "transaction", MockTransactionReportManager.class)//
-		      .req(ReportDelegate.class, "transaction"));
-		all.add(C(ReportDelegate.class, "transaction", ExtendedTransactionDelegate.class));
-
-		all.add(C(ReportManager.class, "problem", MockProblemReportManager.class)//
-		      .req(ReportDelegate.class, "problem"));
-		all.add(C(ReportDelegate.class, "problem", ExtendedProblemDelegate.class));
 
 		return all;
 	}

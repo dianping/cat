@@ -17,20 +17,20 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.page.app.Action;
 import com.dianping.cat.report.page.app.Model;
 import com.dianping.cat.report.page.app.Payload;
 import com.dianping.cat.report.page.app.ProblemStatistics;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.page.problem.service.ProblemReportService;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class CrashLogProcessor {
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private ProblemReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_service;
@@ -113,9 +113,9 @@ public class CrashLogProcessor {
 		}
 	}
 
-	private ProblemReport getHourlyReport(Payload payload, String queryType, String domain) {
+	private ProblemReport getHourlyReport(Payload payload, String domain) {
 		ModelRequest request = new ModelRequest(domain, payload.getDate()).//
-		      setProperty("queryType", queryType);
+		      setProperty("queryType", "view");
 
 		if (!StringUtils.isEmpty(payload.getType())) {
 			request.setProperty("type", "error");
@@ -139,7 +139,7 @@ public class CrashLogProcessor {
 
 		switch (action) {
 		case HOURLY_CRASH_LOG:
-			report = getHourlyReport(payload, "view", queryDomain(payload));
+			report = getHourlyReport(payload, queryDomain(payload));
 			break;
 		case HISTORY_CRASH_LOG:
 			report = showSummarizeReport(model, payload, queryDomain(payload));
@@ -157,7 +157,7 @@ public class CrashLogProcessor {
 	private ProblemReport showSummarizeReport(Model model, Payload payload, String domain) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+		ProblemReport problemReport = m_reportService.queryReport(domain, start, end);
 
 		return problemReport;
 	}

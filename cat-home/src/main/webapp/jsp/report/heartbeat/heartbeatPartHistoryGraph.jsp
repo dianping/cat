@@ -102,4 +102,12 @@ margin: 4px auto;
 			</script>
 		</tr>
 	</c:when>
+	<c:when test="${payload.type eq 'extension'}">
+		<tr id="extensionGraph"></tr>
+		<script>
+			var extensionHistoryGraphs=${model.extensionHistoryGraphs};
+			var count=${model.extensionCount};
+			buildExtensionGraph(count,extensionHistoryGraphs);
+		</script>
+	</c:when>
 </c:choose>

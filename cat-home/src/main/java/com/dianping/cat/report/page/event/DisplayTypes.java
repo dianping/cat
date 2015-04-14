@@ -1,42 +1,27 @@
 package com.dianping.cat.report.page.event;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.CatConstants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 
 public class DisplayTypes {
 
-	public static final Set<String> s_unusedTypes = new HashSet<String>();
-
-	static {
-		s_unusedTypes.add(CatConstants.TYPE_URL);
-		s_unusedTypes.add(CatConstants.TYPE_SQL_PARAM);
-		s_unusedTypes.add(CatConstants.TYPE_PIGEON_REQUEST);
-		s_unusedTypes.add(CatConstants.TYPE_PIGEON_RESPONSE);
-		s_unusedTypes.add(CatConstants.TYPE_REMOTE_CALL);
-	}
-
 	private List<EventTypeModel> m_results = new ArrayList<EventTypeModel>();
 
-	private boolean m_showAll = false;
-
-	public DisplayTypes display(String sorted, String ip, boolean showAll, EventReport report) {
+	public DisplayTypes display(String sorted, String ip, EventReport report) {
 		if (report == null) {
 			return this;
 		}
-		m_showAll = showAll;
 		Machine machine = report.getMachines().get(ip);
 		if (machine == null) {
 			return this;
@@ -44,9 +29,7 @@ public class DisplayTypes {
 		Map<String, EventType> types = machine.getTypes();
 		if (types != null) {
 			for (Entry<String, EventType> entry : types.entrySet()) {
-				if (shouldShow(entry.getKey())) {
-					m_results.add(new EventTypeModel(entry.getKey(), entry.getValue()));
-				}
+				m_results.add(new EventTypeModel(entry.getKey(), entry.getValue()));
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
@@ -57,21 +40,6 @@ public class DisplayTypes {
 
 	public List<EventTypeModel> getResults() {
 		return m_results;
-	}
-
-	public DisplayTypes setShowAll(boolean showAll) {
-		m_showAll = showAll;
-		return this;
-	}
-
-	private boolean shouldShow(String type) {
-		if (m_showAll) {
-			return true;
-		}
-		if (s_unusedTypes.contains(type)) {
-			return false;
-		}
-		return true;
 	}
 
 	public static class EventComparator implements Comparator<EventTypeModel> {
@@ -115,7 +83,11 @@ public class DisplayTypes {
 		}
 
 		public String getType() {
-			return m_type;
+			try {
+				return URLEncoder.encode(m_type, "utf-8");
+			} catch (Exception e) {
+				return m_type;
+			}
 		}
 	}
 }

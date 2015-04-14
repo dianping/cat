@@ -6,7 +6,6 @@ import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
-import com.dianping.cat.service.HostinfoService;
 
 public class CrossMethodVisitor extends BaseVisitor {
 
@@ -20,15 +19,14 @@ public class CrossMethodVisitor extends BaseVisitor {
 
 	private MethodQueryInfo m_info = new MethodQueryInfo();
 
-	private HostinfoService m_hostinfoService;
+	public static final String UNKNOWN_PROJECT = "UnknownProject";
 
-	public CrossMethodVisitor(String method, HostinfoService hostinfoService) {
+	public CrossMethodVisitor(String method) {
 		if (method == null) {
 			m_method = "";
 		} else {
 			m_method = method;
 		}
-		m_hostinfoService = hostinfoService;
 	}
 
 	public MethodQueryInfo getInfo() {
@@ -45,7 +43,7 @@ public class CrossMethodVisitor extends BaseVisitor {
 			ip = ip.substring(0, ip.indexOf(":"));
 		}
 		if (StringUtils.isEmpty(domain)) {
-			domain = m_hostinfoService.queryDomainByIp(ip);
+			domain = UNKNOWN_PROJECT;
 		}
 
 		if (methodName.indexOf(m_method) > -1) {

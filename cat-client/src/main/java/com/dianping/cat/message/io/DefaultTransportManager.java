@@ -8,17 +8,17 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
 
-public class DefaultTransportManager extends ContainerHolder implements TransportManager, Initializable, LogEnabled {
+public class DefaultTransportManager implements TransportManager, Initializable, LogEnabled {
 	@Inject
 	private ClientConfigManager m_configManager;
 
-	private MessageSender m_sender;
+	@Inject
+	private TcpSocketSender m_tcpSocketSender;
 
 	private Logger m_logger;
 
@@ -29,7 +29,7 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	@Override
 	public MessageSender getSender() {
-		return m_sender;
+		return m_tcpSocketSender;
 	}
 
 	@Override
@@ -37,13 +37,8 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 		List<Server> servers = m_configManager.getServers();
 
 		if (!m_configManager.isCatEnabled()) {
-			m_sender = null;
-
-			if (m_configManager.isInitialized()) {
-				m_logger.warn("CAT was DISABLED explicitly!");
-			} else {
-				m_logger.warn("CAT was DISABLED due to not initialized yet!");
-			}
+			m_tcpSocketSender = null;
+			m_logger.warn("CAT was DISABLED due to not initialized yet!");
 		} else {
 			List<InetSocketAddress> addresses = new ArrayList<InetSocketAddress>();
 
@@ -58,16 +53,10 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 			if (addresses.isEmpty()) {
 				throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
 			} else {
-				TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, TcpSocketSender.ID);
-
-				sender.setServerAddresses(addresses);
-				sender.initialize();
-				m_sender = sender;
+				m_tcpSocketSender.setServerAddresses(addresses);
+				m_tcpSocketSender.initialize();
 			}
 		}
 	}
 
-	public void setSender(MessageSender sender) {
-		m_sender = sender;
-	}
 }

@@ -13,14 +13,14 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.report.task.event.EventReportBuilder;
-import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
-import com.dianping.cat.report.task.problem.ProblemReportBuilder;
-import com.dianping.cat.report.task.state.HistoryStateReportMerger;
-import com.dianping.cat.report.task.state.StateReportBuilder.ClearDetailInfo;
-import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.dianping.cat.report.task.utilization.UtilizationReportBuilder;
+import com.dianping.cat.report.page.event.task.EventReportBuilder;
+import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
+import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
+import com.dianping.cat.report.page.state.service.StateReportService;
+import com.dianping.cat.report.page.state.task.HistoryStateReportMerger;
+import com.dianping.cat.report.page.state.task.StateReportBuilder.ClearDetailInfo;
+import com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportBuilder;
+import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
 
 public class GraphBuilderTest extends ComponentTestCase {
 
@@ -66,14 +66,14 @@ public class GraphBuilderTest extends ComponentTestCase {
 
 	@Test
 	public void testStateReportBuilder() throws Exception {
-		ReportServiceManager service = lookup(ReportServiceManager.class);
+		StateReportService service = lookup(StateReportService.class);
 		Date date = TimeHelper.getCurrentMonth();
 		long start = date.getTime();
 		long end = System.currentTimeMillis();
 		HistoryStateReportMerger merger = new HistoryStateReportMerger(new StateReport("cat"));
 
 		for (; start < end; start = start + TimeHelper.ONE_DAY) {
-			StateReport stateReport = service.queryStateReport("cat", new Date(start), new Date(start + TimeHelper.ONE_DAY));
+			StateReport stateReport = service.queryReport("cat", new Date(start), new Date(start + TimeHelper.ONE_DAY));
 
 			stateReport.accept(merger);
 		}

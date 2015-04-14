@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.logview;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -12,13 +11,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.core.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -28,7 +28,18 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<String> m_service;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private ServerConfigManager m_configManager;
+
+	private boolean checkStorageTime(MessageId msg) {
+		long time = msg.getTimestamp();
+		long current = TimeHelper.getCurrentDay().getTime();
+
+		if (time > current - TimeHelper.ONE_DAY * m_configManager.getHdfsMaxStorageTime()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	private String getLogView(String messageId, boolean waterfall) {
 		try {
@@ -67,14 +78,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private String getPath(String messageId) {
-		MessageId id = MessageId.parse(messageId);
-		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final String key = id.getDomain() + '-' + id.getIpAddress();
-
-		return path + key;
-	}
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "m")
@@ -91,25 +94,27 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.LOGVIEW);
 		model.setDomain(payload.getDomain());
-		model.setLongDate(payload.getDate());
+		model.setDate(payload.getDate());
 
 		String messageId = getMessageId(payload);
-		String logView = getLogView(messageId, payload.isWaterfall());
+		String logView = null;
+		MessageId msgId = MessageId.parse(messageId);
 
-		if (logView == null || logView.length() == 0) {
-			Cat.logEvent("Logview", "Fail", Event.SUCCESS, null);
+		if (checkStorageTime(msgId)) {
+			logView = getLogView(messageId, payload.isWaterfall());
+
+			if (logView == null || logView.length() == 0) {
+				Cat.logEvent("Logview", msgId.getDomain() + ":Fail", Event.SUCCESS, messageId);
+			} else {
+				Cat.logEvent("Logview", "Success", Event.SUCCESS, messageId);
+			}
 		} else {
-			Cat.logEvent("Logview", "Success", Event.SUCCESS, null);
+			Cat.logEvent("Logview", "OldMessage", Event.SUCCESS, messageId);
 		}
 
 		switch (payload.getAction()) {
 		case VIEW:
 			model.setTable(logView);
-			break;
-		case DETAIL:
-			String path = getPath(messageId);
-
-			model.setLogviewPath(path);
 			break;
 		}
 

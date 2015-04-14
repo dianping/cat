@@ -1,0 +1,13 @@
+<app-report id="cat" start-time="2015-03-17 00:00:00" end-time="2015-03-18 00:00:00">
+	<command id="1" name="shop.bin" count="1122524681" sum="30870072930197.00" avg="0.00" errors="51761521" successRatio="95.389" requestSum="1000" requestAvg="100" responseSum="100" responseAvg="100" >
+		<transaction url="shop.bin" count="1000" avg="100" />
+		<code id="1XX" count="14433" sum="161795378.00" avg="11210.10" errors="14433" successRatio="0.000" />
+		<code id="-110" count="5467" sum="5765071.00" avg="1054.52" />
+	</command>
+	<command id="2" name="shop2.bin" count="1122524681" sum="30870072930197.00" avg="0.00" errors="51761521" successRatio="95.389" requestSum="1000" requestAvg="100" responseSum="100" responseAvg="100">
+		<transaction url="shop.bin" count="1000" avg="100" />
+		<code id="123" count="14433" sum="161795378.00" avg="11210.10"
+			errors="14433" successRatio="0.000" />
+		<code id="-110" count="5467" sum="5765071.00" avg="1054.52" />
+	</command>
+</app-report>

@@ -6,11 +6,12 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.cross.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.service.ReportDelegate;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -18,6 +19,9 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 
 	@Inject
 	private TaskManager m_taskManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	@Override
 	public void afterLoad(Map<String, CrossReport> reports) {
@@ -45,8 +49,14 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 
 	@Override
 	public boolean createHourlyTask(CrossReport report) {
-		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), CrossAnalyzer.ID,
-		      TaskProlicy.ALL_EXCLUED_HOURLY);
+		String domain = report.getDomain();
+
+		if (m_configManager.validateDomain(domain)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, CrossAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
+		} else {
+			return true;
+		}
 	}
 
 	@Override

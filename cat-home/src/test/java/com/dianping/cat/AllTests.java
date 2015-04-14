@@ -8,14 +8,15 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.report.alert.ExtractDataTest;
+import com.dianping.cat.report.alert.JudgeTimeTest;
+import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
-import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
-import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
@@ -28,12 +29,10 @@ import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.alert.AlertReportBuilderTest;
-import com.dianping.cat.report.task.alert.MetricIdAndRuleMappingTest;
-import com.dianping.cat.report.task.alert.TopReportVisitorTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
+import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
 import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
@@ -41,6 +40,8 @@ import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
 import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
+import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
+import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
 import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
@@ -68,8 +69,6 @@ CrossReportMergerTest.class,
 
 /* graph test */
 EventGraphDataTest.class,
-
-HeartbeatGraphDataTest.class,
 
 ProblemGraphDataTest.class,
 
@@ -116,20 +115,16 @@ MetricReportMergerTest.class,
 /* Dependency */
 DependencyReportMergerTest.class,
 
-GraphConfigManagerTest.class,
-
 MetricReportParseTest.class,
 
 /* service */
 ServiceReportMergerTest.class,
 
+HistoryStorageReportMergerTest.class,
+
 AlertConfigTest.class,
 
 HeavyReportBuilderTest.class,
-
-AlertReportBuilderTest.class,
-
-TopReportVisitorTest.class,
 
 RuleConfigTest.class,
 
@@ -137,9 +132,17 @@ AlertConfigTest.class,
 
 SystemReportConvertorTest.class,
 
+HeartbeatDailyMergerTest.class,
+
 WebReportConvertorTest.class,
 
-MetricIdAndRuleMappingTest.class })
+SystemReportStatisticsTest.class,
+
+MetricIdAndRuleMappingTest.class,
+
+ExtractDataTest.class,
+
+JudgeTimeTest.class })
 public class AllTests {
 
 	@BeforeClass

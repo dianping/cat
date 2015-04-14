@@ -2,52 +2,44 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ page contentType="text/html; charset=utf-8"%>
 	<div class="text-left"></div>
-	开始
-	<div id="startDatePicker" class="input-append date" >
-		<input name="startTime" id="startTime" style="height:auto; width: 150px;" 
-		value="<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-	</div>
-	结束
-	<div id="endDatePicker" class="input-append date" >
-		<input name="endTime" id="endTime" style="height:auto; width: 150px;" 
-		value="<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>" type="text"></input> 
-		<span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"></i> </span>
-	</div>
+     <div style="float:left;">
+		&nbsp;开始
+		<input type="text" id="startTime" style="width:150px;"/>
+		结束
+		<input type="text" id="endTime" style="width:150px;"/></div>
 	应用名
 	<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
 	机器名
 	<input type="text" name="hostname" id="hostname" value="${payload.hostname}" style="height:auto" class="input-small"> 
-	<input class="btn btn-primary  btn-small"  value="查询" onclick="queryNew()" type="submit">
-		
-	<c:if test="${!payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(true)">全屏</a>
-	</c:if>
-	<c:if test="${payload.fullScreen}">
-			<a id="fullScreen" class='btn btn-small btn-primary' onclick="queryFullScreen(false)">全屏</a>
-	</c:if>
-	<a id="refresh10" class='btn btn-small btn-primary' onclick="queryFrequency(10)">10秒</a>
-	<a id="refresh20" class='btn btn-small btn-primary' onclick="queryFrequency(20)">20秒</a>
-	<a id="refresh30" class='btn btn-small btn-primary' onclick="queryFrequency(30)">30秒</a>
-	类型
-	<input type="checkbox" checked="checked" id="show_puppet" class="typeCheckbox"/>   puppet 
-	<input type="checkbox" checked="checked" id="show_workflow" class="typeCheckbox"/>   workflow 
-	<input type="checkbox" checked="checked" id="show_lazyman" class="typeCheckbox"/>   lazyman 
+	每分钟显示个数
+	<input type="text" name="count" id="count" value="${payload.count}" style="height:auto" class="input-small"> 
+	<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit">
+	
+	<br/>
+	<div id="label-group">
+		<label class="btn btn-info btn-sm">
+		<input type="checkbox" style="margin-bottom:0px;" id="select-all-type" />All 
+		</label><label class="btn btn-info btn-sm">
+		<input type="checkbox" style="margin-bottom:0px;" class="altType" data-type="puppet"/>puppet 
+		</label><label class="btn btn-info btn-sm">
+		<input type="checkbox" style="margin-bottom:0px;" class="altType" data-type="workflow"/>workflow 
+		</label><label class="btn btn-info btn-sm">
+		<input type="checkbox" style="margin-bottom:0px;" class="altType" data-type="lazyman"/>lazyman 
+		</label>	
+	</div>
 	<br>
 	</div>
 
 <script>
-	function typeCheckStr(){
-		var result = "";
-		if(!document.getElementById("show_puppet").checked){
-			result += "showPuppet=false&";
-		}
-		if(!document.getElementById("show_workflow").checked){
-			result += "showWorkflow=false&";
-		}
-		if(!document.getElementById("show_lazyman").checked){
-			result += "showLazyman=false&";
-		}
+	function getAltTypeStr(){
+		var result = "&altType=";
+		
+		$(".altType").filter(function(){
+			return $(this).prop("checked");
+		}).each(function(){
+			var data = $(this).data("type");
+			result += data + ",";
+		});
 		return result;
 	}
 	function queryNew(){
@@ -55,19 +47,46 @@
 		var endTime=$("#endTime").val();
 		var domain=$("#domain").val();
 		var hostname=$("#hostname").val();
-		window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&hostname="+hostname;
+		var count=$("#count").val();
+		window.location.href="?op=view&domain="+domain+"&startTime="+startTime+"&endTime="+endTime+"&hostname="+hostname+"&count="+count+getAltTypeStr();
 	}
-	function queryFullScreen(isFullScreen){
-		var typeStatus = typeCheckStr();
-		<c:if test="${payload.refresh}">
-			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}";
-		</c:if>
-		<c:if test="${!payload.refresh}">
-			window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen="+isFullScreen+"&refresh=${payload.refresh}&frequency=${payload.frequency}&startTime=<fmt:formatDate value="${payload.startTime}" pattern="yyyy-MM-dd HH:mm"/>&endTime=<fmt:formatDate value="${payload.endTime}" pattern="yyyy-MM-dd HH:mm"/>";
-		</c:if>
+	$(document).ready(function(){
+		var types = '${payload.altType}';
+		
+		if(types == null || types == ""){
+			$(".altType").each(function(){
+				$(this).prop("checked", true);
+			});
+		}else{
+			var strs = types.split(",");
+			
+			for(var count in strs){
+				var str = strs[count];
+				if(str !=null && str !=""){
+					$("[data-type='"+str+"']").prop("checked", true);
+				}
+			}
+		}
+		
+		checkAllType();
+		$("#select-all-type").click(dealAllType);
+		$("#label-group").click(checkAllType);
+	})
+	function dealAllType(){
+		var isAllButtonChecked = $("#select-all-type").prop("checked");
+		
+		$(".altType").each(function(){
+			$(this).prop("checked", isAllButtonChecked);
+		})
 	}
-	function queryFrequency(frequency){
-		var typeStatus = typeCheckStr();
-		window.location.href="?"+typeStatus+"domain=${payload.domain}&hostname=${payload.hostname}&fullScreen=${payload.fullScreen}&refresh=true&frequency="+frequency;
+	function checkAllType(){
+		var isAllChecked = true;
+		
+		$(".altType").each(function(){
+			if(!$(this).prop("checked")){
+				isAllChecked = false;
+			}
+		});
+		$("#select-all-type").prop("checked", isAllChecked);
 	}
 </script>

@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.cache;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -16,26 +14,23 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
-import com.dianping.cat.report.page.event.TpsStatistics;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.transaction.MergeAllMachine;
-import com.dianping.cat.report.page.transaction.MergeAllName;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.service.ModelRequest;
-import com.dianping.cat.service.ModelResponse;
+import com.dianping.cat.report.page.event.service.EventReportService;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.page.transaction.transform.AllMachineMerger;
+import com.dianping.cat.report.page.transaction.transform.AllNameMerger;
+import com.dianping.cat.report.service.ModelRequest;
+import com.dianping.cat.report.service.ModelResponse;
+import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
@@ -46,7 +41,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ReportServiceManager m_reportService;
+	private TransactionReportService m_transactionReportService;
+
+	@Inject
+	private EventReportService m_eventReportService;
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
@@ -59,10 +57,6 @@ public class Handler implements PageHandler<Context> {
 		String queryName = payload.getQueryName();
 		String ip = payload.getIpAddress();
 		String sortBy = payload.getSortBy();
-		ReportVisitor visitor = new ReportVisitor();
-
-		visitor.visitTransactionReport(transactionReport);
-
 		TransactionReportVistor vistor = new TransactionReportVistor();
 
 		vistor.setType(type).setQueryName(queryName).setSortBy(sortBy).setCurrentIp(ip);
@@ -87,58 +81,12 @@ public class Handler implements PageHandler<Context> {
 		return chart.getJsonString();
 	}
 
-	private void calculateEventTps(Payload payload, EventReport report) {
-		try {
-			if (report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds = 0;
-
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (startTime != null && endTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
-					}
-				}
-				new TpsStatistics(seconds).visitEventReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
-	private void calculateTransactionTps(Payload payload, TransactionReport report) {
-		try {
-			if (report != null) {
-				boolean isCurrent = payload.getPeriod().isCurrent();
-				double seconds = 0;
-
-				if (isCurrent) {
-					seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / 1000.0;
-				} else {
-					Date endTime = report.getEndTime();
-					Date startTime = report.getStartTime();
-
-					if (startTime != null && endTime != null) {
-						seconds = (endTime.getTime() - startTime.getTime()) / 1000.0;
-					}
-				}
-				new com.dianping.cat.report.page.transaction.TpsStatistics(seconds).visitTransactionReport(report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-	}
-
 	private EventReport getHistoryEventReport(Payload payload) {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryEventReport(domain, start, end);
+		return m_eventReportService.queryReport(domain, start, end);
 	}
 
 	private TransactionReport getHistoryTransactionReport(Payload payload) {
@@ -146,7 +94,7 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
-		return m_reportService.queryTransactionReport(domain, start, end);
+		return m_transactionReportService.queryReport(domain, start, end);
 	}
 
 	private EventReport getHourlyEventReport(Payload payload) {
@@ -168,13 +116,13 @@ public class Handler implements PageHandler<Context> {
 			eventReport = response.getModel();
 		}
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			com.dianping.cat.report.page.event.MergeAllMachine allEvent = new com.dianping.cat.report.page.event.MergeAllMachine();
+			com.dianping.cat.report.page.event.transform.AllMachineMerger allEvent = new com.dianping.cat.report.page.event.transform.AllMachineMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();
 		}
 		if (Constants.ALL.equalsIgnoreCase(type)) {
-			com.dianping.cat.report.page.event.MergeAllName allEvent = new com.dianping.cat.report.page.event.MergeAllName();
+			com.dianping.cat.report.page.event.transform.AllNameMerger allEvent = new com.dianping.cat.report.page.event.transform.AllNameMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();
@@ -191,22 +139,22 @@ public class Handler implements PageHandler<Context> {
 		      .setProperty("ip", ipAddress);
 		TransactionReport transactionReport = null;
 
-		if (StringUtils.isEmpty(type)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			transactionReport = response.getModel();
-		} else {
+		if (StringUtils.isNotEmpty(type)) {
 			request.setProperty("type", type);
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			transactionReport = response.getModel();
 		}
+
+		ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+
+		transactionReport = response.getModel();
+
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
+			AllMachineMerger all = new AllMachineMerger();
 
 			all.visitTransactionReport(transactionReport);
 			transactionReport = all.getReport();
 		}
 		if (Constants.ALL.equalsIgnoreCase(type)) {
-			MergeAllName all = new MergeAllName();
+			AllNameMerger all = new AllNameMerger();
 
 			all.visitTransactionReport(transactionReport);
 			transactionReport = all.getReport();
@@ -241,8 +189,6 @@ public class Handler implements PageHandler<Context> {
 			eventReport = getHistoryEventReport(payload);
 			break;
 		}
-		calculateEventTps(payload, eventReport);
-		calculateTransactionTps(payload, transactionReport);
 
 		if (transactionReport != null && eventReport != null) {
 			CacheReport cacheReport = buildCacheReport(transactionReport, eventReport, payload);
@@ -257,26 +203,8 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		m_normalizePayload.normalize(model, payload);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}
-
-	public static class ReportVisitor extends BaseVisitor {
-
-		private Set<String> m_cacheTypes = new HashSet<String>();
-
-		public Set<String> getCacheTypes() {
-			return m_cacheTypes;
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			String typeName = type.getId();
-
-			if (typeName.startsWith("Cache.")) {
-				m_cacheTypes.add(typeName);
-			}
-		}
-	}
-
 }

@@ -32,12 +32,12 @@ public class MetricConfigManagerTest {
 
 		String domain1 = "domain1";
 		String domain2 = "domain2";
-		manager.insertIfNotExist(domain1, "type", "metricKey", new ConfigItem());
+		manager.insertMetricIfNotExist(domain1, "type", "metricKey", new ConfigItem());
 
 		Assert.assertEquals(1, s_storeCount);
-		manager.insertIfNotExist(domain1, "type", "metricKey", new ConfigItem());
+		manager.insertMetricIfNotExist(domain1, "type", "metricKey", new ConfigItem());
 		Assert.assertEquals(1, s_storeCount);
-		manager.insertIfNotExist(domain2, "type", "metricKey", new ConfigItem());
+		manager.insertMetricIfNotExist(domain2, "type", "metricKey", new ConfigItem());
 		Assert.assertEquals(2, s_storeCount);
 		manager.insertMetricItemConfig(new MetricItemConfig());
 		Assert.assertEquals(3, s_storeCount);
@@ -86,10 +86,10 @@ public class MetricConfigManagerTest {
 		}
 		
 		s_storeCount=0;
-		manager.insertIfNotExist("test", "test", "test", new ConfigItem());
-		manager.insertIfNotExist("test", "test", "test", new ConfigItem());
-		manager.insertIfNotExist("test1", "test", "test", new ConfigItem());
-		manager.insertIfNotExist("test1", "test", "test", new ConfigItem());
+		manager.insertMetricIfNotExist("test", "test", "test", new ConfigItem());
+		manager.insertMetricIfNotExist("test", "test", "test", new ConfigItem());
+		manager.insertMetricIfNotExist("test1", "test", "test", new ConfigItem());
+		manager.insertMetricIfNotExist("test1", "test", "test", new ConfigItem());
 		Assert.assertEquals(s_storeCount, 2);
 	}
 

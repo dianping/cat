@@ -9,7 +9,7 @@
 
 <a:report title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 
@@ -46,17 +46,17 @@
 		<th>项目</th>
 		<th>IP</th>
 		<th>方法名</th>
-		<th>Total</th>
-		<th>Failure</th>
-		<th>Failure%</th>
-		<th>Avg(ms)</th>
+		<th class="right">Total</th>
+		<th class="right">Failure</th>
+		<th class="right">Failure%</th>
+		<th class="right">Avg(ms)</th>
 	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">
-		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'} right">
+		<tr class=" right">
 			<td class="left">${item.type}</td>
-			<td>${item.domain}</td>
-			<td>${item.ip}</td>
-			<td>${item.method}</td>
+			<td class="left">${item.domain}</td>
+			<td class="left">${item.ip}</td>
+			<td class="left">${item.method}</td>
 			 <td>${item.totalCount}</td>
 		     <td>${w:format(item.failureCount,'#,###,###,###,##0')}</td>
 		     <td>${w:format(item.failurePercent,'0.0000%')}</td>
@@ -67,3 +67,9 @@
 </br>
 </jsp:body>
 </a:report>
+<style>
+.dataTables_wrapper {
+	/* position: relative; */
+	clear: none;
+}
+</style>

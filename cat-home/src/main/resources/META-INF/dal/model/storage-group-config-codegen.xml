@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="storage-group-config" root="true">
+    <entity-ref name="storage-group" type="list" names="storage-groups" />
+  </entity>
+  <entity name="storage-group">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="link" />
+    <entity-ref name="storage" type="list" names="storages" />
+  </entity>
+  <entity name="link">
+    <attribute name="url" value-type="String" />
+    <element name="par" value-type="String" type="list" names="pars" />
+  </entity>
+  <entity name="storage">
+    <attribute name="id" value-type="String" />
+    <attribute name="department" value-type="String" />
+    <attribute name="productline" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <entity-ref name="machine" type="list" names="machines" />
+  </entity>
+  <entity name="machine">
+    <attribute name="id" value-type="String" />
+    <attribute name="title" value-type="String" />
+    <attribute name="alert" value-type="boolean" />
+  </entity>
+</model>
+

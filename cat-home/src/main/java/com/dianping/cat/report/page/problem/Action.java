@@ -6,7 +6,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	GROUP("group"),
 
 	THREAD("thread"),
-	
+
 	HOUR_GRAPH("hourlyGraph"),
 
 	HISTORY_REPORT("history"),
@@ -14,7 +14,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	HISTORY_GRAPH("historyGraph"),
 
 	HOULY_REPORT("view"),
-	
+
 	GROUP_GRAPHS("groupGraphs"),
 
 	HISTORY_GROUP_GRAPH("historyGroupGraph"),

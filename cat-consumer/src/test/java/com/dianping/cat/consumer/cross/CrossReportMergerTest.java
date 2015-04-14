@@ -10,8 +10,8 @@ import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 public class CrossReportMergerTest {
 	@Test
 	public void testCrossReportMerge() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer.xml"), "utf-8");
-		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_old.xml"), "utf-8");
+		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_old.xml"), "utf-8");
 		CrossReport reportOld = DefaultSaxParser.parse(oldXml);
 		CrossReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_merger.xml"), "utf-8");

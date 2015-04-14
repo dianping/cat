@@ -6,169 +6,189 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.analysis.MessageConsumer;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
+import com.dianping.cat.message.codec.HtmlMessageCodec;
+import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.core.MessageConsumer;
-import com.dianping.cat.report.page.model.cross.CompositeCrossService;
-import com.dianping.cat.report.page.model.cross.HistoricalCrossService;
-import com.dianping.cat.report.page.model.cross.LocalCrossService;
-import com.dianping.cat.report.page.model.dependency.CompositeDependencyService;
-import com.dianping.cat.report.page.model.dependency.HistoricalDependencyService;
-import com.dianping.cat.report.page.model.dependency.LocalDependencyService;
-import com.dianping.cat.report.page.model.event.CompositeEventService;
-import com.dianping.cat.report.page.model.event.HistoricalEventService;
-import com.dianping.cat.report.page.model.event.LocalEventService;
-import com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService;
-import com.dianping.cat.report.page.model.heartbeat.HistoricalHeartbeatService;
-import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
-import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
-import com.dianping.cat.report.page.model.logview.HistoricalMessageService;
-import com.dianping.cat.report.page.model.logview.LocalMessageService;
-import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
-import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
-import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
-import com.dianping.cat.report.page.model.metric.CompositeMetricService;
-import com.dianping.cat.report.page.model.metric.HistoricalMetricService;
-import com.dianping.cat.report.page.model.metric.LocalMetricService;
-import com.dianping.cat.report.page.model.problem.CompositeProblemService;
-import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
-import com.dianping.cat.report.page.model.problem.LocalProblemService;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.state.CompositeStateService;
-import com.dianping.cat.report.page.model.state.HistoricalStateService;
-import com.dianping.cat.report.page.model.state.LocalStateService;
-import com.dianping.cat.report.page.model.top.CompositeTopService;
-import com.dianping.cat.report.page.model.top.HistoricalTopService;
-import com.dianping.cat.report.page.model.top.LocalTopService;
-import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
-import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
-import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
-import com.dianping.cat.report.service.CachedReportTask;
-import com.dianping.cat.report.service.ReportServiceManager;
-import com.dianping.cat.storage.message.LocalMessageBucketManager;
-import com.dianping.cat.storage.message.MessageBucketManager;
-import com.dianping.cat.storage.report.ReportBucketManager;
+import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.page.cross.service.CompositeCrossService;
+import com.dianping.cat.report.page.cross.service.CrossReportService;
+import com.dianping.cat.report.page.cross.service.HistoricalCrossService;
+import com.dianping.cat.report.page.cross.service.LocalCrossService;
+import com.dianping.cat.report.page.dependency.service.CompositeDependencyService;
+import com.dianping.cat.report.page.dependency.service.DependencyReportService;
+import com.dianping.cat.report.page.dependency.service.HistoricalDependencyService;
+import com.dianping.cat.report.page.dependency.service.LocalDependencyService;
+import com.dianping.cat.report.page.event.service.CompositeEventService;
+import com.dianping.cat.report.page.event.service.EventReportService;
+import com.dianping.cat.report.page.event.service.HistoricalEventService;
+import com.dianping.cat.report.page.event.service.LocalEventService;
+import com.dianping.cat.report.page.heartbeat.service.CompositeHeartbeatService;
+import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
+import com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService;
+import com.dianping.cat.report.page.heartbeat.service.LocalHeartbeatService;
+import com.dianping.cat.report.page.logview.service.CompositeLogViewService;
+import com.dianping.cat.report.page.logview.service.HistoricalMessageService;
+import com.dianping.cat.report.page.logview.service.LocalMessageService;
+import com.dianping.cat.report.page.matrix.service.CompositeMatrixService;
+import com.dianping.cat.report.page.matrix.service.HistoricalMatrixService;
+import com.dianping.cat.report.page.matrix.service.LocalMatrixService;
+import com.dianping.cat.report.page.matrix.service.MatrixReportService;
+import com.dianping.cat.report.page.metric.service.CompositeMetricService;
+import com.dianping.cat.report.page.metric.service.HistoricalMetricService;
+import com.dianping.cat.report.page.metric.service.LocalMetricService;
+import com.dianping.cat.report.page.metric.service.MetricReportService;
+import com.dianping.cat.report.page.problem.service.CompositeProblemService;
+import com.dianping.cat.report.page.problem.service.HistoricalProblemService;
+import com.dianping.cat.report.page.problem.service.LocalProblemService;
+import com.dianping.cat.report.page.problem.service.ProblemReportService;
+import com.dianping.cat.report.page.state.service.CompositeStateService;
+import com.dianping.cat.report.page.state.service.HistoricalStateService;
+import com.dianping.cat.report.page.state.service.LocalStateService;
+import com.dianping.cat.report.page.state.service.StateReportService;
+import com.dianping.cat.report.page.storage.service.CompositeStorageService;
+import com.dianping.cat.report.page.storage.service.HistoricalStorageService;
+import com.dianping.cat.report.page.storage.service.LocalStorageService;
+import com.dianping.cat.report.page.storage.task.StorageReportService;
+import com.dianping.cat.report.page.top.service.CompositeTopService;
+import com.dianping.cat.report.page.top.service.HistoricalTopService;
+import com.dianping.cat.report.page.top.service.LocalTopService;
+import com.dianping.cat.report.page.top.service.TopReportService;
+import com.dianping.cat.report.page.transaction.service.CompositeTransactionService;
+import com.dianping.cat.report.page.transaction.service.HistoricalTransactionService;
+import com.dianping.cat.report.page.transaction.service.LocalTransactionService;
+import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.report.service.LocalModelService;
+import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.service.IpService;
 
 class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ModelService.class, "transaction-local", LocalTransactionService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalTransactionService.ID, LocalTransactionService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, TransactionReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TransactionAnalyzer.ID, CompositeTransactionService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "event-local", LocalEventService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalEventService.ID, LocalEventService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, EventReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, EventAnalyzer.ID, CompositeEventService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalProblemService.ID, LocalProblemService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, ProblemReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, ProblemAnalyzer.ID, CompositeProblemService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "heartbeat-local", LocalHeartbeatService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalHeartbeatService.ID, LocalHeartbeatService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, HeartbeatReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, HeartbeatAnalyzer.ID, CompositeHeartbeatService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "matrix-local", LocalMatrixService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, MatrixReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MatrixAnalyzer.ID, CompositeMatrixService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "state-local", LocalStateService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalStateService.ID, LocalStateService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "state-historical", HistoricalStateService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, StateReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StateAnalyzer.ID, CompositeStateService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "state-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "cross-local", LocalCrossService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalCrossService.ID, LocalCrossService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, CrossReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, CrossAnalyzer.ID, CompositeCrossService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "top-local", LocalTopService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalTopService.ID, LocalTopService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "top-historical", HistoricalTopService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, TopReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TopAnalyzer.ID, CompositeTopService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "dependency-local", LocalDependencyService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalDependencyService.ID, LocalDependencyService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "dependency-historical", HistoricalDependencyService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, DependencyReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, DependencyAnalyzer.ID, CompositeDependencyService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
 
-		all.add(C(ModelService.class, "metric-local", LocalMetricService.class) //
-		      .req(ReportBucketManager.class) //
-		      .req(MessageConsumer.class));
+		all.add(C(LocalModelService.class, LocalStorageService.ID, LocalStorageService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, "storage-historical", HistoricalStorageService.class) //
+		      .req(ReportBucketManager.class, StorageReportService.class, ServerConfigManager.class));
+		all.add(C(ModelService.class, StorageAnalyzer.ID, CompositeStorageService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
+
+		all.add(C(LocalModelService.class, LocalMetricService.ID, LocalMetricService.class) //
+		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class, IpService.class));
 		all.add(C(ModelService.class, "metric-historical", HistoricalMetricService.class) //
-		      .req(ReportBucketManager.class, ReportServiceManager.class));
+		      .req(ReportBucketManager.class, MetricReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MetricAnalyzer.ID, CompositeMetricService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-historical", "logview-local" }, "m_services"));
 
-		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
-		      .req(MessageConsumer.class) //
+		all.add(C(LocalModelService.class, "logview", LocalMessageService.class) //
+		      .req(MessageConsumer.class, ServerConfigManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
-		      .req(MessageCodec.class, "html"));
-		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
-		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
-		      .req(MessageCodec.class, "html"));
+		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
+		all.add(C(ModelService.class, "logview-local", LocalMessageService.class) //
+		      .req(MessageConsumer.class, ServerConfigManager.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
+		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall"));
+		all.add(C(ModelService.class, "logview-historical", HistoricalMessageService.class) //
+		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID) //
+		      .req(MessageCodec.class, HtmlMessageCodec.ID, "m_html") //
+		      .req(MessageCodec.class, WaterfallMessageCodec.ID, "m_waterfall").req(ServerConfigManager.class));
 
-		all.add(C(CachedReportTask.class).req(ReportServiceManager.class, ServerConfigManager.class));
 		return all;
 	}
 }

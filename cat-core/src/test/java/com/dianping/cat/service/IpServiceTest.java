@@ -3,7 +3,6 @@ package com.dianping.cat.service;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.IpService.IpInfo;
 
 public class IpServiceTest extends ComponentTestCase {

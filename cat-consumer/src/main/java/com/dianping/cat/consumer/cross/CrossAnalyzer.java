@@ -5,9 +5,10 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -17,9 +18,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.service.DefaultReportManager.StoragePolicy;
-import com.dianping.cat.service.ReportManager;
-import org.unidal.lookup.util.StringUtils;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -28,23 +28,47 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	protected ReportManager<CrossReport> m_reportManager;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
-	@Inject
-	private IpConvertManager m_ipConvertManager;
-
-	private static final String UNKNOWN = "Unknown";
+	protected IpConvertManager m_ipConvertManager;
 
 	private int m_discardLogs = 0;
 
 	private int m_errorAppName;
 
+	public static final String DEFAULT = "unknown";
+
+	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
+		String localAddress = crossInfo.getLocalAddress();
+		String remoteAddress = crossInfo.getRemoteAddress();
+
+		int index = remoteAddress.indexOf(":");
+
+		if (index > 0) {
+			remoteAddress = remoteAddress.substring(0, index);
+		}
+
+		CrossInfo info = new CrossInfo();
+		info.setLocalAddress(remoteAddress);
+
+		String clientPort = crossInfo.getClientPort();
+
+		if (clientPort == null) {
+			info.setRemoteAddress(localAddress);
+		} else {
+			info.setRemoteAddress(localAddress + ":" + clientPort);
+		}
+		info.setRemoteRole("Pigeon.Caller");
+		info.setDetailType("PigeonCall");
+		info.setApp(client);
+
+		return info;
+	}
+
 	@Override
-	public void doCheckpoint(boolean atEnd) {
+	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 
-			m_logger.info("discard server logview count " + m_discardLogs+", errorAppName " + m_errorAppName);
+			m_logger.info("discard server logview count " + m_discardLogs + ", errorAppName " + m_errorAppName);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		}
@@ -69,99 +93,62 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
-		if (m_serverConfigManager.discardTransaction(t)) {
-			return null;
-		} else {
-			String type = t.getType();
+		String type = t.getType();
 
-			if (m_serverConfigManager.isClientCall(type)) {
-				return parsePigeonClientTransaction(t, tree);
-			} else if (m_serverConfigManager.isServerService(type)) {
-				return parsePigeonServerTransaction(t, tree);
-			}
-			return null;
+		if (m_serverConfigManager.isRpcClient(type)) {
+			return parsePigeonClientTransaction(t, tree);
+		} else if (m_serverConfigManager.isRpcServer(type)) {
+			return parsePigeonServerTransaction(t, tree);
 		}
+		return null;
 	}
 
 	private CrossInfo parsePigeonClientTransaction(Transaction t, MessageTree tree) {
 		CrossInfo crossInfo = new CrossInfo();
-		String localIp = tree.getIpAddress();
+		String localAddress = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonCall.server")) {
+				String type = message.getType();
+
+				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonCall.app")) {
+				if (type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
+				}
+				if (type.equals("PigeonCall.port") || type.equals("Call.port")) {
+					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
 
-		crossInfo.setLocalAddress(localIp);
+		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("Pigeon.Server");
 		crossInfo.setDetailType("PigeonCall");
 		return crossInfo;
 	}
 
-	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
-		String localIp = crossInfo.getLocalAddress();
-		String remoteAddress = crossInfo.getRemoteAddress();
-		int index = remoteAddress.indexOf(":");
-		
-		if (index > 0) {
-			remoteAddress = remoteAddress.substring(0, index);
-		}
-
-		CrossInfo info = new CrossInfo();
-		info.setLocalAddress(remoteAddress);
-		info.setRemoteAddress(localIp + ":Caller");
-		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCall");
-		info.setApp(client);
-
-		return info;
-	}
-
-	private void updateServerCrossReport(Transaction t, String domain, CrossInfo info) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
-
-		updateCrossReport(report, t, info);
-	}
-
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
 		CrossInfo crossInfo = new CrossInfo();
-		String localIp = tree.getIpAddress();
+		String localAddress = tree.getIpAddress();
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonService.client")) {
-					String name = message.getName();
-					int index = name.indexOf(":");
+				String type = message.getType();
 
-					if (index > 0) {
-						name = name.substring(0, index);
-					}
-					String formatIp = m_ipConvertManager.convertHostNameToIP(name);
-
-					if (formatIp != null && formatIp.length() > 0) {
-						crossInfo.setRemoteAddress(formatIp);
-					}
+				if (type.equals("PigeonService.client") || type.equals("Service.client")) {
+					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (message.getType().equals("PigeonService.app")) {
+				if (type.equals("PigeonService.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
 		}
 
-		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
-			m_discardLogs++;
-			return null;
-		}
-
-		crossInfo.setLocalAddress(localIp);
+		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("Pigeon.Client");
 		crossInfo.setDetailType("PigeonService");
 		return crossInfo;
@@ -183,15 +170,20 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
 		CrossInfo crossInfo = parseCorssTransaction(t, tree);
 
-		if (crossInfo != null) {
+		if (crossInfo != null && crossInfo.validate()) {
 			updateCrossReport(report, t, crossInfo);
 
-			String domain = crossInfo.getApp();
-			if (m_serverConfigManager.isClientCall(t.getType()) && StringUtils.isNotEmpty(domain)) {
-				CrossInfo info = convertCrossInfo(tree.getDomain(), crossInfo);
+			String targetDomain = crossInfo.getApp();
 
-				updateServerCrossReport(t, domain, info);
-			}else{
+			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)) {
+				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
+
+				if (serverCrossInfo != null) {
+					CrossReport serverReport = m_reportManager.getHourlyReport(getStartTime(), targetDomain, true);
+
+					updateCrossReport(serverReport, t, serverCrossInfo);
+				}
+			} else {
 				m_errorAppName++;
 			}
 		}
@@ -221,10 +213,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String remoteIp = info.getRemoteAddress();
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
+
 		Local local = report.findOrCreateLocal(localIp);
-		Remote remote = local.findOrCreateRemote(remoteIp);
+		String remoteId = remoteIp + ":" + role;
+		Remote remote = local.findOrCreateRemote(remoteId);
 
 		report.addIp(localIp);
+		remote.setIp(remoteIp);
 		remote.setRole(role);
 		remote.setApp(info.getApp());
 
@@ -247,40 +242,58 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		double duration = t.getDurationInMicros() / 1000d;
-		
+
 		type.setSum(type.getSum() + duration);
 		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {
-		private String m_remoteRole = UNKNOWN;
+		private String m_remoteRole;
 
-		private String m_LocalAddress = UNKNOWN;
+		private String m_localAddress;
 
-		private String m_RemoteAddress = UNKNOWN;
+		private String m_remoteAddress;
 
-		private String m_detailType = UNKNOWN;
+		private String m_detailType;
 
-		private String m_app = "";
+		private String m_app;
+
+		private String m_clientPort;
+
+		public String getApp() {
+			if (StringUtils.isEmpty(m_app)) {
+				return DEFAULT;
+			} else {
+				return m_app;
+			}
+		}
+
+		public String getClientPort() {
+			return m_clientPort;
+		}
 
 		public String getDetailType() {
 			return m_detailType;
 		}
 
 		public String getLocalAddress() {
-			return m_LocalAddress;
+			return m_localAddress;
 		}
 
 		public String getRemoteAddress() {
-			return m_RemoteAddress;
+			return m_remoteAddress;
 		}
 
 		public String getRemoteRole() {
 			return m_remoteRole;
 		}
 
-		public String getApp() {
-			return m_app;
+		public void setApp(String app) {
+			m_app = app;
+		}
+
+		public void setClientPort(String clientPort) {
+			m_clientPort = clientPort;
 		}
 
 		public void setDetailType(String detailType) {
@@ -288,19 +301,24 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		public void setLocalAddress(String localAddress) {
-			m_LocalAddress = localAddress;
+			m_localAddress = localAddress;
 		}
 
 		public void setRemoteAddress(String remoteAddress) {
-			m_RemoteAddress = remoteAddress;
+			m_remoteAddress = remoteAddress;
 		}
 
 		public void setRemoteRole(String remoteRole) {
 			m_remoteRole = remoteRole;
 		}
 
-		public void setApp(String app) {
-			m_app = app;
+		public boolean validate() {
+			if (m_localAddress != null && m_remoteAddress != null) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
+
 }

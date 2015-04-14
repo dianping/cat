@@ -15,6 +15,8 @@ import org.unidal.dal.jdbc.Updateset;
 import com.dianping.cat.consumer.MockLog;
 import com.dianping.cat.consumer.company.model.entity.Company;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
+import com.dianping.cat.consumer.config.ProductLineConfig;
+import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 
@@ -34,13 +36,13 @@ public class ProductLineConfigManagerTest {
 		String[] domains1 = { "domain1", "domain2" };
 		String[] domains2 = { "domain3", "domain4" };
 
-		manager.insertProductLine(line1, domains1);
-		manager.insertProductLine(line2, domains2);
+		manager.insertProductLine(line1, domains1, ProductLineConfig.METRIC.getTitle());
+		manager.insertProductLine(line2, domains2, ProductLineConfig.METRIC.getTitle());
 
 		Assert.assertEquals(2, s_storeCount);
-		Assert.assertEquals("Default", manager.queryProductLineByDomain("domain"));
+		Assert.assertEquals(null, manager.queryProductLineByDomain("domain"));
 		Assert.assertEquals("Test1", manager.queryProductLineByDomain("domain1"));
-		List<String> pDomains = manager.queryDomainsByProductLine("Test1");
+		List<String> pDomains = manager.queryDomainsByProductLine("Test1", ProductLineConfig.METRIC);
 		Assert.assertEquals(2, pDomains.size());
 		Map<String, ProductLine> productLines = manager.queryAllProductLines();
 
@@ -54,6 +56,10 @@ public class ProductLineConfigManagerTest {
 
 	@Test
 	public void testInitThrowException() throws Exception {
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			productLineConfig.getCompany().getProductLines().clear();
+		}
+
 		ProductLineConfigManager manager = new MockProductLineConfigManager();
 		((MockProductLineConfigManager) manager).setConfigDao(new MockConfigDao2());
 
@@ -62,8 +68,11 @@ public class ProductLineConfigManagerTest {
 		} catch (Exception e) {
 		}
 
-		Company config = manager.getCompany();
-		Assert.assertEquals(0, config.getProductLines().size());
+		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
+			Company config = productLineConfig.getCompany();
+
+			Assert.assertEquals(0, config.getProductLines().size());
+		}
 	}
 
 	public static class MockProductLineConfigManager extends ProductLineConfigManager {
@@ -77,7 +86,11 @@ public class ProductLineConfigManagerTest {
 	public static class MockConfigDao2 extends MockConfigDao1 {
 		@Override
 		public Config findByName(String name, Readset<Config> readset) throws DalNotFoundException {
-			throw new DalNotFoundException("this is a exception for test");
+			if (ProductLineConfigManager.CONFIG_NAME.equals(name)) {
+				return new Config();
+			} else {
+				throw new DalNotFoundException("this is a exception for test");
+			}
 		}
 	}
 

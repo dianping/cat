@@ -1,31 +1,30 @@
 package com.dianping.cat.report.page.alert;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.home.dal.report.Alert;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.alert.Handler.AlertMinute;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private String m_alertResult;
 
-	private Map<String, List<Alert>> m_alerts;
+	private Map<String, AlertMinute> m_alertMinutes;
 
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
-	public String getAlertResult() {
-		return m_alertResult;
+	public Map<String, AlertMinute> getAlertMinutes() {
+		return m_alertMinutes;
 	}
 
-	public Map<String, List<Alert>> getAlerts() {
-		return m_alerts;
+	public String getAlertResult() {
+		return m_alertResult;
 	}
 
 	public Date getDate() {
@@ -45,11 +44,12 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return null;
 	}
 
+	public void setAlertMinutes(Map<String, AlertMinute> alertMinutes) {
+		m_alertMinutes = alertMinutes;
+	}
+
 	public void setAlertResult(String alertResult) {
 		m_alertResult = alertResult;
 	}
 
-	public void setAlerts(Map<String, List<Alert>> alerts) {
-		m_alerts = alerts;
-	}
 }

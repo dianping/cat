@@ -1,9 +1,7 @@
 package com.dianping.cat.report.page.web.graph;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,11 +17,11 @@ import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.entity.Statistic;
 import com.dianping.cat.consumer.metric.model.entity.StatisticsItem;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.graph.metric.AbstractGraphCreator;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
-import com.dianping.cat.report.page.PieChart.Item;
-import com.dianping.cat.report.page.model.metric.MetricReportMerger;
+import com.dianping.cat.report.page.metric.service.MetricReportMerger;
 import com.dianping.cat.report.page.web.Handler.QueryEntity;
 
 public class WebGraphCreator extends AbstractGraphCreator {
@@ -282,18 +280,5 @@ public class WebGraphCreator extends AbstractGraphCreator {
 		Map<String, Double[]> oldCurrentValues = prepareAllData(report, queryEntity);
 
 		return buildCodeChartData(oldCurrentValues, queryEntity.getType());
-	}
-
-	public double queryMinYlable(final List<Double[]> datas) {
-		double min = Double.MAX_VALUE;
-
-		for (Double[] data : datas) {
-			List<Double> dataList = Arrays.asList(data);
-			double tmp = Collections.min(dataList);
-			if (min > tmp) {
-				min = tmp;
-			}
-		}
-		return min;
 	}
 }

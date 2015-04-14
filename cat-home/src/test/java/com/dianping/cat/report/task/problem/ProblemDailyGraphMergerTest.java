@@ -13,6 +13,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.problem.task.ProblemMerger;
 
 public class ProblemDailyGraphMergerTest {
 	private ProblemMerger m_meger = new ProblemMerger();
@@ -36,14 +37,6 @@ public class ProblemDailyGraphMergerTest {
 	public void testForMergerDaily() throws Exception {
 		ProblemReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerDaily.xml"), "utf-8");
-
-		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
-	}
-
-	@Test
-	public void testForMegerGraph() throws Exception {
-		ProblemReport report = m_meger.mergeForGraph(m_reportDomain, reports);
-		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerGraph.xml"), "utf-8");
 
 		Assert.assertEquals(expeted.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 	}

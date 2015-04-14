@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="app-report" root="true">
+    <attribute name="id" value-type="String" />
+    <attribute name="start-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="command" type="list" names="commands" />
+  </entity>
+  <entity name="command">
+    <attribute name="id" value-type="int" />
+    <attribute name="name" value-type="String" />
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
+    <attribute name="requestSum" value-type="int" />
+    <attribute name="requestAvg" value-type="int" />
+    <attribute name="responseSum" value-type="int" />
+    <attribute name="responseAvg" value-type="int" />
+    <entity-ref name="transaction" />
+    <entity-ref name="code" type="list" names="codes" />
+  </entity>
+  <entity name="transaction">
+    <attribute name="url" value-type="String" />
+    <attribute name="count" value-type="int" />
+    <attribute name="avg" value-type="int" />
+  </entity>
+  <entity name="code">
+    <attribute name="id" value-type="String" />
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="errors" value-type="int" />
+    <attribute name="successRatio" value-type="double" />
+  </entity>
+</model>
+

@@ -8,25 +8,32 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.page.JsonBuilder;
-import com.dianping.cat.report.page.LineChart;
-import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.app.entity.AppReport;
+import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
+import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
+import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
-public class Model extends AbstractReportModel<Action, Context> {
+@ModelMeta(Constants.APP)
+public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private LineChart m_lineChart;
@@ -68,6 +75,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, List<Speed>> m_speeds;
 
+	private Map<Integer, Code> m_codes;
+
+	private List<String> m_codeDistributions;
+
+	private Map<String, List<Command>> m_domain2Commands;
+
+	private Map<Integer, List<Code>> m_command2Codes;
+
+	private Map<String, Pair<String, String>> m_domain2Departments;
+
+	@EntityMeta
+	private AppReport m_appReport;
+
+	private DisplayCommands m_displayCommands;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -76,20 +98,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_appDataDetailInfos;
 	}
 
-	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
-		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
-		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
+	public AppReport getAppReport() {
+		return m_appReport;
+	}
 
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
-				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
-				AppSpeedDetail d = entry.getValue();
+	public int getDefaultCommand() {
+		return CommandQueryEntity.DEFAULT_COMMAND;
+	}
 
-				m.put(d.getMinuteOrder(), d);
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
+	public int getDefaultActivity() {
+		return CommandQueryEntity.DEFAULT_ACTIVITY;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -113,23 +131,40 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_appSpeedDisplayInfo;
 	}
 
+	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
+		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
+		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
+
+		if (details != null && !details.isEmpty()) {
+			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
+				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
+				AppSpeedDetail d = entry.getValue();
+
+				m.put(d.getMinuteOrder(), d);
+				map.put(entry.getKey(), m);
+			}
+		}
+		return map;
+	}
+
 	public Map<Integer, Item> getCities() {
 		return m_cities;
 	}
 
-	public String getCommand() {
-		Map<Integer, List<Code>> maps = new LinkedHashMap<Integer, List<Code>>();
+	public List<String> getCodeDistributions() {
+		return m_codeDistributions;
+	}
 
-		for (Command item : m_commands) {
-			List<Code> items = maps.get(item.getId());
+	public Map<Integer, Code> getCodes() {
+		return m_codes;
+	}
 
-			if (items == null) {
-				items = new ArrayList<Code>();
-				maps.put(item.getId(), items);
-			}
-			items.addAll(item.getCodes().values());
-		}
-		return new JsonBuilder().toJson(maps);
+	public Map<Integer, List<Code>> getCommand2Codes() {
+		return m_command2Codes;
+	}
+
+	public String getCommand2CodesJson() {
+		return new JsonBuilder().toJson(m_command2Codes);
 	}
 
 	public int getCommandId() {
@@ -150,7 +185,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.LINECHART;
+	}
+
+	public DisplayCommands getDisplayCommands() {
+		return m_displayCommands;
 	}
 
 	@Override
@@ -158,28 +197,25 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return getDisplayDomain();
 	}
 
+	public Map<String, List<Command>> getDomain2Commands() {
+		return m_domain2Commands;
+	}
+
+	public String getDomain2CommandsJson() {
+		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
+
+		results.put(Constants.ALL, m_commands);
+		results.putAll(m_domain2Commands);
+		return new JsonBuilder().toJson(results);
+	}
+
+	public Map<String, Pair<String, String>> getDomain2Departments() {
+		return m_domain2Departments;
+	}
+
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
-	}
-
-	public String getDomainToCommandsJson() {
-		Map<String, List<Command>> map = new LinkedHashMap<String, List<Command>>();
-
-		for (Command command : m_commands) {
-			String domain = command.getDomain();
-			if (StringUtils.isEmpty(domain)) {
-				domain = "default";
-			}
-			List<Command> commands = map.get(domain);
-
-			if (commands == null) {
-				commands = new ArrayList<Command>();
-				map.put(domain, commands);
-			}
-			commands.add(command);
-		}
-		return new JsonBuilder().toJson(map);
 	}
 
 	public String getFetchData() {
@@ -242,12 +278,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_appDataDetailInfos = appDataDetailInfos;
 	}
 
+	public void setAppReport(AppReport appReport) {
+		m_appReport = appReport;
+	}
+
 	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {
 		m_appSpeedDisplayInfo = appSpeedDisplayInfo;
 	}
 
 	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
+	}
+
+	public void setCodeDistributions(List<String> codeDistributions) {
+		m_codeDistributions = codeDistributions;
+	}
+
+	public void setCodes(Map<Integer, Code> codes) {
+		m_codes = codes;
+	}
+
+	public void setCommand2Codes(Map<Integer, List<Code>> command2Codes) {
+		m_command2Codes = command2Codes;
 	}
 
 	public void setCommandId(int commandId) {
@@ -264,6 +316,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setDisplayCommands(DisplayCommands displayCommands) {
+		m_displayCommands = displayCommands;
+	}
+
+	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
+		m_domain2Commands = domain2Commands;
+	}
+
+	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {
+		m_domain2Departments = domain2Departments;
 	}
 
 	public void setFetchData(String fetchData) {

@@ -7,6 +7,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.report.page.problem.task.ProblemDailyGraphCreator;
 
 public class ProblemDailyGraphTest {
 

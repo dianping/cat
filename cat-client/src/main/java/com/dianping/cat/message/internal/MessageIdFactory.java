@@ -6,15 +6,18 @@ import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 
 public class MessageIdFactory {
-	private long m_timestamp = getTimestamp();
+	private volatile long m_timestamp = getTimestamp();
 
-	private volatile int m_index;
+	private volatile AtomicInteger m_index;
 
 	private String m_domain;
 
@@ -25,6 +28,8 @@ public class MessageIdFactory {
 	private RandomAccessFile m_markFile;
 
 	private static final long HOUR = 3600 * 1000L;
+
+	private BlockingQueue<String> m_reusedIds = new LinkedBlockingQueue<String>(100000);
 
 	public void close() {
 		try {
@@ -61,30 +66,32 @@ public class MessageIdFactory {
 	}
 
 	public String getNextId() {
-		long timestamp = getTimestamp();
-		int index;
+		String id = m_reusedIds.poll();
 
-		synchronized (this) {
+		if (id != null) {
+			return id;
+		} else {
+			long timestamp = getTimestamp();
+
 			if (timestamp != m_timestamp) {
-				m_index = 0;
+				m_index = new AtomicInteger(0);
 				m_timestamp = timestamp;
 			}
 
-			index = m_index++;
-			saveMark();
+			int index = m_index.getAndIncrement();
+
+			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+
+			sb.append(m_domain);
+			sb.append('-');
+			sb.append(m_ipAddress);
+			sb.append('-');
+			sb.append(timestamp);
+			sb.append('-');
+			sb.append(index);
+
+			return sb.toString();
 		}
-
-		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
-
-		sb.append(m_domain);
-		sb.append('-');
-		sb.append(m_ipAddress);
-		sb.append('-');
-		sb.append(timestamp);
-		sb.append('-');
-		sb.append(index);
-
-		return sb.toString();
 	}
 
 	protected long getTimestamp() {
@@ -124,9 +131,9 @@ public class MessageIdFactory {
 			long lastTimestamp = m_byteBuffer.getLong();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
-				m_index = index + 10000;
+				m_index = new AtomicInteger(index + 10000);
 			} else {
-				m_index = 0;
+				m_index = new AtomicInteger(0);
 			}
 		}
 
@@ -134,18 +141,18 @@ public class MessageIdFactory {
 	}
 
 	protected void resetIndex() {
-		m_index = 0;
+		m_index.set(0);
 	}
 
-	private void saveMark() {
+	public void reuse(String id) {
+		m_reusedIds.offer(id);
+	}
+
+	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index);
+			m_byteBuffer.putInt(m_index.get());
 			m_byteBuffer.putLong(m_timestamp);
-
-			if (m_index % 100 == 0) {
-				m_byteBuffer.force();
-			}
 		} catch (Exception e) {
 			// ignore it
 		}

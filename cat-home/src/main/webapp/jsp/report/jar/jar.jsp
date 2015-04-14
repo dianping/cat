@@ -7,44 +7,37 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:body>
+<a:offline>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#jar').addClass('active');
+		$('#jar_report').addClass('active');
 		init();
 	});
 </script>
-<div class="report">
-	<table class="header">
-		<tr>
-			<td class="title text-success"><span class="text-success"><span class="text-error">【报表时间】</span>&nbsp;&nbsp;From ${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-			</td>
-			<td class="nav" >
-				<c:forEach var="nav" items="${model.navs}">
+<div class="breadcrumbs" id="breadcrumbs">
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+		<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.jarReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.jarReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+		<div class="nav-search nav" id="nav-search">
+			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&op=jar">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?op=jar">now</a> ]&nbsp;
-			</td>
-		</tr>
-	</table>
-</div>
-<div class="row-fluid">
-      <div class="span2">
-		<%@include file="../reportTree.jsp"%>
+		</div>
 	</div>
-	<div class="span10">
-	<br/>
-	<table id="contents" class="table table-striped table-bordered table-condensed table-hover">
+	<div style="display:inline-flex;padding-top:3px;">
+		<table id="contents" class="table table-striped table-condensed table-hover">
 		<thead>
 		<tr>
 			<th>domain</th>
 			<th>ip</th>
 			<c:forEach var="item" items="${model.jars}" varStatus="status">
-				<th width="7%">${item}</th>
+				<th>${item}</th>
 			</c:forEach>
 		</tr></thead>
 	<tbody>
@@ -59,5 +52,5 @@
 				</tr>
 			</c:forEach>
 		</c:forEach></tbody>
-	</table></div></div>
-</a:body>
+	</table></div>
+</a:offline>

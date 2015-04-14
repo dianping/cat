@@ -6,10 +6,10 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.PathMeta;
 
+import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 
-public class Payload extends AbstractReportPayload<Action> {
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("op")
 	private Action m_action = Action.VIEW;
 
@@ -45,6 +45,11 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, m_action);
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.LOGVIEW);
 	}
 
 	public void setPath(String[] path) {

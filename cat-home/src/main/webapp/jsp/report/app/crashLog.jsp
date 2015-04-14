@@ -7,17 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 <a:body>
-	<div class="row-fluid">
-		<%@include file="menu.jsp"%>
-	<div class="span10">
-		<%@include file="crashLogDetail.jsp"%>
-	</div>
-		<table class="footer">
-			<tr>
-				<td>[ end ]</td>
-			</tr>
-		</table>
-	</div>
+	<%@include file="crashLogDetail.jsp"%>
 </a:body>
 
 <script type="text/javascript">
@@ -107,7 +97,7 @@
 	
 	$("#platformType")
 	  .change(function () {
-		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&date=${model.date}&reportType=${model.reportType}";
+		  window.location.href = "?op=${payload.action.name}&query1=" + this.value + ";;;;&date=${model.date}&reportType=${payload.reportType}";
 	  })
 	  
 	$(document).ready(
@@ -115,11 +105,14 @@
 			$('#crashLog').addClass('active');
 			
 			var fields = "${payload.query1}".split(";");
-			$("#platformType").val(fields[0]);
+			if("${payload.query1}".length > 0) {
+				$("#platformType").val(fields[0]);
+			}
 			docReady(fields[1], '${model.fieldsInfo.appVersions}','appVersion');
 			docReady(fields[2], '${model.fieldsInfo.platVersions}','platformVersion');
 			docReady(fields[3], '${model.fieldsInfo.modules}','module');
 			docReady(fields[4], '${model.fieldsInfo.levels}','level');
+			
 		});
 </script>
 
