@@ -5,6 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.storage.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.storage.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
@@ -134,36 +135,29 @@
 				<th class="center">主机名</th>
 				<th class="center">IP</th>
 				<th class="center">标题</th>
-				<th class="center">内容</th>
+				<th class="left">内容</th>
 				<th class="center">状态</th>
 			</tr>
-			<c:forEach var="entry" items="${model.alterations}">
-				<tr><td rowspan="${w:size(entry.value)}" class="text-danger center" style="vertical-align:middle;">${entry.key}</td>
-				<c:forEach var="alt" items="${entry.value}" varStatus="index">
-					<c:if test="${index.index != 0 }">
-						<tr>
-					</c:if>
-						<td>${alt.domain}</td>
-						<td>${alt.hostname}</td>
-						<td>${alt.ip}</td>
-						<td>${alt.title}</td>
-						<td>${alt.content}</td>
-						<td>
-							<c:if test="${alt.status == 0}" >
-								<button class="btn btn-xs btn-success">
-									<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
-								</button>
-							</c:if>
-							<c:if test="${alt.status != 0}" >
-								<button class="btn btn-xs btn-danger">
-									<i class="ace-icon glyphicon glyphicon-remove bigger-120 btn-danger"></i>
-								</button>
-							</c:if>
-						</td>
-					<c:if test="${index.index != 0 }">
-						</tr>
-					</c:if>	
-				</c:forEach>
+			<c:forEach var="alt" items="${model.alterations}">
+				<tr>
+					<td><fmt:formatDate value="${alt.date}" pattern="yyyy-MM-dd HH:mm:ss"/></td>
+					<td>${alt.domain}</td>
+					<td>${alt.hostname}</td>
+					<td>${alt.ip}</td>
+					<td>${alt.title}</td>
+					<td class="left">${alt.content}</td>
+					<td>
+						<c:if test="${alt.status == 0}" >
+							<button class="btn btn-xs btn-success">
+								<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+							</button>
+						</c:if>
+						<c:if test="${alt.status != 0}" >
+							<button class="btn btn-xs btn-danger">
+								<i class="ace-icon glyphicon glyphicon-remove bigger-120 btn-danger"></i>
+							</button>
+						</c:if>
+					</td>
 				</tr>
 			</c:forEach>
 		</c:if>

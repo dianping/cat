@@ -54,7 +54,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Map<String, List<String>>> m_links;
 
-	private Map<String, List<Alteration>> m_alterations;
+	private List<Alteration> m_alterations;
 
 	private String m_distributionChart;
 
@@ -74,7 +74,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_alertInfos;
 	}
 
-	public Map<String, List<Alteration>> getAlterations() {
+	public List<Alteration> getAlterations() {
 		return m_alterations;
 	}
 
@@ -184,7 +184,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_alertInfos = alertInfos;
 	}
 
-	public void setAlterations(Map<String, List<Alteration>> alterations) {
+	public void setAlterations(List<Alteration> alterations) {
 		m_alterations = alterations;
 	}
 

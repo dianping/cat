@@ -1,11 +1,11 @@
 package com.dianping.cat.report.page.storage;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -77,8 +77,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlterationDao m_alterationDao;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
-
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
 		String format = m_storageGroupConfigManager.queryLinkFormat(type);
@@ -114,34 +112,25 @@ public class Handler implements PageHandler<Context> {
 		return links;
 	}
 
-	private Map<String, List<Alteration>> buildAlterations(Payload payload, Model model) {
+	private List<Alteration> buildAlterations(Payload payload, Model model) {
 		int minuteCounts = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		long end = payload.getDate() + (minute + 1) * TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND;
 		long start = payload.getDate() + (minute + 1 - minuteCounts) * TimeHelper.ONE_MINUTE;
-		Map<String, List<Alteration>> results = new LinkedHashMap<String, List<Alteration>>();
+		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
 			List<Alteration> alterations = m_alterationDao.findByTypeDruation(new Date(start), new Date(end),
 			      payload.getType(), AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
-				String date = m_sdf.format(alteration.getDate());
-				List<Alteration> alts = results.get(date);
-
-				if (alts == null) {
-					alts = new ArrayList<Alteration>();
-
-					results.put(date, alts);
-				}
-				alts.add(alteration);
+				results.add(alteration);
 			}
 		} catch (DalNotFoundException e) {
 			// ignore it
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
 		return results;
 	}
 
