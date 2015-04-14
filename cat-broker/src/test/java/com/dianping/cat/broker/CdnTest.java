@@ -2,9 +2,13 @@ package com.dianping.cat.broker;
 
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
+import org.junit.Test;
 import org.unidal.helper.Files;
 
 public class CdnTest {
@@ -20,6 +24,15 @@ public class CdnTest {
 		}
 	}
 
+	@Test
+	public void test() throws UnsupportedEncodingException{
+		String url = "http://localhost:2765/broker-service/api/cdn?v=1&tt=";
+		String url2 = url+URLEncoder.encode("http://sfsd/cat?sdf=tt&gg=yy","utf-8");
+		
+		System.out.println(URLDecoder.decode(url,"utf-8"));
+		System.out.println(URLDecoder.decode(url2,"utf-8"));
+	}
+	
 	public static void sendCdnRequest() throws Exception {
 		String url = "http://localhost:2765/broker-service/api/cdn?v=1";
 		URLConnection conn = new URL(url).openConnection();
