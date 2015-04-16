@@ -32,7 +32,7 @@ Requirements
 ---------------------
 * Java 6
 * Maven 3
-* MySQL 5.6.1+
+* MySQL
 
 Quick Started
 ---------------------
