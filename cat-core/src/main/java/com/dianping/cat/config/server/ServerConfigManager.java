@@ -43,7 +43,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Set<String> m_unusedNames = new HashSet<String>();
 
-	private Set<String> m_crashLogs = new HashSet<String>();
+	private Set<String> m_crashLogDomains = new HashSet<String>();
 
 	private Set<String> m_invalidateDomains = new HashSet<String>();
 
@@ -107,7 +107,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Set<String> getCrashLogs() {
-		return m_crashLogs;
+		return m_crashLogDomains;
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -251,7 +251,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Set<String> getUnusedDomains() {
-		return m_invalidateDomains;
+		Set<String> unusedDomains = new HashSet<String>();
+
+		unusedDomains.addAll(m_invalidateDomains);
+		unusedDomains.addAll(m_crashLogDomains);
+		return unusedDomains;
 	}
 
 	@Override
@@ -278,19 +282,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_invalidateDomains.add(Constants.FRONT_END);
 		m_invalidateDomains.add("paas");
 		m_invalidateDomains.add("SMS-RECEIVER");
-		m_invalidateDomains.add("AndroidCrashLog");
-		m_invalidateDomains.add("iOSCrashLog");
-		m_invalidateDomains.add("MerchantAndroidCrashLog");
-		m_invalidateDomains.add("MerchantIOSCrashLog");
-		m_invalidateDomains.add("ApolloAndroidCrashLog");
-		m_invalidateDomains.add("ApolloIOSCrashLog");
 
-		m_crashLogs.add("AndroidCrashLog");
-		m_crashLogs.add("iOSCrashLog");
-		m_crashLogs.add("MerchantAndroidCrashLog");
-		m_crashLogs.add("MerchantIOSCrashLog");
-		m_crashLogs.add("ApolloAndroidCrashLog");
-		m_crashLogs.add("ApolloIOSCrashLog");
+		m_crashLogDomains.add("AndroidCrashLog");
+		m_crashLogDomains.add("iOSCrashLog");
+		m_crashLogDomains.add("MerchantAndroidCrashLog");
+		m_crashLogDomains.add("MerchantIOSCrashLog");
+		m_crashLogDomains.add("ApolloAndroidCrashLog");
+		m_crashLogDomains.add("ApolloIOSCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -344,7 +342,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isCrashLog(String domain) {
-		return m_crashLogs.contains(domain);
+		return m_crashLogDomains.contains(domain);
 	}
 
 	public boolean isHdfsOn() {
@@ -415,7 +413,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean validateDomain(String domain) {
-		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
+		return !m_invalidateDomains.contains(domain) && !m_crashLogDomains.contains(domain)
+		      && StringUtils.isNotEmpty(domain);
 	}
 
 	public boolean validateIp(String str) {
