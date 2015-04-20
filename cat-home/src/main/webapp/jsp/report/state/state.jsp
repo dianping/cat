@@ -11,7 +11,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.state.Model"
 	scope="request" />
 
-<a:report title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}">
+<a:report title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&show=${payload.show}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
