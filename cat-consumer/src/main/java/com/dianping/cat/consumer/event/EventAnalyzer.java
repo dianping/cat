@@ -70,18 +70,18 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (m_serverConfigManager.validateDomain(domain)) {
 			EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			Message message = tree.getMessage();
+			String ip = tree.getIpAddress();
 
 			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message);
+				processTransaction(report, tree, (Transaction) message, ip);
 			} else if (message instanceof Event) {
-				processEvent(report, tree, (Event) message);
+				processEvent(report, tree, (Event) message, ip);
 			}
 		}
 	}
 
-	private void processEvent(EventReport report, MessageTree tree, Event event) {
+	private void processEvent(EventReport report, MessageTree tree, Event event, String ip) {
 		int count = 1;
-		String ip = tree.getIpAddress();
 		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
@@ -127,14 +127,14 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	private void processTransaction(EventReport report, MessageTree tree, Transaction t) {
+	private void processTransaction(EventReport report, MessageTree tree, Transaction t, String ip) {
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
+				processTransaction(report, tree, (Transaction) child, ip);
 			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child);
+				processEvent(report, tree, (Event) child, ip);
 			}
 		}
 	}
@@ -142,4 +142,5 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void setReportManager(ReportManager<EventReport> reportManager) {
 		m_reportManager = reportManager;
 	}
+	
 }

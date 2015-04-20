@@ -556,7 +556,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
 				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
-				      DefaultMessageManager.this);
+						DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());
