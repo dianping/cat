@@ -31,7 +31,6 @@ public class AppLogManager implements Initializable {
 		m_marinPrinter.setFileName("app");
 		m_marinPrinter.setBusiness("broker-service");
 		m_marinPrinter.setType(LogTypeEnum.FILE);
-		m_marinPrinter.setRequiredField(new String[] { "module", "request_time" });
 		m_marinPrinter.init();
 
 		Threads.forGroup("cat").start(new StoreManager());
@@ -66,8 +65,8 @@ public class AppLogManager implements Initializable {
 
 						log.putString("path/method", proto.getCommandStr());
 						log.putInt("response_code", proto.getCode());
+						log.putInt("eclapse_time", proto.getResponseTime());
 						log.putString("client_version", String.valueOf(proto.getVersion()));
-						log.putString("eclapse_time", String.valueOf(proto.getResponseTime()));
 
 						log.putString("requestbyte", String.valueOf(proto.getRequestByte()));
 						log.putString("responsebyte", String.valueOf(proto.getResponseByte()));

@@ -184,6 +184,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						appData.setResponseTime(Integer.parseInt(items[9]));
 						appData.setCommandStr(items[4]);
 						appData.setDpid(dpid);
+						appData.setIp(userIp);
 
 						if (ipInfo != null) {
 							appData.setCityStr(ipInfo.getProvince());

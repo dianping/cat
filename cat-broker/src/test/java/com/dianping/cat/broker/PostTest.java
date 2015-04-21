@@ -17,23 +17,18 @@ public class PostTest {
 
 	public String m_online = "114.80.165.63";
 
-	
 	@Test
 	public void testBatch3() throws UnsupportedEncodingException {
 		String content = "1428807825974	1	711	0	http://h5.dianping.com/tuan/wallet/user/mywallet.html?token=cc5a2a6ffdec74923138334b724bf48c633efdaa3c5ac4e57a0bfc44781b84a4&dpshare=0&product=dpapp	200	1	0	0	223";
 		System.out.println("http://114.80.165.63/broker-service/api/batch?v=3&c=" + URLEncoder.encode(content, "utf-8"));
 	}
 
-	
 	@Test
 	public void testBatch2() throws UnsupportedEncodingException {
 		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
 		String url = "v=1&c=1400650097	http://m.api.dianping.com/searchshop.api	0	200	0";
-
 		String url2 = "1400656368280\thttp://m.api.dianping.com/searchshop.api\t300\t200\t300\n";
-
 		System.out.println("http://114.80.165.63/broker-service/api/batch?v=1&c=" + URLEncoder.encode(url2, "utf-8"));
-
 		System.out.println("http://114.80.165.63/broker-service/api/batch?" + URLEncoder.encode(url, "utf-8"));
 	}
 
@@ -102,22 +97,23 @@ public class PostTest {
 
 	private void read(String url) throws Exception {
 		InputStream input = Urls.forIO().connectTimeout(1000).openStream(url);
-		String content = Files.forIO().readFrom(input,"utf-8");
+		String content = Files.forIO().readFrom(input, "utf-8");
 		System.out.println(content);
 	}
 
 	@Test
 	public void testBatch() throws Exception {
-		String url = "http://localhost:2765/broker-service/api/batch?v=1.0";
+		String url = "http://localhost:2765/broker-service/api/batch?v=3&dpid=1111";
 		URLConnection conn = new URL(url).openConnection();
 
 		conn.setDoOutput(true);
 		conn.setDoInput(true);
 
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-
-		String content = "&c=1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n1400037748182\thttp\t300\t200\t300\n";
-		writer.write(content);
+		String record = System.currentTimeMillis()
+		      + "	55\t711\t66\thttp://h5.dianping.com/tuan/wallet/user/mywallet.html\t200\t11\t22\t33\t44\n";
+		String content = record + record + record + record + record;
+		writer.write("&c=" + content);
 		writer.flush();
 
 		InputStream in = conn.getInputStream();
@@ -125,7 +121,7 @@ public class PostTest {
 
 		System.out.println(result);
 	}
-	
+
 	@Test
 	public void testCdn() throws Exception {
 		String url = "http://localhost:2765/broker-service/api/cdn?v=1";
@@ -137,9 +133,9 @@ public class PostTest {
 		OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
 
 		String content = "&c=1400037748182\thttp\t300\t200\t300\t300\n1400037748182\thttp\t300\t200\t300\t300\n1400037748182\thttp\t300\t200\t300\t300\n";
-		
+
 		String[] tabs = content.split("\n");
-		for(int i=0;i<tabs.length;i++){
+		for (int i = 0; i < tabs.length; i++) {
 			System.out.println(tabs[i]);
 		}
 		writer.write(content);
