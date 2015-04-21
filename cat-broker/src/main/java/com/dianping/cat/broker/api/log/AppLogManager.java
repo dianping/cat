@@ -63,9 +63,13 @@ public class AppLogManager implements Initializable {
 						String dpid = proto.getDpid();
 
 						if (StringUtils.isNotEmpty(dpid)) {
-							log.putInt("dp_user_id", Integer.parseInt(dpid));
+							try {
+								log.putInt("dp_user_id", Integer.parseInt(dpid));
+							} catch (Exception e) {
+								// ignore
+							}
 						}
-						
+
 						log.putString("user_ip", proto.getIp());
 						log.putString("request_start_time", m_sdf.format(new Date(proto.getTimestamp())));
 
