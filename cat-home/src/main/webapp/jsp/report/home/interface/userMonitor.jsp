@@ -94,10 +94,10 @@
 		<tr><td>version</td><td>versionCode, eg. 6.8 = 680</td><td>int</td></tr>
 		<tr><td>platform</td><td>android=1 or ios=2</td><td>int</td></tr>
 		<tr><td>page</td><td>加载页面，eg. index.bin</td><td>String</td></tr>
-		<tr><td>step1-responseTime1</td><td>页面加载第1阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>step2-responseTime2</td><td>页面加载第2阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>stepN-responseTimeN</td><td>页面加载第N阶段及延时，eg. 1-300</td><td>String</td></tr>
+		<tr><td>step1-responseTime1</td><td>页面加载第1阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>step2-responseTime2</td><td>页面加载第2阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>stepN-responseTimeN</td><td>页面加载第N阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
 	</table>
 	
 	<pre>

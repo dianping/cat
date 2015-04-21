@@ -88,6 +88,7 @@ public class Handler implements PageHandler<Context> {
 	private ConfigModificationDao m_configModificationDao;
 
 	@Override
+	@PreInboundActionMeta("login")
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "config")
 	public void handleInbound(Context ctx) throws ServletException, IOException {

@@ -175,11 +175,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 		ctx = m_context.get();
 
-		if (ctx != null) {
-			return ctx.m_tree;
-		} else {
-			return null;
-		}
+		return ctx.m_tree;
 	}
 
 	@Override
