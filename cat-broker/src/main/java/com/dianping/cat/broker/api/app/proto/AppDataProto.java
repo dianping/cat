@@ -28,7 +28,7 @@ public class AppDataProto extends ProtoData {
 
 	public AppDataProto() {
 	}
-	
+
 	public AppDataProto addCount(int count) {
 		m_count = m_count + count;
 		return this;
@@ -156,4 +156,12 @@ public class AppDataProto extends ProtoData {
 		m_version = version;
 		return this;
 	}
+
+	@Override
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+
+		return sb.toString();
+	}
+
 }

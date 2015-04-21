@@ -18,9 +18,9 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
-public class LogManager {
+public class ErrorLogManager {
 
-	public volatile static LogManager s_manager;
+	public volatile static ErrorLogManager s_manager;
 
 	private BlockingQueue<Entity> m_datas = new LinkedBlockingQueue<Entity>(2000);
 
@@ -30,11 +30,11 @@ public class LogManager {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
 
-	public static LogManager getInstance() {
+	public static ErrorLogManager getInstance() {
 		if (s_manager == null) {
-			synchronized (LogManager.class) {
+			synchronized (ErrorLogManager.class) {
 				if (s_manager == null) {
-					s_manager = new LogManager();
+					s_manager = new ErrorLogManager();
 					s_manager.initialize();
 				}
 			}

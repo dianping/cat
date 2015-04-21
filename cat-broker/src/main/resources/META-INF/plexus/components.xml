@@ -212,6 +212,9 @@
 				<requirement>
 					<role>com.dianping.cat.broker.api.page.batch.UrlParser</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.broker.api.log.AppLogManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -233,6 +236,10 @@
 		<component>
 			<role>com.dianping.cat.broker.api.page.batch.UrlParser</role>
 			<implementation>com.dianping.cat.broker.api.page.batch.UrlParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.log.AppLogManager</role>
+			<implementation>com.dianping.cat.broker.api.log.AppLogManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.broker.api.page.js.Handler</role>

@@ -23,6 +23,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.broker.api.app.AppConsumer;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
+import com.dianping.cat.broker.api.log.AppLogManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
@@ -46,15 +47,22 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	@Inject
 	private UrlParser m_parser;
 
+	@Inject
+	private AppLogManager m_logManager;
+
 	private Logger m_logger;
 
-	private volatile int m_error;
+	private volatile int m_analyzerError;
+
+	private volatile int m_logError;
 
 	public static final String TOO_LONG = "toolongurl.bin";
 
 	private static final String VERSION_TWO = "2";
 
 	private static final String VERSION_THREE = "3";
+
+	private static final int LONG = 30 * 1000;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -95,7 +103,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 				int responseTime = appData.getResponseTime();
 
-				if (responseTime < 60 * 1000 && responseTime >= 0) {
+				if (responseTime < LONG && responseTime >= 0) {
 					offerQueue(appData);
 
 					Cat.logEvent("Command", formatCommand, Event.SUCCESS, null);
@@ -110,9 +118,23 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				} else {
 					Cat.logEvent("Batch.ResponseTimeError", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
 				}
+				logAppInfo(appData);
 			}
 		} else {
 			Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
+		}
+	}
+
+	private void logAppInfo(AppDataProto appData) {
+		boolean success = m_logManager.offer(appData);
+
+		if (!success) {
+			m_logError++;
+
+			if (m_logError % 1000 == 0) {
+				Cat.logEvent("Discard", "Log", Event.SUCCESS, null);
+				m_logger.error("Error when offer appData to queue , discard number " + m_logError);
+			}
 		}
 	}
 
@@ -152,11 +174,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		boolean success = m_appDataConsumer.enqueue(appData);
 
 		if (!success) {
-			m_error++;
+			m_analyzerError++;
 
-			if (m_error % 1000 == 0) {
+			if (m_analyzerError % 1000 == 0) {
 				Cat.logEvent("Discard", "Batch", Event.SUCCESS, null);
-				m_logger.error("Error when offer appData to queue , discard number " + m_error);
+				m_logger.error("Error when offer appData to queue , discard number " + m_analyzerError);
 			}
 		}
 	}

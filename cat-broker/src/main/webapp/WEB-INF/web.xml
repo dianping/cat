@@ -23,7 +23,7 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
-	
+
 	<filter-mapping>
 		<filter-name>cat-filter</filter-name>
 		<url-pattern>/api/*</url-pattern>

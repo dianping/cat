@@ -12,15 +12,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.unidal.helper.Files;
 
-import com.dianping.cat.broker.api.log.LogManager;
+import com.dianping.cat.broker.api.log.ErrorLogManager;
 
 public class LogServlet implements Servlet {
 
-	private LogManager m_instance;
+	private ErrorLogManager m_instance;
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		m_instance = LogManager.getInstance();
+		m_instance = ErrorLogManager.getInstance();
 	}
 
 	public ServletConfig getServletConfig() {
