@@ -26,7 +26,38 @@ public class AppDataProto extends ProtoData {
 
 	private int m_responseTime;
 
-	public AppDataProto() {
+	private String m_ip;
+
+	private String m_dpid;
+
+	private String m_cityStr;
+
+	private String m_operatorStr;
+	
+	private String m_commandStr;
+	
+	public String getCommandStr() {
+		return m_commandStr;
+	}
+
+	public void setCommandStr(String commandStr) {
+		m_commandStr = commandStr;
+	}
+
+	public String getCityStr() {
+		return m_cityStr;
+	}
+
+	public void setCityStr(String cityStr) {
+		m_cityStr = cityStr;
+	}
+	
+	public String getOperatorStr() {
+		return m_operatorStr;
+	}
+
+	public void setOperatorStr(String operatorStr) {
+		m_operatorStr = operatorStr;
 	}
 
 	public AppDataProto addCount(int count) {
@@ -67,6 +98,14 @@ public class AppDataProto extends ProtoData {
 
 	public int getCount() {
 		return m_count;
+	}
+
+	public String getDpid() {
+		return m_dpid;
+	}
+
+	public String getIp() {
+		return m_ip;
 	}
 
 	public int getNetwork() {
@@ -123,6 +162,16 @@ public class AppDataProto extends ProtoData {
 
 	public void setCount(int count) {
 		m_count = count;
+	}
+
+	public AppDataProto setDpid(String dpid) {
+		m_dpid = dpid;
+		return this;
+	}
+
+	public AppDataProto setIp(String ip) {
+		m_ip = ip;
+		return this;
 	}
 
 	public AppDataProto setNetwork(int network) {

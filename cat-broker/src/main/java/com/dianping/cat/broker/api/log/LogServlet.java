@@ -19,12 +19,21 @@ public class LogServlet implements Servlet {
 	private ErrorLogManager m_instance;
 
 	@Override
-	public void init(ServletConfig config) throws ServletException {
-		m_instance = ErrorLogManager.getInstance();
+	public void destroy() {
 	}
 
 	public ServletConfig getServletConfig() {
 		return null;
+	}
+
+	@Override
+	public String getServletInfo() {
+		return "log-error-data";
+	}
+
+	@Override
+	public void init(ServletConfig config) throws ServletException {
+		m_instance = ErrorLogManager.getInstance();
 	}
 
 	@Override
@@ -34,15 +43,6 @@ public class LogServlet implements Servlet {
 		byte[] data = Files.forIO().readFrom(in);
 
 		m_instance.offer(data);
-	}
-
-	@Override
-	public String getServletInfo() {
-		return "log-error-data";
-	}
-
-	@Override
-	public void destroy() {
 	}
 
 }

@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private UrlParser m_parser;
 
 	@Inject
-	private AppLogManager m_logManager;
+	private AppLogManager m_logManager1;
 
 	private Logger m_logger;
 
@@ -118,23 +118,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				} else {
 					Cat.logEvent("Batch.ResponseTimeError", formatCommand, Event.SUCCESS, String.valueOf(responseTime));
 				}
-				logAppInfo(appData);
 			}
 		} else {
 			Cat.logEvent("UnknownCommand", urlBack, Event.SUCCESS, items[4]);
-		}
-	}
-
-	private void logAppInfo(AppDataProto appData) {
-		boolean success = m_logManager.offer(appData);
-
-		if (!success) {
-			m_logError++;
-
-			if (m_logError % 1000 == 0) {
-				Cat.logEvent("Discard", "Log", Event.SUCCESS, null);
-				m_logger.error("Error when offer appData to queue , discard number " + m_logError);
-			}
 		}
 	}
 
@@ -167,6 +153,59 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			response.getWriter().write("OK");
 		} else {
 			response.getWriter().write("ERROR");
+		}
+
+		logData(payload, userIp);
+	}
+
+	private void logData(Payload payload, String userIp) {
+		String dpid = payload.getDpid();
+		String content = payload.getContent();
+		String version = payload.getVersion();
+
+		if (VERSION_THREE.equals(version) && StringUtils.isNotEmpty(content)) {
+			String[] records = content.split("\n");
+
+			for (String record : records) {
+				try {
+					if (StringUtils.isNotEmpty(record)) {
+						String[] items = record.split("\t");
+						AppDataProto appData = new AppDataProto();
+						IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
+
+						appData.setTimestamp(Long.parseLong(items[0]));
+						appData.setNetwork(Integer.parseInt(items[1]));
+						appData.setVersion(Integer.parseInt(items[2]));
+						appData.setConnectType(Integer.parseInt(items[3]));
+						appData.setCode(Integer.parseInt(items[5]));
+						appData.setPlatform(Integer.parseInt(items[6]));
+						appData.setRequestByte(Integer.parseInt(items[7]));
+						appData.setResponseByte(Integer.parseInt(items[8]));
+						appData.setResponseTime(Integer.parseInt(items[9]));
+						appData.setCommandStr(items[4]);
+						appData.setDpid(dpid);
+
+						if (ipInfo != null) {
+							appData.setCityStr(ipInfo.getProvince());
+							appData.setOperatorStr(ipInfo.getChannel());
+						}
+						appData.setCount(1);
+
+						boolean success = m_logManager1.offer(appData);
+
+						if (!success) {
+							m_logError++;
+
+							if (m_logError % 1000 == 0) {
+								Cat.logEvent("Discard", "Log", Event.SUCCESS, null);
+								m_logger.error("Error when offer appData to queue , discard number " + m_analyzerError);
+							}
+						}
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
 		}
 	}
 

@@ -108,6 +108,11 @@
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.4.3</version>
 		</dependency>
+		<dependency>
+			<groupId>com.dianping.data.warehouse</groupId>
+			<artifactId>dp-log</artifactId>
+			<version>1.0.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

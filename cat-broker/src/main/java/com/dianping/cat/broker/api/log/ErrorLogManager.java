@@ -87,6 +87,70 @@ public class ErrorLogManager {
 		}
 	}
 
+	private class LogPruner implements Task {
+
+		private final static long DURATION = TimeHelper.ONE_DAY;
+
+		@Override
+		public String getName() {
+			return "log-pruner";
+		}
+
+		public Date queryPeriod(int months) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			cal.add(Calendar.MONTH, months);
+			return cal.getTime();
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				long current = System.currentTimeMillis();
+				Date period = queryPeriod(-1);
+				String dayStr = m_sdf.format(TimeHelper.getCurrentDay());
+				Transaction t = Cat.newTransaction("LogPrune", dayStr);
+
+				try {
+					File dir = new File(LOG_BASE_PATH);
+					File[] files = dir.listFiles();
+
+					for (File file : files) {
+						Date date = m_sdf.parse(file.getName());
+
+						if (date.before(period)) {
+							file.delete();
+						}
+					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					t.setStatus(e);
+				} finally {
+					t.complete();
+				}
+
+				long duration = System.currentTimeMillis() - current;
+
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+	
 	private class Writer implements Task {
 
 		private LinkedHashMap<String, FileOutputStream> m_outs = new LinkedHashMap<String, FileOutputStream>();
@@ -160,70 +224,6 @@ public class ErrorLogManager {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
-		}
-	}
-	
-	private class LogPruner implements Task {
-
-		private final static long DURATION = TimeHelper.ONE_DAY;
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				long current = System.currentTimeMillis();
-				Date period = queryPeriod(-1);
-				String dayStr = m_sdf.format(TimeHelper.getCurrentDay());
-				Transaction t = Cat.newTransaction("LogPrune", dayStr);
-
-				try {
-					File dir = new File(LOG_BASE_PATH);
-					File[] files = dir.listFiles();
-
-					for (File file : files) {
-						Date date = m_sdf.parse(file.getName());
-
-						if (date.before(period)) {
-							file.delete();
-						}
-					}
-					t.setStatus(Transaction.SUCCESS);
-				} catch (Exception e) {
-					t.setStatus(e);
-				} finally {
-					t.complete();
-				}
-
-				long duration = System.currentTimeMillis() - current;
-
-				try {
-					if (duration < DURATION) {
-						Thread.sleep(DURATION - duration);
-					}
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		public Date queryPeriod(int months) {
-			Calendar cal = Calendar.getInstance();
-
-			cal.set(Calendar.HOUR_OF_DAY, 0);
-			cal.set(Calendar.MINUTE, 0);
-			cal.set(Calendar.MILLISECOND, 0);
-			cal.add(Calendar.MONTH, months);
-			return cal.getTime();
-		}
-
-		@Override
-		public String getName() {
-			return "log-pruner";
-		}
-
-		@Override
-		public void shutdown() {
 		}
 	}
 
