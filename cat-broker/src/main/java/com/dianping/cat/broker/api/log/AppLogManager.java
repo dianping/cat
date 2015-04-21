@@ -18,6 +18,7 @@ import com.dianping.data.warehouse.IMarinLog;
 import com.dianping.data.warehouse.LogTypeEnum;
 import com.dianping.data.warehouse.MarinLog;
 import com.dianping.data.warehouse.MarinPrinter;
+import com.site.lookup.util.StringUtils;
 
 public class AppLogManager implements Initializable {
 
@@ -59,7 +60,12 @@ public class AppLogManager implements Initializable {
 						IMarinLog log = new MarinLog();
 
 						log.putLong("event_id", UUID.randomUUID().getMostSignificantBits());
-						log.putInt("dp_user_id", Integer.parseInt(proto.getDpid()));
+						String dpid = proto.getDpid();
+
+						if (StringUtils.isNotEmpty(dpid)) {
+							log.putInt("dp_user_id", Integer.parseInt(dpid));
+						}
+						
 						log.putString("user_ip", proto.getIp());
 						log.putString("request_start_time", m_sdf.format(new Date(proto.getTimestamp())));
 
