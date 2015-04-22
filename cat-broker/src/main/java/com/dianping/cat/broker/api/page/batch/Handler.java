@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private UrlParser m_parser;
 
 	@Inject
-	private AppLogManager m_logManager1;
+	private AppLogManager m_logManager;
 
 	private Logger m_logger;
 
@@ -194,7 +194,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							}
 							appData.setCount(1);
 
-							boolean success = m_logManager1.offer(appData);
+							boolean success = m_logManager.offer(appData);
 
 							if (!success) {
 								m_logError++;

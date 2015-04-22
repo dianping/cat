@@ -93,7 +93,7 @@ public class ErrorLogManager {
 
 		@Override
 		public String getName() {
-			return "log-pruner";
+			return "error-log-pruner";
 		}
 
 		public Date queryPeriod(int months) {
@@ -114,7 +114,7 @@ public class ErrorLogManager {
 				long current = System.currentTimeMillis();
 				Date period = queryPeriod(-1);
 				String dayStr = m_sdf.format(TimeHelper.getCurrentDay());
-				Transaction t = Cat.newTransaction("LogPrune", dayStr);
+				Transaction t = Cat.newTransaction("ErrorLogPrune", dayStr);
 
 				try {
 					File dir = new File(LOG_BASE_PATH);
