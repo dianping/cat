@@ -121,10 +121,14 @@ public class ErrorLogManager {
 					File[] files = dir.listFiles();
 
 					for (File file : files) {
-						Date date = m_sdf.parse(file.getName());
+						try {
+							Date date = m_sdf.parse(file.getName());
 
-						if (date.before(period)) {
-							file.delete();
+							if (date.before(period)) {
+								file.delete();
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 					}
 					t.setStatus(Transaction.SUCCESS);
@@ -150,7 +154,7 @@ public class ErrorLogManager {
 		public void shutdown() {
 		}
 	}
-	
+
 	private class Writer implements Task {
 
 		private LinkedHashMap<String, FileOutputStream> m_outs = new LinkedHashMap<String, FileOutputStream>();

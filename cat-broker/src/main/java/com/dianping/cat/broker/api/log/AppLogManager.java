@@ -150,16 +150,20 @@ public class AppLogManager implements Initializable {
 					File[] files = dir.listFiles();
 
 					for (File file : files) {
-						String name = file.getName();
-						String[] fields = name.split(FILENAME + ".");
+						try {
+							String name = file.getName();
+							String[] fields = name.split(FILENAME + ".");
 
-						if (fields.length > 1) {
-							String dateStr = fields[1];
-							Date date = m_sdf.parse(dateStr);
+							if (fields.length > 1) {
+								String dateStr = fields[1];
+								Date date = m_sdf.parse(dateStr);
 
-							if (date.before(period)) {
-								file.delete();
+								if (date.before(period)) {
+									file.delete();
+								}
 							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 					}
 					t.setStatus(Transaction.SUCCESS);
