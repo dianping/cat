@@ -289,7 +289,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		m_crashLogDomains.add("MerchantIOSCrashLog");
 		m_crashLogDomains.add("ApolloAndroidCrashLog");
 		m_crashLogDomains.add("ApolloIOSCrashLog");
-		m_crashLogDomains.add("televisionwallcr");
+		m_crashLogDomains.add("TVAndroidCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {
