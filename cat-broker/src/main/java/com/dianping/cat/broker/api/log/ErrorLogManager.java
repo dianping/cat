@@ -93,7 +93,7 @@ public class ErrorLogManager {
 
 		@Override
 		public String getName() {
-			return "log-pruner";
+			return "error-log-pruner";
 		}
 
 		public Date queryPeriod(int months) {
@@ -114,17 +114,21 @@ public class ErrorLogManager {
 				long current = System.currentTimeMillis();
 				Date period = queryPeriod(-1);
 				String dayStr = m_sdf.format(TimeHelper.getCurrentDay());
-				Transaction t = Cat.newTransaction("LogPrune", dayStr);
+				Transaction t = Cat.newTransaction("ErrorLogPrune", dayStr);
 
 				try {
 					File dir = new File(LOG_BASE_PATH);
 					File[] files = dir.listFiles();
 
 					for (File file : files) {
-						Date date = m_sdf.parse(file.getName());
+						try {
+							Date date = m_sdf.parse(file.getName());
 
-						if (date.before(period)) {
-							file.delete();
+							if (date.before(period)) {
+								file.delete();
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 					}
 					t.setStatus(Transaction.SUCCESS);
@@ -150,7 +154,7 @@ public class ErrorLogManager {
 		public void shutdown() {
 		}
 	}
-	
+
 	private class Writer implements Task {
 
 		private LinkedHashMap<String, FileOutputStream> m_outs = new LinkedHashMap<String, FileOutputStream>();
