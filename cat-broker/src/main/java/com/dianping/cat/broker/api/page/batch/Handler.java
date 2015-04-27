@@ -20,6 +20,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.broker.api.BrokerIpService;
 import com.dianping.cat.broker.api.app.AppConsumer;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
@@ -27,8 +28,7 @@ import com.dianping.cat.broker.api.log.AppLogManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.iphub.IpInfo;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private AppConsumer m_appDataConsumer;
 
 	@Inject
-	private IpService m_ipService;
+	private BrokerIpService m_ipService;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -162,6 +162,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String dpid = payload.getDpid();
 		String content = payload.getContent();
 		String version = payload.getVersion();
+		IpInfo ipInfo = m_ipService.findByIp(userIp);
 
 		if (VERSION_THREE.equals(version) && StringUtils.isNotEmpty(content)) {
 			String[] records = content.split("\n");
@@ -173,7 +174,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 						if (items.length >= 10) {
 							AppDataProto appData = new AppDataProto();
-							IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
 
 							appData.setTimestamp(Long.parseLong(items[0]));
 							appData.setNetwork(Integer.parseInt(items[1]));
@@ -189,8 +189,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setIp(userIp);
 
 							if (ipInfo != null) {
-								appData.setCityStr(ipInfo.getProvince());
-								appData.setOperatorStr(ipInfo.getChannel());
+								appData.setCityStr(ipInfo.getSourceProvinceName());
+								appData.setOperatorStr(ipInfo.getCarrierName());
 							}
 							appData.setCount(1);
 
@@ -372,11 +372,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
-		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
+		IpInfo ipInfo = m_ipService.findByIp(userIp);
 
 		if (ipInfo != null) {
-			String province = ipInfo.getProvince();
-			String operatorStr = ipInfo.getChannel();
+			String province = ipInfo.getSourceProvinceName();
+			String operatorStr = ipInfo.getCarrierName();
 			Integer cityId = m_appConfigManager.getCities().get(province);
 			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
 

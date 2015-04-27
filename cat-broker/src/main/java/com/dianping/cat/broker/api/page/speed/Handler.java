@@ -18,6 +18,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.broker.api.BrokerIpService;
 import com.dianping.cat.broker.api.app.AppConsumer;
 import com.dianping.cat.broker.api.app.proto.AppSpeedProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
@@ -25,8 +26,7 @@ import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.iphub.IpInfo;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
@@ -37,7 +37,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private AppConsumer m_appDataConsumer;
 
 	@Inject
-	private IpService m_ipService;
+	private BrokerIpService m_ipService;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -188,11 +188,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	}
 
 	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
-		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
+		IpInfo ipInfo = m_ipService.findByIp(userIp);
 
 		if (ipInfo != null) {
-			String province = ipInfo.getProvince();
-			String operatorStr = ipInfo.getChannel();
+			String province = ipInfo.getSourceProvinceName();
+			String operatorStr = ipInfo.getCarrierName();
 			Integer cityId = m_appConfigManager.getCities().get(province);
 			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
 

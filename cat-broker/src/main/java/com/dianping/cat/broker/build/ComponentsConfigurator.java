@@ -11,6 +11,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
+import com.dianping.cat.broker.api.BrokerIpService;
 import com.dianping.cat.broker.api.app.service.AppService;
 import com.dianping.cat.broker.api.app.service.impl.AppConnectionService;
 import com.dianping.cat.broker.api.app.service.impl.AppDataService;
@@ -33,8 +34,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(BrokerIpService.class).req(IpService.class));
+
 		all.add(C(RequestUtils.class));
-		all.add(C(MonitorManager.class).req(UrlPatternConfigManager.class, IpService.class));
+		all.add(C(MonitorManager.class).req(UrlPatternConfigManager.class, BrokerIpService.class));
 
 		all.add(C(AppService.class, AppDataService.ID, AppDataService.class).req(AppCommandDataDao.class));
 		all.add(C(AppService.class, AppConnectionService.ID, AppConnectionService.class).req(AppConnectionDataDao.class));

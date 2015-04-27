@@ -1,6 +1,15 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.broker.api.BrokerIpService</role>
+			<implementation>com.dianping.cat.broker.api.BrokerIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.broker.api.page.RequestUtils</role>
 			<implementation>com.dianping.cat.broker.api.page.RequestUtils</implementation>
 		</component>
@@ -12,7 +21,7 @@
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
+					<role>com.dianping.cat.broker.api.BrokerIpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -154,10 +163,19 @@
 			<implementation>com.dianping.cat.broker.api.page.MonitorManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
+					<role>com.dianping.cat.broker.api.BrokerIpService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.broker.api.BrokerIpService</role>
+			<implementation>com.dianping.cat.broker.api.BrokerIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.IpService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -201,7 +219,7 @@
 					<role>com.dianping.cat.broker.api.app.AppConsumer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
+					<role>com.dianping.cat.broker.api.BrokerIpService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -306,7 +324,7 @@
 					<role>com.dianping.cat.broker.api.app.AppConsumer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.IpService</role>
+					<role>com.dianping.cat.broker.api.BrokerIpService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
