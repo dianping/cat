@@ -17,13 +17,13 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.Constants;
+import com.dianping.cat.broker.api.BrokerIpService;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMetric;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.iphub.IpInfo;
 
 import org.unidal.lookup.util.StringUtils;
 
@@ -38,7 +38,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 	private Map<Integer, BlockingQueue<MonitorEntity>> m_queues = new LinkedHashMap<Integer, BlockingQueue<MonitorEntity>>();
 
 	@Inject
-	private IpService m_ipService;
+	private BrokerIpService m_ipService;
 
 	@Inject
 	private UrlPatternConfigManager m_patternManger;
@@ -46,8 +46,8 @@ public class MonitorManager implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	private void buildMessage(MonitorEntity entity, String url, IpInfo ipInfo) {
-		String city = ipInfo.getProvince() + "-" + ipInfo.getCity();
-		String channel = ipInfo.getChannel();
+		String city = ipInfo.getSourceProvinceName() + "-" + ipInfo.getSourceCityName();
+		String channel = ipInfo.getCarrierName();
 		String httpStatus = entity.getHttpStatus();
 		String errorCode = entity.getErrorCode();
 		long timestamp = entity.getTimestamp();
@@ -149,7 +149,7 @@ public class MonitorManager implements Initializable, LogEnabled {
 		if (url != null) {
 			Transaction t = Cat.newTransaction("Monitor", url);
 			String ip = entity.getIp();
-			IpInfo ipInfo = m_ipService.findIpInfoByString(ip);
+			IpInfo ipInfo = m_ipService.findByIp(ip);
 
 			try {
 				if (ipInfo != null) {

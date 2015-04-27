@@ -20,6 +20,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.broker.api.BrokerIpService;
 import com.dianping.cat.broker.api.app.AppConsumer;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
 import com.dianping.cat.broker.api.app.proto.ProtoData;
@@ -27,8 +28,7 @@ import com.dianping.cat.broker.api.log.AppLogManager;
 import com.dianping.cat.broker.api.page.RequestUtils;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.IpService.IpInfo;
+import com.dianping.iphub.IpInfo;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private AppConsumer m_appDataConsumer;
 
 	@Inject
-	private IpService m_ipService;
+	private BrokerIpService m_ipService;
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private UrlParser m_parser;
 
 	@Inject
-	private AppLogManager m_logManager1;
+	private AppLogManager m_logManager;
 
 	private Logger m_logger;
 
@@ -140,9 +140,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		String userIp = m_util.getRemoteIp(request);
 		String version = payload.getVersion();
 		boolean success = true;
+		IpInfo ipInfo = m_ipService.findByIp(userIp);
 
 		if (userIp != null) {
-			success = processVersions(payload, request, userIp, version);
+			success = processVersions(payload, request, ipInfo, version);
 		} else {
 			success = false;
 			Cat.logEvent("UnknownIp", "batch", Event.SUCCESS, null);
@@ -155,10 +156,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			response.getWriter().write("ERROR");
 		}
 
-		logData(payload, userIp);
+		logData(payload, userIp, ipInfo);
 	}
 
-	private void logData(Payload payload, String userIp) {
+	private void logData(Payload payload, String userIp, IpInfo ipInfo) {
 		String dpid = payload.getDpid();
 		String content = payload.getContent();
 		String version = payload.getVersion();
@@ -173,7 +174,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 						if (items.length >= 10) {
 							AppDataProto appData = new AppDataProto();
-							IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
 
 							appData.setTimestamp(Long.parseLong(items[0]));
 							appData.setNetwork(Integer.parseInt(items[1]));
@@ -189,12 +189,12 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							appData.setIp(userIp);
 
 							if (ipInfo != null) {
-								appData.setCityStr(ipInfo.getProvince());
-								appData.setOperatorStr(ipInfo.getChannel());
+								appData.setCityStr(ipInfo.getSourceProvinceName());
+								appData.setOperatorStr(ipInfo.getCarrierName());
 							}
 							appData.setCount(1);
 
-							boolean success = m_logManager1.offer(appData);
+							boolean success = m_logManager.offer(appData);
 
 							if (!success) {
 								m_logError++;
@@ -316,13 +316,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private boolean processVersions(Payload payload, HttpServletRequest request, String userIp, String version) {
+	private boolean processVersions(Payload payload, HttpServletRequest request, IpInfo ipInfo, String version) {
 		boolean success = false;
 		Cat.logEvent("Version", "batch:" + version, Event.SUCCESS, version);
 		String content = parseContent(payload);
 
 		if (VERSION_TWO.equals(version)) {
-			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, ipInfo);
 
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
@@ -332,7 +332,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				success = true;
 			}
 		} else if (VERSION_THREE.equals(version)) {
-			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, userIp);
+			Pair<Integer, Integer> infoPair = queryNetworkInfo(request, ipInfo);
 
 			if (infoPair != null) {
 				int cityId = infoPair.getKey();
@@ -371,12 +371,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		return ids;
 	}
 
-	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, String userIp) {
-		IpInfo ipInfo = m_ipService.findIpInfoByString(userIp);
-
+	private Pair<Integer, Integer> queryNetworkInfo(HttpServletRequest request, IpInfo ipInfo) {
 		if (ipInfo != null) {
-			String province = ipInfo.getProvince();
-			String operatorStr = ipInfo.getChannel();
+			String province = ipInfo.getSourceProvinceName();
+			String operatorStr = ipInfo.getCarrierName();
 			Integer cityId = m_appConfigManager.getCities().get(province);
 			Integer operatorId = m_appConfigManager.getOperators().get(operatorStr);
 

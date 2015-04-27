@@ -1,6 +1,8 @@
 package com.dianping.cat.broker.api.log;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
@@ -13,7 +15,10 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.broker.api.app.proto.AppDataProto;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Transaction;
 import com.dianping.data.warehouse.IMarinLog;
 import com.dianping.data.warehouse.LogTypeEnum;
 import com.dianping.data.warehouse.MarinLog;
@@ -26,15 +31,18 @@ public class AppLogManager implements Initializable {
 
 	private MarinPrinter m_marinPrinter;
 
+	private final static String FILE_NAME_PREFIX = Constants.APP;
+
 	@Override
 	public void initialize() throws InitializationException {
 		m_marinPrinter = new MarinPrinter();
-		m_marinPrinter.setFileName("app");
-		m_marinPrinter.setBusiness("broker-service");
+		m_marinPrinter.setFileName(FILE_NAME_PREFIX);
+		m_marinPrinter.setBusiness(Constants.BROKER_SERVICE);
 		m_marinPrinter.setType(LogTypeEnum.FILE);
 		m_marinPrinter.init();
 
 		Threads.forGroup("cat").start(new StoreManager());
+		Threads.forGroup("cat").start(new LogPruner());
 	}
 
 	public boolean offer(AppDataProto proto) {
@@ -100,5 +108,85 @@ public class AppLogManager implements Initializable {
 		public void shutdown() {
 		}
 
+	}
+
+	private class LogPruner implements Task {
+
+		private final static long DURATION = TimeHelper.ONE_HOUR;
+
+		private final static String LOG_BASE_PATH = "/data/applogs/broker-service/logs/";
+
+		private final static String FILENAME = FILE_NAME_PREFIX + ".log";
+
+		private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd.HH");
+
+		@Override
+		public String getName() {
+			return "app-log-pruner";
+		}
+
+		public Date queryPeriod(int days) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.set(Calendar.HOUR_OF_DAY, days);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			cal.add(Calendar.MONTH, 0);
+			return cal.getTime();
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				long current = System.currentTimeMillis();
+				Date period = queryPeriod(-2);
+				String hourStr = m_sdf.format(TimeHelper.getCurrentHour());
+				Transaction t = Cat.newTransaction("AppLogPrune", hourStr);
+
+				try {
+					File dir = new File(LOG_BASE_PATH);
+					File[] files = dir.listFiles();
+
+					for (File file : files) {
+						try {
+							String name = file.getName();
+							String[] fields = name.split(FILENAME + ".");
+
+							if (fields.length > 1) {
+								String dateStr = fields[1];
+								Date date = m_sdf.parse(dateStr);
+
+								if (date.before(period)) {
+									file.delete();
+								}
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
+					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					t.setStatus(e);
+				} finally {
+					t.complete();
+				}
+
+				long duration = System.currentTimeMillis() - current;
+
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 }

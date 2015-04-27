@@ -71,7 +71,6 @@
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
@@ -112,6 +111,36 @@
 			<groupId>com.dianping.data.warehouse</groupId>
 			<artifactId>dp-log</artifactId>
 			<version>1.0.6</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping</groupId>
+			<artifactId>iphub-api</artifactId>
+			<version>1.1.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.dpsf</groupId>
+			<artifactId>dpsf-net</artifactId>
+			<version>2.4.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.lion</groupId>
+			<artifactId>lion-client</artifactId>
+			<version>0.4.5</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -179,6 +208,7 @@
 		</plugins>
 	</build>
 	<properties>
+		<spring.version>4.0.2.RELEASE</spring.version>
 		<packaging>war</packaging>
 		<env>alpha</env>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
