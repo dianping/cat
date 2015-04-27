@@ -141,7 +141,7 @@ public class AppLogManager implements Initializable {
 
 			while (active) {
 				long current = System.currentTimeMillis();
-				Date period = queryPeriod(-1);
+				Date period = queryPeriod(-2);
 				String hourStr = m_sdf.format(TimeHelper.getCurrentHour());
 				Transaction t = Cat.newTransaction("AppLogPrune", hourStr);
 
