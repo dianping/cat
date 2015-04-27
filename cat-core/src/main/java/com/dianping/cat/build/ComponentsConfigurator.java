@@ -25,6 +25,7 @@ import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.url.DefaultUrlPatternHandler;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.config.url.UrlPatternHandler;
@@ -53,10 +54,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
 
+		all.add(C(ServerFilterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(C(ServerConfigManager.class).req(ServerFilterConfigManager.class));
 		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 		all.add(C(IpService.class));
 		all.add(C(TaskManager.class).req(TaskDao.class));
-		all.add(C(ServerConfigManager.class));
 		all.add(C(ServerStatisticManager.class));
 		all.add(C(DomainValidator.class));
 		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));

@@ -15,6 +15,7 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
@@ -40,6 +41,9 @@ public class CrashLogProcessor {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private String APP_VERSIONS = "appVersions";
 
@@ -135,6 +139,7 @@ public class CrashLogProcessor {
 		model.setFieldsInfo(buildFeildsInfo(report));
 		model.setProblemStatistics(problemStatistics);
 		model.setProblemReport(report);
+		model.setCrashLogDomains(m_serverFilterConfigManager.getCrashLogDomains());
 	}
 
 	private String queryDomain(Payload payload) {

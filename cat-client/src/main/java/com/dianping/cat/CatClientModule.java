@@ -1,6 +1,5 @@
 package com.dianping.cat;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.locks.LockSupport;
 
@@ -29,10 +28,6 @@ public class CatClientModule extends AbstractModule {
 		// tracking thread start/stop
 		Threads.addListener(new CatThreadListener(ctx));
 
-		File clientConfigFile = ctx.getAttribute("cat-client-config-file");
-		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
-
-		clientConfigManager.initialize(clientConfigFile);
 
 		// warm up Cat
 		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
@@ -40,6 +35,8 @@ public class CatClientModule extends AbstractModule {
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
 
+		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
+		
 		if (clientConfigManager.isCatEnabled()) {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);

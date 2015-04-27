@@ -39,13 +39,18 @@
 		<table class="table ">
 		<tr><td width="100px;">
 				平台类型</td><td><select id="platformType" style="width: 200px;">
-					<option value='AndroidCrashLog'>Android (主App)</option>
-					<option value='iOSCrashLog'>iOS (主App)</option>
-					<option value='ApolloAndroidCrashLog'>Android (阿波罗)</option>
-					<option value='ApolloIOSCrashLog'>iOS (阿波罗)</option>
-					<option value='MerchantAndroidCrashLog'>Android (点评管家)</option>
-					<option value='MerchantIOSCrashLog'>iOS (点评管家)</option>
-					<option value='TVAndroidCrashLog'>Android(电视墙)</option>
+					<c:forEach var="item" items="${model.crashLogDomains}">
+						<option value='${item.id}'>
+						<c:choose>
+							<c:when test="${empty item.title }">
+								${item.id}
+							</c:when>
+						<c:otherwise>
+							${item.title}
+						</c:otherwise>
+						</c:choose>
+						</option>
+					</c:forEach>
 					</select>&nbsp;&nbsp;&nbsp;<input class="btn btn-primary btn-sm "
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /></td></tr>

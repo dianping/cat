@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,10 +11,9 @@ import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
@@ -31,7 +29,10 @@ import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
-public class ServerConfigManager implements Initializable, LogEnabled {
+public class ServerConfigManager implements LogEnabled {
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
@@ -39,24 +40,10 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Set<String> m_unusedTypes = new HashSet<String>();
-
-	private Set<String> m_unusedNames = new HashSet<String>();
-
-	private Set<String> m_crashLogDomains = new HashSet<String>();
-
-	private Set<String> m_invalidateDomains = new HashSet<String>();
-
 	public static final String DUMP_DIR = "dump";
 
 	public boolean discardTransaction(String type, String name) {
-		if ("Cache.web".equals(type) || "ABTest".equals(type)) {
-			return true;
-		}
-		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
-			return true;
-		}
-		return false;
+		return m_serverFilterConfigManager.discardTransaction(type, name);
 	}
 
 	@Override
@@ -107,7 +94,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Set<String> getCrashLogs() {
-		return m_crashLogDomains;
+		return m_serverFilterConfigManager.getCrashLogDomainIds();
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -251,45 +238,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Set<String> getUnusedDomains() {
-		Set<String> unusedDomains = new HashSet<String>();
-
-		unusedDomains.addAll(m_invalidateDomains);
-		unusedDomains.addAll(m_crashLogDomains);
-		return unusedDomains;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_unusedTypes.add("Service");
-		m_unusedTypes.add("PigeonService");
-		m_unusedTypes.add("URL");
-		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
-		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
-		m_unusedNames.add("pigeon:HeartBeatService:null");
-		m_unusedNames.add("");
-		m_unusedNames.add("/");
-		m_unusedNames.add("/index.jsp");
-		m_unusedNames.add("/Heartbeat.html");
-		m_unusedNames.add("/heartbeat.html");
-		m_unusedNames.add("/heartbeat.jsp");
-		m_unusedNames.add("/inspect/healthcheck");
-		m_unusedNames.add("/MonitorServlet");
-		m_unusedNames.add("/monitorServlet?client=f5");
-
-		m_invalidateDomains.add("PhoenixAgent");
-		m_invalidateDomains.add("cat-agent");
-		m_invalidateDomains.add(Constants.ALL);
-		m_invalidateDomains.add(Constants.FRONT_END);
-		m_invalidateDomains.add("paas");
-		m_invalidateDomains.add("SMS-RECEIVER");
-
-		m_crashLogDomains.add("AndroidCrashLog");
-		m_crashLogDomains.add("iOSCrashLog");
-		m_crashLogDomains.add("MerchantAndroidCrashLog");
-		m_crashLogDomains.add("MerchantIOSCrashLog");
-		m_crashLogDomains.add("ApolloAndroidCrashLog");
-		m_crashLogDomains.add("ApolloIOSCrashLog");
-		m_crashLogDomains.add("TVAndroidCrashLog");
+		return m_serverFilterConfigManager.getUnusedDomains();
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -343,7 +292,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean isCrashLog(String domain) {
-		return m_crashLogDomains.contains(domain);
+		return m_serverFilterConfigManager.isCrashLog(domain);
 	}
 
 	public boolean isHdfsOn() {
@@ -414,8 +363,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean validateDomain(String domain) {
-		return !m_invalidateDomains.contains(domain) && !m_crashLogDomains.contains(domain)
-		      && StringUtils.isNotEmpty(domain);
+		return m_serverFilterConfigManager.validateDomain(domain);
 	}
 
 	public boolean validateIp(String str) {

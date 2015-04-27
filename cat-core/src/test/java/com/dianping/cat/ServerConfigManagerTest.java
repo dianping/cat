@@ -18,7 +18,6 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		File file = new File(path);
 
 		manager.initialize(file);
-		manager.initialize();
 		String id = "logview";
 		Assert.assertEquals(true, manager.getServerConfig() != null);
 		Assert.assertEquals("cat", manager.getConsoleDefaultDomain());
@@ -37,7 +36,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(false, manager.isLocalMode());
 		Assert.assertEquals(true, manager.isRpcServer("PigeonService"));
 		Assert.assertEquals(false, manager.validateDomain("All"));
-		
+
 		Assert.assertEquals(true, manager.discardTransaction("Service", "piegonService:heartTaskService:heartBeat"));
 
 		manager.initialize(null);
