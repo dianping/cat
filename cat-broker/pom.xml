@@ -71,7 +71,6 @@
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jetty</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.unidal.framework</groupId>
