@@ -16,22 +16,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.content.ContentFetcher</role>
-			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-			<implementation>com.dianping.cat.config.server.ServerFilterConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.config.server.ServerConfigManager</role>
 			<implementation>com.dianping.cat.config.server.ServerConfigManager</implementation>
 			<requirements>
@@ -72,6 +56,22 @@
 		<component>
 			<role>com.dianping.cat.report.DomainValidator</role>
 			<implementation>com.dianping.cat.report.DomainValidator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.content.ContentFetcher</role>
+			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+			<implementation>com.dianping.cat.config.server.ServerFilterConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.PathBuilder</role>
@@ -191,6 +191,13 @@
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-core</role-hint>
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<configuration>
+				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>

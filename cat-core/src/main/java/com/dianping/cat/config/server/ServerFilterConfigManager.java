@@ -25,7 +25,7 @@ public class ServerFilterConfigManager implements Initializable {
 	protected ConfigDao m_configDao;
 
 	@Inject
-	private ContentFetcher m_fetcher;
+	protected ContentFetcher m_fetcher;
 
 	private ServerFilterConfig m_config;
 

@@ -27,7 +27,6 @@ import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
-import com.dianping.cat.report.service.ServerConfigManagerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
@@ -142,8 +141,6 @@ SystemReportStatisticsTest.class,
 MetricIdAndRuleMappingTest.class,
 
 ExtractDataTest.class,
-
-ServerConfigManagerTest.class,
 
 JudgeTimeTest.class })
 public class AllTests {

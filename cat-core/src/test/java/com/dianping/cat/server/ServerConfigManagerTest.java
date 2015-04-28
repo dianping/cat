@@ -1,4 +1,4 @@
-package com.dianping.cat.report.service;
+package com.dianping.cat.server;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		String path = System.getProperty("user.dir") + "/src/test/resources/com/dianping/cat/report/service/server.xml";
+		String path = System.getProperty("user.dir") + "/src/test/resources/com/dianping/cat/server.xml";
 		File file = new File(path);
 
 		manager.initialize(file);
@@ -35,9 +35,6 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(false, manager.isJobMachine());
 		Assert.assertEquals(false, manager.isLocalMode());
 		Assert.assertEquals(true, manager.isRpcServer("PigeonService"));
-		Assert.assertEquals(false, manager.validateDomain("All"));
-
-		Assert.assertEquals(true, manager.discardTransaction("Service", "piegonService:heartTaskService:heartBeat"));
 
 		manager.initialize(null);
 

@@ -9,6 +9,7 @@ import com.dianping.cat.analysis.DefaultMessageAnalyzerManagerTest;
 import com.dianping.cat.analysis.PeriodTaskTest;
 import com.dianping.cat.message.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.codec.WaterfallMessageCodecTest;
+import com.dianping.cat.server.ServerConfigManagerTest;
 import com.dianping.cat.service.DefaultReportManagerTest;
 import com.dianping.cat.service.ModelPeriodTest;
 import com.dianping.cat.service.ModelRequestTest;
@@ -42,6 +43,8 @@ ModelPeriodTest.class,
 ModelResponseTest.class,
 
 PeriodTaskTest.class,
+
+ServerConfigManagerTest.class,
 
 AbstractMessageAnalyzerTest.class,
 

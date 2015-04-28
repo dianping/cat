@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
 import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
@@ -236,7 +237,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = TopAnalyzer.ID;
 
-		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, ID, TopAnalyzer.class).is(PER_LOOKUP)
+		      //
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class)
 		      .config(E("errorType").value("Error,RuntimeException,Exception")));
 		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
@@ -278,6 +280,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, StorageDelegate.class).req(TaskManager.class, ServerConfigManager.class,
 		      StorageReportUpdater.class));
+
+		// database
+		all.add(C(JdbcDataSourceDescriptorManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		return all;
 	}
