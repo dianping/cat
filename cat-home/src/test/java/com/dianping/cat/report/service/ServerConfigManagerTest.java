@@ -1,4 +1,4 @@
-package com.dianping.cat;
+package com.dianping.cat.report.service;
 
 import java.io.File;
 
@@ -14,7 +14,7 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		String path = System.getProperty("user.dir") + "/src/test/resources/com/dianping/cat/server.xml";
+		String path = System.getProperty("user.dir") + "/src/test/resources/com/dianping/cat/report/service/server.xml";
 		File file = new File(path);
 
 		manager.initialize(file);

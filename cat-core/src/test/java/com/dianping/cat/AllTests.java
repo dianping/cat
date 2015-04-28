@@ -43,8 +43,6 @@ ModelResponseTest.class,
 
 PeriodTaskTest.class,
 
-ServerConfigManagerTest.class,
-
 AbstractMessageAnalyzerTest.class,
 
 DefaultMessageAnalyzerManagerTest.class,

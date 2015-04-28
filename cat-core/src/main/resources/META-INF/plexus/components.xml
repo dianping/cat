@@ -16,6 +16,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.content.ContentFetcher</role>
+			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 			<implementation>com.dianping.cat.config.server.ServerFilterConfigManager</implementation>
 			<requirements>
@@ -68,10 +72,6 @@
 		<component>
 			<role>com.dianping.cat.report.DomainValidator</role>
 			<implementation>com.dianping.cat.report.DomainValidator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.config.content.ContentFetcher</role>
-			<implementation>com.dianping.cat.config.content.DefaultContentFetcher</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.PathBuilder</role>
