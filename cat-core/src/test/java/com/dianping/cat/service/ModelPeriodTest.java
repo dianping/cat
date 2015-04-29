@@ -18,7 +18,6 @@ public class ModelPeriodTest {
 		Assert.assertEquals(start, period.getStartTime());
 		Assert.assertEquals(period.getStartTime() - hour, ModelPeriod.LAST.getStartTime());
 		Assert.assertEquals(true, period.isCurrent());
-		Assert.assertEquals(false, period.isFuture());
 		Assert.assertEquals(false, period.isHistorical());
 		Assert.assertEquals(false, period.isLast());
 		Assert.assertEquals(period, ModelPeriod.getByName(period.name(), period));

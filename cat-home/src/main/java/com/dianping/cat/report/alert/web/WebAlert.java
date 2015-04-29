@@ -65,35 +65,35 @@ public class WebAlert extends BaseAlert {
 			List<Condition> conditions = conditionPair.getValue();
 
 			if (minute >= maxMinute - 1) {
-				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
+				int start = minute + 1 - maxMinute;
+				int end = minute;
+				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT, start, end);
 
 				if (report != null) {
-					int start = minute + 1 - maxMinute;
-					int end = minute;
 					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
 					results.addAll(computeAlertForCondition(datas, conditions, type));
 				}
 			} else if (minute < 0) {
-				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST);
+				int start = 60 + minute + 1 - (maxMinute);
+				int end = 60 + minute;
+				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST, start, end);
 
 				if (report != null) {
-					int start = 60 + minute + 1 - (maxMinute);
-					int end = 60 + minute;
 					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
 
 					results.addAll(computeAlertForCondition(datas, conditions, type));
 				}
 			} else {
-				MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT);
-				MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST);
+				int currentStart = 0, currentEnd = minute;
+				int lastStart = 60 + 1 - (maxMinute - minute);
+				int lastEnd = 59;
+				MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT, currentStart, currentEnd);
+				MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST, lastStart, lastEnd);
 
 				if (currentReport != null && lastReport != null) {
-					int currentStart = 0, currentEnd = minute;
 					Map<String, double[]> currentValue = fetchMetricInfoData(currentStart, currentEnd, currentReport);
 
-					int lastStart = 60 + 1 - (maxMinute - minute);
-					int lastEnd = 59;
 					Map<String, double[]> lastValue = fetchMetricInfoData(lastStart, lastEnd, currentReport);
 					Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
 
@@ -166,7 +166,7 @@ public class WebAlert extends BaseAlert {
 		return results;
 	}
 
-	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period) {
+	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period, int min, int max) {
 		List<String> fields = Splitters.by(";").split(idPrefix);
 		String url = fields.get(0);
 		String city = fields.get(1);
@@ -179,6 +179,8 @@ public class WebAlert extends BaseAlert {
 		pars.put("type", Constants.TYPE_INFO);
 		pars.put("city", city);
 		pars.put("channel", channel);
+		pars.put("min", String.valueOf(min));
+		pars.put("max", String.valueOf(max));
 		request.getProperties().putAll(pars);
 
 		MetricReport report = m_service.fetchMetricReport(request);

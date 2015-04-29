@@ -31,8 +31,6 @@ public class PayloadTest {
 		long now = timestamp - timestamp % ONE_HOUR;
 
 		checkDate(payload, 0, now, ModelPeriod.CURRENT);
-		checkDate(payload, 1, now + ONE_HOUR, ModelPeriod.FUTURE);
-		checkDate(payload, 2, now + 2 * ONE_HOUR, ModelPeriod.FUTURE);
 		checkDate(payload, -1, now - ONE_HOUR, ModelPeriod.LAST);
 		checkDate(payload, -2, now - 2 * ONE_HOUR, ModelPeriod.HISTORICAL);
 

@@ -40,6 +40,12 @@ public class ApiPayload {
 	@FieldMeta("queryType")
 	private String m_queryType;
 
+	@FieldMeta("min")
+	private int m_min = -1;
+
+	@FieldMeta("max")
+	private int m_max = -1;
+
 	@FieldMeta("cdn")
 	private String m_cdn = "ALL";
 
@@ -63,12 +69,20 @@ public class ApiPayload {
 		return m_ipAddress;
 	}
 
+	public int getMax() {
+		return m_max;
+	}
+
 	public String getMessageId() {
 		return m_messageId;
 	}
 
 	public String getMetricType() {
 		return m_metricType;
+	}
+
+	public int getMin() {
+		return m_min;
 	}
 
 	public String getName() {
@@ -115,12 +129,20 @@ public class ApiPayload {
 		m_ipAddress = ipAddress;
 	}
 
+	public void setMax(int max) {
+		m_max = max;
+	}
+
 	public void setMessageId(String messageId) {
 		m_messageId = messageId;
 	}
 
 	public void setMeticType(String metricType) {
 		m_metricType = metricType;
+	}
+
+	public void setMin(int min) {
+		m_min = min;
 	}
 
 	public void setName(String name) {

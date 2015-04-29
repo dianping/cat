@@ -94,10 +94,10 @@
 		<tr><td>version</td><td>versionCode, eg. 6.8 = 680</td><td>int</td></tr>
 		<tr><td>platform</td><td>android=1 or ios=2</td><td>int</td></tr>
 		<tr><td>page</td><td>加载页面，eg. index.bin</td><td>String</td></tr>
-		<tr><td>step1-responseTime1</td><td>页面加载第1阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>step2-responseTime2</td><td>页面加载第2阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String</td></tr>
-		<tr><td>stepN-responseTimeN</td><td>页面加载第N阶段及延时，eg. 1-300</td><td>String</td></tr>
+		<tr><td>step1-responseTime1</td><td>页面加载第1阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>step2-responseTime2</td><td>页面加载第2阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
+		<tr><td>stepN-responseTimeN</td><td>页面加载第N阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
 	</table>
 	
 	<pre>
@@ -198,20 +198,29 @@
 	sample如下:
 	
 	v=1&c=
-	1400037748182<span class="text-danger">TAB</span>http://dianping.com/shop<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
-	1400037748182<span class="text-danger">TAB</span>http://dianping.com/shop<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
-	1400037748182<span class="text-danger">TAB</span>http://dianping.com/shop<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
+	1400037748182<span class="text-danger">TAB</span>cdn-resource1<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
+	1400037748182<span class="text-danger">TAB</span>cdn-resource2<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
+	1400037748182<span class="text-danger">TAB</span>cdn-resource3<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
 	</pre>
 	
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
-		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
-		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
-		<tr><td>dl</td><td>dnslookup</td><td>dns寻址时间</td><td>int</td></tr>
-		<tr><td>tc</td><td>tcpConnect</td><td>tcp连接建立</td><td>int</td></tr>
-		<tr><td>rq</td><td>request</td><td>请求时间</td><td>int</td></tr>
-		<tr><td>rs</td><td>response</td><td>接受时间</td><td>int</td></tr>
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><td>v</td><td>API版本号</td><td>暂定为1</td></tr>
+		<tr><td>c</td><td>具体内容</td><td>content内容</td></tr>
+	</table>
+	<p>content内容说明</p>
+	<pre>
+	timstamp<span class="text-danger">TAB</span>targetUrl<span class="text-danger">TAB</span>dnslookup<span class="text-danger">TAB</span>tcpconnect<span class="text-danger">TAB</span>request<span class="text-danger">TAB</span>response<span class="text-danger">ENTER</span>
+	</pre>
+	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
+		<tr><td>targetUrl</td><td>具体的cdn资源</td><td>cdn资源的一个定义</td></tr>
+		<tr><td>dnslookup</td><td>dns寻址时间</td><td>int</td></tr>
+		<tr><td>tcpConnect</td><td>tcp连接建立</td><td>int</td></tr>
+		<tr><td>request</td><td>请求时间</td><td>int</td></tr>
+		<tr><td>response</td><td>接受时间</td><td>int</td></tr>
 	</table>
 <br/>
 <h4 class="text-success">URL规则配置&nbsp;  <a target="_blank" href="/cat/s/config?op=urlPatternUpdate">链接</a></h4>

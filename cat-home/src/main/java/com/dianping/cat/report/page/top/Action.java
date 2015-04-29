@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.top;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	
+   API("api");
 
 	private String m_name;
 

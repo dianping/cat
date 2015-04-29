@@ -219,9 +219,16 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		Remote remote = local.findOrCreateRemote(remoteId);
 
 		report.addIp(localIp);
-		remote.setIp(remoteIp);
-		remote.setRole(role);
-		remote.setApp(info.getApp());
+
+		if (StringUtils.isEmpty(remote.getIp())) {
+			remote.setIp(remoteIp);
+		}
+		if (StringUtils.isEmpty(remote.getRole())) {
+			remote.setRole(role);
+		}
+		if (StringUtils.isEmpty(remote.getApp())) {
+			remote.setApp(info.getApp());
+		}
 
 		Type type = remote.getType();
 

@@ -9,6 +9,8 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.analysis.MessageAnalyzerManager;
+import com.dianping.cat.analysis.PeriodStrategy;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 public class PeriodManager implements Task {

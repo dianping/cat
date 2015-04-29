@@ -34,6 +34,7 @@ import com.dianping.cat.configuration.app.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.TimeHelper;
 
 public class AppConfigManager implements Initializable {
 
@@ -79,12 +80,14 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ACTIVITY_END_INDEX = 1200;
 
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type) throws Exception {
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all)
+	      throws Exception {
 		Command command = new Command();
 
 		command.setDomain(domain);
 		command.setTitle(title);
 		command.setName(name);
+		command.setAll(all);
 
 		int commandId = 0;
 
@@ -270,6 +273,7 @@ public class AppConfigManager implements Initializable {
 				m_configDao.insert(config);
 				m_configId = config.getId();
 				m_config = DefaultSaxParser.parse(content);
+				refreshData();
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -449,7 +453,7 @@ public class AppConfigManager implements Initializable {
 		return null;
 	}
 
-	public void refreshAppConfigConfig() throws DalException, SAXException, IOException {
+	public void refreshAppConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -595,12 +599,12 @@ public class AppConfigManager implements Initializable {
 			boolean active = true;
 			while (active) {
 				try {
-					refreshAppConfigConfig();
+					refreshAppConfig();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(60 * 1000L);
+					Thread.sleep(TimeHelper.ONE_MINUTE);
 				} catch (InterruptedException e) {
 					active = false;
 				}

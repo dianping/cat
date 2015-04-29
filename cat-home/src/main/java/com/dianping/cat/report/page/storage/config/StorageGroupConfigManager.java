@@ -43,12 +43,20 @@ public class StorageGroupConfigManager implements Initializable {
 
 	private String m_sqlLinkFormat;
 
+	private String m_cacheLinkFormat;
+
 	public StorageGroupConfig getConfig() {
 		return m_config;
 	}
 
-	public String getSqlLinkFormat() {
-		return m_sqlLinkFormat;
+	public String queryLinkFormat(String type) {
+		if (StorageConstants.SQL_TYPE.equals(type)) {
+			return m_sqlLinkFormat;
+		} else if (StorageConstants.CACHE_TYPE.equals(type)) {
+			return m_cacheLinkFormat;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -82,9 +90,9 @@ public class StorageGroupConfigManager implements Initializable {
 		refreshData();
 	}
 
-	public boolean isSQLAlertMachine(String id, String ip) {
+	public boolean isSQLAlertMachine(String id, String ip, String type) {
 		boolean result = true;
-		StorageGroup group = m_config.getStorageGroups().get(StorageConstants.SQL_TYPE);
+		StorageGroup group = m_config.getStorageGroups().get(type);
 
 		if (group != null) {
 			Storage storage = group.getStorages().get(id);
@@ -123,6 +131,7 @@ public class StorageGroupConfigManager implements Initializable {
 
 	private void refreshData() {
 		m_sqlLinkFormat = refreshLinkFormat(StorageConstants.SQL_TYPE);
+		m_cacheLinkFormat = refreshLinkFormat(StorageConstants.CACHE_TYPE);
 	}
 
 	private String refreshLinkFormat(String type) {

@@ -42,7 +42,7 @@ public abstract class LocalModelService<T> implements Initializable {
 	protected T getReport(ModelPeriod period, String domain) throws Exception {
 		MessageAnalyzer analyzer = null;
 
-		if (period.isCurrent() || period.isFuture()) {
+		if (period.isCurrent()) {
 			analyzer = m_consumer.getCurrentAnalyzer(m_name);
 		} else if (period.isLast()) {
 			analyzer = m_consumer.getLastAnalyzer(m_name);
@@ -63,7 +63,8 @@ public abstract class LocalModelService<T> implements Initializable {
 		throw new RuntimeException("Internal error: this should not be reached!");
 	}
 
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
 		try {
 			return buildReport(request, period, domain, payload);
 		} catch (ConcurrentModificationException e) {

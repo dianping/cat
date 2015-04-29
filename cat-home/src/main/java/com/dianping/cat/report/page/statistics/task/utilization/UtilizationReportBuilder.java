@@ -8,7 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -53,7 +53,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 	private TransactionMergeHelper m_mergeHelper;
 
 	@Inject
-	private ServerConfigManager m_configManger;
+	private ServerFilterConfigManager m_configManger;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {

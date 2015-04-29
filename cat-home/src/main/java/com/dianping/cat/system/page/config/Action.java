@@ -217,6 +217,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
 
+	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
+
 	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 
 	private String m_name;

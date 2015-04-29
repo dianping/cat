@@ -19,6 +19,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
@@ -53,6 +54,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ExceptionRuleConfigManager m_configManager;
+
+	@Inject
+	private JsonBuilder m_builder;
 
 	private void buildExceptionDashboard(Model model, Payload payload, long date) {
 		model.setReportStart(new Date(payload.getDate()));
@@ -97,7 +101,8 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(Action.VIEW);
+		Action action = payload.getAction();
+		model.setAction(action);
 		model.setPage(ReportPage.TOP);
 		normalize(model, payload);
 		long date = payload.getDate();
@@ -105,8 +110,13 @@ public class Handler implements PageHandler<Context> {
 		buildExceptionDashboard(model, payload, date);
 		model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
 
-		if (!ctx.isProcessStopped()) {
-			m_jspViewer.view(ctx, model);
+		switch (action) {
+		case VIEW:
+			if (!ctx.isProcessStopped()) {
+				m_jspViewer.view(ctx, model);
+			}
+		case API:
+			ctx.getHttpServletResponse().getWriter().write(m_builder.toJson(model.getTopMetric()));
 		}
 	}
 

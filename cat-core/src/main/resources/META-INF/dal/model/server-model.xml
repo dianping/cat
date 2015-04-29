@@ -15,7 +15,7 @@
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
 		<attribute name="max-hdfs-storage-time" value-type="int" primitive="true" default-value="15" />
-		<attribute name="local-report-storage-time" value-type="int" primitive="true" default-value="7" />
+		<attribute name="local-report-storage-time" value-type="int" primitive="true" default-value="3" />
 		<attribute name="local-logivew-storage-time" value-type="int" primitive="true" default-value="7" />
 		<entity-ref name="hdfs" type="map" names="hdfses" />
 		<entity-ref name="property" type="map" names="properties" xml-indent="true" />

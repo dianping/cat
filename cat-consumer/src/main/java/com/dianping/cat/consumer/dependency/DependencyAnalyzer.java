@@ -10,6 +10,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -26,6 +27,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject(ID)
 	private ReportManager<DependencyReport> m_reportManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private DatabaseParser m_parser;
@@ -152,7 +156,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		String type = t.getType();
 		String name = t.getName();
 
-		if (m_serverConfigManager.discardTransaction(type, name)) {
+		if (m_serverFilterConfigManager.discardTransaction(type, name)) {
 			return;
 		} else {
 			processTransactionType(report, t, type);

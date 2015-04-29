@@ -14,7 +14,7 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.JsonBuilder;
@@ -47,10 +47,10 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private void buildDisplayInfo(Model model, Payload payload, StateReport report) {
-		StateDisplay display = new StateDisplay(payload.getIpAddress(), m_configManager.getUnusedDomains());
+		StateDisplay display = new StateDisplay(payload.getIpAddress(), m_serverFilterConfigManager.getUnusedDomains());
 
 		display.setSortType(payload.getSort());
 		display.visitStateReport(report);
