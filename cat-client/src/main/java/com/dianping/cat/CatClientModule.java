@@ -28,7 +28,6 @@ public class CatClientModule extends AbstractModule {
 		// tracking thread start/stop
 		Threads.addListener(new CatThreadListener(ctx));
 
-
 		// warm up Cat
 		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 

@@ -227,10 +227,16 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	@Override
 	public void initialize() throws InitializationException {
+		File configFile = new File(XML);
+		
+		initialize(configFile);
+	}
+
+	@Override
+   public void initialize(File configFile) throws InitializationException {
 		try {
 			ClientConfig globalConfig = null;
 			ClientConfig clientConfig = null;
-			File configFile = new File(XML);
 
 			if (configFile != null) {
 				if (configFile.exists()) {
@@ -262,9 +268,5 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		} catch (Exception e) {
 			throw new InitializationException(e.getMessage(), e);
 		}
-	}
-
-	@Override
-   public void initialize(File configFile) throws Exception {
    }
 }
