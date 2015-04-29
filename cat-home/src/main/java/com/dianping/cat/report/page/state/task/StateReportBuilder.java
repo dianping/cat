@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
@@ -34,6 +35,9 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	protected ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private ProjectService m_projectService;
@@ -143,7 +147,7 @@ public class StateReportBuilder implements TaskBuilder {
 	}
 
 	private void updateProjectAndHost(String domain, String ip) {
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			if (!m_projectService.contains(domain)) {
 				m_projectService.insert(domain);
 
@@ -178,7 +182,7 @@ public class StateReportBuilder implements TaskBuilder {
 			Set<String> ips = processDomain.getIps();
 
 			for (String ip : ips) {
-				if (m_serverConfigManager.validateDomain(domain) && m_serverConfigManager.validateIp(ip)) {
+				if (m_serverFilterConfigManager.validateDomain(domain) && m_serverConfigManager.validateIp(ip)) {
 					updateProjectAndHost(domain, ip);
 				}
 			}

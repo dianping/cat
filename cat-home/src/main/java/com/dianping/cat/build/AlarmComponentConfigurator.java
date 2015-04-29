@@ -10,6 +10,7 @@ import com.dianping.cat.config.aggregation.AggregationConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -230,7 +231,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HeartbeatAlert.class)
 		      .req(ProductLineConfigManager.class, HeartbeatDisplayPolicyManager.class)
 		      .req(MetricReportGroupService.class, HeartbeatRuleConfigManager.class, DataChecker.class,
-		            ServerConfigManager.class, AlertManager.class, AlertInfo.class)
+		            ServerFilterConfigManager.class, AlertManager.class, AlertInfo.class)
 		      .req(ModelService.class, HeartbeatAnalyzer.ID, "m_heartbeatService")
 		      .req(ModelService.class, TransactionAnalyzer.ID, "m_transactionService"));
 

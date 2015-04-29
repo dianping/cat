@@ -10,7 +10,7 @@ import org.unidal.webres.helper.Splitters;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -49,7 +49,7 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	private AppDataComparisonNotifier m_appDataInformer;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	private ServerFilterConfigManager m_serverConfigManager;
 
 	@Inject
 	private ProjectService m_projectService;

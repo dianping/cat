@@ -20,6 +20,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
@@ -51,6 +52,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private TopologyGraphDao m_topologyGraphDao;
@@ -204,7 +208,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private class DependencyReloadTask implements Task {
 
 		private void buildDependencyInfo(TopologyGraphBuilder builder, String domain) {
-			if (m_manager.validateDomain(domain)) {
+			if (m_serverFilterConfigManager.validateDomain(domain)) {
 				ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT.getStartTime());
 
 				if (m_service.isEligable(request)) {

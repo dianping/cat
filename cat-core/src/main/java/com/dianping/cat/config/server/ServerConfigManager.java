@@ -6,14 +6,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
@@ -31,9 +29,6 @@ import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
 public class ServerConfigManager implements LogEnabled {
 
-	@Inject
-	private ServerFilterConfigManager m_serverFilterConfigManager;
-
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	private ServerConfig m_config;
@@ -41,10 +36,6 @@ public class ServerConfigManager implements LogEnabled {
 	private Logger m_logger;
 
 	public static final String DUMP_DIR = "dump";
-
-	public boolean discardTransaction(String type, String name) {
-		return m_serverFilterConfigManager.discardTransaction(type, name);
-	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -91,10 +82,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return "";
-	}
-
-	public Set<String> getCrashLogs() {
-		return m_serverFilterConfigManager.getCrashLogDomainIds();
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -237,10 +224,6 @@ public class ServerConfigManager implements LogEnabled {
 		return m_config;
 	}
 
-	public Set<String> getUnusedDomains() {
-		return m_serverFilterConfigManager.getUnusedDomains();
-	}
-
 	public void initialize(File configFile) throws Exception {
 		if (configFile != null && configFile.canRead()) {
 			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
@@ -289,10 +272,6 @@ public class ServerConfigManager implements LogEnabled {
 
 	public boolean isCacheTransaction(String type) {
 		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
-	}
-
-	public boolean isCrashLog(String domain) {
-		return m_serverFilterConfigManager.isCrashLog(domain);
 	}
 
 	public boolean isHdfsOn() {
@@ -360,10 +339,6 @@ public class ServerConfigManager implements LogEnabled {
 		} else {
 			return defaultValue;
 		}
-	}
-
-	public boolean validateDomain(String domain) {
-		return m_serverFilterConfigManager.validateDomain(domain);
 	}
 
 	public boolean validateIp(String str) {

@@ -18,11 +18,6 @@
 		<component>
 			<role>com.dianping.cat.config.server.ServerConfigManager</role>
 			<implementation>com.dianping.cat.config.server.ServerConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.service.HostinfoService</role>

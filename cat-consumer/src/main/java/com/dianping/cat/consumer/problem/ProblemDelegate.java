@@ -8,7 +8,7 @@ import java.util.Set;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
@@ -23,7 +23,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	private TaskManager m_taskManager;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private ServerFilterConfigManager m_configManager;
 
 	@Override
 	public void afterLoad(Map<String, ProblemReport> reports) {
@@ -65,9 +65,9 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 	public boolean createHourlyTask(ProblemReport report) {
 		String domain = report.getDomain();
 
-		if (m_manager.validateDomain(domain)) {
+		if (m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
-		} else if (m_manager.isCrashLog(domain)) {
+		} else if (m_configManager.isCrashLog(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {

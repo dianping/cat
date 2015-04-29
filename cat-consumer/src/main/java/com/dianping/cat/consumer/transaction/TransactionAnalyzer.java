@@ -13,6 +13,7 @@ import org.unidal.tuple.Pair;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -33,6 +34,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
@@ -168,7 +172,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		String type = t.getType();
 		String name = t.getName();
 
-		if (m_serverConfigManager.discardTransaction(type, name)) {
+		if (m_serverFilterConfigManager.discardTransaction(type, name)) {
 			return;
 		} else {
 			Pair<Boolean, Long> pair = checkForTruncatedMessage(tree, t);
