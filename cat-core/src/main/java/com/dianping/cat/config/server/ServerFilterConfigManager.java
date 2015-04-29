@@ -9,6 +9,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -103,6 +104,7 @@ public class ServerFilterConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new ServerFilterConfig();
 		}
+		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insert(String xml) {
