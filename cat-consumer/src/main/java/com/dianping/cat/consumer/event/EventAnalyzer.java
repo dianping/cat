@@ -7,6 +7,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -26,6 +27,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
@@ -67,7 +71,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			Message message = tree.getMessage();
 			String ip = tree.getIpAddress();
@@ -142,5 +146,5 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void setReportManager(ReportManager<EventReport> reportManager) {
 		m_reportManager = reportManager;
 	}
-	
+
 }

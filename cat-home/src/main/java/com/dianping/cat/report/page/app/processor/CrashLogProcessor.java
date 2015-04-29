@@ -14,7 +14,6 @@ import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -38,9 +37,6 @@ public class CrashLogProcessor {
 
 	@Inject
 	private PayloadNormalizer m_normalizer;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
@@ -143,7 +139,7 @@ public class CrashLogProcessor {
 	}
 
 	private String queryDomain(Payload payload) {
-		Set<String> crashLogDomains = m_serverConfigManager.getCrashLogs();
+		Set<String> crashLogDomains = m_serverFilterConfigManager.getCrashLogDomainIds();
 		String domain = "";
 
 		if (StringUtils.isNotEmpty(payload.getQuery1())) {

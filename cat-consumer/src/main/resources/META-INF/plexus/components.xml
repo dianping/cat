@@ -17,6 +17,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -54,7 +57,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -70,6 +73,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -108,7 +114,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -193,7 +199,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -209,6 +215,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -247,7 +256,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -266,6 +275,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -365,6 +377,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -463,7 +478,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -517,7 +532,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -537,6 +552,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
@@ -704,7 +722,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>

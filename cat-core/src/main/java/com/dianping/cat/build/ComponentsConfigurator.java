@@ -55,7 +55,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
 
-		all.add(C(ServerConfigManager.class).req(ServerFilterConfigManager.class));
+		all.add(C(ServerConfigManager.class));
 		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
 		all.add(C(IpService.class));
 		all.add(C(TaskManager.class).req(TaskDao.class));

@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -35,6 +36,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Inject(ID)
 	private ReportManager<HeartbeatReport> m_reportManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private Period buildHeartBeatInfo(Machine machine, Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
@@ -171,7 +175,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			Message message = tree.getMessage();
 			HeartbeatReport report = findOrCreateReport(domain);
 			report.addIp(tree.getIpAddress());
