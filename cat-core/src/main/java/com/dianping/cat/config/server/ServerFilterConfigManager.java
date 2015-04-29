@@ -1,14 +1,18 @@
 package com.dianping.cat.config.server;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
@@ -18,6 +22,7 @@ import com.dianping.cat.configuration.server.filter.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.helper.TimeHelper;
 
 public class ServerFilterConfigManager implements Initializable {
 
@@ -32,6 +37,8 @@ public class ServerFilterConfigManager implements Initializable {
 	private static final String CONFIG_NAME = "serverFilter";
 
 	private int m_configId;
+
+	private long m_modifyTime;
 
 	public boolean discardTransaction(String type, String name) {
 		if ("Cache.web".equals(type) || "ABTest".equals(type)) {
@@ -75,6 +82,7 @@ public class ServerFilterConfigManager implements Initializable {
 			String content = config.getContent();
 
 			m_configId = config.getId();
+			m_modifyTime = config.getModifyDate().getTime();
 			m_config = DefaultSaxParser.parse(content);
 		} catch (DalNotFoundException e) {
 			try {
@@ -131,6 +139,51 @@ public class ServerFilterConfigManager implements Initializable {
 	public boolean validateDomain(String domain) {
 		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().contains(domain)
 		      && StringUtils.isNotEmpty(domain);
+	}
+
+	public void refreshConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				ServerFilterConfig serverConfig = DefaultSaxParser.parse(content);
+
+				m_config = serverConfig;
+				m_modifyTime = modifyTime;
+			}
+		}
+	}
+
+	public class ConfigReloadTask implements Task {
+
+		@Override
+		public String getName() {
+			return "Server-Filter-Config-Reload";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+					refreshConfig();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(TimeHelper.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 
 }
