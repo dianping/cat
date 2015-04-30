@@ -23,6 +23,12 @@ public class PeriodTask implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private int m_index;
+	
+	public void setIndex(int index) {
+		m_index = index;
+	}
+
 	public PeriodTask(MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 		m_analyzer = analyzer;
 		m_queue = queue;
@@ -65,7 +71,7 @@ public class PeriodTask implements Task, LogEnabled {
 		Calendar cal = Calendar.getInstance();
 
 		cal.setTimeInMillis(m_startTime);
-		return m_analyzer.getClass().getSimpleName() + "-" + cal.get(Calendar.HOUR_OF_DAY);
+		return m_analyzer.getClass().getSimpleName() + "-" + cal.get(Calendar.HOUR_OF_DAY) + "-" + m_index;
 	}
 
 	@Override

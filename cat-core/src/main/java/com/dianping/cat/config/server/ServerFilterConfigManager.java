@@ -12,7 +12,6 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -139,8 +138,7 @@ public class ServerFilterConfigManager implements Initializable {
 	}
 
 	public boolean validateDomain(String domain) {
-		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().contains(domain)
-		      && StringUtils.isNotEmpty(domain);
+		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().contains(domain);
 	}
 
 	public void refreshConfig() throws DalException, SAXException, IOException {
