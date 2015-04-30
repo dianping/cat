@@ -91,7 +91,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private DisplayCommands m_displayCommands;
 
-	private List<CrashLogDomain> m_crashLogDomains;
+	private Collection<CrashLogDomain> m_crashLogDomains;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -178,7 +178,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
-	public List<CrashLogDomain> getCrashLogDomains() {
+	public Collection<CrashLogDomain> getCrashLogDomains() {
 		return m_crashLogDomains;
 	}
 
@@ -325,7 +325,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_content = content;
 	}
 
-	public void setCrashLogDomains(List<CrashLogDomain> crashLogDomains) {
+	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
 		m_crashLogDomains = crashLogDomains;
 	}
 
