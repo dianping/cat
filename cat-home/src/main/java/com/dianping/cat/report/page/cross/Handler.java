@@ -80,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
-		long historyTime = payload.getHistoryEndDate().getTime() - payload.getHistoryStartDate().getTime();
+		long historyTime = (payload.getHistoryEndDate().getTime() - payload.getHistoryStartDate().getTime()) / 1000;
 
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
