@@ -135,11 +135,11 @@ public class CrashLogProcessor {
 		model.setFieldsInfo(buildFeildsInfo(report));
 		model.setProblemStatistics(problemStatistics);
 		model.setProblemReport(report);
-		model.setCrashLogDomains(m_serverFilterConfigManager.getCrashLogDomains());
+		model.setCrashLogDomains(m_serverFilterConfigManager.getCrashLogDomains().values());
 	}
 
 	private String queryDomain(Payload payload) {
-		Set<String> crashLogDomains = m_serverFilterConfigManager.getCrashLogDomainIds();
+		Set<String> crashLogDomains = m_serverFilterConfigManager.getCrashLogDomains().keySet();
 		String domain = "";
 
 		if (StringUtils.isNotEmpty(payload.getQuery1())) {
