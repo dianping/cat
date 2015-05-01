@@ -2,7 +2,7 @@ package com.dianping.cat.config.server;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -12,7 +12,6 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -55,23 +54,14 @@ public class ServerFilterConfigManager implements Initializable {
 		return m_config;
 	}
 
-	public List<CrashLogDomain> getCrashLogDomains() {
+	public Map<String, CrashLogDomain> getCrashLogDomains() {
 		return m_config.getCrashLogDomains();
-	}
-
-	public Set<String> getCrashLogDomainIds() {
-		HashSet<String> domains = new HashSet<String>();
-
-		for (CrashLogDomain domain : m_config.getCrashLogDomains()) {
-			domains.add(domain.getId());
-		}
-		return domains;
 	}
 
 	public Set<String> getUnusedDomains() {
 		Set<String> unusedDomains = new HashSet<String>();
 
-		unusedDomains.addAll(getCrashLogDomainIds());
+		unusedDomains.addAll(m_config.getCrashLogDomains().keySet());
 		unusedDomains.addAll(m_config.getDomains());
 		return unusedDomains;
 	}
@@ -119,7 +109,7 @@ public class ServerFilterConfigManager implements Initializable {
 	}
 
 	public boolean isCrashLog(String domain) {
-		return m_config.getCrashLogDomains().contains(domain);
+		return m_config.getCrashLogDomains().containsKey(domain);
 	}
 
 	public boolean storeConfig() {
@@ -139,8 +129,7 @@ public class ServerFilterConfigManager implements Initializable {
 	}
 
 	public boolean validateDomain(String domain) {
-		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().contains(domain)
-		      && StringUtils.isNotEmpty(domain);
+		return !m_config.getDomains().contains(domain) && !m_config.getCrashLogDomains().containsKey(domain);
 	}
 
 	public void refreshConfig() throws DalException, SAXException, IOException {

@@ -40,6 +40,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		m_logger = logger;
 	}
 
+	@Override
+   public int getAnanlyzerCount() {
+	   return 2;
+   }
+
 	public Set<String> getDomains() {
 		return m_reportManager.getDomains(getStartTime());
 	}
@@ -62,7 +67,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
-
+	
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
