@@ -26,6 +26,9 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private ServerFilterConfigManager m_configManager;
+	
+	@Inject
+	private AllTransactionConfigManager m_transactionManager;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
