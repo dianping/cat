@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="server-filter-config" root="true">
+    <element name="transaction-type" value-type="String" type="list" names="transaction-types" />
+    <element name="transaction-name" value-type="String" type="list" names="transaction-names" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="crash-log-domain" type="list" names="crash-log-domains" />
+  </entity>
+  <entity name="crash-log-domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="title" value-type="String" />
+  </entity>
+</model>
+

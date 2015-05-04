@@ -97,6 +97,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		if ("PhoenixAgent".equals(domain)) {
 			return;
 		}
+		
 		if (messageId.getVersion() == 2) {
 			long time = tree.getMessage().getTimestamp();
 			long fixedTime = time - time % (60 * 60 * 1000);

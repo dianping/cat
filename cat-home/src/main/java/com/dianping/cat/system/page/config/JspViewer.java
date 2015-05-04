@@ -206,6 +206,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.DOMAIN_GROUP_CONFIG_UPDATE.getPath();
 		case ACTIVITY_CONFIG_UPDATE:
 			return JspFile.ACTIVITY_CONFIG_UPDATE.getPath();
+		case SERVER_FILTER_CONFIG_UPDATE:
+			return JspFile.SERVER_FILTER_CONFIG_UPDATE.getPath();
 		case BLACK_CONFIG_UPDATE:
 			return JspFile.BLACK_CONFIG_UPDATE.getPath();
 		}

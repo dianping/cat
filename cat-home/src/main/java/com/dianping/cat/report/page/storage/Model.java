@@ -9,16 +9,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.storage.alert.entity.StorageAlertInfo;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Department;
 
+@ModelMeta(StorageAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
+	@EntityMeta
 	private StorageReport m_report;
 
 	private Set<String> m_operations = new HashSet<String>();
@@ -47,12 +54,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Map<String, List<String>>> m_links;
 
+	private List<Alteration> m_alterations;
+
+	private String m_distributionChart;
+
+	public String getDistributionChart() {
+		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public Map<String, StorageAlertInfo> getAlertInfos() {
 		return m_alertInfos;
+	}
+
+	public List<Alteration> getAlterations() {
+		return m_alterations;
 	}
 
 	public String getAvgTrend() {
@@ -159,6 +182,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
 		m_alertInfos = alertInfos;
+	}
+
+	public void setAlterations(List<Alteration> alterations) {
+		m_alterations = alterations;
 	}
 
 	public void setAvgTrend(String avgTrend) {

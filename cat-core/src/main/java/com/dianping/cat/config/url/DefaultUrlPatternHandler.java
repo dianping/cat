@@ -13,7 +13,7 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 
 	private Map<String, String> m_urlToId = new HashMap<String, String>();
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -33,7 +33,6 @@ public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 			String format = item.getPattern();
 
 			urlToId.put(format, item.getName());
-			m_logger.info(String.format("url pattern id : %s , pattern : %s", item.getName(), format));
 		}
 		m_urlToId = urlToId;
 	}

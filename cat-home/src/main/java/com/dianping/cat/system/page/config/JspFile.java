@@ -139,6 +139,8 @@ public enum JspFile {
 
 	ACTIVITY_CONFIG_UPDATE("/jsp/system/activity/activityConfigUpdate.jsp"),
 
+	SERVER_FILTER_CONFIG_UPDATE("/jsp/system/server/serverFilterUpdate.jsp"),
+
 	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp");
 
 	private String m_path;

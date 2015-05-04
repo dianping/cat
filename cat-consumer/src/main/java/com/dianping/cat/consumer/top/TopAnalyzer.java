@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.message.Event;
@@ -28,6 +29,9 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject
 	private Set<String> m_errorTypes;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
@@ -59,7 +63,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			TopReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 			Message message = tree.getMessage();
 

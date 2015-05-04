@@ -20,6 +20,7 @@ import com.dianping.cat.report.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.alert.exception.FrontEndExceptionAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
 import com.dianping.cat.report.alert.network.NetworkAlert;
+import com.dianping.cat.report.alert.storage.StorageCacheAlert;
 import com.dianping.cat.report.alert.storage.StorageSQLAlert;
 import com.dianping.cat.report.alert.system.SystemAlert;
 import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
@@ -27,7 +28,7 @@ import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.alert.web.WebAlert;
 
-public class CatHomeModule extends AbstractModule{
+public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
 
 	@Override
@@ -59,6 +60,7 @@ public class CatHomeModule extends AbstractModule{
 			WebAlert webAlert = ctx.lookup(WebAlert.class);
 			TransactionAlert transactionAlert = ctx.lookup(TransactionAlert.class);
 			StorageSQLAlert storageDatabaseAlert = ctx.lookup(StorageSQLAlert.class);
+			StorageCacheAlert storageCacheAlert = ctx.lookup(StorageCacheAlert.class);
 
 			Threads.forGroup("cat").start(networkAlert);
 			Threads.forGroup("cat").start(databaseAlert);
@@ -73,6 +75,7 @@ public class CatHomeModule extends AbstractModule{
 			Threads.forGroup("cat").start(webAlert);
 			Threads.forGroup("cat").start(transactionAlert);
 			Threads.forGroup("cat").start(storageDatabaseAlert);
+			Threads.forGroup("cat").start(storageCacheAlert);
 		}
 
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);

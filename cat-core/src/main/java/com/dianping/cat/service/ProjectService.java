@@ -7,13 +7,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -132,7 +129,7 @@ public class ProjectService implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
-			Threads.forGroup("cat").start(new ProjectReloadTask());
+			refresh();
 		}
 	}
 
@@ -166,7 +163,7 @@ public class ProjectService implements Initializable {
 		return false;
 	}
 
-	public void refresh() {
+	protected void refresh() {
 		try {
 			List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
 			ConcurrentHashMap<String, Project> tmpDomainProjects = new ConcurrentHashMap<String, Project>();
@@ -234,37 +231,6 @@ public class ProjectService implements Initializable {
 
 		public List<String> getLineDomains() {
 			return m_lineDomains;
-		}
-	}
-
-	public class ProjectReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "project-reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				try {
-					refresh();
-				} catch (Exception ex) {
-					Cat.logError("reload project error", ex);
-				}
-
-				try {
-					TimeUnit.MINUTES.sleep(1);
-				} catch (InterruptedException ex) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
 		}
 	}
 

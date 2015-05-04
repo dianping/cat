@@ -336,13 +336,10 @@ public class Handler implements PageHandler<Context> {
 
 	private ProblemReport showHourlyReport(Model model, Payload payload) {
 		ModelPeriod period = payload.getPeriod();
-		if (period.isFuture()) {
-			model.setDate(payload.getCurrentDate());
-		} else {
-			model.setDate(payload.getDate());
-		}
 
-		if (period.isCurrent() || period.isFuture()) {
+		model.setDate(payload.getDate());
+
+		if (period.isCurrent()) {
 			Calendar cal = Calendar.getInstance();
 			int minute = cal.get(Calendar.MINUTE);
 

@@ -22,51 +22,66 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 	private List<String> m_analyzerNames;
 
-	private Map<Long, Map<String, MessageAnalyzer>> m_analyzers = new HashMap<Long, Map<String, MessageAnalyzer>>();
+	private Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
 
 	@Override
-	public MessageAnalyzer getAnalyzer(String name, long startTime) {
+	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
 		// remove last two hour analyzer
 		try {
-			Map<String, MessageAnalyzer> temp = m_analyzers.remove(startTime - m_duration * 2);
+			Map<String, List<MessageAnalyzer>> temp = m_analyzers.remove(startTime - m_duration * 2);
 
 			if (temp != null) {
-				for (MessageAnalyzer anlyzer : temp.values()) {
-					anlyzer.destroy();
+				for (List<MessageAnalyzer> anlyzers : temp.values()) {
+					for (MessageAnalyzer analyzer : anlyzers) {
+						analyzer.destroy();
+					}
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		Map<String, MessageAnalyzer> map = m_analyzers.get(startTime);
+		Map<String, List<MessageAnalyzer>> map = m_analyzers.get(startTime);
 
 		if (map == null) {
 			synchronized (m_analyzers) {
 				map = m_analyzers.get(startTime);
 
 				if (map == null) {
-					map = new HashMap<String, MessageAnalyzer>();
+					map = new HashMap<String, List<MessageAnalyzer>>();
 					m_analyzers.put(startTime, map);
 				}
 			}
 		}
 
-		MessageAnalyzer analyzer = map.get(name);
+		List<MessageAnalyzer> analyzers = map.get(name);
 
-		if (analyzer == null) {
+		if (analyzers == null) {
 			synchronized (map) {
-				analyzer = map.get(name);
+				analyzers = map.get(name);
 
-				if (analyzer == null) {
-					analyzer = lookup(MessageAnalyzer.class, name);
+				if (analyzers == null) {
+					analyzers = new ArrayList<MessageAnalyzer>();
+
+					MessageAnalyzer analyzer = lookup(MessageAnalyzer.class, name);
+
 					analyzer.initialize(startTime, m_duration, m_extraTime);
-					map.put(name, analyzer);
+					analyzers.add(analyzer);
+
+					int count = analyzer.getAnanlyzerCount();
+
+					for (int i = 1; i < count; i++) {
+						MessageAnalyzer tempAnalyzer = lookup(MessageAnalyzer.class, name);
+
+						tempAnalyzer.initialize(startTime, m_duration, m_extraTime);
+						analyzers.add(tempAnalyzer);
+					}
+					map.put(name, analyzers);
 				}
 			}
 		}
 
-		return analyzer;
+		return analyzers;
 	}
 
 	@Override
@@ -89,7 +104,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 			public int compare(String str1, String str2) {
 				String state = "state";
 				String top = "top";
-				
+
 				if (state.equals(str1)) {
 					return 1;
 				} else if (state.equals(str2)) {

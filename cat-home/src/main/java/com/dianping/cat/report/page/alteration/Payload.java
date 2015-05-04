@@ -12,7 +12,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("altType")
@@ -60,9 +60,12 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("count")
 	private int m_count;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	@FieldMeta("status")
+	private int m_status;
 
-	private SimpleDateFormat m_minSdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	private SimpleDateFormat m_secondFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	public Payload() {
 		super(ReportPage.ALTERATION);
@@ -79,7 +82,12 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public Date getAlterationDate() {
 		try {
-			return m_sdf.parse(m_alterationDate);
+			if (m_alterationDate.length() == 16) {
+				return m_sdf.parse(m_alterationDate);
+			} else {
+				return m_secondFormat.parse(m_alterationDate);
+			}
+
 		} catch (ParseException e) {
 			return new Date();
 		}
@@ -122,7 +130,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 			return new Date();
 		} else {
 			try {
-				return m_minSdf.parse(m_endTime);
+				return m_sdf.parse(m_endTime);
 			} catch (ParseException e) {
 				return new Date();
 			}
@@ -154,11 +162,15 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 			return new Date(System.currentTimeMillis() - TimeHelper.ONE_HOUR / 4);
 		} else {
 			try {
-				return m_minSdf.parse(m_startTime);
+				return m_sdf.parse(m_startTime);
 			} catch (ParseException e) {
 				return new Date();
 			}
 		}
+	}
+
+	public int getStatus() {
+		return m_status;
 	}
 
 	public String getTitle() {
@@ -232,6 +244,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public void setStartTime(String startTime) {
 		m_startTime = startTime;
+	}
+
+	public void setStatus(int status) {
+		m_status = status;
 	}
 
 	public void setTitle(String title) {

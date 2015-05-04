@@ -17,6 +17,7 @@ import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -90,6 +91,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private DisplayCommands m_displayCommands;
 
+	private Collection<CrashLogDomain> m_crashLogDomains;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -100,14 +103,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public AppReport getAppReport() {
 		return m_appReport;
-	}
-
-	public int getDefaultCommand() {
-		return CommandQueryEntity.DEFAULT_COMMAND;
-	}
-
-	public int getDefaultActivity() {
-		return CommandQueryEntity.DEFAULT_ACTIVITY;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -183,9 +178,21 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
+	public Collection<CrashLogDomain> getCrashLogDomains() {
+		return m_crashLogDomains;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.LINECHART;
+	}
+
+	public int getDefaultActivity() {
+		return CommandQueryEntity.DEFAULT_ACTIVITY;
+	}
+
+	public int getDefaultCommand() {
+		return CommandQueryEntity.DEFAULT_COMMAND;
 	}
 
 	public DisplayCommands getDisplayCommands() {
@@ -316,6 +323,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
+		m_crashLogDomains = crashLogDomains;
 	}
 
 	public void setDisplayCommands(DisplayCommands displayCommands) {
