@@ -1,4 +1,4 @@
-package com.dianping.cat.config.black;
+package com.dianping.cat.consumer.transaction;
 
 import java.io.IOException;
 import java.util.Date;
@@ -20,7 +20,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.black.entity.AllTransactionConfig;
 import com.dianping.cat.home.black.transform.DefaultSaxParser;
 
-public class BlackListManager implements Initializable, LogEnabled {
+public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -30,25 +30,17 @@ public class BlackListManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private AllTransactionConfig m_blackList;
+	private AllTransactionConfig m_config;
 
 	private Logger m_logger;
 
 	private long m_modifyTime;
 
-	private static final String CONFIG_NAME = "blackList";
-
-	public boolean isBlack(String domain, String ip) {
-		return m_blackList.getDomainNames().contains(domain) || m_blackList.getIps().contains(ip);
-	}
+	private static final String CONFIG_NAME = "all-transaction-config";
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public AllTransactionConfig getBlackList() {
-		return m_blackList;
 	}
 
 	@Override
@@ -58,7 +50,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 			String content = config.getContent();
 
 			m_configId = config.getId();
-			m_blackList = DefaultSaxParser.parse(content);
+			m_config = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
@@ -72,7 +64,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 				m_configDao.insert(config);
 
 				m_configId = config.getId();
-				m_blackList = DefaultSaxParser.parse(content);
+				m_config = DefaultSaxParser.parse(content);
 				m_modifyTime = now.getTime();
 			} catch (Exception ex) {
 				Cat.logError(ex);
@@ -80,14 +72,14 @@ public class BlackListManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (m_blackList == null) {
-			m_blackList = new AllTransactionConfig();
+		if (m_config == null) {
+			m_config = new AllTransactionConfig();
 		}
 	}
 
 	public boolean insert(String xml) {
 		try {
-			m_blackList = DefaultSaxParser.parse(xml);
+			m_config = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
 
 			return result;
@@ -107,7 +99,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 				String content = config.getContent();
 				AllTransactionConfig blackList = DefaultSaxParser.parse(content);
 
-				m_blackList = blackList;
+				m_config = blackList;
 				m_modifyTime = modifyTime;
 			}
 		}
@@ -121,7 +113,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 				config.setId(m_configId);
 				config.setKeyId(m_configId);
 				config.setName(CONFIG_NAME);
-				config.setContent(m_blackList.toString());
+				config.setContent(m_config.toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 			} catch (Exception e) {
 				Cat.logError(e);

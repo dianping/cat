@@ -49,7 +49,7 @@ public class ProductLineConfigManagerTest {
 		Assert.assertEquals(3, productLines.size());
 
 		manager.enableLogging(new MockLog());
-		manager.refreshProductLineConfig();
+		manager.refreshConfig();
 		productLines = manager.queryAllProductLines();
 		Assert.assertEquals(1, productLines.size());
 	}
