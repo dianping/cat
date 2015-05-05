@@ -13,10 +13,10 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	public String m_currentDomain;
 
 	private String m_currentType;
-	
+
 	private AllTransactionConfigManager m_configManager;
 
-	public TransactionReportTypeAggregator(TransactionReport report,AllTransactionConfigManager configManager) {
+	public TransactionReportTypeAggregator(TransactionReport report, AllTransactionConfigManager configManager) {
 		m_report = report;
 		m_configManager = configManager;
 	}
@@ -108,14 +108,15 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		Machine machine = m_report.findOrCreateMachine(m_currentDomain);
 		String typeName = type.getId();
-		TransactionType result = machine.findOrCreateType(typeName);
-
-		m_currentType = typeName;
-		mergeType(result, type);
-
+		
 		if (validateType(typeName)) {
+			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+			TransactionType result = machine.findOrCreateType(typeName);
+
+			m_currentType = typeName;
+			mergeType(result, type);
+
 			super.visitType(type);
 		}
 	}
@@ -125,6 +126,6 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	}
 
 	private boolean validateName(String type, String name) {
-		return m_configManager.validate(type,name);
+		return m_configManager.validate(type, name);
 	}
 }

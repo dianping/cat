@@ -29,7 +29,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Inject
 	private AllTransactionConfigManager m_transactionManager;
-	
+
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	@Override
@@ -49,6 +49,8 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			TransactionReport all = createAggregatedReport(reports);
 
 			reports.put(all.getDomain(), all);
+			
+			System.err.println(all);
 		}
 	}
 
@@ -69,7 +71,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
 		TransactionReport first = reports.values().iterator().next();
 		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
-		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all,m_transactionManager);
+		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all, m_transactionManager);
 
 		try {
 			for (TransactionReport report : reports.values()) {
