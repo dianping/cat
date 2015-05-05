@@ -49,7 +49,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
 	public AllTransactionConfig getConfig() {
 		return m_config;
-   }
+	}
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -132,7 +132,9 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean validate(String type) {
-		return m_config.getTypes().containsKey(type);
+		Map<String, Type> types = m_config.getTypes();
+		
+		return types.containsKey(type) || types.containsKey("*");
 	}
 
 	public boolean validate(String type, String name) {
