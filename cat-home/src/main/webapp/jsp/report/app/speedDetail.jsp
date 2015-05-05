@@ -121,16 +121,16 @@
 	</td>
 	</tr>
 	<tr class="text-success">
-		<th style="text-align: center">时间</th>
-		<th style="text-align: center">访问次数</th>
-		<th style="text-align: center">慢用户比例</th>
-		<th style="text-align: center">延时(ms)</th>
+		<th style="text-align: right">时间</th>
+		<th style="text-align: right">访问次数</th>
+		<th style="text-align: right">慢用户比例</th>
+		<th style="text-align: right">延时(ms)</th>
 		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
-			<th style="text-align: center">对比时间</th>
-			<th style="text-align: center">对比访问次数</th>
-			<th style="text-align: center">对比慢用户比例</th>
-			<th style="text-align: center">对比延时(ms)</th>
-			<th style="text-align: center">变化比例</th>
+			<th style="text-align: right">对比时间</th>
+			<th style="text-align: right">对比访问次数</th>
+			<th style="text-align: right">对比慢用户比例</th>
+			<th style="text-align: right">对比延时(ms)</th>
+			<th style="text-align: right">变化比例</th>
 		</c:if>
 	</tr>
 	</thead>
@@ -178,16 +178,16 @@
 	</td>
 	</tr>
 	<tr class="text-success">
-		<th style="text-align: center">时间</th>
-		<th style="text-align: center">访问次数</th>
-		<th style="text-align: center">慢用户比例</th>
-		<th style="text-align: center">延时(ms)</th>
+		<th style="text-align: right">时间</th>
+		<th style="text-align: right">访问次数</th>
+		<th style="text-align: right">慢用户比例</th>
+		<th style="text-align: right">延时(ms)</th>
 		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedDetails) gt 1}">
-			<th style="text-align: center">对比时间</th>
-			<th style="text-align: center">对比访问次数</th>
-			<th style="text-align: center">对比慢用户比例</th>
-			<th style="text-align: center">对比延时(ms)</th>
-			<th style="text-align: center">变化比例</th>
+			<th style="text-align: right">对比时间</th>
+			<th style="text-align: right">对比访问次数</th>
+			<th style="text-align: right">对比慢用户比例</th>
+			<th style="text-align: right">对比延时(ms)</th>
+			<th style="text-align: right">变化比例</th>
 		</c:if>
 	</tr></thead>
 	<tbody id="details">
