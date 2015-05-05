@@ -49,8 +49,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			TransactionReport all = createAggregatedReport(reports);
 
 			reports.put(all.getDomain(), all);
-			
-			System.err.println(all);
 		}
 	}
 
