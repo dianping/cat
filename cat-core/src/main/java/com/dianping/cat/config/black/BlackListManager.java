@@ -17,7 +17,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.black.entity.AllTransactionConfig;
+import com.dianping.cat.home.black.entity.BlackList;
 import com.dianping.cat.home.black.transform.DefaultSaxParser;
 
 public class BlackListManager implements Initializable, LogEnabled {
@@ -30,7 +30,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private AllTransactionConfig m_blackList;
+	private BlackList m_blackList;
 
 	private Logger m_logger;
 
@@ -47,7 +47,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 		m_logger = logger;
 	}
 
-	public AllTransactionConfig getBlackList() {
+	public BlackList getBlackList() {
 		return m_blackList;
 	}
 
@@ -81,7 +81,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 			Cat.logError(e);
 		}
 		if (m_blackList == null) {
-			m_blackList = new AllTransactionConfig();
+			m_blackList = new BlackList();
 		}
 	}
 
@@ -105,7 +105,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllTransactionConfig blackList = DefaultSaxParser.parse(content);
+				BlackList blackList = DefaultSaxParser.parse(content);
 
 				m_blackList = blackList;
 				m_modifyTime = modifyTime;

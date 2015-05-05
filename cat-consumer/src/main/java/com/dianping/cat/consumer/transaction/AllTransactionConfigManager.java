@@ -2,6 +2,8 @@ package com.dianping.cat.consumer.transaction;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -14,11 +16,13 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.consumer.transaction.config.entity.AllTransactionConfig;
+import com.dianping.cat.consumer.transaction.config.entity.Name;
+import com.dianping.cat.consumer.transaction.config.entity.Type;
+import com.dianping.cat.consumer.transaction.config.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.black.entity.AllTransactionConfig;
-import com.dianping.cat.home.black.transform.DefaultSaxParser;
 
 public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
@@ -42,6 +46,10 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+
+	public AllTransactionConfig getConfig() {
+		return m_config;
+   }
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -121,6 +129,28 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return true;
+	}
+
+	public boolean validate(String type) {
+		return m_config.getTypes().containsKey(type);
+	}
+
+	public boolean validate(String type, String name) {
+		Map<String, Type> types = m_config.getTypes();
+		Type typeConfig = types.get(type);
+
+		if (typeConfig != null) {
+			List<Name> list = typeConfig.getNameList();
+
+			for (Name nameConfig : list) {
+				String configId = nameConfig.getId();
+
+				if (configId.equals(name) || "*".equals(configId)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }

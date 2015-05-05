@@ -12,6 +12,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
@@ -49,6 +50,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
+	
+	@Inject
+	private AllTransactionConfigManager m_transactionConfigManager;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -158,8 +162,15 @@ public class GlobalConfigProcessor {
 			}
 			model.setContent(m_serverFilterConfigManager.getConfig().toString());
 			break;
+		case TRANSACTION_ALL_CONFIG:
+			String transactionConfig = payload.getContent();
+			if (!StringUtils.isEmpty(transactionConfig)) {
+				model.setOpState(m_transactionConfigManager.insert(transactionConfig));
+			}
+			model.setContent(m_transactionConfigManager.getConfig().toString());
+			break;
 		default:
-			throw new RuntimeException("Error action name " + action.getName());
+			break;
 		}
 	}
 

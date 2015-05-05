@@ -93,6 +93,9 @@
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
+							<li id="transactionAllConfig"><a href="/cat/s/config?op=transactionAllConfig">
+								<i class="menu-icon fa fa-caret-right"></i>Transaction合并</a>
+								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
 								<i class="menu-icon fa fa-caret-right"></i>异常告警配置</a>
 								<b class="arrow"></b></li>

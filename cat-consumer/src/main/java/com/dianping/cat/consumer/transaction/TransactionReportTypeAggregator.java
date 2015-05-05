@@ -13,9 +13,12 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	public String m_currentDomain;
 
 	private String m_currentType;
+	
+	private AllTransactionConfigManager m_configManager;
 
-	public TransactionReportTypeAggregator(TransactionReport report) {
+	public TransactionReportTypeAggregator(TransactionReport report,AllTransactionConfigManager configManager) {
 		m_report = report;
+		m_configManager = configManager;
 	}
 
 	private void mergeName(TransactionName old, TransactionName other) {
@@ -118,10 +121,10 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	}
 
 	private boolean validateType(String type) {
-		return true;
+		return m_configManager.validate(type);
 	}
 
 	private boolean validateName(String type, String name) {
-		return true;
+		return m_configManager.validate(type,name);
 	}
 }
