@@ -93,6 +93,9 @@
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
+							<li id="transactionAllConfig"><a href="/cat/s/config?op=transactionAllConfig">
+								<i class="menu-icon fa fa-caret-right"></i>Transaction合并</a>
+								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
 								<i class="menu-icon fa fa-caret-right"></i>异常告警配置</a>
 								<b class="arrow"></b></li>
@@ -165,14 +168,14 @@
 							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
 								<b class="arrow"></b></li>
-							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
-								<b class="arrow"></b></li>
 							<li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>全局黑名单</a>
 								<b class="arrow"></b></li>
-								<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
+							<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
+								<b class="arrow"></b></li>
+							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
 						</ul></li>
 					</ul>

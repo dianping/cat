@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.transaction.config" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true">
+	<entity name="all-transaction-config" root="true">
+		<entity-ref name="type" type="map" names="types" method-find-or-create="true" />
+	</entity>
+	<entity name="type">
+		<attribute name="id"  value-type="String"  key="true" />
+		<entity-ref name="name" type="list"/>
+	</entity>
+	<entity name="name">
+		<attribute name="id"  value-type="String" />
+	</entity>
+</model>
+
