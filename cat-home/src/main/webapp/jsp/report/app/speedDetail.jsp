@@ -117,7 +117,7 @@
 		<td colspan="9">
 		</c:otherwise>
 	</c:choose>
-	<span class="text-success">计算规则：</span>下面数据是从一天中288个5分钟点数据求和再平均的结果
+	<span class="text-success">计算规则：</span>一天中288个5分钟点数据求和再平均的结果
 	</td>
 	</tr>
 	<tr class="text-success">
@@ -174,7 +174,7 @@
 		<td colspan="9">
 		</c:otherwise>
 	</c:choose>
-	<span class="text-success">计算规则：</span>下面数据是这个测速点5分钟内所有数据求和再平均的结果
+	<span class="text-success">计算规则：</span>这个测速点5分钟内所有数据求和再平均的结果
 	</td>
 	</tr>
 	<tr class="text-success">

@@ -60,6 +60,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
+	private Map<String, AppDataDetail> m_comparisonAppDetails;
+
 	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
 	private String m_content;
@@ -168,6 +170,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public List<Command> getCommands() {
 		return m_commands;
+	}
+
+	public Map<String, AppDataDetail> getComparisonAppDetails() {
+		return m_comparisonAppDetails;
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -315,6 +321,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setCommands(List<Command> commands) {
 		m_commands = commands;
+	}
+
+	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {
+		m_comparisonAppDetails = comparisonAppDetail;
 	}
 
 	public void setConnectionTypes(Map<Integer, Item> map) {

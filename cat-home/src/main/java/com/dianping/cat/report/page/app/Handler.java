@@ -143,7 +143,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
-
 	}
 
 	private Map<String, List<Speed>> buildPageStepInfo() {
@@ -212,6 +211,7 @@ public class Handler implements PageHandler<Context> {
 
 			model.setLineChart(lineChartPair.getKey());
 			model.setAppDataDetailInfos(lineChartPair.getValue());
+			model.setComparisonAppDetails(buildComparisonInfo(payload));
 			break;
 		case PIECHART:
 			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload, field);
@@ -357,6 +357,45 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private Map<String, AppDataDetail> buildComparisonInfo(Payload payload) {
+		CommandQueryEntity currentEntity = payload.getQueryEntity1();
+		CommandQueryEntity comparisonEntity = payload.getQueryEntity2();
+		Map<String, AppDataDetail> result = new HashMap<String, AppDataDetail>();
+
+		if (currentEntity != null) {
+			AppDataDetail detail = buildComparisonInfo(currentEntity);
+
+			if (detail != null) {
+				result.put("当前值", detail);
+			}
+		}
+
+		if (comparisonEntity != null) {
+			AppDataDetail detail = buildComparisonInfo(comparisonEntity);
+
+			if (detail != null) {
+				result.put("对比值", detail);
+			}
+		}
+
+		return result;
+	}
+
+	private AppDataDetail buildComparisonInfo(CommandQueryEntity entity) {
+		AppDataDetail appDetail = null;
+
+		try {
+			List<AppDataDetail> appDetails = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
 	}
 
 	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
