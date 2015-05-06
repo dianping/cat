@@ -125,19 +125,18 @@
 		<br/>
 <table id="web_content" class="table table-striped table-condensed table-bordered table-hover">
 	<thead>
-	<tr><td colspan="6"><span class="text-success">计算规则：</span>不考虑查询维度，查询所有日期数据，得到至多288个5分钟点数据求和及平均的结果</td></tr>
 	<tr class="text-success">
-		<th class="center">类别</th>
-		<th class="center">成功率(%)</th>
-		<th class="center">总请求数</th>
-		<th class="center">成功平均延迟(ms)</th>
-		<th class="center">平均发包(B)</th>
-		<th class="center">平均回包(B)</th>
+		<th class="right text-success">类别</th>
+		<th class="right text-success">成功率(%)</th>
+		<th class="right text-success">总请求数</th>
+		<th class="right text-success">成功平均延迟(ms)</th>
+		<th class="right text-success">平均发包(B)</th>
+		<th class="right text-success">平均回包(B)</th>
 	</tr></thead>
 	<tbody>
 		<c:forEach var="item" items="${model.comparisonAppDetails}">
 		<tr class="right">
-			<td class="center">${item.key}</td>
+			<td>${item.key}</td>
 			<td>${w:format(item.value.successRatio,'#0.000')}%</td>
 			<td>${w:format(item.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(item.value.responseTimeAvg,'###,##0.000')}</td>
@@ -147,21 +146,21 @@
 		</c:forEach>
 	</tbody>
 </table>
+<h5 class="center text-success"><strong>点击展开，进行OLAP查询</strong></h5>
 <table id="comparison_content" class="table table-striped table-condensed table-bordered table-hover">
 	<thead>
-	<tr><td colspan="11"><span class="text-success">计算规则：</span>根据当前维度展开项，查询当前所选天，得到至多288个5分钟点数据求和及平均的结果</td></tr>
-	<tr class="text-success">
-		<th class="center">网络类型</th>
-		<th class="center">版本</th>
-		<th class="center">连接类型</th>
-		<th class="center">平台</th>
-		<th class="center">地区</th>
-		<th class="center">运营商</th>
-		<th class="center"><a href="javascript:queryGroupBy('success');">成功率</a>(%)</th>
-		<th class="center"><a href="javascript:queryGroupBy('request');">总请求数</a></th>
-		<th class="center"><a href="javascript:queryGroupBy('delay');">成功平均延迟</a>(ms)</th>
-		<th class="center"><a href="javascript:queryGroupBy('requestPackage');">平均发包</a>(B)</th>
-		<th class="center"><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
+	<tr>
+		<th class="right text-success">网络类型</th>
+		<th class="right text-success">版本</th>
+		<th class="right text-success">连接类型</th>
+		<th class="right text-success">平台</th>
+		<th class="right text-success">地区</th>
+		<th class="right text-success">运营商</th>
+		<th class="right"><a href="javascript:queryGroupBy('success');">成功率</a>(%)</th>
+		<th class="right"><a href="javascript:queryGroupBy('request');">总请求数</a></th>
+		<th class="right"><a href="javascript:queryGroupBy('delay');">成功平均延迟</a>(ms)</th>
+		<th class="right"><a href="javascript:queryGroupBy('requestPackage');">平均发包</a>(B)</th>
+		<th class="right"><a href="javascript:queryGroupBy('responsePackage');">平均回包</a>(B)</th>
 	</tr></thead>
 	<tbody>
 	<c:forEach var="item" items="${model.appDataDetailInfos}" varStatus="status">
