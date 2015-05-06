@@ -24,7 +24,7 @@ public class AppSpeedDetail {
 	public String getDateTime() {
 		long time = m_period.getTime() + m_minuteOrder * TimeHelper.ONE_MINUTE;
 
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(time));
+		return new SimpleDateFormat("HH:mm").format(new Date(time));
 	}
 
 	public String getDayTime() {

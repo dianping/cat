@@ -106,7 +106,7 @@
 			<div id="${model.appSpeedDisplayInfo.lineChart.id}"></div>
 		</div>
 		<br/>
-<table id="web_content" class="table table-striped table-condensed   table-hover">
+<table id="web_content" class="table table-striped table-condensed table-bordered table-hover">
 	<thead>
 	<tr>
 	<c:choose>
@@ -121,16 +121,16 @@
 	</td>
 	</tr>
 	<tr class="text-success">
-		<th style="text-align: center">时间</th>
-		<th style="text-align: center">访问次数</th>
-		<th style="text-align: center">慢用户比例</th>
-		<th style="text-align: center">延时(ms)</th>
+		<th style="text-align: center"  width="10%">时间</th>
+		<th style="text-align: center" width="10%">访问次数</th>
+		<th style="text-align: center" width="10%">慢用户比例</th>
+		<th style="text-align: center" width="10%">延时(ms)</th>
 		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
-			<th style="text-align: center">对比时间</th>
-			<th style="text-align: center">对比访问次数</th>
-			<th style="text-align: center">对比慢用户比例</th>
-			<th style="text-align: center">对比延时(ms)</th>
-			<th style="text-align: center">变化比例</th>
+			<th style="text-align: center" width="10%">对比时间</th>
+			<th style="text-align: center" width="10%">对比访问次数</th>
+			<th style="text-align: center" width="10%">对比慢用户比例</th>
+			<th style="text-align: center" width="10%">对比延时(ms)</th>
+			<th style="text-align: center" width="10%">变化比例</th>
 		</c:if>
 	</tr>
 	</thead>
@@ -163,7 +163,7 @@
 	</tbody>
 </table>
 
-<table id="web_content" class="table table-striped table-condensed   table-hover">
+<table id="web_content" class="table table-striped table-condensed table-bordered table-hover">
 	<thead>
 	<tr>
 	<c:choose>
@@ -178,23 +178,23 @@
 	</td>
 	</tr>
 	<tr class="text-success">
-		<th style="text-align: center">时间</th>
-		<th style="text-align: center">访问次数</th>
-		<th style="text-align: center">慢用户比例</th>
-		<th style="text-align: center">延时(ms)</th>
+		<th style="text-align: center" width="10%">时间</th>
+		<th style="text-align: center" width="10%">访问次数</th>
+		<th style="text-align: center" width="10%">慢用户比例</th>
+		<th style="text-align: center" width="10%">延时(ms)</th>
 		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedDetails) gt 1}">
-			<th style="text-align: center">对比时间</th>
-			<th style="text-align: center">对比访问次数</th>
-			<th style="text-align: center">对比慢用户比例</th>
-			<th style="text-align: center">对比延时(ms)</th>
-			<th style="text-align: center">变化比例</th>
+			<th style="text-align: center" width="10%">对比时间</th>
+			<th style="text-align: center" width="10%">对比访问次数</th>
+			<th style="text-align: center" width="10%">对比慢用户比例</th>
+			<th style="text-align: center" width="10%">对比延时(ms)</th>
+			<th style="text-align: center" width="10%">变化比例</th>
 		</c:if>
 	</tr></thead>
 	<tbody id="details">
 		<c:set var="details" value="${model.appSpeedDetails}" />
 		<c:forEach var="entry" items="${details['当前值']}" >
 		<tr class="right" >
-	 		<td style="text-align: center">${entry.value.dateTime}</td>
+	 		<td style="text-align: center" width="10%">${entry.value.dateTime}</td>
 			<td>${w:format(entry.value.accessNumberSum,'#,###,###,###,##0')}</td>
 			<td>${w:format(entry.value.slowRatio,'#0.000')}%</td>
 			<td>${w:format(entry.value.responseTimeAvg,'#,###,###,###,##0')}</td>
