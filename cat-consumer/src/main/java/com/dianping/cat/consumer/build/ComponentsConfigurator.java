@@ -45,6 +45,7 @@ import com.dianping.cat.consumer.storage.StorageDelegate;
 import com.dianping.cat.consumer.storage.StorageReportUpdater;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
+import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.config.ConfigDao;
@@ -85,6 +86,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMetricComponents());
 		all.addAll(defineStorageComponents());
 
+		all.add(C(AllTransactionConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		return all;
@@ -265,7 +267,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class,
-		      ServerFilterConfigManager.class));
+		      ServerFilterConfigManager.class, AllTransactionConfigManager.class));
 
 		return all;
 	}

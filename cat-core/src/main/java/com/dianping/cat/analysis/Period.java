@@ -75,7 +75,11 @@ public class Period {
 		for (Entry<String, List<PeriodTask>> entry : m_tasks.entrySet()) {
 			List<PeriodTask> tasks = entry.getValue();
 			int length = tasks.size();
-			int index = Math.abs(domain.hashCode()) % length;
+			int index = 0;
+
+			if (length > 1) {
+				index = Math.abs(domain.hashCode()) % length;
+			}
 			PeriodTask task = tasks.get(index);
 			boolean enqueue = task.enqueue(tree);
 
