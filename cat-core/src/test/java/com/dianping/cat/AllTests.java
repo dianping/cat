@@ -5,7 +5,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzerTest;
-import com.dianping.cat.analysis.DefaultMessageAnalyzerManagerTest;
 import com.dianping.cat.analysis.PeriodTaskTest;
 import com.dianping.cat.message.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.codec.WaterfallMessageCodecTest;
@@ -47,8 +46,6 @@ PeriodTaskTest.class,
 ServerConfigManagerTest.class,
 
 AbstractMessageAnalyzerTest.class,
-
-DefaultMessageAnalyzerManagerTest.class,
 
 DefaultReportManagerTest.class
 

@@ -441,6 +441,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.black.BlackListManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6068,11 +6071,26 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.config.SenderConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.config.SenderConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+			<implementation>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

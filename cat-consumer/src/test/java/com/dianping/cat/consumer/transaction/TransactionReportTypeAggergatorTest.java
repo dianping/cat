@@ -17,20 +17,35 @@ public class TransactionReportTypeAggergatorTest {
 		TransactionReport report3 = parse("transaction_report_aggergator3.xml");
 		TransactionReport report4 = parse("transaction_report_aggergator4.xml");
 		TransactionReport result = new TransactionReport("All");
-		TransactionReportTypeAggregator aggergator = new TransactionReportTypeAggregator(result);
-		
+		TransactionReportTypeAggregator aggergator = new TransactionReportTypeAggregator(result,
+		      new ExtendAllTransactionConfigManager());
+
 		aggergator.visitTransactionReport(report1);
 		aggergator.visitTransactionReport(report2);
 		aggergator.visitTransactionReport(report3);
 		aggergator.visitTransactionReport(report4);
-		
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_aggergatorAll.xml"), "utf-8");
+
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_aggergatorAll.xml"),
+		      "utf-8");
 		Assert.assertEquals(expected.replaceAll("\\r", ""), result.toString().replaceAll("\\r", ""));
 	}
 
 	private TransactionReport parse(String name) throws Exception {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream(name), "utf-8");
 		return DefaultSaxParser.parse(source);
+	}
+
+	public static class ExtendAllTransactionConfigManager extends AllTransactionConfigManager {
+
+		@Override
+		public boolean validate(String type) {
+			return true;
+		}
+
+		@Override
+		public boolean validate(String type, String name) {
+			return true;
+		}
 	}
 
 }

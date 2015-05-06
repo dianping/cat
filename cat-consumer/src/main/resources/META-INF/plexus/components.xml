@@ -59,6 +59,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -735,6 +738,18 @@
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+			<implementation>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>org.unidal.initialization.Module</role>
