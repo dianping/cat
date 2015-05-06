@@ -114,7 +114,7 @@
 		<th class="right text-success" width="10%">慢用户比例</th>
 		<th class="right text-success" width="10%">延时(ms)</th>
 		<c:if test="${fn:length(model.appSpeedDisplayInfo.appSpeedSummarys) gt 1}">
-			<th class="right text-success" width="10%">对比时间</th>
+			<th class="right text-success" width="10%">对比日期</th>
 			<th class="right text-success" width="10%">对比访问次数</th>
 			<th class="right text-success" width="10%">对比慢用户比例</th>
 			<th class="right text-success" width="10%">对比延时(ms)</th>
