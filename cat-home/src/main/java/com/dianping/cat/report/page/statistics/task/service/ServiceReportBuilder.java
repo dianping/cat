@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -40,7 +40,7 @@ public class ServiceReportBuilder implements TaskBuilder {
 	protected CrossReportService m_crossReportService;
 
 	@Inject
-	private ServerConfigManager m_configManger;
+	private ServerFilterConfigManager m_configManger;
 
 	Map<String, Domain> stat = new HashMap<String, Domain>();
 

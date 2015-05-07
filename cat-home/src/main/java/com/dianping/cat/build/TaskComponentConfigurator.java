@@ -12,6 +12,7 @@ import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
@@ -154,27 +155,27 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, HeartbeatReportService.class));
 
 		all.add(C(TaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ProblemReportService.class,
-		      BugReportService.class, ServerConfigManager.class));
+		      BugReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
-		      ServiceReportService.class, ServerConfigManager.class));
+		      ServiceReportService.class, ServerFilterConfigManager.class));
 
 		
 		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(CrossReportService.class));
 
 		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
-		      .req(StateReportService.class));
+		      .req(StateReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(StateReportService.class,
 		      RouterConfigService.class, RouterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
-		      HeavyReportService.class, ServerConfigManager.class));
+		      HeavyReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
 		      UtilizationReportService.class, TransactionReportService.class, HeartbeatReportService.class,
-		      CrossReportService.class, TransactionMergeHelper.class, ServerConfigManager.class));
+		      CrossReportService.class, TransactionMergeHelper.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      DependencyReportService.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
@@ -184,7 +185,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      NetGraphConfigManager.class));
 
 		all.add(C(TaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(HeartbeatReportService.class,
-		      JarReportService.class, ServerConfigManager.class));
+		      JarReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, SystemReportBuilder.ID, SystemReportBuilder.class).req(MetricReportService.class,
 		      SystemReportService.class, ProductLineConfigManager.class));
@@ -232,7 +233,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class).req(ProjectService.class)
 		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class)//
-		      .req(AppDataComparisonNotifier.class, ServerConfigManager.class));
+		      .req(AppDataComparisonNotifier.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
@@ -244,7 +245,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class));
 
-		all.add(C(CachedReportTask.class).req(ServerConfigManager.class).req(TransactionReportService.class)
+		all.add(C(CachedReportTask.class).req(ServerFilterConfigManager.class).req(TransactionReportService.class)
 		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
 		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
 		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")

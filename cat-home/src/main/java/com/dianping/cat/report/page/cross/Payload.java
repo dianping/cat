@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	private static int HOUR = 60 * 60 * 1000;
 
@@ -32,6 +32,8 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	@FieldMeta("method")
 	private String m_method;
+
+	private String m_rawDate;
 
 	public Payload() {
 		super(ReportPage.CROSS);
@@ -118,4 +120,15 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 			m_action = Action.HOURLY_PROJECT;
 		}
 	}
+
+	public String getRawDate() {
+		return m_rawDate;
+	}
+
+	public void setDate(String date) {
+		m_rawDate = date;
+
+		super.setDate(date);
+	}
+
 }

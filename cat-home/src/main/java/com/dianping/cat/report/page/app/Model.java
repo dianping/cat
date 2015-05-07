@@ -17,6 +17,7 @@ import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -59,6 +60,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
+	private Map<String, AppDataDetail> m_comparisonAppDetails;
+
 	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
 	private String m_content;
@@ -90,6 +93,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private DisplayCommands m_displayCommands;
 
+	private Collection<CrashLogDomain> m_crashLogDomains;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -100,14 +105,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public AppReport getAppReport() {
 		return m_appReport;
-	}
-
-	public int getDefaultCommand() {
-		return CommandQueryEntity.DEFAULT_COMMAND;
-	}
-
-	public int getDefaultActivity() {
-		return CommandQueryEntity.DEFAULT_ACTIVITY;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -175,6 +172,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_commands;
 	}
 
+	public Map<String, AppDataDetail> getComparisonAppDetails() {
+		return m_comparisonAppDetails;
+	}
+
 	public Map<Integer, Item> getConnectionTypes() {
 		return m_connectionTypes;
 	}
@@ -183,9 +184,21 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
+	public Collection<CrashLogDomain> getCrashLogDomains() {
+		return m_crashLogDomains;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.LINECHART;
+	}
+
+	public int getDefaultActivity() {
+		return CommandQueryEntity.DEFAULT_ACTIVITY;
+	}
+
+	public int getDefaultCommand() {
+		return CommandQueryEntity.DEFAULT_COMMAND;
 	}
 
 	public DisplayCommands getDisplayCommands() {
@@ -310,12 +323,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_commands = commands;
 	}
 
+	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {
+		m_comparisonAppDetails = comparisonAppDetail;
+	}
+
 	public void setConnectionTypes(Map<Integer, Item> map) {
 		m_connectionTypes = map;
 	}
 
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
+		m_crashLogDomains = crashLogDomains;
 	}
 
 	public void setDisplayCommands(DisplayCommands displayCommands) {

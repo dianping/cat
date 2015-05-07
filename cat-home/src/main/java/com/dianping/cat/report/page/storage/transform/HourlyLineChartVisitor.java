@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Machine;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
+import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
@@ -30,8 +31,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private static final int SIZE = 60;
 
-	private Set<String> m_operations;
-
 	private String m_domain;
 
 	private String m_currentOperation;
@@ -39,23 +38,7 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	public HourlyLineChartVisitor(String ip, String domain, Set<String> operations, Date start) {
 		m_ip = ip;
 		m_domain = domain;
-		m_operations = operations;
-		m_start = start;
 
-		for (String title : StorageConstants.TITLES) {
-			LineChart linechart = new LineChart();
-
-			linechart.setSize(SIZE);
-			linechart.setStep(TimeHelper.ONE_MINUTE);
-			linechart.setStart(start);
-			m_lineCharts.put(title, linechart);
-		}
-
-		for (String operation : operations) {
-			LineChartData data = new LineChartData(operation);
-
-			m_datas.put(operation, data);
-		}
 	}
 
 	private Map<Integer, Double> buildAvgData(Map<Integer, Double> counts, Map<Integer, Double> sums) {
@@ -128,11 +111,8 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 
 	@Override
 	public void visitOperation(Operation operation) {
-		if (m_operations.contains(operation.getId())) {
-			m_currentOperation = operation.getId();
-
-			super.visitOperation(operation);
-		}
+		m_currentOperation = operation.getId();
+		super.visitOperation(operation);
 	}
 
 	@Override
@@ -144,6 +124,27 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 		data.incSums(minute, segment.getSum());
 		data.incErrors(minute, segment.getError());
 		data.incLongs(minute, segment.getLongCount());
+	}
+
+	@Override
+	public void visitStorageReport(StorageReport storageReport) {
+		m_start = storageReport.getStartTime();
+
+		for (String title : StorageConstants.TITLES) {
+			LineChart linechart = new LineChart();
+
+			linechart.setSize(SIZE);
+			linechart.setStep(TimeHelper.ONE_MINUTE);
+			linechart.setStart(m_start);
+			m_lineCharts.put(title, linechart);
+		}
+
+		for (String operation : storageReport.getOps()) {
+			LineChartData data = new LineChartData(operation);
+
+			m_datas.put(operation, data);
+		}
+		super.visitStorageReport(storageReport);
 	}
 
 	public static class LineChartData {

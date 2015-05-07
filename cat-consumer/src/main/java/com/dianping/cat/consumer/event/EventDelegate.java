@@ -6,7 +6,7 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
@@ -21,7 +21,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	private TaskManager m_taskManager;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private ServerFilterConfigManager m_configManager;
 
 	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
@@ -57,7 +57,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public boolean createHourlyTask(EventReport report) {
 		String domain = report.getDomain();
 
-		if (m_manager.validateDomain(domain)) {
+		if (m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), EventAnalyzer.ID, TaskProlicy.ALL);
 		} else {
 			return true;

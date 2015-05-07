@@ -44,7 +44,7 @@ public class RealtimeConfigConfiguration extends AbstractResourceConfigurator {
 		}
 
 		@Override
-		public MessageAnalyzer getAnalyzer(String name, long startTime) {
+		public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
 			return null;
 		}
 	}

@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
@@ -25,7 +25,10 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	private TaskManager m_taskManager;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private ServerFilterConfigManager m_configManager;
+
+	@Inject
+	private AllTransactionConfigManager m_transactionManager;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
@@ -66,7 +69,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
 		TransactionReport first = reports.values().iterator().next();
 		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
-		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all);
+		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all, m_transactionManager);
 
 		try {
 			for (TransactionReport report : reports.values()) {
@@ -90,7 +93,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		if (domain.equals(Constants.ALL)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, TransactionAnalyzer.ID,
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
-		} else if (m_manager.validateDomain(domain)) {
+		} else if (m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), TransactionAnalyzer.ID,
 			      TaskProlicy.ALL);
 		} else {

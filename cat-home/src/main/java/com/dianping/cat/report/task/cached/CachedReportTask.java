@@ -7,7 +7,7 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -28,7 +28,7 @@ public class CachedReportTask implements Task {
 	private TransactionReportService m_transactionReportService;
 
 	@Inject
-	private ServerConfigManager m_configManger;
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private TransactionReportBuilder m_transactionReportBuilder;
@@ -56,7 +56,7 @@ public class CachedReportTask implements Task {
 		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
-			if (m_configManger.validateDomain(domain)) {
+			if (m_serverFilterConfigManager.validateDomain(domain)) {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Month-" + domain);
 
 				m_transactionReportBuilder.buildMonthlyTask(TransactionAnalyzer.ID, domain, start);
@@ -77,7 +77,7 @@ public class CachedReportTask implements Task {
 		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
-			if (m_configManger.validateDomain(domain)) {
+			if (m_serverFilterConfigManager.validateDomain(domain)) {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Week-" + domain);
 
 				m_transactionReportBuilder.buildWeeklyTask(TransactionAnalyzer.ID, domain, start);

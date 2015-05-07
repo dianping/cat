@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wizard package="com.dianping.cat.service">
-   <model package="com.dianping.cat.service.appData" name="appData">
-      <sample-model>app</sample-model>
-   </model>
-</wizard>

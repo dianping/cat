@@ -53,6 +53,9 @@
 						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
 							<b class="arrow"></b></li>
+						<li id="dashbord_cache"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=Cache">
+							<i class="menu-icon fa fa-caret-right"></i>缓存大盘</a>
+							<b class="arrow"></b></li>
 					</ul>
 				</li>
 				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>

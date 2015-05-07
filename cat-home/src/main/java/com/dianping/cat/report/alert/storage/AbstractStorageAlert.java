@@ -166,7 +166,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(name + "-" + getType(), period.getStartTime()) //
+		ModelRequest request = new ModelRequest(name + "-" + getName(), period.getStartTime()) //
 		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
@@ -180,8 +180,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	protected abstract StorageRuleConfigManager getRuleConfigManager();
-
-	protected abstract String getType();
 
 	protected double[] mergeArray(double[] from, double[] to) {
 		int fromLength = from.length;
@@ -208,7 +206,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
 
-			m_alertBuilder.processAlertEntity(minute, entity, param);
+			m_alertBuilder.processAlertEntity(getName(), minute, entity, param);
 		}
 	}
 
@@ -217,7 +215,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 		if (currentReport != null) {
 			for (String ip : currentReport.getIps()) {
-				if (m_storageConfigManager.isSQLAlertMachine(id, ip)) {
+				if (m_storageConfigManager.isSQLAlertMachine(id, ip, getName())) {
 					processMachine(id, currentReport, ip);
 				}
 			}
@@ -260,8 +258,8 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private Set<String> queryCurrentStorages() {
-		Set<String> ids = new HashSet<String>(m_storageConfigManager.queryStorageGroup(getType()).getStorages().keySet());
-		ModelRequest request = new ModelRequest("*-" + getType(), ModelPeriod.CURRENT.getStartTime()) //
+		Set<String> ids = new HashSet<String>(m_storageConfigManager.queryStorageGroup(getName()).getStorages().keySet());
+		ModelRequest request = new ModelRequest("*-" + getName(), ModelPeriod.CURRENT.getStartTime()) //
 		      .setProperty("ip", Constants.ALL);
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 

@@ -67,7 +67,9 @@
 								${basedir}/src/main/resources/META-INF/dal/model/app-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-comparison-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/black-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/black-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
+					 </manifest>
                   </configuration>
                </execution>
                <execution>

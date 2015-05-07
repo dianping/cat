@@ -1,11 +1,11 @@
 package com.dianping.cat.report.page.storage;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,6 +42,7 @@ import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Dep
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.transform.HourlyLineChartVisitor;
+import com.dianping.cat.report.page.storage.transform.PieChartVisitor;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.page.storage.transform.StorageOperationFilter;
 import com.dianping.cat.report.service.ModelRequest;
@@ -76,11 +77,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AlterationDao m_alterationDao;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("HH:mm");
-
 	private Map<String, Map<String, List<String>>> buildAlertLinks(Map<String, StorageAlertInfo> alertInfos, String type) {
 		Map<String, Map<String, List<String>>> links = new LinkedHashMap<String, Map<String, List<String>>>();
-		String format = m_storageGroupConfigManager.getSqlLinkFormat();
+		String format = m_storageGroupConfigManager.queryLinkFormat(type);
 
 		if (format != null) {
 			for (Entry<String, StorageAlertInfo> alertInfo : alertInfos.entrySet()) {
@@ -113,39 +112,30 @@ public class Handler implements PageHandler<Context> {
 		return links;
 	}
 
-	private Map<String, List<Alteration>> buildAlterations(Payload payload, Model model) {
+	private List<Alteration> buildAlterations(Payload payload, Model model) {
 		int minuteCounts = payload.getMinuteCounts();
 		int minute = model.getMinute();
 		long end = payload.getDate() + (minute + 1) * TimeHelper.ONE_MINUTE - TimeHelper.ONE_SECOND;
 		long start = payload.getDate() + (minute + 1 - minuteCounts) * TimeHelper.ONE_MINUTE;
-		Map<String, List<Alteration>> results = new LinkedHashMap<String, List<Alteration>>();
+		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
 			List<Alteration> alterations = m_alterationDao.findByTypeDruation(new Date(start), new Date(end),
-			      StorageConstants.SQL_TYPE, AlterationEntity.READSET_FULL);
+			      payload.getType(), AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
-				String date = m_sdf.format(alteration.getDate());
-				List<Alteration> alts = results.get(date);
-
-				if (alts == null) {
-					alts = new ArrayList<Alteration>();
-
-					results.put(date, alts);
-				}
-				alts.add(alteration);
+				results.add(alteration);
 			}
 		} catch (DalNotFoundException e) {
 			// ignore it
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-
 		return results;
 	}
 
-	private void buildLineCharts(Model model, Payload payload, String ipAddress, StorageReport storageReport) {
-		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(ipAddress, payload.getProject(),
+	private void buildLineCharts(Model model, Payload payload, StorageReport storageReport) {
+		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(payload.getIpAddress(), payload.getProject(),
 		      storageReport.getOps(), storageReport.getStartTime());
 
 		visitor.visitStorageReport(storageReport);
@@ -179,31 +169,33 @@ public class Handler implements PageHandler<Context> {
 		return StringUtils.join(ops, ";");
 	}
 
-	private StorageReport buildReport(Payload payload, Model model, StorageReport storageReport) {
+	private StorageReport filterReport(Payload payload, Model model, StorageReport storageReport) {
 		if (storageReport != null) {
 			Set<String> allOps = storageReport.getOps();
 			model.setOperations(allOps);
 
 			Pair<Boolean, Set<String>> pair = buildOperations(payload, model, allOps);
-			storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
-
 			if (pair.getKey()) {
 				StorageOperationFilter filter = new StorageOperationFilter(pair.getValue());
 				filter.visitStorageReport(storageReport);
 
 				storageReport = filter.getStorageReport();
 			}
-			StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
-			storageReport = sorter.getSortedReport();
-
-			model.setReport(storageReport);
-
-			Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
-			      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
-			model.setDepartments(departments);
-
 		}
 		return storageReport;
+	}
+
+	private StorageReport mergeReport(Payload payload, StorageReport storageReport) {
+		storageReport = m_mergeHelper.mergeReport(storageReport, payload.getIpAddress(), Constants.ALL);
+		StorageSorter sorter = new StorageSorter(storageReport, payload.getSort());
+
+		return sorter.getSortedReport();
+	}
+
+	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
+		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
+		      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
+		model.setDepartments(departments);
 	}
 
 	private String buildReportId(Payload payload) {
@@ -222,28 +214,40 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
-		String ipAddress = payload.getIpAddress();
 		StorageReport storageReport = null;
+		StorageReport rawReport = null;
 
 		switch (payload.getAction()) {
 		case HOURLY_STORAGE:
 			storageReport = queryHourlyReport(payload);
+			rawReport = filterReport(payload, model, storageReport);
+			storageReport = mergeReport(payload, rawReport);
 
-			buildReport(payload, model, storageReport);
+			model.setReport(storageReport);
+			buildDepartments(payload, model, storageReport);
 			break;
 		case HOURLY_STORAGE_GRAPH:
 			storageReport = queryHourlyReport(payload);
-			storageReport = buildReport(payload, model, storageReport);
+			rawReport = filterReport(payload, model, storageReport);
 
-			buildLineCharts(model, payload, ipAddress, storageReport);
+			if (Constants.ALL.equals(payload.getIpAddress())) {
+				buildPieCharts(model, payload, rawReport);
+			}
+			storageReport = mergeReport(payload, rawReport);
+
+			model.setReport(storageReport);
+			buildLineCharts(model, payload, storageReport);
+			buildDepartments(payload, model, storageReport);
 			break;
 		case HISTORY_STORAGE:
 			storageReport = queryHistoryReport(payload);
+			rawReport = filterReport(payload, model, storageReport);
+			storageReport = mergeReport(payload, rawReport);
 
-			buildReport(payload, model, storageReport);
+			model.setReport(storageReport);
+			buildDepartments(payload, model, storageReport);
 			break;
 		case DASHBOARD:
-
 			Map<String, StorageAlertInfo> alertInfos = m_alertInfoManager.queryAlertInfos(payload, model);
 
 			model.setLinks(buildAlertLinks(alertInfos, payload.getType()));
@@ -259,6 +263,13 @@ public class Handler implements PageHandler<Context> {
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void buildPieCharts(Model model, Payload payload, StorageReport report) {
+		PieChartVisitor visitor = new PieChartVisitor();
+
+		visitor.visitStorageReport(report);
+		model.setDistributionChart(visitor.getPiechartJson());
 	}
 
 	private void normalize(Model model, Payload payload) {
