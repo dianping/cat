@@ -69,17 +69,6 @@
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.matrix.build.ComponentsConfigurator</className>
-                     <env>dev</env>
-                  </configuration>
-               </execution>
             </executions>
          </plugin>
          <plugin>
