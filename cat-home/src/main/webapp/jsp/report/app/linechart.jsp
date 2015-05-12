@@ -195,14 +195,29 @@
 			
 			$("#"+domainId).val(domainInitVal);
 			commandSelect.empty();
-			for(var cou in commands){
-				var command = commands[cou];
-				if(command['title'] != undefined && command['title'].length > 0){
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-				}else{
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-				}
-			}
+//			for(var cou in commands){
+//				var command = commands[cou];
+//				if(command['title'] != undefined && command['title'].length > 0){
+//					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+//				}else{
+//					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+//				}
+//			}
+
+            var data = [];
+            for(var cou in commands){
+                var command = commands[cou];
+                if(command['title'] != undefined && command['title'].length > 0){
+                    data.push({id: command.id, value: command.title, category: "A"});
+                }else{
+                    data.push({id: command.id, value: command.name, category: "A"});
+                }
+            }
+
+            commandSelect.autocomplete({
+                minLength:0, source: data, select: function(event, ui) { commandSelect.val(ui.item.id); return false; }
+            }).val(data[0] ? data[0].id : null).bind('focus', function(){ $(this).autocomplete("search", ""); } );
+
 			if(commandInitVal != ''){
 				commandSelect.val(commandInitVal);
 			}
@@ -219,24 +234,50 @@
 			var commands = domain2CommandsJson[domain];
 			commandSelect.empty();
 			
-			for(var cou in commands){
-				var command = commands[cou];
-				if(command['title'] != undefined && command['title'].length > 0){
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-				}else{
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-				}
-			}
+//			for(var cou in commands){
+//				var command = commands[cou];
+//				if(command['title'] != undefined && command['title'].length > 0){
+//					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
+//				}else{
+//					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
+//				}
+//			}
+
+            var data = [];
+            for(var cou in commands){
+                var command = commands[cou];
+                if(command['title'] != undefined && command['title'].length > 0){
+                    data.push({id: command.id, value: command.title, category: "A"});
+                }else{
+                    data.push({id: command.id, value: command.name, category: "A"});
+                }
+            }
+            commandSelect.autocomplete({
+                minLength:0, source: data, select: function(event, ui) { commandSelect.val(ui.item.id); return false; }
+            }).val(data[0] ? data[0].id : null).bind('focus', function(){ $(this).autocomplete("search", ""); } );
 		}
 		
 		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
 			var domainsSelect = $("#"+domainSelectId);
 			for(var domain in domain2CommandsJson){
-				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+//				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
+                data.push({id: domain, value: domain, category: "A"});
 			}
-			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
-			domainsSelect.on('change', changeCommandByDomain);
-			domainsSelect.change();
+
+            domainsSelect.autocomplete({
+                minLength:0, source: data, select: function(event, ui) {
+                    domainsSelect.val(ui.item.id);
+                    changeCommandByDomain.call(domainsSelect);
+                    return false;
+                }
+            }).bind('focus', function(){
+                        $(this).autocomplete("search", "");
+                    });
+
+            changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
+
+//			domainsSelect.on('change', changeCommandByDomain);
+//			domainsSelect.change();
 		}
 
 		$(document).ready(

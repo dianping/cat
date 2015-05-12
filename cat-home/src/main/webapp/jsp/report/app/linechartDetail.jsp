@@ -6,9 +6,9 @@
 						&nbsp;日期
 					<input type="text" id="time" style="width:110px;"/>
 					</div>
-					&nbsp;项目<select id="domains" style="width: 200px;"></select>
-						命令字 <select id="command" style="width: 240px;">
-						</select> 
+					&nbsp;项目<input id="domains" style="width: 200px;"></input>
+						命令字 <input id="command" style="width: 240px;">
+						</input>
 				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value=''>All</option>
@@ -62,9 +62,9 @@
 						&nbsp;日期
 					<input type="text" id="time2" style="width:110px;"/>
 					</div>
-						&nbsp;项目<select id="domains2" style="width: 200px;"></select>
-						命令字 <select id="command2" style="width: 240px;">
-						</select> 
+						&nbsp;项目<input id="domains2" style="width: 200px;"></input>
+						命令字 <input id="command2" style="width: 240px;">
+						</input>
 						返回码 <select id="code2" style="width: 120px;">
 						<option value=''>All</option>
 				</select> 网络类型 <select id="network2" style="width: 80px;">
