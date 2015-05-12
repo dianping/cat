@@ -8,7 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -31,12 +31,12 @@ public class BugReportBuilder implements TaskBuilder {
 
 	@Inject
 	protected BugReportService m_reportService;
-	
+
 	@Inject
 	protected ProblemReportService m_problemReportService;
-	
+
 	@Inject
-	private ServerConfigManager m_configManager;
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	private SimpleDateFormat m_hourly_formate = new SimpleDateFormat("yyyyMMddHH");
 
@@ -58,7 +58,7 @@ public class BugReportBuilder implements TaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		
+
 		byte[] binaryContent = DefaultNativeBuilder.build(bugReport);
 		return m_reportService.insertDailyReport(report, binaryContent);
 	}
@@ -71,7 +71,7 @@ public class BugReportBuilder implements TaskBuilder {
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, ProblemAnalyzer.ID);
 
 		for (String domainName : domains) {
-			if (m_configManager.validateDomain(domainName)) {
+			if (m_serverFilterConfigManager.validateDomain(domainName)) {
 				ProblemReport problemReport = m_problemReportService.queryReport(domainName, start, end);
 				visitor.visitProblemReport(problemReport);
 			}
@@ -115,7 +115,8 @@ public class BugReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		BugReport bugReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime() + TimeHelper.ONE_WEEK));
+		BugReport bugReport = queryDailyReportsByDuration(domain, period,
+		      new Date(period.getTime() + TimeHelper.ONE_WEEK));
 
 		for (Domain d : bugReport.getDomains().values()) {
 			d.setProblemUrl(String.format("http://%s/cat/r/p?op=history&reportType=week&domain=%s&date=%s",

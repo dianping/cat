@@ -38,7 +38,7 @@
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -72,6 +72,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
@@ -437,6 +440,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.black.BlackListManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1231,7 +1237,7 @@
 					<role>com.dianping.cat.report.page.statistics.service.BugReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1247,7 +1253,7 @@
 					<role>com.dianping.cat.report.page.statistics.service.ServiceReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1288,6 +1294,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1318,7 +1327,7 @@
 					<role>com.dianping.cat.report.page.statistics.service.HeavyReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1343,7 +1352,7 @@
 					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1394,7 +1403,7 @@
 					<role>com.dianping.cat.report.page.statistics.service.JarReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1651,7 +1660,7 @@
 					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1717,7 +1726,7 @@
 			<implementation>com.dianping.cat.report.task.cached.CachedReportTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
@@ -2796,6 +2805,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageCacheContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.ContactorManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.ContactorManager</implementation>
 		</component>
@@ -2884,6 +2903,11 @@
 			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageSQLDecorator</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
+			<role-hint>Cache</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.StorageCacheDecorator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.decorator.DecoratorManager</implementation>
 		</component>
@@ -2917,14 +2941,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.sender.spliter.SpliterManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.spliter.SpliterManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-			<implementation>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.sender.Sender</role>
@@ -3090,7 +3106,7 @@
 					<role>com.dianping.cat.report.alert.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
@@ -3223,6 +3239,34 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.storage.StorageCacheAlert</role>
+			<implementation>com.dianping.cat.report.alert.storage.StorageCacheAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -3452,9 +3496,6 @@
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3464,10 +3505,6 @@
 		<component>
 			<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 			<implementation>com.dianping.cat.statistic.ServerStatisticManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.DomainValidator</role>
-			<implementation>com.dianping.cat.report.DomainValidator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.RealtimeConsumer</role>
@@ -4252,7 +4289,7 @@
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4303,7 +4340,19 @@
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+			<implementation>com.dianping.cat.config.server.ServerFilterConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4493,6 +4542,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
@@ -5434,6 +5486,9 @@
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5634,6 +5689,9 @@
 				<requirement>
 					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AlterationDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -5691,9 +5749,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5789,6 +5844,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6010,11 +6068,29 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.config.SenderConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.sender.config.SenderConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+			<implementation>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

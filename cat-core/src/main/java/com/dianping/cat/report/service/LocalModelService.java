@@ -1,6 +1,7 @@
 package com.dianping.cat.report.service;
 
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -40,30 +41,36 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	@SuppressWarnings("unchecked")
 	protected T getReport(ModelPeriod period, String domain) throws Exception {
-		MessageAnalyzer analyzer = null;
+		List<MessageAnalyzer> analyzers = null;
 
-		if (period.isCurrent() || period.isFuture()) {
-			analyzer = m_consumer.getCurrentAnalyzer(m_name);
+		if (domain == null || domain.length() == 0) {
+			domain = m_defaultDomain;
+		}
+
+		if (period.isCurrent()) {
+			analyzers = m_consumer.getCurrentAnalyzer(m_name);
 		} else if (period.isLast()) {
-			analyzer = m_consumer.getLastAnalyzer(m_name);
+			analyzers = m_consumer.getLastAnalyzer(m_name);
 		}
 
-		if (analyzer == null) {
+		if (analyzers == null) {
 			return null;
-		} else if (analyzer instanceof AbstractMessageAnalyzer) {
-			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
+		} else {
+			AbstractMessageAnalyzer<T> a = null;
+			int size = analyzers.size();
+			int index = 0;
 
-			if (domain == null || domain.length() == 0) {
-				return a.getReport(m_defaultDomain);
-			} else {
-				return a.getReport(domain);
+			if (size > 1) {
+				index = Math.abs(domain.hashCode()) % size;
 			}
+			
+			a = (AbstractMessageAnalyzer<T>) analyzers.get(index);
+			return a.getReport(domain);
 		}
-
-		throw new RuntimeException("Internal error: this should not be reached!");
 	}
 
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload) throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
 		try {
 			return buildReport(request, period, domain, payload);
 		} catch (ConcurrentModificationException e) {

@@ -23,10 +23,12 @@ import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.AlertDao;
@@ -103,14 +105,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
 		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
-		      req(StateReportService.class, ServerConfigManager.class));
+		      req(StateReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
 
 		all.add(C(TopologyGraphBuilder.class).req(DependencyItemBuilder.class));
 
 		all.add(C(TopologyGraphManager.class)
-		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class) //
+		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class,
+		            ServerFilterConfigManager.class) //
 		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
 		      .req(ModelService.class, DependencyAnalyzer.ID));
 
@@ -202,7 +205,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, BlackListManager.class));
+		      RouterConfigManager.class, BlackListManager.class, AllTransactionConfigManager.class));
 
 		return all;
 	}

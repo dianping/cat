@@ -218,7 +218,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	public void refreshMetricConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

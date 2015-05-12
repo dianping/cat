@@ -8,11 +8,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
@@ -31,7 +34,7 @@ import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
-public class AppConfigProcessor extends BaseProcesser {
+public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private AppRuleConfigManager m_appRuleConfigManager;
@@ -48,26 +51,7 @@ public class AppConfigProcessor extends BaseProcesser {
 	@Inject
 	private EventReportService m_eventReportService;
 
-	public void buildBatchApiConfig(Payload payload, Model model) {
-		Date start = TimeHelper.getCurrentDay(-1);
-		Date end = TimeHelper.getCurrentDay();
-		EventReport report = m_eventReportService.queryReport("broker-service", start, end);
-		EventReportVisitor visitor = new EventReportVisitor();
-
-		visitor.visitEventReport(report);
-		Set<String> validatePaths = visitor.getPaths();
-		Set<String> invalidatePaths = visitor.getInvalidatePaths();
-
-		Map<String, Integer> commands = m_appConfigManager.getCommands();
-
-		for (Entry<String, Integer> entry : commands.entrySet()) {
-			validatePaths.remove(entry.getKey());
-			invalidatePaths.remove(entry.getKey());
-		}
-
-		model.setValidatePaths(new ArrayList<String>(validatePaths));
-		model.setInvalidatePaths(new ArrayList<String>(invalidatePaths));
-	}
+	private Set<String> m_invalids = new HashSet<String>();
 
 	public void appRuleBatchUpdate(Payload payload, Model model) {
 		String content = payload.getContent();
@@ -76,7 +60,7 @@ public class AppConfigProcessor extends BaseProcesser {
 		for (String path : paths) {
 			try {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
-					m_appConfigManager.addCommand("", path, path, "api");
+					m_appConfigManager.addCommand("", path, path, "api", true);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -92,6 +76,27 @@ public class AppConfigProcessor extends BaseProcesser {
 		model.setPlatforms(appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(appConfigManager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(appConfigManager.queryCommands());
+	}
+
+	public void buildBatchApiConfig(Payload payload, Model model) {
+		Date start = TimeHelper.getCurrentDay(-1);
+		Date end = TimeHelper.getCurrentDay();
+		EventReport report = m_eventReportService.queryReport(Constants.BROKER_SERVICE, start, end);
+		EventReportVisitor visitor = new EventReportVisitor();
+
+		visitor.visitEventReport(report);
+		Set<String> validatePaths = visitor.getPaths();
+		Set<String> invalidatePaths = visitor.getInvalidatePaths();
+
+		Map<String, Integer> commands = m_appConfigManager.getCommands();
+
+		for (Entry<String, Integer> entry : commands.entrySet()) {
+			validatePaths.remove(entry.getKey());
+			invalidatePaths.remove(entry.getKey());
+		}
+
+		model.setValidatePaths(new ArrayList<String>(validatePaths));
+		model.setInvalidatePaths(new ArrayList<String>(invalidatePaths));
 	}
 
 	private void buildListInfo(Model model, Payload payload) {
@@ -115,6 +120,20 @@ public class AppConfigProcessor extends BaseProcesser {
 		buildBatchApiConfig(payload, model);
 		model.setSpeeds(m_appSpeedConfigManager.getConfig().getSpeeds());
 		model.setCodes(m_appConfigManager.getCodes());
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_invalids.add("jpg");
+		m_invalids.add("http");
+		m_invalids.add("file");
+		m_invalids.add("zip");
+		m_invalids.add("patch");
+		m_invalids.add("dianping://");
+		m_invalids.add("data:");
+		m_invalids.add(".js");
+		m_invalids.add("OTHERS");
+		m_invalids.add("hit-");
 	}
 
 	public void process(Action action, Payload payload, Model model) {
@@ -160,7 +179,7 @@ public class AppConfigProcessor extends BaseProcesser {
 				try {
 					String type = payload.getType();
 
-					if (m_appConfigManager.addCommand(domain, title, name, type).getKey()) {
+					if (m_appConfigManager.addCommand(domain, title, name, type, payload.isAll()).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
@@ -343,31 +362,40 @@ public class AppConfigProcessor extends BaseProcesser {
 		}
 	}
 
-	public static class EventReportVisitor extends BaseVisitor {
-		private Set<String> paths = new HashSet<String>();
+	public class EventReportVisitor extends BaseVisitor {
+		private Set<String> m_paths = new HashSet<String>();
 
-		private Set<String> invalidatePaths = new HashSet<String>();
+		private Set<String> m_invalidatePaths = new HashSet<String>();
 
 		public Set<String> getInvalidatePaths() {
-			return invalidatePaths;
+			return m_invalidatePaths;
 		}
 
 		public Set<String> getPaths() {
-			return paths;
+			return m_paths;
+		}
+
+		private boolean invalidate(String name) {
+			for (String str : m_invalids) {
+				if (StringUtils.isEmpty(str) || name.indexOf(str) > -1) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public void setInvalidatePaths(Set<String> invalidatePaths) {
-			this.invalidatePaths = invalidatePaths;
+			m_invalidatePaths = invalidatePaths;
 		}
 
 		@Override
 		public void visitName(EventName name) {
 			String id = name.getId();
 
-			if (id.indexOf(".") > 0 && id.indexOf("/") == -1 && id.indexOf(".jpg") == -1 && id.indexOf(".zip") == -1) {
-				paths.add(id);
+			if (invalidate(id)) {
+				m_invalidatePaths.add(id);
 			} else {
-				invalidatePaths.add(id);
+				m_paths.add(id);
 			}
 		}
 

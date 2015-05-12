@@ -3,18 +3,16 @@ package com.dianping.cat.analysis;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
@@ -25,7 +23,7 @@ public class Period {
 
 	private long m_endTime;
 
-	private List<PeriodTask> m_tasks;
+	private Map<String, List<PeriodTask>> m_tasks;
 
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
@@ -47,25 +45,42 @@ public class Period {
 		m_logger = logger;
 
 		List<String> names = m_analyzerManager.getAnalyzerNames();
-		Map<String, MessageAnalyzer> analyzers = new LinkedHashMap<String, MessageAnalyzer>();
 
-		m_tasks = new ArrayList<PeriodTask>(names.size());
+		m_tasks = new HashMap<String, List<PeriodTask>>();
 		for (String name : names) {
-			MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
-			MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
-			PeriodTask task = new PeriodTask(analyzer, queue, startTime);
+			List<MessageAnalyzer> messageAnalyzers = m_analyzerManager.getAnalyzer(name, startTime);
 
-			analyzers.put(name, analyzer);
-			task.enableLogging(m_logger);
-			m_tasks.add(task);
+			for (MessageAnalyzer analyzer : messageAnalyzers) {
+				MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
+				PeriodTask task = new PeriodTask(analyzer, queue, startTime);
+
+				task.enableLogging(m_logger);
+
+				List<PeriodTask> analyzerTasks = m_tasks.get(name);
+
+				if (analyzerTasks == null) {
+					analyzerTasks = new ArrayList<PeriodTask>();
+					m_tasks.put(name, analyzerTasks);
+				}
+				analyzerTasks.add(task);
+			}
 		}
 	}
 
 	public void distribute(MessageTree tree) {
 		m_serverStateManager.addMessageTotal(tree.getDomain(), 1);
 		boolean success = true;
+		String domain = tree.getDomain();
 
-		for (PeriodTask task : m_tasks) {
+		for (Entry<String, List<PeriodTask>> entry : m_tasks.entrySet()) {
+			List<PeriodTask> tasks = entry.getValue();
+			int length = tasks.size();
+			int index = 0;
+
+			if (length > 1) {
+				index = Math.abs(domain.hashCode()) % length;
+			}
+			PeriodTask task = tasks.get(index);
 			boolean enqueue = task.enqueue(tree);
 
 			if (enqueue == false) {
@@ -86,46 +101,46 @@ public class Period {
 		m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
 		      df.format(endDate)));
 
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("Checkpoint", "RealtimeConsumer");
-
 		try {
-			for (PeriodTask task : m_tasks) {
-				task.finish();
+			for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
+				for (PeriodTask task : tasks.getValue()) {
+					task.finish();
+				}
 			}
-
-			t.setStatus(Message.SUCCESS);
 		} catch (Throwable e) {
-			cat.logError(e);
-			t.setStatus(e);
+			Cat.logError(e);
 		} finally {
-			t.complete();
-
 			m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
 			      df.format(endDate)));
 		}
 	}
 
-	public MessageAnalyzer getAnalyzer(String name) {
-		List<String> names = m_analyzerManager.getAnalyzerNames();
-		int index = names.indexOf(name);
+	public List<MessageAnalyzer> getAnalyzer(String name) {
+		List<MessageAnalyzer> analyzers = new ArrayList<MessageAnalyzer>();
+		List<PeriodTask> tasks = m_tasks.get(name);
 
-		if (index >= 0) {
-			PeriodTask task = m_tasks.get(index);
-
-			return task.getAnalyzer();
+		if (tasks != null) {
+			for (PeriodTask task : tasks) {
+				analyzers.add(task.getAnalyzer());
+			}
 		}
-
-		return null;
+		return analyzers;
 	}
 
 	public List<MessageAnalyzer> getAnalzyers() {
 		List<MessageAnalyzer> analyzers = new ArrayList<MessageAnalyzer>(m_tasks.size());
 
-		for (PeriodTask task : m_tasks) {
-			analyzers.add(task.getAnalyzer());
+		for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
+			for (PeriodTask task : tasks.getValue()) {
+				analyzers.add(task.getAnalyzer());
+			}
 		}
+
 		return analyzers;
+	}
+
+	public long getStartTime() {
+		return m_startTime;
 	}
 
 	public boolean isIn(long timestamp) {
@@ -138,8 +153,17 @@ public class Period {
 		m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
 		      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
-		for (PeriodTask task : m_tasks) {
-			Threads.forGroup("Cat-RealtimeConsumer").start(task);
+		for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
+			List<PeriodTask> taskList = tasks.getValue();
+
+			for (int i = 0; i < taskList.size(); i++) {
+				PeriodTask task = taskList.get(i);
+
+				task.setIndex(i);
+
+				Threads.forGroup("Cat-RealtimeConsumer").start(task);
+			}
 		}
 	}
+
 }

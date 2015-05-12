@@ -20,10 +20,4 @@ public class StorageSQLAlert extends AbstractStorageAlert {
 	protected StorageRuleConfigManager getRuleConfigManager() {
 		return m_configManager;
 	}
-
-	@Override
-	protected String getType() {
-		return "SQL";
-	}
-
 }

@@ -47,6 +47,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
+	private BlockingQueue<MessageTree> m_atomicTrees = new LinkedBlockingQueue<MessageTree>(SIZE);
+	
 	private List<InetSocketAddress> m_serverAddresses;
 
 	private ChannelManager m_manager;
@@ -58,8 +60,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_attempts = new AtomicInteger();
-
-	private BlockingQueue<MessageTree> m_atomicTrees = new LinkedBlockingQueue<MessageTree>(SIZE * 10);
 
 	private static final int MAX_CHILD_NUMBER = 200;
 
@@ -127,6 +127,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		if (count % 1000 == 0 || count == 1) {
 			m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
 		}
+
+		tree = null;
 	}
 
 	private MessageTree mergeTree(BlockingQueue<MessageTree> trees) {

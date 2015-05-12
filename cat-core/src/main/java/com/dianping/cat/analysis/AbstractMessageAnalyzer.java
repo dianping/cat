@@ -15,10 +15,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	public static final long ONE_DAY = 24 * ONE_HOUR;
-	
+
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
-	
+
 	private long m_extraTime;
 
 	protected long m_startTime;
@@ -75,6 +75,11 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	@Override
 	public abstract void doCheckpoint(boolean atEnd);
+
+	@Override
+	public int getAnanlyzerCount() {
+		return 1;
+	}
 
 	protected long getExtraTime() {
 		return m_extraTime;

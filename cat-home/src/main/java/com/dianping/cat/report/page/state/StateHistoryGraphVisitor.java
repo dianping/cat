@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.state;
 
-import java.util.Set;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
@@ -26,7 +24,7 @@ public class StateHistoryGraphVisitor extends BaseVisitor {
 
 	private StateReport m_stateReport;
 
-	public StateHistoryGraphVisitor(String ip, Set<String> fakeDomains, long start, long end, String key) {
+	public StateHistoryGraphVisitor(String ip, long start, long end, String key) {
 		m_ip = ip;
 		m_start = start;
 		m_attribute = key;
@@ -146,7 +144,7 @@ public class StateHistoryGraphVisitor extends BaseVisitor {
 		} else if (m_attribute.equalsIgnoreCase("blockTotal")) {
 			m_data[hour] += (double) message.getBlockTotal();
 		} else if (m_attribute.equalsIgnoreCase("blockLoss")) {
-			m_data[hour] = (double) message.getBlockLoss();
+			m_data[hour] += (double) message.getBlockLoss();
 		} else if (m_attribute.equalsIgnoreCase("blockTime")) {
 			m_data[hour] += (double) message.getBlockTime() * 1.0 / 60 / 1000;
 		} else if (m_attribute.equalsIgnoreCase("size")) {

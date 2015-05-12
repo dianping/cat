@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.server.filter" enable-sax-parser="true" enable-validator="true">
+  <entity name="server-filter-config" root="true">
+    <element name="transaction-type" value-type="String" type="set" names="transaction-types" />
+    <element name="transaction-name" value-type="String" type="set" names="transaction-names" />
+    <element name="domain" value-type="String" type="set" names="domains" />
+    <entity-ref name="crash-log-domain" type="map" names="crash-log-domains" />
+  </entity>
+  <entity name="crash-log-domain">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="title" value-type="String" />
+  </entity>
+</model>
+

@@ -5,12 +5,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.storage.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.storage.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 
 <a:report title="Storage Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&type=${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -21,13 +22,16 @@
   	</div>
   	
   	<c:set var="linkMap" value="${model.links}" />
+  	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
+  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
   
+  <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
 		<table  class="smallTable" style="float:left" border="1">
 		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
 		<c:if test="${empty entry.value.storages}">
 			<tr><td>
-				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">访问正常</button>
+				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">${name}访问正常</button>
 			</td></tr>
 		</c:if>
 		<c:forEach var="storage" items="${entry.value.storages}">
@@ -38,8 +42,11 @@
 			<c:set var="minute" value="${times[1]}" />
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
+					<%-- <c:if test="${payload.type eq 'SQL'}">
+					</c:if>
+					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if> --%>
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
-			      	<thead><tr><td colspan="4" class="center"><h5><strong>数据库：[&nbsp;<a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=All' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
+			      	<thead><tr><td colspan="4" class="center"><h5><strong>${name}：[&nbsp;<a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}&type=${payload.type}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>
 							<th width="10%" class="center">机器</th>
 							<th width="10%" class="center">方法</th>
@@ -50,10 +57,10 @@
 							<tr>
 							<td rowspan="${machine_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${machine_entry.value.level == 1}">
-									<span class="text-warning"><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></span>
+									<span class="text-warning"><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></span>
 								</c:if>
 								<c:if test="${machine_entry.value.level == 2}">
-									<span class="text-danger"><strong><a href='/cat/r/storage?op=database&domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}' target='_blank'>${machine_entry.key}</a></strong></span>
+									<span class="text-danger"><strong><a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=${machine_entry.key}&date=${model.date}&type=${payload.type}' target='_blank'>${machine_entry.key}</a></strong></span>
 								</c:if>
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
@@ -115,6 +122,46 @@
 		</c:forEach>
 		</table>
 	</c:forEach>
+	</span>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<table class="table table-hover table-striped table-condensed table-bordered center"  style="width:100%">
+		<c:if test="${w:size(model.alterations) > 0}">
+			<tr class="text-success">
+				<th class="center">时间</th>
+				<th class="center">${name}</th>
+				<th class="center">主机名</th>
+				<th class="center">IP</th>
+				<th class="center">标题</th>
+				<th class="left">内容</th>
+				<th class="center">状态</th>
+			</tr>
+			<c:forEach var="alt" items="${model.alterations}">
+				<tr>
+					<td><fmt:formatDate value="${alt.date}" pattern="HH:mm:ss"/></td>
+					<td>${alt.domain}</td>
+					<td>${alt.hostname}</td>
+					<td>${alt.ip}</td>
+					<td>${alt.title}</td>
+					<td class="left">${alt.content}</td>
+					<td>
+						<c:if test="${alt.status == 0}" >
+							<button class="btn btn-xs btn-success">
+								<i class="ace-icon glyphicon glyphicon-ok bigger-120 btn-success"></i>
+							</button>
+						</c:if>
+						<c:if test="${alt.status != 0}" >
+							<button class="btn btn-xs btn-danger">
+								<i class="ace-icon glyphicon glyphicon-remove bigger-120 btn-danger"></i>
+							</button>
+						</c:if>
+					</td>
+				</tr>
+			</c:forEach>
+		</c:if>
+	</table>
 </jsp:body>
 </a:report>
 
@@ -146,6 +193,12 @@
 		$('.position').hide();
 		$('.switch').hide();
 		$('#Dashboard_report').addClass('active open');
-		$('#dashbord_database').addClass('active');
+		<c:if test="${payload.type eq 'SQL'}">
+			$('#dashbord_database').addClass('active');
+		</c:if>
+		<c:if test="${payload.type eq 'Cache'}">
+			$('#dashbord_cache').addClass('active');
+		</c:if>
+		
 	});
 </script>

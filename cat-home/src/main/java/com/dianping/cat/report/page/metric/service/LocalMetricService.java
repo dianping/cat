@@ -10,6 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.ApiPayload;
@@ -84,8 +85,9 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 			cdnReportConvertor.visitMetricReport(report);
 			report = cdnReportConvertor.getReport();
 		}
+		MetricReportFilter filter = new MetricReportFilter(payload.getMin(), payload.getMax());
 
-		return new MetricReportFilter().buildXml(report);
+		return filter.buildXml(report);
 	}
 
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
@@ -103,9 +105,28 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 	}
 
 	public static class MetricReportFilter extends com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder {
-		public MetricReportFilter() {
+
+		private int m_min;
+
+		private int m_max;
+
+		public MetricReportFilter(int min, int max) {
 			super(true, new StringBuilder(DEFAULT_SIZE));
+			m_min = min;
+			m_max = max;
 		}
+
+		@Override
+		public void visitSegment(Segment segment) {
+			int id = segment.getId();
+
+			if (m_min == -1 && m_max == -1) {
+				super.visitSegment(segment);
+			} else if (id <= m_max && id >= m_min) {
+				super.visitSegment(segment);
+			}
+		}
+
 	}
 
 }

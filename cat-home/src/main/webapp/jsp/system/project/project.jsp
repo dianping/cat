@@ -120,27 +120,27 @@
 		<tr>
 			<td style="width:10%;">CMDB事业部</td>
 			<td><input type="name" class="input-xlarge" name="project.bu" value="${model.project.bu}" /></td>
-			<td>cmdb中项目所属事业部名称<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
+			<td>cmdb中项目所属事业部名称<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB产品线</td>
 			<td><input type="name" class="input-xlarge" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
-			<td>cmdb中项目所属产品线名称<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
+			<td>cmdb中项目所属产品线名称<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">负责人</td>
 			<td><input type="name" class="input-xlarge" name="project.owner" value="${model.project.owner}"/></td>
-			<td>可选字段</td>
+			<td>项目负责人<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">项目组邮件</td>
 			<td><input type="name" name="project.email" class="input-xxlarge" value="${model.project.email}"/></td>
-			<td>可选字段(多个，逗号分割)</td>
+			<td>字段(多个，逗号分割)<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td>项目组号码</td>
 			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
-			<td>可选字段(多个，逗号分割)</td>
+			<td>字段(多个，逗号分割)<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" />&nbsp;

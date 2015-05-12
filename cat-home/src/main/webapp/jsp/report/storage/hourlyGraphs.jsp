@@ -18,17 +18,25 @@
 
 <table width="100%">
 	<tr>
-		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>操作量</h5>
-		<div id="countTrend" class="graph"></div></td>
+		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
+		<div id="errorTrend" class="graph"></div></td>
 		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>响应时间</h5>
 		<div id="avgTrend" class="graph"></div></td>
 	</tr>
 	<tr>
-		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>错误量</h5>
-		<div id="errorTrend" class="graph"></div></td>
+		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>操作量</h5>
+		<div id="countTrend" class="graph"></div></td>
 		<td width="50%"><h5 style="text-align:center"  class='text-center text-info'>长响应</h5>
 		<div id="longTrend" class="graph"></div></td>
 	</tr>
+	<c:if test="${payload.ipAddress eq 'All' and payload.project eq 'All' and model.distributionChart != null}">
+	<tr><td colspan="2" width="90%"><h5 style="text-align:center"  class='text-center text-info'>错误分布</h5>
+		<div id="piechart" class="graph"></div></td></tr>
+	<tr><td  style="display:none">
+		<div id ="piechartMeta">${model.distributionChart}</div>
+	</td>
+	</tr>
+	</c:if>
 	<tr><td  style="display:none">
 		<div id ="longTrendMeta">${model.longTrend}</div>
 	</td>
@@ -53,4 +61,8 @@
 	graphLineChart(document.getElementById('errorTrend'), errorTrend);
 	var longTrend = ${model.longTrend};
 	graphLineChart(document.getElementById('longTrend'), longTrend);
+	<c:if test="${payload.ipAddress eq 'All' and payload.project eq 'All' and model.distributionChart != null}">
+		var piechart = ${model.distributionChart};
+		graphPieChart(document.getElementById('piechart'), piechart);
+	</c:if>
 </script>

@@ -7,6 +7,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -27,6 +28,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
 
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
+
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -40,6 +44,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+
+	@Override
+   public int getAnanlyzerCount() {
+	   return 2;
+   }
 
 	@Override
 	public EventReport getReport(String domain) {
@@ -67,21 +76,21 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			EventReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			Message message = tree.getMessage();
+			String ip = tree.getIpAddress();
 
 			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message);
+				processTransaction(report, tree, (Transaction) message, ip);
 			} else if (message instanceof Event) {
-				processEvent(report, tree, (Event) message);
+				processEvent(report, tree, (Event) message, ip);
 			}
 		}
 	}
 
-	private void processEvent(EventReport report, MessageTree tree, Event event) {
+	private void processEvent(EventReport report, MessageTree tree, Event event, String ip) {
 		int count = 1;
-		String ip = tree.getIpAddress();
 		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
@@ -127,19 +136,20 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	private void processTransaction(EventReport report, MessageTree tree, Transaction t) {
+	private void processTransaction(EventReport report, MessageTree tree, Transaction t, String ip) {
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
+				processTransaction(report, tree, (Transaction) child, ip);
 			} else if (child instanceof Event) {
-				processEvent(report, tree, (Event) child);
+				processEvent(report, tree, (Event) child, ip);
 			}
 		}
 	}
-
+	
 	public void setReportManager(ReportManager<EventReport> reportManager) {
 		m_reportManager = reportManager;
 	}
+
 }

@@ -37,6 +37,9 @@ $(document).delegate('.storage_graph_link', 'click', function(e){
 					
 					data = $('#errorTrendMeta',cell).text();
 					graphLineChart($('#errorTrend',cell)[0],eval('('+data+')'));
+					
+					data = $('#piechartMeta',cell).text();
+					graphPieChart($('#piechart',cell)[0],eval('('+data+')'));
 				}
 			});
 		}

@@ -16,10 +16,9 @@ import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor.Di
 
 @ModelMeta(EventAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
-	@EntityMeta
+
 	private DisplayNames m_displayNameReport;
 
-	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
 
 	private List<String> m_groups;

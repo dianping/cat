@@ -16,10 +16,9 @@ import com.dianping.cat.report.page.transaction.transform.DistributionDetailVisi
 
 @ModelMeta(TransactionAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
-	@EntityMeta
+
 	private DisplayNames m_displayNameReport;
 
-	@EntityMeta
 	private DisplayTypes m_displayTypeReport;
 
 	private List<String> m_groups;

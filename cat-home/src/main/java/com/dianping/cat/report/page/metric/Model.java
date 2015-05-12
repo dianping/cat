@@ -88,7 +88,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	}
 
 	public void setJson(String json) {
-		this.m_json = json;
+		m_json = json;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {

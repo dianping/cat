@@ -17,7 +17,7 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 	private Map<Integer, Map<String, TrieTreeNode>> m_formats = new HashMap<Integer, Map<String, TrieTreeNode>>();
 
-	private Logger m_logger;
+	protected Logger m_logger;
 
 	/**
 	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
@@ -199,8 +199,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 		for (AggregationRule rule : rules) {
 			String format = rule.getPattern();
-
-			m_logger.info("aggregation rule : " + format);
 
 			if (format == null || format.isEmpty()) {
 				continue;

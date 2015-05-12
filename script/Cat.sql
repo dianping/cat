@@ -205,6 +205,7 @@ CREATE TABLE `alteration` (
   `alt_group` varchar(45) DEFAULT NULL COMMENT '变更组别',
   `content` longtext NOT NULL COMMENT '变更内容',
   `url` varchar(200) DEFAULT NULL COMMENT '变更链接',
+  `status` tinyint(4) DEFAULT '0' COMMENT '变更状态',
   `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
   PRIMARY KEY (`id`),
   KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)

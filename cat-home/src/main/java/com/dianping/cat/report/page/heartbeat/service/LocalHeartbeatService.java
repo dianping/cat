@@ -9,6 +9,7 @@ import org.unidal.lookup.util.StringUtils;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
@@ -39,7 +40,7 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 				ipAddress = SortHelper.sortIpAddress(ips).get(0);
 			}
 		}
-		HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
+		HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress, payload.getMin(), payload.getMax());
 
 		return filter.buildXml(report);
 	}
@@ -84,9 +85,26 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	      com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
 		private String m_ip;
 
-		public HeartBeatReportFilter(String ip) {
+		private int m_min;
+
+		private int m_max;
+
+		public HeartBeatReportFilter(String ip, int min, int max) {
 			super(true, new StringBuilder(DEFAULT_SIZE));
 			m_ip = ip;
+			m_min = min;
+			m_max = max;
+		}
+
+		@Override
+		public void visitPeriod(Period period) {
+			int minute = period.getMinute();
+
+			if (m_min == -1 && m_max == -1) {
+				super.visitPeriod(period);
+			} else if (minute <= m_max && minute >= m_min) {
+				super.visitPeriod(period);
+			}
 		}
 
 		@Override

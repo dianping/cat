@@ -175,11 +175,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 		ctx = m_context.get();
 
-		if (ctx != null) {
-			return ctx.m_tree;
-		} else {
-			return null;
-		}
+		return ctx.m_tree;
 	}
 
 	@Override
@@ -253,13 +249,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx != null) {
-			if (ctx.m_totalDurationInMicros == 0) {
-				ctx.m_stack.clear();
-				ctx.m_knownExceptions.clear();
-				m_context.remove();
-			} else {
-				ctx.m_knownExceptions.clear();
-			}
+// yj.huang: for accuracy of log view, we do not remove context with zero duration.
+//			if (ctx.m_totalDurationInMicros == 0) {
+//				ctx.m_stack.clear();
+//				m_context.remove();
+//			}
+            ctx.m_knownExceptions.clear();
 		}
 	}
 
@@ -556,7 +551,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
 				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
-				      DefaultMessageManager.this);
+						DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());

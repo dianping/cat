@@ -91,6 +91,21 @@
 		<param name="domain" />
 		<param name="hostname" />
 		<query-defs>
+			<query name="find-by-type-druation" type="SELECT" multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="type" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='date'/> >= ${start-time}
+					AND <FIELD name='date'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='type'>
+						AND <FIELD name='type'/> = ${type} 
+					</IF>
+					ORDER BY <FIELD name='date'/> desc		
+					]]></statement>
+			</query>
 			<query name="find-by-dtdh" type="SELECT" multiple="true">
 				<param name="start-time" />
 				<param name="end-time" />

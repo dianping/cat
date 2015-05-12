@@ -7,6 +7,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.black.BlackListManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ConfigReloadTask implements Task {
@@ -19,9 +20,12 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private RouterConfigManager m_routerConfigManager;
-	
+
 	@Inject
 	private BlackListManager m_blackListManager;
+	
+	@Inject
+	private AllTransactionConfigManager m_allTransactionConfigManager;
 
 	@Override
 	public String getName() {
@@ -33,22 +37,27 @@ public class ConfigReloadTask implements Task {
 		boolean active = true;
 		while (active) {
 			try {
-				m_productLineConfigManager.refreshProductLineConfig();
+				m_productLineConfigManager.refreshConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 			try {
-				m_metricConfigManager.refreshMetricConfig();
+				m_metricConfigManager.refreshConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 			try {
-				m_routerConfigManager.refreshRouterConfig();
+				m_routerConfigManager.refreshConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 			try {
-				m_blackListManager.refreshBlackList();
+				m_blackListManager.refreshConfig();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			try {
+				m_allTransactionConfigManager.refreshConfig();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

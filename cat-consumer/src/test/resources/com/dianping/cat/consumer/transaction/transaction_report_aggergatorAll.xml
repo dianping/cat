@@ -9,6 +9,9 @@
       </type>
       <type id="URL" totalCount="1" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="39780.3" sum2="1582470358.6" std="0.0" tps="0.00" line95Value="39780.00" line99Value="0.00">
          <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="model" totalCount="1" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="39780.3" sum2="1582470358.6" std="0.0" tps="0.00" line95Value="39780.00" line99Value="0.00">
+            <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         </name>
       </type>
    </machine>
    <machine ip="Cat2">
@@ -20,6 +23,9 @@
       </type>
       <type id="URL" totalCount="1" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="39780.3" sum2="1582470358.6" std="0.0" tps="0.00" line95Value="39780.00" line99Value="0.00">
          <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="model" totalCount="1" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="39780.3" sum2="1582470358.6" std="0.0" tps="0.00" line95Value="39780.00" line99Value="0.00">
+            <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         </name>
       </type>
    </machine>
    <machine ip="Cat3">
@@ -31,6 +37,9 @@
       </type>
       <type id="URL" totalCount="2" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="79560.6" sum2="3164940717.2" std="0.0" tps="0.00" line95Value="59670.00" line99Value="0.00">
          <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         <name id="model" totalCount="2" failCount="0" failPercent="0.00" min="39780.28" max="39780.28" avg="39780.3" sum="79560.6" sum2="3164940717.2" std="0.0" tps="0.00" line95Value="59670.00" line99Value="0.00">
+            <successMessageUrl>Cat-c0a8a501-1337230896586-0</successMessageUrl>
+         </name>
       </type>
    </machine>
 </transaction-report>

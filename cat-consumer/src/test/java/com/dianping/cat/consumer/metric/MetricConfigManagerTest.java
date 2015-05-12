@@ -54,7 +54,7 @@ public class MetricConfigManagerTest {
 		hashSet.add(domain2);
 		List<MetricItemConfig> sets = manager.queryMetricItemConfigs(hashSet);
 		Assert.assertEquals(1, sets.size());
-		manager.refreshMetricConfig();
+		manager.refreshConfig();
 		Assert.assertEquals(1, manager.getMetricConfig().getMetricItemConfigs().size());
 
 		String id = manager.buildMetricKey(item.getDomain(), item.getType(), item.getMetricKey());
