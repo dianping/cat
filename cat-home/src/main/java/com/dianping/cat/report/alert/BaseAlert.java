@@ -164,7 +164,7 @@ public abstract class BaseAlert implements Task, LogEnabled {
 				}
 
 				t.setStatus(Transaction.SUCCESS);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				t.setStatus(e);
 			} finally {
 				t.complete();
