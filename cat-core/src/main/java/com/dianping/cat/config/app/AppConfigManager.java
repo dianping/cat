@@ -87,7 +87,7 @@ public class AppConfigManager implements Initializable {
 
 		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
-	
+
 	public boolean addConstant(String type, int id, String value) {
 		ConfigItem item = m_config.getConfigItems().get(type);
 
@@ -516,14 +516,14 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean updateCommand(int id, String domain, String name, String title, boolean all, int threshold) {
-		Command command = m_config.findCommand(id);
+	public boolean updateCommand(int id, Command command) {
+		Command c = m_config.findCommand(id);
 
-		command.setDomain(domain);
-		command.setName(name);
-		command.setTitle(title);
-		command.setAll(all);
-		command.setThreshold(threshold);
+		c.setDomain(command.getDomain());
+		c.setName(command.getName());
+		c.setTitle(command.getTitle());
+		c.setAll(command.getAll());
+		c.setThreshold(command.getThreshold());
 		return storeConfig();
 	}
 

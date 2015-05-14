@@ -171,9 +171,14 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			String name = payload.getName();
 			String title = payload.getTitle();
 			boolean all = payload.isAll();
+			int timeThreshold = payload.getThreshold();
 
 			if (m_appConfigManager.containCommand(id)) {
-				if (m_appConfigManager.updateCommand(id, domain, name, title, all, payload.getThreshold())) {
+				Command command = new Command();
+
+				command.setDomain(domain).setName(name).setTitle(title).setAll(all).setThreshold(timeThreshold);
+
+				if (m_appConfigManager.updateCommand(id, command)) {
 					model.setOpState(true);
 				} else {
 					model.setOpState(false);
@@ -181,7 +186,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			} else {
 				try {
 					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setAll(all)
-					      .setThreshold(payload.getThreshold());
+					      .setThreshold(timeThreshold);
 
 					if (m_appConfigManager.addCommand(command).getKey()) {
 						model.setOpState(true);
