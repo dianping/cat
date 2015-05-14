@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -24,7 +25,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
-public class StatusUpdateTask implements Task, Initializable {
+public class StatusUpdateTask extends ContainerHolder implements Task, Initializable {
 	@Inject
 	private MessageStatistics m_statistics;
 
@@ -38,6 +39,8 @@ public class StatusUpdateTask implements Task, Initializable {
 	private long m_interval = 60 * 1000; // 60 seconds
 
 	private String m_jars;
+
+    private List<StatusExtensionBuilder> m_statusExtensionBuilders;
 
 	private void buildClasspath() {
 		ClassLoader loader = StatusUpdateTask.class.getClassLoader();
@@ -69,6 +72,18 @@ public class StatusUpdateTask implements Task, Initializable {
 		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
 		List<StatusExtension> extensions = res.getStatusExtension();
 
+        // Invoke the statusExtensionCollector callback provided by the user for more extensions.
+        if (m_statusExtensionBuilders != null) {
+        for (StatusExtensionBuilder statusExtensionCollector : m_statusExtensionBuilders) {
+            if (null == statusExtensionCollector)
+                return;
+            StatusExtension statusExtension = statusExtensionCollector.collect();
+            if (null == statusExtension)
+                return;
+            extensions.add(statusExtension);
+            }
+        }
+
 		for (StatusExtension extension : extensions) {
 			String id = extension.getId();
 			String des = extension.getDescription();
@@ -94,6 +109,7 @@ public class StatusUpdateTask implements Task, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+        m_statusExtensionBuilders = lookupList(StatusExtensionBuilder.class);
 	}
 
 	private String parseJar(String path) {
