@@ -475,7 +475,6 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
-
 	}
 
 	private void sortCommands() {
