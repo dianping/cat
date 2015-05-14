@@ -44,7 +44,7 @@ public class AppConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Integer> m_commands = new ConcurrentHashMap<String, Integer>();
+	private Map<String, Command> m_commands = new ConcurrentHashMap<String, Command>();
 
 	private Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
 
@@ -82,12 +82,18 @@ public class AppConfigManager implements Initializable {
 
 	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all)
 	      throws Exception {
+		return addCommand(domain, title, name, type, all, 30);
+	}
+
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all,
+	      int threshold) throws Exception {
 		Command command = new Command();
 
 		command.setDomain(domain);
 		command.setTitle(title);
 		command.setName(name);
 		command.setAll(all);
+		command.setThreshold(threshold);
 
 		int commandId = 0;
 
@@ -233,7 +239,7 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCodes();
 	}
 
-	public Map<String, Integer> getCommands() {
+	public Map<String, Command> getCommands() {
 		return m_commands;
 	}
 
@@ -472,10 +478,10 @@ public class AppConfigManager implements Initializable {
 	private void refreshData() {
 		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
-		Map<String, Integer> commandMap = new ConcurrentHashMap<String, Integer>();
+		Map<String, Command> commandMap = new ConcurrentHashMap<String, Command>();
 
 		for (Command c : commands) {
-			commandMap.put(c.getName(), c.getId());
+			commandMap.put(c.getName(), c);
 
 			if (!c.isAll()) {
 				excludedCommands.put(c.getId(), c.getName());
@@ -557,13 +563,14 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean updateCommand(int id, String domain, String name, String title, boolean all) {
+	public boolean updateCommand(int id, String domain, String name, String title, boolean all, int threshold) {
 		Command command = m_config.findCommand(id);
 
 		command.setDomain(domain);
 		command.setName(name);
 		command.setTitle(title);
 		command.setAll(all);
+		command.setThreshold(threshold);
 		return storeConfig();
 	}
 

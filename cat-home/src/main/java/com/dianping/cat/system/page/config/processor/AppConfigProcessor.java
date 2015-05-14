@@ -170,7 +170,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			boolean all = payload.isAll();
 
 			if (m_appConfigManager.containCommand(id)) {
-				if (m_appConfigManager.updateCommand(id, domain, name, title, all)) {
+				if (m_appConfigManager.updateCommand(id, domain, name, title, all, payload.getThreshold())) {
 					model.setOpState(true);
 				} else {
 					model.setOpState(false);
@@ -179,7 +179,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				try {
 					String type = payload.getType();
 
-					if (m_appConfigManager.addCommand(domain, title, name, type, payload.isAll()).getKey()) {
+					if (m_appConfigManager.addCommand(domain, title, name, type, all, payload.getThreshold()).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
