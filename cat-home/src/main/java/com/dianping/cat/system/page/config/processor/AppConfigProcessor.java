@@ -88,9 +88,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		Set<String> validatePaths = visitor.getPaths();
 		Set<String> invalidatePaths = visitor.getInvalidatePaths();
 
-		Map<String, Integer> commands = m_appConfigManager.getCommands();
+		Map<String, Command> commands = m_appConfigManager.getCommands();
 
-		for (Entry<String, Integer> entry : commands.entrySet()) {
+		for (Entry<String, Command> entry : commands.entrySet()) {
 			validatePaths.remove(entry.getKey());
 			invalidatePaths.remove(entry.getKey());
 		}
