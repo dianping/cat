@@ -331,9 +331,4 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 	}
 
-	@Override
-	public int getAnanlyzerCount() {
-		return 2;
-	}
-
 }

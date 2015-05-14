@@ -214,9 +214,4 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		}
 	}
 
-	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
-	
 }
