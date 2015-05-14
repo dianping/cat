@@ -209,49 +209,52 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
-		String localIp = info.getLocalAddress();
-		String remoteIp = info.getRemoteAddress();
-		String role = info.getRemoteRole();
-		String transactionName = t.getName();
+		synchronized (report) {
 
-		Local local = report.findOrCreateLocal(localIp);
-		String remoteId = remoteIp + ":" + role;
-		Remote remote = local.findOrCreateRemote(remoteId);
+			String localIp = info.getLocalAddress();
+			String remoteIp = info.getRemoteAddress();
+			String role = info.getRemoteRole();
+			String transactionName = t.getName();
 
-		report.addIp(localIp);
+			Local local = report.findOrCreateLocal(localIp);
+			String remoteId = remoteIp + ":" + role;
+			Remote remote = local.findOrCreateRemote(remoteId);
 
-		if (StringUtils.isEmpty(remote.getIp())) {
-			remote.setIp(remoteIp);
+			report.addIp(localIp);
+
+			if (StringUtils.isEmpty(remote.getIp())) {
+				remote.setIp(remoteIp);
+			}
+			if (StringUtils.isEmpty(remote.getRole())) {
+				remote.setRole(role);
+			}
+			if (StringUtils.isEmpty(remote.getApp())) {
+				remote.setApp(info.getApp());
+			}
+
+			Type type = remote.getType();
+
+			if (type == null) {
+				type = new Type();
+				type.setId(info.getDetailType());
+				remote.setType(type);
+			}
+
+			Name name = type.findOrCreateName(transactionName);
+
+			type.incTotalCount();
+			name.incTotalCount();
+
+			if (!t.isSuccess()) {
+				type.incFailCount();
+				name.incFailCount();
+			}
+
+			double duration = t.getDurationInMicros() / 1000d;
+
+			type.setSum(type.getSum() + duration);
+			name.setSum(name.getSum() + duration);
 		}
-		if (StringUtils.isEmpty(remote.getRole())) {
-			remote.setRole(role);
-		}
-		if (StringUtils.isEmpty(remote.getApp())) {
-			remote.setApp(info.getApp());
-		}
-
-		Type type = remote.getType();
-
-		if (type == null) {
-			type = new Type();
-			type.setId(info.getDetailType());
-			remote.setType(type);
-		}
-
-		Name name = type.findOrCreateName(transactionName);
-
-		type.incTotalCount();
-		name.incTotalCount();
-
-		if (!t.isSuccess()) {
-			type.incFailCount();
-			name.incFailCount();
-		}
-
-		double duration = t.getDurationInMicros() / 1000d;
-
-		type.setSum(type.getSum() + duration);
-		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {
@@ -326,6 +329,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				return false;
 			}
 		}
+	}
+
+	@Override
+	public int getAnanlyzerCount() {
+		return 2;
 	}
 
 }
