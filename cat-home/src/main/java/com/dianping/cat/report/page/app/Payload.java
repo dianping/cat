@@ -35,9 +35,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("sort")
 	private String m_sort = AppDataService.SUCCESS;
 
-	@FieldMeta("showActivity")
-	private boolean m_showActivity = false;
-
 	@FieldMeta("codeId")
 	private int m_codeId;
 
@@ -137,7 +134,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		if (m_query1 != null && m_query1.length() > 0) {
 			return new CommandQueryEntity(m_query1);
 		} else {
-			return new CommandQueryEntity(m_showActivity);
+			return new CommandQueryEntity();
 		}
 	}
 
@@ -179,10 +176,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public String getType() {
 		return m_type;
-	}
-
-	public boolean isShowActivity() {
-		return m_showActivity;
 	}
 
 	public void setAction(String action) {
@@ -228,10 +221,6 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public void setQuery2(String query2) {
 		m_query2 = query2;
-	}
-
-	public void setShowActivity(boolean showActivity) {
-		m_showActivity = showActivity;
 	}
 
 	public void setSort(String sort) {

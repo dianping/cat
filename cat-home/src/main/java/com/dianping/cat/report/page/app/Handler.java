@@ -263,11 +263,6 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	private boolean checkAction(Action action) {
-		return Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
-		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action);
-	}
-
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
 		T data = null;
@@ -338,7 +333,6 @@ public class Handler implements PageHandler<Context> {
 			String domain = payload.getDomain();
 			String name = payload.getName();
 			String title = payload.getTitle();
-			String type = payload.getType();
 
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
@@ -347,7 +341,7 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, type,
+						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, 
 						      true);
 
 						if (addCommandResult.getKey()) {
@@ -379,7 +373,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case APP_CONFIG_FETCH:
-			type = payload.getType();
+			String type = payload.getType();
 
 			try {
 				if ("xml".equalsIgnoreCase(type)) {
@@ -447,9 +441,6 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		boolean activity = payload.isShowActivity();
-
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.APP);
 		model.setConnectionTypes(m_appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
@@ -458,12 +449,8 @@ public class Handler implements PageHandler<Context> {
 		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
 		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_appConfigManager.queryCommands(activity));
+		model.setCommands(m_appConfigManager.queryCommands());
 
-		if (checkAction(action)) {
-			model.setDomain2Commands(m_appConfigManager.queryDomain2Commands(activity));
-			model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
-		}
 		m_normalizePayload.normalize(model, payload);
 	}
 

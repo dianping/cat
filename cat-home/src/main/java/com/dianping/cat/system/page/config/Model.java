@@ -186,10 +186,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
-	public Map<String, List<Command>> getActivityCommands() {
-		return m_appConfigManager.queryDomain2Commands(true);
-	}
-
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
 	}
@@ -199,7 +195,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public Map<String, List<Command>> getApiCommands() {
-		return m_appConfigManager.queryDomain2Commands(false);
+		return m_appConfigManager.queryDomain2Commands();
 	}
 
 	public Item getAppItem() {

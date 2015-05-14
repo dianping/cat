@@ -76,17 +76,14 @@ public class AppConfigManager implements Initializable {
 
 	public static final int ALL_COMMAND_ID = 0;
 
-	public static final int COMMAND_END_INDEX = 1099;
+	public static final int COMMAND_ID = 1200;
 
-	public static final int ACTIVITY_END_INDEX = 1200;
-
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all)
-	      throws Exception {
-		return addCommand(domain, title, name, type, all, 30);
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, boolean all) throws Exception {
+		return addCommand(domain, title, name, all, 30);
 	}
 
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all,
-	      int threshold) throws Exception {
+	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, boolean all, int threshold)
+	      throws Exception {
 		Command command = new Command();
 
 		command.setDomain(domain);
@@ -97,11 +94,7 @@ public class AppConfigManager implements Initializable {
 
 		int commandId = 0;
 
-		if ("activity".equals(type)) {
-			commandId = findAvailableId(COMMAND_END_INDEX + 1, ACTIVITY_END_INDEX);
-		} else {
-			commandId = findAvailableId(1, COMMAND_END_INDEX);
-		}
+		commandId = findAvailableId(1, COMMAND_ID);
 		command.setId(commandId);
 		m_config.addCommand(command);
 
@@ -379,28 +372,6 @@ public class AppConfigManager implements Initializable {
 		return results;
 	}
 
-	public List<Command> queryCommands(boolean activity) {
-		List<Command> commands = queryCommands();
-		List<Command> results = new ArrayList<Command>();
-
-		if (activity) {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId > COMMAND_END_INDEX && commandId <= ACTIVITY_END_INDEX) {
-					results.add(command);
-				}
-			}
-		} else {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId >= ALL_COMMAND_ID && commandId <= COMMAND_END_INDEX) {
-					results.add(command);
-				}
-			}
-		}
-		return results;
-	}
-
 	public Map<Integer, Item> queryConfigItem(String name) {
 		ConfigItem config = m_config.findConfigItem(name);
 
@@ -413,10 +384,6 @@ public class AppConfigManager implements Initializable {
 
 	public Map<String, List<Command>> queryDomain2Commands() {
 		return queryDomain2Commands(queryCommands());
-	}
-
-	public Map<String, List<Command>> queryDomain2Commands(boolean activity) {
-		return queryDomain2Commands(queryCommands(activity));
 	}
 
 	public Map<String, List<Command>> queryDomain2Commands(List<Command> commands) {

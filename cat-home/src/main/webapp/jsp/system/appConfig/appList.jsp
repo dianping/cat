@@ -87,7 +87,6 @@
 			<div class="tabbable" id="content"> <!-- Only required for left/right tabs -->
 				<ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;" id="myTab">
 				    <li id="tab-api" class="text-right"><a href="#tabContent-api" data-toggle="tab"> <strong>API命令字</strong></a></li>
-				    <li id="tab-activity" class="text-right"><a href="#tabContent-activity" data-toggle="tab"> <strong>活动命令字</strong></a></li>
 				    <li id="tab-batch" class="text-right"><a href="#tabContent-batch" data-toggle="tab"><strong>批量添加命令字</strong></a></li>
 				    <li id="tab-code" class="text-right"><a href="#tabContent-code" data-toggle="tab"> <strong>返回码</strong></a></li>
 				    <li id="tab-speed" class="text-right"><a href="#tabContent-speed" data-toggle="tab"><strong>测速配置</strong></a></li>
@@ -146,41 +145,6 @@
 						  </div>
 						</div>
 						
-					</div>
-					<div class="tab-pane" id="tabContent-activity">
-					
-						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-						  <ul class="nav nav-tabs padding-12 ">
-						  	<c:forEach var="entry" items="${model.activityCommands}" varStatus="status">
-							    <li id="tab-activity-${entry.key}" class="text-right"><a href="#tabContent-activity-${entry.key}" data-toggle="tab"> ${entry.key}</a></li>
-							</c:forEach>
-						  </ul>
-						  <div class="tab-content">
-						  	<c:forEach var="entry" items="${model.activityCommands}" varStatus="status">
-							  	<div class="tab-pane" id="tabContent-activity-${entry.key}">
-								    <table class="table table-striped table-condensed table-bordered table-hover">
-									    <thead><tr>
-												<th width="30%">名称</th>
-												<th width="32%">标题</th>
-												<th width="8%">操作 <a href="?op=appUpdate&type=activity&id=-1" class="btn btn-primary btn-xs" >
-												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
-											</tr>
-										</thead>
-										
-								    	<c:forEach var="command" items="${entry.value}">
-									    	<tr><td>${command.name}</td>
-											<td>${command.title}</td>
-											<td><a href="?op=appUpdate&id=${item.id}&type=activity" class="btn btn-primary btn-xs">
-												<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-												<a href="?op=appPageDelete&id=${item.id}&type=activity" class="btn btn-danger btn-xs delete" >
-												<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td></tr>
-								    	</c:forEach>
-								    </table>
-							    </div>
-							</c:forEach>
-						  </div>
-					  </div>
-						  
 					</div>
 					<div class="tab-pane"  id="tabContent-batch">
 						<h4 class="text-center text-danger">合法的命令字&nbsp;&nbsp;${w:size(model.validatePaths)}</h4>
