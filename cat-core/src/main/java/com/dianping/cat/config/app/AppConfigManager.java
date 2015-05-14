@@ -78,20 +78,7 @@ public class AppConfigManager implements Initializable {
 
 	public static final int COMMAND_ID = 1200;
 
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, boolean all) throws Exception {
-		return addCommand(domain, title, name, all, 30);
-	}
-
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, boolean all, int threshold)
-	      throws Exception {
-		Command command = new Command();
-
-		command.setDomain(domain);
-		command.setTitle(title);
-		command.setName(name);
-		command.setAll(all);
-		command.setThreshold(threshold);
-
+	public Pair<Boolean, Integer> addCommand(Command command) throws Exception {
 		int commandId = 0;
 
 		commandId = findAvailableId(1, COMMAND_ID);
@@ -100,7 +87,7 @@ public class AppConfigManager implements Initializable {
 
 		return new Pair<Boolean, Integer>(storeConfig(), commandId);
 	}
-
+	
 	public boolean addConstant(String type, int id, String value) {
 		ConfigItem item = m_config.getConfigItems().get(type);
 
@@ -316,10 +303,6 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean shouldAdd2AllCommands(int id) {
-		return !m_excludedCommands.containsKey(id);
-	}
-
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 		Map<Integer, Code> result = new HashMap<Integer, Code>();
@@ -475,6 +458,10 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+	}
+
+	public boolean shouldAdd2AllCommands(int id) {
+		return !m_excludedCommands.containsKey(id);
 	}
 
 	private void sortCommands() {

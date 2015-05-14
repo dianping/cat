@@ -31,6 +31,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -341,8 +342,11 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, 
-						      true);
+						Command command = new Command();
+
+						command.setDomain(domain).setTitle(title).setName(name);
+
+						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
 
 						if (addCommandResult.getKey()) {
 							setUpdateResult(model, 1);

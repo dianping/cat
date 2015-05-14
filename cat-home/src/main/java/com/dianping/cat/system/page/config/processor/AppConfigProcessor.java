@@ -60,7 +60,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		for (String path : paths) {
 			try {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
-					m_appConfigManager.addCommand(path, path, "api", true);
+					Command command = new Command();
+
+					command.setDomain("").setTitle(path).setName(path);
+					m_appConfigManager.addCommand(command);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -177,7 +180,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 				}
 			} else {
 				try {
-					if (m_appConfigManager.addCommand(domain, title, name, all, payload.getThreshold()).getKey()) {
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setAll(all)
+					      .setThreshold(payload.getThreshold());
+
+					if (m_appConfigManager.addCommand(command).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
