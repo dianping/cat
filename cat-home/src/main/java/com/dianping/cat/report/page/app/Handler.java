@@ -454,7 +454,8 @@ public class Handler implements PageHandler<Context> {
 		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
 		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_appConfigManager.queryCommands());
-
+		model.setDomain2Commands(m_appConfigManager.queryDomain2Commands());
+		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
 		m_normalizePayload.normalize(model, payload);
 	}
 
