@@ -48,7 +48,7 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private MetricConfig m_metricConfig;
+	private volatile MetricConfig m_metricConfig;
 
 	private long m_modifyTime;
 

@@ -33,11 +33,11 @@ public class UrlPatternConfigManager implements Initializable {
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "url-pattern";
-
-	private UrlPattern m_UrlPattern;
+	private volatile UrlPattern m_UrlPattern;
 
 	private long m_modifyTime;
+
+	private static final String CONFIG_NAME = "url-pattern";
 
 	public boolean deletePatternItem(String key) {
 		m_UrlPattern.removePatternItem(key);

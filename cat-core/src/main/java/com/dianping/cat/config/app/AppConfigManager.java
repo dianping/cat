@@ -44,33 +44,33 @@ public class AppConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Command> m_commands = new ConcurrentHashMap<String, Command>();
+	private volatile Map<String, Command> m_commands = new ConcurrentHashMap<String, Command>();
 
-	private Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
+	private volatile Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
+	private volatile Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
+
+	private volatile Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "app-config";
-
-	private AppConfig m_config;
+	private volatile AppConfig m_config;
 
 	private long m_modifyTime;
 
-	private Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
+	private static final String CONFIG_NAME = "app-config";
 
-	public static String NETWORK = "网络类型";
+	public static final String NETWORK = "网络类型";
 
-	public static String OPERATOR = "运营商";
+	public static final String OPERATOR = "运营商";
 
-	public static String VERSION = "版本";
+	public static final String VERSION = "版本";
 
-	public static String PLATFORM = "平台";
+	public static final String PLATFORM = "平台";
 
-	public static String CITY = "城市";
+	public static final String CITY = "城市";
 
-	public static String CONNECT_TYPE = "连接类型";
+	public static final String CONNECT_TYPE = "连接类型";
 
 	public static final int TOO_LONG_COMMAND_ID = 23;
 

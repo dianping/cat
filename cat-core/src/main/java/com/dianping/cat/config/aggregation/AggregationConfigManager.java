@@ -35,7 +35,7 @@ public class AggregationConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "aggreationConfig";
 
-	private Aggregation m_aggregation;
+	private volatile Aggregation m_aggregation;
 
 	private long m_modifyTime;
 
