@@ -213,7 +213,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public String getDomain2CommandsJson() {
 		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
 
-		results.put(Constants.ALL, m_commands);
 		results.putAll(m_domain2Commands);
 		return new JsonBuilder().toJson(results);
 	}
