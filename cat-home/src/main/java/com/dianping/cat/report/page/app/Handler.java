@@ -270,7 +270,7 @@ public class Handler implements PageHandler<Context> {
 		FutureTask task = tasks.get(i);
 
 		try {
-			data = (T) task.get(5L, TimeUnit.SECONDS);
+			data = (T) task.get(10L, TimeUnit.SECONDS);
 		} catch (Exception e) {
 			task.cancel(true);
 			Cat.logError(e);

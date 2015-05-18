@@ -44,21 +44,25 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	@Override
 	public void complete() {
-		if (isCompleted()) {
-			// complete() was called more than once
-			DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
+		try {
+			if (isCompleted()) {
+				// complete() was called more than once
+				DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
 
-			event.setStatus("TransactionAlreadyCompleted");
-			event.complete();
-			addChild(event);
-		} else {
-			m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
+				event.setStatus("TransactionAlreadyCompleted");
+				event.complete();
+				addChild(event);
+			} else {
+				m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
 
-			setCompleted(true);
+				setCompleted(true);
 
-			if (m_manager != null) {
-				m_manager.end(this);
+				if (m_manager != null) {
+					m_manager.end(this);
+				}
 			}
+		} catch (Exception e) {
+			// ignore
 		}
 	}
 
