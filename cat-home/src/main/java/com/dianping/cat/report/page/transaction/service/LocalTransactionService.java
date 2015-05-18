@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.transaction.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -55,8 +57,14 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		TransactionReport report = super.getReport(period, domain);
+		List<TransactionReport> reports = super.getReport(period, domain);
+		TransactionReport report = new TransactionReport(domain);
+		TransactionReportMerger merger = new TransactionReportMerger(report);
 
+		for (TransactionReport tmp : reports) {
+			tmp.accept(merger);
+		}
+		
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

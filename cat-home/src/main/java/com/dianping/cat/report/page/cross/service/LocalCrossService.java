@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.cross.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.cross.CrossReportMerger;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -29,7 +31,13 @@ public class LocalCrossService extends LocalModelService<CrossReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		CrossReport report = super.getReport(period, domain);
+		List<CrossReport> reports = super.getReport(period, domain);
+		CrossReport report = new CrossReport(domain);
+		CrossReportMerger merger = new CrossReportMerger(report);
+
+		for (CrossReport tmp : reports) {
+			tmp.accept(merger);
+		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

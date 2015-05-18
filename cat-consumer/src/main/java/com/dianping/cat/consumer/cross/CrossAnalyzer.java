@@ -80,6 +80,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
+	public int getAnanlyzerCount() {
+		return 2;
+	}
+
+	@Override
 	public CrossReport getReport(String domain) {
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
@@ -210,7 +215,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
 		synchronized (report) {
-
 			String localIp = info.getLocalAddress();
 			String remoteIp = info.getRemoteAddress();
 			String role = info.getRemoteRole();
