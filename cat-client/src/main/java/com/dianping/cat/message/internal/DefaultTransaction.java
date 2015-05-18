@@ -89,7 +89,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 				if (lastChild instanceof Transaction) {
 					DefaultTransaction trx = (DefaultTransaction) lastChild;
 
-					duration = (trx.getTimestamp() - getTimestamp()) * 1000L + trx.getDurationInMicros();
+					duration = (trx.getTimestamp() - getTimestamp()) * 1000L;
 				} else {
 					duration = (lastChild.getTimestamp() - getTimestamp()) * 1000L;
 				}
