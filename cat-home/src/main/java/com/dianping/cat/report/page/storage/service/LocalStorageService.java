@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.storage.service;
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -10,7 +9,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
-import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -34,13 +32,7 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
-		List<StorageReport> reports = super.getReport(period, id);
-		StorageReport report = new StorageReport(id);
-		StorageReportMerger merger = new StorageReportMerger(report);
-
-		for (StorageReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		StorageReport report = super.getReport(period, id);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

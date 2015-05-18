@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.heartbeat.service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -9,7 +8,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
@@ -50,13 +48,7 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		List<HeartbeatReport> reports = super.getReport(period, domain);
-		HeartbeatReport report = new HeartbeatReport(domain);
-		HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
-
-		for (HeartbeatReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		HeartbeatReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

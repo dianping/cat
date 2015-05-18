@@ -41,7 +41,7 @@ public abstract class LocalModelService<T> implements Initializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected List<T> getReport(ModelPeriod period, String domain) throws Exception {
+	protected T getReport(ModelPeriod period, String domain) throws Exception {
 		List<MessageAnalyzer> analyzers = null;
 
 		if (domain == null || domain.length() == 0) {
@@ -57,12 +57,9 @@ public abstract class LocalModelService<T> implements Initializable {
 		if (analyzers == null) {
 			return null;
 		} else {
-			List<T> list = new ArrayList<T>();
+			MessageAnalyzer a = analyzers.get(0);
 
-			for (MessageAnalyzer a : analyzers) {
-				list.add(((AbstractMessageAnalyzer<T>) a).getReport(domain));
-			}
-			return list;
+			return ((AbstractMessageAnalyzer<T>) a).getReport(domain);
 		}
 	}
 

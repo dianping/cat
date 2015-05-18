@@ -1,12 +1,10 @@
 package com.dianping.cat.report.page.dependency.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
-import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -31,13 +29,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		List<DependencyReport> reports = super.getReport(period, domain);
-		DependencyReport report = new DependencyReport(domain);
-		DependencyReportMerger merger = new DependencyReportMerger(report);
-
-		for (DependencyReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		DependencyReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

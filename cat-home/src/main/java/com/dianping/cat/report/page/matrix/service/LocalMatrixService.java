@@ -1,12 +1,10 @@
 package com.dianping.cat.report.page.matrix.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
-import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -31,13 +29,7 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		List<MatrixReport> reports = super.getReport(period, domain);
-		MatrixReport report = new MatrixReport(domain);
-		MatrixReportMerger merger = new MatrixReportMerger(report);
-
-		for (MatrixReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		MatrixReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

@@ -1,12 +1,10 @@
 package com.dianping.cat.report.page.problem.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemReportMerger;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -45,13 +43,7 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		List<ProblemReport> reports = super.getReport(period, domain);
-		ProblemReport report = new ProblemReport(domain);
-		ProblemReportMerger merger = new ProblemReportMerger(report);
-
-		for (ProblemReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		ProblemReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

@@ -1,12 +1,10 @@
 package com.dianping.cat.report.page.top.service;
 
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.top.TopReportMerger;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -31,13 +29,7 @@ public class LocalTopService extends LocalModelService<TopReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		List<TopReport> reports = super.getReport(period, domain);
-		TopReport report = new TopReport(domain);
-		TopReportMerger merger = new TopReportMerger(report);
-
-		for (TopReport tmp : reports) {
-			tmp.accept(merger);
-		}
+		TopReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getDomains().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
