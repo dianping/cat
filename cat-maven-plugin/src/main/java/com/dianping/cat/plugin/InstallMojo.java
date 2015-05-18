@@ -60,7 +60,12 @@ public class InstallMojo extends AbstractMojo {
 			result = stmt.executeQuery("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'cat'");
 			if (!result.next()) {
 				stmt.executeUpdate("create database cat");
-			}
+			} else {
+                getLog().info("Database 'cat' already exists, drop it first...");
+                stmt.executeUpdate("drop database cat");
+                getLog().info("Database 'cat' has dropped");
+                stmt.executeUpdate("create database cat");
+            }
 		} catch (SQLException e) {
 			if (e.getErrorCode() == 1007) {
 				getLog().info("Database 'cat' already exists, drop it first...");
