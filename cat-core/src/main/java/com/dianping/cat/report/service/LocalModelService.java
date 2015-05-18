@@ -1,6 +1,5 @@
 package com.dianping.cat.report.service;
 
-import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
