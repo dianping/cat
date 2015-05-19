@@ -146,9 +146,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		reports.put(Constants.CAT, stateReport);
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);
 		}
 		if (atEnd) {
 			long minute = 1000 * 60;

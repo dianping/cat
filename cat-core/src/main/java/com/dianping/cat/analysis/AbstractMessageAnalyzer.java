@@ -138,12 +138,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	public void setIndex(int index) {
 		m_index = index;
-
-		ReportManager<?> manager = this.getReportManager();
-
-		if (manager != null) {
-			manager.setIndex(index);
-		}
 	}
 
 }

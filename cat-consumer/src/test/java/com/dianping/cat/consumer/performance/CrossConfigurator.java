@@ -62,9 +62,5 @@ public class CrossConfigurator extends AbstractResourceConfigurator {
 		@Override
       public void destory() {
       }
-
-		@Override
-      public void setIndex(int index) {
-      }
 	}
 }

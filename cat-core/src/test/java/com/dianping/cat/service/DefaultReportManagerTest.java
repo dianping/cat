@@ -99,7 +99,7 @@ public class DefaultReportManagerTest {
 
 	@Test
 	public void testLoadReport() {
-		m_manager.loadHourlyReports(m_start, null);
+		m_manager.loadHourlyReports(m_start, null, 0);
 
 		Map<String, String> reports = m_manager.getHourlyReports(m_start);
 		Assert.assertEquals(3, reports.size());
@@ -114,7 +114,7 @@ public class DefaultReportManagerTest {
 		m_manager.getHourlyReport(m_start, DOMAIN1, true);
 		m_manager.getHourlyReport(m_start, DOMAIN2, true);
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
-		m_manager.storeHourlyReports(m_start, StoragePolicy.FILE_AND_DB);
+		m_manager.storeHourlyReports(m_start, StoragePolicy.FILE_AND_DB, 0);
 
 		Assert.assertEquals(3, m_reportContentDao.count);
 		Assert.assertEquals(3, m_hourlyReportDao.count);

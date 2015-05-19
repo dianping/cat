@@ -42,9 +42,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -58,9 +58,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	@Override
 	public DependencyReport getReport(String domain) {
@@ -71,9 +71,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-   public ReportManager<DependencyReport> getReportManager() {
+	public ReportManager<DependencyReport> getReportManager() {
 		return m_reportManager;
-   }
+	}
 
 	private boolean isCache(String type) {
 		return type.startsWith("Cache.");
@@ -81,7 +81,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	private String parseDatabase(Transaction t) {
@@ -204,7 +204,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			updateDependencyInfo(report, t, type, "Cache");
 		}
 	}
-	
+
 	private void updateDependencyInfo(DependencyReport report, Transaction t, String target, String type) {
 		synchronized (report) {
 			long current = t.getTimestamp() / 1000 / 60;

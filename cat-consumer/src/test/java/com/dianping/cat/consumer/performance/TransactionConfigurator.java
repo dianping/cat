@@ -62,9 +62,5 @@ public class TransactionConfigurator extends AbstractResourceConfigurator {
 		@Override
       public void destory() {
       }
-
-		@Override
-      public void setIndex(int index) {
-      }
 	}
 }

@@ -56,10 +56,6 @@ public class Configurator extends AbstractResourceConfigurator {
 		@Override
       public void destory() {
       }
-
-		@Override
-      public void setIndex(int index) {
-      }
 	}
 	
 }

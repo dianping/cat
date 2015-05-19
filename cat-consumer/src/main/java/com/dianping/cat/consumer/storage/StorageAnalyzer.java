@@ -40,10 +40,10 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 			m_databaseParser.showErrorCon();
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -62,14 +62,14 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	@Override
-   public ReportManager<StorageReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<StorageReport> getReportManager() {
+		return m_reportManager;
+	}
 
 	@Override
-   protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
-   }
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
+	}
 
 	@Override
 	protected void process(MessageTree tree) {

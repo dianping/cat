@@ -53,8 +53,6 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 	private Logger m_logger;
 
-	private int m_index;
-
 	public void cleanup(long time) {
 		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
@@ -144,7 +142,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	}
 
 	@Override
-	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
+	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
 		ReportBucket bucket = null;
@@ -155,7 +153,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 		}
 
 		try {
-			bucket = m_bucketManager.getReportBucket(startTime, m_name,m_index);
+			bucket = m_bucketManager.getReportBucket(startTime, m_name, index);
 
 			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
@@ -249,7 +247,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	}
 
 	@Override
-	public void storeHourlyReports(long startTime, StoragePolicy policy) {
+	public void storeHourlyReports(long startTime, StoragePolicy policy, int index) {
 		Transaction t = Cat.newTransaction("Checkpoint", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
 		ReportBucket bucket = null;
@@ -275,7 +273,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 				m_reportDelegate.beforeSave(reports);
 
 				if (policy.forFile()) {
-					bucket = m_bucketManager.getReportBucket(startTime, m_name,m_index);
+					bucket = m_bucketManager.getReportBucket(startTime, m_name, index);
 
 					try {
 						storeFile(reports, bucket);
@@ -316,10 +314,5 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 			return this == FILE_AND_DB || this == FILE;
 		}
 	}
-
-	@Override
-   public void setIndex(int index) {
-		m_index = index;
-   }
 
 }

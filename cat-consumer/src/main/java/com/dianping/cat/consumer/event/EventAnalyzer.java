@@ -34,9 +34,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -46,9 +46,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	@Override
 	public EventReport getReport(String domain) {
@@ -68,13 +68,13 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-   public ReportManager<EventReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<EventReport> getReportManager() {
+		return m_reportManager;
+	}
 
 	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			range.incFails(count);
 		}
 	}
-	
+
 	private void processTransaction(EventReport report, MessageTree tree, Transaction t, String ip) {
 		List<Message> children = t.getChildren();
 

@@ -62,9 +62,5 @@ public class DependencyConfigurator extends AbstractResourceConfigurator {
 		@Override
       public void destory() {
       }
-
-		@Override
-      public void setIndex(int index) {
-      }
 	}
 }

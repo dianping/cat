@@ -86,9 +86,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -134,13 +134,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-   public ReportManager<TransactionReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<TransactionReport> getReportManager() {
+		return m_reportManager;
+	}
 
 	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	@Override
@@ -271,7 +271,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}
-	
+
 	private TransactionReport queryReport(String domain) {
 		long period = getStartTime();
 		long timestamp = System.currentTimeMillis();
