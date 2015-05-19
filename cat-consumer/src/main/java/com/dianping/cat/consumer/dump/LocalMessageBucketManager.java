@@ -78,7 +78,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
 	public void archive(long startTime) {
-		String path = m_pathBuilder.getPath(new Date(startTime), "");
+		String path = m_pathBuilder.getLogviewPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
 
 		for (String key : m_buckets.keySet()) {
@@ -133,7 +133,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		try {
 			MessageId id = MessageId.parse(messageId);
-			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+			final String path = m_pathBuilder.getLogviewPath(new Date(id.getTimestamp()), "");
 			final File dir = new File(m_baseDir, path);
 			final String key = id.getDomain() + '-' + id.getIpAddress();
 			final List<String> paths = new ArrayList<String>();
@@ -278,7 +278,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-				String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				String path = m_pathBuilder.getLogviewPath(new Date(id.getTimestamp()), name);
 				LocalMessageBucket bucket = m_buckets.get(path);
 
 				if (bucket == null) {

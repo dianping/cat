@@ -71,6 +71,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 					MessageAnalyzer analyzer = lookup(MessageAnalyzer.class, name);
 
 					analyzer.initialize(startTime, m_duration, m_extraTime);
+					analyzer.setIndex(0);
 					analyzers.add(analyzer);
 
 					int count = analyzer.getAnanlyzerCount();
@@ -79,6 +80,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 						MessageAnalyzer tempAnalyzer = lookup(MessageAnalyzer.class, name);
 
 						tempAnalyzer.initialize(startTime, m_duration, m_extraTime);
+						tempAnalyzer.setIndex(i);
 						analyzers.add(tempAnalyzer);
 					}
 					map.put(name, analyzers);

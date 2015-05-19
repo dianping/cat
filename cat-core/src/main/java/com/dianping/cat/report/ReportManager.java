@@ -11,6 +11,8 @@ public interface ReportManager<T> {
 	
 	public void initialize();
 	
+	public void setIndex(int index);
+	
 	public Set<String> getDomains(long startTime);
 
 	public T getHourlyReport(long startTime, String domain, boolean createIfNotExist);

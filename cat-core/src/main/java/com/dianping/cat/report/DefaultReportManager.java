@@ -53,6 +53,8 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 	private Logger m_logger;
 
+	private int m_index;
+
 	public void cleanup(long time) {
 		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
@@ -145,7 +147,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		ReportBucket<String> bucket = null;
+		ReportBucket bucket = null;
 
 		if (reports == null) {
 			reports = new ConcurrentHashMap<String, T>();
@@ -153,7 +155,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 		}
 
 		try {
-			bucket = m_bucketManager.getReportBucket(startTime, m_name);
+			bucket = m_bucketManager.getReportBucket(startTime, m_name,m_index);
 
 			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
@@ -233,7 +235,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 		}
 	}
 
-	private void storeFile(Map<String, T> reports, ReportBucket<String> bucket) {
+	private void storeFile(Map<String, T> reports, ReportBucket bucket) {
 		for (T report : reports.values()) {
 			try {
 				String domain = m_reportDelegate.getDomain(report);
@@ -250,7 +252,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	public void storeHourlyReports(long startTime, StoragePolicy policy) {
 		Transaction t = Cat.newTransaction("Checkpoint", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		ReportBucket<String> bucket = null;
+		ReportBucket bucket = null;
 
 		try {
 			t.addData("reports", reports == null ? 0 : reports.size());
@@ -273,7 +275,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 				m_reportDelegate.beforeSave(reports);
 
 				if (policy.forFile()) {
-					bucket = m_bucketManager.getReportBucket(startTime, m_name);
+					bucket = m_bucketManager.getReportBucket(startTime, m_name,m_index);
 
 					try {
 						storeFile(reports, bucket);
@@ -314,5 +316,10 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 			return this == FILE_AND_DB || this == FILE;
 		}
 	}
+
+	@Override
+   public void setIndex(int index) {
+		m_index = index;
+   }
 
 }

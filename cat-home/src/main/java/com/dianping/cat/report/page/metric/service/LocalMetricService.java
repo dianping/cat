@@ -102,17 +102,30 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 	}
 
 	private MetricReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, MetricAnalyzer.ID);
-			String xml = bucket.findById(domain);
+		MetricReport report = new MetricReport(domain);
+		MetricReportMerger merger = new MetricReportMerger(report);
 
-			return xml == null ? null : DefaultSaxParser.parse(xml);
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, MetricAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
+
+				if (xml != null) {
+					MetricReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class MetricReportFilter extends com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder {

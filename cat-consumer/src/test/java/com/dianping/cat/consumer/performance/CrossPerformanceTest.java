@@ -70,6 +70,10 @@ public class CrossPerformanceTest extends ComponentTestCase {
 		@Override
       public void destory() {
       }
+
+		@Override
+      public void setIndex(int index) {
+      }
 	}
 
 	public MessageTree buildMessage() {

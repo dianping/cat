@@ -498,7 +498,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportBucket</role>
-			<role-hint>java.lang.String-report</role-hint>
 			<implementation>com.dianping.cat.report.LocalReportBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>

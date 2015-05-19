@@ -63,28 +63,32 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
+		EventReport report = new EventReport(domain);
+		EventReportMerger merger = new EventReportMerger(report);
 
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			EventReport report = null;
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new EventReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
 
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+				if (xml != null) {
+					EventReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {

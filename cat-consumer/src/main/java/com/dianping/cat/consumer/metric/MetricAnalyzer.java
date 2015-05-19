@@ -92,15 +92,15 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	@Override
-   public ReportManager<?> getReportManager() {
-	   return null;
-   }
+	public ReportManager<?> getReportManager() {
+		return null;
+	}
 
 	protected void loadReports() {
-		ReportBucket<String> reportBucket = null;
+		ReportBucket reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID, m_index);
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
@@ -252,12 +252,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void storeReports(boolean atEnd) {
-		ReportBucket<String> reportBucket = null;
+		ReportBucket reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
 		t.setStatus(Message.SUCCESS);
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID, m_index);
 
 			for (MetricReport report : m_reports.values()) {
 				try {
@@ -318,7 +318,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		seg.setSum(seg.getSum() + sum);
 		seg.setAvg(seg.getSum() / seg.getCount());
 	}
-	
 
 	public static class ConfigItem {
 		private int m_count;

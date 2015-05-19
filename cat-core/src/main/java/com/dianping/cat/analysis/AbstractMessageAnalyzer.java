@@ -32,6 +32,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	private volatile boolean m_active = true;
 
+	protected int m_index;
+
 	@Override
 	public void analyze(MessageQueue queue) {
 		while (!isTimeout() && isActive()) {
@@ -73,8 +75,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public void destroy() {
 		super.release(this);
 		ReportManager<?> manager = this.getReportManager();
-		
-		if(manager!=null){
+
+		if (manager != null) {
 			manager.destory();
 		}
 	}
@@ -131,6 +133,16 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public void shutdown() {
 		synchronized (this) {
 			m_active = false;
+		}
+	}
+
+	public void setIndex(int index) {
+		m_index = index;
+
+		ReportManager<?> manager = this.getReportManager();
+
+		if (manager != null) {
+			manager.setIndex(index);
 		}
 	}
 

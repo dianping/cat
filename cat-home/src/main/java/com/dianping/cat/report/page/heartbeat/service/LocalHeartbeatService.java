@@ -71,26 +71,32 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			HeartbeatReport report = null;
+		HeartbeatReport report = new HeartbeatReport(domain);
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new HeartbeatReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
+
+				if (xml != null) {
+					HeartbeatReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class HeartBeatReportFilter extends

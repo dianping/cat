@@ -17,5 +17,7 @@ public interface MessageAnalyzer {
 	
 	public int getAnanlyzerCount();
 	
+	public void setIndex(int index);
+	
 	public ReportManager<?> getReportManager();
 }

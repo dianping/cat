@@ -24,7 +24,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.PathBuilder;
 
-public class LocalReportBucket implements ReportBucket<String>, LogEnabled {
+public class LocalReportBucket implements ReportBucket, LogEnabled {
 	@Inject
 	private PathBuilder m_pathBuilder;
 
@@ -127,12 +127,12 @@ public class LocalReportBucket implements ReportBucket<String>, LogEnabled {
 	}
 
 	@Override
-	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+	public void initialize(String name, Date timestamp, int index) throws IOException {
 		m_baseDir = m_configManager.getHdfsLocalBaseDir("report");
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 
-		String logicalPath = m_pathBuilder.getReportPath(name, timestamp);
+		String logicalPath = m_pathBuilder.getReportPath(name, timestamp, index);
 
 		File dataFile = new File(m_baseDir, logicalPath);
 		File indexFile = new File(m_baseDir, logicalPath + ".idx");
@@ -217,4 +217,5 @@ public class LocalReportBucket implements ReportBucket<String>, LogEnabled {
 			m_writeLock.unlock();
 		}
 	}
+
 }
