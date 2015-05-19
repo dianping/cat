@@ -31,7 +31,6 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 	@Override
 	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
-		m_logger.info("get analyzer from message manager " + name);
 		// remove last two hour analyzer
 		try {
 			Map<String, List<MessageAnalyzer>> temp = m_analyzers.remove(startTime - m_duration * 2);
@@ -104,7 +103,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
-
+		
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {
