@@ -7,13 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 
-public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable {
+public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable,
+      LogEnabled {
 	private static final long MINUTE = 60 * 1000L;
 
 	private long m_duration = 60 * MINUTE;
@@ -24,8 +27,11 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 	private Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
 
+	protected Logger m_logger;
+
 	@Override
 	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
+		m_logger.info("get analyzer from message manager " + name);
 		// remove last two hour analyzer
 		try {
 			Map<String, List<MessageAnalyzer>> temp = m_analyzers.remove(startTime - m_duration * 2);
@@ -118,5 +124,10 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				return str1.compareTo(str2);
 			}
 		});
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }
