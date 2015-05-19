@@ -210,11 +210,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	private void logStorageState(final MessageTree tree) {
-		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 		String domain = tree.getDomain();
+		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 
 		m_serverStateManager.addMessageSize(domain, size);
-		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
+		if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 		}
 	}
@@ -233,7 +233,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) {
-		m_total++;
 		boolean errorFlag = true;
 		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress()).hashCode());
 		int index = (int) (hash % m_gzipThreads);
