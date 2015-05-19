@@ -9,8 +9,6 @@ public interface ReportManager<T> {
 	
 	public void destory();
 	
-	public void cleanup(long startTime);
-
 	public void initialize();
 	
 	public Set<String> getDomains(long startTime);

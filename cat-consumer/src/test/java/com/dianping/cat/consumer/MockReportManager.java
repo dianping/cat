@@ -12,10 +12,6 @@ public abstract class MockReportManager<T> implements ReportManager<T> {
 	private Set<String> m_set;
 
 	@Override
-	public void cleanup(long time) {
-	}
-
-	@Override
 	public void initialize() {
 	}
 

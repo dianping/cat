@@ -53,7 +53,6 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 	private Logger m_logger;
 
-	@Override
 	public void cleanup(long time) {
 		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
@@ -142,7 +141,6 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	@Override
 	public void initialize() {
 		m_logger.info("init report manager " + this);
-		super.release(this);
 	}
 
 	@Override
