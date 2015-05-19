@@ -6,9 +6,34 @@
 						&nbsp;日期
 					<input type="text" id="time" style="width:110px;"/>
 					</div>
-					&nbsp;项目<select id="domains" style="width: 200px;"></select>
+					<!-- &nbsp;项目<select id="domains" style="width: 200px;"></select>
 						命令字 <select id="command" style="width: 240px;">
-						</select> 
+						</select>  -->
+					&nbsp;项目
+					<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:10%;MARGIN-TOP:5px;padding:5px;">
+						<form id="wrap_search" style="margin-bottom:0px;">
+						<div class="input-group">
+							<%-- <c:if test="${not empty payload.project.domain}">
+								<c:set var="domain" value="${payload.project.domain}"/>
+							</c:if>
+							<c:if test="${not empty payload.domain}">
+								<c:set var="domain" value="${payload.domain}"/>
+							</c:if>
+							<c:if test="${empty domain}">
+								<c:set var="domain" value="cat"/>
+							</c:if> --%>
+							<span class="input-icon" style="width:300px;">
+								<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+								<i class="ace-icon fa fa-search nav-search-icon"></i>
+								</span>
+								<!-- <span class="input-group-btn" style="width:50px">
+								<button class="btn btn-sm btn-primary" type="button" id="search_go">
+								Go
+								</button>
+								</span> -->
+							</div>
+						</form>
+					</div>
 				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
 				</select> 网络类型 <select id="network" style="width: 80px;">
 						<option value=''>All</option>

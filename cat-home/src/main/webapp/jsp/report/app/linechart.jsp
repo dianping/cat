@@ -334,6 +334,46 @@
 							break;
 						}
 					}
+					
+					$.widget( "custom.catcomplete", $.ui.autocomplete, {
+						_renderMenu: function( ul, items ) {
+							var that = this,
+							currentCategory = "";
+							$.each( items, function( index, item ) {
+								if ( item.category != currentCategory ) {
+									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+									currentCategory = item.category;
+								}
+								that._renderItemData( ul, item );
+							});
+						}
+					});
+					
+					var data = [];
+					<c:forEach var="project" items="${model.projects}">
+								var item = {};
+								item['label'] = '${project.domain}';
+								item['category'] ='${project.bu} - ${project.cmdbProductline}';
+								
+								data.push(item);
+					</c:forEach>
+							
+					$( "#search" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					
+					$("#search_go").bind("click",function(e){
+						var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
+						window.location.href = newUrl;
+					});
+					$('#wrap_search').submit(
+						function(){
+							var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
+							window.location.href = newUrl;
+							return false;
+						}		
+					);
 
 					var data = ${model.lineChart.jsonString};
 					graphMetricChartForDay(document
