@@ -58,5 +58,9 @@ public class ProblemConfigurator extends AbstractResourceConfigurator {
 		public void setReport(ProblemReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }

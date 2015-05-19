@@ -82,11 +82,11 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<String> m_codeDistributions;
 
-	private Map<String, List<Command>> m_domain2Commands;
-
 	private Map<Integer, List<Code>> m_command2Codes;
 
 	private Map<String, Pair<String, String>> m_domain2Departments;
+
+	private Map<Integer, Command> m_rawCommands;
 
 	@EntityMeta
 	private AppReport m_appReport;
@@ -206,18 +206,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return getDisplayDomain();
 	}
 
-	public Map<String, List<Command>> getDomain2Commands() {
-		return m_domain2Commands;
-	}
-
-	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
-
-		results.put(Constants.ALL, m_commands);
-		results.putAll(m_domain2Commands);
-		return new JsonBuilder().toJson(results);
-	}
-
 	public Map<String, Pair<String, String>> getDomain2Departments() {
 		return m_domain2Departments;
 	}
@@ -273,6 +261,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
+	}
+
+	public Map<Integer, Command> getRawCommands() {
+		return m_rawCommands;
 	}
 
 	public Map<String, List<Speed>> getSpeeds() {
@@ -339,10 +331,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_displayCommands = displayCommands;
 	}
 
-	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
-		m_domain2Commands = domain2Commands;
-	}
-
 	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {
 		m_domain2Departments = domain2Departments;
 	}
@@ -385,6 +373,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
+	}
+
+	public void setRawCommands(Map<Integer, Command> rawCommands) {
+		m_rawCommands = rawCommands;
 	}
 
 	public void setSpeeds(Map<String, List<Speed>> speeds) {

@@ -2,77 +2,84 @@
 <table width="100%">
 			<tr>
 				<th>
-		        <div style="float:left;">
-						&nbsp;日期
-					<input type="text" id="time" style="width:110px;"/>
-					</div>
-					<!-- &nbsp;项目<select id="domains" style="width: 200px;"></select>
-						命令字 <select id="command" style="width: 240px;">
-						</select>  -->
-					&nbsp;项目
-					<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:10%;MARGIN-TOP:5px;padding:5px;">
-						<form id="wrap_search" style="margin-bottom:0px;">
-						<div class="input-group">
-							<%-- <c:if test="${not empty payload.project.domain}">
-								<c:set var="domain" value="${payload.project.domain}"/>
-							</c:if>
-							<c:if test="${not empty payload.domain}">
-								<c:set var="domain" value="${payload.domain}"/>
-							</c:if>
-							<c:if test="${empty domain}">
-								<c:set var="domain" value="cat"/>
-							</c:if> --%>
-							<span class="input-icon" style="width:300px;">
-								<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
-								<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-								<!-- <span class="input-group-btn" style="width:50px">
-								<button class="btn btn-sm btn-primary" type="button" id="search_go">
-								Go
-								</button>
-								</span> -->
-							</div>
-						</form>
-					</div>
-				返回码 <select id="code" style="width: 120px;"><option value=''>All</option>
-				</select> 网络类型 <select id="network" style="width: 80px;">
+				<div class="input-group" style="float:left;width:110px">
+	              <span class="input-group-addon">日期</span>
+	              <input type="text" id="time"/>
+	            </div>
+				<div class="input-group" style="float:left;width:300px">
+					<span class="input-group-addon">命令字</span>
+		            <form id="wrap_search" style="margin-bottom:0px;">
+						<span class="input-icon" style="width:300px;">
+							<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" />
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+					</form>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">返回码</span>
+					<select id="code" style="width:120px"><option value=''>All</option></select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">网络类型</span>
+					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
 				</select>
+	            </div>
 				</th>
-			</tr>
 			<tr>
-				<th align=left>&nbsp;版本 <select id="version" style="width: 100px;">
+				<th align=left>
+				<div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">版本</span>
+					<select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 连接类型 <select id="connectionType" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">连接类型</span>
+					<select id="connectionType" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 平台 <select id="platform" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">平台</span>
+					<select id="platform" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 地区 <select id="city" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">地区</span>
+					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 运营商 <select id="operator" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">运营商</span>
+					<select id="operator" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> <input class="btn btn-primary btn-sm"
+					</select>
+	            </div>
+	            <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" /> <input class="btn btn-primary btn-sm" id="checkbox"
 					onclick="check()" type="checkbox" /> <label for="checkbox"

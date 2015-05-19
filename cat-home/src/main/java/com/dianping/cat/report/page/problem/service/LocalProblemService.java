@@ -43,7 +43,21 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
+<<<<<<< HEAD
 		ProblemReport report = super.getReport(period, domain);
+=======
+		List<ProblemReport> reports = super.getReport(period, domain);
+		ProblemReport report = null;
+
+		if (reports != null) {
+			report = new ProblemReport(domain);
+			ProblemReportMerger merger = new ProblemReportMerger(report);
+
+			for (ProblemReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
+>>>>>>> f86721684ccda964204d843c5badb55317c9cd63
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -53,28 +67,32 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 	}
 
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
+		ProblemReport report = new ProblemReport(domain);
+		ProblemReportMerger merger = new ProblemReportMerger(report);
 
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, ProblemAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			ProblemReport report = null;
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new ProblemReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, ProblemAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
 
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+				if (xml != null) {
+					ProblemReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {

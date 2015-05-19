@@ -1780,9 +1780,6 @@
 			<implementation>com.dianping.cat.report.page.transaction.service.HistoricalTransactionService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
@@ -1828,9 +1825,6 @@
 			<role-hint>event-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.event.service.HistoricalEventService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
@@ -1878,9 +1872,6 @@
 			<implementation>com.dianping.cat.report.page.problem.service.HistoricalProblemService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
 				</requirement>
 				<requirement>
@@ -1926,9 +1917,6 @@
 			<role-hint>heartbeat-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
@@ -1976,9 +1964,6 @@
 			<implementation>com.dianping.cat.report.page.matrix.service.HistoricalMatrixService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.matrix.service.MatrixReportService</role>
 				</requirement>
 				<requirement>
@@ -2024,9 +2009,6 @@
 			<role-hint>state-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.state.service.HistoricalStateService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 				</requirement>
@@ -2074,9 +2056,6 @@
 			<implementation>com.dianping.cat.report.page.cross.service.HistoricalCrossService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
@@ -2122,9 +2101,6 @@
 			<role-hint>top-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.top.service.HistoricalTopService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.top.service.TopReportService</role>
 				</requirement>
@@ -2172,9 +2148,6 @@
 			<implementation>com.dianping.cat.report.page.dependency.service.HistoricalDependencyService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.dependency.service.DependencyReportService</role>
 				</requirement>
 				<requirement>
@@ -2220,9 +2193,6 @@
 			<role-hint>storage-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.storage.service.HistoricalStorageService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.task.StorageReportService</role>
 				</requirement>
@@ -2272,9 +2242,6 @@
 			<role-hint>metric-historical</role-hint>
 			<implementation>com.dianping.cat.report.page.metric.service.HistoricalMetricService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
 				</requirement>

@@ -19,8 +19,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
@@ -42,9 +42,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -58,9 +58,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	@Override
 	public DependencyReport getReport(String domain) {
@@ -70,13 +70,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return report;
 	}
 
+	@Override
+	public ReportManager<DependencyReport> getReportManager() {
+		return m_reportManager;
+	}
+
 	private boolean isCache(String type) {
 		return type.startsWith("Cache.");
 	}
 
 	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	private String parseDatabase(Transaction t) {

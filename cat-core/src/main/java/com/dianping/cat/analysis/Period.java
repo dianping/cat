@@ -76,15 +76,25 @@ public class Period {
 			List<PeriodTask> tasks = entry.getValue();
 			int length = tasks.size();
 			int index = 0;
+			boolean manyTasks = length > 1;
 
-			if (length > 1) {
+			if (manyTasks) {
 				index = Math.abs(domain.hashCode()) % length;
 			}
 			PeriodTask task = tasks.get(index);
 			boolean enqueue = task.enqueue(tree);
 
 			if (enqueue == false) {
-				success = false;
+				if (manyTasks) {
+					task = tasks.get((index + 1) % length);
+					enqueue = task.enqueue(tree);
+
+					if (enqueue == false) {
+						success = false;
+					}
+				} else {
+					success = false;
+				}
 			}
 		}
 

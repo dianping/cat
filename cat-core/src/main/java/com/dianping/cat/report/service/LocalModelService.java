@@ -23,6 +23,8 @@ public abstract class LocalModelService<T> implements Initializable {
 	protected ServerConfigManager m_manager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
+	
+	public static final int ANALYZER_COUNT = 2;
 
 	private String m_defaultDomain = Constants.CAT;
 

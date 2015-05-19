@@ -41,7 +41,21 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
+<<<<<<< HEAD
 		EventReport report = super.getReport(period, domain);
+=======
+		List<EventReport> reports = super.getReport(period, domain);
+		EventReport report = null;
+
+		if (reports != null) {
+			report = new EventReport(domain);
+			EventReportMerger merger = new EventReportMerger(report);
+
+			for (EventReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
+>>>>>>> f86721684ccda964204d843c5badb55317c9cd63
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -51,28 +65,32 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
+		EventReport report = new EventReport(domain);
+		EventReportMerger merger = new EventReportMerger(report);
 
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			EventReport report = null;
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new EventReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
 
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+				if (xml != null) {
+					EventReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {

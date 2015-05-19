@@ -9,6 +9,8 @@
 
 <a:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	<link rel="stylesheet" href="${model.webapp}/assets/css/chosen.css" />
+	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">
@@ -240,11 +242,6 @@
 
 		$(document).ready(
 				function() {
-					initDomain('domains', 'command', '${payload.domains}', '${payload.commandId}');
-					initDomain('domains2', 'command2', '${payload.domains2}', '${payload.commandId2}');
-					command1Change();
-					command2Change();
-					
 					$('#trend').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d',
@@ -266,7 +263,7 @@
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
-						$("#command").val(words[1]);
+						$("#command").val(${model.rawCommands[+words[1]].name});
 					}else{
 						$("#command").val('${model.defaultCommand}');
 					}
@@ -325,8 +322,8 @@
 							break;
 						}
 					}
-					
-					$.widget( "custom.catcomplete", $.ui.autocomplete, {
+							
+				 $.widget( "custom.catcomplete", $.ui.autocomplete, {
 						_renderMenu: function( ul, items ) {
 							var that = this,
 							currentCategory = "";
@@ -339,33 +336,20 @@
 							});
 						}
 					});
-					
+		
 					var data = [];
-					<c:forEach var="project" items="${model.projects}">
+					<c:forEach var="command" items="${model.commands}">
 								var item = {};
-								item['label'] = '${project.domain}';
-								item['category'] ='${project.bu} - ${project.cmdbProductline}';
+								item['label'] = '${command.name}';
+								item['category'] ='${command.domain}';
 								
 								data.push(item);
 					</c:forEach>
 							
-					$( "#search" ).catcomplete({
+					$( "#command" ).catcomplete({
 						delay: 0,
 						source: data
 					});
-					
-					$("#search_go").bind("click",function(e){
-						var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
-						window.location.href = newUrl;
-					});
-					$('#wrap_search').submit(
-						function(){
-							var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
-							window.location.href = newUrl;
-							return false;
-						}		
-					);
-
 					var data = ${model.lineChart.jsonString};
 					graphMetricChartForDay(document
 							.getElementById('${model.lineChart.id}'), data, datePair);

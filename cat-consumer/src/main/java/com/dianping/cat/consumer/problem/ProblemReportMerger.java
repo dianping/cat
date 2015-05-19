@@ -18,6 +18,16 @@ public class ProblemReportMerger extends DefaultMerger {
 		super(problemReport);
 	}
 
+	protected Entity findOrCreateEntity(Machine machine, Entity entity) {
+		String id = entity.getId();
+		String type = entity.getType();
+		String status = entity.getStatus();
+		Entity result = machine.findOrCreateEntity(id);
+
+		result.setStatus(status).setType(type);
+		return result;
+	}
+
 	protected Entry findOrCreateEntry(Machine machine, Entry entry) {
 		String type = entry.getType();
 		String status = entry.getStatus();
@@ -32,16 +42,6 @@ public class ProblemReportMerger extends DefaultMerger {
 
 		result.setStatus(status).setType(type);
 		machine.addEntry(result);
-		return result;
-	}
-
-	protected Entity findOrCreateEntity(Machine machine, Entity entity) {
-		String id = entity.getId();
-		String type = entity.getType();
-		String status = entity.getStatus();
-		Entity result = machine.findOrCreateEntity(id);
-
-		result.setStatus(status).setType(type);
 		return result;
 	}
 

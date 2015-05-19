@@ -19,14 +19,14 @@ public class TopReportMerger extends DefaultMerger {
 	}
 	
 	@Override
-   protected void mergeMachine(Machine to, Machine from) {
-		to.setCount(to.getCount() + from.getCount());
-   }
-
-	@Override
 	protected void mergeError(Error old, Error error) {
 		old.setCount(old.getCount() + error.getCount());
 	}
+
+	@Override
+   protected void mergeMachine(Machine to, Machine from) {
+		to.setCount(to.getCount() + from.getCount());
+   }
 
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {

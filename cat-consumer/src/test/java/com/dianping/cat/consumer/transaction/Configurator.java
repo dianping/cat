@@ -56,5 +56,9 @@ public class Configurator extends AbstractResourceConfigurator {
 		public void setReport(TransactionReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }

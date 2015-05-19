@@ -198,7 +198,7 @@ public class AppSpeedConfigManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "AppConfig-Config-Reload";
+			return "App-Speed-Config-Reload";
 		}
 
 		@Override

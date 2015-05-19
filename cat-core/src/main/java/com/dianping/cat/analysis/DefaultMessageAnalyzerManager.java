@@ -7,13 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 
-public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable {
+public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable,
+      LogEnabled {
 	private static final long MINUTE = 60 * 1000L;
 
 	private long m_duration = 60 * MINUTE;
@@ -23,6 +26,8 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	private List<String> m_analyzerNames;
 
 	private Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
+
+	protected Logger m_logger;
 
 	@Override
 	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
@@ -66,6 +71,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 					MessageAnalyzer analyzer = lookup(MessageAnalyzer.class, name);
 
 					analyzer.initialize(startTime, m_duration, m_extraTime);
+					analyzer.setIndex(0);
 					analyzers.add(analyzer);
 
 					int count = analyzer.getAnanlyzerCount();
@@ -74,6 +80,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 						MessageAnalyzer tempAnalyzer = lookup(MessageAnalyzer.class, name);
 
 						tempAnalyzer.initialize(startTime, m_duration, m_extraTime);
+						tempAnalyzer.setIndex(i);
 						analyzers.add(tempAnalyzer);
 					}
 					map.put(name, analyzers);
@@ -98,7 +105,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
-
+		
 		Collections.sort(m_analyzerNames, new Comparator<String>() {
 			@Override
 			public int compare(String str1, String str2) {
@@ -118,5 +125,10 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				return str1.compareTo(str2);
 			}
 		});
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

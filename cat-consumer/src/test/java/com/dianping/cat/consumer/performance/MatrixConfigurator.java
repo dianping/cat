@@ -58,5 +58,9 @@ public class MatrixConfigurator extends AbstractResourceConfigurator {
 		public void setReport(MatrixReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }
