@@ -30,17 +30,18 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	}
 
 	private String filterReport(ApiPayload payload, EventReport report) {
-	   String ipAddress = payload.getIpAddress();
+		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
-		EventReportFilter filter = new EventReportFilter(type, name, ipAddress );
+		EventReportFilter filter = new EventReportFilter(type, name, ipAddress);
 
 		return filter.buildXml(report);
-   }
+	}
 
 	@Override
-	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
-		EventReport report = super.getReport( period, domain);
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		EventReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -73,7 +74,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
 			}
 		}
 	}
-	
+
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 

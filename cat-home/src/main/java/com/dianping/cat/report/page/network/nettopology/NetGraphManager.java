@@ -148,32 +148,35 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		@Override
 		public void run() {
 			boolean active = TimeHelper.sleepToNextMinute();
+			long current = System.currentTimeMillis();
 
 			while (active) {
-				Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
-				long current = System.currentTimeMillis();
-
 				try {
-					NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
-					Set<String> groups = queryAllGroups(netGraphTemplate);
-					Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, ModelPeriod.CURRENT);
-					List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
+					Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
 
-					m_currentNetGraphSet = m_netGraphBuilder
-					      .buildGraphSet(netGraphTemplate, currentMetricReports, alertKeys);
+					try {
+						NetGraph netGraphTemplate = m_netGraphConfigManager.getConfig().getNetGraphs().get(0);
+						Set<String> groups = queryAllGroups(netGraphTemplate);
+						Map<String, MetricReport> currentMetricReports = queryMetricReports(groups, ModelPeriod.CURRENT);
+						List<AlertMetric> alertKeys = m_alertInfo.queryLastestAlarmKey(5);
 
-					Map<String, MetricReport> lastHourReports = queryMetricReports(groups, ModelPeriod.LAST);
+						m_currentNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, currentMetricReports,
+						      alertKeys);
 
-					m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports,
-					      new ArrayList<AlertMetric>());
-					t.setStatus(Transaction.SUCCESS);
+						Map<String, MetricReport> lastHourReports = queryMetricReports(groups, ModelPeriod.LAST);
+
+						m_lastNetGraphSet = m_netGraphBuilder.buildGraphSet(netGraphTemplate, lastHourReports,
+						      new ArrayList<AlertMetric>());
+						t.setStatus(Transaction.SUCCESS);
+					} catch (Exception e) {
+						t.setStatus(e);
+						Cat.logError(e);
+					} finally {
+						t.complete();
+					}
 				} catch (Exception e) {
-					t.setStatus(e);
 					Cat.logError(e);
-				} finally {
-					t.complete();
 				}
-
 				try {
 					long duration = System.currentTimeMillis() - current;
 

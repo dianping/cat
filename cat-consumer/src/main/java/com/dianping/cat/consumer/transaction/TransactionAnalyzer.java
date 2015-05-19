@@ -98,9 +98,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	public Set<String> getDomains() {
 		return m_reportManager.getDomains(getStartTime());
@@ -156,8 +156,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
 
-		while (dk < d) {
-			dk <<= 1;
+		if (d > 65536) {
+			dk = 65536;
+		} else {
+			if (dk > 256) {
+				dk = 256;
+			}
+			while (dk < d) {
+				dk <<= 1;
+			}
 		}
 
 		Duration duration = name.findOrCreateDuration(dk);
@@ -278,5 +285,5 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		return report;
 	}
-	
+
 }

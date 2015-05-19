@@ -58,6 +58,11 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
+   public int getAnanlyzerCount() {
+	   return 2;
+   }
+
+	@Override
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
@@ -196,19 +201,22 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void updateDependencyInfo(DependencyReport report, Transaction t, String target, String type) {
-		long current = t.getTimestamp() / 1000 / 60;
-		int min = (int) (current % (60));
-		Segment segment = report.findOrCreateSegment(min);
-		Dependency dependency = segment.findOrCreateDependency(type + ":" + target);
+		synchronized (report) {
+			long current = t.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+			Segment segment = report.findOrCreateSegment(min);
+			Dependency dependency = segment.findOrCreateDependency(type + ":" + target);
 
-		dependency.setType(type);
-		dependency.setTarget(target);
+			dependency.setType(type);
+			dependency.setTarget(target);
 
-		if (!t.getStatus().equals(Transaction.SUCCESS)) {
-			dependency.incErrorCount();
+			if (!t.getStatus().equals(Transaction.SUCCESS)) {
+				dependency.incErrorCount();
+			}
+			dependency.incTotalCount();
+			dependency.setSum(dependency.getSum() + t.getDurationInMillis());
+			dependency.setAvg(dependency.getSum() / dependency.getTotalCount());
 		}
-		dependency.incTotalCount();
-		dependency.setSum(dependency.getSum() + t.getDurationInMillis());
-		dependency.setAvg(dependency.getSum() / dependency.getTotalCount());
 	}
+
 }

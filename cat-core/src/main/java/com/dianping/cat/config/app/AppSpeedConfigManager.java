@@ -34,15 +34,15 @@ public class AppSpeedConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Speed> m_speeds = new ConcurrentHashMap<String, Speed>();
+	private volatile Map<String, Speed> m_speeds = new ConcurrentHashMap<String, Speed>();
+
+	private volatile AppSpeedConfig m_config;
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "app-speed-config";
-
-	private AppSpeedConfig m_config;
-
 	private long m_modifyTime;
+
+	private static final String CONFIG_NAME = "app-speed-config";
 
 	@Override
 	public void initialize() {

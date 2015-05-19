@@ -193,10 +193,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return Action.LINECHART;
 	}
 
-	public int getDefaultActivity() {
-		return CommandQueryEntity.DEFAULT_ACTIVITY;
-	}
-
 	public int getDefaultCommand() {
 		return CommandQueryEntity.DEFAULT_COMMAND;
 	}

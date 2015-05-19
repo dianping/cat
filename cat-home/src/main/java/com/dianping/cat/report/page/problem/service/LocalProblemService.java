@@ -20,7 +20,7 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
 public class LocalProblemService extends LocalModelService<ProblemReport> {
-	
+
 	public static final String ID = ProblemAnalyzer.ID;
 
 	@Inject
@@ -31,19 +31,19 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 	}
 
 	private String filterReport(ApiPayload payload, ProblemReport report) {
-	   String ipAddress = payload.getIpAddress();;
+		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		String queryType = payload.getQueryType();
 		String name = payload.getName();
-		ProblemReportFilter filter = new ProblemReportFilter(ipAddress , type, queryType,
-		      name);
+		ProblemReportFilter filter = new ProblemReportFilter(ipAddress, type, queryType, name);
 
 		return filter.buildXml(report);
-   }
+	}
 
 	@Override
-	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
-		ProblemReport report = super.getReport( period, domain);
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		ProblemReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -76,7 +76,6 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 			}
 		}
 	}
-	
 
 	public static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;

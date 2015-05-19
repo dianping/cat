@@ -34,7 +34,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private AllTransactionConfig m_config;
+	private volatile AllTransactionConfig m_config;
 
 	private Logger m_logger;
 

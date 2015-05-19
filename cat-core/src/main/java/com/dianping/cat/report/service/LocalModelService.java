@@ -56,16 +56,9 @@ public abstract class LocalModelService<T> implements Initializable {
 		if (analyzers == null) {
 			return null;
 		} else {
-			AbstractMessageAnalyzer<T> a = null;
-			int size = analyzers.size();
-			int index = 0;
+			MessageAnalyzer a = analyzers.get(0);
 
-			if (size > 1) {
-				index = Math.abs(domain.hashCode()) % size;
-			}
-			
-			a = (AbstractMessageAnalyzer<T>) analyzers.get(index);
-			return a.getReport(domain);
+			return ((AbstractMessageAnalyzer<T>) a).getReport(domain);
 		}
 	}
 

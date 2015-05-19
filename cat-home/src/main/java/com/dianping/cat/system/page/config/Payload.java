@@ -143,6 +143,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("all")
 	private boolean m_all = true;
 
+	@FieldMeta("threshold")
+	private int m_threshold = 30;
+
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
@@ -353,6 +356,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_constant;
 	}
 
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
 	}
@@ -415,6 +419,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
 		m_exceptionLimit = exceptionLimit;
+	}
+
+	public int getThreshold() {
+		return m_threshold;
+	}
+
+	public void setThreshold(int threshold) {
+		m_threshold = threshold;
 	}
 
 	public void setFrom(String from) {

@@ -30,7 +30,7 @@ public class BlackListManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private BlackList m_blackList;
+	private volatile BlackList m_blackList;
 
 	private Logger m_logger;
 

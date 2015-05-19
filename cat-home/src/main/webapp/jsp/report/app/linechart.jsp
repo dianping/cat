@@ -179,8 +179,7 @@
 			var commandId2 = $('#command2').val();
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
 					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
-					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2
-					+"&showActivity=${payload.showActivity}";
+					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
 			window.location.href = href;
 		}
 		
@@ -246,11 +245,7 @@
 					command1Change();
 					command2Change();
 					
-					if(${payload.showActivity}){
-						$('#activity_trend').addClass('active');
-					} else {
-						$('#trend').addClass('active');
-					}
+					$('#trend').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d',
 						timepicker:false,
@@ -273,11 +268,7 @@
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
 						$("#command").val(words[1]);
 					}else{
-						if('${payload.showActivity}' == 'true') {
-							$("#command").val('${model.defaultActivity}');
-						}else{
-							$("#command").val('${model.defaultCommand}');
-						}
+						$("#command").val('${model.defaultCommand}');
 					}
 					
 					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {

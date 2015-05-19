@@ -31,7 +31,7 @@ public class ServerConfigManager implements LogEnabled {
 
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
-	private ServerConfig m_config;
+	private volatile ServerConfig m_config;
 
 	private Logger m_logger;
 

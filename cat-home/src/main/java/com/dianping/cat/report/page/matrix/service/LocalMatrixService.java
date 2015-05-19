@@ -16,7 +16,7 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
 public class LocalMatrixService extends LocalModelService<MatrixReport> {
-	
+
 	public static final String ID = MatrixAnalyzer.ID;
 
 	@Inject
@@ -27,8 +27,9 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 	}
 
 	@Override
-	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
-		MatrixReport report = super.getReport( period, domain);
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		MatrixReport report = super.getReport(period, domain);
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

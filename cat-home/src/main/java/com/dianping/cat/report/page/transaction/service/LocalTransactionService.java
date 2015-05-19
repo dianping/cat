@@ -56,7 +56,7 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		TransactionReport report = super.getReport(period, domain);
-
+		
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

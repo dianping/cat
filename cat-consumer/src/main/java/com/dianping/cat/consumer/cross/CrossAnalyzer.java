@@ -80,6 +80,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
+	public int getAnanlyzerCount() {
+		return 2;
+	}
+
+	@Override
 	public CrossReport getReport(String domain) {
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
@@ -209,49 +214,51 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
-		String localIp = info.getLocalAddress();
-		String remoteIp = info.getRemoteAddress();
-		String role = info.getRemoteRole();
-		String transactionName = t.getName();
+		synchronized (report) {
+			String localIp = info.getLocalAddress();
+			String remoteIp = info.getRemoteAddress();
+			String role = info.getRemoteRole();
+			String transactionName = t.getName();
 
-		Local local = report.findOrCreateLocal(localIp);
-		String remoteId = remoteIp + ":" + role;
-		Remote remote = local.findOrCreateRemote(remoteId);
+			Local local = report.findOrCreateLocal(localIp);
+			String remoteId = remoteIp + ":" + role;
+			Remote remote = local.findOrCreateRemote(remoteId);
 
-		report.addIp(localIp);
+			report.addIp(localIp);
 
-		if (StringUtils.isEmpty(remote.getIp())) {
-			remote.setIp(remoteIp);
+			if (StringUtils.isEmpty(remote.getIp())) {
+				remote.setIp(remoteIp);
+			}
+			if (StringUtils.isEmpty(remote.getRole())) {
+				remote.setRole(role);
+			}
+			if (StringUtils.isEmpty(remote.getApp())) {
+				remote.setApp(info.getApp());
+			}
+
+			Type type = remote.getType();
+
+			if (type == null) {
+				type = new Type();
+				type.setId(info.getDetailType());
+				remote.setType(type);
+			}
+
+			Name name = type.findOrCreateName(transactionName);
+
+			type.incTotalCount();
+			name.incTotalCount();
+
+			if (!t.isSuccess()) {
+				type.incFailCount();
+				name.incFailCount();
+			}
+
+			double duration = t.getDurationInMicros() / 1000d;
+
+			type.setSum(type.getSum() + duration);
+			name.setSum(name.getSum() + duration);
 		}
-		if (StringUtils.isEmpty(remote.getRole())) {
-			remote.setRole(role);
-		}
-		if (StringUtils.isEmpty(remote.getApp())) {
-			remote.setApp(info.getApp());
-		}
-
-		Type type = remote.getType();
-
-		if (type == null) {
-			type = new Type();
-			type.setId(info.getDetailType());
-			remote.setType(type);
-		}
-
-		Name name = type.findOrCreateName(transactionName);
-
-		type.incTotalCount();
-		name.incTotalCount();
-
-		if (!t.isSuccess()) {
-			type.incFailCount();
-			name.incFailCount();
-		}
-
-		double duration = t.getDurationInMicros() / 1000d;
-
-		type.setSum(type.getSum() + duration);
-		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {
