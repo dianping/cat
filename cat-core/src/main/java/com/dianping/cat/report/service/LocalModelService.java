@@ -1,5 +1,6 @@
 package com.dianping.cat.report.service;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public abstract class LocalModelService<T> implements Initializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T getReport(ModelPeriod period, String domain) throws Exception {
+	protected List<T> getReport(ModelPeriod period, String domain) throws Exception {
 		List<MessageAnalyzer> analyzers = null;
 
 		if (domain == null || domain.length() == 0) {
@@ -58,9 +59,12 @@ public abstract class LocalModelService<T> implements Initializable {
 		if (analyzers == null) {
 			return null;
 		} else {
-			MessageAnalyzer a = analyzers.get(0);
+			List<T> list = new ArrayList<T>();
 
-			return ((AbstractMessageAnalyzer<T>) a).getReport(domain);
+			for (MessageAnalyzer a : analyzers) {
+				list.add(((AbstractMessageAnalyzer<T>) a).getReport(domain));
+			}
+			return list;
 		}
 	}
 

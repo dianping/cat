@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.state.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -29,16 +31,12 @@ public class LocalStateService extends LocalModelService<StateReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-<<<<<<< HEAD
-		StateReport report = super.getReport(period, domain);
-=======
 		List<StateReport> reports = super.getReport(period, domain);
 		StateReport report = null;
 
 		if (reports != null) {
 			report = new StateReport(domain);
 			StateReportMerger merger = new StateReportMerger(report);
->>>>>>> f86721684ccda964204d843c5badb55317c9cd63
 
 			for (StateReport tmp : reports) {
 				tmp.accept(merger);

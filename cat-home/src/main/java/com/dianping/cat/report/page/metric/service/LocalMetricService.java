@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.metric.service;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -41,10 +42,6 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-<<<<<<< HEAD
-		MetricReport report = super.getReport(period, domain);
-
-=======
 		List<MetricReport> reports = super.getReport(period, domain);
 		MetricReport report = null;
 
@@ -57,7 +54,6 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 			}
 		}
 
->>>>>>> f86721684ccda964204d843c5badb55317c9cd63
 		if ((report == null || report.getMetricItems().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

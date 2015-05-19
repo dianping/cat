@@ -31,7 +31,6 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
-import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -86,7 +85,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<String, Pair<String, String>> m_domain2Departments;
 
-	private Map<Integer, Command> m_rawCommands;
+	private Map<String, Command> m_command2Id;
 
 	@EntityMeta
 	private AppReport m_appReport;
@@ -193,8 +192,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return Action.LINECHART;
 	}
 
-	public int getDefaultCommand() {
-		return CommandQueryEntity.DEFAULT_COMMAND;
+	public String getDefaultCommand() {
+		return "shop.bin";
 	}
 
 	public DisplayCommands getDisplayCommands() {
@@ -263,8 +262,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_problemStatistics;
 	}
 
-	public Map<Integer, Command> getRawCommands() {
-		return m_rawCommands;
+	public Map<String, Command> getCommand2Id() {
+		return m_command2Id;
+	}
+
+	public String getCommand2IdJson() {
+		return new JsonBuilder().toJson(m_command2Id);
 	}
 
 	public Map<String, List<Speed>> getSpeeds() {
@@ -375,8 +378,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_problemStatistics = problemStatistics;
 	}
 
-	public void setRawCommands(Map<Integer, Command> rawCommands) {
-		m_rawCommands = rawCommands;
+	public void setCommand2Id(Map<String, Command> rawCommands) {
+		m_command2Id = rawCommands;
 	}
 
 	public void setSpeeds(Map<String, List<Speed>> speeds) {

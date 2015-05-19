@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.event.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -41,9 +43,6 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-<<<<<<< HEAD
-		EventReport report = super.getReport(period, domain);
-=======
 		List<EventReport> reports = super.getReport(period, domain);
 		EventReport report = null;
 
@@ -55,7 +54,6 @@ public class LocalEventService extends LocalModelService<EventReport> {
 				tmp.accept(merger);
 			}
 		}
->>>>>>> f86721684ccda964204d843c5badb55317c9cd63
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();

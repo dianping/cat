@@ -20,8 +20,6 @@
 
 			if (value == true) {
 				$('#history').slideDown();
-				$("#domains2").val($("#domains").val());
-				$("#domains2").change();
 				$("#command2").val($("#command").val());
 				command2Change();
 				$("#code2").val($("#code").val());
@@ -37,8 +35,9 @@
 			}
 		}
  		var command1Change = function command1Change() {
-			var key = $("#command").val();
-			var value = commandInfo[key];
+			var command = $("#command").val();
+			var commandId = ${model.command2IdJson}[command].id;
+			var value = commandInfo[commandId];
 			var code = document.getElementById("code");
 			$("#code").empty();
 			
@@ -55,8 +54,9 @@
 			}
 		}
 		var command2Change = function command2Change() {
-			var key = $("#command2").val();
-			var value = commandInfo[key];
+			var command = $("#command2").val();
+			var commandId = ${model.command2IdJson}[command].id;
+			var value = commandInfo[commandId];
 			var code = document.getElementById("code2");
 			$("#code2").empty();
 			var opt = $('<option />');
@@ -66,7 +66,6 @@
 			
 			for ( var prop in value) {
 				var opt = $('<option />');
-
 				opt.html(value[prop].name);
 				opt.val(value[prop].id);
 				opt.appendTo(code);
@@ -137,7 +136,8 @@
 				operator = operatorCode;
 			}
 			var split = ";";
-			var query1 = time + split + command + split + code + split
+			var commandId = ${model.command2IdJson}[command].id;
+			var query1 = time + split + commandId + split + code + split
 					+ network + split + version + split + connectionType
 					+ split + platform + split + city + split + operator + split + split;
 			var query2 = "";
@@ -146,6 +146,7 @@
 			if (value) {
 				var time2 = $("#time2").val();
 				var command2 = $("#command2").val();
+				var commandId2 = ${model.command2IdJson}[command2].id;
 				var code2 = $("#code2").val();
 				var network2 = $("#network2").val();
 				var version2 = $("#version2").val();
@@ -153,7 +154,7 @@
 				var platform2 = $("#platform2").val();
 				var city2 = $("#city2").val();
 				var operator2 = $("#operator2").val();
-				query2 = time2 + split + command2 + split + code2 + split
+				query2 = time2 + split + commandId2 + split + code2 + split
 						+ network2 + split + version2 + split + connectionType2
 						+ split + platform2 + split + city2 + split
 						+ operator2 + split + split;
@@ -175,70 +176,14 @@
 			if(typeof(sort) == "undefined"){
 				sort = "";
 			}
-			var domains = $('#domains').val();
 			var commandId = $('#command').val();
-			var domains2 = $('#domains2').val();
 			var commandId2 = $('#command2').val();
 			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
-					+ type + "&groupByField=" + field + "&sort=" + sort+"&domains="+domains
-					+"&commandId="+commandId+"&domains2="+domains2+"&commandId2="+commandId2;
+					+ type + "&groupByField=" + field + "&sort=" + sort
+					+"&commandId="+commandId+"&commandId2="+commandId2;
 			window.location.href = href;
 		}
 		
-		var domain2CommandsJson = ${model.domain2CommandsJson};
-
-		function changeDomain(domainId, commandId, domainInitVal, commandInitVal){
-			if(domainInitVal == ""){
-				domainInitVal = $("#"+domainId).val()
-			}
-			var commandSelect = $("#"+commandId);
-			var commands = domain2CommandsJson[domainInitVal];
-			
-			$("#"+domainId).val(domainInitVal);
-			commandSelect.empty();
-			for(var cou in commands){
-				var command = commands[cou];
-				if(command['title'] != undefined && command['title'].length > 0){
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-				}else{
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-				}
-			}
-			if(commandInitVal != ''){
-				commandSelect.val(commandInitVal);
-			}
-		}
-		
-		function changeCommandByDomain(){
-			if($(this).attr("id")=="domains"){
-				var domain = $("#domains").val();
-				var commandSelect = $("#command");
-			}else{
-				var domain = $("#domains2").val();
-				var commandSelect = $("#command2");
-			}
-			var commands = domain2CommandsJson[domain];
-			commandSelect.empty();
-			
-			for(var cou in commands){
-				var command = commands[cou];
-				if(command['title'] != undefined && command['title'].length > 0){
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['title']+"</option>"));
-				}else{
-					commandSelect.append($("<option value='"+command['id']+"'>"+command['name']+"</option>"));
-				}
-			}
-		}
-		
-		function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal){
-			var domainsSelect = $("#"+domainSelectId);
-			for(var domain in domain2CommandsJson){
-				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
-			}
-			changeDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal);
-			domainsSelect.on('change', changeCommandByDomain);
-			domainsSelect.change();
-		}
 
 		$(document).ready(
 				function() {
@@ -263,7 +208,7 @@
 					command1.on('change', command1Change);
 					command2.on('change', command2Change);
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
-						$("#command").val(${model.rawCommands[+words[1]].name});
+						$("#command").val('${payload.commandId}');
 					}else{
 						$("#command").val('${model.defaultCommand}');
 					}
@@ -299,8 +244,10 @@
 						
 						datePair["对比值"]=$("#time2").val();
 
-						if(typeof(words[1]) != 'undefined' && words[0].length > 0 ){
-							$("#command2").val(words[1]);
+						if(typeof(words[1]) != 'undefined' && words[1].length > 0){
+							$("#command2").val('${payload.commandId2}');
+						}else{
+							$("#command2").val('${model.defaultCommand}');
 						}
 						command2Change();
 						$("#code2").val(words[2]);
@@ -341,7 +288,11 @@
 					<c:forEach var="command" items="${model.commands}">
 								var item = {};
 								item['label'] = '${command.name}';
-								item['category'] ='${command.domain}';
+								if('${command.title}'.length >0 ){
+									item['category'] ='${command.title}';
+								}else{
+									item['category'] ='${command.domain}';
+								}
 								
 								data.push(item);
 					</c:forEach>
@@ -350,6 +301,32 @@
 						delay: 0,
 						source: data
 					});
+					$('#command').blur(function(){
+						console.log('changed!')
+						command1Change();
+					})
+					$('#command2').blur(function(){
+						console.log('changed!')
+						command2Change();
+					})
+					$( "#command2" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					$('#wrap_search').submit(
+							function(){
+								console.log('submit!');
+								command1Change();
+								return false;
+							}		
+						);
+					$('#wrap_search2').submit(
+							function(){
+								command2Change();
+								console.log('submit!');
+								return false;
+							}		
+						);
 					var data = ${model.lineChart.jsonString};
 					graphMetricChartForDay(document
 							.getElementById('${model.lineChart.id}'), data, datePair);
