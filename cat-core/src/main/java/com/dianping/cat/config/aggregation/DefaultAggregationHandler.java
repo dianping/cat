@@ -19,14 +19,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 	protected Logger m_logger;
 
-	/**
-	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
-	 * 
-	 * @param tree
-	 * @param prefix
-	 * @param suffix
-	 * @param format
-	 */
 	private void buildFormatTree(TrieTreeNode tree, char[] prefix, char[] suffix, AggregationMessageFormat format) {
 		if (prefix.length == 0 && suffix.length == 0) {
 			tree.addFormat("", format);
@@ -120,13 +112,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 		return parse(formatTree, input);
 	}
 
-	/**
-	 * parse input to output based on format tree
-	 * 
-	 * @param formatTree
-	 * @param input
-	 * @return
-	 */
 	private String parse(TrieTreeNode formatTree, String input) {
 		char[] cs = input.toCharArray();
 		List<Map<String, AggregationMessageFormat>> sformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();
