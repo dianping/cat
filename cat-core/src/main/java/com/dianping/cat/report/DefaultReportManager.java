@@ -142,6 +142,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	@Override
 	public void initialize() {
 		m_logger.info("init report manager " + this);
+		super.release(this);
 	}
 
 	@Override

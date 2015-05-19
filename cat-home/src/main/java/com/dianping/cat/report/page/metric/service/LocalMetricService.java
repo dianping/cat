@@ -43,13 +43,17 @@ public class LocalMetricService extends LocalModelService<MetricReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<MetricReport> reports = super.getReport(period, domain);
-		MetricReport report = new MetricReport(domain);
-		MetricReportMerger merger = new MetricReportMerger(report);
+		MetricReport report = null;
 
-		for (MetricReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new MetricReport(domain);
+			MetricReportMerger merger = new MetricReportMerger(report);
+
+			for (MetricReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
-		
+
 		if ((report == null || report.getMetricItems().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

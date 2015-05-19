@@ -35,11 +35,15 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
 		List<StorageReport> reports = super.getReport(period, id);
-		StorageReport report = new StorageReport(id);
-		StorageReportMerger merger = new StorageReportMerger(report);
+		StorageReport report = null;
 
-		for (StorageReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new StorageReport(id);
+			StorageReportMerger merger = new StorageReportMerger(report);
+
+			for (StorageReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

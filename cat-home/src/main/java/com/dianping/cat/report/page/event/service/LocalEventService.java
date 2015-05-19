@@ -44,11 +44,15 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<EventReport> reports = super.getReport(period, domain);
-		EventReport report = new EventReport(domain);
-		EventReportMerger merger = new EventReportMerger(report);
+		EventReport report = null;
 
-		for (EventReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new EventReport(domain);
+			EventReportMerger merger = new EventReportMerger(report);
+
+			for (EventReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

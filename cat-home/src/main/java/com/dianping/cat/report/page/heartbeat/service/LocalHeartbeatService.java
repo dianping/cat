@@ -51,11 +51,15 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<HeartbeatReport> reports = super.getReport(period, domain);
-		HeartbeatReport report = new HeartbeatReport(domain);
-		HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
+		HeartbeatReport report = null;
 
-		for (HeartbeatReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new HeartbeatReport(domain);
+			HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
+
+			for (HeartbeatReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

@@ -32,11 +32,15 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<DependencyReport> reports = super.getReport(period, domain);
-		DependencyReport report = new DependencyReport(domain);
-		DependencyReportMerger merger = new DependencyReportMerger(report);
+		DependencyReport report = null;
+		
+		if (reports != null) {
+			report = new DependencyReport(domain);
+			DependencyReportMerger merger = new DependencyReportMerger(report);
 
-		for (DependencyReport tmp : reports) {
-			tmp.accept(merger);
+			for (DependencyReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {

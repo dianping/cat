@@ -32,11 +32,15 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<MatrixReport> reports = super.getReport(period, domain);
-		MatrixReport report = new MatrixReport(domain);
-		MatrixReportMerger merger = new MatrixReportMerger(report);
+		MatrixReport report = null;
 
-		for (MatrixReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new MatrixReport(domain);
+			MatrixReportMerger merger = new MatrixReportMerger(report);
+
+			for (MatrixReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {

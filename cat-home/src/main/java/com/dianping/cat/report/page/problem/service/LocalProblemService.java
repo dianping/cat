@@ -46,11 +46,15 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<ProblemReport> reports = super.getReport(period, domain);
-		ProblemReport report = new ProblemReport(domain);
-		ProblemReportMerger merger = new ProblemReportMerger(report);
+		ProblemReport report = null;
 
-		for (ProblemReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new ProblemReport(domain);
+			ProblemReportMerger merger = new ProblemReportMerger(report);
+
+			for (ProblemReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {

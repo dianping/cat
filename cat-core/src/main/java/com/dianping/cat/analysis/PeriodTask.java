@@ -60,6 +60,7 @@ public class PeriodTask implements Task, LogEnabled {
 			m_analyzer.destroy();
 			
 			ReportManager<?> manager = m_analyzer.getReportManager();
+			
 			if(manager!=null){
 				manager.destory();
 			}

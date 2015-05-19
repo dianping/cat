@@ -32,13 +32,16 @@ public class LocalStateService extends LocalModelService<StateReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<StateReport> reports = super.getReport(period, domain);
-		StateReport report = new StateReport(domain);
-		StateReportMerger merger = new StateReportMerger(report);
+		StateReport report = null;
 
-		for (StateReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new StateReport(domain);
+			StateReportMerger merger = new StateReportMerger(report);
+
+			for (StateReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
-
 		if ((report == null || report.getMachines().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

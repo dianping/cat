@@ -58,13 +58,17 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<TransactionReport> reports = super.getReport(period, domain);
-		TransactionReport report = new TransactionReport(domain);
-		TransactionReportMerger merger = new TransactionReportMerger(report);
+		TransactionReport report = null;
 
-		for (TransactionReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new TransactionReport(domain);
+			TransactionReportMerger merger = new TransactionReportMerger(report);
+
+			for (TransactionReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
-		
+
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);

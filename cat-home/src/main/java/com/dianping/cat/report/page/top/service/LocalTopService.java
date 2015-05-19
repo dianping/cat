@@ -32,11 +32,15 @@ public class LocalTopService extends LocalModelService<TopReport> {
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
 		List<TopReport> reports = super.getReport(period, domain);
-		TopReport report = new TopReport(domain);
-		TopReportMerger merger = new TopReportMerger(report);
+		TopReport report = null;
 
-		for (TopReport tmp : reports) {
-			tmp.accept(merger);
+		if (reports != null) {
+			report = new TopReport(domain);
+			TopReportMerger merger = new TopReportMerger(report);
+
+			for (TopReport tmp : reports) {
+				tmp.accept(merger);
+			}
 		}
 
 		if ((report == null || report.getDomains().isEmpty()) && period.isLast()) {
