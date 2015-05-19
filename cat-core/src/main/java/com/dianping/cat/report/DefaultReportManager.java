@@ -65,6 +65,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	}
 
 	public void destory() {
+		m_logger.info("release report manager " + this);
 		super.release(this);
 	}
 
@@ -140,7 +141,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 	@Override
 	public void initialize() {
-		m_logger.info("init report manager" + this);
+		m_logger.info("init report manager " + this);
 	}
 
 	@Override
