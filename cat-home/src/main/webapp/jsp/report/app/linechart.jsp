@@ -9,8 +9,6 @@
 
 <a:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/chosen.css" />
-	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
  	<script type="text/javascript">

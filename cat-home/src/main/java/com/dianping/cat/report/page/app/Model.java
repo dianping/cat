@@ -81,6 +81,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<String> m_codeDistributions;
 
+	private Map<String, List<Command>> m_domain2Commands;
+
+	public Map<String, List<Command>> getDomain2Commands() {
+		return m_domain2Commands;
+	}
+
+	public String getDomain2CommandsJson() {
+		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
+
+		results.put(Constants.ALL, m_commands);
+		results.putAll(m_domain2Commands);
+		return new JsonBuilder().toJson(results);
+	}
+
+	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
+		m_domain2Commands = domain2Commands;
+	}
+
 	private Map<Integer, List<Code>> m_command2Codes;
 
 	private Map<String, Pair<String, String>> m_domain2Departments;
