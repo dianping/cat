@@ -87,6 +87,14 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 		}
 	}
 
+	private boolean validateName(String type, String name) {
+		return m_configManager.validate(type, name);
+	}
+
+	private boolean validateType(String type) {
+		return m_configManager.validate(type);
+	}
+
 	@Override
 	public void visitName(TransactionName name) {
 		if (validateName(m_currentType, name.getId())) {
@@ -119,13 +127,5 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 
 			super.visitType(type);
 		}
-	}
-
-	private boolean validateType(String type) {
-		return m_configManager.validate(type);
-	}
-
-	private boolean validateName(String type, String name) {
-		return m_configManager.validate(type, name);
 	}
 }

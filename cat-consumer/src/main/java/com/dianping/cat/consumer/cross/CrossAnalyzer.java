@@ -93,6 +93,11 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
+   public ReportManager<CrossReport> getReportManager() {
+		return m_reportManager;
+   }
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}

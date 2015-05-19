@@ -84,7 +84,17 @@ public class Period {
 			boolean enqueue = task.enqueue(tree);
 
 			if (enqueue == false) {
-				success = false;
+				if (length > 1) {
+					index = (index + 1) % length;
+					task = tasks.get(index);
+					enqueue = task.enqueue(tree);
+
+					if (enqueue == false) {
+						success = false;
+					}
+				} else {
+					success = false;
+				}
 			}
 		}
 

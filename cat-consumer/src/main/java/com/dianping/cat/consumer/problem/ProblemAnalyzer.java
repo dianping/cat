@@ -59,15 +59,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
+   public ReportManager<ProblemReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
 	public void initialize() throws InitializationException {
 		// to work around a performance issue within plexus
 		m_handlers = new ArrayList<ProblemHandler>(m_handlers);
 	}
-
+	
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
-	
+
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();

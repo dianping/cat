@@ -78,6 +78,83 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 	}
 
+	@Override
+	public synchronized void doCheckpoint(boolean atEnd) {
+		if (atEnd && !isLocalMode()) {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+		} else {
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	private HeartbeatReport findOrCreateReport(String domain) {
+		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
+	}
+
+	@Override
+	public HeartbeatReport getReport(String domain) {
+		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
+
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		return report;
+	}
+
+	@Override
+   public ReportManager<HeartbeatReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+	}
+
+	@Override
+	protected void process(MessageTree tree) {
+		String domain = tree.getDomain();
+
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
+			Message message = tree.getMessage();
+			HeartbeatReport report = findOrCreateReport(domain);
+			report.addIp(tree.getIpAddress());
+
+			if (message instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) message);
+			}
+		}
+	}
+
+	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
+		String ip = tree.getIpAddress();
+		Machine machine = report.findOrCreateMachine(ip);
+		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
+
+		if (period != null) {
+			machine.getPeriods().add(period);
+		}
+	}
+
+	private void processTransaction(HeartbeatReport report, MessageTree tree, Transaction transaction) {
+		List<Message> children = transaction.getChildren();
+
+		for (Message message : children) {
+			if (message instanceof Transaction) {
+				Transaction temp = (Transaction) message;
+
+				processTransaction(report, tree, temp);
+			} else if (message instanceof Heartbeat) {
+				if (message.getType().equalsIgnoreCase("heartbeat")) {
+					processHeartbeat(report, (Heartbeat) message, tree);
+				}
+			}
+		}
+	}
+
 	private void transalteHearbeat(StatusInfo info) {
 		MessageInfo message = info.getMessage();
 
@@ -135,78 +212,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					ex.findOrCreateExtensionDetail(entry.getKey()).setValue(value);
 				} catch (Exception e) {
 					Cat.logError("StatusExtension can only be double type", e);
-				}
-			}
-		}
-	}
-
-	@Override
-	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
-		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
-		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	private HeartbeatReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
-	}
-
-	@Override
-	public HeartbeatReport getReport(String domain) {
-		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		return report;
-	}
-
-	@Override
-	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
-	}
-
-	@Override
-	protected void process(MessageTree tree) {
-		String domain = tree.getDomain();
-
-		if (m_serverFilterConfigManager.validateDomain(domain)) {
-			Message message = tree.getMessage();
-			HeartbeatReport report = findOrCreateReport(domain);
-			report.addIp(tree.getIpAddress());
-
-			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message);
-			}
-		}
-	}
-
-	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
-		String ip = tree.getIpAddress();
-		Machine machine = report.findOrCreateMachine(ip);
-		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
-
-		if (period != null) {
-			machine.getPeriods().add(period);
-		}
-	}
-
-	private void processTransaction(HeartbeatReport report, MessageTree tree, Transaction transaction) {
-		List<Message> children = transaction.getChildren();
-
-		for (Message message : children) {
-			if (message instanceof Transaction) {
-				Transaction temp = (Transaction) message;
-
-				processTransaction(report, tree, temp);
-			} else if (message instanceof Heartbeat) {
-				if (message.getType().equalsIgnoreCase("heartbeat")) {
-					processHeartbeat(report, (Heartbeat) message, tree);
 				}
 			}
 		}

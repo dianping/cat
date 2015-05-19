@@ -551,7 +551,7 @@ public class AppConfigManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "AppConfig-Config-Reload";
+			return "App-Config-Reload";
 		}
 
 		@Override

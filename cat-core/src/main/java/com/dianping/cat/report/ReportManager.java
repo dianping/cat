@@ -6,6 +6,9 @@ import java.util.Set;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 
 public interface ReportManager<T> {
+	
+	public void destory();
+	
 	public void cleanup(long startTime);
 
 	public void initialize();

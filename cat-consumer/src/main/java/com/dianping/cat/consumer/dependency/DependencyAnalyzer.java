@@ -19,8 +19,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
@@ -69,6 +69,11 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
+
+	@Override
+   public ReportManager<DependencyReport> getReportManager() {
+		return m_reportManager;
+   }
 
 	private boolean isCache(String type) {
 		return type.startsWith("Cache.");
@@ -199,7 +204,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			updateDependencyInfo(report, t, type, "Cache");
 		}
 	}
-
+	
 	private void updateDependencyInfo(DependencyReport report, Transaction t, String target, String type) {
 		synchronized (report) {
 			long current = t.getTimestamp() / 1000 / 60;

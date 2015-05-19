@@ -66,6 +66,10 @@ public class CrossPerformanceTest extends ComponentTestCase {
 			}
 			return report;
 		}
+
+		@Override
+      public void destory() {
+      }
 	}
 
 	public MessageTree buildMessage() {

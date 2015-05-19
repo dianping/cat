@@ -45,11 +45,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
@@ -57,6 +52,16 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	@Override
 	public TopReport getReport(String domain) {
 		return m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, false);
+	}
+
+	@Override
+   public ReportManager<TopReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
@@ -106,5 +111,4 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public void setErrorType(String type) {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
-
 }

@@ -30,6 +30,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -89,6 +90,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 		return report;
 	}
+
+	@Override
+   public ReportManager<?> getReportManager() {
+	   return null;
+   }
 
 	protected void loadReports() {
 		ReportBucket<String> reportBucket = null;
@@ -312,6 +318,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		seg.setSum(seg.getSum() + sum);
 		seg.setAvg(seg.getSum() / seg.getCount());
 	}
+	
 
 	public static class ConfigItem {
 		private int m_count;

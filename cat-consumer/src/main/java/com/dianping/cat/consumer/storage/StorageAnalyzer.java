@@ -62,6 +62,11 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	}
 
 	@Override
+   public ReportManager<StorageReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
    protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
    }
@@ -170,5 +175,4 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private String querySQLId(String name) {
 		return name + "-SQL";
 	}
-	
 }

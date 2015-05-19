@@ -48,6 +48,11 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	}
 
 	@Override
+   public ReportManager<MatrixReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}

@@ -67,6 +67,30 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		return storeConfig();
 	}
 
+	protected void deleteUnusedConfig() {
+		try {
+			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
+			List<String> unused = new ArrayList<String>();
+
+			for (MetricItemConfig config : configs.values()) {
+				String domain = config.getDomain();
+				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
+				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
+
+				if (ProductLineConfig.METRIC.equals(productLineConfig)) {
+					unused.add(config.getId());
+				}
+			}
+			for (String id : unused) {
+				m_logger.info("delete metric item " + id);
+				m_metricConfig.removeMetricItemConfig(id);
+			}
+			storeConfig();
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
+		}
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -230,30 +254,6 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 				m_metricConfig = metricConfig;
 				m_modifyTime = modifyTime;
 			}
-		}
-	}
-
-	protected void deleteUnusedConfig() {
-		try {
-			Map<String, MetricItemConfig> configs = m_metricConfig.getMetricItemConfigs();
-			List<String> unused = new ArrayList<String>();
-
-			for (MetricItemConfig config : configs.values()) {
-				String domain = config.getDomain();
-				String productLine = m_productLineConfigManager.queryProductLineByDomain(domain);
-				ProductLineConfig productLineConfig = m_productLineConfigManager.queryProductLine(productLine);
-
-				if (ProductLineConfig.METRIC.equals(productLineConfig)) {
-					unused.add(config.getId());
-				}
-			}
-			for (String id : unused) {
-				m_logger.info("delete metric item " + id);
-				m_metricConfig.removeMetricItemConfig(id);
-			}
-			storeConfig();
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
 		}
 	}
 

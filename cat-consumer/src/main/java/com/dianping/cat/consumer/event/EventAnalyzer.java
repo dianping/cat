@@ -68,6 +68,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
+   public ReportManager<EventReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
@@ -135,7 +140,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			range.incFails(count);
 		}
 	}
-
+	
 	private void processTransaction(EventReport report, MessageTree tree, Transaction t, String ip) {
 		List<Message> children = t.getChildren();
 
@@ -147,7 +152,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			}
 		}
 	}
-	
+
 	public void setReportManager(ReportManager<EventReport> reportManager) {
 		m_reportManager = reportManager;
 	}

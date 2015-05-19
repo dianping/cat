@@ -10,6 +10,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.report.ReportManager;
 
 public class PeriodTask implements Task, LogEnabled {
 
@@ -57,6 +58,11 @@ public class PeriodTask implements Task, LogEnabled {
 		try {
 			m_analyzer.doCheckpoint(true);
 			m_analyzer.destroy();
+			
+			ReportManager<?> manager = m_analyzer.getReportManager();
+			if(manager!=null){
+				manager.destory();
+			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

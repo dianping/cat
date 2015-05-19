@@ -63,9 +63,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-	private Logger m_logger;
-
-	private long m_error;
+	protected Logger m_logger;
 
 	private long m_total;
 
@@ -218,15 +216,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_serverStateManager.addMessageSize(domain, size);
 		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-
-			Message message = tree.getMessage();
-
-			if (message instanceof Transaction) {
-				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
-				      - ((Transaction) message).getDurationInMillis();
-
-				m_serverStateManager.addProcessDelay(delay);
-			}
 		}
 	}
 
@@ -263,11 +252,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		if (errorFlag) {
-			m_error++;
-			if (m_error % (CatConstants.ERROR_COUNT * 10) == 0) {
-				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
-				      + index);
-			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
 		logStorageState(tree);

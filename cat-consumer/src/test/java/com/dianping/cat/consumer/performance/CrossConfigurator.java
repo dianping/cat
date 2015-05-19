@@ -58,5 +58,9 @@ public class CrossConfigurator extends AbstractResourceConfigurator {
 		public void setReport(CrossReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }

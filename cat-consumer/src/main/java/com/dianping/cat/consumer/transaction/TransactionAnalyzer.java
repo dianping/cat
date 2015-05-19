@@ -134,6 +134,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
+   public ReportManager<TransactionReport> getReportManager() {
+	   return m_reportManager;
+   }
+
+	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
@@ -266,7 +271,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}
-
+	
 	private TransactionReport queryReport(String domain) {
 		long period = getStartTime();
 		long timestamp = System.currentTimeMillis();
