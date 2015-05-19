@@ -16,12 +16,6 @@ public class AggregationMessageFormat {
 		m_messageFormat = new MessageFormat(build(pattern));
 	}
 
-	/**
-	 * build message format by user's aggregation rule
-	 * 
-	 * @param pattern
-	 * @return
-	 */
 	private String build(String pattern) {
 		int index = 0;
 		Pattern p = Pattern.compile("\\{(.*?)\\}");
@@ -43,11 +37,6 @@ public class AggregationMessageFormat {
 		return m_formatTokens;
 	}
 
-	/**
-	 * message format is not thread safe, so return a clone
-	 * 
-	 * @return message format clone
-	 */
 	public MessageFormat getMessageFormat() {
 		return (MessageFormat) m_messageFormat.clone();
 	}
