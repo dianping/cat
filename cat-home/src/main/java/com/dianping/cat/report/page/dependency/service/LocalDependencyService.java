@@ -33,7 +33,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	      throws Exception {
 		List<DependencyReport> reports = super.getReport(period, domain);
 		DependencyReport report = null;
-		
+
 		if (reports != null) {
 			report = new DependencyReport(domain);
 			DependencyReportMerger merger = new DependencyReportMerger(report);

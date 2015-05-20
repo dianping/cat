@@ -200,7 +200,7 @@
 					if(words[1] != undefined || words.length > 1){
 						$("#command").val(words[1]);
 					}else{
-						$("#command").val('${model.defaultCommand}');
+						$("#command").val('1');
 					}
 
 					$("#code").val(words[2]);
@@ -217,7 +217,7 @@
 				});
 	</script>
 	
-		<%@include file="piechartDetail.jsp"%>
+		<%@include file="connPiechartDetail.jsp"%>
 </a:body>
 
 <style type="text/css">
