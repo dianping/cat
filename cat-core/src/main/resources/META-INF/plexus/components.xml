@@ -119,6 +119,25 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.url.AppUrlHandler</role>
+			<implementation>com.dianping.cat.config.app.url.DefaultAppUrlHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.url.AppUrlConfigManager</role>
+			<implementation>com.dianping.cat.config.app.url.AppUrlConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.url.AppUrlHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.app.AppConfigManager</role>
 			<implementation>com.dianping.cat.config.app.AppConfigManager</implementation>
 			<requirements>
