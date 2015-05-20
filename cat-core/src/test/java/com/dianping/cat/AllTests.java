@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzerTest;
 import com.dianping.cat.analysis.PeriodTaskTest;
+import com.dianping.cat.config.CommandFormatManagerTest;
 import com.dianping.cat.message.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.codec.WaterfallMessageCodecTest;
 import com.dianping.cat.server.ServerConfigManagerTest;
@@ -47,7 +48,9 @@ ServerConfigManagerTest.class,
 
 AbstractMessageAnalyzerTest.class,
 
-DefaultReportManagerTest.class
+DefaultReportManagerTest.class,
+
+CommandFormatManagerTest.class
 
 })
 public class AllTests {

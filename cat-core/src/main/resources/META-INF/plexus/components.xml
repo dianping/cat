@@ -119,15 +119,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.url.AppUrlHandler</role>
-			<implementation>com.dianping.cat.config.app.url.DefaultAppUrlHandler</implementation>
+			<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+			<implementation>com.dianping.cat.config.app.command.DefaultCommandFormatlHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.app.url.AppUrlConfigManager</role>
-			<implementation>com.dianping.cat.config.app.url.AppUrlConfigManager</implementation>
+			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.app.url.AppUrlHandler</role>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

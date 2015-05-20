@@ -19,6 +19,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
@@ -50,6 +51,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private EventReportService m_eventReportService;
+
+	@Inject
+	private CommandFormatConfigManager m_urlConfigManager;
 
 	private Set<String> m_invalids = new HashSet<String>();
 
@@ -365,6 +369,14 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+			break;
+		case APP_COMMAND_FORMAT_CONFIG:
+			String content = payload.getContent();
+
+			if (StringUtils.isNotEmpty(content)) {
+				m_urlConfigManager.insert(content);
+			}
+			model.setContent(m_urlConfigManager.getUrlFormat().toString());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());
