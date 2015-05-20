@@ -36,7 +36,7 @@ public class CommandFormatConfigManager implements Initializable {
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "app-command-config";
+	private static final String CONFIG_NAME = "app-command-format-config";
 
 	private volatile CommandFormat m_urlFormat;
 
