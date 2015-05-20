@@ -1,4 +1,4 @@
-package com.dianping.cat.config.app.url;
+package com.dianping.cat.config.app.command;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,9 +12,9 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
-import com.dianping.cat.configuration.app.url.entity.Rule;
+import com.dianping.cat.configuration.app.command.entity.Rule;
 
-public class DefaultAppUrlHandler implements AppUrlHandler, LogEnabled {
+public class DefaultCommandFormatlHandler implements CommandFormatHandler, LogEnabled {
 
 	private Map<Integer, TrieTreeNode> m_formats = new HashMap<Integer, TrieTreeNode>();
 

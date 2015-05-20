@@ -6349,6 +6349,9 @@
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
@@ -6359,6 +6362,21 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

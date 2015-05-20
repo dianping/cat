@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<url-format>
+   <rule pattern="http://m.dianping.com/shopping/mallshoplist/{id}" type="1">
+      <command id="http://m.dianping.com/shopping/mallshoplist/"/>
+   </rule>
+   <rule pattern="http://m.dianping.com/shopping/mallpromolist/{id}" type="2">
+      <command id="http://m.dianping.com/shopping/mallpromolist/"/>
+   </rule>
+</url-format>

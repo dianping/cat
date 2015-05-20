@@ -1,4 +1,4 @@
-package com.dianping.cat.config.app.url;
+package com.dianping.cat.config.app.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,29 +16,29 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.app.url.entity.Command;
-import com.dianping.cat.configuration.app.url.entity.Rule;
-import com.dianping.cat.configuration.app.url.entity.UrlFormat;
-import com.dianping.cat.configuration.app.url.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.app.command.entity.Command;
+import com.dianping.cat.configuration.app.command.entity.CommandFormat;
+import com.dianping.cat.configuration.app.command.entity.Rule;
+import com.dianping.cat.configuration.app.command.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class AppUrlConfigManager implements Initializable {
+public class CommandFormatConfigManager implements Initializable {
 	@Inject
 	protected ConfigDao m_configDao;
 
 	@Inject
-	protected AppUrlHandler m_handler;
+	protected CommandFormatHandler m_handler;
 
 	@Inject
 	private ContentFetcher m_fetcher;
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "app-url-config";
+	private static final String CONFIG_NAME = "app-command-config";
 
-	private volatile UrlFormat m_urlFormat;
+	private volatile CommandFormat m_urlFormat;
 
 	private Map<String, Rule> m_map = new HashMap<String, Rule>();
 
@@ -48,6 +48,10 @@ public class AppUrlConfigManager implements Initializable {
 
 	private String buildKey(int type, String pattern) {
 		return type + ":" + pattern;
+	}
+
+	public CommandFormat getUrlFormat() {
+		return m_urlFormat;
 	}
 
 	public List<String> handle(int type, String url) {
@@ -88,9 +92,9 @@ public class AppUrlConfigManager implements Initializable {
 		try {
 			refreshUrlFormatConfig();
 		} catch (Exception e) {
+			m_urlFormat = new CommandFormat();
 			Cat.logError(e);
 		}
-
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
@@ -117,7 +121,7 @@ public class AppUrlConfigManager implements Initializable {
 		return new ArrayList<Rule>();
 	}
 
-	private UrlFormat queryUrlFormat() {
+	private CommandFormat queryUrlFormat() {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
@@ -126,7 +130,7 @@ public class AppUrlConfigManager implements Initializable {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new UrlFormat();
+		return new CommandFormat();
 	}
 
 	public void refreshRule() {
@@ -143,7 +147,7 @@ public class AppUrlConfigManager implements Initializable {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				UrlFormat format = DefaultSaxParser.parse(content);
+				CommandFormat format = DefaultSaxParser.parse(content);
 
 				for (Rule rule : format.getRules()) {
 					int type = rule.getType();
@@ -205,5 +209,5 @@ public class AppUrlConfigManager implements Initializable {
 		public void shutdown() {
 		}
 	}
-
+	
 }

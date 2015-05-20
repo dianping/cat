@@ -68,6 +68,9 @@
 							<li id="appList"><a href="/cat/s/config?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
 								<b class="arrow"></b></li>
+							<li id="appCommandFormatConfig"><a href="/cat/s/config?op=appCommandFormatConfig">
+								<i class="menu-icon fa fa-caret-right"></i>命令字规则</a>
+								<b class="arrow"></b></li>
 							<li id="appConfigUpdate"><a href="/cat/s/config?op=appConfigUpdate" style="display:none">
 								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
 								<b class="arrow"></b></li>
