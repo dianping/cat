@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.url.UrlPatternConfigManager;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.entity.PatternItem;
 import com.dianping.cat.report.alert.AlertType;
 
 public class WebContactor extends ProjectContactor {

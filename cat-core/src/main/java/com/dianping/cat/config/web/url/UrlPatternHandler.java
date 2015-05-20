@@ -1,8 +1,8 @@
-package com.dianping.cat.config.url;
+package com.dianping.cat.config.web.url;
 
 import java.util.Collection;
 
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.configuration.web.entity.PatternItem;
 
 public interface UrlPatternHandler {
 

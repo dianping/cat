@@ -62,6 +62,7 @@
                   </goals>
                   <configuration>
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/url-format-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-config-manifest.xml,

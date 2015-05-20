@@ -1,4 +1,4 @@
-package com.dianping.cat.config.black;
+package com.dianping.cat.config.server;
 
 import java.io.IOException;
 import java.util.Date;

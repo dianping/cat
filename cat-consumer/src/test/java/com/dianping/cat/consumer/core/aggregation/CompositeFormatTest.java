@@ -9,7 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import com.dianping.cat.config.CompositeFormat;
-import com.dianping.cat.config.aggregation.AggregationMessageFormat;
+import com.dianping.cat.config.web.js.AggregationMessageFormat;
 
 public class CompositeFormatTest {
 	@Rule
