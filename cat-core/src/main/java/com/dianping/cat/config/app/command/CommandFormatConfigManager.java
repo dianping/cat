@@ -54,19 +54,21 @@ public class CommandFormatConfigManager implements Initializable {
 		return m_urlFormat;
 	}
 
-	public List<String> handle(int type, String url) {
-		String format = m_handler.handle(type, url);
+	public List<String> handle(int type, String command) {
+		String format = m_handler.handle(type, command);
 		String key = buildKey(type, format);
 		List<String> result = new ArrayList<String>();
 
-		if (format != null) {
-			Rule rule = m_map.get(key);
+		Rule rule = m_map.get(key);
 
+		if (rule != null) {
 			for (Command c : rule.getCommands()) {
 				result.add(c.getId());
 			}
-		} else {
-			result.add(url);
+		}
+
+		if (result.isEmpty()) {
+			result.add(command);
 		}
 		return result;
 	}
@@ -110,33 +112,8 @@ public class CommandFormatConfigManager implements Initializable {
 		}
 	}
 
-	public List<Rule> queryRulesFromDB() {
-		try {
-			m_urlFormat = queryUrlFormat();
-
-			return m_urlFormat.getRules();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new ArrayList<Rule>();
-	}
-
-	private CommandFormat queryUrlFormat() {
-		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-			String content = config.getContent();
-
-			return DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new CommandFormat();
-	}
-
-	public void refreshRule() {
-		List<Rule> rules = queryRulesFromDB();
-
-		m_handler.register(rules);
+	public List<Rule> queryRules() {
+		return m_urlFormat.getRules();
 	}
 
 	private void refreshUrlFormatConfig() throws DalException, SAXException, IOException {
@@ -159,7 +136,7 @@ public class CommandFormatConfigManager implements Initializable {
 
 				m_map = map;
 				m_urlFormat = format;
-				m_handler.register(queryRulesFromDB());
+				m_handler.register(queryRules());
 				m_modifyTime = modifyTime;
 			}
 		}
@@ -209,5 +186,9 @@ public class CommandFormatConfigManager implements Initializable {
 		public void shutdown() {
 		}
 	}
-	
+
+	public void setConfigDao(ConfigDao configDao) {
+		m_configDao = configDao;
+	}
+
 }

@@ -2,6 +2,9 @@
 <model model-package="com.dianping.cat.configuration.app.command" enable-merger="false"  enable-sax-parser="true"
 	enable-base-visitor="false" >
   <entity name="command-format" root="true">
+    <attribute name="picSmall" value-type="int" primitive="true" default-value="1000"/>
+    <attribute name="picMiddel" value-type="int" primitive="true" default-value="2000"/>
+    <attribute name="picLarge" value-type="int" primitive="true" default-value="4000"/>
     <entity-ref name="rule" type="list" names="rules" />
   </entity>
   <entity name="rule">

@@ -162,9 +162,11 @@ public class DefaultCommandFormatlHandler implements CommandFormatHandler, LogEn
 
 	@Override
 	public void register(List<Rule> rules) {
+		System.out.println("start register");
 		m_formats.clear();
-
+		
 		for (Rule rule : rules) {
+			System.out.println("---"+rule.getPattern()+"----");
 			String format = rule.getPattern();
 
 			if (format == null || format.isEmpty()) {
