@@ -455,8 +455,11 @@ public class Handler implements PageHandler<Context> {
 		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
 		model.setCommands(m_appConfigManager.queryCommands());
 		model.setCommand2Id(m_appConfigManager.getCommands());
-		model.setDomain2Commands(m_appConfigManager.queryDomain2Commands());
 		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
+
+		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
+
+		model.setDefaultCommand(defaultCommand.getName() + "|" + defaultCommand.getTitle());
 		m_normalizePayload.normalize(model, payload);
 	}
 

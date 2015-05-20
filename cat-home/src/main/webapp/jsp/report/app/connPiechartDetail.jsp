@@ -1,55 +1,98 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<style>
+.form-control {
+  height: 30px;
+}
+</style>
 <table>
-			<tr>
-				<th class="left">
-				<div style="float:left;">
-						&nbsp;开始
-					<input type="text" id="time" style="width:150px;"/>
-						结束
-						<input type="text" id="time2" style="width:60px;"/></div>
-		        &nbsp;项目<select id="group" style="width: 200px;"></select>
-		         命令字 <select id="command" style="width: 200px;">
-						
-				</select> 返回码 <select id="code" style="width: 100px;"><option value=''>All</option>
-				</select> 网络类型 <select id="network" style="width: 80px;">
+	<tr>
+			<th>
+				<div class="input-group" style="float:left;width:110px">
+	              <span class="input-group-addon">开始</span>
+	              <input type="text" id="time"/>
+	            </div>
+				<div class="input-group" style="float:left;width:60px">
+	              <span class="input-group-addon">结束</span>
+        	      <input type="text" id="time2" style="width:60px;"/></div>
+	            </div>
+				<div class="input-group" style="float:left;width:200px">
+					<span class="input-group-addon">命令字</span>
+		            <form id="wrap_search" style="margin-bottom:0px;">
+						<span class="input-icon" style="width:200px;">
+							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+					</form>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">返回码</span>
+					<select id="code" style="width:120px"><option value=''>All</option></select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">网络类型</span>
+					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
 				</select>
-				</th>
+	            </div>
+			</th>
 			</tr>
 			<tr>
-				<th align=left>&nbsp;版本 <select id="app-version" style="width: 100px;">
+				<th align=left>
+				<div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">版本</span>
+					<select id="version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 连接类型 <select id="connnect-type" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">连接类型</span>
+					<select id="connectionType" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 平台 <select id="platform" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">平台</span>
+					<select id="platform" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 地区 <select id="city" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">地区</span>
+					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 运营商 <select id="operator" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">运营商</span>
+					<select id="operator" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
 							<option value='${item.value.id}'>${item.value.name}</option>
 						</c:forEach>
-				</select> 饼图展开 <select id="piechartSelect" style="width: 100px;">
+					</select>
+	            </div>
+	             <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">饼图展开</span>
+					<select id="piechartSelect" style="width: 100px;">
 						<option value='code'>返回码</option>
 						<option value='network'>网络类型</option>
 						<option value='app-version'>版本</option>
@@ -58,8 +101,8 @@
 						<option value='city'>地区</option>
 						<option value='operator'>运营商</option>
 				</select>
-				
-				 <input class="btn btn-primary btn-sm"
+	            </div>
+	            <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />
 				</th>

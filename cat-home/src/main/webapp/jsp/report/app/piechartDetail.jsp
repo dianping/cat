@@ -6,20 +6,20 @@
 }
 </style>
 <table>
-<tr>
-				<th>
-				<div class="input-group" style="float:left;width:110px">
+	<tr>
+			<th>
+				<div class="input-group" style="float:left;">
 	              <span class="input-group-addon">开始</span>
-	              <input type="text" id="time"/>
+	              <input type="text" id="time" style="width:130px"/>
 	            </div>
 				<div class="input-group" style="float:left;width:60px">
 	              <span class="input-group-addon">结束</span>
         	      <input type="text" id="time2" style="width:60px;"/></div>
 	            </div>
-				<div class="input-group" style="float:left;width:200px">
+				<div class="input-group" style="float:left;">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search" style="margin-bottom:0px;">
-						<span class="input-icon" style="width:200px;">
+						<span class="input-icon" style="width:350px;">
 							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
@@ -38,8 +38,8 @@
 						</c:forEach>
 				</select>
 	            </div>
-				</th>
-				</tr>
+			</th>
+			</tr>
 			<tr>
 				<th align=left>
 				<div class="input-group" style="float:left;width:120px">

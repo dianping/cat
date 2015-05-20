@@ -7,14 +7,14 @@
 <table width="100%">
 			<tr>
 				<th>
-				<div class="input-group" style="float:left;width:110px">
+				<div class="input-group" style="float:left;width:120px">
 	              <span class="input-group-addon">日期</span>
-	              <input type="text" id="time"/>
+	              <input type="text" id="time" style="width:100px"/>
 	            </div>
-				<div class="input-group" style="float:left;width:300px">
+				<div class="input-group" style="float:left;width:350px">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search" style="margin-bottom:0px;">
-						<span class="input-icon" style="width:300px;">
+						<span class="input-icon" style="width:350px;">
 							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
@@ -96,14 +96,14 @@
 		<table id="history" style="display: none">
 				<tr>
 				<th>
-				<div class="input-group" style="float:left;width:110px">
+				<div class="input-group" style="float:left;width:120px">
 	              <span class="input-group-addon">日期</span>
-	              <input type="text" id="time2"/>
+	              <input type="text" id="time2" style="width:100px"/>
 	            </div>
-				<div class="input-group" style="float:left;width:300px">
+				<div class="input-group" style="float:left;width:350px">
 					<span class="input-group-addon">命令字</span>
 		            <form id="wrap_search2" style="margin-bottom:0px;">
-						<span class="input-icon" style="width:300px;">
+						<span class="input-icon" style="width:350px;">
 							<input type="text" placeholder="input domain for search" class="search-input search-input form-control ui-autocomplete-input" id="command2" autocomplete="on" data=""/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>

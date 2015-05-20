@@ -33,7 +33,7 @@
 			}
 		}
  		var command1Change = function command1Change() {
-			var command = $("#command").val();
+			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
 			var value = commandInfo[commandId];
 			var code = document.getElementById("code");
@@ -52,7 +52,7 @@
 			}
 		}
 		var command2Change = function command2Change() {
-			var command = $("#command2").val();
+			var command = $("#command2").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
 			var value = commandInfo[commandId];
 			var code = document.getElementById("code2");
@@ -95,7 +95,7 @@
 
 		function query(field,networkCode,appVersionCode,channelCode,platformCode,cityCode,operatorCode,sort) {
 			var time = $("#time").val();
-			var command = $("#command").val();
+			var command = $("#command").val().split('|')[0];
 			var code = $("#code").val();
 			var network = "";
 			var version = "";
@@ -143,7 +143,7 @@
 
 			if (value) {
 				var time2 = $("#time2").val();
-				var command2 = $("#command2").val();
+				var command2 = $("#command2").val().split('|')[0];
 				var commandId2 = ${model.command2IdJson}[command2].id;
 				var code2 = $("#code2").val();
 				var network2 = $("#network2").val();
@@ -285,11 +285,11 @@
 					var data = [];
 					<c:forEach var="command" items="${model.commands}">
 								var item = {};
-								item['label'] = '${command.name}';
-								if('${command.title}'.length >0 ){
-									item['category'] ='${command.title}';
-								}else{
+								item['label'] = '${command.name}|${command.title}';
+								if('${command.domain}'.length >0 ){
 									item['category'] ='${command.domain}';
+								}else{
+									item['category'] ='未知项目';
 								}
 								
 								data.push(item);
@@ -300,11 +300,9 @@
 						source: data
 					});
 					$('#command').blur(function(){
-						console.log('changed!')
 						command1Change();
 					})
 					$('#command2').blur(function(){
-						console.log('changed!')
 						command2Change();
 					})
 					$( "#command2" ).catcomplete({
@@ -313,7 +311,6 @@
 					});
 					$('#wrap_search').submit(
 							function(){
-								console.log('submit!');
 								command1Change();
 								return false;
 							}		
@@ -321,7 +318,6 @@
 					$('#wrap_search2').submit(
 							function(){
 								command2Change();
-								console.log('submit!');
 								return false;
 							}		
 						);

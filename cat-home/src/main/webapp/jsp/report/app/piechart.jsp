@@ -14,7 +14,7 @@
 	<script type="text/javascript">
 		var commandInfo = ${model.command2CodesJson};
 		var command1Change = function command1Change() {
-			var command = $("#command").val();
+			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
 			var value = commandInfo[commandId];
 			var code = document.getElementById("code");
@@ -83,7 +83,7 @@
 			var period = times[0];
 			var start = converTimeFormat(times[1]);
 			var end = converTimeFormat($("#time2").val());
-			var command = $("#command").val();
+			var command = $("#command").val().split('|')[0];
 			var commandId = ${model.command2IdJson}[command].id;
 			var code = $("#code").val();
 			var network = $("#network").val();
@@ -99,7 +99,7 @@
 					+ split + platform + split + city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+command;
+			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val();
  			window.location.href = href;
  		}
 		
@@ -181,13 +181,12 @@
 					var data = [];
 					<c:forEach var="command" items="${model.commands}">
 								var item = {};
-								item['label'] = '${command.name}';
-								if('${command.title}'.length >0 ){
-									item['category'] ='${command.title}';
-								}else{
+								item['label'] = '${command.name}|${command.title}';
+								if('${command.domain}'.length >0 ){
 									item['category'] ='${command.domain}';
+								}else{
+									item['category'] ='未知项目';
 								}
-								
 								data.push(item);
 					</c:forEach>
 							
