@@ -20,7 +20,7 @@ import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.configuration.web.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;

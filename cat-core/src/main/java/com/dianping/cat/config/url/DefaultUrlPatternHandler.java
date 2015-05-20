@@ -7,7 +7,7 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.configuration.web.entity.PatternItem;
 
 public class DefaultUrlPatternHandler implements UrlPatternHandler, LogEnabled {
 

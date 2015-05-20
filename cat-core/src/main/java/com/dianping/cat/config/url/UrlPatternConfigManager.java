@@ -14,9 +14,9 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.configuration.url.pattern.entity.UrlPattern;
-import com.dianping.cat.configuration.url.pattern.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.entity.PatternItem;
+import com.dianping.cat.configuration.web.entity.UrlPattern;
+import com.dianping.cat.configuration.web.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
