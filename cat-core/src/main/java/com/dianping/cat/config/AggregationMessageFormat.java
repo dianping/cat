@@ -1,4 +1,4 @@
-package com.dianping.cat.config.web.js;
+package com.dianping.cat.config;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

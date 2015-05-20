@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.configuration.web.entity.PatternItem;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;

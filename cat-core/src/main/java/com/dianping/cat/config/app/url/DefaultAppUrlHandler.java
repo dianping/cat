@@ -1,4 +1,4 @@
-package com.dianping.cat.config.web.js;
+package com.dianping.cat.config.app.url;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,11 +12,11 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.app.url.entity.Rule;
 
-public class DefaultAggregationHandler implements AggregationHandler, LogEnabled {
+public class DefaultAppUrlHandler implements AppUrlHandler, LogEnabled {
 
-	private Map<Integer, Map<String, TrieTreeNode>> m_formats = new HashMap<Integer, Map<String, TrieTreeNode>>();
+	private Map<Integer, TrieTreeNode> m_formats = new HashMap<Integer, TrieTreeNode>();
 
 	protected Logger m_logger;
 
@@ -70,42 +70,23 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 		m_logger = logger;
 	}
 
-	private TrieTreeNode findOrCreateTrieTreeNode(int type, String domain) {
-		Map<String, TrieTreeNode> nodes = findOrCreateTrieTreeNodes(type);
-		TrieTreeNode node = nodes.get(domain);
+	private TrieTreeNode findOrCreateTrieTreeNodes(int type) {
+		TrieTreeNode node = m_formats.get(type);
 
 		if (node == null) {
 			node = new TrieTreeNode();
-			nodes.put(domain, node);
+			m_formats.put(type, node);
 		}
 		return node;
 	}
 
-	private Map<String, TrieTreeNode> findOrCreateTrieTreeNodes(int type) {
-		Map<String, TrieTreeNode> nodes = m_formats.get(type);
-
-		if (nodes == null) {
-			nodes = new HashMap<String, TrieTreeNode>();
-			m_formats.put(type, nodes);
-		}
-
-		return nodes;
-	}
-
-	private TrieTreeNode getFormatTree(int type, String domain) {
-		if (m_formats == null) {
-			return null;
-		}
-		Map<String, TrieTreeNode> domainToFormatMap = m_formats.get(type);
-		if (domainToFormatMap == null) {
-			return null;
-		}
-		return domainToFormatMap.get(domain);
+	private TrieTreeNode getFormatTree(int type) {
+		return m_formats.get(type);
 	}
 
 	@Override
-	public String handle(int type, String domain, String input) {
-		TrieTreeNode formatTree = getFormatTree(type, domain);
+	public String handle(int type, String input) {
+		TrieTreeNode formatTree = getFormatTree(type);
 
 		if (formatTree == null) {
 			return input;
@@ -180,10 +161,10 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 	}
 
 	@Override
-	public void register(List<AggregationRule> rules) {
+	public void register(List<Rule> rules) {
 		m_formats.clear();
 
-		for (AggregationRule rule : rules) {
+		for (Rule rule : rules) {
 			String format = rule.getPattern();
 
 			if (format == null || format.isEmpty()) {
@@ -203,12 +184,9 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 			String key1 = format.substring(0, index1);
 			String key2 = format.substring(index2 + 1);
 			AggregationMessageFormat value = new AggregationMessageFormat(format);
+			TrieTreeNode node = findOrCreateTrieTreeNodes(rule.getType());
 
-			if (rule.getDomain() != null) {
-				TrieTreeNode node = findOrCreateTrieTreeNode(rule.getType(), rule.getDomain());
-
-				buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
-			}
+			buildFormatTree(node, key1.toCharArray(), key2.toCharArray(), value);
 		}
 	}
 }

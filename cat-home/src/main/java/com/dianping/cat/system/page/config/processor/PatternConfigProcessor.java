@@ -6,8 +6,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.configuration.web.entity.PatternItem;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.web.WebRuleConfigManager;
 import com.dianping.cat.report.page.web.CityManager;
 import com.dianping.cat.system.page.config.Action;
