@@ -5,6 +5,7 @@
     <entity-ref name="rule" type="list" names="rules" />
   </entity>
   <entity name="rule">
+    <attribute name="type" value-type="int" primitive="true"/>
     <attribute name="pattern" value-type="String" />
     <entity-ref name="command" type="list" names="commands" />
   </entity>
