@@ -11,7 +11,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler, LogEnabled {
 

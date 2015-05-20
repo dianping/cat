@@ -14,9 +14,9 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.js.entity.Aggregation;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.web.js.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;

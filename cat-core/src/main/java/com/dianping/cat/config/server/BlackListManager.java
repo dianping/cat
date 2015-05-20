@@ -14,11 +14,11 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.configuration.server.black.entity.BlackList;
+import com.dianping.cat.configuration.server.black.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.black.entity.BlackList;
-import com.dianping.cat.home.black.transform.DefaultSaxParser;
 
 public class BlackListManager implements Initializable, LogEnabled {
 
