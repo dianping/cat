@@ -2366,7 +2366,7 @@
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-command-data</role-hint>
-			<implementation>com.dianping.cat.config.app.AppCommandDataTableProvider</implementation>
+			<implementation>com.dianping.cat.config.app.AppCommandTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
@@ -2377,6 +2377,11 @@
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>app-speed-data</role-hint>
 			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>web-api-data</role-hint>
+			<implementation>com.dianping.cat.config.app.WebApiTableProvider</implementation>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
@@ -2568,6 +2573,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>web-api-data</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>web-api-data</logical-table-name>
+				<physical-table-name>web_api_data</physical-table-name>
+				<data-source-name>app</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
 			<requirements>
@@ -2588,6 +2603,15 @@
 		<component>
 			<role>com.dianping.cat.app.AppSpeedDataDao</role>
 			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.app.WebApiDataDao</role>
+			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

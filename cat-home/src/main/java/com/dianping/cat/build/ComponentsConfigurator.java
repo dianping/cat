@@ -15,10 +15,11 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppCommandDataTableProvider;
+import com.dianping.cat.config.app.AppCommandTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
+import com.dianping.cat.config.app.WebApiTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
 import com.dianping.cat.config.server.BlackListManager;
@@ -154,9 +155,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TableProvider.class, "app-command-data", AppCommandDataTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
+		all.add(C(TableProvider.class, "web-api-data", WebApiTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //

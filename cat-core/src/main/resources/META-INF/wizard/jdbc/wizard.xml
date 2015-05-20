@@ -39,6 +39,7 @@
          <table name="app_command_data"/>
          <table name="app_speed_data"/>
          <table name="app_connection_data"/>
+         <table name="web_api_data"/>
       </group>
    </jdbc>
 </wizard>
