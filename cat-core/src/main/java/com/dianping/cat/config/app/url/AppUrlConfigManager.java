@@ -1,0 +1,209 @@
+package com.dianping.cat.config.app.url;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.configuration.app.url.entity.Command;
+import com.dianping.cat.configuration.app.url.entity.Rule;
+import com.dianping.cat.configuration.app.url.entity.UrlFormat;
+import com.dianping.cat.configuration.app.url.transform.DefaultSaxParser;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
+
+public class AppUrlConfigManager implements Initializable {
+	@Inject
+	protected ConfigDao m_configDao;
+
+	@Inject
+	protected AppUrlHandler m_handler;
+
+	@Inject
+	private ContentFetcher m_fetcher;
+
+	private int m_configId;
+
+	private static final String CONFIG_NAME = "app-url-config";
+
+	private volatile UrlFormat m_urlFormat;
+
+	private Map<String, Rule> m_map = new HashMap<String, Rule>();
+
+	private long m_modifyTime;
+
+	public static final int PROBLEM_TYPE = 3;
+
+	private String buildKey(int type, String pattern) {
+		return type + ":" + pattern;
+	}
+
+	public List<String> handle(int type, String url) {
+		String format = m_handler.handle(type, url);
+		String key = buildKey(type, format);
+		List<String> result = new ArrayList<String>();
+
+		if (format != null) {
+			Rule rule = m_map.get(key);
+
+			for (Command c : rule.getCommands()) {
+				result.add(c.getId());
+			}
+		} else {
+			result.add(url);
+		}
+		return result;
+	}
+
+	@Override
+	public void initialize() {
+		try {
+			m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			try {
+				String content = m_fetcher.getConfigContent(CONFIG_NAME);
+				Config config = m_configDao.createLocal();
+
+				config.setName(CONFIG_NAME);
+				config.setContent(content);
+				m_configDao.insert(config);
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		try {
+			refreshUrlFormatConfig();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		Threads.forGroup("cat").start(new ConfigReloadTask());
+	}
+
+	public boolean insert(String xml) {
+		try {
+			m_urlFormat = DefaultSaxParser.parse(xml);
+			boolean result = storeConfig();
+
+			return result;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	public List<Rule> queryRulesFromDB() {
+		try {
+			m_urlFormat = queryUrlFormat();
+
+			return m_urlFormat.getRules();
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new ArrayList<Rule>();
+	}
+
+	private UrlFormat queryUrlFormat() {
+		try {
+			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			String content = config.getContent();
+
+			return DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new UrlFormat();
+	}
+
+	public void refreshRule() {
+		List<Rule> rules = queryRulesFromDB();
+
+		m_handler.register(rules);
+	}
+
+	private void refreshUrlFormatConfig() throws DalException, SAXException, IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+		long modifyTime = config.getModifyDate().getTime();
+		Map<String, Rule> map = new HashMap<String, Rule>();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+				UrlFormat format = DefaultSaxParser.parse(content);
+
+				for (Rule rule : format.getRules()) {
+					int type = rule.getType();
+					String pattern = rule.getPattern();
+					String key = buildKey(type, pattern);
+
+					map.put(key, rule);
+				}
+
+				m_map = map;
+				m_urlFormat = format;
+				m_handler.register(queryRulesFromDB());
+				m_modifyTime = modifyTime;
+			}
+		}
+	}
+
+	private boolean storeConfig() {
+		try {
+			Config config = m_configDao.createLocal();
+
+			config.setId(m_configId);
+			config.setKeyId(m_configId);
+			config.setName(CONFIG_NAME);
+			config.setContent(m_urlFormat.toString());
+			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
+	}
+
+	public class ConfigReloadTask implements Task {
+
+		@Override
+		public String getName() {
+			return "App-Rule-Config-Reload";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+			while (active) {
+				try {
+					refreshUrlFormatConfig();
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(60 * 1000L);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
+}
