@@ -10,7 +10,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.black.BlackListManager;
+import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.core.dal.Project;

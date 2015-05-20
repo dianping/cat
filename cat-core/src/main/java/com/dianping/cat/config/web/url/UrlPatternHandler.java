@@ -1,4 +1,4 @@
-package com.dianping.cat.config.url;
+package com.dianping.cat.config.web.url;
 
 import java.util.Collection;
 

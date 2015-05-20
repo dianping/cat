@@ -3,7 +3,7 @@ package com.dianping.cat.config;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.dianping.cat.config.aggregation.AggregationMessageFormat;
+import com.dianping.cat.config.web.js.AggregationMessageFormat;
 
 public class TrieTreeNode {
 

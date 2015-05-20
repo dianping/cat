@@ -439,7 +439,7 @@
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.black.BlackListManager</role>
+					<role>com.dianping.cat.config.server.BlackListManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
@@ -2709,7 +2709,7 @@
 			<implementation>com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
@@ -2744,7 +2744,7 @@
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3161,7 +3161,7 @@
 					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3251,7 +3251,7 @@
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3484,13 +3484,13 @@
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.black.BlackListManager</role>
+					<role>com.dianping.cat.config.server.BlackListManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.black.BlackListManager</role>
-			<implementation>com.dianping.cat.config.black.BlackListManager</implementation>
+			<role>com.dianping.cat.config.server.BlackListManager</role>
+			<implementation>com.dianping.cat.config.server.BlackListManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -5065,7 +5065,7 @@
 					<role>com.dianping.cat.report.page.web.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.web.CityManager</role>
@@ -5093,14 +5093,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
-			<implementation>com.dianping.cat.config.url.UrlPatternConfigManager</implementation>
+			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternHandler</role>
+					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -6030,7 +6030,7 @@
 					<role>com.dianping.cat.report.alert.sender.config.SenderConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.black.BlackListManager</role>
+					<role>com.dianping.cat.config.server.BlackListManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
@@ -6093,10 +6093,10 @@
 			<implementation>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.url.UrlPatternConfigManager</role>
+					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
+					<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
@@ -6110,14 +6110,14 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.config.aggregation.AggregationConfigManager</role>
-			<implementation>com.dianping.cat.config.aggregation.AggregationConfigManager</implementation>
+			<role>com.dianping.cat.config.web.js.AggregationConfigManager</role>
+			<implementation>com.dianping.cat.config.web.js.AggregationConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.aggregation.AggregationHandler</role>
+					<role>com.dianping.cat.config.web.js.AggregationHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>

@@ -1,8 +1,8 @@
-package com.dianping.cat.config.url;
+package com.dianping.cat.config.web.js;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
@@ -14,38 +14,41 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.web.entity.PatternItem;
-import com.dianping.cat.configuration.web.entity.UrlPattern;
-import com.dianping.cat.configuration.web.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
+import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class UrlPatternConfigManager implements Initializable {
+public class AggregationConfigManager implements Initializable {
 	@Inject
 	protected ConfigDao m_configDao;
 
 	@Inject
-	private UrlPatternHandler m_handler;
+	protected AggregationHandler m_handler;
 
 	@Inject
 	private ContentFetcher m_fetcher;
 
 	private int m_configId;
 
-	private volatile UrlPattern m_UrlPattern;
+	private static final String CONFIG_NAME = "aggreationConfig";
+
+	private volatile Aggregation m_aggregation;
 
 	private long m_modifyTime;
 
-	private static final String CONFIG_NAME = "url-pattern";
+	public static final int PROBLEM_TYPE = 3;
 
-	public boolean deletePatternItem(String key) {
-		m_UrlPattern.removePatternItem(key);
+	public boolean deleteAggregationRule(String rule) {
+		m_aggregation.removeAggregationRule(rule);
+		m_handler.register(queryAggregationRules());
 		return storeConfig();
 	}
 
-	public String handle(String url) {
-		return m_handler.handle(url);
+	public String handle(int type, String domain, String status) {
+		return m_handler.handle(type, domain, status);
 	}
 
 	@Override
@@ -55,7 +58,7 @@ public class UrlPatternConfigManager implements Initializable {
 			String content = config.getContent();
 
 			m_configId = config.getId();
-			m_UrlPattern = DefaultSaxParser.parse(content);
+			m_aggregation = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
@@ -66,49 +69,78 @@ public class UrlPatternConfigManager implements Initializable {
 				config.setContent(content);
 				m_configDao.insert(config);
 				m_configId = config.getId();
-				m_UrlPattern = DefaultSaxParser.parse(content);
+				m_aggregation = DefaultSaxParser.parse(content);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (m_UrlPattern == null) {
-			m_UrlPattern = new UrlPattern();
+		if (m_aggregation == null) {
+			m_aggregation = new Aggregation();
 		}
-		m_handler.register(queryUrlPatternRules());
+		m_handler.register(queryAggregationRules());
+
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
-	public boolean insertPatternItem(PatternItem rule) {
-		m_UrlPattern.addPatternItem(rule);
-		m_handler.register(queryUrlPatternRules());
-
+	public boolean insertAggregationRule(AggregationRule rule) {
+		m_aggregation.addAggregationRule(rule);
+		m_handler.register(queryAggregationRules());
 		return storeConfig();
 	}
 
-	public PatternItem queryUrlPattern(String key) {
-		return m_UrlPattern.findPatternItem(key);
+	public List<AggregationRule> queryAggrarationRulesFromDB() {
+		try {
+			m_aggregation = queryAggreation();
+
+			return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new ArrayList<AggregationRule>();
 	}
 
-	public Collection<PatternItem> queryUrlPatternRules() {
-		return m_UrlPattern.getPatternItems().values();
+	public AggregationRule queryAggration(String key) {
+		return m_aggregation.findAggregationRule(key);
 	}
 
-	public void refreshUrlPatternConfig() throws DalException, SAXException, IOException {
+	private Aggregation queryAggreation() {
+		try {
+			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			String content = config.getContent();
+
+			return DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new Aggregation();
+	}
+
+	public List<AggregationRule> queryAggregationRules() {
+		return new ArrayList<AggregationRule>(m_aggregation.getAggregationRules().values());
+	}
+
+	public void refreshAggreationConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				UrlPattern pattern = DefaultSaxParser.parse(content);
+				Aggregation aggregation = DefaultSaxParser.parse(content);
 
-				m_UrlPattern = pattern;
-				m_handler.register(new ArrayList<PatternItem>(m_UrlPattern.getPatternItems().values()));
+				m_aggregation = aggregation;
+				m_handler.register(queryAggregationRules());
 				m_modifyTime = modifyTime;
 			}
 		}
+	}
+
+	public void refreshRule() {
+		List<AggregationRule> rules = queryAggrarationRulesFromDB();
+
+		m_handler.register(rules);
 	}
 
 	private boolean storeConfig() {
@@ -118,7 +150,7 @@ public class UrlPatternConfigManager implements Initializable {
 			config.setId(m_configId);
 			config.setKeyId(m_configId);
 			config.setName(CONFIG_NAME);
-			config.setContent(m_UrlPattern.toString());
+			config.setContent(m_aggregation.toString());
 			m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -131,7 +163,7 @@ public class UrlPatternConfigManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "UrlPattern-Config-Reload";
+			return "Aggreation-Config-Reload";
 		}
 
 		@Override
@@ -139,7 +171,7 @@ public class UrlPatternConfigManager implements Initializable {
 			boolean active = true;
 			while (active) {
 				try {
-					refreshUrlPatternConfig();
+					refreshAggreationConfig();
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

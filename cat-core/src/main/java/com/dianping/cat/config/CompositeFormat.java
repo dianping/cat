@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.config.aggregation.AggregationMessageFormat;
+import com.dianping.cat.config.web.js.AggregationMessageFormat;
 
 /**
  * Composite format of many message format
