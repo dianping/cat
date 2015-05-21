@@ -68,9 +68,8 @@ public class StorageReportUpdater {
 
 		private long m_threshold;
 
-		public StorageUpdateParam setDomain(String domain) {
-			m_domain = domain;
-			return this;
+		public String getDomain() {
+			return m_domain;
 		}
 
 		public String getId() {
@@ -79,10 +78,6 @@ public class StorageReportUpdater {
 
 		public String getIp() {
 			return m_ip;
-		}
-
-		public String getDomain() {
-			return m_domain;
 		}
 
 		public String getMethod() {
@@ -97,8 +92,8 @@ public class StorageReportUpdater {
 			return m_transaction;
 		}
 
-		public StorageUpdateParam setTransaction(Transaction transaction) {
-			m_transaction = transaction;
+		public StorageUpdateParam setDomain(String domain) {
+			m_domain = domain;
 			return this;
 		}
 
@@ -112,13 +107,18 @@ public class StorageReportUpdater {
 			return this;
 		}
 
+		public StorageUpdateParam setMethod(String method) {
+			m_method = method;
+			return this;
+		}
+
 		public StorageUpdateParam setThreshold(long threshold) {
 			m_threshold = threshold;
 			return this;
 		}
 
-		public StorageUpdateParam setMethod(String method) {
-			m_method = method;
+		public StorageUpdateParam setTransaction(Transaction transaction) {
+			m_transaction = transaction;
 			return this;
 		}
 	}

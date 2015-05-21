@@ -1,8 +1,8 @@
-package com.dianping.cat.config.aggregation;
+package com.dianping.cat.config.web.js;
 
 import java.util.List;
 
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 
 public interface AggregationHandler {
 

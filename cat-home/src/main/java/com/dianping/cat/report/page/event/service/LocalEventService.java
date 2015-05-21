@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.event.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -30,17 +32,28 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	}
 
 	private String filterReport(ApiPayload payload, EventReport report) {
-	   String ipAddress = payload.getIpAddress();
+		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
-		EventReportFilter filter = new EventReportFilter(type, name, ipAddress );
+		EventReportFilter filter = new EventReportFilter(type, name, ipAddress);
 
 		return filter.buildXml(report);
-   }
+	}
 
 	@Override
-	public String buildReport(ModelRequest request, ModelPeriod period, String domain,ApiPayload payload) throws Exception {
-		EventReport report = super.getReport( period, domain);
+	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		List<EventReport> reports = super.getReport(period, domain);
+		EventReport report = null;
+
+		if (reports != null) {
+			report = new EventReport(domain);
+			EventReportMerger merger = new EventReportMerger(report);
+
+			for (EventReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -50,30 +63,34 @@ public class LocalEventService extends LocalModelService<EventReport> {
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
+		EventReport report = new EventReport(domain);
+		EventReportMerger merger = new EventReportMerger(report);
 
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			EventReport report = null;
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new EventReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
 
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+				if (xml != null) {
+					EventReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
-	
+
 	public static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 

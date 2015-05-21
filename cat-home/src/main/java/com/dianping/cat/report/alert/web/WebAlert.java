@@ -16,8 +16,8 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.url.UrlPatternConfigManager;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.model.entity.MetricItem;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;

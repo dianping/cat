@@ -40,15 +40,12 @@ public class DumpAnalyzerTest {
 		}
 
 		Assert.assertEquals(size, bucketManager.m_insert);
-		Assert.assertEquals(size, analyzer.getOldVersionDomains().get("cat").intValue());
 
 		for (int i = 0; i < size; i++) {
 			analyzer.process(generateErrorMessageTree());
 		}
 
 		Assert.assertEquals(size, bucketManager.m_insert);
-		Assert.assertEquals(size, analyzer.getOldVersionDomains().get("cat").intValue());
-		Assert.assertEquals(size, analyzer.getErrorTimestampDomains().get("cat").intValue());
 	}
 
 	protected MessageTree generateOldMessageTree() {

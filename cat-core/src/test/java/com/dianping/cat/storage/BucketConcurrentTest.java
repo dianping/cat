@@ -32,7 +32,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 	public void testStringBucket() throws Exception {
 		long timestamp = System.currentTimeMillis();
 		ReportBucketManager manager = lookup(ReportBucketManager.class);
-		final ReportBucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data");
+		final ReportBucket bucket = manager.getReportBucket(timestamp, "concurrent/data", 0);
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -61,7 +61,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
-		final ReportBucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data");
+		final ReportBucket bucket2 = manager.getReportBucket(timestamp, "concurrent/data", 0);
 
 		for (int p = 0; p < 10; p++) {
 			final int num = p;

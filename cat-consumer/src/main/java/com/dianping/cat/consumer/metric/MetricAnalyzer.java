@@ -30,6 +30,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.report.ReportBucketManager;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
@@ -90,11 +91,16 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return report;
 	}
 
+	@Override
+	public ReportManager<?> getReportManager() {
+		return null;
+	}
+
 	protected void loadReports() {
-		ReportBucket<String> reportBucket = null;
+		ReportBucket reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID, m_index);
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
@@ -246,12 +252,12 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	protected void storeReports(boolean atEnd) {
-		ReportBucket<String> reportBucket = null;
+		ReportBucket reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", ID);
 
 		t.setStatus(Message.SUCCESS);
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID);
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, MetricAnalyzer.ID, m_index);
 
 			for (MetricReport report : m_reports.values()) {
 				try {

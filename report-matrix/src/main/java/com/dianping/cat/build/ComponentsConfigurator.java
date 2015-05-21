@@ -47,14 +47,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMatrixComponents());
 		return all;
 	}
-
+	
 	private Collection<Component> defineMatrixComponents() {
 		final List<Component> all = new ArrayList<Component>();
 		final String ID = MatrixAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
@@ -67,7 +67,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
-		      .req(ReportBucketManager.class, MatrixReportService.class, ServerConfigManager.class));
+		      .req(MatrixReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MatrixAnalyzer.ID, CompositeMatrixService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));

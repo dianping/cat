@@ -1,4 +1,4 @@
-package com.dianping.cat.config.url;
+package com.dianping.cat.config.web.url;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.configuration.url.pattern.entity.UrlPattern;
-import com.dianping.cat.configuration.url.pattern.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
+import com.dianping.cat.configuration.web.url.entity.UrlPattern;
+import com.dianping.cat.configuration.web.url.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -33,11 +33,11 @@ public class UrlPatternConfigManager implements Initializable {
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "url-pattern";
-
-	private UrlPattern m_UrlPattern;
+	private volatile UrlPattern m_UrlPattern;
 
 	private long m_modifyTime;
+
+	private static final String CONFIG_NAME = "url-pattern";
 
 	public boolean deletePatternItem(String key) {
 		m_UrlPattern.removePatternItem(key);

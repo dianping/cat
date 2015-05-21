@@ -12,10 +12,6 @@ public abstract class MockReportManager<T> implements ReportManager<T> {
 	private Set<String> m_set;
 
 	@Override
-	public void cleanup(long time) {
-	}
-
-	@Override
 	public void initialize() {
 	}
 
@@ -39,12 +35,12 @@ public abstract class MockReportManager<T> implements ReportManager<T> {
 	}
 
 	@Override
-	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
+	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
 		return null;
 	}
 
 	@Override
-	public void storeHourlyReports(long startTime, StoragePolicy policy) {
+	public void storeHourlyReports(long startTime, StoragePolicy policy, int index) {
 	}
 
 }

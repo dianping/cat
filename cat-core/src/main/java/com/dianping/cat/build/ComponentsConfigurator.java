@@ -16,20 +16,23 @@ import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
-import com.dianping.cat.config.aggregation.AggregationConfigManager;
-import com.dianping.cat.config.aggregation.AggregationHandler;
-import com.dianping.cat.config.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.config.black.BlackListManager;
+import com.dianping.cat.config.app.command.CommandFormatConfigManager;
+import com.dianping.cat.config.app.command.CommandFormatHandler;
+import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.config.url.DefaultUrlPatternHandler;
-import com.dianping.cat.config.url.UrlPatternConfigManager;
-import com.dianping.cat.config.url.UrlPatternHandler;
+import com.dianping.cat.config.web.js.AggregationConfigManager;
+import com.dianping.cat.config.web.js.AggregationHandler;
+import com.dianping.cat.config.web.js.DefaultAggregationHandler;
+import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
+import com.dianping.cat.config.web.url.UrlPatternHandler;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.TaskDao;
@@ -76,6 +79,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
 
 		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class, ContentFetcher.class));
+
+		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
+
+		all.add(C(CommandFormatConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
 
 		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 

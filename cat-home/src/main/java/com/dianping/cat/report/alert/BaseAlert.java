@@ -147,36 +147,39 @@ public abstract class BaseAlert implements Task, LogEnabled {
 	@Override
 	public void run() {
 		boolean active = TimeHelper.sleepToNextMinute();
-		
+
 		while (active) {
-			Transaction t = Cat.newTransaction("Alert" + getName(), TimeHelper.getMinuteStr());
-			long current = System.currentTimeMillis();
-
 			try {
-				Map<String, ProductLine> productLines = getProductlines();
+				Transaction t = Cat.newTransaction("Alert" + getName(), TimeHelper.getMinuteStr());
+				long current = System.currentTimeMillis();
 
-				for (ProductLine productLine : productLines.values()) {
-					try {
-						processProductLine(productLine);
-					} catch (Exception e) {
-						Cat.logError(e);
+				try {
+					Map<String, ProductLine> productLines = getProductlines();
+
+					for (ProductLine productLine : productLines.values()) {
+						try {
+							processProductLine(productLine);
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
 					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Throwable e) {
+					t.setStatus(e);
+				} finally {
+					t.complete();
 				}
+				long duration = System.currentTimeMillis() - current;
 
-				t.setStatus(Transaction.SUCCESS);
+				try {
+					if (duration < DURATION) {
+						Thread.sleep(DURATION - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
 			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
-			}
-			long duration = System.currentTimeMillis() - current;
-
-			try {
-				if (duration < DURATION) {
-					Thread.sleep(DURATION - duration);
-				}
-			} catch (InterruptedException e) {
-				active = false;
+				Cat.logError(e);
 			}
 		}
 	}

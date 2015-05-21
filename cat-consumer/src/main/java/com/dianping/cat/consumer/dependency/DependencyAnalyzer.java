@@ -19,8 +19,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
@@ -42,9 +42,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -58,11 +58,21 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
+	public int getAnanlyzerCount() {
+		return 2;
+	}
+
+	@Override
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
 		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
+	}
+
+	@Override
+	public ReportManager<DependencyReport> getReportManager() {
+		return m_reportManager;
 	}
 
 	private boolean isCache(String type) {
@@ -71,7 +81,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	private String parseDatabase(Transaction t) {
@@ -196,19 +206,22 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void updateDependencyInfo(DependencyReport report, Transaction t, String target, String type) {
-		long current = t.getTimestamp() / 1000 / 60;
-		int min = (int) (current % (60));
-		Segment segment = report.findOrCreateSegment(min);
-		Dependency dependency = segment.findOrCreateDependency(type + ":" + target);
+		synchronized (report) {
+			long current = t.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+			Segment segment = report.findOrCreateSegment(min);
+			Dependency dependency = segment.findOrCreateDependency(type + ":" + target);
 
-		dependency.setType(type);
-		dependency.setTarget(target);
+			dependency.setType(type);
+			dependency.setTarget(target);
 
-		if (!t.getStatus().equals(Transaction.SUCCESS)) {
-			dependency.incErrorCount();
+			if (!t.getStatus().equals(Transaction.SUCCESS)) {
+				dependency.incErrorCount();
+			}
+			dependency.incTotalCount();
+			dependency.setSum(dependency.getSum() + t.getDurationInMillis());
+			dependency.setAvg(dependency.getSum() / dependency.getTotalCount());
 		}
-		dependency.incTotalCount();
-		dependency.setSum(dependency.getSum() + t.getDurationInMillis());
-		dependency.setAvg(dependency.getSum() / dependency.getTotalCount());
 	}
+
 }

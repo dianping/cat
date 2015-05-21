@@ -8,16 +8,16 @@ public class EventTpsStatisticsComputer extends BaseVisitor {
 
 	public double m_duration = 3600;
 
+	public EventTpsStatisticsComputer setDuration(double duration) {
+		m_duration = duration;
+		return this;
+	}
+
 	@Override
 	public void visitName(EventName name) {
 		if (m_duration > 0) {
 			name.setTps(name.getTotalCount() * 1.0 / m_duration);
 		}
-	}
-
-	public EventTpsStatisticsComputer setDuration(double duration) {
-		m_duration = duration;
-		return this;
 	}
 
 	@Override

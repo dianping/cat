@@ -8,6 +8,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.report.ReportManager;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;
@@ -30,6 +31,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	private long m_errors = 0;
 
 	private volatile boolean m_active = true;
+
+	protected int m_index;
 
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -71,6 +74,11 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	@Override
 	public void destroy() {
 		super.release(this);
+		ReportManager<?> manager = this.getReportManager();
+
+		if (manager != null) {
+			manager.destory();
+		}
 	}
 
 	@Override
@@ -126,6 +134,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		synchronized (this) {
 			m_active = false;
 		}
+	}
+
+	public void setIndex(int index) {
+		m_index = index;
 	}
 
 }

@@ -22,6 +22,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
@@ -30,8 +31,6 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
-import com.dianping.cat.report.page.app.service.CommandQueryEntity;
-import com.dianping.cat.report.ReportPage;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -82,11 +81,13 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<String> m_codeDistributions;
 
-	private Map<String, List<Command>> m_domain2Commands;
-
 	private Map<Integer, List<Code>> m_command2Codes;
 
 	private Map<String, Pair<String, String>> m_domain2Departments;
+
+	private Map<String, Command> m_command2Id;
+
+	private String m_defaultCommand;
 
 	@EntityMeta
 	private AppReport m_appReport;
@@ -164,6 +165,14 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new JsonBuilder().toJson(m_command2Codes);
 	}
 
+	public Map<String, Command> getCommand2Id() {
+		return m_command2Id;
+	}
+
+	public String getCommand2IdJson() {
+		return new JsonBuilder().toJson(m_command2Id);
+	}
+
 	public int getCommandId() {
 		return m_commandId;
 	}
@@ -193,12 +202,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return Action.LINECHART;
 	}
 
-	public int getDefaultActivity() {
-		return CommandQueryEntity.DEFAULT_ACTIVITY;
-	}
-
-	public int getDefaultCommand() {
-		return CommandQueryEntity.DEFAULT_COMMAND;
+	public String getDefaultCommand() {
+		return m_defaultCommand;
 	}
 
 	public DisplayCommands getDisplayCommands() {
@@ -208,18 +213,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
-	}
-
-	public Map<String, List<Command>> getDomain2Commands() {
-		return m_domain2Commands;
-	}
-
-	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
-
-		results.put(Constants.ALL, m_commands);
-		results.putAll(m_domain2Commands);
-		return new JsonBuilder().toJson(results);
 	}
 
 	public Map<String, Pair<String, String>> getDomain2Departments() {
@@ -315,6 +308,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_command2Codes = command2Codes;
 	}
 
+	public void setCommand2Id(Map<String, Command> rawCommands) {
+		m_command2Id = rawCommands;
+	}
+
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
@@ -339,12 +336,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_crashLogDomains = crashLogDomains;
 	}
 
-	public void setDisplayCommands(DisplayCommands displayCommands) {
-		m_displayCommands = displayCommands;
+	public void setDefaultCommand(String defaultCommand) {
+		m_defaultCommand = defaultCommand;
 	}
 
-	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
-		m_domain2Commands = domain2Commands;
+	public void setDisplayCommands(DisplayCommands displayCommands) {
+		m_displayCommands = displayCommands;
 	}
 
 	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {

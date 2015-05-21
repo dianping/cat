@@ -1,4 +1,4 @@
-package com.dianping.cat.config.aggregation;
+package com.dianping.cat.config.web.js;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,9 +14,9 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.configuration.aggreation.model.entity.Aggregation;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
-import com.dianping.cat.configuration.aggreation.model.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.web.js.entity.Aggregation;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.web.js.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
@@ -35,7 +35,7 @@ public class AggregationConfigManager implements Initializable {
 
 	private static final String CONFIG_NAME = "aggreationConfig";
 
-	private Aggregation m_aggregation;
+	private volatile Aggregation m_aggregation;
 
 	private long m_modifyTime;
 

@@ -58,5 +58,9 @@ public class EventConfigurator extends AbstractResourceConfigurator {
 		public void setReport(EventReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }

@@ -1,9 +1,7 @@
-package com.dianping.cat.consumer.transaction;
+package com.dianping.cat.config.server;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,15 +14,13 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.consumer.transaction.config.entity.AllTransactionConfig;
-import com.dianping.cat.consumer.transaction.config.entity.Name;
-import com.dianping.cat.consumer.transaction.config.entity.Type;
-import com.dianping.cat.consumer.transaction.config.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.server.black.entity.BlackList;
+import com.dianping.cat.configuration.server.black.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class AllTransactionConfigManager implements Initializable, LogEnabled {
+public class BlackListManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -34,21 +30,25 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private AllTransactionConfig m_config;
+	private volatile BlackList m_blackList;
 
 	private Logger m_logger;
 
 	private long m_modifyTime;
 
-	private static final String CONFIG_NAME = "all-transaction-config";
+	private static final String CONFIG_NAME = "blackList";
+
+	public boolean isBlack(String domain, String ip) {
+		return m_blackList.getDomainNames().contains(domain) || m_blackList.getIps().contains(ip);
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	public AllTransactionConfig getConfig() {
-		return m_config;
+	public BlackList getBlackList() {
+		return m_blackList;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 			String content = config.getContent();
 
 			m_configId = config.getId();
-			m_config = DefaultSaxParser.parse(content);
+			m_blackList = DefaultSaxParser.parse(content);
 			m_modifyTime = config.getModifyDate().getTime();
 		} catch (DalNotFoundException e) {
 			try {
@@ -72,7 +72,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 				m_configDao.insert(config);
 
 				m_configId = config.getId();
-				m_config = DefaultSaxParser.parse(content);
+				m_blackList = DefaultSaxParser.parse(content);
 				m_modifyTime = now.getTime();
 			} catch (Exception ex) {
 				Cat.logError(ex);
@@ -80,14 +80,14 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (m_config == null) {
-			m_config = new AllTransactionConfig();
+		if (m_blackList == null) {
+			m_blackList = new BlackList();
 		}
 	}
 
 	public boolean insert(String xml) {
 		try {
-			m_config = DefaultSaxParser.parse(xml);
+			m_blackList = DefaultSaxParser.parse(xml);
 			boolean result = storeConfig();
 
 			return result;
@@ -105,9 +105,9 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllTransactionConfig blackList = DefaultSaxParser.parse(content);
+				BlackList blackList = DefaultSaxParser.parse(content);
 
-				m_config = blackList;
+				m_blackList = blackList;
 				m_modifyTime = modifyTime;
 			}
 		}
@@ -121,7 +121,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 				config.setId(m_configId);
 				config.setKeyId(m_configId);
 				config.setName(CONFIG_NAME);
-				config.setContent(m_config.toString());
+				config.setContent(m_blackList.toString());
 				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -129,30 +129,6 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 			}
 		}
 		return true;
-	}
-
-	public boolean validate(String type) {
-		Map<String, Type> types = m_config.getTypes();
-		
-		return types.containsKey(type) || types.containsKey("*");
-	}
-
-	public boolean validate(String type, String name) {
-		Map<String, Type> types = m_config.getTypes();
-		Type typeConfig = types.get(type);
-
-		if (typeConfig != null) {
-			List<Name> list = typeConfig.getNameList();
-
-			for (Name nameConfig : list) {
-				String configId = nameConfig.getId();
-
-				if (configId.equals(name) || "*".equals(configId)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 }

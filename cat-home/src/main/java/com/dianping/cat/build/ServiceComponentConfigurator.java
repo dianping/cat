@@ -80,7 +80,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalTransactionService.ID, LocalTransactionService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
-		      .req(ReportBucketManager.class, TransactionReportService.class, ServerConfigManager.class));
+		      .req(TransactionReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TransactionAnalyzer.ID, CompositeTransactionService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
@@ -88,7 +88,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalEventService.ID, LocalEventService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
-		      .req(ReportBucketManager.class, EventReportService.class, ServerConfigManager.class));
+		      .req(EventReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, EventAnalyzer.ID, CompositeEventService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
@@ -96,7 +96,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalProblemService.ID, LocalProblemService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
-		      .req(ReportBucketManager.class, ProblemReportService.class, ServerConfigManager.class));
+		      .req(ProblemReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, ProblemAnalyzer.ID, CompositeProblemService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
@@ -104,16 +104,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalHeartbeatService.ID, LocalHeartbeatService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
-		      .req(ReportBucketManager.class, HeartbeatReportService.class, ServerConfigManager.class));
+		      .req(HeartbeatReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, HeartbeatAnalyzer.ID, CompositeHeartbeatService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
-
 		all.add(C(LocalModelService.class, LocalStateService.ID, LocalStateService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "state-historical", HistoricalStateService.class) //
-		      .req(ReportBucketManager.class, StateReportService.class, ServerConfigManager.class));
+		      .req(StateReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StateAnalyzer.ID, CompositeStateService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "state-historical" }, "m_services"));
@@ -121,7 +120,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalCrossService.ID, LocalCrossService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
-		      .req(ReportBucketManager.class, CrossReportService.class, ServerConfigManager.class));
+		      .req(CrossReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, CrossAnalyzer.ID, CompositeCrossService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
@@ -129,7 +128,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalTopService.ID, LocalTopService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "top-historical", HistoricalTopService.class) //
-		      .req(ReportBucketManager.class, TopReportService.class, ServerConfigManager.class));
+		      .req(TopReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TopAnalyzer.ID, CompositeTopService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
@@ -137,7 +136,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalDependencyService.ID, LocalDependencyService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "dependency-historical", HistoricalDependencyService.class) //
-		      .req(ReportBucketManager.class, DependencyReportService.class, ServerConfigManager.class));
+		      .req(DependencyReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, DependencyAnalyzer.ID, CompositeDependencyService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
@@ -145,7 +144,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalStorageService.ID, LocalStorageService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "storage-historical", HistoricalStorageService.class) //
-		      .req(ReportBucketManager.class, StorageReportService.class, ServerConfigManager.class));
+		      .req(StorageReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StorageAnalyzer.ID, CompositeStorageService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
@@ -153,7 +152,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocalModelService.class, LocalMetricService.ID, LocalMetricService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class, IpService.class));
 		all.add(C(ModelService.class, "metric-historical", HistoricalMetricService.class) //
-		      .req(ReportBucketManager.class, MetricReportService.class, ServerConfigManager.class));
+		      .req(MetricReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MetricAnalyzer.ID, CompositeMetricService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));

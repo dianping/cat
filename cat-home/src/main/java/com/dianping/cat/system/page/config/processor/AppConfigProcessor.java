@@ -19,6 +19,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.config.app.command.CommandFormatConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
@@ -51,6 +52,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 	@Inject
 	private EventReportService m_eventReportService;
 
+	@Inject
+	private CommandFormatConfigManager m_urlConfigManager;
+
 	private Set<String> m_invalids = new HashSet<String>();
 
 	public void appRuleBatchUpdate(Payload payload, Model model) {
@@ -60,7 +64,10 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		for (String path : paths) {
 			try {
 				if (StringUtils.isNotEmpty(path) && !m_appConfigManager.getCommands().containsKey(path)) {
-					m_appConfigManager.addCommand("", path, path, "api", true);
+					Command command = new Command();
+
+					command.setDomain("").setTitle(path).setName(path);
+					m_appConfigManager.addCommand(command);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -88,9 +95,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 		Set<String> validatePaths = visitor.getPaths();
 		Set<String> invalidatePaths = visitor.getInvalidatePaths();
 
-		Map<String, Integer> commands = m_appConfigManager.getCommands();
+		Map<String, Command> commands = m_appConfigManager.getCommands();
 
-		for (Entry<String, Integer> entry : commands.entrySet()) {
+		for (Entry<String, Command> entry : commands.entrySet()) {
 			validatePaths.remove(entry.getKey());
 			invalidatePaths.remove(entry.getKey());
 		}
@@ -168,18 +175,24 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			String name = payload.getName();
 			String title = payload.getTitle();
 			boolean all = payload.isAll();
+			int timeThreshold = payload.getThreshold();
 
 			if (m_appConfigManager.containCommand(id)) {
-				if (m_appConfigManager.updateCommand(id, domain, name, title, all)) {
+				Command command = new Command();
+
+				command.setDomain(domain).setName(name).setTitle(title).setAll(all).setThreshold(timeThreshold);
+
+				if (m_appConfigManager.updateCommand(id, command)) {
 					model.setOpState(true);
 				} else {
 					model.setOpState(false);
 				}
 			} else {
 				try {
-					String type = payload.getType();
+					Command command = new Command().setDomain(domain).setTitle(title).setName(name).setAll(all)
+					      .setThreshold(timeThreshold);
 
-					if (m_appConfigManager.addCommand(domain, title, name, type, payload.isAll()).getKey()) {
+					if (m_appConfigManager.addCommand(command).getKey()) {
 						model.setOpState(true);
 					} else {
 						model.setOpState(false);
@@ -356,6 +369,14 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+			break;
+		case APP_COMMAND_FORMAT_CONFIG:
+			String content = payload.getContent();
+
+			if (StringUtils.isNotEmpty(content)) {
+				m_urlConfigManager.insert(content);
+			}
+			model.setContent(m_urlConfigManager.getUrlFormat().toString());
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

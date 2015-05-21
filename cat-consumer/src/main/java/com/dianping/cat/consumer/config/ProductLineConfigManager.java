@@ -43,7 +43,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Map<String, String> m_metricProductLines = new HashMap<String, String>();
+	private volatile Map<String, String> m_metricProductLines = new HashMap<String, String>();
 
 	public static final String CONFIG_NAME = "productLineConfig";
 

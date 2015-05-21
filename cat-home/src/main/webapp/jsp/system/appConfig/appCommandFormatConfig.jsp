@@ -12,9 +12,9 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-			<h4 class="text-center text-danger">Transaction All Report合并</h4>
-			<form name="transactionAllConfig" id="form" method="post"
-				action="${model.pageUri}?op=transactionAllConfig">
+			<h4 class="text-center text-danger">H5的类型为1，图片的类型为2</h4>
+			<form name="appUrlConfig" id="form" method="post"
+				action="${model.pageUri}?op=appCommandFormatConfig">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
@@ -29,8 +29,8 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
-			$('#transactionAllConfig').addClass('active');
+			$('#userMonitor_config').addClass('active open');
+			$('#appCommandFormatConfig').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

@@ -1,0 +1,15 @@
+<all-config>
+	<report id="transaction">
+		<type id="URL">
+			<name id="*"></name>
+		</type>
+	</report>
+	<report id="event">
+		<type id="URL">
+			<name id="*"></name>
+		</type>
+		<type id="SQL">
+			<name id="*"></name>
+		</type>
+	</report>
+</all-config>

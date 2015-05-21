@@ -172,6 +172,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	APP_RULE_DELETE("appRuleDelete"),
 
 	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
+	
+	APP_COMMAND_FORMAT_CONFIG("appCommandFormatConfig"),
 
 	TRANSACTION_RULE("transactionRule"),
 
@@ -219,7 +221,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
-	TRANSACTION_ALL_CONFIG("transactionAllConfig"),
+	ALL_REPORT_CONFIG("allReportConfig"),
 
 	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 

@@ -35,7 +35,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private RouterConfig m_routerConfig;
+	private volatile RouterConfig m_routerConfig;
 
 	private Logger m_logger;
 

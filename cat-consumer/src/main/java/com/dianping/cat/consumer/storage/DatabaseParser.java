@@ -82,12 +82,12 @@ public class DatabaseParser implements LogEnabled {
 			m_ip = ip;
 		}
 
-		public String getName() {
-			return m_name;
-		}
-
 		public String getIp() {
 			return m_ip;
+		}
+
+		public String getName() {
+			return m_name;
 		}
 	}
 }

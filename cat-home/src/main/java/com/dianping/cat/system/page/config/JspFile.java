@@ -124,6 +124,8 @@ public enum JspFile {
 	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
+	
+	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
 
@@ -143,7 +145,7 @@ public enum JspFile {
 
 	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp"),
 	
-	TRANSACTION_ALL_CONFIG("/jsp/system/transactionRule/transactionConfig.jsp");
+	ALL_REPORT_CONFIG("/jsp/system/transactionRule/allReportConfig.jsp");
 
 	private String m_path;
 

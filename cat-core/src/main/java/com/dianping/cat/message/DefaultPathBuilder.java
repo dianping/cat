@@ -6,16 +6,16 @@ import java.util.Date;
 public class DefaultPathBuilder implements PathBuilder {
 
 	@Override
-	public String getPath(Date timestamp, String name) {
+	public String getLogviewPath(Date timestamp, String name) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}");
 
 		return format.format(new Object[] { timestamp, name });
 	}
 
 	@Override
-	public String getReportPath(String name, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report-{1}");
+	public String getReportPath(String name, Date timestamp, int index) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/report-{2}");
 
-		return format.format(new Object[] { timestamp, name });
+		return format.format(new Object[] { timestamp, index, name });
 	}
 }

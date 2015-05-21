@@ -5,6 +5,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
@@ -35,15 +36,15 @@ public class TransactionReportTypeAggergatorTest {
 		return DefaultSaxParser.parse(source);
 	}
 
-	public static class ExtendAllTransactionConfigManager extends AllTransactionConfigManager {
+	public static class ExtendAllTransactionConfigManager extends AllReportConfigManager {
 
 		@Override
-		public boolean validate(String type) {
+		public boolean validate(String report, String type) {
 			return true;
 		}
 
 		@Override
-		public boolean validate(String type, String name) {
+		public boolean validate(String report, String type, String name) {
 			return true;
 		}
 	}

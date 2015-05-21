@@ -7,11 +7,11 @@ import org.unidal.dal.jdbc.mapping.TableProvider;
 
 import com.dianping.cat.app.AppCommandData;
 
-public class AppCommandDataTableProvider implements TableProvider {
+public class WebApiTableProvider implements TableProvider {
 
-	private String m_logicalTableName = "app-command-data";
+	private String m_logicalTableName = "web-api-data";
 
-	private String m_physicalTableName = "app_command_data";
+	private String m_physicalTableName = "web_api_data";
 
 	private String m_dataSourceName = "app";
 

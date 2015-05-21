@@ -10,6 +10,7 @@
 	<transaction-name>/</transaction-name>
 	<transaction-name>/index.jsp</transaction-name>
 	<transaction-name>/Heartbeat.html</transaction-name>
+	<transaction-name>/Heartbeat.jsp</transaction-name>
 	<transaction-name>/heartbeat.jsp</transaction-name>
 	<transaction-name>/inspect/healthcheck</transaction-name>
 	<transaction-name>/MonitorServlet</transaction-name>
@@ -23,6 +24,7 @@
 	<crash-log-domain id="ApolloIOSCrashLog" title="iOS(阿波罗)"/>
 	<crash-log-domain id="TVAndroidCrashLog" title="Android(电视墙)"/>
 
+	<domain></domain>
 	<domain>PhoenixAgent</domain>
 	<domain>cat-agent</domain>
 	<domain>All</domain>

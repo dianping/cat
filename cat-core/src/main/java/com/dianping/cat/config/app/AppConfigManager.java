@@ -44,58 +44,44 @@ public class AppConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private Map<String, Integer> m_commands = new ConcurrentHashMap<String, Integer>();
+	private volatile Map<String, Command> m_commands = new ConcurrentHashMap<String, Command>();
 
-	private Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
+	private volatile Map<String, Integer> m_cities = new ConcurrentHashMap<String, Integer>();
 
-	private Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
+	private volatile Map<String, Integer> m_operators = new ConcurrentHashMap<String, Integer>();
+
+	private volatile Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
 
 	private int m_configId;
 
-	private static final String CONFIG_NAME = "app-config";
-
-	private AppConfig m_config;
+	private volatile AppConfig m_config;
 
 	private long m_modifyTime;
 
-	private Map<Integer, String> m_excludedCommands = new ConcurrentHashMap<Integer, String>();
+	private static final String CONFIG_NAME = "app-config";
 
-	public static String NETWORK = "网络类型";
+	public static final String NETWORK = "网络类型";
 
-	public static String OPERATOR = "运营商";
+	public static final String OPERATOR = "运营商";
 
-	public static String VERSION = "版本";
+	public static final String VERSION = "版本";
 
-	public static String PLATFORM = "平台";
+	public static final String PLATFORM = "平台";
 
-	public static String CITY = "城市";
+	public static final String CITY = "城市";
 
-	public static String CONNECT_TYPE = "连接类型";
+	public static final String CONNECT_TYPE = "连接类型";
 
 	public static final int TOO_LONG_COMMAND_ID = 23;
 
 	public static final int ALL_COMMAND_ID = 0;
 
-	public static final int COMMAND_END_INDEX = 1099;
+	public static final int COMMAND_ID = 1200;
 
-	public static final int ACTIVITY_END_INDEX = 1200;
-
-	public Pair<Boolean, Integer> addCommand(String domain, String title, String name, String type, boolean all)
-	      throws Exception {
-		Command command = new Command();
-
-		command.setDomain(domain);
-		command.setTitle(title);
-		command.setName(name);
-		command.setAll(all);
-
+	public Pair<Boolean, Integer> addCommand(Command command) throws Exception {
 		int commandId = 0;
 
-		if ("activity".equals(type)) {
-			commandId = findAvailableId(COMMAND_END_INDEX + 1, ACTIVITY_END_INDEX);
-		} else {
-			commandId = findAvailableId(1, COMMAND_END_INDEX);
-		}
+		commandId = findAvailableId(1, COMMAND_ID);
 		command.setId(commandId);
 		m_config.addCommand(command);
 
@@ -233,7 +219,7 @@ public class AppConfigManager implements Initializable {
 		return m_config.getCodes();
 	}
 
-	public Map<String, Integer> getCommands() {
+	public Map<String, Command> getCommands() {
 		return m_commands;
 	}
 
@@ -317,10 +303,6 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean shouldAdd2AllCommands(int id) {
-		return !m_excludedCommands.containsKey(id);
-	}
-
 	public Map<Integer, Code> queryCodeByCommand(int command) {
 		Command c = m_config.findCommand(command);
 		Map<Integer, Code> result = new HashMap<Integer, Code>();
@@ -373,28 +355,6 @@ public class AppConfigManager implements Initializable {
 		return results;
 	}
 
-	public List<Command> queryCommands(boolean activity) {
-		List<Command> commands = queryCommands();
-		List<Command> results = new ArrayList<Command>();
-
-		if (activity) {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId > COMMAND_END_INDEX && commandId <= ACTIVITY_END_INDEX) {
-					results.add(command);
-				}
-			}
-		} else {
-			for (Command command : commands) {
-				int commandId = command.getId();
-				if (commandId >= ALL_COMMAND_ID && commandId <= COMMAND_END_INDEX) {
-					results.add(command);
-				}
-			}
-		}
-		return results;
-	}
-
 	public Map<Integer, Item> queryConfigItem(String name) {
 		ConfigItem config = m_config.findConfigItem(name);
 
@@ -407,10 +367,6 @@ public class AppConfigManager implements Initializable {
 
 	public Map<String, List<Command>> queryDomain2Commands() {
 		return queryDomain2Commands(queryCommands());
-	}
-
-	public Map<String, List<Command>> queryDomain2Commands(boolean activity) {
-		return queryDomain2Commands(queryCommands(activity));
 	}
 
 	public Map<String, List<Command>> queryDomain2Commands(List<Command> commands) {
@@ -472,10 +428,10 @@ public class AppConfigManager implements Initializable {
 	private void refreshData() {
 		Map<Integer, String> excludedCommands = new ConcurrentHashMap<Integer, String>();
 		Collection<Command> commands = m_config.getCommands().values();
-		Map<String, Integer> commandMap = new ConcurrentHashMap<String, Integer>();
+		Map<String, Command> commandMap = new ConcurrentHashMap<String, Command>();
 
 		for (Command c : commands) {
-			commandMap.put(c.getName(), c.getId());
+			commandMap.put(c.getName(), c);
 
 			if (!c.isAll()) {
 				excludedCommands.put(c.getId(), c.getName());
@@ -502,7 +458,10 @@ public class AppConfigManager implements Initializable {
 			operatorMap.put(item.getName(), item.getId());
 		}
 		m_operators = operatorMap;
+	}
 
+	public boolean shouldAdd2AllCommands(int id) {
+		return !m_excludedCommands.containsKey(id);
 	}
 
 	private void sortCommands() {
@@ -557,13 +516,14 @@ public class AppConfigManager implements Initializable {
 		return false;
 	}
 
-	public boolean updateCommand(int id, String domain, String name, String title, boolean all) {
-		Command command = m_config.findCommand(id);
+	public boolean updateCommand(int id, Command command) {
+		Command c = m_config.findCommand(id);
 
-		command.setDomain(domain);
-		command.setName(name);
-		command.setTitle(title);
-		command.setAll(all);
+		c.setDomain(command.getDomain());
+		c.setName(command.getName());
+		c.setTitle(command.getTitle());
+		c.setAll(command.getAll());
+		c.setThreshold(command.getThreshold());
 		return storeConfig();
 	}
 
@@ -591,7 +551,7 @@ public class AppConfigManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "AppConfig-Config-Reload";
+			return "App-Config-Reload";
 		}
 
 		@Override

@@ -11,11 +11,11 @@ import com.dianping.cat.report.ReportBucket;
 import com.dianping.cat.storage.StringBucketTestCase;
 
 public class LocalReportBucketTest extends StringBucketTestCase {
-	@SuppressWarnings("unchecked")
+
 	@Override
-	protected ReportBucket<String> createBucket() throws Exception, IOException {
-		ReportBucket<String> bucket = lookup(ReportBucket.class, String.class.getName() + "-report");
-		bucket.initialize(null, "cat", new Date());
+	protected ReportBucket createBucket() throws Exception, IOException {
+		ReportBucket bucket = lookup(ReportBucket.class, String.class.getName() + "-report");
+		bucket.initialize("cat", new Date(), 0);
 		return bucket;
 	}
 

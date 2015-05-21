@@ -27,7 +27,7 @@ public class AppComparisonConfigManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private AppComparisonConfig m_config;
+	private volatile AppComparisonConfig m_config;
 
 	private static final String CONFIG_NAME = "appComparisonConfig";
 

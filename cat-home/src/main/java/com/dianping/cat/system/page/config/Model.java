@@ -14,13 +14,13 @@ import org.unidal.web.mvc.ViewModel;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -186,10 +186,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
-	public Map<String, List<Command>> getActivityCommands() {
-		return m_appConfigManager.queryDomain2Commands(true);
-	}
-
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
 	}
@@ -199,7 +195,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public Map<String, List<Command>> getApiCommands() {
-		return m_appConfigManager.queryDomain2Commands(false);
+		return m_appConfigManager.queryDomain2Commands();
 	}
 
 	public Item getAppItem() {
