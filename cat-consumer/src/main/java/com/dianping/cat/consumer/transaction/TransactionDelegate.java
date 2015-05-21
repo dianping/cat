@@ -75,11 +75,13 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		try {
 			for (TransactionReport report : reports.values()) {
 				String domain = report.getDomain();
+				
+				if (!domain.equals(Constants.ALL)) {
+					all.getIps().add(domain);
+					all.getDomainNames().add(domain);
 
-				all.getIps().add(domain);
-				all.getDomainNames().add(domain);
-
-				visitor.visitTransactionReport(report);
+					visitor.visitTransactionReport(report);
+				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
