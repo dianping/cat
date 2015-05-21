@@ -5,9 +5,9 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.BlackListManager;
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ConfigReloadTask implements Task {
@@ -25,7 +25,7 @@ public class ConfigReloadTask implements Task {
 	private BlackListManager m_blackListManager;
 	
 	@Inject
-	private AllTransactionConfigManager m_allTransactionConfigManager;
+	private AllReportConfigManager m_allTransactionConfigManager;
 
 	@Override
 	public String getName() {

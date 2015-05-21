@@ -121,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 		case BLACK_CONFIG_UPDATE:
 		case STORAGE_GROUP_CONFIG_UPDATE:
 		case SERVER_FILTER_CONFIG_UPDATE:
-		case TRANSACTION_ALL_CONFIG:
+		case ALL_REPORT_CONFIG:
 			m_globalConfigProcessor.process(action, payload, model);
 			break;
 

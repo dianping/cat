@@ -61,7 +61,7 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -120,6 +120,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -750,8 +753,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
-			<implementation>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</implementation>
+			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
+			<implementation>com.dianping.cat.consumer.config.AllReportConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

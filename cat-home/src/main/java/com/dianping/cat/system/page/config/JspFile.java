@@ -145,7 +145,7 @@ public enum JspFile {
 
 	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp"),
 	
-	TRANSACTION_ALL_CONFIG("/jsp/system/transactionRule/transactionConfig.jsp");
+	ALL_REPORT_CONFIG("/jsp/system/transactionRule/allReportConfig.jsp");
 
 	private String m_path;
 
