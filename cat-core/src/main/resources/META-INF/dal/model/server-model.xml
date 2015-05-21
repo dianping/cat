@@ -6,11 +6,7 @@
 		<attribute name="alert-machine" value-type="boolean" default-value="false"/>
 		<attribute name="hdfs-machine" value-type="boolean" default-value="true"/>
 		<attribute name="send-machine" value-type="boolean" default-value="true"/>
-   	 	<entity-ref name="ldap" />
 		<entity-ref name="property" type="map" names="properties"/>
-	</entity>
-	<entity name="ldap" class-name="ldap">
-		<attribute name="ldapUrl" value-type="String" default-value="ldap://idcldap.dianpingoa.com/DC=dianpingoa,DC=com" />
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />

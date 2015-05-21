@@ -5638,20 +5638,6 @@
 		<component>
 			<role>com.dianping.cat.system.page.login.service.SessionManager</role>
 			<implementation>com.dianping.cat.system.page.login.service.SessionManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.page.login.spi.LDAPService</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.login.spi.LDAPService</role>
-			<implementation>com.dianping.cat.system.page.login.spi.LDAPService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.Handler</role>
