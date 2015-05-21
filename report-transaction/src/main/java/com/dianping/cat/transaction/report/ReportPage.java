@@ -5,7 +5,7 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   TRANSACTION("transaction", "matrix", "Transaction", "Transaction", false);
+   TRANSACTION("transaction", "t", "Transaction", "Transaction", false);
 
    private String m_name;
 
