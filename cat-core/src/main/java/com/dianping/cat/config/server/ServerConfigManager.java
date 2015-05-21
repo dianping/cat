@@ -20,7 +20,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
-import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
@@ -31,7 +30,7 @@ public class ServerConfigManager implements LogEnabled {
 
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
-	private ServerConfig m_config;
+	private volatile ServerConfig m_config;
 
 	private Logger m_logger;
 
@@ -160,20 +159,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return null;
-	}
-
-	public Ldap getLdap() {
-		if (m_config != null) {
-			Ldap ldap = m_config.getLdap();
-
-			if (ldap == null) {
-				ldap = new Ldap();
-				m_config.setLdap(ldap);
-			}
-			return ldap;
-		} else {
-			return null;
-		}
 	}
 
 	public int getLocalReportStroageTime() {

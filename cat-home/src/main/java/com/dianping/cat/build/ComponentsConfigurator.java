@@ -15,20 +15,21 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppCommandDataTableProvider;
+import com.dianping.cat.config.app.AppCommandTableProvider;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppConnectionTableProvider;
 import com.dianping.cat.config.app.AppSpeedTableProvider;
-import com.dianping.cat.config.black.BlackListManager;
+import com.dianping.cat.config.app.WebApiTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.transaction.AllTransactionConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.dal.report.AlertDao;
@@ -154,9 +155,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TableProvider.class, "app-command-data", AppCommandDataTableProvider.class));
+		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
 		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
 		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
+		all.add(C(TableProvider.class, "web-api-data", WebApiTableProvider.class));
 
 		// database
 		all.add(C(JdbcDataSourceDescriptorManager.class) //
@@ -205,7 +207,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, BlackListManager.class, AllTransactionConfigManager.class));
+		      RouterConfigManager.class, BlackListManager.class, AllReportConfigManager.class));
 
 		return all;
 	}

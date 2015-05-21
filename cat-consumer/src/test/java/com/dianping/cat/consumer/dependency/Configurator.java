@@ -62,6 +62,10 @@ public class Configurator extends AbstractResourceConfigurator {
 
 			return report;
 		}
+
+		@Override
+      public void destory() {
+      }
 	}
 
 	public static class ExtendedHostinfoService extends HostinfoService {

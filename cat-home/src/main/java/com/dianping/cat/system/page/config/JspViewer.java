@@ -174,6 +174,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case APP_CONSTANT_ADD:
 		case APP_CONSTANT_UPDATE:
 			return JspFile.APP_CONSTANT_UPDATE.getPath();
+		case APP_COMMAND_FORMAT_CONFIG:
+			return JspFile.APP_COMMAND_FORMAT_CONFIG.getPath();
 		case TRANSACTION_RULE:
 		case TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT:
 		case TRANSACTION_RULE_DELETE:
@@ -210,8 +212,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.SERVER_FILTER_CONFIG_UPDATE.getPath();
 		case BLACK_CONFIG_UPDATE:
 			return JspFile.BLACK_CONFIG_UPDATE.getPath();
-		case TRANSACTION_ALL_CONFIG:
-			return JspFile.TRANSACTION_ALL_CONFIG.getPath();
+		case ALL_REPORT_CONFIG:
+			return JspFile.ALL_REPORT_CONFIG.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.aggregation.AggregationConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.config.web.js.AggregationConfigManager;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.home.alert.config.entity.Receiver;
 import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.sender.config.AlertConfigManager;

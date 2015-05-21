@@ -62,10 +62,10 @@ public class DefaultReportManagerTest {
 	}
 
 	@Test
-	public void testClean(){
-		long hour = 3600*1000L;
-		m_manager.getHourlyReport(m_start-3*hour, DOMAIN1, true);
-		m_manager.getHourlyReport(m_start-4*hour, DOMAIN2, true);
+	public void testClean() {
+		long hour = 3600 * 1000L;
+		m_manager.getHourlyReport(m_start - 3 * hour, DOMAIN1, true);
+		m_manager.getHourlyReport(m_start - 4 * hour, DOMAIN2, true);
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
 		m_manager.cleanup(m_start);
 
@@ -99,7 +99,7 @@ public class DefaultReportManagerTest {
 
 	@Test
 	public void testLoadReport() {
-		m_manager.loadHourlyReports(m_start, null);
+		m_manager.loadHourlyReports(m_start, null, 0);
 
 		Map<String, String> reports = m_manager.getHourlyReports(m_start);
 		Assert.assertEquals(3, reports.size());
@@ -114,7 +114,7 @@ public class DefaultReportManagerTest {
 		m_manager.getHourlyReport(m_start, DOMAIN1, true);
 		m_manager.getHourlyReport(m_start, DOMAIN2, true);
 		m_manager.getHourlyReport(m_start, DOMAIN3, true);
-		m_manager.storeHourlyReports(m_start, StoragePolicy.FILE_AND_DB);
+		m_manager.storeHourlyReports(m_start, StoragePolicy.FILE_AND_DB, 0);
 
 		Assert.assertEquals(3, m_reportContentDao.count);
 		Assert.assertEquals(3, m_hourlyReportDao.count);
@@ -124,17 +124,17 @@ public class DefaultReportManagerTest {
 	public class MockBuckerManager implements ReportBucketManager {
 
 		@Override
-		public void closeBucket(ReportBucket<?> bucket) {
+		public void closeBucket(ReportBucket bucket) {
 		}
 
 		@Override
-		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
+		public ReportBucket getReportBucket(long timestamp, String name, int index) throws IOException {
 			return new MockStringBucket();
 		}
 
 		@Override
-      public void clearOldReports() {
-      }
+		public void clearOldReports() {
+		}
 
 	}
 
@@ -212,7 +212,7 @@ public class DefaultReportManagerTest {
 
 	}
 
-	public class MockStringBucket implements ReportBucket<String> {
+	public class MockStringBucket implements ReportBucket {
 
 		@Override
 		public void close() throws IOException {
@@ -238,7 +238,7 @@ public class DefaultReportManagerTest {
 		}
 
 		@Override
-		public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+		public void initialize(String name, Date timestamp, int index) throws IOException {
 		}
 
 		@Override

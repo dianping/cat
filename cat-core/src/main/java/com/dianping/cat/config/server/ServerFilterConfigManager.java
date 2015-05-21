@@ -32,13 +32,13 @@ public class ServerFilterConfigManager implements Initializable {
 	@Inject
 	protected ContentFetcher m_fetcher;
 
-	private ServerFilterConfig m_config;
-
-	private static final String CONFIG_NAME = "serverFilter";
+	private volatile ServerFilterConfig m_config;
 
 	private int m_configId;
 
 	private long m_modifyTime;
+
+	private static final String CONFIG_NAME = "serverFilter";
 
 	public boolean discardTransaction(String type, String name) {
 		if ("Cache.web".equals(type) || "ABTest".equals(type)) {

@@ -38,15 +38,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		long startTime = getStartTime();
 
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);
 		}
-	}
-
-	@Override
-	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
@@ -57,6 +52,16 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	@Override
 	public TopReport getReport(String domain) {
 		return m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, false);
+	}
+
+	@Override
+	public ReportManager<TopReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	@Override
@@ -106,5 +111,4 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public void setErrorType(String type) {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
-
 }

@@ -86,9 +86,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
@@ -98,9 +98,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-   public int getAnanlyzerCount() {
-	   return 2;
-   }
+	public int getAnanlyzerCount() {
+		return 2;
+	}
 
 	public Set<String> getDomains() {
 		return m_reportManager.getDomains(getStartTime());
@@ -134,8 +134,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
+	public ReportManager<TransactionReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	@Override
@@ -156,8 +161,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
 
-		while (dk < d) {
-			dk <<= 1;
+		if (d > 65536) {
+			dk = 65536;
+		} else {
+			if (dk > 256) {
+				dk = 256;
+			}
+			while (dk < d) {
+				dk <<= 1;
+			}
 		}
 
 		Duration duration = name.findOrCreateDuration(dk);
@@ -278,5 +290,5 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		return report;
 	}
-	
+
 }

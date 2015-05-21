@@ -52,5 +52,9 @@ public class Configurator extends AbstractResourceConfigurator {
 
 			return m_report;
 		}
+
+		@Override
+		public void destory() {
+		}
 	}
 }

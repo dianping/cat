@@ -25,6 +25,7 @@
 			var domain = $("#commandDomain").val();
 			var id = $("#commandId").val();
 			var all = $("#all").val();
+			var threshold = $("#threshold").val();
 			
 			if(name == undefined || name == ""){
 				if($("#errorMessage").length == 0){
@@ -56,7 +57,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all;
+							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -72,7 +73,7 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all;
+				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
 			}
 		})
 	</script>
@@ -94,6 +95,9 @@
 									<option value='false'>否</option>
 									</select><br/>
 		</td></tr>
+		<tr><td>默认过滤时间</td><td><input name="threshold" value="${model.updateCommand.threshold}" id="threshold" /><span class="text-danger">（支持数字）</span><br/>
+			</td>
+		</tr>
 		<c:if test="${payload.id gt 0}">
 			<input name="id" value="${payload.id}" id="commandId" style="display:none"/>
 		</c:if>

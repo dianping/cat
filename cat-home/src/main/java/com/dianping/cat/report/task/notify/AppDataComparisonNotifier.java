@@ -21,6 +21,7 @@ import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparison;
 import com.dianping.cat.configuration.app.comparison.entity.AppComparisonConfig;
 import com.dianping.cat.configuration.app.comparison.entity.Item;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
@@ -190,7 +191,7 @@ public class AppDataComparisonNotifier {
 
 	private double queryOneDayDelay4Command(Date yesterday, String url) {
 		String yesterdayStr = m_sdf.format(yesterday);
-		Integer command = m_appConfigManager.getCommands().get(url);
+		Command command = m_appConfigManager.getCommands().get(url);
 
 		if (command != null) {
 			CommandQueryEntity entity = new CommandQueryEntity(yesterdayStr + ";" + command + ";;;;;;;;;");

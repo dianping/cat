@@ -26,6 +26,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>transaction</name>
 			</configuration>
@@ -60,7 +61,7 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -86,6 +87,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>event</name>
 			</configuration>
@@ -118,6 +120,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -171,6 +176,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>problem</name>
 			</configuration>
@@ -228,6 +234,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>heartbeat</name>
 			</configuration>
@@ -288,6 +295,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>top</name>
 			</configuration>
@@ -389,6 +397,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>state</name>
 			</configuration>
@@ -450,6 +459,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>cross</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>cross</name>
 			</configuration>
@@ -504,6 +514,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>matrix</name>
 			</configuration>
@@ -568,6 +579,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>dependency</name>
 			</configuration>
@@ -694,6 +706,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>storage</name>
 			</configuration>
@@ -740,8 +753,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</role>
-			<implementation>com.dianping.cat.consumer.transaction.AllTransactionConfigManager</implementation>
+			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
+			<implementation>com.dianping.cat.consumer.config.AllReportConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

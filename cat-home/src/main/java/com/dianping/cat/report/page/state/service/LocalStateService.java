@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.state.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.state.StateReportMerger;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -29,8 +31,17 @@ public class LocalStateService extends LocalModelService<StateReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		StateReport report = super.getReport(period, domain);
+		List<StateReport> reports = super.getReport(period, domain);
+		StateReport report = null;
 
+		if (reports != null) {
+			report = new StateReport(domain);
+			StateReportMerger merger = new StateReportMerger(report);
+
+			for (StateReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
 		if ((report == null || report.getMachines().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
@@ -45,17 +56,30 @@ public class LocalStateService extends LocalModelService<StateReport> {
 	}
 
 	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID);
-			String xml = bucket.findById(domain);
+		StateReport report = new StateReport(domain);
+		StateReportMerger merger = new StateReportMerger(report);
 
-			return xml == null ? null : DefaultSaxParser.parse(xml);
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
+
+				if (xml != null) {
+					StateReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class StateReportFilter extends com.dianping.cat.consumer.state.model.transform.DefaultXmlBuilder {

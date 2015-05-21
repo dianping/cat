@@ -1,4 +1,4 @@
-package com.dianping.cat.config.aggregation;
+package com.dianping.cat.config.web.js;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,9 +9,10 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.config.AggregationMessageFormat;
 import com.dianping.cat.config.CompositeFormat;
 import com.dianping.cat.config.TrieTreeNode;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 
 public class DefaultAggregationHandler implements AggregationHandler, LogEnabled {
 
@@ -19,14 +20,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 
 	protected Logger m_logger;
 
-	/**
-	 * build a format tree use prefix as trieTree index and suffix as map key or conversely
-	 * 
-	 * @param tree
-	 * @param prefix
-	 * @param suffix
-	 * @param format
-	 */
 	private void buildFormatTree(TrieTreeNode tree, char[] prefix, char[] suffix, AggregationMessageFormat format) {
 		if (prefix.length == 0 && suffix.length == 0) {
 			tree.addFormat("", format);
@@ -120,13 +113,6 @@ public class DefaultAggregationHandler implements AggregationHandler, LogEnabled
 		return parse(formatTree, input);
 	}
 
-	/**
-	 * parse input to output based on format tree
-	 * 
-	 * @param formatTree
-	 * @param input
-	 * @return
-	 */
 	private String parse(TrieTreeNode formatTree, String input) {
 		char[] cs = input.toCharArray();
 		List<Map<String, AggregationMessageFormat>> sformatSet = new ArrayList<Map<String, AggregationMessageFormat>>();

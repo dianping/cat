@@ -66,17 +66,22 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 
 			m_logger.info("discard server logview count " + m_discardLogs + ", errorAppName " + m_errorAppName);
 		} else {
-			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	@Override
+	public int getAnanlyzerCount() {
+		return 2;
 	}
 
 	@Override
@@ -88,8 +93,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
+	public ReportManager<CrossReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
 	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
@@ -209,49 +219,51 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void updateCrossReport(CrossReport report, Transaction t, CrossInfo info) {
-		String localIp = info.getLocalAddress();
-		String remoteIp = info.getRemoteAddress();
-		String role = info.getRemoteRole();
-		String transactionName = t.getName();
+		synchronized (report) {
+			String localIp = info.getLocalAddress();
+			String remoteIp = info.getRemoteAddress();
+			String role = info.getRemoteRole();
+			String transactionName = t.getName();
 
-		Local local = report.findOrCreateLocal(localIp);
-		String remoteId = remoteIp + ":" + role;
-		Remote remote = local.findOrCreateRemote(remoteId);
+			Local local = report.findOrCreateLocal(localIp);
+			String remoteId = remoteIp + ":" + role;
+			Remote remote = local.findOrCreateRemote(remoteId);
 
-		report.addIp(localIp);
+			report.addIp(localIp);
 
-		if (StringUtils.isEmpty(remote.getIp())) {
-			remote.setIp(remoteIp);
+			if (StringUtils.isEmpty(remote.getIp())) {
+				remote.setIp(remoteIp);
+			}
+			if (StringUtils.isEmpty(remote.getRole())) {
+				remote.setRole(role);
+			}
+			if (StringUtils.isEmpty(remote.getApp())) {
+				remote.setApp(info.getApp());
+			}
+
+			Type type = remote.getType();
+
+			if (type == null) {
+				type = new Type();
+				type.setId(info.getDetailType());
+				remote.setType(type);
+			}
+
+			Name name = type.findOrCreateName(transactionName);
+
+			type.incTotalCount();
+			name.incTotalCount();
+
+			if (!t.isSuccess()) {
+				type.incFailCount();
+				name.incFailCount();
+			}
+
+			double duration = t.getDurationInMicros() / 1000d;
+
+			type.setSum(type.getSum() + duration);
+			name.setSum(name.getSum() + duration);
 		}
-		if (StringUtils.isEmpty(remote.getRole())) {
-			remote.setRole(role);
-		}
-		if (StringUtils.isEmpty(remote.getApp())) {
-			remote.setApp(info.getApp());
-		}
-
-		Type type = remote.getType();
-
-		if (type == null) {
-			type = new Type();
-			type.setId(info.getDetailType());
-			remote.setType(type);
-		}
-
-		Name name = type.findOrCreateName(transactionName);
-
-		type.incTotalCount();
-		name.incTotalCount();
-
-		if (!t.isSuccess()) {
-			type.incFailCount();
-			name.incFailCount();
-		}
-
-		double duration = t.getDurationInMicros() / 1000d;
-
-		type.setSum(type.getSum() + duration);
-		name.setSum(name.getSum() + duration);
 	}
 
 	public static class CrossInfo {

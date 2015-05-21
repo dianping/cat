@@ -23,7 +23,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 
 	protected ExecutorService pool = null;
 
-	protected ReportBucket<String> bucket = null;
+	protected ReportBucket bucket = null;
 
 	protected void printFails(final int fails, final long start) {
 		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
@@ -72,7 +72,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 		}
 	}
 
-	protected abstract ReportBucket<String> createBucket() throws Exception;
+	protected abstract ReportBucket createBucket() throws Exception;
 
 	@After
 	@Override

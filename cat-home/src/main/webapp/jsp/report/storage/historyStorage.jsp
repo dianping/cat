@@ -87,7 +87,7 @@
 			<td class="right">${w:format(domain.value.operations[item].avg,'###,##0.0')}</td>
 			<td class="right"><c:choose>
 			<c:when test="${domain.value.operations[item].error > 0}">
-				<span class="text-danger"><strong>${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}</strong></span>
+				<span class="badge badge-danger">${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}</span>
 			</c:when>
 			<c:otherwise>
 				${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}

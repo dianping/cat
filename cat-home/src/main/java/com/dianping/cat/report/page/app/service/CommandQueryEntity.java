@@ -5,13 +5,10 @@ import java.util.List;
 import org.unidal.helper.Splitters;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.app.AppConfigManager;
 
 public class CommandQueryEntity extends BaseQueryEntity {
 
 	public static final int DEFAULT_COMMAND = 1;
-
-	public static final int DEFAULT_ACTIVITY = AppConfigManager.COMMAND_END_INDEX + 1;
 
 	private int m_code = DEFAULT_VALUE;
 
@@ -21,13 +18,9 @@ public class CommandQueryEntity extends BaseQueryEntity {
 
 	private int m_endMinuteOrder = DEFAULT_VALUE;
 
-	public CommandQueryEntity(boolean showActivity) {
+	public CommandQueryEntity() {
 		super();
-		if (showActivity) {
-			m_id = DEFAULT_ACTIVITY;
-		} else {
-			m_id = DEFAULT_COMMAND;
-		}
+		m_id = DEFAULT_COMMAND;
 	}
 
 	public CommandQueryEntity(String query) {

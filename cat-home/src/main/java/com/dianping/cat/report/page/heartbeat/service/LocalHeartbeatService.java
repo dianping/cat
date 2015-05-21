@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.heartbeat.service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -8,6 +9,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
@@ -48,7 +50,17 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		HeartbeatReport report = super.getReport(period, domain);
+		List<HeartbeatReport> reports = super.getReport(period, domain);
+		HeartbeatReport report = null;
+
+		if (reports != null) {
+			report = new HeartbeatReport(domain);
+			HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
+
+			for (HeartbeatReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -59,26 +71,32 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			HeartbeatReport report = null;
+		HeartbeatReport report = new HeartbeatReport(domain);
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(report);
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new HeartbeatReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, HeartbeatAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
+
+				if (xml != null) {
+					HeartbeatReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class HeartBeatReportFilter extends
