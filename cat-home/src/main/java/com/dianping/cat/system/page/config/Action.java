@@ -221,7 +221,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
 
-	TRANSACTION_ALL_CONFIG("transactionAllConfig"),
+	ALL_REPORT_CONFIG("allReportConfig"),
 
 	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 

@@ -12,9 +12,9 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-			<h4 class="text-center text-danger">Transaction All Report合并</h4>
+			<h4 class="text-center text-danger">Report All合并</h4>
 			<form name="transactionAllConfig" id="form" method="post"
-				action="${model.pageUri}?op=transactionAllConfig">
+				action="${model.pageUri}?op=allReportConfig">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr>
 						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
@@ -30,7 +30,7 @@
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
-			$('#transactionAllConfig').addClass('active');
+			$('#allReportConfig').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

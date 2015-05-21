@@ -6,7 +6,10 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
@@ -23,6 +26,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Inject
 	private ServerFilterConfigManager m_configManager;
 
+	@Inject
+	private AllReportConfigManager m_allManager;
+
 	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	@Override
@@ -36,6 +42,11 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 			domainNames.clear();
 			domainNames.addAll(reports.keySet());
+		}
+		if (reports.size() > 0) {
+			EventReport all = createAggregatedReport(reports);
+
+			reports.put(all.getDomain(), all);
 		}
 	}
 
@@ -57,11 +68,34 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public boolean createHourlyTask(EventReport report) {
 		String domain = report.getDomain();
 
-		if (m_configManager.validateDomain(domain)) {
+		if (domain.equals(Constants.ALL)) {
+			return m_taskManager.createTask(report.getStartTime(), domain, EventAnalyzer.ID,
+			      TaskProlicy.ALL_EXCLUED_HOURLY);
+		} else if (m_configManager.validateDomain(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), report.getDomain(), EventAnalyzer.ID, TaskProlicy.ALL);
 		} else {
 			return true;
 		}
+	}
+
+	public EventReport createAggregatedReport(Map<String, EventReport> reports) {
+		EventReport first = reports.values().iterator().next();
+		EventReport all = makeReport(Constants.ALL, first.getStartTime().getTime(), Constants.HOUR);
+		EventReportTypeAggregator visitor = new EventReportTypeAggregator(all, m_allManager);
+
+		try {
+			for (EventReport report : reports.values()) {
+				String domain = report.getDomain();
+
+				all.getIps().add(domain);
+				all.getDomainNames().add(domain);
+
+				visitor.visitEventReport(report);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return all;
 	}
 
 	@Override

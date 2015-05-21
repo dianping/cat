@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -14,9 +15,9 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 
 	private String m_currentType;
 
-	private AllTransactionConfigManager m_configManager;
+	private AllReportConfigManager m_configManager;
 
-	public TransactionReportTypeAggregator(TransactionReport report, AllTransactionConfigManager configManager) {
+	public TransactionReportTypeAggregator(TransactionReport report, AllReportConfigManager configManager) {
 		m_report = report;
 		m_configManager = configManager;
 	}
@@ -88,11 +89,11 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	}
 
 	private boolean validateName(String type, String name) {
-		return m_configManager.validate(type, name);
+		return m_configManager.validate(TransactionAnalyzer.ID, type, name);
 	}
 
 	private boolean validateType(String type) {
-		return m_configManager.validate(type);
+		return m_configManager.validate(TransactionAnalyzer.ID, type);
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class TransactionReportTypeAggregator extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType type) {
 		String typeName = type.getId();
-		
+
 		if (validateType(typeName)) {
 			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
 			TransactionType result = machine.findOrCreateType(typeName);

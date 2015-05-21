@@ -49,7 +49,7 @@
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/all-transaction-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/all-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/event-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/problem-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml,

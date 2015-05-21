@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.transaction;
+package com.dianping.cat.consumer.config;
 
 import java.io.IOException;
 import java.util.Date;
@@ -16,15 +16,16 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.consumer.transaction.config.entity.AllTransactionConfig;
-import com.dianping.cat.consumer.transaction.config.entity.Name;
-import com.dianping.cat.consumer.transaction.config.entity.Type;
-import com.dianping.cat.consumer.transaction.config.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.all.config.entity.AllConfig;
+import com.dianping.cat.consumer.all.config.entity.Name;
+import com.dianping.cat.consumer.all.config.entity.Report;
+import com.dianping.cat.consumer.all.config.entity.Type;
+import com.dianping.cat.consumer.all.config.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 
-public class AllTransactionConfigManager implements Initializable, LogEnabled {
+public class AllReportConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -34,20 +35,20 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private volatile AllTransactionConfig m_config;
+	private volatile AllConfig m_config;
 
 	private Logger m_logger;
 
 	private long m_modifyTime;
 
-	private static final String CONFIG_NAME = "all-transaction-config";
+	private static final String CONFIG_NAME = "all-report-config";
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	public AllTransactionConfig getConfig() {
+	public AllConfig getConfig() {
 		return m_config;
 	}
 
@@ -81,7 +82,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 			Cat.logError(e);
 		}
 		if (m_config == null) {
-			m_config = new AllTransactionConfig();
+			m_config = new AllConfig();
 		}
 	}
 
@@ -105,7 +106,7 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllTransactionConfig blackList = DefaultSaxParser.parse(content);
+				AllConfig blackList = DefaultSaxParser.parse(content);
 
 				m_config = blackList;
 				m_modifyTime = modifyTime;
@@ -131,24 +132,34 @@ public class AllTransactionConfigManager implements Initializable, LogEnabled {
 		return true;
 	}
 
-	public boolean validate(String type) {
-		Map<String, Type> types = m_config.getTypes();
-		
-		return types.containsKey(type) || types.containsKey("*");
+	public boolean validate(String reportName, String type) {
+		Report report = m_config.getReports().get(reportName);
+
+		if (report != null) {
+			Map<String, Type> types = report.getTypes();
+
+			return types.containsKey(type) || types.containsKey("*");
+		} else {
+			return false;
+		}
 	}
 
-	public boolean validate(String type, String name) {
-		Map<String, Type> types = m_config.getTypes();
-		Type typeConfig = types.get(type);
+	public boolean validate(String reportName, String type, String name) {
+		Report report = m_config.getReports().get(reportName);
 
-		if (typeConfig != null) {
-			List<Name> list = typeConfig.getNameList();
+		if (report != null) {
+			Map<String, Type> types = report.getTypes();
+			Type typeConfig = types.get(type);
 
-			for (Name nameConfig : list) {
-				String configId = nameConfig.getId();
+			if (typeConfig != null) {
+				List<Name> list = typeConfig.getNameList();
 
-				if (configId.equals(name) || "*".equals(configId)) {
-					return true;
+				for (Name nameConfig : list) {
+					String configId = nameConfig.getId();
+
+					if (configId.equals(name) || "*".equals(configId)) {
+						return true;
+					}
 				}
 			}
 		}

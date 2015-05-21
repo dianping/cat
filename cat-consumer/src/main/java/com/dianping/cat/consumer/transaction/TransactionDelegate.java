@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultNativeParser;
@@ -28,7 +29,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	private ServerFilterConfigManager m_configManager;
 
 	@Inject
-	private AllTransactionConfigManager m_transactionManager;
+	private AllReportConfigManager m_transactionManager;
 
 	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
